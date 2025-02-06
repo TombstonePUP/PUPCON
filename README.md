@@ -42,21 +42,21 @@ The PUP SANJUAN Accreditation Website allows seamless file server handling for a
     ```bash
     composer install
     ```
-5. Generate Key Encryotion for Laravel:
-    ```bash
-    php artisan key:generate
-    ```
-6. Copy the `.env.example` file and rename it to `.env`:
+5. Copy the `.env.example` file and rename it to `.env`:
     ```bash
     cp .env.example .env
     ```
-7. Update the `.env` file with your database credentials:
+6. Update the `.env` file with your database credentials:
     ```bash
     DB_USERNAME=your-username (usually postgres)
     ```
-6. Migrate the project database:
+7. Migrate the project database:
     ```bash
     php artisan migrate
+    ```
+8. Generate Key Encryotion for Laravel:
+    ```bash
+    php artisan key:generate
     ```
 <!-- 7. Fresh migrate the project database:
     ```bash
