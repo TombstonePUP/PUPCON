@@ -1,0 +1,80 @@
+{
+    "teams": [
+        {
+            "name": "Acme Inc",
+            "logo": "GalleryVerticalEnd",
+            "plan": "Enterprise"
+        },
+        {
+            "name": "Acme Corp.",
+            "logo": "AudioWaveform",
+            "plan": "Startup"
+        },
+        {
+            "name": "Evil Corp.",
+            "logo": "Command",
+            "plan": "Free"
+        }
+    ],
+    "accre": [
+        {
+            "title": "Analytics",
+            "url": "/dashboard",
+            "icon": "SquareTerminal"
+        },
+        {
+            "title": "User Management",
+            "url": "/users",
+            "icon": "Bot"
+        },
+        {
+            "title": "Embed",
+            "url": "/embed",
+            "icon": "Bot",
+            "isActive": true,
+            "collapsible": true,
+            "items": [
+                {
+                    "title": "Accountancy",
+                    "url": "/accountancy"
+                },
+                {
+                    "title": "Accountancy",
+                    "url": "/accountancy"
+                },
+                {
+                    "title": "Accountancy",
+                    "url": "/accountancy"
+                }
+            ]
+        }
+    ],
+    "content": [
+        {
+            "title": "News",
+            "url": "/dashboard",
+            "icon": "SquareTerminal"
+        },
+        {
+            "title": "Programs",
+            "url": "/embed",
+            "icon": "Bot",
+            "isActive": true,
+            "collapsible": true,
+            "items": [
+                {
+                    "title": "Accountancy",
+                    "url": "/accountancy"
+                },
+                {
+                    "title": "Accountancy",
+                    "url": "/accountancy"
+                },
+                {
+                    "title": "Accountancy",
+                    "url": "/accountancy"
+                }
+            ]
+        }
+    ]
+}

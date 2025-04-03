@@ -1,56 +1,122 @@
-import { NavFooter } from '@/components/nav-footer';
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
-import AppLogo from './app-logo';
+"use client"
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        url: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
+import * as React from "react"
+import {
+    AudioWaveform,
+    BookOpen,
+    Bot,
+    Command,
+    Frame,
+    GalleryVerticalEnd,
+    Map,
+    PieChart,
+    Settings2,
+    SquareTerminal,
+} from "lucide-react"
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        url: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        url: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
-    },
-];
+import { NavMain } from "@/components/nav-main"
+import { NavUser } from "@/components/nav-user"
+import { LevelSwitcher } from "@/components/level-switcher"
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarRail,
+} from "@/components/ui/sidebar"
 
-export function AppSidebar() {
+// sample data
+const data = {
+    levels: [
+        {
+            name: "Acme Inc",
+            logo: GalleryVerticalEnd,
+            plan: "Enterprise",
+        },
+        {
+            name: "Acme Corp.",
+            logo: AudioWaveform,
+            plan: "Startup",
+        },
+        {
+            name: "Evil Corp.",
+            logo: Command,
+            plan: "Free",
+        },
+    ],
+    accre: [
+        {
+            title: "Analytics",
+            url: "/dashboard",
+            icon: SquareTerminal,
+        },
+        {
+            title: "User Management",
+            url: "/users",
+            icon: Bot,
+        },
+        {
+            title: "Embed",
+            url: "/embed",
+            icon: Bot,
+            isActive: true,
+            collapsible: true,
+            items: [
+                {
+                    title: "Accountancy",
+                    url: "/accountancy",
+                }, {
+                    title: "Accountancy",
+                    url: "/accountancy",
+                }, {
+                    title: "Accountancy",
+                    url: "/accountancy",
+                },
+            ],
+        },
+    ],
+    content: [
+        {
+            title: "News",
+            url: "/dashboard",
+            icon: SquareTerminal,
+        },
+        {
+            title: "Programs",
+            url: "/embed",
+            icon: Bot,
+            isActive: true,
+            collapsible: true,
+            items: [
+                {
+                    title: "Accountancy",
+                    url: "/accountancy",
+                }, {
+                    title: "Accountancy",
+                    url: "/accountancy",
+                }, {
+                    title: "Accountancy",
+                    url: "/accountancy",
+                },
+            ],
+        },
+    ],
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
-                            <Link href="/dashboard" prefetch>
-                                <AppLogo />
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
+                <LevelSwitcher teams={data.levels} />
             </SidebarHeader>
-
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+            <NavMain label="Accreditation" items={data.accre} />
+            <NavMain label="Content" items={data.content} />
             </SidebarContent>
-
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
+            <SidebarRail />
         </Sidebar>
-    );
+    )
 }
