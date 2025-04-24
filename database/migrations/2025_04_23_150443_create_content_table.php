@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('news', function (Blueprint $table) {
             $table->id(column: 'news_id')->autoIncrement()->primary();
             $table->string('title');
-            $table->text('content');
-            $table->text('content_path');
+            $table->text('description');
+            $table->text('news_url')->nullable();
             $table->string('image_name')->nullable();
             $table->text('image_path')->nullable();
         });

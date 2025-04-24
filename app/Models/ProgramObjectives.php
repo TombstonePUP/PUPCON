@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class ProgramObjectives extends Model
+{
+    /** @use HasFactory<\Database\Factories\ProgramObjectivesFactory> */
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    public $timestamps = false;
+    protected $table = 'program_objectives';
+    protected $primaryKey = 'program_objective_id';
+    protected $fillable = [
+        'program_id',
+        'objective_description'
+    ];
+
+    /**
+     * @return BelongsTo<Programs,ProgramObjectives>
+     */
+    public function Programs(): BelongsTo
+    {
+        return $this->belongsTo(Programs::class, 'program_id', 'program_id');
+    }
+}

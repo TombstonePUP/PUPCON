@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('search', function (Blueprint $table) {
             $table->id(column: 'search_id')->autoIncrement()->primary();
             $table->string('content');
+            $table->string('content_type');
             $table->text('content_path');
         });
     }

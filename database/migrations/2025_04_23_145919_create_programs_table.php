@@ -27,7 +27,7 @@ return new class extends Migration
 
         Schema::create('program_objectives', function (Blueprint $table) {
             $table->id(column: 'program_objective_id')->autoIncrement()->primary();
-            $table->foreignId('program')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
             $table->text('objective_description')->nullable();
         });
     }
