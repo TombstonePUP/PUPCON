@@ -17,7 +17,10 @@ class ParameterOutlinesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'parameter_outline_id' => fake()->unique()->randomNumber(),
+            'area_parameter_id' => AreaParametersFactory::new()->create()->area_parameter_id,
+            'outline_name' => fake()->word(),
+            'outline_description' => fake()->sentence(),
         ];
     }
 }

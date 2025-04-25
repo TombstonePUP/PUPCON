@@ -17,7 +17,8 @@ class RolesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'role_id' => fake()->unique()->randomNumber(),
+            'role_name' => fake()->unique()->word(),
         ];
     }
 }

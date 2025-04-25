@@ -17,7 +17,12 @@ class ExhibitFilesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'exhibit_file_id' => fake()->unique()->randomNumber(),
+            'exhibit_id' => ExhibitsFactory::new()->create()->exhibit_id,
+            'file_name' => fake()->word(),
+            'file_path' => fake()->filePath(),
+            'file_status_id' => FileStatusFactory::new()->create()->file_status_id,
+            'file_rejection_reason' => fake()->sentence(),
         ];
     }
 }

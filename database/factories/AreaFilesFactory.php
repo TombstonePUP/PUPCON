@@ -17,7 +17,12 @@ class AreaFilesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'area_file_id' => fake()->unique()->randomNumber(),
+            'parameter_outline_id' => ParameterOutlinesFactory::new()->create()->parameter_outline_id,
+            'file_name' => fake()->word(),
+            'file_path' => fake()->filePath(),
+            'file_status_id' => FileStatusFactory::new()->create()->file_status_id,
+            'file_rejection_reason' => fake()->sentence(),
         ];
     }
 }

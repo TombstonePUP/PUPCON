@@ -17,7 +17,9 @@ class ProgramObjectivesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'program_objective_id' => fake()->unique()->randomNumber(),
+            'program_id' => ProgramsFactory::new()->create()->program_id,
+            'objective_description' => fake()->sentence(),
         ];
     }
 }

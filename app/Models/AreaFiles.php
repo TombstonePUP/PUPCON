@@ -24,7 +24,7 @@ class AreaFiles extends Model
         'file_name',
         'file_path',
         'file_status_id',
-        'file_reject_reason',
+        'file_rejection_reason',
     ];
 
     /**

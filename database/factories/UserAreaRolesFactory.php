@@ -17,7 +17,9 @@ class UserAreaRolesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_area_role_id' => fake()->randomNumber(),
+            'user_role_id' => UserRolesFactory::new()->create()->user_role_id,
+            'area_id' => AreasFactory::new()->create()->area_id,
         ];
     }
 }

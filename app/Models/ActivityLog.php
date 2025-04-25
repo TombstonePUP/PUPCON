@@ -16,13 +16,14 @@ class ActivityLog extends Model
      *
      * @var list<string>
      */
-    // public $timestamps = false;
+    public $timestamps = false;
     protected $table = 'activity_log';
     protected $primaryKey = 'activity_log_id';
     protected $fillable = [
         'user_id',
         'area',
         'program',
+        'file_name',
         'activity',
         'activity_date',
     ];

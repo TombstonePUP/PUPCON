@@ -22,6 +22,7 @@ class ParameterOutlines extends Model
     protected $primaryKey = 'parameter_outline_id';
     protected $fillable = [
         'area_parameter_id',
+        'parameter_outline_category_id',
         'outline_name',
         'outline_description',
     ];
@@ -32,6 +33,14 @@ class ParameterOutlines extends Model
     public function AreaParameter(): BelongsTo
     {
         return $this->belongsTo(AreaParameters::class, 'area_parameter_id', 'area_parameter_id');
+    }
+
+    /**
+     * @return BelongsTo<ParameterOutlineCategory,ParameterOutlines>
+     */
+    public function ParameterOutlineCategory(): BelongsTo
+    {
+        return $this->belongsTo(ParameterOutlineCategory::class, 'parameter_outline_category_id', 'parameter_outline_category_id');
     }
 
     /**

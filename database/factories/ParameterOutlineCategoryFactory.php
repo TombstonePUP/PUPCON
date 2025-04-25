@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FileStatus>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ParameterOutlineCategory>
  */
-class FileStatusFactory extends Factory
+class ParameterOutlineCategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,8 +17,8 @@ class FileStatusFactory extends Factory
     public function definition(): array
     {
         return [
-            'file_status_id' => fake()->unique()->randomNumber(),
-            'status_name' => fake()->unique()->word(),
+            'parameter_outline_category_id' => fake()->unique()->randomNumber(),
+            'category_name' => fake()->word(),
         ];
     }
 }

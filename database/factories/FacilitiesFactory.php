@@ -17,7 +17,11 @@ class FacilitiesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'facility_id' => fake()->unique()->randomNumber(),
+            'facility_name' => fake()->word(),
+            'description' => fake()->sentence(),
+            'facility_image_name' => fake()->imageUrl(),
+            'facility_image_path' => fake()->url(),
         ];
     }
 }

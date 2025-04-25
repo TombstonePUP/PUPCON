@@ -17,7 +17,12 @@ class AreasFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'area_id' => fake()->unique()->randomNumber(),
+            'area_number' => fake()->unique()->randomNumber(),
+            'area_name' => fake()->unique()->word(),
+            'area_description' => fake()->sentence(),
+            'area_image_name' => fake()->imageUrl(),
+            'area_image_path' => fake()->imageUrl(),
         ];
     }
 }

@@ -17,7 +17,9 @@ class UserProgramRolesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_program_role_id' => fake()->randomNumber(),
+            'user_role_id' => UserRolesFactory::new()->create()->user_role_id,
+            'program_id' => ProgramsFactory::new()->create()->program_id,
         ];
     }
 }

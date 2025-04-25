@@ -17,7 +17,11 @@ class AreaParametersFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'area_parameter_id' => fake()->unique()->randomNumber(),
+            'program_id' => ProgramsFactory::new()->create()->program_id,
+            'area_id' => AreasFactory::new()->create()->area_id,
+            'parameter_name' => fake()->word(),
+            'parameter_description' => fake()->sentence(),
         ];
     }
 }

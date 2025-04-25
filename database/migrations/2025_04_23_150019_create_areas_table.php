@@ -28,10 +28,17 @@ return new class extends Migration
             $table->string('parameter_description')->nullable();
         });
 
+        Schema::create('parameter_outline_category', function (Blueprint $table) {
+            $table->id(column: 'parameter_outline_category_id')->autoIncrement()->primary();
+            $table->string('category_name')->unique();
+        });
+
         Schema::create('parameter_outlines', function (Blueprint $table) {
             $table->id(column: 'parameter_outline_id')->autoIncrement()->primary();
             // $table->foreignId('area_parameter_id')->constrained()->onDelete('cascade');
             $table->foreignId('area_parameter_id')->references('area_parameter_id')->on('area_parameters')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('parameter_outline_category_id')->nullable()->references('parameter_outline_category_id')->on('parameter_outline_category')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->string('outline_name');
             $table->string('outline_description')->nullable();
         });
@@ -57,10 +64,12 @@ return new class extends Migration
 
         Schema::create('exhibit_files', function (Blueprint $table) {
             $table->id(column: 'exhibit_file_id')->autoIncrement()->primary();
-            $table->foreignId('exhibit_id')->references('exhibit_id')->on('exhibits')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('exhibit_id')->references('exhibit_id')->on('exhibits')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->string('file_name');
             $table->text('file_path');
-            $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
         });
     }
@@ -72,6 +81,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('areas');
         Schema::dropIfExists('area_parameters');
+        Schema::dropIfExists('parameter_outline_category');
         Schema::dropIfExists('parameter_outlines');
         Schema::dropIfExists('file_status');
         Schema::dropIfExists('area_files');
