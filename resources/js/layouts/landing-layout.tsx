@@ -1,94 +1,151 @@
-import React from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
-const Header: React.FC = () => {
-    const page = usePage();
-    const underSurvey = page.props.underSurvey || [];
-    const currentPath = page.url;
+interface LayoutProps {
+    children: ReactNode;
+    footerText?: string;
+}
 
-    const isActive = (path: string) => currentPath.startsWith(path);
+const LEFT_NAV = [
+    {
+        label: 'ABOUT',
+        href: '/about',
+        dropdown: [
+            { label: 'Vision, Mission, and Goals', href: '/about/vision-mission-goals' },
+            { label: 'History', href: '/about/history' },
+            { label: 'Administration', href: '/about/administration' },
+            { label: 'Facilities', href: '/about/facilities' },
+            { label: 'Faculty and Staff', href: '/about/faculty-staff' },
+            { label: 'Local Task Force', href: '/about/local-task-force' },
+        ],
+    },
+    {
+        label: 'CERTIFICATE OF AUTHENTICITY',
+        href: '/certificate',
+        dropdown: [],
+    },
+];
+
+const RIGHT_NAV = [
+    {
+        label: 'PROGRAMS',
+        href: '/programs',
+        dropdown: [], // fill if needed
+    },
+    {
+        label: 'EXHIBITS',
+        href: '/exhibits',
+        dropdown: [],
+    },
+    {
+        label: 'OTHERS',
+        href: '/others',
+        dropdown: [],
+    },
+];
+
+function isActive(path: string) {
+    return window.location.pathname.startsWith(path);
+}
+
+export default function Layout({ children }: LayoutProps) {
+    const currentYear = new Date().getFullYear();
 
     return (
-        <header className="fin-header bg-white shadow-sm sticky top-0 z-50">
-            <div className="flex min-w-full h-[4vw] bg-[#630101f2] items-center justify-center relative">
-                <Link href={route('home')} className="absolute top-0">
-                    <img
-                        className="w-[15vw] object-contain"
-                        src="/images/badge.png"
-                        alt="badge"
-                    />
-                </Link>
-            </div>
-            <div className="flex justify-between px-70 py-3 color-[#7f1414]">
-                {/* Left Nav */}
-                <ul className="flex gap-30">
-                    <li className="relative group">
-                        <Link
-                            href={route('home')}
-                            className={cn('nav-link', isActive('/about') && 'active')}
-                        >
-                            ABOUT
-                        </Link>
-                        <div className="dropdown-content absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-2 p-2 text-sm">
-                            <Link href={route('home')}>Vision, Mission, and Goals</Link>
-                            <Link href={route('home')}>History</Link>
-                            <Link href={route('home')}>Administration</Link>
-                            <Link href={route('home')}>Facilities</Link>
-                            <Link href={route('home')}>Faculty and Staff</Link>
-                            <Link href={route('home')}>Local Task Force</Link>
-                        </div>
-                    </li>
-                    <li>
-                        <Link
-                            href={route('home')}
-                            className={cn('nav-link no-wrap', isActive('/certificate') && 'active')}
-                        >
-                            CERTIFICATE OF AUTHENTICITY
-                        </Link>
-                    </li>
-                </ul>
+        <div className="flex flex-col min-h-screen">
+            {/* Header */}
+            <header>
+                {/* Badge */}
+                <div className="flex min-w-full h-[4vw] bg-[#630101] items-center justify-center relative opacity-85">
+                    <Link href="/" className="absolute top-0">
+                        <img
+                            className="w-[16vw] object-contain"
+                            src="/images/badge.png"
+                            alt="badge"
+                            draggable={false}
+                        />
+                    </Link>
+                </div>
 
-                {/* Right Nav */}
-                <ul className="flex gap-30">
-                    <li className="relative group">
-                        <Link
-                            href={route('home')}
-                            className={cn('nav-link', isActive('/programs') && 'active')}
-                        >
-                            PROGRAMS
-                        </Link>
-                        <div className="dropdown-content absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-2 p-2 text-sm">
-                            {/* {underSurvey.map((program: any) => (
-                <Link
-                  key={program.program_name}
-                  href={route('programs.show', { program_name: program.program_name })}
-                >
-                  {program.program_name}
-                </Link>
-              ))} */}
-                        </div>
-                    </li>
-                    <li>
-                        <Link
-                            href={route('home')}
-                            className={cn('nav-link', isActive('/exhibits') && 'active')}
-                        >
-                            EXHIBITS
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href={route('home')}
-                            className={cn('nav-link', isActive('/others') && 'active')}
-                        >
-                            OTHERS
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-        </header>
+                {/* Navigation */}
+                <div className="flex justify-between px-[10vw] py-[1vw] text-[#7f1414]">
+                    {/* Left */}
+                    <ul className="flex gap-[6vw]">
+                        {LEFT_NAV.map((item) => (
+                            <li key={item.label} className="relative group">
+                                <Link
+                                    href={item.href}
+                                    className={cn('text-[#7f1414]', isActive(item.href) && 'active')}
+                                >
+                                    {item.label}
+                                </Link>
+
+                                {item.dropdown.length > 0 && (
+                                    <div className="dropdown-content absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-2 p-2 text-sm">
+                                        {item.dropdown.map((drop) => (
+                                            <Link key={drop.label} className="text-[#7f1414] whitespace-nowrap" href={drop.href}>
+                                                {drop.label}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+
+                    {/* Right */}
+                    <ul className="flex gap-[6vw]">
+                        {RIGHT_NAV.map((item) => (
+                            <li key={item.label} className="relative group">
+                                <Link
+                                    href={item.href}
+                                    className={cn('text-[#7f1414] whitespace-nowrap', isActive(item.href) && 'active')}
+                                >
+                                    {item.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </header>
+
+            {/* Main */}
+            <main className="flex-1">
+                {children}
+            </main>
+
+            {/* Footer */}
+            <footer className="w-full bg-gray-800 text-gray-300 text-center py-6 mt-10">
+                <div className="footer1">
+                    <img src="images/pupcon-logo-white.png" alt="Logo" />
+                    <h2>Maharlika Technologies</h2>
+                </div>
+                <div className="footer2">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="https://pupsinta.freshservice.com/support/home" target="_blank">PUP SINTA</a></li>
+                        <li><a href="https://outlook.office.com/" target="_blank">PUP WebMail</a></li>
+                        <li><a href="https://www.pup.edu.ph/iapply/" target="_blank">PUP iApply</a></li>
+                    </ul>
+                </div>
+                <div className="footer3">
+                    <h3>Portals</h3>
+                    <ul>
+                        <li><a href="https://sis1.pup.edu.ph/student/" target="_blank">SIS for Students</a></li>
+                        <li><a href="https://sis2.pup.edu.ph/faculty/" target="_blank">SIS for Faculty</a></li>
+                        <li><a href="https://sis8.pup.edu.ph/" target="_blank">PUPSIS</a></li>
+                    </ul>
+                </div>
+                <div className="footer4">
+                    <h3>Socials</h3>
+                    <ul>
+                        <li><a href="https://www.facebook.com/profile.php?id=100064299686924" target="_blank">PUPSJ Facebook</a></li>
+                        <li><a href="https://www.facebook.com/ThePUPOfficial" target="_blank">PUP Sta. Mesa Facebook</a></li>
+                        <li><a href="/">Go to Home Page</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
     );
-};
-
-export default Header;
+}
