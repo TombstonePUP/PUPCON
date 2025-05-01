@@ -21,7 +21,7 @@ class AreasFactory extends Factory
             'area_number' => fake()->unique()->randomNumber(),
             'area_name' => fake()->unique()->word(),
             'area_description' => fake()->sentence(),
-            'area_image_name' => fake()->imageUrl(),
+            'area_image_name' => fake()->word(),
             'area_image_path' => fake()->imageUrl(),
         ];
     }

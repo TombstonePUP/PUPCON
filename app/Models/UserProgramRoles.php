@@ -20,16 +20,16 @@ class UserProgramRoles extends Model
     protected $table = 'user_program_roles';
     protected $primaryKey = 'user_program_role_id';
     protected $fillable = [
-        'user_role_id',
+        'user_id',
         'program_id',
     ];
 
     /**
-     * @return BelongsTo<UserRoles,UserProgramRoles>
+     * @return BelongsTo<User,UserProgramRoles>
      */
-    public function UserRoles(): BelongsTo
+    public function Users(): BelongsTo
     {
-        return $this->belongsTo(UserRoles::class, 'user_role_id', 'user_role_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     /**

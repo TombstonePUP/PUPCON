@@ -19,7 +19,7 @@ class LocalTaskForceFactory extends Factory
         return [
             'local_task_force_id' => fake()->unique()->randomNumber(),
             'user_id' => UserFactory::new()->create()->user_id,
-            'profile_image_name' => fake()->imageUrl(),
+            'profile_image_name' => fake()->word(),
             'profile_image_path' => fake()->imageUrl(),
         ];
     }

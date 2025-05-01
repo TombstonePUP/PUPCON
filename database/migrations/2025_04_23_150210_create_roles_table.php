@@ -24,7 +24,7 @@ return new class extends Migration
 
         Schema::create('user_program_roles', function (Blueprint $table) {
             $table->id(column: 'user_program_role_id')->autoIncrement()->primary();
-            $table->foreignId('user_role_id')->references('user_role_id')->on('user_roles')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('user_id')->references('user_id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
         });
 

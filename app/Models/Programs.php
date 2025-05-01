@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Programs extends Model
@@ -31,6 +32,15 @@ class Programs extends Model
         'overview_image_name',
         'overview_image_path'
     ];
+
+    /**
+     * @return BelongsToMany<User,Programs>
+     */
+    public function Users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_program_roles', 'program_id', 'user_id')
+            ->withPivot('role_id');
+    }
 
     /**
      * @return HasMany<ProgramObjectives,Programs>

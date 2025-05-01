@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserRoles extends Model
@@ -34,11 +35,12 @@ class UserRoles extends Model
     }
 
     /**
-     * @return HasMany<UserProgramRoles,UserRoles>
+     * @return BelongsToMany<Programs,UserRoles>
      */
-    public function UserProgramRoles(): HasMany
+    public function Areas(): BelongsToMany
     {
-        return $this->hasMany(UserProgramRoles::class, 'user_role_id', 'user_role_id');
+        return $this->belongsToMany(AreaParameters::class, 'user_area_roles', 'user_role_id', 'area_id')
+            ->withPivot('user_area_role_id');
     }
 
     /**
