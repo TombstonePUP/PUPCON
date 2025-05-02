@@ -60,23 +60,6 @@ export default function Register() {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="middle_name">Middle Name</Label>
-                        <Input
-                            id="middle_name"
-                            type="text"
-                            // required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="name"
-                            value={data.middle_name}
-                            onChange={(e) => setData('middle_name', e.target.value)}
-                            disabled={processing}
-                            placeholder="Middle name"
-                        />
-                        {/*<InputError message={errors.middle_name} className="mt-2" />*/}
-                    </div>
-
-                    <div className="grid gap-2">
                         <Label htmlFor="last_name">Last Name</Label>
                         <Input
                             id="last_name"
@@ -91,23 +74,6 @@ export default function Register() {
                             placeholder="Last name"
                         />
                         <InputError message={errors.last_name} className="mt-2" />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="suffix">Suffix</Label>
-                        <Input
-                            id="suffix"
-                            type="text"
-                            // required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="name"
-                            value={data.suffix}
-                            onChange={(e) => setData('suffix', e.target.value)}
-                            disabled={processing}
-                            placeholder="Suffix"
-                        />
-                        {/*<InputError message={errors.suffix} className="mt-2" />*/}
                     </div>
 
                     <div className="grid gap-2">
