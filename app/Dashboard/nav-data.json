@@ -35,16 +35,16 @@
             "collapsible": true,
             "items": [
                 {
-                    "title": "Accountancy",
-                    "url": "/accountancy"
+                    "title": "Testing1",
+                    "url": "/testing1"
                 },
                 {
-                    "title": "Accountancy",
-                    "url": "/accountancy"
+                    "title": "Testing2",
+                    "url": "/testing2"
                 },
                 {
-                    "title": "Accountancy",
-                    "url": "/accountancy"
+                    "title": "Testing3",
+                    "url": "/testing3"
                 }
             ]
         }
@@ -63,16 +63,16 @@
             "collapsible": true,
             "items": [
                 {
-                    "title": "Accountancy",
-                    "url": "/accountancy"
+                    "title": "Testing1",
+                    "url": "/testing1"
                 },
                 {
-                    "title": "Accountancy",
-                    "url": "/accountancy"
+                    "title": "Testing2",
+                    "url": "/testing2"
                 },
                 {
-                    "title": "Accountancy",
-                    "url": "/accountancy"
+                    "title": "Testing3",
+                    "url": "/testing3"
                 }
             ]
         }
