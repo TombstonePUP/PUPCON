@@ -55,21 +55,20 @@ export default function Layout({ children }: LayoutProps) {
     return (
         <div className="flex flex-col min-h-screen">
             {/* Header */}
-            <header>
+            <header className="sticky top-0 z-50 bg-transparent shadow-sm">
                 {/* Badge */}
-                <div className="flex min-w-full h-[4vw] bg-[#630101] items-center justify-center relative opacity-85">
-                    <Link href="/" className="absolute top-0">
-                        <img
-                            className="w-[16vw] object-contain"
-                            src="/images/badge.png"
-                            alt="badge"
-                            draggable={false}
-                        />
-                    </Link>
+                <div className="flex min-w-full h-[3vw] bg-[#630101] items-center justify-center relative opacity-85">
                 </div>
-
+                <Link href="/" className="absolute top-[-0.5vw] w-screen grid place-items-center">
+                    <img
+                        className="w-[18vw] object-contain"
+                        src="/images/badge.png"
+                        alt="badge"
+                        draggable={false}
+                    />
+                </Link>
                 {/* Navigation */}
-                <div className="flex justify-between px-[10vw] py-[1vw] text-[#7f1414]">
+                <div className="flex justify-between px-[15vw] py-[0.8vw] text-[#7f1414] bg-white">
                     {/* Left */}
                     <ul className="flex gap-[6vw]">
                         {LEFT_NAV.map((item) => (
@@ -109,6 +108,7 @@ export default function Layout({ children }: LayoutProps) {
                     </ul>
                 </div>
             </header>
+
 
             {/* Main */}
             <main className="flex-1">
