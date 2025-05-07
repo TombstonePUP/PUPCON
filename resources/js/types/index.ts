@@ -41,3 +41,14 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface ActivityLogs {
+    activity_log_id: number;
+    user_id: number;
+    area: string;
+    program: string;
+    file_name: string;
+    activity: string;
+    activity_date: string;
+    [key: string]: unknown;
+}

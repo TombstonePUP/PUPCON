@@ -26,38 +26,38 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 const chartData = [
-  { date: "2024-04-01", desktop: 222, mobile: 150 },
-  { date: "2024-04-02", desktop: 97, mobile: 180 },
-  { date: "2024-04-03", desktop: 167, mobile: 120 },
-  { date: "2024-04-04", desktop: 242, mobile: 260 },
-  { date: "2024-04-05", desktop: 373, mobile: 290 },
-  { date: "2024-04-06", desktop: 301, mobile: 340 },
-  { date: "2024-04-16", desktop: 138, mobile: 190 },
-  { date: "2024-04-17", desktop: 446, mobile: 360 },
-  { date: "2024-04-18", desktop: 364, mobile: 410 },
-  { date: "2024-04-19", desktop: 243, mobile: 180 },
-  { date: "2024-04-20", desktop: 89, mobile: 150 },
-  { date: "2024-04-21", desktop: 137, mobile: 200 },
-  { date: "2024-04-22", desktop: 224, mobile: 170 },
-  { date: "2024-04-23", desktop: 138, mobile: 230 },
-  { date: "2024-04-24", desktop: 387, mobile: 290 },
-  { date: "2024-04-25", desktop: 215, mobile: 250 },
-  { date: "2024-04-26", desktop: 75, mobile: 130 },
-  { date: "2024-04-27", desktop: 383, mobile: 420 },
-  { date: "2024-04-28", desktop: 122, mobile: 180 },
-  { date: "2024-04-29", desktop: 315, mobile: 240 },
-  { date: "2024-05-27", desktop: 420, mobile: 460 },
-  { date: "2024-05-28", desktop: 233, mobile: 190 },
-  { date: "2024-05-29", desktop: 78, mobile: 130 },
-  { date: "2024-05-30", desktop: 340, mobile: 280 },
-  { date: "2024-05-31", desktop: 178, mobile: 230 },
-  { date: "2024-06-01", desktop: 178, mobile: 200 },
-  { date: "2024-06-02", desktop: 470, mobile: 410 },
-  { date: "2024-06-03", desktop: 103, mobile: 160 },
-  { date: "2024-06-04", desktop: 439, mobile: 380 },
-  { date: "2024-06-05", desktop: 88, mobile: 140 },
-  { date: "2024-06-06", desktop: 294, mobile: 250 },
-  { date: "2024-06-07", desktop: 323, mobile: 370 },
+  { date: "2024-04-01", desktop: 222 },
+  { date: "2024-04-02", desktop: 97 },
+  { date: "2024-04-03", desktop: 167 },
+  { date: "2024-04-04", desktop: 242 },
+  { date: "2024-04-05", desktop: 373 },
+  { date: "2024-04-06", desktop: 301 },
+  { date: "2024-04-16", desktop: 138 },
+  { date: "2024-04-17", desktop: 446 },
+  { date: "2024-04-18", desktop: 364 },
+  { date: "2024-04-19", desktop: 243 },
+  { date: "2024-04-20", desktop: 89 },
+  { date: "2024-04-21", desktop: 137 },
+  { date: "2024-04-22", desktop: 224 },
+  { date: "2024-04-23", desktop: 138 },
+  { date: "2024-04-24", desktop: 387 },
+  { date: "2024-04-25", desktop: 215 },
+  { date: "2024-04-26", desktop: 75 },
+  { date: "2024-04-27", desktop: 383 },
+  { date: "2024-04-28", desktop: 122 },
+  { date: "2024-04-29", desktop: 315 },
+  { date: "2024-05-27", desktop: 420 },
+  { date: "2024-05-28", desktop: 233 },
+  { date: "2024-05-29", desktop: 78 },
+  { date: "2024-05-30", desktop: 340 },
+  { date: "2024-05-31", desktop: 178 },
+  { date: "2024-06-01", desktop: 178 },
+  { date: "2024-06-02", desktop: 470 },
+  { date: "2024-06-03", desktop: 103 },
+  { date: "2024-06-04", desktop: 439 },
+  { date: "2024-06-05", desktop: 88 },
+  { date: "2024-06-06", desktop: 294 },
+  { date: "2024-06-07", desktop: 323 },
 ]
 
 const chartConfig = {
@@ -95,7 +95,7 @@ export function ProgressChart() {
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle>Area Chart - Interactive</CardTitle>
+          <CardTitle>File Upload Frequency</CardTitle>
           <CardDescription>
             Showing total visitors for the last 3 months
           </CardDescription>
@@ -139,7 +139,7 @@ export function ProgressChart() {
                   stopOpacity={0.1}
                 />
               </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+              { /* <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
                   stopColor="var(--color-mobile)"
@@ -150,7 +150,7 @@ export function ProgressChart() {
                   stopColor="var(--color-mobile)"
                   stopOpacity={0.1}
                 />
-              </linearGradient>
+              </linearGradient> */ }
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -181,13 +181,13 @@ export function ProgressChart() {
                 />
               }
             />
-            <Area
+            { /* <Area
               dataKey="mobile"
               type="natural"
               fill="url(#fillMobile)"
               stroke="var(--color-mobile)"
               stackId="a"
-            />
+            /> */ }
             <Area
               dataKey="desktop"
               type="natural"

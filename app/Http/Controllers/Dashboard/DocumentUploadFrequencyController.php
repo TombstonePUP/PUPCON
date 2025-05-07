@@ -13,7 +13,7 @@ class DocumentUploadFrequencyController extends Controller
      */
     public function index()
     {
-        //
+        // $
     }
 
     /**
