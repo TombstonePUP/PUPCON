@@ -2,12 +2,24 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+function HomeCard({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card"
+      className={cn(
+        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border overflow-hidden shadow-sm max-w-md mx-auto ",
+        className
+      )}
+      {...props}
+    />
+  )
+}
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border overflow-hidden shadow-sm w-[18vw] max-w-md mx-auto",
+        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
         className
       )}
       {...props}
@@ -29,6 +41,17 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-title"
+      className={cn("leading-none font-semibold", className)}
+      {...props}
+    />
+  )
+}
+
+
+function HomeCardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-title"
@@ -106,4 +129,6 @@ export {
   CardDescription,
   CardContent,
   CardImage,
+  HomeCard,
+  HomeCardTitle,
 }

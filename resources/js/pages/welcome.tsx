@@ -10,7 +10,9 @@ import {
     CardContent,
     CardFooter,
     CardAction,
-    CardImage
+    CardImage,
+    HomeCard,
+    HomeCardTitle
 } from "@/components/ui/card"
 
 export default function Welcome() {
@@ -23,68 +25,68 @@ export default function Welcome() {
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
             <Layout>
-                <div className='overflow-hidden w-[100vw] h-[70vh] grid place-items-center'>
+                <div className='overflow-y-hidden w-full h-[70vh] grid place-items-center'>
                     <iframe
                         className='pointer-events-none h-[240%] w-[100%]'
                         src="https://www.youtube.com/embed/QtioU1IZS_Y?autoplay=1&controls=0&modestbranding=1&rel=0&mute=1&loop=1&playlist=QtioU1IZS_Y"
                         allow="autoplay; encrypted-media" >
-                    </iframe>
+                    </iframe>   
                 </div>
-                <div className="bg-[#7f1414] w-screen h-[7vw] flex items-center justify-center gap-7">
+                <div className="bg-[#7f1414] h-[7vw] flex items-center justify-center gap-7">
                     <Button className="text-[0.8vw] px-[2vw] py-[1.5vw]">OVERVIEW</Button>
                     <Button className="text-[0.8vw] px-[2vw] py-[1.5vw]">CONTACT US</Button>
                     <Button className="text-[0.8vw] px-[2vw] py-[1.5vw]">VISIT CAMPUS</Button>
                 </div>
-                <div className="bg-[url('/images/bg.png')] bg-cover bg-center h-[70vh] w-screen flex flex-col items-center justify-center gap-7">
+                <div className="bg-[url('/images/bg.png')] bg-cover bg-center h-[70vh] w-full flex flex-col items-center justify-center gap-7">
                     <p className="text-[1.7vw] font-bold">LATEST UPDATES</p>
                     <div className='bg-[#7f1414] w-[10%] h-[0.3%]'></div>
                     <div className='flex flex-row gap-5'>
                         <Link href='/'>
-                            <Card className='hover:border-[#7f1414] pb-6'>
+                            <HomeCard className='hover:border-[#7f1414] pb-6 w-[18vw]'>
                                 <CardImage src="/images/pupcet.jpg" alt="pupcet" />
                                 <CardHeader>
-                                    <CardTitle>PUPSJ PUPCET</CardTitle>
+                                    <HomeCardTitle>PUPSJ PUPCET</HomeCardTitle>
                                     <CardDescription>The PUPSJ PUPCET Online Application for Academic Year 2025-2026 starts on December 15, 2024 - April 15, 2025.</CardDescription>
                                 </CardHeader>
-                            </Card>
+                            </HomeCard>
                         </Link>
                         <Link href='/'>
-                            <Card className='hover:border-[#7f1414] pb-6'>
+                            <HomeCard className='hover:border-[#7f1414] pb-6 w-[18vw]'>
                                 <CardImage src="/images/cpale.jpg" alt="cpale" />
                                 <CardHeader>
-                                    <CardTitle>CPALE 2024 Passers</CardTitle>
+                                    <HomeCardTitle>CPALE 2024 Passers</HomeCardTitle>
                                     <CardDescription>Pagpupugay sa bagong CPA ng ating Sintang Paaralan.</CardDescription>
                                 </CardHeader>
-                            </Card>
+                            </HomeCard>
                         </Link>
                         <Link href='/'>
-                            <Card className='hover:border-[#7f1414] pb-6'>
+                            <HomeCard className='hover:border-[#7f1414] pb-6 w-[18vw]'>
                                 <CardImage src="/images/mental.jpg" alt="mental health" />
                                 <CardHeader>
-                                    <CardTitle>Mental Health Matters</CardTitle>
+                                    <HomeCardTitle>Mental Health Matters</HomeCardTitle>
                                     <CardDescription>The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow tips for boosting your</CardDescription>
                                 </CardHeader>
-                            </Card>
+                            </HomeCard>
                         </Link>
                         <Link href='/'>
-                            <Card className='hover:border-[#7f1414] pb-6'>
+                            <HomeCard className='hover:border-[#7f1414] pb-6 w-[18vw]'>
                                 <CardImage src="/images/ceremony.jpg" alt="ceremony" />
                                 <CardHeader>
-                                    <CardTitle>Ceremonial Signing</CardTitle>
+                                    <HomeCardTitle>Ceremonial Signing</HomeCardTitle>
                                     <CardDescription>A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!</CardDescription>
                                 </CardHeader>
-                            </Card>
+                            </HomeCard>
                         </Link>
                     </div>
                 </div>
                 <div className='grid place-items-center py-10'>
-                    <Card  className='flex flex-row'>
-                        <CardImage className='pb-0' src="/images/pup-slogan.jpg" alt="pup slogan" />
+                    <HomeCard className='flex flex-row'>
+                        <CardImage className='pb-0 w-[20vw]' src="/images/pup-slogan.jpg" alt="pup slogan" />
                         <CardHeader className='py-2'>
-                            <CardTitle>Ceremonial Signing</CardTitle>
+                            <HomeCardTitle>Ceremonial Signing</HomeCardTitle>
                             <CardDescription>This is your dashboard</CardDescription>
                         </CardHeader>
-                    </Card>
+                    </HomeCard>
                 </div>
 
 
