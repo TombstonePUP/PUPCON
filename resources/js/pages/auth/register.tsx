@@ -11,9 +11,7 @@ import AuthLayout from '@/layouts/auth-layout';
 
 interface RegisterForm {
     first_name: string;
-    middle_name: string;
     last_name: string;
-    suffix: string;
     email: string;
     password: string;
     password_confirmation: string;
@@ -22,9 +20,7 @@ interface RegisterForm {
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm<RegisterForm>({
         first_name: '',
-        middle_name: '',
         last_name: '',
-        suffix: '',
         email: '',
         password: '',
         password_confirmation: '',

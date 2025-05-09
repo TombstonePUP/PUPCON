@@ -22,8 +22,8 @@ class ActivityLogFactory extends Factory
             'area' => fake()->word(),
             'program' => fake()->word(),
             'file_name' => fake()->word(),
-            'activity' => fake()->word(),
-            'activity_date' => fake()->dateTime(),
+            'activity' => fake()->randomElement(['upload', 'approved', 'rejected']),
+            'activity_date' => fake()->dateTimeThisMonth()
         ];
     }
 }

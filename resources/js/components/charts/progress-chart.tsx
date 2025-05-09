@@ -1,7 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
+
+import { type FrequencyUploads } from "@/types"
 
 import {
   Card,
@@ -25,61 +27,47 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-const chartData = [
-  { date: "2024-04-01", desktop: 222 },
-  { date: "2024-04-02", desktop: 97 },
-  { date: "2024-04-03", desktop: 167 },
-  { date: "2024-04-04", desktop: 242 },
-  { date: "2024-04-05", desktop: 373 },
-  { date: "2024-04-06", desktop: 301 },
-  { date: "2024-04-16", desktop: 138 },
-  { date: "2024-04-17", desktop: 446 },
-  { date: "2024-04-18", desktop: 364 },
-  { date: "2024-04-19", desktop: 243 },
-  { date: "2024-04-20", desktop: 89 },
-  { date: "2024-04-21", desktop: 137 },
-  { date: "2024-04-22", desktop: 224 },
-  { date: "2024-04-23", desktop: 138 },
-  { date: "2024-04-24", desktop: 387 },
-  { date: "2024-04-25", desktop: 215 },
-  { date: "2024-04-26", desktop: 75 },
-  { date: "2024-04-27", desktop: 383 },
-  { date: "2024-04-28", desktop: 122 },
-  { date: "2024-04-29", desktop: 315 },
-  { date: "2024-05-27", desktop: 420 },
-  { date: "2024-05-28", desktop: 233 },
-  { date: "2024-05-29", desktop: 78 },
-  { date: "2024-05-30", desktop: 340 },
-  { date: "2024-05-31", desktop: 178 },
-  { date: "2024-06-01", desktop: 178 },
-  { date: "2024-06-02", desktop: 470 },
-  { date: "2024-06-03", desktop: 103 },
-  { date: "2024-06-04", desktop: 439 },
-  { date: "2024-06-05", desktop: 88 },
-  { date: "2024-06-06", desktop: 294 },
-  { date: "2024-06-07", desktop: 323 },
-]
+
+interface ProgressChartProps {
+    data: FrequencyUploads[]
+}
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  documents: {
+    label: "Documents",
   },
-  desktop: {
-    label: "Desktop",
+  uploads: {
+    label: "Uploads",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  approved: {
+    label: "Approved",
     color: "hsl(var(--chart-2))",
   },
-} satisfies ChartConfig
+  rejected: {
+    label: "Rejected",
+    color: "hsl(var(--chart-3))",
+  }, } satisfies ChartConfig
 
-export function ProgressChart() {
+const getTimeRangeLabel = (range: string) => {
+  switch (range) {
+    case "7d":
+      return "last 7 days"
+    case "30d":
+      return "last 30 days"
+    case "90d":
+    default:
+      return "last 3 months"
+  }
+}
+
+export function ProgressChart( { data }: ProgressChartProps) {
+  console.log("ProgressChart data", data)
   const [timeRange, setTimeRange] = React.useState("90d")
 
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date)
-    const referenceDate = new Date("2024-06-30")
+  const filteredData = data.filter((item) => {
+    const date = new Date(item.activity_date)
+    const referenceDate = new Date()
     let daysToSubtract = 90
     if (timeRange === "30d") {
       daysToSubtract = 30
@@ -95,9 +83,9 @@ export function ProgressChart() {
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle>File Upload Frequency</CardTitle>
+          <CardTitle>File Activity Frequency</CardTitle>
           <CardDescription>
-            Showing total visitors for the last 3 months
+            Showing document activity for the {getTimeRangeLabel(timeRange)}
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
@@ -123,42 +111,60 @@ export function ProgressChart() {
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
+          className="aspect-auto h-[275px] w-full"
         >
+          <defs>
+            <clipPath id="clip">
+              <rect x="0" y="0" width="100%" height="100%" />
+            </clipPath>
+          </defs>
           <AreaChart data={filteredData}>
             <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="fillUploads" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-desktop)"
+                  stopColor="var(--color-uploads)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-desktop)"
+                  stopColor="var(--color-uploads)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
-              { /* <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="fillApproved" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-mobile)"
+                  stopColor="var(--color-approved)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-mobile)"
+                  stopColor="var(--color-approved)"
                   stopOpacity={0.1}
                 />
-              </linearGradient> */ }
+              </linearGradient>
+              <linearGradient id="fillRejected" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-rejected)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-rejected)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="date"
+              dataKey="activity_date"
               tickLine={false}
+              allowDataOverflow={true}
               axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
+              tickMargin={10}
+              minTickGap={40}
               tickFormatter={(value) => {
                 const date = new Date(value)
                 return date.toLocaleDateString("en-US", {
@@ -167,7 +173,10 @@ export function ProgressChart() {
                 })
               }}
             />
-            <ChartTooltip
+            <YAxis
+              hide={true}
+              domain={[0, "dataMax + 1"]}
+            /> <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
@@ -177,23 +186,33 @@ export function ProgressChart() {
                       day: "numeric",
                     })
                   }}
-                  indicator="dot"
+                  indicator="line"
                 />
               }
             />
-            { /* <Area
-              dataKey="mobile"
-              type="natural"
-              fill="url(#fillMobile)"
-              stroke="var(--color-mobile)"
-              stackId="a"
-            /> */ }
             <Area
-              dataKey="desktop"
-              type="natural"
-              fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
+              dataKey="uploads"
+              type="bump"
+              connectNulls={false}
+              fill="url(#fillUploads)"
+              stroke="var(--color-uploads)"
               stackId="a"
+            />
+            <Area
+              dataKey="approved"
+              type="bump"
+              connectNulls={false}
+              fill="url(#fillApproved)"
+              stroke="var(--color-approved)"
+              stackId="b"
+            />
+            <Area
+              dataKey="rejected"
+              type="bump"
+              connectNulls={false}
+              fill="url(#fillRejected)"
+              stroke="var(--color-rejected)"
+              stackId="c"
             />
             <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\AreaFiles;
 use Illuminate\Http\Request;
 
@@ -12,13 +13,20 @@ class AreaUploadsController extends Controller
      */
     public function index()
     {
-        //
+        $areaUploads = ActivityLog::selectRaw("
+            area,
+            count(*) as uploads")
+            ->groupBy('area')
+            ->orderByRaw('max(activity_date) desc')
+            ->limit(5)
+            ->get();
+        return $areaUploads;
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): void
     {
         //
     }
@@ -26,7 +34,7 @@ class AreaUploadsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): void
     {
         //
     }
@@ -34,7 +42,7 @@ class AreaUploadsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AreaFiles $areaFiles)
+    public function show(AreaFiles $areaFiles): void
     {
         //
     }
@@ -42,7 +50,7 @@ class AreaUploadsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AreaFiles $areaFiles)
+    public function edit(AreaFiles $areaFiles): void
     {
         //
     }
@@ -50,7 +58,7 @@ class AreaUploadsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, AreaFiles $areaFiles)
+    public function update(Request $request, AreaFiles $areaFiles): void
     {
         //
     }
@@ -58,7 +66,7 @@ class AreaUploadsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AreaFiles $areaFiles)
+    public function destroy(AreaFiles $areaFiles): void
     {
         //
     }

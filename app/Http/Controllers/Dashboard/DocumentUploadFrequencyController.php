@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DocumentUploadFrequencyController extends Controller
 {
@@ -13,13 +14,21 @@ class DocumentUploadFrequencyController extends Controller
      */
     public function index()
     {
-        // $
+        $frequency = ActivityLog::selectRaw("
+            to_char(activity_date, 'YYYY-MM-DD') as activity_date,
+            count(*) filter(where activity='upload') as uploads,
+            count(*) filter(where activity='approved') as approved,
+            count(*) filter(where activity='rejected') as rejected")
+            ->groupByRaw("to_char(activity_date, 'YYYY-MM-DD')")
+            ->orderBy('activity_date')
+            ->get();
+        return $frequency;
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): void
     {
         //
     }
@@ -27,7 +36,7 @@ class DocumentUploadFrequencyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): void
     {
         //
     }
@@ -35,7 +44,7 @@ class DocumentUploadFrequencyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ActivityLog $activityLog)
+    public function show(ActivityLog $activityLog): void
     {
         //
     }
@@ -43,7 +52,7 @@ class DocumentUploadFrequencyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ActivityLog $activityLog)
+    public function edit(ActivityLog $activityLog): void
     {
         //
     }
@@ -51,7 +60,7 @@ class DocumentUploadFrequencyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ActivityLog $activityLog)
+    public function update(Request $request, ActivityLog $activityLog): void
     {
         //
     }
@@ -59,7 +68,7 @@ class DocumentUploadFrequencyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ActivityLog $activityLog)
+    public function destroy(ActivityLog $activityLog): void
     {
         //
     }

@@ -10,8 +10,15 @@ import { OverallProgress } from "@/components/charts/overall-progress";
 import { DataTable } from "@/components/charts/data-table"
 
 import { type ActivityLogs } from "@/types"
+import { type FrequencyUploads } from "@/types"
+import { type AreaUploads } from "@/types"
 import data from "../../../app/Dashboard/data.json"
 
+interface DashboardProps {
+    activityLogs: ActivityLogs[];
+    frequencyUploads: FrequencyUploads[];
+    areaUploads: AreaUploads[];
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -20,15 +27,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard( activityLogs: ActivityLogs[] ) {
+export default function Dashboard({ frequencyUploads, areaUploads } : DashboardProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <ProgressChart />
+                    <ProgressChart data = { frequencyUploads }/>
                     <OverallProgress />
-                    <AreaProgress />
+                    <AreaProgress data = { areaUploads }/>
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min pt-4 pb-4">
                     <DataTable data={ data } />

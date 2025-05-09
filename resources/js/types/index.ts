@@ -31,9 +31,7 @@ export interface SharedData {
 export interface User {
     id: number;
     first_name: string;
-    middle_name?: string;
     last_name: string;
-    suffix?: string;
     email: string;
     avatar?: string;
     email_verified_at: string | null;
@@ -52,3 +50,18 @@ export interface ActivityLogs {
     activity_date: string;
     [key: string]: unknown;
 }
+
+export interface FrequencyUploads {
+    activity_date: string;
+    uploads: number;
+    approved: number;
+    rejected: number;
+    [key: string]: unknown;
+}
+
+export interface AreaUploads {
+    area: string;
+    uploads: number;
+    [key: string]: unknown;
+}
+

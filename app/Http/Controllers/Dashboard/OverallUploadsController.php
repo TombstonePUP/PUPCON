@@ -13,7 +13,7 @@ class OverallUploadsController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**

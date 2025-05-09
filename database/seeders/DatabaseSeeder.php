@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory(10)->create();
         LocalTaskForce::factory(10)->create();
-        ActivityLog::factory(10)->create();
+        ActivityLog::factory(100)->create();
         Roles::factory(5)->create();
         UserRoles::factory(10)->create();
         Areas::factory(10)->create();
