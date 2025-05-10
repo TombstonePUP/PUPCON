@@ -1,23 +1,15 @@
-import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import Layout from '@/layouts/landing-layout';
 import { Button } from "@/components/ui/button";
 import {
-    Card,
     CardHeader,
-    CardTitle,
     CardDescription,
-    CardContent,
-    CardFooter,
-    CardAction,
     CardImage,
     HomeCard,
-    HomeCardTitle
+    HomeCardTitle,
 } from "@/components/ui/card"
 
 export default function Welcome() {
-    const { auth } = usePage<SharedData>().props;
-
     return (
         <>
             <Head title="PUP San Juan">
@@ -30,7 +22,7 @@ export default function Welcome() {
                         className='pointer-events-none h-[240%] w-[100%]'
                         src="https://www.youtube.com/embed/QtioU1IZS_Y?autoplay=1&controls=0&modestbranding=1&rel=0&mute=1&loop=1&playlist=QtioU1IZS_Y"
                         allow="autoplay; encrypted-media" >
-                    </iframe>   
+                    </iframe>
                 </div>
                 <div className="bg-[#7f1414] h-[7vw] flex items-center justify-center gap-7">
                     <Button className="text-[0.8vw] px-[2vw] py-[1.5vw]">OVERVIEW</Button>
@@ -80,16 +72,22 @@ export default function Welcome() {
                     </div>
                 </div>
                 <div className='grid place-items-center py-10'>
-                    <HomeCard className='flex flex-row'>
-                        <CardImage className='pb-0 w-[20vw]' src="/images/pup-slogan.jpg" alt="pup slogan" />
-                        <CardHeader className='py-2'>
-                            <HomeCardTitle>Ceremonial Signing</HomeCardTitle>
-                            <CardDescription>This is your dashboard</CardDescription>
+                    <HomeCard className='flex flex-row w-[70%] h-[20vw] bg-[#f4f4f4]'>
+                        <CardImage className='pb-0 w-[80%] h-full' src="/images/pup-slogan.jpg" alt="pup slogan" />
+                        <CardHeader className='grid place-items-center w-[80%] p-[6vw] '>
+                            <HomeCardTitle className='text-[1.5vw]'>WELCOME ACCREDITORS!</HomeCardTitle>
+                            <CardDescription className='grid place-items-center text-center'>
+                                <h1 className='text-[0.9vw] text-black mb-[0.5vw]'>
+                                    "It is our honor to host you, esteemed accreditors, and we appreciate your role in our continued success."
+                                </h1>
+                                <br />
+                                <p>
+                                    Level II AACCUP Survey Visit
+                                </p>
+                            </CardDescription>
                         </CardHeader>
                     </HomeCard>
                 </div>
-
-
 
                 {/* <img src="/images/bg.png" alt="background" /> */}
             </Layout>

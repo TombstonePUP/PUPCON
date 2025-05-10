@@ -8,6 +8,14 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+Route::get('/programs', function () {
+    return Inertia::render('programs');
+})->name('programs');
+
+Route::get('/programs/programview', function () {
+    return Inertia::render('programview');
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     /* Route::get('dashboard', function () {
         return Inertia::render('dashboard');

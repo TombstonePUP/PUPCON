@@ -31,7 +31,11 @@ const RIGHT_NAV = [
     {
         label: 'PROGRAMS',
         href: '/programs',
-        dropdown: [], // fill if needed
+        dropdown: [
+            { label: 'Information Technology', href: '/programs/programview' },
+            { label: 'Accountancy', href: '/programs/accountancy' },
+            { label: 'Psychology', href: '/programs/psychology' },
+        ],
     },
     {
         label: 'EXHIBITS',
@@ -61,31 +65,43 @@ export default function Layout({ children }: LayoutProps) {
                 </div>
                 <Link href="/" className="absolute top-[-0.5vw] w-screen grid place-items-center">
                     <img
-                        className="w-[18vw] object-contain"
+                        className="w-[17.8vw] object-contain"
                         src="/images/badge.png"
                         alt="badge"
                         draggable={false}
                     />
                 </Link>
                 {/* Navigation */}
-                <div className="flex justify-between px-[15vw] py-[0.8vw] text-[#7f1414] bg-white">
+                <div className="flex justify-between px-[13vw] py-[0.8vw] text-[#7f1414] bg-white">
                     {/* Left */}
-                    <ul className="flex gap-[6vw]">
+                    <ul className="flex gap-[4vw]">
                         {LEFT_NAV.map((item) => (
                             <li key={item.label} className="relative group">
                                 <Link
                                     href={item.href}
-                                    className={cn('text-[#7f1414]', isActive(item.href) && 'active')}
+                                    className={cn(
+                                        'text-[#7f1414] px-[1vw] py-[0.55vw] rounded-[1vw] transition-all duration-200',
+                                        isActive(item.href) && 'active',
+                                        'hover:bg-[#7f1414] hover:text-white'
+                                    )}
                                 >
                                     {item.label}
                                 </Link>
 
                                 {item.dropdown.length > 0 && (
-                                    <div className="dropdown-content absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-2 p-2 text-sm">
+                                    <div className="absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-[0.5vw] text-sm border-radius-[1vw] overflow-hidden">
                                         {item.dropdown.map((drop) => (
-                                            <Link key={drop.label} className="text-[#7f1414] whitespace-nowrap" href={drop.href}>
-                                                {drop.label}
+                                            <Link
+                                                key={drop.label}
+                                                href={drop.href}
+                                                className="relative inline-block text-[#7f1414] text-[0.8vw] whitespace-nowrap p-[0.8vw] overflow-hidden
+                                                       before:absolute before:inset-0 before:bg-[#7f1414] before:scale-x-0 before:origin-left
+                                                       before:transition-transform before:duration-300 hover:before:scale-x-100
+                                                       hover:text-white z-10"
+                                            >
+                                                <span className="relative z-20">{drop.label}</span>
                                             </Link>
+
                                         ))}
                                     </div>
                                 )}
@@ -94,15 +110,37 @@ export default function Layout({ children }: LayoutProps) {
                     </ul>
 
                     {/* Right */}
-                    <ul className="flex gap-[6vw]">
+                    <ul className="flex gap-[4vw]">
                         {RIGHT_NAV.map((item) => (
                             <li key={item.label} className="relative group">
                                 <Link
                                     href={item.href}
-                                    className={cn('text-[#7f1414] whitespace-nowrap', isActive(item.href) && 'active')}
+                                    className={cn(
+                                        'text-[#7f1414] px-[1vw] py-[0.55vw] rounded-[1vw] transition-all duration-200 whitespace-nowrap',
+                                        isActive(item.href) && 'active',
+                                        'hover:bg-[#7f1414] hover:text-white'
+                                    )}
                                 >
                                     {item.label}
                                 </Link>
+
+                                {item.dropdown.length > 0 && (
+                                    <div className="absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-[0.5vw] text-sm border-radius-[1vw] overflow-hidden">
+                                        {item.dropdown.map((drop) => (
+                                            <Link
+                                                key={drop.label}
+                                                href={drop.href}
+                                                className="relative inline-block text-[#7f1414] text-[0.8vw] whitespace-nowrap p-[0.8vw] overflow-hidden
+                                                       before:absolute before:inset-0 before:bg-[#7f1414] before:scale-x-0 before:origin-left
+                                                       before:transition-transform before:duration-300 hover:before:scale-x-100
+                                                       hover:text-white z-10"
+                                            >
+                                                <span className="relative z-20">{drop.label}</span>
+                                            </Link>
+
+                                        ))}
+                                    </div>
+                                )}
                             </li>
                         ))}
                     </ul>
@@ -118,7 +156,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Footer */}
             <footer className="w-full bg-gray-800 text-gray-300 text-center py-6 mt-10">
                 <div className="footer1">
-                    <img src="images/pupcon-logo-white.png" alt="Logo" />
+                    <img src="/images/pupcon-logo-white.png" alt="Logo" />
                     <h2>Maharlika Technologies</h2>
                 </div>
                 <div className="footer2">

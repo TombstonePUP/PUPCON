@@ -7,13 +7,14 @@ function HomeCard({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border overflow-hidden shadow-sm max-w-md mx-auto ",
+        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border overflow-hidden shadow-sm mx-auto ",
         className
       )}
       {...props}
     />
   )
 }
+
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -49,7 +50,6 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
     />
   )
 }
-
 
 function HomeCardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
