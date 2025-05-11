@@ -10,12 +10,12 @@ export default function Programs() {
             </Head>
             <Layout>
                 <div className="relative before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#7f1414] before:to-transparent overflow-hidden h-[25vw] flex items-center">
-                    <img src="/images/campus/1.jpg" alt="banner" />
+                    <img src="/images/campus/ground.jpg" alt="banner" />
                     <h1 className='absolute text-white text-center w-full font-black text-[3.5vw]'>Programs Under Survey</h1>
                 </div>
                 <div className='flex flex-col py-[3vw] px-[30vw] gap-[3vw]'>
                     <div>
-                        <Link href='/programs/it'>
+                        <Link href='/programs/programview'>
                             <h1 className='text-[1vw] text-[#7f1414] font-bold'>
                                 Bachelor of Science in
                             </h1>
@@ -29,7 +29,7 @@ export default function Programs() {
 
                     </div>
                     <div>
-                        <Link href='/programs/accountancy'>
+                        <Link href='/programs'>
                             <h1 className='text-[1vw] text-[#7f1414] font-bold'>
                                 Bachelor of Science in
                             </h1>

@@ -10,19 +10,19 @@ interface LayoutProps {
 const LEFT_NAV = [
     {
         label: 'ABOUT',
-        href: '/about',
+        href: '/',//'/about',
         dropdown: [
-            { label: 'Vision, Mission, and Goals', href: '/about/vision-mission-goals' },
-            { label: 'History', href: '/about/history' },
-            { label: 'Administration', href: '/about/administration' },
-            { label: 'Facilities', href: '/about/facilities' },
-            { label: 'Faculty and Staff', href: '/about/faculty-staff' },
-            { label: 'Local Task Force', href: '/about/local-task-force' },
+            // { label: 'Vision, Mission, and Goals', href: '/about/vision-mission-goals' },
+            // { label: 'History', href: '/about/history' },
+            // { label: 'Administration', href: '/about/administration' },
+            // { label: 'Facilities', href: '/about/facilities' },
+            // { label: 'Faculty and Staff', href: '/about/faculty-staff' },
+            // { label: 'Local Task Force', href: '/about/local-task-force' },
         ],
     },
     {
         label: 'CERTIFICATE OF AUTHENTICITY',
-        href: '/certificate',
+        href: '/',//'/certificate',
         dropdown: [],
     },
 ];
@@ -33,18 +33,18 @@ const RIGHT_NAV = [
         href: '/programs',
         dropdown: [
             { label: 'Information Technology', href: '/programs/programview' },
-            { label: 'Accountancy', href: '/programs/accountancy' },
-            { label: 'Psychology', href: '/programs/psychology' },
+            // { label: 'Accountancy', href: '/programs/accountancy' },
+            // { label: 'Psychology', href: '/programs/psychology' },
         ],
     },
     {
         label: 'EXHIBITS',
-        href: '/exhibits',
+        href: '/',//'/exhibits',
         dropdown: [],
     },
     {
         label: 'OTHERS',
-        href: '/others',
+        href: '/',//'/others',
         dropdown: [],
     },
 ];
