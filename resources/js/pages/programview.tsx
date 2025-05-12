@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import Layout from '@/layouts/landing-layout';
 import { AreaCard } from '@/components/ui/area-card';
 
@@ -47,30 +47,42 @@ export default function Programs() {
                     <AreaCard imageSrc="/images/placeholder.png"
                         heading="Mission, Goals, and Objectives"
                         circleLetter="I"
+                        href="/programs/programview/area" />
+                    <AreaCard imageSrc="/images/placeholder.png"
+                        heading="Faculty"
+                        circleLetter="II"
                         href="/goals" />
                     <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Mission, Goals, and Objectives"
-                        circleLetter="I"
+                        heading="Curriculum and Instruction"
+                        circleLetter="III"
                         href="/goals" />
                     <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Mission, Goals, and Objectives"
-                        circleLetter="I"
+                        heading="Support to students"
+                        circleLetter="IV"
                         href="/goals" />
                     <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Mission, Goals, and Objectives"
-                        circleLetter="I"
+                        heading="Research"
+                        circleLetter="V"
                         href="/goals" />
                     <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Mission, Goals, and Objectives"
-                        circleLetter="I"
+                        heading="Extension and Community Involvement"
+                        circleLetter="VI"
                         href="/goals" />
                     <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Mission, Goals, and Objectives"
-                        circleLetter="I"
+                        heading="Library"
+                        circleLetter="VII"
                         href="/goals" />
                     <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Mission, Goals, and Objectives"
-                        circleLetter="I"
+                        heading="Physical Plant and Facilities"
+                        circleLetter="VIII"
+                        href="/goals" />
+                    <AreaCard imageSrc="/images/placeholder.png"
+                        heading="Laboratories"
+                        circleLetter="IX"
+                        href="/goals" />
+                    <AreaCard imageSrc="/images/placeholder.png"
+                        heading="Administration"
+                        circleLetter="X"
                         href="/goals" />
                 </div>
             </Layout>

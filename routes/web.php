@@ -16,6 +16,10 @@ Route::get('/programs/programview', function () {
     return Inertia::render('programview');
 });
 
+Route::get('/programs/programview/area', function () {
+    return Inertia::render('area');
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     /* Route::get('dashboard', function () {
         return Inertia::render('dashboard');

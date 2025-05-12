@@ -31,7 +31,7 @@ export function AreaCard({
 
             <h1
                 className="font-black text-[#7f1414] w-[12vw] h-[6vw] grid place-items-center text-center text-[1vw] 
-                relative before:content-[attr(data-circle)] before:text-white before:text-[1.3vw] before:pt-[0.3vw] 
+                relative before:content-[attr(data-circle)] before:text-white before:text-[1.3vw] before:pt-[0.45vw] 
                 before:font-black before:top-[-1.5vw] before:absolute before:w-[2.8vw] before:h-[2.8vw] 
                 before:rounded-full before:bg-[#7f1414] before:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
                 data-circle={circleLetter}
