@@ -38,7 +38,7 @@ export default function Programs() {
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <div className='bg-[#D9D9D9] p-[2vw]'>
+                                <div className='bg-[#D9D9D9] p-[2vw] rounded'>
                                     <h1 className='font-black text-[1vw]'>Systems - Inputs and Processes</h1>
                                     <ul className='pl-[1vw]'>
                                         <li>S.1. The institution has a system of determining the Vision and Mission.</li>
@@ -47,7 +47,7 @@ export default function Programs() {
 
                                     </ul>
                                 </div>
-                                <div className='bg-[#D9D9D9] p-[2vw]'>
+                                <div className='bg-[#D9D9D9] p-[2vw] rounded'>
                                     <h1 className='font-black text-[1vw]'>Implementation</h1>
                                     <ul className='pl-[1vw]'>
                                         <li>I.1. The Institution/College conducts review on the statement of the Vision and Mission as well as its goals and program objectives for the approval of authorities concerned.</li>
@@ -56,7 +56,7 @@ export default function Programs() {
 
                                     </ul>
                                 </div>
-                                <div className='bg-[#D9D9D9] p-[2vw]'>
+                                <div className='bg-[#D9D9D9] p-[2vw] rounded'>
                                     <h1 className='font-black text-[1vw]'>Outcome/s</h1>
                                     <ul className='pl-[1vw]'>
                                         <li >O.1. The VMGO are crafted and duly approved by BOR/BOT.</li>
@@ -74,7 +74,7 @@ export default function Programs() {
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <div className='bg-[#D9D9D9] p-[2vw]'>
+                                <div className='bg-[#D9D9D9] p-[2vw] rounded'>
                                     <h1 className='font-black text-[1vw]'>Systems - Inputs and Processes</h1>
                                     <ul className='pl-[1vw]'>
                                         <li>S.1. The institution has a system of determining the Vision and Mission.</li>
@@ -83,7 +83,7 @@ export default function Programs() {
 
                                     </ul>
                                 </div>
-                                <div className='bg-[#D9D9D9] p-[2vw]'>
+                                <div className='bg-[#D9D9D9] p-[2vw] rounded'>
                                     <h1 className='font-black text-[1vw]'>Implementation</h1>
                                     <ul className='pl-[1vw]'>
                                         <li>I.1. The Institution/College conducts review on the statement of the Vision and Mission as well as its goals and program objectives for the approval of authorities concerned.</li>
@@ -92,7 +92,7 @@ export default function Programs() {
 
                                     </ul>
                                 </div>
-                                <div className='bg-[#D9D9D9] p-[2vw]'>
+                                <div className='bg-[#D9D9D9] p-[2vw] rounded'>
                                     <h1 className='font-black text-[1vw]'>Outcome/s</h1>
                                     <ul className='pl-[1vw]'>
                                         <li >O.1. The VMGO are crafted and duly approved by BOR/BOT.</li>
