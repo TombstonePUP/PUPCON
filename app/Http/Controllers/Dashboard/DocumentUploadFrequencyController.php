@@ -15,11 +15,9 @@ class DocumentUploadFrequencyController extends Controller
     public function index()
     {
         $frequency = ActivityLog::selectRaw("
-            to_char(activity_date, 'YYYY-MM-DD') as activity_date,
-            count(*) filter(where activity='upload') as uploads,
-            count(*) filter(where activity='approved') as approved,
-            count(*) filter(where activity='rejected') as rejected")
-            ->groupByRaw("to_char(activity_date, 'YYYY-MM-DD')")
+            activity_date::date as activity_date,
+            count(*)  as activity")
+            ->groupByRaw("activity_date::date")
             ->orderBy('activity_date')
             ->get();
         return $frequency;

@@ -20,19 +20,20 @@ class ExhibitFiles extends Model
     protected $table = 'exhibit_files';
     protected $primaryKey = 'exhibit_file_id';
     protected $fillable = [
-        'exhibit_id',
+        'exhibit_outline_id',
         'file_name',
         'file_path',
         'file_status_id',
         'file_reject_reason',
     ];
 
+
     /**
-     * @return BelongsTo<Exhibits,ExhibitFiles>
+     * @return BelongsTo<ExhibitOutlines,ExhibitFiles>
      */
-    public function Exhibits(): BelongsTo
+    public function ExhibitOutlines(): BelongsTo
     {
-        return $this->belongsTo(Exhibits::class, 'exhibit_id', 'exhibit_id');
+        return $this->belongsTo(ExhibitOutlines::class, 'exhibit_outline_id', 'exhibit_outline_id');
     }
 
     /**

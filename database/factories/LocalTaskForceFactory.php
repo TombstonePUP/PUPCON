@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,9 +18,10 @@ class LocalTaskForceFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
         return [
             'local_task_force_id' => fake()->unique()->randomNumber(),
-            'user_id' => UserFactory::new()->create()->user_id,
+            'user_id' => $user->user_id,
             'profile_image_name' => fake()->word(),
             'profile_image_path' => fake()->imageUrl(),
         ];

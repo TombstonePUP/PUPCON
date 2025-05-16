@@ -22,7 +22,7 @@ class DashboardController extends Controller
         return Inertia::render('dashboard', [
             'activityLogs' => $activityLog,
             'frequencyUploads' => $frequency,
-            'areaUploads' => $areaUploads,
+            'documentStatistics' => $areaUploads,
             'overallUploads' => $overallUploads
         ]);
     }

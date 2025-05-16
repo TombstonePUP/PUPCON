@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\FileStatus;
+use App\Models\ParameterOutlines;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,12 +19,14 @@ class AreaFilesFactory extends Factory
      */
     public function definition(): array
     {
+        $parameterOutlines = ParameterOutlines::inRandomOrder()->first();
+        $fileStatus = FileStatus::inRandomOrder()->first();
         return [
             'area_file_id' => fake()->unique()->randomNumber(),
-            'parameter_outline_id' => ParameterOutlinesFactory::new()->create()->parameter_outline_id,
+            'parameter_outline_id' => $parameterOutlines->parameter_outline_id,
             'file_name' => fake()->word(),
             'file_path' => fake()->filePath(),
-            'file_status_id' => FileStatusFactory::new()->create()->file_status_id,
+            'file_status_id' => $fileStatus->file_status_id,
             'file_rejection_reason' => fake()->sentence(),
         ];
     }

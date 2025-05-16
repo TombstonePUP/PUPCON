@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,13 +18,14 @@ class ActivityLogFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
         return [
             'activity_log_id' => fake()->unique()->randomNumber(),
-            'user_id' => UserFactory::new()->create()->user_id,
+            'user_id' => $user->user_id,
             'area' => fake()->word(),
             'program' => fake()->word(),
             'file_name' => fake()->word(),
-            'activity' => fake()->randomElement(['upload', 'approved', 'rejected']),
+            'activity' => fake()->randomElement(['upload', 'delete', 'approval', 'rejection']),
             'activity_date' => fake()->dateTimeThisMonth()
         ];
     }

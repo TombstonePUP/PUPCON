@@ -26,8 +26,8 @@ class Exhibits extends Model
     /**
      * @return HasMany<ExhibitFiles,Exhibits>
      */
-    public function ExhibitFiles(): HasMany
+    public function ExhibitOutlines(): HasMany
     {
-        return $this->hasMany(ExhibitFiles::class, 'exhibit_id', 'exhibit_id');
+        return $this->hasMany(ExhibitOutlines::class, 'exhibit_id', 'exhibit_id');
     }
 }

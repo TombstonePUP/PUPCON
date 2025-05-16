@@ -9,6 +9,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -34,19 +35,11 @@ interface ProgressChartProps {
 
 const chartConfig = {
   documents: {
-    label: "Documents",
+    label: "Activity",
   },
-  uploads: {
-    label: "Uploads",
+  activity: {
+    label: "Activity",
     color: "hsl(var(--chart-1))",
-  },
-  approved: {
-    label: "Approved",
-    color: "hsl(var(--chart-2))",
-  },
-  rejected: {
-    label: "Rejected",
-    color: "hsl(var(--chart-3))",
   }, } satisfies ChartConfig
 
 const getTimeRangeLabel = (range: string) => {
@@ -62,7 +55,6 @@ const getTimeRangeLabel = (range: string) => {
 }
 
 export function ProgressChart( { data }: ProgressChartProps) {
-  console.log("ProgressChart data", data)
   const [timeRange, setTimeRange] = React.useState("90d")
 
   const filteredData = data.filter((item) => {
@@ -120,39 +112,15 @@ export function ProgressChart( { data }: ProgressChartProps) {
           </defs>
           <AreaChart data={filteredData}>
             <defs>
-              <linearGradient id="fillUploads" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="fillActivity" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-uploads)"
+                  stopColor="var(--color-activity)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-uploads)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillApproved" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-approved)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-approved)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillRejected" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-rejected)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-rejected)"
+                  stopColor="var(--color-activity)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
@@ -176,7 +144,8 @@ export function ProgressChart( { data }: ProgressChartProps) {
             <YAxis
               hide={true}
               domain={[0, "dataMax + 1"]}
-            /> <ChartTooltip
+            />
+            <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
@@ -191,30 +160,14 @@ export function ProgressChart( { data }: ProgressChartProps) {
               }
             />
             <Area
-              dataKey="uploads"
+              dataKey="activity"
               type="bump"
               connectNulls={false}
-              fill="url(#fillUploads)"
-              stroke="var(--color-uploads)"
+              fill="url(#fillActivity)"
+              stroke="var(--color-activity)"
               stackId="a"
             />
-            <Area
-              dataKey="approved"
-              type="bump"
-              connectNulls={false}
-              fill="url(#fillApproved)"
-              stroke="var(--color-approved)"
-              stackId="b"
-            />
-            <Area
-              dataKey="rejected"
-              type="bump"
-              connectNulls={false}
-              fill="url(#fillRejected)"
-              stroke="var(--color-rejected)"
-              stackId="c"
-            />
-            <ChartLegend content={<ChartLegendContent />} />
+            {/* <ChartLegend content={<ChartLegendContent />} /> */}
           </AreaChart>
         </ChartContainer>
       </CardContent>

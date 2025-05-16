@@ -11,13 +11,13 @@ import { DataTable } from "@/components/charts/data-table"
 
 import { type ActivityLogs } from "@/types"
 import { type FrequencyUploads } from "@/types"
-import { type AreaUploads } from "@/types"
+import { type DocumentStatistics } from "@/types"
 import data from "../../../app/Dashboard/data.json"
 
 interface DashboardProps {
     activityLogs: ActivityLogs[];
     frequencyUploads: FrequencyUploads[];
-    areaUploads: AreaUploads[];
+    documentStatistics: DocumentStatistics[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,7 +27,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard({ frequencyUploads, areaUploads } : DashboardProps) {
+export default function Dashboard({ frequencyUploads, documentStatistics } : DashboardProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -35,7 +35,7 @@ export default function Dashboard({ frequencyUploads, areaUploads } : DashboardP
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <ProgressChart data = { frequencyUploads }/>
                     <OverallProgress />
-                    <AreaProgress data = { areaUploads }/>
+                    <AreaProgress data = { documentStatistics }/>
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min pt-4 pb-4">
                     <DataTable data={ data } />

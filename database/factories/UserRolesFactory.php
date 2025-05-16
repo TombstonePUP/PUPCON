@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Roles;
+use App\Models\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,10 +19,12 @@ class UserRolesFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
+        $role = Roles::inRandomOrder()->first();
         return [
             'user_role_id' => fake()->unique()->randomNumber(),
-            'user_id' => UserFactory::new()->create()->user_id,
-            'role_id' => RolesFactory::new()->create()->role_id,
+            'user_id' => $user->user_id,
+            'role_id' => $role->role_id,
         ];
     }
 }

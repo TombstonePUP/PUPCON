@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Programs;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,9 +18,10 @@ class ProgramObjectivesFactory extends Factory
      */
     public function definition(): array
     {
+        $program = Programs::inRandomOrder()->first();
         return [
             'program_objective_id' => fake()->unique()->randomNumber(),
-            'program_id' => ProgramsFactory::new()->create()->program_id,
+            'program_id' => $program->program_id,
             'objective_description' => fake()->sentence(),
         ];
     }

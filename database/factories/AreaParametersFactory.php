@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Areas;
+use App\Models\Programs;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,10 +19,12 @@ class AreaParametersFactory extends Factory
      */
     public function definition(): array
     {
+        $program = Programs::inRandomOrder()->first();
+        $area = Areas::inRandomOrder()->first();
         return [
             'area_parameter_id' => fake()->unique()->randomNumber(),
-            'program_id' => ProgramsFactory::new()->create()->program_id,
-            'area_id' => AreasFactory::new()->create()->area_id,
+            'program_id' => $program->program_id,
+            'area_id' => $area->area_id,
             'parameter_name' => fake()->word(),
             'parameter_description' => fake()->sentence(),
         ];

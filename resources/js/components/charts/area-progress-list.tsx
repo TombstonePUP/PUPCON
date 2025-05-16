@@ -1,7 +1,9 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts"
+
+import { type DocumentStatistics } from "@/types"
 
 import {
   Card,
@@ -17,59 +19,48 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-  { browser: "chrome", documents: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", documents: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", documents: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", documents: 173, fill: "var(--color-edge)" },
-  { browser: "other", documents: 90, fill: "var(--color-other)" },
-]
+
+interface DocumentStatisticsProps {
+    data: DocumentStatistics[]
+}
 
 const chartConfig = {
   documents: {
     label: "Documents",
   },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
+  Approved: {
+    label: "Aprroved",
+    color: "hsl(var(--chart-1))"
   },
-  safari: {
-    label: "Safari",
+  Pending: {
+    label: "Pending",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
+  Rejected: {
+    label: "Rejected",
     color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
   },
 } satisfies ChartConfig
 
-export function AreaProgress() {
+export function AreaProgress( { data }: DocumentStatisticsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Mixed</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Document Statistics - Bar Chart</CardTitle>
+        <CardDescription>Overall Document Statuses</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             layout="vertical"
             margin={{
               left: 0,
             }}
           >
             <YAxis
-              dataKey="browser"
+              dataKey="file_status"
               type="category"
               tickLine={false}
               tickMargin={10}
@@ -83,7 +74,14 @@ export function AreaProgress() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="documents" layout="vertical" radius={5} />
+            <Bar dataKey="documents" layout="vertical" radius={5}>
+              {data.map((entry) => (
+                <Cell
+                  key={entry.file_status}
+                  fill={chartConfig[entry.file_status].color}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>

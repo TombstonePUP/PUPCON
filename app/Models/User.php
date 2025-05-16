@@ -23,11 +23,8 @@ class User extends Authenticatable
     protected $table = 'users';
     protected $primaryKey = 'user_id';
     protected $fillable = [
-        // 'username',
         'first_name',
-        // 'middle_name',
         'last_name',
-        // 'suffix',
         'email',
         'password',
     ];

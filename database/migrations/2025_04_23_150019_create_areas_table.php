@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -62,9 +63,17 @@ return new class extends Migration
             $table->string('exhibit_name');
         });
 
+        Schema::create('exhibit_outlines', function (Blueprint $table) {
+            $table->id(column: 'exhibit_outline_id')->autoIncrement()->primary();
+            $table->foreignId('exhibit_id')->references('exhibit_id')->on('exhibits')
+                ->onUpdate('cascade')->onDelete('cascade');
+            $table->string('outline_name');
+            $table->string('outline_description')->nullable();
+        });
+
         Schema::create('exhibit_files', function (Blueprint $table) {
             $table->id(column: 'exhibit_file_id')->autoIncrement()->primary();
-            $table->foreignId('exhibit_id')->references('exhibit_id')->on('exhibits')
+            $table->foreignId('exhibit_outline_id')->references('exhibit_outline_id')->on('exhibit_outlines')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('file_name');
             $table->text('file_path');
@@ -72,6 +81,35 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
         });
+
+        DB::statement(<<<SQL
+            CREATE VIEW public.files_overview AS
+            SELECT
+                'area-file' file_type,
+                po.outline_name outline,
+                af.file_name file_name,
+                af.file_path file_path,
+                fs.status_name file_status,
+                af.file_rejection_reason rejection_reason
+            FROM area_files af
+                LEFT JOIN parameter_outlines po ON po.parameter_outline_id = af.parameter_outline_id
+                LEFT JOIN file_status fs ON fs.file_status_id = af.file_status_id
+            UNION ALL
+            SELECT
+                'exhibit-file' file_type,
+                eo.outline_name outline,
+                ef.file_name file_name,
+                ef.file_path file_path,
+                fs.status_name file_status,
+                ef.file_rejection_reason rejection_reason
+            FROM exhibit_files ef
+                LEFT JOIN exhibit_outlines eo ON eo.exhibit_outline_id = ef.exhibit_outline_id
+                LEFT JOIN file_status fs ON fs.file_status_id = ef.file_status_id
+        SQL);
+
+        /* DB::statement('CREATE INDEX idx_files_overview_status ON public.files_overview (file_status)');
+        DB::statement('CREATE INDEX idx_files_overview_outlines ON public.files_overview (outline)');
+        DB::statement('CREATE INDEX idx_files_overview_type ON public.files_overview (file_type)'); */
     }
 
     /**
@@ -86,6 +124,8 @@ return new class extends Migration
         Schema::dropIfExists('file_status');
         Schema::dropIfExists('area_files');
         Schema::dropIfExists('exhibits');
+        Schema::dropIfExists('exhibit_outlines');
         Schema::dropIfExists('exhibit_files');
+        DB::statement('DROP VIEW IF EXISTS files_overview');
     }
 };

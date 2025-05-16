@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Programs;
+use App\Models\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,10 +19,12 @@ class UserProgramRolesFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
+        $program = Programs::inRandomOrder()->first();
         return [
-            'user_program_role_id' => fake()->randomNumber(),
-            'user_id' => UserFactory::new()->create()->user_id,
-            'program_id' => ProgramsFactory::new()->create()->program_id,
+            'user_program_role_id' => fake()->unique()->randomNumber(),
+            'user_id' => $user->user_id,
+            'program_id' => $program->program_id,
         ];
     }
 }

@@ -53,15 +53,13 @@ export interface ActivityLogs {
 
 export interface FrequencyUploads {
     activity_date: string;
-    uploads: number;
-    approved: number;
-    rejected: number;
+    activity: number;
     [key: string]: unknown;
 }
 
-export interface AreaUploads {
-    area: string;
-    uploads: number;
+export interface DocumentStatistics {
+    file_status: string;
+    documents: number;
     [key: string]: unknown;
 }
 
