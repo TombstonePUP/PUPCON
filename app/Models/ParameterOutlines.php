@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ParameterOutlines extends Model
 {
@@ -25,6 +25,7 @@ class ParameterOutlines extends Model
         'parameter_outline_category_id',
         'outline_name',
         'outline_description',
+        'container'
     ];
 
     /**
@@ -44,10 +45,10 @@ class ParameterOutlines extends Model
     }
 
     /**
-     * @return HasMany<AreaFiles,ParameterOutlines>
+     * @return HasOne<AreaFiles,ParameterOutlines>
      */
-    public function AreaFiles(): HasMany
+    public function AreaFiles(): HasOne
     {
-        return $this->hasMany(AreaFiles::class, 'parameter_outline_id', 'parameter_outline_id');
+        return $this->hasOne(AreaFiles::class, 'parameter_outline_id', 'parameter_outline_id');
     }
 }

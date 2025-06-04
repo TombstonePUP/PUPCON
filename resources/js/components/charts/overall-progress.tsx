@@ -2,7 +2,9 @@
 
 import * as React from "react"
 import { TrendingUp } from "lucide-react"
-import { Label, Pie, PieChart } from "recharts"
+import { Label, Pie, PieChart, Cell } from "recharts"
+
+import { type OverallUploads } from "@/types"
 
 import {
   Card,
@@ -18,50 +20,47 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
-]
+
+interface OverallProgressProps {
+    data?: OverallUploads[]
+}
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
+  "Area Documents": { color: "hsl(var(--chart-1))" },
+  "Exhibit Documents": { color: "hsl(var(--chart-2))" },
+  "Area Outlines": { color: "hsl(var(--chart-5))" },
+  "Exhibit Outlines": { color: "hsl(var(--chart-4))" },
 } satisfies ChartConfig
 
-export function OverallProgress() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-  }, [])
+function toTitleCase(str: string) {
+  return str
+    .replace(/_/g, " ")         // snake_case → words
+    .replace(/\bfile\b/gi, "")  // remove 'file'
+    .replace(/\s+/g, " ")       // remove extra spaces
+    .trim()
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+export function OverallProgress({ data = [] }: OverallProgressProps) {
+  const pieData = React.useMemo(() => {
+    return data.flatMap((item) => {
+      const docLabel = `${toTitleCase(item.document_type)} Documents`
+      const outlineLabel = `${toTitleCase(item.document_type)} Outlines`
+      return [
+        { name: docLabel, value: item.documents },
+        { name: outlineLabel, value: item.outlines },
+      ]
+    })
+  }, [data])
+
+
+  const total = pieData.reduce((acc, cur) => acc + cur.value, 0)
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Donut with Text</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Document Uploads</CardTitle>
+        <CardDescription>Document Uploaded and Outline with no Documents</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -71,42 +70,49 @@ export function OverallProgress() {
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent hideLabel
+                indicator="line"
+              />}
             />
             <Pie
-              data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              data={pieData}
+              dataKey="value"
+              nameKey="name"
               innerRadius={60}
               strokeWidth={5}
             >
+              {pieData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={chartConfig[entry.name]?.color ?? "#ccc"}
+                />
+              ))}
               <Label
                 content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
+                  if (!viewBox) return null
+                  return (
+                    <text
+                      x={viewBox.cx}
+                      y={viewBox.cy}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                    >
+                      <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
+                        className="fill-foreground text-3xl font-bold"
                       >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {totalVisitors.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Visitors
-                        </tspan>
-                      </text>
-                    )
-                  }
+                        {total.toLocaleString()}
+                      </tspan>
+                      <tspan
+                        x={viewBox.cx}
+                        y={(viewBox.cy || 0) + 24}
+                        className="fill-muted-foreground"
+                      >
+                        Documents
+                      </tspan>
+                    </text>
+                  )
                 }}
               />
             </Pie>
@@ -115,12 +121,13 @@ export function OverallProgress() {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Document Upload Progress
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing Document Uploads of Area and Exhibit files
         </div>
       </CardFooter>
     </Card>
   )
 }
+

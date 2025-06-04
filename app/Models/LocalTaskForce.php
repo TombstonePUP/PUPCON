@@ -20,7 +20,11 @@ class LocalTaskForce extends Model
     protected $table = 'local_task_force';
     protected $primaryKey = 'local_task_force_id';
     protected $fillable = [
-        'user_id',
+        // 'user_id',
+        'area_id',
+        'program_id',
+        'first_name',
+        'last_nae',
         'profile_image_name',
         'profile_image_path',
     ];

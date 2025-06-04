@@ -15,14 +15,16 @@ return new class extends Migration
             $table->id(column: 'program_id')->autoIncrement()->primary();
             $table->string('degree_type');
             $table->string('program_name');
-            $table->string('program_image_name')->nullable();
-            $table->text('program_image_path')->nullable();
             $table->text('program_description')->nullable();
             $table->integer('accreditation_level');
             $table->boolean('under_survey')->default(false);
-            $table->text('overview_description')->nullable();
+            $table->string('program_image_name')->nullable();
+            $table->text('program_image_path')->nullable();
             $table->text('overview_image_name')->nullable();
             $table->text('overview_image_path')->nullable();
+            $table->text('overview_description')->nullable();
+            $table->text('page_banner_image_name')->nullable();
+            $table->text('page_banner_image_path')->nullable();
         });
 
         Schema::create('program_objectives', function (Blueprint $table) {

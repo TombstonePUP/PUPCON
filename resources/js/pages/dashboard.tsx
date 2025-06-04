@@ -1,6 +1,6 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import { OverallUploads, type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 
 // charts components
@@ -18,6 +18,7 @@ interface DashboardProps {
     activityLogs: ActivityLogs[];
     frequencyUploads: FrequencyUploads[];
     documentStatistics: DocumentStatistics[];
+    overallUploads: OverallUploads[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,14 +28,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard({ frequencyUploads, documentStatistics } : DashboardProps) {
+export default function Dashboard({ frequencyUploads, documentStatistics, overallUploads } : DashboardProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <ProgressChart data = { frequencyUploads }/>
-                    <OverallProgress />
+                    <OverallProgress data = { overallUploads }/>
                     <AreaProgress data = { documentStatistics }/>
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min pt-4 pb-4">

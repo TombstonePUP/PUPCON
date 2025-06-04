@@ -23,14 +23,16 @@ class Programs extends Model
     protected $fillable = [
         'degree_type',
         'program_name',
-        'program_image_name',
-        'program_image_path',
         'program_description',
         'accreditation_level',
         'under_survey',
-        'overview_description',
+        'program_image_name',
+        'program_image_path',
         'overview_image_name',
-        'overview_image_path'
+        'overview_image_path',
+        'overview_description',
+        'page_banner_image_name',
+        'page_banner_image_path'
     ];
 
     /**
@@ -66,11 +68,4 @@ class Programs extends Model
         return $this->hasMany(UserProgramRoles::class, 'program_id', 'program_id');
     }
 
-    /**
-     * @return HasMany<Facilities,Programs>
-     */
-    public function Facilities(): HasMany
-    {
-        return $this->hasMany(Facilities::class, 'program_id', 'program_id');
-    }
 }

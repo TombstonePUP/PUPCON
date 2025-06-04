@@ -24,6 +24,7 @@ class ExhibitOutlinesFactory extends Factory
             'exhibit_id' => $exhibit->exhibit_id,
             'outline_name' => fake()->word(),
             'outline_description' => fake()->sentence(),
+            'container' => fake()->boolean(),
         ];
     }
 }

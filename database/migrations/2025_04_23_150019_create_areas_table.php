@@ -42,6 +42,7 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('outline_name');
             $table->string('outline_description')->nullable();
+            $table->boolean('container');
         });
 
         Schema::create('file_status', function (Blueprint $table) {
@@ -69,6 +70,7 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('outline_name');
             $table->string('outline_description')->nullable();
+            $table->boolean('container');
         });
 
         Schema::create('exhibit_files', function (Blueprint $table) {

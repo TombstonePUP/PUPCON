@@ -27,6 +27,7 @@ class ParameterOutlinesFactory extends Factory
             'parameter_outline_category_id' => $outlineCategory->parameter_outline_category_id,
             'outline_name' => fake()->word(),
             'outline_description' => fake()->sentence(),
+            'container' => fake()->boolean(),
         ];
     }
 }

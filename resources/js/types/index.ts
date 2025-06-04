@@ -63,3 +63,9 @@ export interface DocumentStatistics {
     [key: string]: unknown;
 }
 
+export interface OverallUploads {
+    document_type: string;
+    outlines: number;
+    documents: number;
+    [key: string]: unknown;
+}

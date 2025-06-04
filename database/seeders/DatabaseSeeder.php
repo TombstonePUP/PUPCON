@@ -1,7 +1,6 @@
 <?php
 
 namespace Database\Seeders;
-
 use App\Models\ActivityLog;
 use App\Models\AreaFiles;
 use App\Models\AreaParameters;
@@ -35,13 +34,13 @@ class DatabaseSeeder extends Seeder
         $faker = Faker::create();
 
         User::factory(10)->create();
-        LocalTaskForce::factory(10)->create();
         ActivityLog::factory(100)->create();
         Roles::factory(5)->create();
         UserRoles::factory(10)->create();
         Areas::factory(10)->create();
         UserAreaRoles::factory(10)->create();
         Programs::factory(10)->create();
+        LocalTaskForce::factory(10)->create();
         UserProgramRoles::factory(10)->create();
         Facilities::factory(10)->create();
         ProgramObjectives::factory(10)->create();

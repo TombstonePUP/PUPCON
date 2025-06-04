@@ -89,8 +89,8 @@ class User extends Authenticatable
     /**
      * @return HasMany<LocalTaskForce,User>
      */
-    public function LocalTaskForce(): HasMany
+    /* public function LocalTaskForce(): HasMany
     {
         return $this->hasMany(LocalTaskForce::class, 'user_id', 'user_id');
-    }
+    } */
 }

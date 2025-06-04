@@ -24,6 +24,7 @@ class ExhibitOutlines extends Model
         'exhibit_id',
         'outline_name',
         'outline_description',
+        'container',
     ];
 
     /**
