@@ -70,10 +70,18 @@ export function AreaProgress({ data }: DocumentStatisticsProps) {
                             }
                         />
                         <XAxis dataKey="documents" type="number" hide />
+                        {data.map((entry) => (
                         <ChartTooltip
                             cursor={false}
-                            content={<ChartTooltipContent hideLabel indicator="line" />}
+                            content={
+                                <ChartTooltipContent hideLabel
+                                indicator="line"
+                                nameKey={entry.file_status}
+                                color={chartConfig[entry.file_status].color}
+                                />
+                            }
                         />
+                        ))}
                         <Bar dataKey="documents" layout="vertical" radius={5}>
                             {data.map((entry) => (
                                 <Cell
