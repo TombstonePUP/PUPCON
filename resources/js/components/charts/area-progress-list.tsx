@@ -6,18 +6,18 @@ import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts"
 import { type DocumentStatistics } from "@/types"
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card"
 import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
+    ChartConfig,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
 } from "@/components/ui/chart"
 
 interface DocumentStatisticsProps {
@@ -25,74 +25,74 @@ interface DocumentStatisticsProps {
 }
 
 const chartConfig = {
-  documents: {
-    label: "Documents",
-  },
-  Approved: {
-    label: "Aprroved",
-    color: "hsl(var(--chart-1))"
-  },
-  Pending: {
-    label: "Pending",
-    color: "hsl(var(--chart-2))",
-  },
-  Rejected: {
-    label: "Rejected",
-    color: "hsl(var(--chart-3))",
-  },
+    documents: {
+        label: "Documents",
+    },
+    Approved: {
+        label: "Aprroved",
+        color: "hsl(var(--chart-1))"
+    },
+    Pending: {
+        label: "Pending",
+        color: "hsl(var(--chart-2))",
+    },
+    Rejected: {
+        label: "Rejected",
+        color: "hsl(var(--chart-3))",
+    },
 } satisfies ChartConfig
 
-export function AreaProgress( { data }: DocumentStatisticsProps) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Document Statistics - Bar Chart</CardTitle>
-        <CardDescription>Overall Document Statuses</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={data}
-            layout="vertical"
-            margin={{
-              left: 0,
-            }}
-          >
-            <YAxis
-              dataKey="file_status"
-              type="category"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) =>
-                chartConfig[value as keyof typeof chartConfig]?.label
-              }
-            />
-            <XAxis dataKey="documents" type="number" hide />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel indicator="line" />}
-            />
-            <Bar dataKey="documents" layout="vertical" radius={5}>
-              {data.map((entry) => (
-                <Cell
-                  key={entry.file_status}
-                  fill={chartConfig[entry.file_status].color}
-                />
-              ))}
-            </Bar>
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Showing all documents
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Document uploads, approvals, pending, and rejections
-        </div>
-      </CardFooter>
-    </Card>
-  )
+export function AreaProgress({ data }: DocumentStatisticsProps) {
+    return (
+        <Card>
+            <CardHeader className="border-b">
+                <CardTitle>Document Statistics - Bar Chart</CardTitle>
+                {/* <CardDescription>Overall Document Statuses</CardDescription> */}
+            </CardHeader>
+            <CardContent>
+                <ChartContainer config={chartConfig}>
+                    <BarChart
+                        accessibilityLayer
+                        data={data}
+                        layout="vertical"
+                        margin={{
+                            left: 0,
+                        }}
+                    >
+                        <YAxis
+                            dataKey="file_status"
+                            type="category"
+                            tickLine={false}
+                            tickMargin={10}
+                            axisLine={false}
+                            tickFormatter={(value) =>
+                                chartConfig[value as keyof typeof chartConfig]?.label
+                            }
+                        />
+                        <XAxis dataKey="documents" type="number" hide />
+                        <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent hideLabel indicator="line" />}
+                        />
+                        <Bar dataKey="documents" layout="vertical" radius={5}>
+                            {data.map((entry) => (
+                                <Cell
+                                    key={entry.file_status}
+                                    fill={chartConfig[entry.file_status].color}
+                                />
+                            ))}
+                        </Bar>
+                    </BarChart>
+                </ChartContainer>
+            </CardContent>
+            <CardFooter className="flex-col items-start gap-2 text-sm">
+                <div className="flex gap-2 font-medium leading-none">
+                    Showing all documents
+                </div>
+                <div className="leading-none text-muted-foreground">
+                    Document uploads, approvals, pending, and rejections
+                </div>
+            </CardFooter>
+        </Card>
+    )
 }
