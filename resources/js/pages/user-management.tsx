@@ -4,7 +4,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 
 // charts components
-import { DataTable } from "@/components/charts/data-table"
+import { DataTable } from "@/components/charts/user-table"
 import data from "../../../app/Dashboard/data.json"
 
 const breadcrumbs: BreadcrumbItem[] = [

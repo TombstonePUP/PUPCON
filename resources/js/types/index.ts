@@ -69,3 +69,14 @@ export interface OverallUploads {
     documents: number;
     [key: string]: unknown;
 }
+
+export interface UserRecords {
+    user_id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    role: string;
+    program_role: string;
+    area_role: string;
+    [key: string]: unknown;
+}

@@ -26,10 +26,9 @@ interface OverallProgressProps {
 }
 
 const chartConfig = {
-    "Area Documents": { color: "hsl(var(--chart-1))" },
-    "Exhibit Documents": { color: "hsl(var(--chart-2))" },
-    "Area Outlines": { color: "hsl(var(--chart-5))" },
-    "Exhibit Outlines": { color: "hsl(var(--chart-4))" },
+    "Area Files": { color: "hsl(var(--chart-1))" },
+    "Exhibit Files": { color: "hsl(var(--chart-2))" },
+    "Missing Files": { color: "hsl(var(--chart-5))" },
 } satisfies ChartConfig
 
 function toTitleCase(str: string) {
@@ -43,18 +42,24 @@ function toTitleCase(str: string) {
 
 export function OverallProgress({ data = [] }: OverallProgressProps) {
     const pieData = React.useMemo(() => {
-        return data.flatMap((item) => {
-            const docLabel = `${toTitleCase(item.document_type)} Documents`
-            const outlineLabel = `${toTitleCase(item.document_type)} Outlines`
-            return [
-                { name: docLabel, value: item.documents },
-                { name: outlineLabel, value: item.outlines },
-            ]
+        let missing = 0
+        const mainData = data.flatMap((item) => {
+            const label = `${toTitleCase(item.document_type)} Files`
+            missing += item.outlines || 0
+            return [{ name: label, value: item.documents }]
         })
+
+        if (missing > 0) {
+            mainData.push({ name: "Missing Files", value: missing })
+        }
+
+        return mainData
     }, [data])
 
+    const total = pieData
+        .filter((entry) => entry.name !== "Missing Files")
+        .reduce((acc, cur) => acc + cur.value, 0)
 
-    const total = pieData.reduce((acc, cur) => acc + cur.value, 0)
 
     return (
         <Card className="flex flex-col">
