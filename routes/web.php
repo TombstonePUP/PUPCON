@@ -26,13 +26,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard'); */
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
-    Route::get('/document/program', function () {
-        return Inertia::render('document/program');
-    })->name('Program');
-   Route::get('users', function () {
+    Route::get('users', function () {
         return Inertia::render('user-management');
     })->name('users');
+    Route::get('/document/program', function () {
+        return Inertia::render('document/program');
+    })->name('program');
+    Route::get('/document/program/area', function () {
+        return Inertia::render('document/area');
+    })->name('area');
+
 });
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';
