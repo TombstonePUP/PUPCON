@@ -76,7 +76,7 @@ export interface UserRecords {
     last_name: string;
     email: string;
     role: string;
-    program_role: string;
-    area_role: string;
+    program_roles: string;
+    area_roles: string;
     [key: string]: unknown;
 }

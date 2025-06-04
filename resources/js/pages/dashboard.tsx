@@ -1,6 +1,6 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
-import { OverallUploads, type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 
 // charts components
@@ -12,6 +12,7 @@ import { DataTable } from "@/components/charts/data-table"
 import { type ActivityLogs } from "@/types"
 import { type FrequencyUploads } from "@/types"
 import { type DocumentStatistics } from "@/types"
+import { type OverallUploads } from "@/types"
 import data from "../../../app/Dashboard/data.json"
 
 interface DashboardProps {
