@@ -27,8 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
     Route::get('/document/program', function () {
-        return Inertia::render('userprogram');
-    })->name('userprogram');
+        return Inertia::render('document/program');
+    })->name('Program');
    Route::get('users', function () {
         return Inertia::render('user-management');
     })->name('users');

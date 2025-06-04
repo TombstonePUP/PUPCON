@@ -63,8 +63,8 @@ const data = {
             collapsible: true,
             items: [
                 {
-                    title: "Accountancy",
-                    url: "/program",
+                    title: "Information Technology",
+                    url: "/document/program",
                 }, {
                     title: "Accountancy",
                     url: "/accountancy",

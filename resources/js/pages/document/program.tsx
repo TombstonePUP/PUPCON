@@ -5,12 +5,12 @@ import { Head } from '@inertiajs/react';
 
 // charts components
 import { DataTable } from "@/components/charts/data-table"
-import data from "../../../app/Dashboard/data.json"
+import data from "../../../../app/Dashboard/data.json"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Program',
-        href: '/program',
+        href: '/document/program',
     },
 ];
 
