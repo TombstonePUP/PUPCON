@@ -64,7 +64,7 @@ const data = {
             items: [
                 {
                     title: "Accountancy",
-                    url: "/accountancy",
+                    url: "/program",
                 }, {
                     title: "Accountancy",
                     url: "/accountancy",
@@ -110,8 +110,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <LevelSwitcher teams={data.levels} />
             </SidebarHeader>
             <SidebarContent>
-            <NavMain label="Accreditation" items={data.accre} />
-            <NavMain label="Content" items={data.content} />
+                <NavMain label="Accreditation" items={data.accre} />
+                <NavMain label="Content" items={data.content} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />
