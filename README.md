@@ -113,7 +113,7 @@ The PUP SANJUAN Accreditation Website allows seamless file server handling for a
 ## Testing
 
 1. Go to `http://localhost:8000` in your browser.
-2. Login with email: <test@example.com> and password: password123
+2. Login with email: <test@example.com> and password: password@123
 
 ## Team
 
