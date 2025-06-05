@@ -5,7 +5,7 @@ import {
     AccordionItem,
     AccordionTrigger,
     AccordionContent,
-} from "@/components/ui/accordion" // Adjust the path as needed
+} from "@/components/ui/accordion"
 
 
 export default function Programs() {
