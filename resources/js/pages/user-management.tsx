@@ -4,7 +4,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 
 // charts components
-import { DataTable } from "@/components/charts/users/user-table"
+import { DataTable } from "@/components/charts/data-table"
 
 import { columns } from "@/components/charts/users/columns"
 import { type UserRecords } from "@/types"

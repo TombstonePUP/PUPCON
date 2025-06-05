@@ -22,6 +22,7 @@ export const columns: ColumnDef<UserRecords>[] = [
         cell: ({ row }) => {
             return <div className="text-left"> {row.getValue("first_name")} </div>
         },
+        enableGlobalFilter: true,
     },
     {
         accessorKey: "last_name",
@@ -29,6 +30,7 @@ export const columns: ColumnDef<UserRecords>[] = [
         cell: ({ row }) => {
             return <div className="text-left"> {row.getValue("last_name")} </div>
         },
+        enableGlobalFilter: true,
     },
     {
         accessorKey: "email",
@@ -36,6 +38,7 @@ export const columns: ColumnDef<UserRecords>[] = [
         cell: ({ row }) => {
             return <div className="text-left"> {row.getValue("email")} </div>
         },
+        enableGlobalFilter: true,
     },
     {
         accessorKey: "role",

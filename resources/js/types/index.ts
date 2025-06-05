@@ -42,7 +42,7 @@ export interface User {
 
 export interface ActivityLogs {
     activity_log_id: number;
-    user_id: number;
+    full_name: string;
     area: string;
     program: string;
     file_name: string;

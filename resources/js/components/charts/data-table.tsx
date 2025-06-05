@@ -32,11 +32,21 @@ interface DataTableProps<TData, TValue> {
 }
 
 const globalFilterFn = (row, columnId, filterValue) => {
-  const search = filterValue.toLowerCase();
-  return ['first_name', 'last_name', 'email'].some((id) => {
-    const value = row.getValue(id);
-    return String(value).toLowerCase().includes(search);
-  });
+  const search = String(filterValue).toLowerCase();
+
+  return row
+    .getAllCells()
+    .some(cell => {
+      const column = cell.column;
+      const value = cell.getValue();
+
+      // Check if the column is enabled for global filtering
+      if (column.columnDef.enableGlobalFilter === false) {
+        return false;
+      }
+
+      return String(value).toLowerCase().includes(search);
+    });
 };
 
 
@@ -50,7 +60,6 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    // onColumnFiltersChange: setColumnFilters,
     globalFilterFn,
     onGlobalFilterChange: setGlobalFilter,
     getFilteredRowModel: getFilteredRowModel(),

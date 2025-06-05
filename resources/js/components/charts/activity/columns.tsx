@@ -1,6 +1,6 @@
 "use client"
 
-import { type UserRecords } from "@/types"
+import { type ActivityLogs } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { MoreVertical } from "lucide-react"
@@ -15,76 +15,55 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export const columns: ColumnDef<UserRecords>[] = [
-    {
+export const columns: ColumnDef<ActivityLogs>[] = [
+    /* {
         accessorKey: "activity_log_id",
-    },
+    }, */
     {
-        accessorKey: "name",
+        accessorKey: "full_name",
         header: () => <div className="text-left">Name</div>,
         cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue("Name")} </div>
+            return <div className="text-left"> {row.getValue("full_name")} </div>
+        },
+        enableGlobalFilter: true,
+    },
+    {
+        accessorKey: "area",
+        header: () => <div className="text-left">Area</div>,
+        cell: ({ row }) => {
+            return <div className="text-left"> {row.getValue("area")} </div>
+        },
+        enableGlobalFilter: true,
+    },
+    {
+        accessorKey: "program",
+        header: () => <div className="text-left">Program</div>,
+        cell: ({ row }) => {
+            return <div className="text-left"> {row.getValue("program")} </div>
+        },
+        enableGlobalFilter: true,
+    },
+    {
+        accessorKey: "file_name",
+        header: () => <div className="text-left">File</div>,
+        cell: ({ row }) => {
+            return <div className="text-left"> {row.getValue("file_name")} </div>
+        },
+        enableGlobalFilter: true,
+    },
+    {
+        accessorKey: "activity",
+        header: () => <div className="text-left">Activity</div>,
+        cell: ({ row }) => {
+            return <div className="text-left"> {row.getValue("activity")} </div>
         },
     },
     {
-        accessorKey: "last_name",
-        header: () => <div className="text-left">Last Name</div>,
+        accessorKey: "activity_date",
+        header: () => <div className="text-left">Date</div>,
         cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue("last_name")} </div>
+            return <div className="text-left"> {row.getValue("activity_date")} </div>
         },
-    },
-    {
-        accessorKey: "email",
-        header: () => <div className="text-left">Email</div>,
-        cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue("email")} </div>
-        },
-    },
-    {
-        accessorKey: "role",
-        header: () => <div className="text-left">Role</div>,
-        cell: ({ row }) => {
-            return <div className="text-left w-32">
-                <Badge variant="outline" className="px-1.5 text-muted-foreground">
-                    {row.getValue("role")}
-                </Badge>
-            </div>
-        },
-    },
-    {
-        accessorKey: "program_roles",
-        header: () => <div className="text-left">Program/s</div>,
-        cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue("program_roles")} </div>
-        },
-    },
-    {
-        accessorKey: "area_roles",
-        header: () => <div className="text-left">Area/s</div>,
-        cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue("area_roles")} </div>
-        },
-    },
-    {
-        id: "actions",
-        cell: ({ row }) => {
-            const user = row.original
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreVertical className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>Edit User</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
-        },
+        enableGlobalFilter: true,
     },
 ];

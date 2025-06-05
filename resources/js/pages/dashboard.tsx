@@ -30,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard({ frequencyUploads, documentStatistics, overallUploads } : DashboardProps) {
+export default function Dashboard({ frequencyUploads, documentStatistics, overallUploads, activityLogs } : DashboardProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -41,7 +41,7 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
                     <AreaProgress data = { documentStatistics }/>
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min pt-4 pb-4">
-                    <DataTable columns={ columns } data={ data } />
+                    <DataTable columns={ columns } data={ activityLogs } />
                     {/* <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" /> */}
                 </div>
             </div>
