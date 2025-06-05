@@ -17,10 +17,13 @@ import {
 
 export const columns: ColumnDef<UserRecords>[] = [
     {
-        accessorKey: "first_name",
-        header: () => <div className="text-left">First Name</div>,
+        accessorKey: "activity_log_id",
+    },
+    {
+        accessorKey: "name",
+        header: () => <div className="text-left">Name</div>,
         cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue("first_name")} </div>
+            return <div className="text-left"> {row.getValue("Name")} </div>
         },
     },
     {

@@ -14,6 +14,7 @@ import { type FrequencyUploads } from "@/types"
 import { type DocumentStatistics } from "@/types"
 import { type OverallUploads } from "@/types"
 import data from "../../../app/Dashboard/data.json"
+import { columns } from "@/components/charts/activity/columns"
 
 interface DashboardProps {
     activityLogs: ActivityLogs[];
@@ -40,7 +41,7 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
                     <AreaProgress data = { documentStatistics }/>
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min pt-4 pb-4">
-                    <DataTable data={ data } />
+                    <DataTable columns={ columns } data={ data } />
                     {/* <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" /> */}
                 </div>
             </div>

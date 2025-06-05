@@ -31,22 +31,31 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
+const globalFilterFn = (row, columnId, filterValue) => {
+  const search = filterValue.toLowerCase();
+  return ['first_name', 'last_name', 'email'].some((id) => {
+    const value = row.getValue(id);
+    return String(value).toLowerCase().includes(search);
+  });
+};
+
+
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+  const [globalFilter, setGlobalFilter] = React.useState('');
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
+    // onColumnFiltersChange: setColumnFilters,
+    globalFilterFn,
+    onGlobalFilterChange: setGlobalFilter,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
-      columnFilters,
+      globalFilter,
     },
   })
 
@@ -54,18 +63,16 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
+          placeholder="Search..."
+          value={globalFilter ?? ''}
+          onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
+        <DataTableViewOptions table={table} />
       </div>
-      <DataTableViewOptions table={table} />
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 z-10 bg-muted">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
