@@ -95,14 +95,14 @@ class DashboardController extends Controller
             ->leftJoin('area_files AS af', 'po.parameter_outline_id', '=', 'af.parameter_outline_id')
             ->selectRaw("
                 'area_file' AS document_type,
-                COUNT(*) FILTER (WHERE po.container = 'true') AS outlines,
+                GREATEST(COUNT(*) FILTER (WHERE po.container = 'true') - COUNT(af.area_file_id),0) AS outlines,
                 COUNT(af.area_file_id) AS documents
             ");
         $exhibit_files = ExhibitOutlines::from('exhibit_outlines AS eo')
             ->leftJoin('exhibit_files AS ef', 'eo.exhibit_outline_id', '=', 'ef.exhibit_outline_id')
             ->selectRaw("
                 'exhibit_file' AS document_type,
-                COUNT(*) FILTER (WHERE eo.container = 'true') AS outlines,
+                GREATEST(COUNT(*) FILTER (WHERE eo.container = 'true') - COUNT(ef.exhibit_file_id),0) AS outlines,
                 COUNT(ef.exhibit_file_id) AS documents
             ");
         $overall_uploads = $area_files->union($exhibit_files)->get();
