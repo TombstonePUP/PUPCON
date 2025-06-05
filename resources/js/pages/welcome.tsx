@@ -1,5 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import Layout from '@/layouts/landing-layout';
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
     CardHeader,
@@ -90,6 +91,35 @@ export default function Welcome() {
                 </div>
 
                 {/* <img src="/images/bg.png" alt="background" /> */}
+
+                <motion.section
+                    className="grid place-items-center py-10 bg-white"
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
+                >
+                    <div className="flex flex-col lg:flex-row w-[70%] items-center justify-center gap-5">
+                        <div className="w-full lg:w-[30%] flex justify-center">
+                            <div className="w-[15vw] h-[15vw] rounded-full bg-gray-300 overflow-hidden shadow-lg">
+                                <img
+                                    src="/images/adfa/alagon.png"
+                                    alt="Director"
+                                    className="object-cover w-full h-full"
+                                />
+                            </div>
+                        </div>
+                        <div className="lg:w-[60%] text-center lg:text-left">
+                            <h2 className="text-[1.5vw] font-bold text-[#7f1414] mb-[1vw]">Message from the Director</h2>
+                            <p className="text-[0.9vw] text-gray-700 leading-relaxed">
+                                Welcome to PUP San Juan! As the Campus Director, I am proud to see our institution thrive through innovation, collaboration, and excellence. We continue to build a community that uplifts each learner and shapes the future of education. Maraming salamat sa inyong suporta!
+                            </p>
+                            <p className="mt-[0.8vw] text-[0.85vw] font-medium text-gray-800">Dr. Cecilia R. Alagon, Campus Director</p>
+                        </div>
+                    </div>
+                </motion.section>
+
+
             </Layout>
 
         </>
