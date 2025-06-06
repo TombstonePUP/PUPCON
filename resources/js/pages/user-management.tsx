@@ -55,11 +55,9 @@ export default function Users({ userRecords }: UsersProps) {
                     return updatedAreas;
                 });
             }
-
             return updated;
         });
     };
-
 
     const toggleArea = (program: string, area: number) => {
         setSelectedAreas((prev) => {

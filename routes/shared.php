@@ -11,7 +11,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::controller(ManageProgramController::class)->prefix('manage_program')->as('manage.')->group(function () {
+    Route::get('manage-programs', function () {
+        return Inertia::render('manage-programs');
+    })->name('manage-programs');
+
+    Route::controller(ManageProgramController::class)->prefix('manage-program')->as('manage.')->group(function () {
         Route::get('/{program_name}', 'index')->name('program');
         Route::controller(AreaFilesController::class)->prefix('{program_name}')->as('program.area.')->group(function () {
             Route::get('/{area_name}', 'index')->name('index');
@@ -21,7 +25,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('/document/program/area', function () {
     //     return Inertia::render('document/area');
     // })->name('area');
-   Route::get('users', [UserController::class, 'index'])
-       ->name('users');
+    Route::get('users', [UserController::class, 'index'])
+        ->name('users');
 });
-

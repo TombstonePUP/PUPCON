@@ -73,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     const programItems = privileges.map((program) => ({
         title: program.title,
-        url: `/manage_program/${program.title}`,
+        url: `/manage-program/${program.title}`,
     }));
     const accre = [
         {
@@ -87,8 +87,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             icon: Bot,
         },
         {
-            title: "Documents",
-            url: "/documents",
+            title: "Programs",
+            url: "/manage-programs",
             icon: Bot,
             isActive: true,
             collapsible: true,

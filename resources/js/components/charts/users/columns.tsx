@@ -144,7 +144,7 @@ export const columns: ColumnDef<UserRecords>[] = [
                                 <DialogHeader>
                                     <DialogTitle>Edit Account</DialogTitle>
                                     <DialogDescription>
-                                        Fill in the details to create a new account
+                                        Account Name
                                     </DialogDescription>
                                 </DialogHeader>
                                 <Tabs defaultValue="account" className="w-full">
@@ -159,7 +159,7 @@ export const columns: ColumnDef<UserRecords>[] = [
                                                 <input
                                                     type="text"
                                                     className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    placeholder="Enter first name"
+                                                    placeholder="Account first name"
                                                 />
                                             </div>
                                             <div>
@@ -167,7 +167,7 @@ export const columns: ColumnDef<UserRecords>[] = [
                                                 <input
                                                     type="text"
                                                     className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    placeholder="Enter last name"
+                                                    placeholder="Account last name"
                                                 />
                                             </div>
                                             <div>
@@ -175,7 +175,7 @@ export const columns: ColumnDef<UserRecords>[] = [
                                                 <input
                                                     type="email"
                                                     className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    placeholder="Enter email address"
+                                                    placeholder="Account email address"
                                                 />
                                             </div>
                                         </div>

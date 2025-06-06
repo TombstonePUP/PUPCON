@@ -1,7 +1,7 @@
 "use client"
 
 import { ChevronRight, type LucideIcon } from "lucide-react"
-
+import { Link, router } from "@inertiajs/react"
 import {
     Collapsible,
     CollapsibleContent,
@@ -17,8 +17,6 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-
-import { Link } from "@inertiajs/react"
 
 export function NavMain({
     label,
@@ -50,19 +48,33 @@ export function NavMain({
                             className="group/collapsible"
                         >
                             <SidebarMenuItem>
-                                <CollapsibleTrigger asChild>
-                                    <SidebarMenuButton tooltip={item.title}>
-                                        {item.icon && <item.icon />}
-                                        <span>{item.title}</span>
-                                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                <div className="flex w-full">
+                                    <SidebarMenuButton 
+                                        tooltip={item.title}
+                                        asChild
+                                        onClick={() => router.get(item.url)}
+                                        className="hover:cursor-pointer flex-1" // Added cursor-pointer
+                                    >
+                                        <div className="flex items-center">
+                                            {item.icon && <item.icon />}
+                                            <span>{item.title}</span>
+                                        </div>
                                     </SidebarMenuButton>
-                                </CollapsibleTrigger>
+                                    <CollapsibleTrigger asChild>
+                                        <button className="px-2 hover:cursor-pointer"> {/* Added cursor-pointer */}
+                                            <ChevronRight className="size-5 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                        </button>
+                                    </CollapsibleTrigger>
+                                </div>
                                 <CollapsibleContent>
                                     <SidebarMenuSub>
                                         {item.items?.map((subItem) => (
                                             <SidebarMenuSubItem key={subItem.title}>
                                                 <SidebarMenuSubButton asChild>
-                                                    <Link href={subItem.url}>
+                                                    <Link 
+                                                      href={subItem.url} 
+                                                      className="hover:cursor-pointer" // Added cursor-pointer
+                                                    >
                                                         <span>{subItem.title}</span>
                                                     </Link>
                                                 </SidebarMenuSubButton>
@@ -74,8 +86,15 @@ export function NavMain({
                         </Collapsible>
                     ) : (
                         <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton tooltip={item.title} asChild>
-                                <Link href={item.url} className="flex items-center w-full">
+                            <SidebarMenuButton 
+                              tooltip={item.title} 
+                              asChild
+                              className="hover:cursor-pointer" // Added cursor-pointer
+                            >
+                                <Link 
+                                  href={item.url} 
+                                  className="flex items-center w-full hover:cursor-pointer" // Added cursor-pointer
+                                >
                                     {item.icon && <item.icon />}
                                     <span>{item.title}</span>
                                 </Link>
