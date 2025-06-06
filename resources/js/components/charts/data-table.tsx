@@ -31,23 +31,23 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-const globalFilterFn = (row, columnId, filterValue) => {
-  const search = String(filterValue).toLowerCase();
+// const globalFilterFn = (row, columnId, filterValue) => {
+//   const search = String(filterValue).toLowerCase();
 
-  return row
-    .getAllCells()
-    .some(cell => {
-      const column = cell.column;
-      const value = cell.getValue();
+//   return row
+//     .getAllCells()
+//     .some(cell => {
+//       const column = cell.column;
+//       const value = cell.getValue();
 
-      // Check if the column is enabled for global filtering
-      if (column.columnDef.enableGlobalFilter === false) {
-        return false;
-      }
+//       // Check if the column is enabled for global filtering
+//       if (column.columnDef.enableGlobalFilter === false) {
+//         return false;
+//       }
 
-      return String(value).toLowerCase().includes(search);
-    });
-};
+//       return String(value).toLowerCase().includes(search);
+//     });
+// };
 
 
 export function DataTable<TData, TValue>({
@@ -60,7 +60,7 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    globalFilterFn,
+    // globalFilterFn,
     onGlobalFilterChange: setGlobalFilter,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
         />
         <DataTableViewOptions table={table} />
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border mb-4">
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-muted">
             {table.getHeaderGroups().map((headerGroup) => (

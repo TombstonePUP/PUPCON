@@ -29,7 +29,7 @@ const chartConfig = {
         label: "Documents",
     },
     Approved: {
-        label: "Aprroved",
+        label: "Approved",
         color: "hsl(var(--chart-1))"
     },
     Pending: {
@@ -49,14 +49,14 @@ export function AreaProgress({ data }: DocumentStatisticsProps) {
                 <CardTitle>Document Statistics - Bar Chart</CardTitle>
                 {/* <CardDescription>Overall Document Statuses</CardDescription> */}
             </CardHeader>
-            <CardContent>
+            <CardContent >
                 <ChartContainer config={chartConfig}>
                     <BarChart
                         accessibilityLayer
                         data={data}
                         layout="vertical"
                         margin={{
-                            left: 0,
+                            left: 15,
                         }}
                     >
                         <YAxis

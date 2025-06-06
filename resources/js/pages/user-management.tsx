@@ -2,16 +2,32 @@ import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-
-// charts components
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/charts/data-table"
-
 import { columns } from "@/components/charts/users/columns"
 import { type UserRecords } from "@/types"
+import { useState } from 'react';
 
 interface UsersProps {
     userRecords: UserRecords[];
 }
+
+const programList = [
+    'Information Technology',
+    'Accounting',
+    'Psychology'
+];
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -21,13 +37,160 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Users({ userRecords }: UsersProps) {
+    const [selectedPrograms, setSelectedPrograms] = useState<string[]>([]);
+    const [selectedAreas, setSelectedAreas] = useState<Record<string, number[]>>({});
+
+    const toggleProgram = (program: string) => {
+        setSelectedPrograms((prev) => {
+            const isSelected = prev.includes(program);
+            const updated = isSelected
+                ? prev.filter((p) => p !== program)
+                : [...prev, program];
+
+            // If program is being unchecked, also clear its areas
+            if (isSelected) {
+                setSelectedAreas((prevAreas) => {
+                    const updatedAreas = { ...prevAreas };
+                    delete updatedAreas[program];
+                    return updatedAreas;
+                });
+            }
+
+            return updated;
+        });
+    };
+
+
+    const toggleArea = (program: string, area: number) => {
+        setSelectedAreas((prev) => {
+            const current = prev[program] || [];
+            return {
+                ...prev,
+                [program]: current.includes(area)
+                    ? current.filter((a) => a !== area)
+                    : [...current, area]
+            };
+        });
+    };
+
+    const isProgramSelected = (program: string) => selectedPrograms.includes(program);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Users" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="border-sidebar-border/70 relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min pt-4 pb-4">
+                <div className="border-sidebar-border/70 relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min p-4">
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button variant="black" className='w-full'>
+                                Add Account
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Add Account</DialogTitle>
+                                <DialogDescription>
+                                    Fill in the details to create a new account
+                                </DialogDescription>
+                            </DialogHeader>
+                            <Tabs defaultValue="account" className="w-full">
+                                <TabsList className='w-full'>
+                                    <TabsTrigger value="account">Information</TabsTrigger>
+                                    <TabsTrigger value="password">Access</TabsTrigger>
+                                </TabsList>
+                                <TabsContent value="account">
+                                    <div className="flex flex-col gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-muted-foreground mb-1">First Name</label>
+                                            <input
+                                                type="text"
+                                                className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                placeholder="Enter first name"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-muted-foreground mb-1">Last Name</label>
+                                            <input
+                                                type="text"
+                                                className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                placeholder="Enter last name"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-muted-foreground mb-1">Email</label>
+                                            <input
+                                                type="email"
+                                                className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                placeholder="Enter email address"
+                                            />
+                                        </div>
+                                    </div>
+                                </TabsContent>
+                                <TabsContent value="password" className='flex flex-col gap-4'>
+                                    <div>
+                                        <label className="block text-sm font-medium text-muted-foreground mb-1">Programs</label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {programList.map(program => (
+                                                <label key={program} className="flex items-center gap-3 text-sm">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="accent-ring"
+                                                        checked={isProgramSelected(program)}
+                                                        onChange={() => toggleProgram(program)}
+                                                    />
+                                                    {program}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {programList.map((program) =>
+                                        isProgramSelected(program) ? (
+                                            <div key={program}>
+                                                <label className="block text-sm font-medium text-muted-foreground mb-1">
+                                                    Areas - {program}
+                                                </label>
+                                                <div className="grid grid-cols-5 gap-2">
+                                                    {Array.from({ length: 10 }).map((_, i) => (
+                                                        <label key={i} className="flex items-center gap-2 text-sm">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="accent-ring"
+                                                                checked={(selectedAreas[program] || []).includes(i + 1)}
+                                                                onChange={() => toggleArea(program, i + 1)}
+                                                            />
+                                                            Area {i + 1}
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null
+                                    )}
+
+
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-muted-foreground mb-1">Additional Access</label>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            <label className="flex items-center gap-2 text-sm">
+                                                <input type="checkbox" className="accent-ring" /> Exhibits
+                                            </label>
+                                            <label className="flex items-center gap-2 text-sm">
+                                                <input type="checkbox" className="accent-ring" /> Accre Coordinator
+                                            </label>
+                                        </div>
+                                    </div>
+                                </TabsContent>
+                            </Tabs>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button variant="outline">Cancel</Button>
+                                </DialogClose>
+                                <Button variant="black">Submit</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                     <DataTable columns={columns} data={userRecords} />
-                    {/* <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" /> */}
                 </div>
             </div>
         </AppLayout>
