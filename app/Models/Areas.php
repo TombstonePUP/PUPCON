@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -21,6 +22,7 @@ class Areas extends Model
     protected $table = 'areas';
     protected $primaryKey = 'area_id';
     protected $fillable = [
+        'program_id',
         'area_number',
         'area_name',
         'area_description',
@@ -37,11 +39,27 @@ class Areas extends Model
     }
 
     /**
+     * @return HasMany<AreaForms,Areas>
+     */
+    public function AreaForms(): HasMany
+    {
+        return $this->hasMany(AreaForms::class, 'area_id', 'area_id');
+    }
+
+    /**
      * @return HasMany<UserAreaRoles,Areas>
      */
     public function UserAreaRoles(): HasMany
     {
         return $this->hasMany(UserAreaRoles::class, 'area_id', 'area_id');
+    }
+
+    /**
+     * @return BelongsTo<Programs,Areas>
+     */
+    public function Programs(): BelongsTo
+    {
+        return $this->belongsTo(Programs::class, 'program_id', 'program_id');
     }
 
     /**

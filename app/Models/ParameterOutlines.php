@@ -23,6 +23,7 @@ class ParameterOutlines extends Model
     protected $fillable = [
         'area_parameter_id',
         'parameter_outline_category_id',
+        'outline_number',
         'outline_name',
         'outline_description',
         'container'

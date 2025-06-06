@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Programs;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Areas>
@@ -16,8 +17,10 @@ class AreasFactory extends Factory
      */
     public function definition(): array
     {
+        $program = Programs::inRandomOrder()->first();
         return [
             'area_id' => fake()->unique()->randomNumber(),
+            'program_id' => $program->program_id,
             'area_number' => fake()->unique()->randomNumber(),
             'area_name' => fake()->unique()->word(),
             'area_description' => fake()->sentence(),

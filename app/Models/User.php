@@ -52,13 +52,13 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * @return HasMany<UserRoles,User>
-     */
-    public function UserRoles(): HasMany
-    {
-        return $this->hasMany(UserRoles::class, 'user_id', 'user_id');
-    }
+    // /**
+    //  * @return HasMany<UserRoles,User>
+    //  */
+    // public function UserRoles(): HasMany
+    // {
+    //     return $this->hasMany(UserRoles::class, 'user_id', 'user_id');
+    // }
 
     /**
      * @return BelongsToMany<Roles,User>

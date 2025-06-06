@@ -38,4 +38,12 @@ class FileStatus extends Model
     {
         return $this->hasMany(ExhibitFiles::class, 'file_status_id', 'file_status_id');
     }
+
+    /**
+     * @return HasMany<AreaForms,FileStatus>
+     */
+    public function AreaForms(): HasMany
+    {
+        return $this->hasMany(AreaForms::class, 'file_status_id', 'file_status_id');
+    }
 }

@@ -25,6 +25,7 @@ class ParameterOutlinesFactory extends Factory
             'parameter_outline_id' => fake()->unique()->randomNumber(),
             'area_parameter_id' => $areaParameter->area_parameter_id,
             'parameter_outline_category_id' => $outlineCategory->parameter_outline_category_id,
+            'outline_number' => fake()->unique()->word(),
             'outline_name' => fake()->word(),
             'outline_description' => fake()->sentence(),
             'container' => fake()->boolean(),

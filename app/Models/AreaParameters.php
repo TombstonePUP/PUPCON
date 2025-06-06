@@ -21,19 +21,10 @@ class AreaParameters extends Model
     protected $table = 'area_parameters';
     protected $primaryKey = 'area_parameter_id';
     protected $fillable = [
-        'program_id',
         'area_id',
         'parameter_name',
         'parameter_description'
     ];
-
-    /**
-     * @return BelongsTo<Programs,AreaParameters>
-     */
-    public function Programs(): BelongsTo
-    {
-        return $this->belongsTo(Programs::class, 'program_id', 'program_id');
-    }
 
     /**
      * @return BelongsTo<Areas,AreaParameters>

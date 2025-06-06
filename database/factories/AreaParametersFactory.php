@@ -19,11 +19,9 @@ class AreaParametersFactory extends Factory
      */
     public function definition(): array
     {
-        $program = Programs::inRandomOrder()->first();
         $area = Areas::inRandomOrder()->first();
         return [
             'area_parameter_id' => fake()->unique()->randomNumber(),
-            'program_id' => $program->program_id,
             'area_id' => $area->area_id,
             'parameter_name' => fake()->word(),
             'parameter_description' => fake()->sentence(),

@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -21,22 +19,6 @@ Route::get('/programs/programview/area', function () {
     return Inertia::render('area');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    /* Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard'); */
-    Route::get('dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
-
-    Route::get('/document/program', function () {
-        return Inertia::render('document/program');
-    })->name('program');
-    Route::get('/document/program/area', function () {
-        return Inertia::render('document/area');
-    })->name('area');
-   Route::get('users', [UserController::class, 'index'])
-       ->name('users');
-});
-
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
+require __DIR__ . '/shared.php';
