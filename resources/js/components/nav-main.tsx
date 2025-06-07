@@ -17,6 +17,7 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { useSidebar } from "@/components/ui/sidebar" // Import the sidebar hook
 
 export function NavMain({
     label,
@@ -35,6 +36,8 @@ export function NavMain({
         }[]
     }[]
 }) {
+    const { state } = useSidebar() // Get the sidebar state
+
     return (
         <SidebarGroup>
             <SidebarGroupLabel>{label}</SidebarGroupLabel>
@@ -49,31 +52,34 @@ export function NavMain({
                         >
                             <SidebarMenuItem>
                                 <div className="flex w-full">
-                                    <SidebarMenuButton 
+                                    <SidebarMenuButton
                                         tooltip={item.title}
                                         asChild
                                         onClick={() => router.get(item.url)}
-                                        className="hover:cursor-pointer flex-1" // Added cursor-pointer
+                                        className="hover:cursor-pointer flex-1"
                                     >
                                         <div className="flex items-center">
                                             {item.icon && <item.icon />}
                                             <span>{item.title}</span>
                                         </div>
                                     </SidebarMenuButton>
-                                    <CollapsibleTrigger asChild>
-                                        <button className="px-2 hover:cursor-pointer"> {/* Added cursor-pointer */}
-                                            <ChevronRight className="size-5 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                        </button>
-                                    </CollapsibleTrigger>
+                                    {/* Only show chevron when sidebar is expanded */}
+                                    {state === "expanded" && (
+                                        <CollapsibleTrigger asChild>
+                                            <button className="px-2 hover:cursor-pointer">
+                                                <ChevronRight className="size-5 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                            </button>
+                                        </CollapsibleTrigger>
+                                    )}
                                 </div>
                                 <CollapsibleContent>
                                     <SidebarMenuSub>
                                         {item.items?.map((subItem) => (
                                             <SidebarMenuSubItem key={subItem.title}>
                                                 <SidebarMenuSubButton asChild>
-                                                    <Link 
-                                                      href={subItem.url} 
-                                                      className="hover:cursor-pointer" // Added cursor-pointer
+                                                    <Link
+                                                        href={subItem.url}
+                                                        className="hover:cursor-pointer"
                                                     >
                                                         <span>{subItem.title}</span>
                                                     </Link>
@@ -86,14 +92,14 @@ export function NavMain({
                         </Collapsible>
                     ) : (
                         <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton 
-                              tooltip={item.title} 
-                              asChild
-                              className="hover:cursor-pointer" // Added cursor-pointer
+                            <SidebarMenuButton
+                                tooltip={item.title}
+                                asChild
+                                className="hover:cursor-pointer"
                             >
-                                <Link 
-                                  href={item.url} 
-                                  className="flex items-center w-full hover:cursor-pointer" // Added cursor-pointer
+                                <Link
+                                    href={item.url}
+                                    className="flex items-center w-full hover:cursor-pointer"
                                 >
                                     {item.icon && <item.icon />}
                                     <span>{item.title}</span>
