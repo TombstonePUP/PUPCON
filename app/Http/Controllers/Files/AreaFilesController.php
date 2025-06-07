@@ -16,7 +16,7 @@ class AreaFilesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, string $program_name, string $area_name)
+    public function index(string $program_name, string $area_name)
     {
         $program = Programs::select('program_id', 'program_name')
             ->where('program_name', $program_name)
@@ -25,11 +25,23 @@ class AreaFilesController extends Controller
         $area = Areas::select('area_id', 'area_name', 'area_number', 'program_id')
             ->where('program_id', $program->program_id)
             ->where('area_name', $area_name)
-            ->with(['Programs', 'AreaParameters.ParameterOutlines.ParameterOutlineCategory', 'AreaParameters.ParameterOutlines.AreaFiles.FileStatus',
-                'AreaForms.AreaFormCategory', 'AreaForms.FileStatus'])
+            ->with([
+                'Programs',
+                'AreaParameters.ParameterOutlines.ParameterOutlineCategory',
+                'AreaParameters.ParameterOutlines.AreaFiles.FileStatus',
+                'AreaForms.AreaFormCategory',
+                'AreaForms.FileStatus'])
             ->firstOrFail();
-
-        dd($area->AreaParameters);
+        $parameterOutlineCategories = ParameterOutlineCategory::with([
+            'ParameterOutlines' => function ($query) use ($area) {
+                $query->whereHas('AreaParameter', function ($q) use ($area) {
+                    $q->where('area_id', $area->area_id);
+                });
+            },
+            'ParameterOutlines.AreaFiles.FileStatus',
+            'ParameterOutlines.AreaParameter.Areas'])
+            ->get();
+        // dd($parameterOutlineCategories->pluck('ParameterOutlines')->flatten()->pluck('AreaParameter')->flatten());
 
         // $parameters = $area->AreaParameters()
         //     ->with(['ParameterOutlines.ParameterOutlineCategory', 'ParameterOutlines.AreaFiles.FileStatus'])
@@ -43,7 +55,6 @@ class AreaFilesController extends Controller
         foreach ($parameters as $parameter) {
             $parameterOutlines = $parameterOutlines->merge($parameter->ParameterOutlines);
         }
-        $parameterOutlineCategories = ParameterOutlineCategory::all();
         $areaFormCategories = AreaFormCategory::all(); */
         /* $areaForms = AreaForms::from('area_forms as af')
             ->leftjoin('areas as a', 'af.area_id', '=', 'a.area_id')
@@ -88,9 +99,9 @@ class AreaFilesController extends Controller
         return inertia('document/area', [
             'program' => $program,
             'area' => $area,
+            'parameterOutlineCategories' => $parameterOutlineCategories,
             // 'parameters' => $parameters,
             /* 'parameterOutlines' => $parameterOutlines,
-            'parameterOutlineCategories' => $parameterOutlineCategories,
             'areaFormCategories' => $areaFormCategories, */
             // 'areaForms' => $areaForms,
             // 'areaFiles' => $areaFiles,
@@ -110,7 +121,7 @@ class AreaFilesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**

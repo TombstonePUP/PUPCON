@@ -27,7 +27,7 @@ interface OverallProgressProps {
 
 const chartConfig = {
     "Area Files": { color: "hsl(var(--chart-1))" },
-    "Exhibit Files": { color: "hsl(var(--chart-2))" },
+    "Exhibit Files": { color: "hsl(var(--chart-3))" },
     "Missing Files": { color: "hsl(var(--chart-5))" },
 } satisfies ChartConfig
 
@@ -129,7 +129,7 @@ export function OverallProgress({ data = [] }: OverallProgressProps) {
                     Document Upload Progress
                 </div>
                 <div className="leading-none text-muted-foreground">
-                    Showing Document Uploads of Area and Exhibit files
+                    Area and Exhibit Document Uploads and Documeents to be uploaded
                 </div>
             </CardFooter>
         </Card>

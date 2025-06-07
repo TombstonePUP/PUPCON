@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Files\AreaFilesController;
+use App\Http\Controllers\Files\AreaParameterController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
@@ -21,8 +22,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::controller(ManageProgramController::class)->prefix('manage-program')->as('manage.')->group(function () {
         Route::get('/{program_name}', 'index')->name('program');
-        Route::controller(AreaFilesController::class)->prefix('{program_name}')->as('program.area.')->group(function () {
-            Route::get('/{area_name}', 'index')->name('index');
+        Route::controller(AreaFilesController::class)->prefix('{program_name}')->group(function () {
+            Route::get('/{area_name}', 'index')->name('area');
+            Route::controller(AreaParameterController::class)->group(function () {
+                Route::post('/{area_name}/store', 'store')->name('area.addParameter');
+            });
         });
     });
 

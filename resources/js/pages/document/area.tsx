@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import {
     Dialog,
     DialogTrigger,
@@ -22,15 +22,39 @@ import {
 import { Button } from "@/components/ui/button"
 import {
     type Program,
-    type Area
+    type Area,
+    type ParameterOutlineCategory,
 } from "@/types"
+import InputError from '@/components/input-error';
 // charts components
-export interface AreaFilesProps {
+interface AreaFilesProps {
     program: Program;
-    area: Area;
+    area?: Area;
+    parameterOutlineCategories?: ParameterOutlineCategory[];
 }
 
-export default function Users({ program, area }: AreaFilesProps) {
+interface ParameterForm {
+    area_id: number;
+    parameter_name: string;
+    parameter_description: string;
+}
+
+interface ParameterOutlineForm {
+    area_parameter_id: number;
+    parameter_outline_category_id: number;
+    outline_number: string;
+    outline_name: string;
+    outline_description: string;
+    container: boolean;
+    file_name?: string;
+}
+
+/* interface AreaFileForm {
+    parameter_outline_id: number;
+    file_name: string; */
+
+
+export default function Areas({ program, area, parameterOutlineCategories }: AreaFilesProps) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: program.program_name,
@@ -41,10 +65,24 @@ export default function Users({ program, area }: AreaFilesProps) {
             href: `/document/${program.program_name}/${area.area_name}`,
         },
     ];
-    console.log(area.areaParameters);
+    const { data, setData, post, processing, errors, reset } = useForm<ParameterForm>({
+        area_id: area?.area_id || 0,
+        parameter_name: '',
+        parameter_description: '',
+    });
+
+    const addParameter = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(route('manage.area.addParameter', { program_name: program.program_name, area_name: area?.area_name }), {
+            onSuccess: () => {
+                reset('parameter_name', 'parameter_description');
+            },
+        });
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`${area.area_name}- ${program.program_name}`} />
+            <Head title={`${area.area_name} - ${program.program_name}`} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="rounded border-2">
                     <h1 className='text-center font-black text-[1.8vw] mb-3 mt-3'>
@@ -112,192 +150,6 @@ export default function Users({ program, area }: AreaFilesProps) {
                     </Dialog>
                 </div>
                 <div className="border-sidebar-border/70 relative space-y-5 overflow-y-auto rounded-xl border p-4">
-                    {area.areaParameters.length ? (
-                    <Accordion type="single" collapsible className='w-[100%] flex flex-col gap-[1vw]'>
-                        <AccordionItem value="item-1">
-                            <AccordionTrigger className='flex flex-row justify-between items-center'>
-                                <div className="flex flex-row justify-between w-full ">
-                                    <h1 className='text-[#7f1414] font-black text-lg'>Parameter A</h1>
-                                    <p className='text-lg'>Statement of Vision, Mission, Goals, and Objectives</p>
-                                </div>
-                                <div className='flex justify-center gap-3'>
-                                    <Dialog>
-                                        <DialogTrigger asChild >
-                                            <Button>Edit</Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>Edit Parameter</DialogTitle>
-                                                <DialogDescription>Parameter A</DialogDescription>
-                                            </DialogHeader>
-
-                                            <div className="flex gap-4">
-                                                <div className="w-1/4">
-                                                    <label className="block text-sm font-medium text-muted-foreground mb-1">Parameter</label>
-                                                    <input
-                                                        type="text"
-                                                        maxLength={1}
-                                                        placeholder="A"
-                                                        className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <label className="block text-sm font-medium text-muted-foreground mb-1">Description</label>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Enter description"
-                                                        className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <DialogFooter>
-                                                <DialogClose asChild>
-                                                    <Button variant="outline">Cancel</Button>
-                                                </DialogClose>
-                                                <Button>Submit</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-
-                                    </Dialog>
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button variant="reverse">Remove</Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>Are you sure?</DialogTitle>
-                                                <DialogDescription>
-                                                    This action cannot be undone. This will permanently delete the <b>Parameter A</b>.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <DialogFooter>
-                                                <DialogClose asChild>
-                                                    <Button variant="outline">Cancel</Button>
-                                                </DialogClose>
-                                                <Button >Remove</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                </div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <div className='bg-[#D9D9D9] p-[2vw] rounded'>
-                                    <h1 className='font-black text-[1vw]'>Systems - Inputs and Processes</h1>
-                                    <ul className='pl-[1vw]'>
-                                        <li>
-                                            <Dialog>
-                                                <DialogTrigger asChild>
-                                                    <a className='cursor-pointer underline text-[#7f1414]'>
-                                                        S.1. The institution has a system of determining the Vision and Mission.
-                                                    </a>
-                                                </DialogTrigger>
-                                                <DialogContent>
-                                                    <DialogHeader>
-                                                        <DialogTitle>Attach Document</DialogTitle>
-                                                        <DialogDescription>
-                                                            S.1. The institution has a system of determining the Vision and Mission.
-                                                        </DialogDescription>
-                                                    </DialogHeader>
-                                                    <div className=" flex flex-col gap-4">
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-muted-foreground mb-1">Upload Document</label>
-                                                            <input
-                                                                type="file"
-                                                                className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-foreground hover:file:bg-accent"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <DialogFooter>
-                                                        <DialogClose asChild>
-                                                            <Button variant="outline">Cancel</Button>
-                                                        </DialogClose>
-                                                        <Button>Submit</Button>
-                                                    </DialogFooter>
-                                                </DialogContent>
-                                            </Dialog>
-                                        </li>
-                                        <li>
-                                            <Dialog>
-                                                <DialogTrigger asChild>
-                                                    <a className='cursor-pointer underline'>
-                                                        S.2. The Vision clearly reflects what the Institution hopes to become in the future.
-                                                    </a>
-                                                </DialogTrigger>
-                                                <DialogContent>
-                                                    <DialogHeader>
-                                                        <DialogTitle>Attach Document</DialogTitle>
-                                                        <DialogDescription>
-                                                            S.2. The Vision clearly reflects what the Institution hopes to become in the future.
-                                                        </DialogDescription>
-                                                    </DialogHeader>
-                                                    <div className=" flex flex-col gap-4">
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-muted-foreground mb-1">Upload Document</label>
-                                                            <input
-                                                                type="file"
-                                                                className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-foreground hover:file:bg-accent"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <DialogFooter>
-                                                        <DialogClose asChild>
-                                                            <Button variant="outline">Cancel</Button>
-                                                        </DialogClose>
-                                                        <Button>Submit</Button>
-                                                    </DialogFooter>
-                                                </DialogContent>
-                                            </Dialog>
-                                        </li>
-                                        <li className='mt-5'>
-                                            <Dialog>
-                                                <DialogTrigger asChild>
-                                                    <a className='cursor-pointer underline'>
-                                                        Add Outline
-                                                    </a>
-                                                </DialogTrigger>
-                                                <DialogContent>
-                                                    <DialogHeader>
-                                                        <DialogTitle>Add Outline</DialogTitle>
-                                                        <DialogDescription>
-                                                            Make a new outline for Parameter A - Systems - Inputs and Processes
-                                                        </DialogDescription>
-                                                    </DialogHeader>
-                                                    <div className=" flex flex-col gap-4">
-                                                        <div>
-                                                            <textarea
-                                                                placeholder="Enter outline description"
-                                                                className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring resize-y min-h-[100px]"
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-muted-foreground mb-1">Upload Document</label>
-                                                            <input
-                                                                type="file"
-                                                                className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-foreground hover:file:bg-accent"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <DialogFooter>
-                                                        <DialogClose asChild>
-                                                            <Button variant="outline">Cancel</Button>
-                                                        </DialogClose>
-                                                        <Button>Submit</Button>
-                                                    </DialogFooter>
-                                                </DialogContent>
-                                            </Dialog>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                    ) : (
-                        <div className='flex flex-col items-center justify-center w-full h-full'>
-                            <h1 className='text-[1.5vw] font-bold'>Content Not Available</h1>
-                            <p className='text-[1.2vw] text-[#858585]'>No Available Parameters in This Area.</p>
-                        </div>
-                    )}
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button>Add Parameter</Button>
@@ -308,34 +160,221 @@ export default function Users({ program, area }: AreaFilesProps) {
                                 <DialogDescription>Parameter A</DialogDescription>
                             </DialogHeader>
 
-                            <div className="flex gap-4">
-                                <div className="w-1/4">
-                                    <label className="block text-sm font-medium text-muted-foreground mb-1">Parameter</label>
-                                    <input
-                                        type="text"
-                                        maxLength={1}
-                                        placeholder="A"
-                                        className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                    />
+                            <form onSubmit={addParameter} className="flex flex-col gap-4">
+                                <div className="flex gap-4">
+                                    <div className="w-1/4">
+                                        <label className="block text-sm font-medium text-muted-foreground mb-1">Parameter</label>
+                                        <input
+                                            id="parameter_name"
+                                            type="text"
+                                            required
+                                            autoFocus
+                                            maxLength={1}
+                                            value={data.parameter_name}
+                                            onChange={(e) => setData('parameter_name', e.target.value)}
+                                            disabled={processing}
+                                            placeholder="A"
+                                            className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                        />
+                                        <InputError message={errors.parameter_name} className="mt-2" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <label className="block text-sm font-medium text-muted-foreground mb-1">Description</label>
+                                        <input
+                                            id="parameter_description"
+                                            type="text"
+                                            required
+                                            autoFocus
+                                            value={data.parameter_description}
+                                            onChange={(e) => setData('parameter_description', e.target.value)}
+                                            disabled={processing}
+                                            placeholder="Enter description"
+                                            className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                        />
+                                        <InputError message={errors.parameter_description} className="mt-2" />
+                                    </div>
                                 </div>
-                                <div className="flex-1">
-                                    <label className="block text-sm font-medium text-muted-foreground mb-1">Description</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Enter description"
-                                        className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                    />
-                                </div>
-                            </div>
-
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="outline">Cancel</Button>
-                                </DialogClose>
-                                <Button>Submit</Button>
-                            </DialogFooter>
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                        <Button variant="outline">Cancel</Button>
+                                    </DialogClose>
+                                    <Button>Submit</Button>
+                                </DialogFooter>
+                            </form>
                         </DialogContent>
                     </Dialog>
+                    {area.area_parameters?.length ? (
+                        area.area_parameters.map((parameter) => (
+                        <Accordion type="single" collapsible className='w-[100%] flex flex-col gap-[1vw]'>
+                            <AccordionItem value="item-1">
+                                <AccordionTrigger className='flex flex-row justify-between items-center'>
+                                    <div className="flex flex-row justify-between w-full ">
+                                        <h1 className='text-[#7f1414] font-black text-lg'>{parameter.parameter_name}</h1>
+                                        <p className='text-lg'>{parameter.parameter_description}</p>
+                                    </div>
+                                    <div className='flex justify-center gap-3'>
+                                        <Dialog>
+                                            <DialogTrigger asChild >
+                                                <Button>Edit</Button>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>Edit Parameter</DialogTitle>
+                                                    <DialogDescription>{parameter.parameter_name}</DialogDescription>
+                                                </DialogHeader>
+                                                <form className="flex gap-4">
+                                                    <div className="w-1/4">
+                                                        <label className="block text-sm font-medium text-muted-foreground mb-1">Parameter</label>
+                                                        <input
+                                                            type="text"
+                                                            maxLength={1}
+                                                            placeholder="A"
+                                                            className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <label className="block text-sm font-medium text-muted-foreground mb-1">Description</label>
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Enter description"
+                                                            className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                        />
+                                                    </div>
+                                                </form>
+                                                <DialogFooter>
+                                                    <DialogClose asChild>
+                                                        <Button variant="outline">Cancel</Button>
+                                                    </DialogClose>
+                                                    <Button>Submit</Button>
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <Button variant="reverse">Remove</Button>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>Are you sure?</DialogTitle>
+                                                    <DialogDescription>
+                                                        This action cannot be undone. This will permanently delete the <b>{parameter.parameter_name}</b>.
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <DialogFooter>
+                                                    <DialogClose asChild>
+                                                        <Button variant="outline">Cancel</Button>
+                                                    </DialogClose>
+                                                    <Button >Remove</Button>
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    {parameterOutlineCategories?.some(category =>
+                                        category.parameter_outlines?.some(outline =>
+                                            outline.area_parameter_id === parameter.area_parameter_id
+                                        )
+                                    ) ? (
+                                        parameterOutlineCategories.map((category) => {
+                                            const outlinesForParameter = category.parameter_outlines?.filter(
+                                                (outline) => outline.area_parameter_id === parameter.area_parameter_id
+                                            ) ?? [];
+                                            if (!outlinesForParameter.length) return null;
+                                            return (
+                                                <div key={category.id} className='bg-[#D9D9D9] p-[2vw] rounded'>
+                                                    <h1 className='font-black text-[1vw]'>{category.category_name}</h1>
+                                                    <ul className='pl-[1vw]'>
+                                                        {outlinesForParameter.map((outline) => (
+                                                            <li key={outline.id}>
+                                                                <Dialog>
+                                                                    <DialogTrigger asChild>
+                                                                        <a className='cursor-pointer underline text-[#7f1414]'>
+                                                                            {outline.outline_description}
+                                                                        </a>
+                                                                    </DialogTrigger>
+                                                                    <DialogContent>
+                                                                        <DialogHeader>
+                                                                            <DialogTitle>Attach Document</DialogTitle>
+                                                                            <DialogDescription>
+                                                                                Attach a document to the outline: <b>{outline.outline_description}</b>
+                                                                            </DialogDescription>
+                                                                        </DialogHeader>
+                                                                        <div className="flex flex-col gap-4">
+                                                                            <div>
+                                                                                <label className="block text-sm font-medium text-muted-foreground mb-1">
+                                                                                    Upload Document
+                                                                                </label>
+                                                                                <input
+                                                                                    type="file"
+                                                                                    className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-foreground hover:file:bg-accent"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        <DialogFooter>
+                                                                            <DialogClose asChild>
+                                                                                <Button variant="outline">Cancel</Button>
+                                                                            </DialogClose>
+                                                                            <Button>Submit</Button>
+                                                                        </DialogFooter>
+                                                                    </DialogContent>
+                                                                </Dialog>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className='flex flex-col items-center justify-center w-full h-full'>
+                                            <h1 className='text-[1.5vw] font-bold'>Content Not Available</h1>
+                                            <p className='text-[1.2vw] text-[#858585]'>No Available Outline/Files in This Parameter.</p>
+                                        </div>
+                                    )}
+                                    <Dialog>
+                                        <DialogTrigger asChild>
+                                            <a className='cursor-pointer underline'>Add Outline</a>
+                                        </DialogTrigger>
+                                        <DialogContent>
+                                            <DialogHeader>
+                                                <DialogTitle>Add Outline</DialogTitle>
+                                                <DialogDescription>
+                                                    Make a new outline for {parameter.parameter_name}
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <div className=" flex flex-col gap-4">
+                                                <div>
+                                                    <textarea
+                                                        placeholder="Enter outline description"
+                                                        className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring resize-y min-h-[100px]"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-muted-foreground mb-1">Upload Document</label>
+                                                    <input
+                                                        type="file"
+                                                        className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-foreground hover:file:bg-accent"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <DialogFooter>
+                                                <DialogClose asChild>
+                                                    <Button variant="outline">Cancel</Button>
+                                                </DialogClose>
+                                                <Button>Submit</Button>
+                                            </DialogFooter>
+                                        </DialogContent>
+                                    </Dialog>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                        ))
+                    ) : (
+                        <div className='flex flex-col items-center justify-center w-full h-full'>
+                            <h1 className='text-[1.5vw] font-bold'>Content Not Available</h1>
+                            <p className='text-[1.2vw] text-[#858585]'>No Available Parameters in This Area.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </AppLayout>
