@@ -26,7 +26,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{area_id}', 'index')->name('area');
             Route::controller(AreaParameterController::class)->group(function () {
                 Route::post('/{area_id}/store', 'store')->name('area.addParameter');
-                Route::patch('/{area_id}/update', 'update')->name('area.updateParameter');
+                Route::patch('/{area_id}/{parameter_id}/update', 'update')->name('area.updateParameter');
+                Route::delete('/{area_id}/{parameter_id}/delete', 'destroy')->name('area.deleteParameter');
             });
         });
     });

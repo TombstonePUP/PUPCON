@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import {
     Dialog,
     DialogTrigger,
@@ -59,14 +59,14 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: program.program_name,
-            href: `/document/${program.program_name}`,
+            href: `/manage-program/${program.program_name}`,
         },
         {
             title: area.area_name,
-            href: `/document/${program.program_name}/${area.area_id}`,
+            href: `/manage-program/${program.program_name}/${area.area_id}`,
         },
     ];
-    const { data, setData, post, patch, processing, errors, reset } = useForm<ParameterForm>({
+    const { data, setData, post, patch, delete: destroy, processing, errors, reset } = useForm<ParameterForm>({
         area_id: area?.area_id,
         area_parameter_id: undefined,
         parameter_name: '',
@@ -75,18 +75,41 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
 
     const addParameter = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('manage.area.addParameter', { program_name: program.program_name, area_id: area?.area_id }), {
+        post(route('manage.area.addParameter', [ program.program_name, area?.area_id ]), {
+            onFinish: () => {
+                reset('parameter_name', 'parameter_description');
+            },
+        });
+    }
+    const editParameter = (e: React.FormEvent) => {
+        e.preventDefault();
+        patch(route('manage.area.updateParameter', [
+                program.program_name,
+                area?.area_id,
+                data.area_parameter_id
+            ]), {
             onSuccess: () => {
                 reset('parameter_name', 'parameter_description');
             },
         });
     }
 
-    const editParameter = (e: React.FormEvent) => {
-        e.preventDefault();
-        patch(route('manage.area.updateParameter', { program_name: program.program_name, area_id: area?.area_id }), {
+    const deleteParameter = (id: number) => {
+        console.log('Deleting parameter with ID:', id);
+        /* console.log(route(`/manage-program/${program.program_name}/${area?.area_id}/${id}/delete`, {
+            program_name: program.program_name,
+            area_id: area?.area_id,
+            parameter_id: id
+        }
+        )); */
+
+        destroy(route('manage.area.deleteParameter', [
+            program.program_name,
+            area?.area_id,
+            id,
+        ]), {
             onSuccess: () => {
-                reset('parameter_name', 'parameter_description', 'area_parameter_id');
+                console.log('Parameter deleted successfully');
             },
         });
     }
@@ -235,7 +258,7 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
                                             <DialogContent>
                                                 <DialogHeader>
                                                     <DialogTitle>Edit Parameter</DialogTitle>
-                                                    <DialogDescription>{parameter.parameter_name}</DialogDescription>
+                                                    <DialogDescription>Parameter {parameter.parameter_name}</DialogDescription>
                                                 </DialogHeader>
                                                 <form onSubmit={editParameter} className="flex flex-col gap-4">
                                                     <div className="flex gap-4">
@@ -294,14 +317,16 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
                                                 <DialogHeader>
                                                     <DialogTitle>Are you sure?</DialogTitle>
                                                     <DialogDescription>
-                                                        This action cannot be undone. This will permanently delete the <b>{parameter.parameter_name}</b>.
+                                                        This action cannot be undone. This will permanently delete the <b>Parameter {parameter.parameter_name}</b>.
                                                     </DialogDescription>
                                                 </DialogHeader>
                                                 <DialogFooter>
                                                     <DialogClose asChild>
                                                         <Button variant="outline">Cancel</Button>
                                                     </DialogClose>
-                                                    <Button >Remove</Button>
+                                                    <Button disabled={processing} onClick={() => deleteParameter(parameter.area_parameter_id)} type="submit">
+                                                        Remove
+                                                    </Button>
                                                 </DialogFooter>
                                             </DialogContent>
                                         </Dialog>

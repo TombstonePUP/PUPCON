@@ -89,8 +89,14 @@ class AreaParameterController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AreaParameters $areaParameters): void
+    public function destroy(Request $request, AreaParameters $areaParameters): RedirectResponse
     {
-        //
+         // dd($request->parameter_id);
+        $areaParameters->find($request->parameter_id)->delete();
+        $areaParameters->delete();
+
+        return redirect()->back()
+            ->with('success', 'Area parameter deleted successfully.');
+
     }
 }
