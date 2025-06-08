@@ -30,7 +30,7 @@ return new class extends Migration
         Schema::create('area_parameters', function (Blueprint $table) {
             $table->id(column: 'area_parameter_id')->autoIncrement()->primary();
             $table->foreignId('area_id')->references('area_id')->on('areas')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('parameter_name');
+            $table->string('parameter_name')->nullable();
             $table->string('parameter_description')->nullable();
         });
 

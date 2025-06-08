@@ -34,7 +34,8 @@ interface AreaFilesProps {
 }
 
 interface ParameterForm {
-    area_id: number;
+    area_id?: number;
+    area_parameter_id?: number; // Optional for adding new parameters
     parameter_name: string;
     parameter_description: string;
 }
@@ -62,20 +63,30 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
         },
         {
             title: area.area_name,
-            href: `/document/${program.program_name}/${area.area_name}`,
+            href: `/document/${program.program_name}/${area.area_id}`,
         },
     ];
-    const { data, setData, post, processing, errors, reset } = useForm<ParameterForm>({
-        area_id: area?.area_id || 0,
+    const { data, setData, post, patch, processing, errors, reset } = useForm<ParameterForm>({
+        area_id: area?.area_id,
+        area_parameter_id: undefined,
         parameter_name: '',
         parameter_description: '',
     });
 
     const addParameter = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('manage.area.addParameter', { program_name: program.program_name, area_name: area?.area_name }), {
+        post(route('manage.area.addParameter', { program_name: program.program_name, area_id: area?.area_id }), {
             onSuccess: () => {
                 reset('parameter_name', 'parameter_description');
+            },
+        });
+    }
+
+    const editParameter = (e: React.FormEvent) => {
+        e.preventDefault();
+        patch(route('manage.area.updateParameter', { program_name: program.program_name, area_id: area?.area_id }), {
+            onSuccess: () => {
+                reset('parameter_name', 'parameter_description', 'area_parameter_id');
             },
         });
     }
@@ -167,16 +178,16 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
                                         <input
                                             id="parameter_name"
                                             type="text"
-                                            required
+                                            // required
                                             autoFocus
                                             maxLength={1}
+                                            tabIndex={1}
                                             value={data.parameter_name}
                                             onChange={(e) => setData('parameter_name', e.target.value)}
                                             disabled={processing}
                                             placeholder="A"
                                             className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
                                         />
-                                        <InputError message={errors.parameter_name} className="mt-2" />
                                     </div>
                                     <div className="flex-1">
                                         <label className="block text-sm font-medium text-muted-foreground mb-1">Description</label>
@@ -185,20 +196,22 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
                                             type="text"
                                             required
                                             autoFocus
+                                            tabIndex={2}
                                             value={data.parameter_description}
                                             onChange={(e) => setData('parameter_description', e.target.value)}
                                             disabled={processing}
                                             placeholder="Enter description"
                                             className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
                                         />
-                                        <InputError message={errors.parameter_description} className="mt-2" />
                                     </div>
                                 </div>
+                                <InputError message={errors.parameter_name} className="mt-2" />
+                                <InputError message={errors.parameter_description} className="mt-2" />
                                 <DialogFooter>
                                     <DialogClose asChild>
-                                        <Button variant="outline">Cancel</Button>
+                                        <Button tabIndex={3} variant="outline">Cancel</Button>
                                     </DialogClose>
-                                    <Button>Submit</Button>
+                                    <Button type="submit" tabIndex={4}>Submit</Button>
                                 </DialogFooter>
                             </form>
                         </DialogContent>
@@ -209,7 +222,9 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
                             <AccordionItem value="item-1">
                                 <AccordionTrigger className='flex flex-row justify-between items-center'>
                                     <div className="flex flex-row justify-between w-full ">
-                                        <h1 className='text-[#7f1414] font-black text-lg'>{parameter.parameter_name}</h1>
+                                        <h1 className='text-[#7f1414] font-black text-lg'>
+                                            {parameter.parameter_name ? `Parameter ${parameter.parameter_name}` : null }
+                                        </h1>
                                         <p className='text-lg'>{parameter.parameter_description}</p>
                                     </div>
                                     <div className='flex justify-center gap-3'>
@@ -222,31 +237,53 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
                                                     <DialogTitle>Edit Parameter</DialogTitle>
                                                     <DialogDescription>{parameter.parameter_name}</DialogDescription>
                                                 </DialogHeader>
-                                                <form className="flex gap-4">
-                                                    <div className="w-1/4">
-                                                        <label className="block text-sm font-medium text-muted-foreground mb-1">Parameter</label>
-                                                        <input
-                                                            type="text"
-                                                            maxLength={1}
-                                                            placeholder="A"
-                                                            className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                        />
+                                                <form onSubmit={editParameter} className="flex flex-col gap-4">
+                                                    <div className="flex gap-4">
+                                                        <div className="w-1/4">
+                                                            <label className="block text-sm font-medium text-muted-foreground mb-1">Parameter</label>
+                                                            <input
+                                                                id="parameter_name"
+                                                                type="text"
+                                                                autoFocus
+                                                                maxLength={1}
+                                                                tabIndex={1}
+                                                                value={data.parameter_name}
+                                                                onChange={(e) => {
+                                                                    // setData('area_id', undefined); // Reset area_id for editing
+                                                                    setData('parameter_name', e.target.value)
+                                                                    setData('area_parameter_id', parameter.area_parameter_id);
+                                                                }}
+                                                                disabled={processing}
+                                                                placeholder={parameter.parameter_name || "A"}
+                                                                className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                            />
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <label className="block text-sm font-medium text-muted-foreground mb-1">Description</label>
+                                                            <input
+                                                                id="parameter_description"
+                                                                type="text"
+                                                                required
+                                                                autoFocus
+                                                                // value={parameter.parameter_description}
+                                                                value={data.parameter_description}
+                                                                tabIndex={2}
+                                                                onChange={(e) => setData('parameter_description', e.target.value)}
+                                                                disabled={processing}
+                                                                placeholder={parameter.parameter_description || "Enter description"}
+                                                                className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                            />
+                                                        </div>
                                                     </div>
-                                                    <div className="flex-1">
-                                                        <label className="block text-sm font-medium text-muted-foreground mb-1">Description</label>
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Enter description"
-                                                            className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                        />
-                                                    </div>
+                                                    <InputError message={errors.parameter_name} className="mt-2" />
+                                                    <InputError message={errors.parameter_description} className="mt-2" />
+                                                    <DialogFooter>
+                                                        <DialogClose asChild>
+                                                            <Button tabIndex={3} variant="outline">Cancel</Button>
+                                                        </DialogClose>
+                                                        <Button type="submit" tabIndex={4}>Submit</Button>
+                                                    </DialogFooter>
                                                 </form>
-                                                <DialogFooter>
-                                                    <DialogClose asChild>
-                                                        <Button variant="outline">Cancel</Button>
-                                                    </DialogClose>
-                                                    <Button>Submit</Button>
-                                                </DialogFooter>
                                             </DialogContent>
                                         </Dialog>
                                         <Dialog>

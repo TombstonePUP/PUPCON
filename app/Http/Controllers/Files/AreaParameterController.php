@@ -28,20 +28,18 @@ class AreaParameterController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, string $program_name, string $area_name): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        // dd($request->all());
+        $validated = $request->validate([
             'area_id' => 'required|integer',
-            'parameter_name' => 'required|string|max:255',
-            'parameter_description' => 'nullable|string|max:1000',
+            'parameter_name' => 'nullable|string|max:1',
+            'parameter_description' => 'string|max:1000',
         ]);
-        $request->parameter_name = strtoupper($request->parameter_name);
+        $validated['parameter_name'] = strtoupper($validated['parameter_name'] ?? '');
 
-        $areaParameter = AreaParameters::create([
-            'area_id' => $request->area_id,
-            'parameter_name' => $request->parameter_name,
-            'parameter_description' => $request->parameter_description,
-        ]);
+        $areaParameter = new AreaParameters();
+        $areaParameter->create($validated);
 
         return redirect()->back()
             ->with('success', 'Area parameter created successfully.');
@@ -66,9 +64,26 @@ class AreaParameterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, AreaParameters $areaParameters): void
+    public function update(Request $request, AreaParameters $areaParameters): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'area_id' => 'required|integer',
+            'area_parameter_id' => 'required|integer',
+            'parameter_name' => 'nullable|string|max:1',
+            'parameter_description' => 'string|max:1000',
+        ]);
+        $validated['parameter_name'] = strtoupper($validated['parameter_name'] ?? '');
+
+        $areaParameters->find($validated['area_parameter_id'])
+            ->update([
+                'parameter_name' => $validated['parameter_name'],
+                'parameter_description' => $validated['parameter_description'],
+            ]);
+
+        // $areaParameters->update($validated);
+
+        return redirect()->back()
+            ->with('success', 'Area parameter updated successfully.');
     }
 
     /**

@@ -14,7 +14,7 @@ export default function Users({ program }: ProgramProps) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: program.program_name,
-            href: `/manage_program/${program.program_id}`,
+            href: `/manage-program/${program.program_id}`,
         },
     ];
 
@@ -31,7 +31,7 @@ export default function Users({ program }: ProgramProps) {
                 <div className='flex flex-row flex-wrap mt-10 gap-3 justify-center overflow-x-hidden'>
                     {program.areas?.length ? (
                         program.areas.map((area) => (
-                        <Link key={area.area_id} href={route('manage.area', [program.program_name, area.area_name])} className='border rounded shadow p-7 w-[49.5%]'>
+                        <Link key={area.area_id} href={route('manage.area', [program.program_name, area.area_id])} className='border rounded shadow p-7 w-[49.5%]'>
                             <h1 className='font-black'>{area.area_number}</h1>
                             <p className='text-[#858585]'>{area.area_name}</p>
                         </Link>

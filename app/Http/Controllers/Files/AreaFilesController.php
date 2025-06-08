@@ -16,7 +16,7 @@ class AreaFilesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(string $program_name, string $area_name)
+    public function index(string $program_name, string $area_id)
     {
         $program = Programs::select('program_id', 'program_name')
             ->where('program_name', $program_name)
@@ -24,7 +24,7 @@ class AreaFilesController extends Controller
             ->firstOrFail();
         $area = Areas::select('area_id', 'area_name', 'area_number', 'program_id')
             ->where('program_id', $program->program_id)
-            ->where('area_name', $area_name)
+            ->where('area_id', $area_id)
             ->with([
                 'Programs',
                 'AreaParameters.ParameterOutlines.ParameterOutlineCategory',
@@ -41,7 +41,6 @@ class AreaFilesController extends Controller
             'ParameterOutlines.AreaFiles.FileStatus',
             'ParameterOutlines.AreaParameter.Areas'])
             ->get();
-        // dd($parameterOutlineCategories->pluck('ParameterOutlines')->flatten()->pluck('AreaParameter')->flatten());
 
         // $parameters = $area->AreaParameters()
         //     ->with(['ParameterOutlines.ParameterOutlineCategory', 'ParameterOutlines.AreaFiles.FileStatus'])

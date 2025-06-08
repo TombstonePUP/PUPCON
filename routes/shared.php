@@ -23,9 +23,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(ManageProgramController::class)->prefix('manage-program')->as('manage.')->group(function () {
         Route::get('/{program_name}', 'index')->name('program');
         Route::controller(AreaFilesController::class)->prefix('{program_name}')->group(function () {
-            Route::get('/{area_name}', 'index')->name('area');
+            Route::get('/{area_id}', 'index')->name('area');
             Route::controller(AreaParameterController::class)->group(function () {
-                Route::post('/{area_name}/store', 'store')->name('area.addParameter');
+                Route::post('/{area_id}/store', 'store')->name('area.addParameter');
+                Route::patch('/{area_id}/update', 'update')->name('area.updateParameter');
             });
         });
     });
