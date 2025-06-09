@@ -74,18 +74,100 @@ class DatabaseSeeder extends Seeder
             'role_id' => 1,
         ]);
         UserRoles::factory(10)->create();
-        Programs::factory()->create([
-            'program_id' => 1,
-            'program_name' => 'Sample Program',
-            'program_description' => 'This is a sample program for testing purposes.',
-        ]);
-        Programs::factory(10)->create();
+        $programs = [
+            [
+                'program_id' => 1,
+                'degree_type' => 'Bachelor of Science',
+                'program_name' => 'Information Technology',
+                'program_description' => 'This is a sample program for testing purposes.',
+            ],
+            [
+                'program_id' => 2,
+                'degree_type' => 'Bachelor of Arts',
+                'program_name' => 'Communication',
+                'program_description' => 'This is another sample program for testing purposes.',
+            ],
+            [
+                'program_id' => 3,
+                'degree_type' => 'Bachelor of Science',
+                'program_name' => 'Business Administration',
+                'program_description' => 'This is a sample program for testing purposes.',
+            ],
+            [
+                'program_id' => 4,
+                'degree_type' => 'Bachelor of Science',
+                'program_name' => 'Psychology',
+                'program_description' => 'This is a sample program for testing purposes.',
+            ],
+            [
+                'program_id' => 5,
+                'degree_type' => 'Bachelor of Science',
+                'program_name' => 'Accountancy',
+                'program_description' => 'This is a sample program for testing purposes.',
+            ],
+        ];
+        foreach ($programs as $attributes) {
+            Programs::factory()->create($attributes);
+        }
         UserProgramRoles::factory()->create([
             'user_id' => 11111,
             'program_id' => 1, // Assuming program_id 1 is for a specific program
         ]);
         UserProgramRoles::factory(10)->create();
-        Areas::factory(20)->create();
+        $areas = [
+            [
+                'area_id' => 1,
+                'area_name' => 'Area 1',
+                'area_description' => 'This is a sample area for testing purposes.',
+            ],
+            [
+                'area_id' => 2,
+                'area_name' => 'Area 2',
+                'area_description' => 'This is another sample area for testing purposes.',
+            ],
+            [
+                'area_id' => 3,
+                'area_name' => 'Area 3',
+                'area_description' => 'This is a sample area for testing purposes.',
+            ],
+            [                'area_id' => 4,
+                'area_name' => 'Area 4',
+                'area_description' => 'This is a sample area for testing purposes.',
+            ],
+            [
+                'area_id' => 5,
+                'area_name' => 'Area 5',
+                'area_description' => 'This is a sample area for testing purposes.',
+            ],
+            [
+                'area_id' => 6,
+                'area_name' => 'Area 6',
+                'area_description' => 'This is a sample area for testing purposes.',
+            ],
+            [
+                'area_id' => 7,
+                'area_name' => 'Area 7',
+                'area_description' => 'This is a sample area for testing purposes.',
+            ],
+            [
+                'area_id' => 8,
+                'area_name' => 'Area 8',
+                'area_description' => 'This is a sample area for testing purposes.',
+            ],
+            [
+                'area_id' => 9,
+                'area_name' => 'Area 9',
+                'area_description' => 'This is a sample area for testing purposes.',
+            ],
+            [
+                'area_id' => 10,
+                'area_name' => 'Area 10',
+                'area_description' => 'This is a sample area for testing purposes.',
+            ],
+        ];
+        foreach ($areas as $attributes) {
+            Areas::factory()->create($attributes);
+        }
         UserAreaRoles::factory(10)->create();
         LocalTaskForce::factory(10)->create();
         Facilities::factory(10)->create();
