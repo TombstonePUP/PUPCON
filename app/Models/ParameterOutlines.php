@@ -24,7 +24,6 @@ class ParameterOutlines extends Model
         'area_parameter_id',
         'parameter_outline_category_id',
         'outline_number',
-        'outline_name',
         'outline_description',
         'container'
     ];

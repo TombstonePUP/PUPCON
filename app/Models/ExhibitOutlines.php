@@ -22,7 +22,6 @@ class ExhibitOutlines extends Model
     protected $primaryKey = 'exhibit_outline_id';
     protected $fillable = [
         'exhibit_id',
-        'outline_name',
         'outline_description',
         'container',
     ];

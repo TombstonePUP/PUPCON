@@ -47,7 +47,6 @@ return new class extends Migration
                 ->on('parameter_outline_category')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('outline_number');
-            $table->string('outline_name');
             $table->string('outline_description')->nullable();
             $table->boolean('container');
         });
@@ -92,7 +91,6 @@ return new class extends Migration
             $table->id(column: 'exhibit_outline_id')->autoIncrement()->primary();
             $table->foreignId('exhibit_id')->references('exhibit_id')->on('exhibits')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->string('outline_name');
             $table->string('outline_description')->nullable();
             $table->boolean('container');
         });
@@ -112,7 +110,7 @@ return new class extends Migration
             CREATE VIEW public.files_overview AS
             SELECT
                 'area-file' file_type,
-                po.outline_name outline,
+                po.outline_description outline,
                 af.file_name file_name,
                 af.file_path file_path,
                 fs.status_name file_status,
@@ -135,7 +133,7 @@ return new class extends Migration
             UNION ALL
             SELECT
                 'exhibit-file' file_type,
-                eo.outline_name outline,
+                eo.outline_description outline,
                 ef.file_name file_name,
                 ef.file_path file_path,
                 fs.status_name file_status,

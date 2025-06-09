@@ -141,7 +141,6 @@ export default function Users({ userRecords }: UsersProps) {
                                             ))}
                                         </div>
                                     </div>
-
                                     {programList.map((program) =>
                                         isProgramSelected(program) ? (
                                             <div key={program}>
@@ -164,9 +163,6 @@ export default function Users({ userRecords }: UsersProps) {
                                             </div>
                                         ) : null
                                     )}
-
-
-
                                     <div>
                                         <label className="block text-sm font-medium text-muted-foreground mb-1">Additional Access</label>
                                         <div className="grid grid-cols-3 gap-2">

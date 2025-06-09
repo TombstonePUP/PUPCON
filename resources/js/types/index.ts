@@ -151,7 +151,6 @@ export interface ParameterOutlines {
     area_parameter_id: number;
     parameter_outline_category_id: number;
     outline_number: string;
-    outline_name: string;
     outline_description: string;
     container: boolean;
     areaParameters?: AreaParameters;

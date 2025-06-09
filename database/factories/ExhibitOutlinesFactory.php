@@ -22,7 +22,6 @@ class ExhibitOutlinesFactory extends Factory
         return [
             'exhibit_outline_id' => fake()->unique()->randomNumber(),
             'exhibit_id' => $exhibit->exhibit_id,
-            'outline_name' => fake()->word(),
             'outline_description' => fake()->sentence(),
             'container' => fake()->boolean(),
         ];

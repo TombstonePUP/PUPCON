@@ -91,7 +91,15 @@ class DatabaseSeeder extends Seeder
         Facilities::factory(10)->create();
         ProgramObjectives::factory(10)->create();
         AreaParameters::factory(50)->create();
-        ParameterOutlineCategory::factory(5)->create();
+        $parameterCategory = [
+            ['category_name' => 'No Category'],
+            ['category_name' => 'Systems - Inputs and Processes'],
+            ['category_name' => 'Implementation'],
+            ['category_name' => 'Outcome/s']
+        ];
+        foreach ($parameterCategory as $attributes) {
+            ParameterOutlineCategory::factory()->create($attributes);
+        }
         ParameterOutlines::factory(80)->create();
         $file_status = [
             ['status_name' => 'Approved'],
