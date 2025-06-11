@@ -30,7 +30,6 @@ class AreaParameterController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // dd($request->all());
         $validated = $request->validate([
             'area_id' => 'required|integer',
             'parameter_name' => 'nullable|string|max:1',
@@ -93,7 +92,7 @@ class AreaParameterController extends Controller
     {
          // dd($request->parameter_id);
         $areaParameters->find($request->parameter_id)->delete();
-        $areaParameters->delete();
+        // $areaParameters->delete();
 
         return redirect()->back()
             ->with('success', 'Area parameter deleted successfully.');

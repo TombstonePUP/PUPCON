@@ -9,11 +9,13 @@ import { AreaProgress } from "@/components/charts/area-progress-list";
 import { OverallProgress } from "@/components/charts/overall-progress";
 import { DataTable } from "@/components/charts/data-table"
 
-import { type ActivityLogs } from "@/types"
-import { type FrequencyUploads } from "@/types"
-import { type DocumentStatistics } from "@/types"
-import { type OverallUploads } from "@/types"
-import data from "../../../app/Dashboard/data.json"
+import {
+    type ActivityLogs,
+    type FrequencyUploads,
+    type DocumentStatistics,
+    type OverallUploads
+} from "@/types"
+
 import { columns } from "@/components/charts/activity/columns"
 
 interface DashboardProps {
