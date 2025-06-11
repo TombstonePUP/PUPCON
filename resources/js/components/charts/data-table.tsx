@@ -31,25 +31,6 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-// const globalFilterFn = (row, columnId, filterValue) => {
-//   const search = String(filterValue).toLowerCase();
-
-//   return row
-//     .getAllCells()
-//     .some(cell => {
-//       const column = cell.column;
-//       const value = cell.getValue();
-
-//       // Check if the column is enabled for global filtering
-//       if (column.columnDef.enableGlobalFilter === false) {
-//         return false;
-//       }
-
-//       return String(value).toLowerCase().includes(search);
-//     });
-// };
-
-
 export function DataTable<TData, TValue>({
   columns,
   data,

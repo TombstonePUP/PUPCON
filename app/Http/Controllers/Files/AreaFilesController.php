@@ -120,7 +120,6 @@ class AreaFilesController extends Controller
      */
     public function store(Request $request)
     {
-        // $validated = $request->validate([
 
     }
 
