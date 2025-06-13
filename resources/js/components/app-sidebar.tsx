@@ -3,7 +3,7 @@
 import * as React from "react"
 import {
     AudioWaveform,
-    Bot,
+    Bot, Braces,
     Command,
     GalleryVerticalEnd,
     SquareTerminal,
@@ -89,7 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {
             title: "Programs",
             url: "/manage-programs",
-            icon: Bot,
+            icon: Braces,
             isActive: true,
             collapsible: true,
             items: programItems,
@@ -97,10 +97,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ];
     return (
         <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader>
+            {/* <SidebarHeader>
                 <LevelSwitcher teams={data.levels} />
-            </SidebarHeader>
-            <SidebarContent>
+            </SidebarHeader> */}
+            <SidebarContent className="mt-5">
                 <NavMain label="Accreditation" items={accre} />
                 <NavMain label="Content" items={data.content} />
             </SidebarContent>

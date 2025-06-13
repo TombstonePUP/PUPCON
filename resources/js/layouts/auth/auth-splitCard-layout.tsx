@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
+
+
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -31,7 +33,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                                 </div>
                                 <Input id="password" type="password" required />
                             </div>
-                            <Button type="submit" className="w-full">
+                            <Button type="submit" className="w-full animate__animated animate__bounce">
                                 Login
                             </Button>
                             <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
@@ -39,7 +41,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                             </div>
                             <div className="text-center text-sm">
                                 go back to{' '}
-                                <a href="#" className="underline underline-offset-4">
+                                <a href="/" className="underline underline-offset-4">
                                     homepage
                                 </a>
                             </div>
