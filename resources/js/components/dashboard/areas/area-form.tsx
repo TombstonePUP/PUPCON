@@ -12,7 +12,7 @@ import {
     DialogClose
 } from "@/components/ui/dialog";
 
-export default function     AreaForm() {
+export default function AreaForm() {
     return (
         <Dialog>
             <DialogTrigger asChild className='flex-1 border rounded flex items-center flex-col p-10 h-[15vw]'>
