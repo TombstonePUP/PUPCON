@@ -100,7 +100,7 @@ export default function ManagePrograms({ userRecords }: UsersProps) {
                         </DialogContent>
                     </Dialog>
                     <div className='flex flex-row flex-wrap'>
-                        <Link href="/manage-programs/program" className='border rounded shadow p-7 w-[49.5%]'>
+                        <Link href="/manage-programs/program" className='border rounded shadow p-7 w-[49.5%] text-center'>
                             Bachelor of Science in Information Technology
                         </Link>
                     </div>
