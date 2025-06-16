@@ -120,6 +120,7 @@ export interface ProgramAreas {
 
 export interface Program {
     program_id: number;
+    degree_type: string;
     program_name: string;
     area?: Area;
     [key: string]: unknown; // This allows for additional properties...

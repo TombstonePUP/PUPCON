@@ -22,7 +22,7 @@ const buttonVariants = cva(
         reverse:
           "border bg-[white] text-[#7f1414] shadow-xs hover:bg-[#7f1414] hover:text-primary-foreground ",
         black:
-          "border bg-black text-white shadow-xs hover:bg-white hover:text-black ",
+          "bg-black text-white shadow-xs hover:bg-white hover:text-black hover:border",
         none:
           "bg-background text-[#171717] shadow-xs hover:bg-accent hover:text-black ",
       },

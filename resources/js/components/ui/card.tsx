@@ -66,7 +66,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-description"
       className={cn(
-        "text-muted-foreground text-sm h-[4vw] overflow-hidden text-ellipsis",
+        "text-muted-foreground text-sm h-fit overflow-hidden text-ellipsis",
         "whitespace-normal overflow-hidden [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]",
         className
       )}      

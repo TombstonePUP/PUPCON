@@ -18,7 +18,7 @@ class AreaFilesController extends Controller
      */
     public function index(string $program_name, string $area_id)
     {
-        $program = Programs::select('program_id', 'program_name')
+        $program = Programs::select('program_id', 'program_name', 'degree_type')
             ->where('program_name', $program_name)
             ->with('Areas')
             ->firstOrFail();

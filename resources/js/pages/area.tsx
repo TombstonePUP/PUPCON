@@ -7,7 +7,6 @@ import {
     AccordionContent,
 } from "@/components/ui/accordion"
 
-
 export default function Programs() {
     return (
         <>
@@ -30,7 +29,7 @@ export default function Programs() {
                 </div>
                 <div className='w-full flex justify-center py-[2vw]'>
                     <Accordion type="single" collapsible className='w-[68%] flex flex-col gap-[1vw]'>
-                        <AccordionItem value="item-1">
+                        <AccordionItem value="item-1" className='before:bg-[#171717]'>
                             <AccordionTrigger className='flex flex-row justify-between'>
                                 <div className="flex flex-row justify-between w-full">
                                     <h1 className='text-[#7f1414] font-black'>Parameter A</h1>
