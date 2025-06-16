@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('areas', function (Blueprint $table) {
             $table->id(column: 'area_id')->autoIncrement()->primary();
             $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('area_number')->unique();
+            $table->string('area_number');
             $table->string('area_name');
             $table->string('area_description')->nullable();
             $table->string('area_image_name')->nullable();
@@ -48,6 +48,9 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('outline_number');
             $table->string('outline_description')->nullable();
+            $table->float('item_rating')->default(false);
+            /* $table->float('system_implementation_outcome_mean')->default(false);
+            $table->float('')->default(false); */
             $table->boolean('container');
         });
 
@@ -64,8 +67,8 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('form_image_name')->nullable();
             $table->text('form_image_path')->nullable();
-            $table->string('file_name');
-            $table->text('file_path');
+            $table->string('file_name')->nullable();
+            $table->text('file_path')->nullable();
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
@@ -109,7 +112,7 @@ return new class extends Migration
         DB::statement(<<<SQL
             CREATE VIEW public.files_overview AS
             SELECT
-                'area-file' file_type,
+                CONCAT('Area', '-', a.area_number, '-','Parameter', '-', ap.parameter_name) file_type, -- area_name and parameter_name
                 po.outline_description outline,
                 af.file_name file_name,
                 af.file_path file_path,
@@ -117,19 +120,21 @@ return new class extends Migration
                 af.file_rejection_reason rejection_reason
             FROM area_files af
                 LEFT JOIN parameter_outlines po ON po.parameter_outline_id = af.parameter_outline_id
+                LEFT JOIN area_parameters ap ON ap.area_parameter_id = po.area_parameter_id
+                LEFT JOIN areas a ON a.area_id = ap.area_id
                 LEFT JOIN file_status fs ON fs.file_status_id = af.file_status_id
-            -- UNION ALL
-            -- SELECT
-            --     'area-form' file_type,
-            --     po.outline_name outline,
-            --     af.file_name file_name,
-            --     af.file_path file_path,
-            --     fs.status_name file_status,
-            --     af.file_rejection_reason rejection_reason
-            -- FROM area_forms af
-            --     LEFT JOIN areas a ON a.area_id = af.area_id
-            --     LEFT JOIN area_f
-            --     LEFT JOIN file_status fs ON fs.file_status_id = af.file_status_id
+            UNION ALL
+            SELECT
+                'area-form' file_type,
+                CONCAT(a.area_name,'-', afc.category_name) outline,
+                afo.file_name file_name,
+                afo.file_path file_path,
+                fs.status_name file_status,
+                afo.file_rejection_reason rejection_reason
+            FROM area_forms afo
+                LEFT JOIN area_form_categories afc on afc.area_form_category_id = afo.area_form_category_id
+                LEFT JOIN areas a ON a.area_id = afo.area_id
+                LEFT JOIN file_status fs ON fs.file_status_id = afo.file_status_id
             UNION ALL
             SELECT
                 'exhibit-file' file_type,

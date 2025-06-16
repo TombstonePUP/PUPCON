@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Guest\AreasController;
+use App\Http\Controllers\Guest\ProgramsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -7,17 +9,13 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::get('/programs', function () {
-    return Inertia::render('programs');
-})->name('programs');
-
-Route::get('/programs/programview', function () {
-    return Inertia::render('programview');
+Route::controller(ProgramsController::class)->prefix('programs')->group(function () {
+    Route::get('/', 'index')->name('programs.index');
+    Route::get('/{program_name}', 'show')->name('programs.show');
 });
 
-Route::get('/programs/programview/area', function () {
-    return Inertia::render('area');
-});
+Route::get('/programs/{program_name}/{area_id}', AreasController::class)
+    ->name('programs.areas.show');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

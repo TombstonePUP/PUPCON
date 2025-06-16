@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Files\AreaFilesController;
+use App\Http\Controllers\Files\AreaFormsController;
 use App\Http\Controllers\Files\AreaParameterController;
 use App\Http\Controllers\Files\AreaParameterOutlinesController;
 use App\Http\Controllers\Programs\ManageProgramController;
@@ -36,8 +37,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::patch('/{area_id}/{outline_id}/updateOutline', 'update')->name('area.updateOutline');
                 Route::delete('/{area_id}/{outline_id}/deleteOutline', 'destroy')->name('area.deleteOutline');
             });
+
+            Route::controller(AreaFormsController::class)->group(function () {
+                // Route::post('/{area_id}/storeForm', 'store')->name('area.addForm');
+                // Route::patch('/{area_id}/{form_id}/updateForm', 'update')->name('area.updateForm');
+                // Route::delete('/{area_id}/{form_id}/deleteForm', 'destroy')->name('area.deleteForm');
+            });
         });
     });
+
+
 
     // Route::get('/document/program/area', function () {
     //     return Inertia::render('document/area');
@@ -45,3 +54,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('users', [UserController::class, 'index'])
         ->name('users');
 });
+
+Route::post('manage-program/{program_name}/{area_id}/storeForm', [AreaFormsController::class, 'store'])
+    ->name('test.addForm');
+
+Route::post('manage-program/{program_name}/{area_id}/{form_id}/updateForm', [AreaFormsController::class, 'update'])
+    ->name('test.updateForm');

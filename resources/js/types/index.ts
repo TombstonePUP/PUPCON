@@ -30,6 +30,46 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
+export interface GuestNavigation {
+    programs: NavPrograms[];
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface NavPrograms {
+    program_id: number;
+    program_name: string;
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface ProgramsUnderSurvey {
+    program_id: number;
+    program_name: string;
+    degree_type: string;
+    program_description: string;
+    accreditation_level: string;
+    program_image_name: string;
+    program_image_path: string;
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface PerProgramUnderSurvey {
+    program_id: number;
+    degree_type: string;
+    program_name: string;
+    program_description: string;
+    accreditation_level: number;
+    under_survey: boolean;
+    program_image_name: string;
+    program_image_path: string;
+    overview_image_name: string;
+    overview_image_path: string;
+    overview_description: string;
+    page_banner_image_name: string;
+    page_banner_image_path: string;
+    areas?: ProgramAreas[];
+    [key: string]: unknown; // This allows for additional properties...
+}
+
 export interface ProgramPrivilege {
     program_name: string;
     [key: string]: unknown;
@@ -114,6 +154,7 @@ export interface ProgramAreas {
     area_description: string;
     area_image_name: string;
     area_image_path: string;
+    area_numeral: string;
     programs?: PerProgram;
     [key: string]: unknown;
 }
@@ -131,6 +172,7 @@ export interface Area {
     program_id: number;
     area_name: string;
     area_number: string;
+    area_numeral?: string;
     program?: Program;
     areaParameters?: AreaParameters[];
     areaForms?: AreaForms[];

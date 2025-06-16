@@ -1,19 +1,29 @@
 import { Head } from '@inertiajs/react';
 import Layout from '@/layouts/landing-layout';
 import { AreaCard } from '@/components/ui/area-card';
+import { PerProgramUnderSurvey } from '@/types';
 
-export default function Programs() {
+interface PerProgramProps {
+    program: PerProgramUnderSurvey;
+}
+
+export default function Programs({ program }: PerProgramProps) {
+    const numerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV'];
     return (
         <>
-            <Head title="Information Technology">
+            <Head title={`${program.degree_type} in ${program.program_name}`}>
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
             <Layout>
                 <div className="relative before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#7f1414] before:to-transparent overflow-hidden h-[25vw] flex items-center">
                     <img className='w-full' src="/images/campus/comlab.jpg" alt="banner" />
-                    <h2 className='absolute text-white px-[15vw] top-[9.5vw]'>Accreditation Level 1</h2>
-                    <h1 className='absolute text-white px-[14.9vw] w-full font-black text-[3vw]'>BS Information Technology</h1>
+                    <h2 className='absolute text-white px-[15vw] top-[9.5vw]'>
+                        {program.accreditation_level === 0 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + program.accreditation_level}
+                    </h2>
+                    <h1 className='absolute text-white px-[14.9vw] w-full font-black text-[3vw]'>
+                        {program.degree_type.match(/\b[A-Z]/g)} {program.program_name}
+                    </h1>
                     <h2 className='absolute text-white px-[15vw] top-[14vw]'>Polytechnic University of the Philippines
                     </h2>
                     <b className='absolute text-white px-[30.6vw] top-[14vw]'>San Juan Campus</b>
@@ -35,7 +45,7 @@ export default function Programs() {
                             Program Overview
                         </h1>
                         <p className='text-justify'>
-                            The Bachelor of Science in Information Technology (BSIT) program is a four-year degree program which focuses on the study of computer utilization and computer software to plan, install, customize, operate, manage, administer and maintain information technology infrastructure. It likewise deals with the design and development of computer-based information systems for real-world business solutions.The program prepares students to become IT professionals with primary competencies in the areas of systems analysis and design, applications development, database administration, network administration, and systems implementation and maintenance.
+                            {program.overview_description || 'No program overview available.'}
                         </p>
                     </div>
                     <img className='rounded-[1vw] w-[25vw]' src="/images/campus/comlab.jpg" alt="computer lab" />
@@ -44,46 +54,22 @@ export default function Programs() {
                     <h1>No Program Objective</h1>
                 </div>
                 <div className='h-fit w-full px-[13vw] py-[3vw] flex flex-wrap flex-row gap-[1.5vw] justify-center' id='areas'>
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Mission, Goals, and Objectives"
-                        circleLetter="I"
-                        href="/programs/programview/area" />
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Faculty"
-                        circleLetter="II"
-                        href="/programs/programview/area" />
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Curriculum and Instruction"
-                        circleLetter="III"
-                        href="/programs/programview/area" />
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Support to students"
-                        circleLetter="IV"
-                        href="/programs/programview/area" />
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Research"
-                        circleLetter="V"
-                        href="/programs/programview/area" />
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Extension and Community Involvement"
-                        circleLetter="VI"
-                        href="/programs/programview/area" />
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Library"
-                        circleLetter="VII"
-                        href="/programs/programview/area" />
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Physical Plant and Facilities"
-                        circleLetter="VIII"
-                        href="/programs/programview/area" />
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Laboratories"
-                        circleLetter="IX"
-                        href="/programs/programview/area" />
-                    <AreaCard imageSrc="/images/placeholder.png"
-                        heading="Administration"
-                        circleLetter="X"
-                        href="/programs/programview/area" />
+                    {program?.areas?.length > 0 ? (
+                        program.areas.map((area, index) => (
+                            <AreaCard
+                                key={index}
+                                imageSrc={area.image_path || '/images/placeholder.png'}
+                                heading={area.area_name}
+                                circleLetter={area.area_numeral}
+                                href={route('programs.areas.show', [
+                                    program.program_name,
+                                    area.area_id,
+                                ])}
+                            />
+                        ))
+                    ) : (
+                        <p className='text-center text-gray-500'>No areas under survey.</p>
+                    )}
                 </div>
             </Layout>
         </>

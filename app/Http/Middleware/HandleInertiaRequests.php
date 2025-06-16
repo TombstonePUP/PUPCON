@@ -38,7 +38,13 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
+
+        $programs_under_survey = Programs::select('program_name', 'program_id')
+            ->where('under_survey', true)
+            ->get();
+
         $role = $request->user()?->Roles->first()?->role_name;
+
         if ($role === 'Admin' || $role === 'Coordinator') {
             $programs = Programs::select('program_name as title')->get();
         } elseif ($role === 'Area Chair') {
@@ -54,6 +60,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'programs' => $programs,
+            ],
+            'guest' => [
+                'programs' => $programs_under_survey
             ],
         ];
     }

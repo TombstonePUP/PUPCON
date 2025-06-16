@@ -23,8 +23,8 @@ class AreaFilesController extends Controller
             ->with('Areas')
             ->firstOrFail();
         $area = Areas::select('area_id', 'area_name', 'area_number', 'program_id')
-            ->where('program_id', $program->program_id)
             ->where('area_id', $area_id)
+            ->where('program_id', $program->program_id)
             ->with([
                 'Programs',
                 'AreaParameters.ParameterOutlines.ParameterOutlineCategory',
@@ -105,53 +105,5 @@ class AreaFilesController extends Controller
             // 'areaForms' => $areaForms,
             // 'areaFiles' => $areaFiles,
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(AreaFiles $areaFiles)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AreaFiles $areaFiles)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, AreaFiles $areaFiles)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(AreaFiles $areaFiles)
-    {
-        //
     }
 }
