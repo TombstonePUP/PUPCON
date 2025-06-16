@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
-use App\Models\Programs;
+use App\Models\AreaFiles;
 use Illuminate\Http\Request;
 
-class ProgramsController extends Controller
+class ParameterFilesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,7 +35,7 @@ class ProgramsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Programs $programs)
+    public function show(AreaFiles $areaFiles)
     {
         //
     }
@@ -43,7 +43,7 @@ class ProgramsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Programs $programs)
+    public function edit(AreaFiles $areaFiles)
     {
         //
     }
@@ -51,7 +51,7 @@ class ProgramsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Programs $programs)
+    public function update(Request $request, AreaFiles $areaFiles)
     {
         //
     }
@@ -59,7 +59,7 @@ class ProgramsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Programs $programs)
+    public function destroy(AreaFiles $areaFiles)
     {
         //
     }

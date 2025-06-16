@@ -55,14 +55,18 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'role_id' => 3,
-                'role_name' => 'Area Chair'
+                'role_name' => 'Chairman'
             ],
             [
                 'role_id' => 4,
-                'role_name' => 'Chair Assistant'
+                'role_name' => 'Co Chair'
             ],
             [
                 'role_id' => 5,
+                'role_name' => 'Member'
+            ],
+            [
+                'role_id' => 6,
                 'role_name' => 'Content Manager'
             ],
         ];
@@ -80,30 +84,35 @@ class DatabaseSeeder extends Seeder
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Information Technology',
                 'program_description' => 'This is a sample program for testing purposes.',
+                'under_survey' => true,
             ],
             [
                 'program_id' => 2,
                 'degree_type' => 'Bachelor of Arts',
                 'program_name' => 'Communication',
                 'program_description' => 'This is another sample program for testing purposes.',
+                'under_survey' => true,
             ],
             [
                 'program_id' => 3,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Business Administration',
                 'program_description' => 'This is a sample program for testing purposes.',
+                'under_survey' => true,
             ],
             [
                 'program_id' => 4,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Psychology',
                 'program_description' => 'This is a sample program for testing purposes.',
+                'under_survey' => true,
             ],
             [
                 'program_id' => 5,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Accountancy',
                 'program_description' => 'This is a sample program for testing purposes.',
+                'under_survey' => false,
             ],
         ];
         foreach ($programs as $attributes) {
@@ -130,7 +139,8 @@ class DatabaseSeeder extends Seeder
                 'area_name' => 'Area 3',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
-            [                'area_id' => 4,
+            [
+                'area_id' => 4,
                 'area_name' => 'Area 4',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],

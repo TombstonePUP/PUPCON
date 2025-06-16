@@ -1,13 +1,14 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { GuestNavigation } from '@/types';
 
 interface LayoutProps {
     children: ReactNode;
     footerText?: string;
 }
 
-const LEFT_NAV = [
+const leftNav = [
     {
         label: 'ABOUT',
         href: '/',//'/about',
@@ -27,34 +28,37 @@ const LEFT_NAV = [
     },
 ];
 
-const RIGHT_NAV = [
-    {
-        label: 'PROGRAMS',
-        href: '/programs',
-        dropdown: [
-            { label: 'Information Technology', href: '/programs/programview' },
-            // { label: 'Accountancy', href: '/programs/accountancy' },
-            // { label: 'Psychology', href: '/programs/psychology' },
-        ],
-    },
-    {
-        label: 'EXHIBITS',
-        href: '/',//'/exhibits',
-        dropdown: [],
-    },
-    {
-        label: 'OTHERS',
-        href: '/',//'/others',
-        dropdown: [],
-    },
-];
 
 function isActive(path: string) {
     return window.location.pathname.startsWith(path);
 }
 
 export default function Layout({ children }: LayoutProps) {
-    const currentYear = new Date().getFullYear();
+    const { guest } = usePage<GuestNavigation>().props;
+
+    const underSurveyPrograms = guest?.programs?.length ?
+        guest.programs.map((program) => ({
+            label: program.program_name,
+            href: `/programs/${program.program_name}`,
+        })) : [];
+
+    const rightNav = [
+        {
+            label: 'PROGRAMS',
+            href: '/programs',
+            dropdown: underSurveyPrograms,
+        },
+        {
+            label: 'EXHIBITS',
+            href: '/',//'/exhibits',
+            dropdown: [],
+        },
+        {
+            label: 'OTHERS',
+            href: '/',//'/others',
+            dropdown: [],
+        },
+    ];
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -75,7 +79,7 @@ export default function Layout({ children }: LayoutProps) {
                 <div className="flex justify-between px-[13vw] py-[0.8vw] text-[#7f1414] bg-white">
                     {/* Left */}
                     <ul className="flex gap-[4vw]">
-                        {LEFT_NAV.map((item) => (
+                        {leftNav.map((item) => (
                             <li key={item.label} className="relative group">
                                 <Link
                                     href={item.href}
@@ -111,7 +115,7 @@ export default function Layout({ children }: LayoutProps) {
 
                     {/* Right */}
                     <ul className="flex gap-[4vw]">
-                        {RIGHT_NAV.map((item) => (
+                        {rightNav.map((item) => (
                             <li key={item.label} className="relative group">
                                 <Link
                                     href={item.href}

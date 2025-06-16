@@ -66,7 +66,19 @@ class AreaParameterOutlinesController extends Controller
      */
     public function update(Request $request, ParameterOutlines $parameterOutlines)
     {
-        //
+        $validated = $request->validate([
+            'area_parameter_id' => 'required|integer',
+            'parameter_outline_category_id' => 'required|integer',
+            'outline_number' => 'required|string|max:10',
+            'outline_description' => 'nullable|string|max:1000',
+            'container' => 'nullable|boolean',
+        ]);
+
+        $parameterOutline = $parameterOutlines->find($validated['outline_id']);
+        $parameterOutline->update($validated);
+
+        return redirect()->back()
+            ->with('success', 'Parameter outline updated successfully.');
     }
 
     /**

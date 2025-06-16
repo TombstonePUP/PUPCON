@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
-use App\Models\News;
+use App\Models\FilesOverview;
 use Illuminate\Http\Request;
 
-class NewsController extends Controller
+class FileApprovalController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $files = FilesOverview::select('*')->get();
+        return inertia('document/document-request', [
+            'files' => $files,
+        ]);
     }
 
     /**
@@ -35,7 +38,7 @@ class NewsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(News $news)
+    public function show(FilesOverview $filesOverview)
     {
         //
     }
@@ -43,7 +46,7 @@ class NewsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(News $news)
+    public function edit(FilesOverview $filesOverview)
     {
         //
     }
@@ -51,7 +54,7 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, News $news)
+    public function update(Request $request, FilesOverview $filesOverview)
     {
         //
     }
@@ -59,7 +62,7 @@ class NewsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(News $news)
+    public function destroy(FilesOverview $filesOverview)
     {
         //
     }

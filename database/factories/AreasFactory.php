@@ -21,7 +21,7 @@ class AreasFactory extends Factory
         return [
             'area_id' => fake()->unique()->randomNumber(),
             'program_id' => $program->program_id,
-            'area_number' => fake()->unique()->randomNumber(),
+            'area_number' => fake()->numberBetween(1, 15),
             'area_name' => fake()->unique()->word(),
             'area_description' => fake()->sentence(),
             'area_image_name' => fake()->word(),
