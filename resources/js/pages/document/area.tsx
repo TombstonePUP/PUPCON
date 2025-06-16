@@ -233,7 +233,7 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
                                                             <div>
                                                                 <h3 className='text-sm font-medium text-muted-foreground mb-1'>Edit Outline Content</h3>
                                                                 <textarea
-                                                                    className="min-h-[120px] w-full rounded border p-3 focus:border-transparent focus:ring-2 focus:ring-blue-500 max-h-[20vw]"
+                                                                    className="min-h-[120px] text-sm w-full rounded border p-3 focus:border-transparent focus:ring-2 focus:ring-blue-500 max-h-[20vw]"
                                                                     defaultValue="The institution has a system of determining the Vision and Mission."
                                                                     placeholder="Enter outline description..."
                                                                 />
