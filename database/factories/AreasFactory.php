@@ -23,7 +23,7 @@ class AreasFactory extends Factory
             'program_id' => $program->program_id,
             'area_number' => fake()->numberBetween(1, 15),
             'area_name' => fake()->unique()->word(),
-            'area_description' => fake()->paragraph(),
+            'area_description' => fake()->sentence(),
             'area_image_name' => fake()->word(),
             'area_image_path' => fake()->imageUrl(),
         ];
