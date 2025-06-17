@@ -44,7 +44,7 @@ export default function Users({ program }: ProgramProps) {
                             placeholder="Enter program overview"
                             className="focus:ring-ring min-h-[100px] w-full resize-y rounded border p-5 focus:ring-2 focus:outline-none"
                         />
-                    </div>                
+                    </div>
 
                     {/* objectives */}
                     <EditableGrid
@@ -72,7 +72,7 @@ export default function Users({ program }: ProgramProps) {
                     {/* FACULTIES */}
                     <EditableGrid
                         mode="faculty"
-                        initialItems={ []}
+                        initialItems={[]}
                         onAdd={(facultyData) => console.log('Add faculty', facultyData)}
                         onEdit={(id, facultyData) => console.log('Edit faculty', id, facultyData)}
                         onRemove={(id) => console.log('Remove faculty', id)}

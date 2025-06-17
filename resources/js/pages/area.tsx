@@ -52,7 +52,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                     <AccordionTrigger className='flex flex-row justify-between'>
                                         <div className="flex flex-row justify-between w-full">
                                             <h1 className='text-[#7f1414] font-black'>
-                                                { parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name}` : parameter.parameter_name }
+                                                {parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name}` : parameter.parameter_name}
                                             </h1>
                                             <p>{parameter.parameter_description}</p>
                                         </div>
