@@ -126,52 +126,72 @@ class DatabaseSeeder extends Seeder
         $areas = [
             [
                 'area_id' => 1,
-                'area_name' => 'Area 1',
+                'program_id' => 1,
+                'area_number' => 1,
+                'area_name' => 'Mission, Goals, and Objectives',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
             [
                 'area_id' => 2,
-                'area_name' => 'Area 2',
+                'program_id' => 1,
+                'area_number' => 2,
+                'area_name' => 'Faculty',
                 'area_description' => 'This is another sample area for testing purposes.',
             ],
             [
                 'area_id' => 3,
-                'area_name' => 'Area 3',
+                'program_id' => 1,
+                'area_number' => 3,
+                'area_name' => 'Curriculum and Instruction',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
             [
                 'area_id' => 4,
-                'area_name' => 'Area 4',
+                'program_id' => 1,
+                'area_number' => 4,
+                'area_name' => 'Support to Students',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
             [
                 'area_id' => 5,
-                'area_name' => 'Area 5',
+                'program_id' => 1,
+                'area_number' => 5,
+                'area_name' => 'Research',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
             [
                 'area_id' => 6,
-                'area_name' => 'Area 6',
+                'program_id' => 1,
+                'area_number' => 6,
+                'area_name' => 'Extension and Community Involvement',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
             [
                 'area_id' => 7,
-                'area_name' => 'Area 7',
+                'program_id' => 1,
+                'area_number' => 7,
+                'area_name' => 'Library',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
             [
                 'area_id' => 8,
-                'area_name' => 'Area 8',
+                'program_id' => 1,
+                'area_number' => 8,
+                'area_name' => 'Physical Plant and Facilities',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
             [
                 'area_id' => 9,
-                'area_name' => 'Area 9',
+                'program_id' => 1,
+                'area_number' => 9,
+                'area_name' => 'Laboratories',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
             [
                 'area_id' => 10,
-                'area_name' => 'Area 10',
+                'program_id' => 1,
+                'area_number' => 10,
+                'area_name' => 'Administration',
                 'area_description' => 'This is a sample area for testing purposes.',
             ],
         ];
@@ -192,7 +212,7 @@ class DatabaseSeeder extends Seeder
         foreach ($parameterCategory as $attributes) {
             ParameterOutlineCategory::factory()->create($attributes);
         }
-        ParameterOutlines::factory(80)->create();
+        ParameterOutlines::factory(200)->create();
         $file_status = [
             ['status_name' => 'Approved'],
             ['status_name' => 'Pending'],
@@ -203,7 +223,7 @@ class DatabaseSeeder extends Seeder
         }
         AreaFormCategory::factory(3)->create();
         AreaForms::factory(50)->create();
-        AreaFiles::factory(100)->create();
+        AreaFiles::factory(200)->create();
         Exhibits::factory(10)->create();
         ExhibitOutlines::factory(10)->create();
         ExhibitFiles::factory(10)->create();
