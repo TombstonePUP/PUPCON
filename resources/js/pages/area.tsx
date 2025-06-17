@@ -11,6 +11,7 @@ import {
     PerProgram,
     ParameterOutlineCategory
 } from '@/types';
+import { buildOutlineTree, RecursiveOutline } from '@/components/recursive-outline';
 
 interface AreaProps {
     program: PerProgram;
@@ -48,7 +49,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                     <Accordion type="single" collapsible className='w-[68%] flex flex-col gap-[1vw]'>
                         {area.area_parameters?.length > 0 ? (
                             area.area_parameters?.map((parameter, index) => (
-                                <AccordionItem value={`parameter-${index}`} key={index} className='before:bg-[#171717]'>
+                                <AccordionItem value={`parameter-${index}`} key={index}>
                                     <AccordionTrigger className='flex flex-row justify-between'>
                                         <div className="flex flex-row justify-between w-full">
                                             <h1 className='text-[#7f1414] font-black'>
@@ -63,20 +64,18 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                                 outline => outline.parameter_outline_category_id === category.parameter_outline_category_id
                                             ) || [];
                                             if (outlines.length === 0) return null;
+                                            {outlines.map((outline) => (
+                                                outline.initial = category.category_name == 'No Category' ?
+                                                    parameter.parameter_name == ' ' ? '' : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
+                                                    : category.category_name.match(/^[A-Za-z]/)
+                                            ))}
+
+                                            const sortedOutlines = buildOutlineTree({ outlines });
 
                                             return (
                                                 <div key={category.parameter_outline_category_id} className='bg-[#D9D9D9] p-[2vw] rounded'>
                                                     <h1 className='font-black text-[1vw]'>{category.category_name == 'No Category' ? '' : category.category_name}</h1>
-                                                    <ul className='pl-[1vw]'>
-                                                        {outlines.map((outline, i) => (
-                                                            <li key={i}>
-                                                                {category.category_name == 'No Category' ?
-                                                                    parameter.parameter_name == ' ' ? '' : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
-                                                                    : category.category_name.match(/^[A-Za-z]/)}.
-                                                                {outline.outline_number}. {outline.outline_description}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
+                                                    <RecursiveOutline outlines={sortedOutlines} />
                                                 </div>
                                             );
                                         })}

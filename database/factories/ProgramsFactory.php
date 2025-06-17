@@ -20,7 +20,7 @@ class ProgramsFactory extends Factory
             'program_id' => fake()->unique()->randomNumber(),
             'degree_type' => fake()->word(),
             'program_name' => fake()->word(),
-            'program_description' => fake()->sentence(),
+            'program_description' => fake()->paragraph(),
             'accreditation_level' => fake()->randomNumber(),
             'under_survey' => fake()->boolean(),
             'program_image_name' => fake()->word(),

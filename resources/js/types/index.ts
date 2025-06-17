@@ -196,6 +196,7 @@ export interface ParameterOutlines {
     outline_number: string;
     outline_description: string;
     container: boolean;
+    initial?: string;
     areaParameters?: AreaParameters;
     parameterOutlineCategory?: ParameterOutlineCategory;
     areaFiles?: AreaFiles;
