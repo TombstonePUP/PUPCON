@@ -14,9 +14,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-     Route::get('manage-programs/program', function () {
+    Route::get('manage-programs/program', function () {
         return Inertia::render('content/program');
     })->name('program_name');
+
+    Route::get('requests', function () {
+        return Inertia::render('document/document-request');
+    })->name('requests');
 
     Route::get('manage-programs', function () {
         return Inertia::render('manage-programs');

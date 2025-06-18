@@ -1,71 +1,60 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import {
-    AudioWaveform,
-    Bot, Braces,
-    Command,
-    GalleryVerticalEnd,
-    SquareTerminal,
-} from "lucide-react"
+import { AudioWaveform, Bot, Braces, Command, GalleryVerticalEnd, SquareTerminal, Boxes } from 'lucide-react';
+import * as React from 'react';
 
-import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
-import { LevelSwitcher } from "@/components/level-switcher"
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarRail,
-} from "@/components/ui/sidebar"
-import { usePage } from "@inertiajs/react"
+import { NavMain } from '@/components/nav-main';
+import { NavUser } from '@/components/nav-user';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarRail } from '@/components/ui/sidebar';
+import { usePage } from '@inertiajs/react';
 
 const data = {
     levels: [
         {
-            name: "Acme Inc",
+            name: 'Acme Inc',
             logo: GalleryVerticalEnd,
-            plan: "Enterprise",
+            plan: 'Enterprise',
         },
         {
-            name: "Acme Corp.",
+            name: 'Acme Corp.',
             logo: AudioWaveform,
-            plan: "Startup",
+            plan: 'Startup',
         },
         {
-            name: "Evil Corp.",
+            name: 'Evil Corp.',
             logo: Command,
-            plan: "Free",
+            plan: 'Free',
         },
     ],
     content: [
         {
-            title: "News",
-            url: "/dashboard",
+            title: 'News',
+            url: '/dashboard',
             icon: SquareTerminal,
         },
         {
-            title: "Programs",
-            url: "/embed",
+            title: 'Programs',
+            url: '/embed',
             icon: Bot,
             isActive: true,
             collapsible: true,
             items: [
                 {
-                    title: "Accountancy",
-                    url: "/accountancy",
-                }, {
-                    title: "Accountancy",
-                    url: "/accountancy",
-                }, {
-                    title: "Accountancy",
-                    url: "/accountancy",
+                    title: 'Accountancy',
+                    url: '/accountancy',
+                },
+                {
+                    title: 'Accountancy',
+                    url: '/accountancy',
+                },
+                {
+                    title: 'Accountancy',
+                    url: '/accountancy',
                 },
             ],
         },
     ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { auth } = usePage().props;
@@ -77,18 +66,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }));
     const accre = [
         {
-            title: "Analytics",
-            url: "/dashboard",
+            title: 'Analytics',
+            url: '/dashboard',
             icon: SquareTerminal,
         },
         {
-            title: "User Management",
-            url: "/users",
+            title: 'User Management',
+            url: '/users',
             icon: Bot,
         },
         {
-            title: "Programs",
-            url: "/manage-programs",
+            title: 'Requests',
+            url: '/requests',
+            icon: Boxes,
+        },
+        {
+            title: 'Programs',
+            url: '/manage-programs',
             icon: Braces,
             isActive: true,
             collapsible: true,
@@ -109,5 +103,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>
-    )
+    );
 }

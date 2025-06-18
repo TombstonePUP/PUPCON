@@ -16,7 +16,7 @@ import {
     type OverallUploads
 } from "@/types"
 
-import { columns } from "@/components/charts/activity/columns"
+import { columns } from "@/components/charts/data-table-columns/logs"
 
 interface DashboardProps {
     activityLogs: ActivityLogs[];
