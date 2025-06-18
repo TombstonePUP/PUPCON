@@ -25,7 +25,11 @@ export default function Programs() {
                     <div className="grid w-[75%] grid-cols-4 gap-2">
                         <div className="overflow-hidden rounded-xl bg-white">
                             <div className="grid place-items-center bg-[linear-gradient(120deg,#7f1414_0%,#c12c2c_100%)]">
-                                <img className="my-5 h-40 hover:scale-130" src="/images/exhibits/student-handbook.png" alt="Student Handbook" />
+                                <img
+                                    className="my-5 h-40 transition duration-300 hover:scale-120"
+                                    src="/images/exhibits/student-handbook.png"
+                                    alt="Student Handbook"
+                                />
                             </div>
                             <div className="rounded-b-xl border border-[#7f1414]/25 p-4">
                                 <h1 className="mb-2 text-xl font-black">Student Handbook</h1>
@@ -33,7 +37,7 @@ export default function Programs() {
                                 <div className="flex justify-end">
                                     <Dialog>
                                         <DialogTrigger asChild>
-                                            <Button className="mt-10 w-30 rounded-full border-none font-black hover:bg-[#7f1414] hover:text-white bg-[linear-gradient(120deg,#7f1414_0%,#c12c2c_100%)]">
+                                            <Button className="mt-10 w-30 rounded-full border-none bg-[linear-gradient(130deg,#7f1414_0%,#c12c2c_50%,#7f1414_100%)] bg-[length:200%_200%] font-black text-white hover:text-white transition-all duration-300 hover:bg-left hover:scale-105 cursor-pointer">
                                                 View
                                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path
@@ -47,21 +51,13 @@ export default function Programs() {
                                         </DialogTrigger>
                                         <DialogContent>
                                             <DialogHeader>
-                                                <DialogTitle>Add Parameter</DialogTitle>
-                                                <DialogDescription>Parameter A</DialogDescription>
+                                                <DialogTitle>Student Handbook</DialogTitle>
+                                                <DialogDescription>none</DialogDescription>
                                             </DialogHeader>
-                                            <form className="flex flex-col gap-4">
-                                                <DialogFooter>
-                                                    <DialogClose asChild>
-                                                        <Button tabIndex={3} variant="outline">
-                                                            Cancel
-                                                        </Button>
-                                                    </DialogClose>
-                                                    <Button variant="black" type="submit" tabIndex={4}>
-                                                        Submit
-                                                    </Button>
-                                                </DialogFooter>
-                                            </form>
+                                            {/* content */}
+                                            <div>
+
+                                            </div>
                                         </DialogContent>
                                     </Dialog>
                                 </div>
