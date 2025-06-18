@@ -1,369 +1,452 @@
 "use client";
-
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu"
-
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Eye, Trash2 } from 'lucide-react';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 
-import { useEffect } from "react";
+import { useForm } from '@inertiajs/react';
 
 import {
     type AreaParameters,
     type ParameterOutlineCategory
 } from "@/types";
+import { buildOutlineTree } from "@/components/recursive-outline";
 
 interface ParameterAccordionProps {
+    area_id?: number;
+    program: string;
     areaParameters?: AreaParameters[];
     parameterOutlineCategories?: ParameterOutlineCategory[];
 }
 
-export default function ParameterAccordion() {
+export default function ParameterAccordion({ area_id, program, areaParameters, parameterOutlineCategories }: ParameterAccordionProps) {
+
+    const {
+        data: dataParams,
+        setData: setParamsData,
+        patch: patchParams,
+        delete: destroyParams,
+        processing: processingParams,
+        errors: errorsParams,
+        reset: resetParams,
+    } = useForm<ParameterForm>({
+        area_id: area_id,
+        area_parameter_id: undefined,
+        parameter_name: '',
+        parameter_description: '',
+    });
+
+    const {
+        data: dataOutline,
+        setData: setOutlineData,
+        post: postOutline,
+        patch: patchOutline,
+        delete: destroyOutline,
+        processing: processingOutline,
+        errors: errorsOutline,
+        reset: resetOutline,
+    } = useForm<ParameterOutlineForm>({
+        parameter_outline_id: undefined,
+        area_parameter_id: 0,
+        parameter_outline_category_id: 0,
+        outline_number: 0,
+        outline_description: '',
+        container: false,
+    });
+
+    const editParameter = (e: React.FormEvent) => {
+        e.preventDefault();
+        patchParams(route('manage.area.updateParameter', [program, area_id, dataParams.area_parameter_id]), {
+            onSuccess: () => {
+                resetParams('parameter_name', 'parameter_description', 'area_parameter_id');
+            },
+        });
+    };
+
+    const deleteParameter = (id: number) => {
+        destroyParams(route('manage.area.deleteParameter', [program, area_id, id]), {
+            onSuccess: () => {
+                console.log('Parameter deleted successfully');
+            },
+        });
+    };
+
+    const addOutline = (e: React.FormEvent) => {
+        e.preventDefault();
+        postOutline(route('manage.area.addOutline', [program, area_id]), {
+            onFinish: () => {
+                resetOutline('area_parameter_id', 'parameter_outline_category_id', 'outline_number', 'outline_description', 'container');
+            },
+        });
+    };
+
+    const deleteOutline = (id: number) => {
+        console.log(id);
+        destroyOutline(route('manage.area.deleteOutline', [program, area_id, id]), {
+            onSuccess: () => {
+                console.log('Outline deleted successfully');
+            },
+        });
+    };
 
     return (
         <>
-            {areaParameters?.length ? (
+            <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
+            {areaParameters?.length > 0 ? (
                 areaParameters.map((parameter) => (
-                <Accordion type="single" collapsible className='w-[100%] flex flex-col gap-[1vw]'>
-                    <AccordionItem value="item-1">
-                        <AccordionTrigger className='flex flex-row justify-between items-center'>
-                            <div className="flex flex-row justify-between w-full ">
-                                <h1 className='text-[#7f1414] font-black text-lg'>
-                                    {parameter.parameter_name ? `Parameter ${parameter.parameter_name}` : null }
-                                </h1>
-                                <p className='text-lg'>{parameter.parameter_description}</p>
-                            </div>
-                            <div className='flex justify-center gap-3'>
-                                <Dialog>
-                                    <DialogTrigger asChild >
-                                        <Button>Edit</Button>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle>Edit Parameter</DialogTitle>
-                                            <DialogDescription>Parameter {parameter.parameter_name}</DialogDescription>
-                                        </DialogHeader>
-                                        <form onSubmit={editParameter}
-                                        className="flex flex-col gap-4">
-                                            <div className="flex gap-4">
-                                                <div className="w-1/4">
-                                                    <label className="block text-sm font-medium text-muted-foreground mb-1">Parameter</label>
-                                                    <input
-                                                        id="parameter_name"
-                                                        type="text"
-                                                        autoFocus
-                                                        maxLength={1}
-                                                        tabIndex={1}
-                                                        value={dataParams.parameter_name}
-                                                        onChange={(e) => {
-                                                            setParamsData('area_parameter_id', parameter.area_parameter_id);
-                                                            setParamsData('parameter_name', e.target.value)
-                                                        }}
-                                                        disabled={processingParams}
-                                                        placeholder='A'
-                                                        className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <label className="block text-sm font-medium text-muted-foreground mb-1">Description</label>
-                                                    <input
-                                                        id="parameter_description"
-                                                        type="text"
-                                                        required
-                                                        autoFocus
-                                                        // value={parameter.parameter_description}
-                                                        value={dataParams.parameter_description}
-                                                        tabIndex={2}
-                                                        onChange={(e) => {
-                                                            setParamsData('area_parameter_id', parameter.area_parameter_id);
-                                                            setParamsData('parameter_description', e.target.value)
-                                                        }}
-                                                        disabled={processingParams}
-                                                        placeholder='Enter description'
-                                                        className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <InputError message={errorsParams.parameter_name} className="mt-2" />
-                                            <InputError message={errorsParams.parameter_description} className="mt-2" />
-                                            <DialogFooter>
-                                                <DialogClose asChild>
-                                                    <Button tabIndex={3} variant="outline">Cancel</Button>
-                                                </DialogClose>
-                                                <Button type="submit" tabIndex={4}>Submit</Button>
-                                            </DialogFooter>
-                                        </form>
-                                    </DialogContent>
-                                </Dialog>
-                                <Dialog>
-                                    <DialogTrigger asChild>
-                                        <Button variant="reverse">Remove</Button>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle>Are you sure?</DialogTitle>
-                                            <DialogDescription>
-                                                This action cannot be undone. This will permanently delete the <b>Parameter {parameter.parameter_name}</b>.
-                                            </DialogDescription>
-                                        </DialogHeader>
-                                        <DialogFooter>
-                                            <DialogClose asChild>
-                                                <Button variant="outline">Cancel</Button>
-                                            </DialogClose>
-                                            <Button disabled={processingParams} onClick={() => deleteParameter(parameter.area_parameter_id)} type="submit">
-                                                Remove
-                                            </Button>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </Dialog>
-                            </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            {parameterOutlineCategories?.some(category =>
-                                category.parameter_outlines?.some(outline =>
-                                    outline.area_parameter_id === parameter.area_parameter_id
-                                )
-                            ) ? (
-                                parameterOutlineCategories.map((category) => {
-                                    const outlinesForParameter = category.parameter_outlines?.filter(
-                                        (outline) => outline.area_parameter_id === parameter.area_parameter_id
-                                    ) ?? [];
-                                    if (!outlinesForParameter.length) return null;
-                                    return (
-                                        <div key={category.id} className='bg-[#D9D9D9] p-[2vw] rounded'>
-                                            <h1 className='font-black text-[1vw]'>{category.category_name === 'No Category' ? null :  category.category_name}</h1>
-                                            <ul className='pl-[1vw]'>
-                                                {outlinesForParameter.map((outline) => (
-                                                    <li key={outline.id}>
-                                                        <Dialog>
-                                                            <DialogTrigger asChild>
-                                                            </DialogTrigger>
-                                                            <DialogContent>
-                                                                <DialogHeader>
-                                                                    <DialogTitle>Attach Document</DialogTitle>
-                                                                    <DialogDescription>
-                                                                        Attach a document to the outline: <b>{outline.outline_description}</b>
-                                                                    </DialogDescription>
-                                                                </DialogHeader>
-                                                                <div className="flex flex-col gap-4">
-                                                                    <div>
-                                                                        <label className="block text-sm font-medium text-muted-foreground mb-1">
-                                                                            Upload Document
-                                                                        </label>
-                                                                        <input
-                                                                            type="file"
-                                                                            className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-foreground hover:file:bg-accent"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <DialogFooter>
-                                                                    <DialogClose asChild>
-                                                                        <Button variant="outline">Cancel</Button>
-                                                                    </DialogClose>
-                                                                    <Button>Submit</Button>
-                                                                </DialogFooter>
-                                                            </DialogContent>
-                                                        </Dialog>
-                                                        <ContextMenu>
-                                                            <ContextMenuTrigger>
-                                                                <a className='cursor-pointer underline text-[#7f1414]'>
-                                                                    {outline.outline_description}
-                                                                </a>
-                                                            </ContextMenuTrigger>
-                                                            <ContextMenuContent>
-                                                                <Dialog>
-                                                                    <DialogTrigger asChild>
-                                                                    <Button variant="none" className='shadowColor: none, , w-full justify-start border-none'>
-                                                                            Edit Outline
-                                                                    </Button>
-                                                                    </DialogTrigger>
-                                                                    <DialogContent>
-                                                                        <DialogHeader>
-                                                                            <DialogTitle>Edit Outline {outline.outline_number} - {outline.outline_description}</DialogTitle>
-                                                                            <DialogDescription>
-                                                                                This action cannot be undone. This will permanently delete the <b>Parameter {outline.outline_description}</b>.
-                                                                            </DialogDescription>
-                                                                        </DialogHeader>
-                                                                    </DialogContent>
-                                                                </Dialog>
-                                                                <Dialog>
-                                                                    <DialogTrigger asChild>
-                                                                    <Button variant="reverse" className='shadowColor: none, , w-full justify-start !text-black border-none hover:bg-red-400'>
-                                                                            Attach Document
-                                                                    </Button>
-                                                                    </DialogTrigger>
-                                                                    <DialogContent>
-                                                                        <DialogHeader>
-                                                                            <DialogTitle>Are you sure?</DialogTitle>
-                                                                            <DialogDescription>
-                                                                                This action cannot be undone. This will permanently delete the <b>Parameter {outline.outline_description}</b>.
-                                                                            </DialogDescription>
-                                                                        </DialogHeader>
-                                                                        <DialogFooter>
-                                                                            <DialogClose asChild>
-                                                                                <Button variant="outline">Cancel</Button>
-                                                                            </DialogClose>
-                                                                            <Button type="submit">
-                                                                                Submit
-                                                                            </Button>
-                                                                        </DialogFooter>
-                                                                    </DialogContent>
-                                                                </Dialog>
-                                                                <ContextMenuItem>Download</ContextMenuItem>
-                                                                <ContextMenuSeparator />
-                                                                <Dialog>
-                                                                    <DialogTrigger asChild>
-                                                                    <Button variant="reverse" className='shadowColor: none, , w-full justify-start !text-black border-none hover:bg-red-400'>
-                                                                        Delete
-                                                                    </Button>
-                                                                    </DialogTrigger>
-                                                                    <DialogContent>
-                                                                        <DialogHeader>
-                                                                            <DialogTitle>Are you sure?</DialogTitle>
-                                                                            <DialogDescription>
-                                                                                This action cannot be undone. This will permanently delete the <b>Parameter {outline.outline_description}</b>.
-                                                                            </DialogDescription>
-                                                                        </DialogHeader>
-                                                                        <DialogFooter>
-                                                                            <DialogClose asChild>
-                                                                                <Button variant="outline">Cancel</Button>
-                                                                            </DialogClose>
-                                                                            <Button type="submit">
-                                                                                Remove
-                                                                            </Button>
-                                                                        </DialogFooter>
-                                                                    </DialogContent>
-                                                                </Dialog>
-                                                            </ContextMenuContent>
-                                                        </ContextMenu>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    );
-                                })
-                            ) : (
-                                <div className='flex flex-col items-center justify-center w-full h-full'>
-                                    <h1 className='text-[1.5vw] font-bold'>Content Not Available</h1>
-                                    <p className='text-[1.2vw] text-[#858585]'>No Available Outline/Files in This Parameter.</p>
-                                </div>
-                            )}
+                <AccordionItem value={`item-${parameter.area_parameter_id}`} className="before:bg-[#171717]">
+                    <AccordionTrigger className="flex flex-row items-center justify-between">
+                        <div className="flex h-full w-full flex-row items-center">
+                            <h1 className="font-black text-[#171717]">
+                                { parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}` : parameter.parameter_name }
+                            </h1>
+                            <p className="flex-1 text-center">{parameter.parameter_description}</p>
+                        </div>
+                        <div className="flex justify-center gap-3">
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <a className='cursor-pointer underline'>Add Outline</a>
+                                    <Button variant="black">Edit</Button>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                        <DialogTitle>Add Outline</DialogTitle>
-                                        <DialogDescription>
-                                            Make a new outline for {parameter.parameter_name}
-                                        </DialogDescription>
+                                        <DialogTitle>Edit Parameter</DialogTitle>
+                                        <DialogDescription>{ parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}` : parameter.parameter_name }</DialogDescription>
                                     </DialogHeader>
-                                    <form onSubmit={(e) => addOutline(e)} className="flex flex-col gap-4">
-                                        <div className=" flex flex-col gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-muted-foreground mb-1">Outline Number</label>
+                                    <form
+                                        onSubmit={editParameter}
+                                        className="flex flex-col gap-4"
+                                    >
+                                        <div className="flex gap-4">
+                                            <div className="w-1/4">
+                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Parameter</label>
                                                 <input
-                                                    id="outline_number"
+                                                    id="parameter_name"
                                                     type="text"
-                                                    required
                                                     autoFocus
+                                                    maxLength={1}
                                                     tabIndex={1}
-                                                    value={dataOutline.outline_number}
-                                                    onChange={(e) => setOutlineData('outline_number', e.target.value)}
-                                                    disabled={processingOutline}
-                                                    placeholder="1.1.3"
-                                                    className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                    value={dataParams.parameter_name}
+                                                    onChange={(e) => {
+                                                        setParamsData('parameter_name', e.target.value)
+                                                        setParamsData('area_parameter_id', parameter.area_parameter_id);
+                                                    }}
+                                                    disabled={processingParams}
+                                                    placeholder='A'
+                                                    className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                                                 />
-                                                <InputError message={errorsOutline.outline_number} className="mt-2" />
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-muted-foreground mb-1">Outline Name</label>
-                                                <textarea
-                                                    id="outline_description"
-                                                    required
+                                            <div className="flex-1">
+                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">
+                                                    Description
+                                                </label>
+                                                <input
+                                                    id="parameter_description"
+                                                    type="text"
                                                     autoFocus
                                                     tabIndex={2}
-                                                    value={dataOutline.outline_description}
-                                                    onChange={(e) => setOutlineData('outline_description', e.target.value)}
-                                                    disabled={processingOutline}
-                                                    placeholder="Enter outline description"
-                                                    className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring resize-y min-h-[100px]"
+                                                    value={dataParams.parameter_description}
+                                                    onChange={(e) => {
+                                                        setParamsData('parameter_description', e.target.value)
+                                                        setParamsData('area_parameter_id', parameter.area_parameter_id);
+                                                    }}
+                                                    placeholder="Enter description"
+                                                    className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-muted-foreground mb-1">Outline Category</label>
-                                                <select
-                                                    className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    id="parameter_outline_category_id"
-                                                    tabIndex={3}
-                                                    autoFocus
-                                                    value= {dataOutline.parameter_outline_category_id}
-                                                    onChange={(e) => setOutlineData('parameter_outline_category_id', e.target.value)}
-                                                    disabled={processingOutline}
-                                                >
-                                                    <option value='' disabled>Select Category</option>
-                                                    {
-                                                        parameterOutlineCategories?.map((category) => {
-                                                            return (
-                                                                <option key={category.parameter_outline_category_id} value={category.parameter_outline_category_id}>
-                                                                    {category.category_name}
-                                                                </option>
-                                                            );
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                            <div className="flex items-center cursor-pointer">
-                                                <Checkbox
-                                                    id="container"
-                                                    className="accent-ring"
-                                                    tabIndex={4}
-                                                    autoFocus
-                                                    checked={dataOutline.container}
-                                                    onCheckedChange={(checked) => setOutlineData('container', checked === true)}
-                                                />
-                                                <span className="ml-2">Outline Container</span>
-                                            </div>
-                                            {/* <div>
-                                                <label className="block text-sm font-medium text-muted-foreground mb-1">Upload Document</label>
-                                                <input
-                                                    type="file"
-                                                    className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-foreground hover:file:bg-accent"
-                                                />
-                                            </div> */}
                                         </div>
+                                        <InputError message={errorsParams.parameter_name} className="mt-2" />
+                                        <InputError message={errorsParams.parameter_description} className="mt-2" />
                                         <DialogFooter>
                                             <DialogClose asChild>
-                                                <Button tabIndex={5} disabled={processingOutline} variant="outline">Cancel</Button>
+                                                <Button tabIndex={3} variant="outline">
+                                                    Cancel
+                                                </Button>
                                             </DialogClose>
-                                            <Button
-                                                type='submit'
-                                                tabIndex={6}
-                                                onClick={() => setOutlineData('area_parameter_id', parameter.area_parameter_id)}
-                                                disabled={processingOutline}
-                                            >
+                                            <Button variant="black" type="submit" tabIndex={4}>
                                                 Submit
                                             </Button>
                                         </DialogFooter>
                                     </form>
                                 </DialogContent>
                             </Dialog>
-                        </AccordionContent>
-                    </AccordionItem>
-                </Accordion>
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline">Remove</Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Are you sure?</DialogTitle>
+                                        <DialogDescription>
+                                            This action cannot be undone. This will permanently delete the Parameter A
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                        <DialogClose asChild>
+                                            <Button variant="outline">Cancel</Button>
+                                        </DialogClose>
+                                        <Button
+                                            disabled={processingParams}
+                                            onClick={() => deleteParameter(parameter.area_parameter_id)}
+                                            type="submit"
+                                        >
+                                            Remove
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                        {parameterOutlineCategories?.length > 0 ? (
+                            parameterOutlineCategories.map((category) => {
+                                const outlines = parameter.parameter_outlines?.filter(
+                                    outline => outline.parameter_outline_category_id === category.parameter_outline_category_id
+                                ) || [];
+                                if (outlines.length === 0) return null;
+                                {outlines.map((outline) => (
+                                    outline.initial = category.category_name == 'No Category' ?
+                                        parameter.parameter_name == ' ' ? '' : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
+                                        : category.category_name.match(/^[A-Za-z]/)
+                                ))}
+
+                                const sortedOutlines = buildOutlineTree({ outlines });
+
+                                return (
+                                    <>
+                                        <div className="rounded bg-[#D9D9D9] p-[2vw]">
+                                            <h1 className="text-[1vw] font-black">{category.category_name == 'No Category' ? '' : category.category_name}</h1>
+                                            <ul className="pl-[1vw]">
+                                                <li>
+                                                    <Dialog>
+                                                        <DialogTrigger asChild>
+                                                            <a className="cursor-pointer underline">
+                                                                S.1. The institution has a system of determining the Vision and Mission.
+                                                            </a>
+                                                        </DialogTrigger>
+                                                        <DialogContent>
+                                                            <DialogHeader>
+                                                                <DialogTitle className="text-2xl font-black">Edit Outline</DialogTitle>
+                                                                <DialogDescription>Parameter A - Systems - Inputs and Processes</DialogDescription>
+                                                            </DialogHeader>
+
+                                                            <div className="flex flex-col gap-3 ">
+                                                                {/* Current Document Section */}
+                                                                <div>
+                                                                    <h1 className='text-sm font-medium text-muted-foreground mb-1'>Current Document</h1>
+                                                                    <div className="flex items-center gap-4 rounded border bg-gray-50 p-4">
+                                                                        <div className="flex-1">
+                                                                            <p className="text-sm text-gray-600">No document uploaded</p>
+                                                                            {/* When document exists:
+                                                                            <p className="font-medium">vision_mission_system.pdf</p>
+                                                                            <p className="text-sm text-gray-500">Uploaded on Jan 15, 2023</p>
+                                                                            */}
+                                                                        </div>
+                                                                        <Button variant="outline" size="sm" disabled={true}>
+                                                                            <Eye className="mr-2 h-4 w-4" />
+                                                                            View PDF
+                                                                        </Button>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Edit Outline Section */}
+                                                                <div>
+                                                                    <h3 className='text-sm font-medium text-muted-foreground mb-1'>Edit Outline Content</h3>
+                                                                    <textarea
+                                                                        className="min-h-[120px] text-sm w-full rounded border p-3 focus:border-transparent focus:ring-2 focus:ring-blue-500 max-h-[20vw]"
+                                                                        defaultValue="The institution has a system of determining the Vision and Mission."
+                                                                        placeholder="Enter outline description..."
+                                                                    />
+                                                                </div>
+
+                                                                {/* Upload File Section */}
+                                                                <div className="space-y-2">
+                                                                    <h3 className='text-sm font-medium text-muted-foreground mb-1'>Upload Document</h3>
+                                                                    <div className="flex w-full items-center justify-center">
+                                                                        <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                                                <svg
+                                                                                    className="mb-4 h-8 w-8 text-gray-500"
+                                                                                    aria-hidden="true"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    fill="none"
+                                                                                    viewBox="0 0 20 16"
+                                                                                >
+                                                                                    <path
+                                                                                        stroke="currentColor"
+                                                                                        strokeLinecap="round"
+                                                                                        strokeLinejoin="round"
+                                                                                        strokeWidth="2"
+                                                                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                                                                    />
+                                                                                </svg>
+                                                                                <p className="mb-2 text-sm text-gray-500">
+                                                                                    <span className="font-semibold">Click to upload</span> or drag and
+                                                                                    drop
+                                                                                </p>
+                                                                                <p className="text-xs text-gray-500">PDF (MAX. 10MB)</p>
+                                                                            </div>
+                                                                            <input type="file" className="hidden" accept=".pdf" />
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Action Buttons */}
+                                                                <div className="flex justify-between pt-4">
+                                                                    <Dialog>
+                                                                        <DialogTrigger asChild>
+                                                                            <Button variant="destructive">
+                                                                                <Trash2 className="h-4 w-4" />
+                                                                                Remove Outline
+                                                                            </Button>
+                                                                        </DialogTrigger>
+                                                                        <DialogContent className="max-w-md">
+                                                                            <DialogHeader>
+                                                                                <DialogTitle>Confirm Removal</DialogTitle>
+                                                                                <DialogDescription>
+                                                                                    Are you sure you want to permanently remove this outline and all
+                                                                                    associated documents?
+                                                                                </DialogDescription>
+                                                                            </DialogHeader>
+                                                                            <DialogFooter>
+                                                                                <DialogClose asChild>
+                                                                                    <Button variant="outline">Cancel</Button>
+                                                                                </DialogClose>
+                                                                                <Button variant="destructive">Delete Permanently</Button>
+                                                                            </DialogFooter>
+                                                                        </DialogContent>
+                                                                    </Dialog>
+
+                                                                    <div className="flex gap-2">
+                                                                        <DialogClose asChild>
+                                                                            <Button variant="outline">Cancel</Button>
+                                                                        </DialogClose>
+                                                                        <Button variant="black" type="submit">
+                                                                            Save Changes
+                                                                        </Button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </DialogContent>
+                                                    </Dialog>
+                                                </li>
+                                                <li>S.2. The Vision clearly reflects what the Institution hopes to become in the future.</li>
+                                                <li>S.3. The Mission clearly reflects the Institution’s legal and other statutory mandates.</li>
+                                            </ul>
+                                        </div>
+                                    </>
+                                );
+                            })
+                        ) : (
+                            <p className="text-center text-gray-500">No outlines available for this parameter.</p>
+                        )}
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <a className="cursor-pointer underline">Add Outline</a>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Add Outline</DialogTitle>
+                                    <DialogDescription>Make a new outline for Parameter { parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}` : parameter.parameter_name }</DialogDescription>
+                                </DialogHeader>
+                                <form className="flex flex-col gap-4">
+                                    <div className="flex flex-col gap-4">
+                                        <div>
+                                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Number</label>
+                                            <input
+                                                id="outline_number"
+                                                type="text"
+                                                required
+                                                autoFocus
+                                                tabIndex={1}
+                                                placeholder="1.1.3"
+                                                className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                                            />
+                                            <InputError
+                                                // message={errorsOutline.outline_number}
+                                                className="mt-2"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Name</label>
+                                            <textarea
+                                                id="outline_description"
+                                                required
+                                                autoFocus
+                                                tabIndex={2}
+                                                placeholder="Enter outline description"
+                                                className="focus:border-ring focus:ring-ring min-h-[100px] w-full resize-y rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-muted-foreground mb-1 block text-sm font-medium">
+                                                Outline Category
+                                            </label>
+                                            <select
+                                                className="bg-background focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                                                id="parameter_outline_category_id"
+                                                tabIndex={3}
+                                                autoFocus
+                                            >
+                                                <option value="" disabled>
+                                                    Select Category
+                                                </option>
+                                                {parameterOutlineCategories?.map((category) => {
+                                                    return (
+                                                        <option
+                                                            key={category.parameter_outline_category_id}
+                                                            value={category.parameter_outline_category_id}
+                                                        >
+                                                            {category.category_name}
+                                                        </option>
+                                                    );
+                                                })}
+                                            </select>
+                                        </div>
+                                        <div className="flex cursor-pointer items-center">
+                                            <label className="flex gap-2 text-sm">
+                                                <input type="checkbox" className="accent-ring" />
+                                                Outline Container
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <DialogClose asChild>
+                                            <Button
+                                                tabIndex={5}
+                                                // disabled={processingOutline}
+                                                variant="outline"
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </DialogClose>
+                                        <Button variant="black" type="submit" tabIndex={6}>
+                                            Submit
+                                        </Button>
+                                    </DialogFooter>
+                                </form>
+                            </DialogContent>
+                        </Dialog>
+                    </AccordionContent>
+                </AccordionItem>
                 ))
             ) : (
-                <div className='flex flex-col items-center justify-center w-full h-full'>
-                    <h1 className='text-[1.5vw] font-bold'>Content Not Available</h1>
-                    <p className='text-[1.2vw] text-[#858585]'>No Available Parameters in This Area.</p>
+                <div className="flex h-full w-full flex-col items-center justify-center">
+                    <h1 className="text-[1.5vw] font-bold">Content Not Available</h1>
+                    <p className="text-[1.2vw] text-[#858585]">No Available Parameters in This Area.</p>
                 </div>
             )}
+            </Accordion>
         </>
     );
 }
