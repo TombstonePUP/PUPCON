@@ -1,7 +1,8 @@
-import { Head } from '@inertiajs/react';
-import Layout from '@/layouts/landing-layout';
+import ImageRow from '@/components/imagerow';
 import { AreaCard } from '@/components/ui/area-card';
+import Layout from '@/layouts/landing-layout';
 import { PerProgramUnderSurvey } from '@/types';
+import { Head } from '@inertiajs/react';
 
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
@@ -16,66 +17,102 @@ export default function Programs({ program }: PerProgramProps) {
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
             <Layout>
-                <div className='flex flex-col items-center gap-3'>
-                    <div className="relative before:content-[''] rounded-t-2xl mt-8 w-[75%] before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#7f1414] before:to-transparent overflow-hidden h-[20vw] flex items-center">
-                        <img className='w-full' src="/images/campus/comlab.jpg" alt="banner" />
-                        <h2 className='absolute text-white left-20 top-[7.5vw]'>
+                <div className="flex flex-col items-center gap-3">
+                    <div className="relative mt-7 flex h-[20vw] w-[75%] items-center overflow-hidden rounded-t-2xl rounded-bl-2xl before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#7f1414] before:to-transparent before:content-['']">
+                        <img className="w-full" src="/images/campus/comlab.jpg" alt="banner" />
+                        <h2 className="absolute top-[7.5vw] left-20 text-white">
                             {program.accreditation_level === 0 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + program.accreditation_level}
                         </h2>
-                        <h1 className='absolute text-white left-20 top-[9vw] w-full font-black text-[3vw]'>
+                        <h1 className="absolute top-[9vw] left-20 w-full text-[3vw] font-black text-white">
                             {program.degree_type.match(/\b[A-Z]/g)} {program.program_name}
                         </h1>
-                        <h2 className='absolute text-white left-20 top-[13vw]'>Polytechnic University of the Philippines <b>San Juan Campus</b>
+                        <h2 className="absolute top-[13vw] left-20 text-white">
+                            Polytechnic University of the Philippines <b>San Juan Campus</b>
                         </h2>
-                        <div className='absolute bg-white w-fit py-[1vw] px-[2vw] h-fit gap-[0.8vw] rounded-xl right-[7vw] flex flex-col'>
-                            <a className='text-[#a6a6a6] border-b border-[##0003] pb-[0.7vw] hover:text-[#7f1414]' href="#overview">
+                        <div className="absolute right-15 flex h-fit w-fit flex-col gap-[0.8vw] rounded-xl bg-white px-[2vw] py-[1vw] opacity-85">
+                            <a className="border-b border-[##0003] pb-[0.7vw] text-[#a6a6a6] hover:text-[#7f1414]" href="#overview">
                                 Program Overview
                             </a>
-                            <a className='text-[#a6a6a6] border-b border-[##0003] pb-[0.7vw] hover:text-[#7f1414]' href="#goals">
+                            <a className="border-b border-[##0003] pb-[0.7vw] text-[#a6a6a6] hover:text-[#7f1414]" href="#goals">
                                 Program Goals
                             </a>
-                            <a className='text-[#a6a6a6] hover:text-[#7f1414]' href="#areas">
+                            <a className="text-[#a6a6a6] hover:text-[#7f1414]" href="#areas">
                                 Areas Under Survey
                             </a>
                         </div>
                     </div>
-                    <div className='flex justify-center border gap-3 border-[#7f1414]/25 w-[75%] p-4'>
-                        <h1 className='border-r border-[#7f1414]/25 px-4 font-[950] text-2xl'>
-                            <p className='font-normal text-sm mb-[-0.5vw]'>Student Population</p>
+                    <div className="flex w-[75%] justify-center gap-4 rounded-xl rounded-tr-none border border-[#7f1414]/25 p-4">
+                        <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-[950]">
+                            <p className="mb-[-0.3vw] text-sm font-normal">Student Population</p>
                             1000
                         </h1>
-                        <h1 className='border-r border-[#7f1414]/25 px-4 font-[950] text-2xl'>
-                            <p className='font-normal text-sm mb-[-0.5vw]'>Years to take</p>
-                            4
+                        <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-[950]">
+                            <p className="mb-[-0.3vw] text-sm font-normal">Years to take</p>4
                         </h1>
-                        <h1 className='border-r border-[#7f1414]/25 px-4 font-[950] text-2xl'>
-                            <p className='font-normal text-sm mb-[-0.5vw]'>Required credits</p>
+                        <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-[950]">
+                            <p className="mb-[-0.3vw] text-sm font-normal">Required credits</p>
                             33
                         </h1>
-                        <h1 className='border-r border-[#7f1414]/25 px-4 font-[950] text-2xl'>
-                            <p className='font-normal text-sm mb-[-0.5vw]'>Faculty population</p>
-                            9
+                        <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-[950]">
+                            <p className="mb-[-0.3vw] text-sm font-normal">Faculty population</p>9
                         </h1>
-                        <h1 className='px-4 font-[950] text-2xl'>
-                            <p className='font-normal text-sm mb-[-0.5vw]'>Latest graduates</p>
+                        <h1 className="px-4 text-4xl font-[950]">
+                            <p className="mb-[-0.3vw] text-sm font-normal">Latest graduates</p>
                             100
                         </h1>
                     </div>
-                    <div className='flex flex-row gap-[5vw] w-[75%] border border-[#7f1414]/25 justify-between rounded-b-xl p-5' id='overview'>
-                        <div>
-                            <h1 className='font-black text-[1.8vw] mb-[1vw]'>
-                                Program Overview
-                            </h1>
-                            <p>
-                                {program.overview_description || 'No program overview available.'}
-                            </p>
+                    <div className="flex w-[75%] flex-row justify-between gap-4 rounded-xl" id="overview">
+                        <div className="flex-1 rounded-xl border border-[#7f1414]/25 p-8 px-13">
+                            <h1 className="mb-1 text-[1.8vw] font-black">Program Overview</h1>
+                            <p>{program.overview_description || 'No program overview available.'}</p>
                         </div>
-                        <img className='rounded-[1vw] w-[25vw]' src="/images/campus/comlab.jpg" alt="computer lab" />
+                        <img className="w-[25vw] rounded-xl" src="/images/campus/comlab.jpg" alt="computer lab" />
                     </div>
-                    <div className="bg-[url('/images/objectives-bg.png')] w-full h-[23vw] bg-cover flex justify-center items-center" id='goals'>
+                    <div className="flex h-[23vw] w-full items-center justify-center bg-cover" id="goals">
                         <h1>No Program Objective</h1>
                     </div>
-                    <div className='h-fit w-full px-[13vw] py-[3vw] flex flex-wrap flex-row gap-[1.5vw] justify-center' id='areas'>
+                    <div className="grid w-[75%] place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
+                        <h1 className="text-4xl font-black">Gallery of Excellence</h1>
+                        <p>Showcasing the moments that define our passion and commitment.</p>
+                    </div>
+                    <ImageRow
+                        height="h-112"
+                        images={[
+                            { id: 1, src: '/images/gallery/it/1.jpg', alt: '' },
+                            { id: 2, src: '/images/gallery/it/1.jpg', alt: '' },
+                            { id: 3, src: '/images/gallery/it/1.jpg', alt: '' },
+                            { id: 4, src: '/images/gallery/it/1.jpg', alt: '' },
+                            { id: 5, src: '/images/gallery/it/1.jpg', alt: '' },
+                            { id: 6, src: '/images/gallery/it/1.jpg', alt: '' },
+                            { id: 7, src: '/images/gallery/it/1.jpg', alt: '' },
+                        ]}
+                    />
+                    <div className="flex w-[75%] items-center justify-center overflow-x-hidden py-6">
+                        <svg height="55" viewBox="0 0 1156 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M558.066 44.1741L559.801 36.6052L553.983 31.5144L561.669 30.841L564.657 23.7031L567.646 30.841L575.332 31.5144L569.514 36.6052L571.249 44.1741L564.657 40.1607L558.066 44.1741Z"
+                                fill="#daa520"
+                                fill-opacity="0.44"
+                            ></path>
+                            <path
+                                d="M573.01 23.7031L574.744 16.1343L568.927 11.0435L576.612 10.3701L579.601 3.23218L582.59 10.3701L590.275 11.0435L584.458 16.1343L586.192 23.7031L579.601 19.6898L573.01 23.7031Z"
+                                fill="#daa520"
+                                fill-opacity="0.44"
+                            ></path>
+                            <path
+                                d="M585.819 44.1741L587.553 36.6052L581.736 31.5144L589.421 30.841L592.41 23.7031L595.399 30.841L603.084 31.5144L597.267 36.6052L599.001 44.1741L592.41 40.1607L585.819 44.1741Z"
+                                fill="#daa520"
+                                fill-opacity="0.44"
+                            ></path>
+                            <line x1="636" y1="27.5" x2="1156" y2="27.5" stroke="#7F1414" stroke-opacity="0.26"></line>
+                            <line y1="27.5" x2="520" y2="27.5" stroke="#7F1414" stroke-opacity="0.26"></line>
+                        </svg>
+                    </div>
+                    <div className="grid w-[75%] place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
+                        <h1 className="text-4xl font-black">Areas Under Survey</h1>
+                        <p>ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES</p>
+                    </div>
+                    <div className="flex h-fit w-full flex-row flex-wrap justify-center gap-[1.5vw] px-[13vw] py-3" id="areas">
                         {program?.areas?.length > 0 ? (
                             program.areas.map((area, index) => (
                                 <AreaCard
@@ -83,18 +120,15 @@ export default function Programs({ program }: PerProgramProps) {
                                     imageSrc={area.image_path || '/images/placeholder.png'}
                                     heading={area.area_name}
                                     circleLetter={area.area_numeral}
-                                    href={route('programs.areas.show', [
-                                        program.program_name,
-                                        area.area_id,
-                                    ])}
+                                    href={route('programs.areas.show', [program.program_name, area.area_id])}
                                 />
                             ))
                         ) : (
-                            <p className='text-center text-gray-500'>No areas under survey.</p>
+                            <p className="text-center text-gray-500">No areas under survey.</p>
                         )}
                     </div>
                 </div>
             </Layout>
         </>
-    )
+    );
 }

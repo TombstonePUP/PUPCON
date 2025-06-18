@@ -14,6 +14,10 @@ Route::controller(ProgramsController::class)->prefix('programs')->group(function
     Route::get('/{program_name}', 'show')->name('programs.show');
 });
 
+Route::get('exhibits', function () {
+    return Inertia::render('exhibits');
+})->name('exhibits');
+
 Route::get('/programs/{program_name}/{area_id}', AreasController::class)
     ->name('programs.areas.show');
 
