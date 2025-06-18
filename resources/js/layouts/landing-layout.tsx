@@ -50,7 +50,7 @@ export default function Layout({ children }: LayoutProps) {
         },
         {
             label: 'EXHIBITS',
-            href: '/',//'/exhibits',
+            href: '/exhibits',
             dropdown: [],
         },
         {
