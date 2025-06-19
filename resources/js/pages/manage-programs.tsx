@@ -83,11 +83,11 @@ export default function ManagePrograms({ userRecords }: UsersProps) {
                                         </div>
                                     </div>
                                 </TabsContent>
-                                <TabsContent value="desc" className='flex flex-col gap-4'>                                                            <textarea
-                                    placeholder="Enter program overview"
-                                    className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring resize-y min-h-[100px]"
-                                />
-
+                                <TabsContent value="desc" className='flex flex-col gap-4'>
+                                    <textarea
+                                        placeholder="Enter program overview"
+                                        className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring resize-y min-h-[100px]"
+                                    />
                                 </TabsContent>
                             </Tabs>
 

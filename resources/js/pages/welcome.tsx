@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { CardDescription, CardHeader, CardImage, HomeCard, HomeCardTitle } from '@/components/ui/card';
+import { CardDescription, CardHeader, CardImage, HomeCard, HomeCardTitle, HomeCardDescription } from '@/components/ui/card';
 import Layout from '@/layouts/landing-layout';
 import { Head, Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
@@ -33,9 +33,9 @@ export default function Welcome() {
                                 <CardImage src="/images/pupcet.jpg" alt="pupcet" />
                                 <CardHeader>
                                     <HomeCardTitle>PUPSJ PUPCET</HomeCardTitle>
-                                    <CardDescription>
+                                    <HomeCardDescription>
                                         The PUPSJ PUPCET Online Application for Academic Year 2025-2026 starts on December 15, 2024 - April 15, 2025.
-                                    </CardDescription>
+                                    </HomeCardDescription>
                                 </CardHeader>
                             </HomeCard>
                         </Link>
@@ -44,7 +44,9 @@ export default function Welcome() {
                                 <CardImage src="/images/cpale.jpg" alt="cpale" />
                                 <CardHeader>
                                     <HomeCardTitle>CPALE 2024 Passers</HomeCardTitle>
-                                    <CardDescription>Pagpupugay sa bagong CPA ng ating Sintang Paaralan.</CardDescription>
+                                    <HomeCardDescription
+                                    >Pagpupugay sa bagong CPA ng ating Sintang Paaralan.
+                                    </HomeCardDescription>
                                 </CardHeader>
                             </HomeCard>
                         </Link>
@@ -53,10 +55,10 @@ export default function Welcome() {
                                 <CardImage src="/images/mental.jpg" alt="mental health" />
                                 <CardHeader>
                                     <HomeCardTitle>Mental Health Matters</HomeCardTitle>
-                                    <CardDescription>
+                                    <HomeCardDescription>
                                         The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow
                                         tips for boosting your
-                                    </CardDescription>
+                                    </HomeCardDescription>
                                 </CardHeader>
                             </HomeCard>
                         </Link>
@@ -65,9 +67,9 @@ export default function Welcome() {
                                 <CardImage src="/images/ceremony.jpg" alt="ceremony" />
                                 <CardHeader>
                                     <HomeCardTitle>Ceremonial Signing</HomeCardTitle>
-                                    <CardDescription>
+                                    <HomeCardDescription>
                                         A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!
-                                    </CardDescription>
+                                    </HomeCardDescription>
                                 </CardHeader>
                             </HomeCard>
                         </Link>
@@ -129,9 +131,9 @@ export default function Welcome() {
                             <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl">
                                 <iframe
                                     className="h-full w-full"
-                                    src="https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=1"
+                                    src="https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=0"
                                     title="PUPSJ AVP 2024"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
                                 ></iframe>
                                 <div className="bg-gradient-radial pointer-events-none absolute -bottom-10 left-1/2 h-64 w-64 -translate-x-1/2 transform rounded-full from-[#b11116]/40 to-transparent blur-xl"></div>

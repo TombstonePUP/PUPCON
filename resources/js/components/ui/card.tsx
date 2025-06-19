@@ -7,7 +7,7 @@ function HomeCard({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border overflow-hidden shadow-sm mx-auto ",
+        "group bg-card text-card-foreground flex flex-col gap-6 rounded-xl border overflow-hidden shadow-sm mx-auto ",
         className
       )}
       {...props}
@@ -56,6 +56,20 @@ function HomeCardTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-title"
       className={cn("leading-none font-semibold text-[1.2vw] text-[#7f1414]", className)}
+      {...props}
+    />
+  )
+}
+
+function HomeCardDescription({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-description"
+      className={cn(
+        "text-muted-foreground text-sm h-[4.5vw] overflow-hidden text-ellipsis",
+        "whitespace-normal overflow-hidden",
+        className
+      )}      
       {...props}
     />
   )
@@ -114,7 +128,7 @@ function CardImage({ src, alt, className }: { src: string; alt: string; classNam
       <img
         src={src}
         alt={alt}
-        className="w-full h-full object-cover transition-transform duration-300 hover:scale-120"
+        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-120"
       />
     </div>
   )
@@ -131,4 +145,5 @@ export {
   CardImage,
   HomeCard,
   HomeCardTitle,
+  HomeCardDescription
 }

@@ -21,18 +21,18 @@ export default function Programs() {
             </Head>
             <Layout>
                 <div className="flex flex-col items-center gap-8">
-                    <div className="mt-7 grid w-[75%] place-items-center rounded-xl bg-[#7f1414] py-5 text-4xl font-black text-white">Exhibits</div>
-                    <div className="grid w-[75%] grid-cols-4 gap-2">
-                        <div className="overflow-hidden rounded-xl bg-white">
+                    <div className="mt-7 grid w-[75%] place-items-center rounded-xl bg-[#7f1414] py-5 text-6xl h-[10vw] font-black text-white">Exhibits</div>
+                    <div className="grid w-[75%] grid-cols-4 gap-2 ">
+                        <div className="group overflow-hidden rounded-xl border bg-white border-gray-100 hover:border-[#7f1414]/20 duration-300">
                             <div className="grid place-items-center bg-[linear-gradient(120deg,#7f1414_0%,#c12c2c_100%)]">
                                 <img
-                                    className="my-5 h-40 transition duration-300 hover:scale-120"
+                                    className="my-5 h-40 transition duration-300 group-hover:scale-110"
                                     src="/images/exhibits/student-handbook.png"
                                     alt="Student Handbook"
                                 />
                             </div>
-                            <div className="rounded-b-xl border border-[#7f1414]/25 p-4">
-                                <h1 className="mb-2 text-xl font-black">Student Handbook</h1>
+                            <div className="rounded-b-xl   p-4">
+                                <h1 className="mb-2 text-xl font-black text-[#7f1414] group-hover:text-[#a01818]">Student Handbook</h1>
                                 <p> Click to explore this interactive exhibit and discover its contents. </p>
                                 <div className="flex justify-end">
                                     <Dialog>
