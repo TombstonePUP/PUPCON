@@ -66,12 +66,15 @@ class AreaParameterOutlinesController extends Controller
      */
     public function update(Request $request, ParameterOutlines $parameterOutlines)
     {
+        dd($request->outline_file);
         $validated = $request->validate([
-            'area_parameter_id' => 'required|integer',
-            'parameter_outline_category_id' => 'required|integer',
-            'outline_number' => 'required|string|max:10',
+            'parameter_outline_id' => 'required|integer',
+            'parameter_outline_category_id' => 'nullable|integer',
+            'outline_number' => 'nullable|string|max:10',
             'outline_description' => 'nullable|string|max:1000',
             'container' => 'nullable|boolean',
+            'area_file_id' => 'nullable|integer',
+            'outline_file' => 'nullable|file|mimes:pdf',
         ]);
 
         $parameterOutline = $parameterOutlines->find($validated['outline_id']);

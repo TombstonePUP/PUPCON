@@ -26,11 +26,11 @@ interface OutlineProps {
 
 interface ParameterOutlineForm {
     parameter_outline_id?: number; // Optional for adding new outlines
-    area_parameter_id: number;
     parameter_outline_category_id: number;
     outline_number: string | number;
     outline_description: string;
     container: boolean;
+    area_file_id?: number | null;
     outline_file?: File | null;
 }
 
@@ -104,6 +104,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
         data: dataOutline,
         setData: setOutlineData,
         delete: destroyOutline,
+        patch: updateOutline,
         processing: processingOutline,
         errors: errorsOutline,
         reset: resetOutline,
@@ -113,6 +114,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
         outline_number: '',
         outline_description: '',
         container: false,
+        area_file_id: undefined,
         outline_file: null,
     });
 
@@ -126,11 +128,14 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
     };
 
     const editOutline = (e: React.FormEvent) => {
+        console.log('Editing outline:', dataOutline);
         e.preventDefault();
-        destroyOutline(route('manage.area.deleteOutline', [program, area_id, dataOutline.parameter_outline_id]), {
+
+        updateOutline(route('manage.area.updateOutline', [program, area_id, dataOutline.parameter_outline_id]), {
+            forceFormData: true,
             onSuccess: () => {
                 resetOutline('parameter_outline_id', 'parameter_outline_category_id', 'outline_number', 'outline_description', 'container', 'outline_file');
-                console.log('Outline deleted successfully');
+                console.log('Outline updated successfully');
             },
         });
     };
@@ -140,126 +145,17 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
             <ul className="pl-[1vw]">
                 {outlines.map((outline) => (
                     <li key={outline.parameter_outline_id}>
-                        {!outline.container ? (
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <a className="cursor-pointer underline">
-                                        {outline.initial}.
-                                        {outline.outline_number}.
-                                        {outline.outline_description}
-                                    </a>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle className="text-2xl font-black">Edit Outline</DialogTitle>
-                                        <DialogDescription>Parameter A - Systems - Inputs and Processes</DialogDescription>
-                                    </DialogHeader>
-
-                                    <div className="flex flex-col gap-3 ">
-                                        {/* Current Document Section */}
-                                        <div>
-                                            <h1 className='text-sm font-medium text-muted-foreground mb-1'>Current Document</h1>
-                                            <div className="flex items-center gap-4 rounded border bg-gray-50 p-4">
-                                                <div className="flex-1">
-                                                    <p className="text-sm text-gray-600">No document uploaded</p>
-                                                    {/* When document exists:
-                                                    <p className="font-medium">vision_mission_system.pdf</p>
-                                                    <p className="text-sm text-gray-500">Uploaded on Jan 15, 2023</p>
-                                                    */}
-                                                </div>
-                                                <Button variant="outline" size="sm" disabled={true}>
-                                                    <Eye className="mr-2 h-4 w-4" />
-                                                    View PDF
-                                                </Button>
-                                            </div>
-                                        </div>
-
-                                        {/* Edit Outline Section */}
-                                        <div>
-                                            <h3 className='text-sm font-medium text-muted-foreground mb-1'>Edit Outline Content</h3>
-                                            <textarea
-                                                className="min-h-[120px] text-sm w-full rounded border p-3 focus:border-transparent focus:ring-2 focus:ring-blue-500 max-h-[20vw]"
-                                                defaultValue="The institution has a system of determining the Vision and Mission."
-                                                placeholder="Enter outline description..."
-                                            />
-                                        </div>
-
-                                        {/* Upload File Section */}
-                                        <div className="space-y-2">
-                                            <h3 className='text-sm font-medium text-muted-foreground mb-1'>Upload Document</h3>
-                                            <div className="flex w-full items-center justify-center">
-                                                <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
-                                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                        <svg
-                                                            className="mb-4 h-8 w-8 text-gray-500"
-                                                            aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 20 16"
-                                                        >
-                                                            <path
-                                                                stroke="currentColor"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth="2"
-                                                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                                                            />
-                                                        </svg>
-                                                        <p className="mb-2 text-sm text-gray-500">
-                                                            <span className="font-semibold">Click to upload</span> or drag and
-                                                            drop
-                                                        </p>
-                                                        <p className="text-xs text-gray-500">PDF (MAX. 10MB)</p>
-                                                    </div>
-                                                    <input type="file" className="hidden" accept=".pdf" />
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        {/* Action Buttons */}
-                                        <div className="flex justify-between pt-4">
-                                            <Dialog>
-                                                <DialogTrigger asChild>
-                                                    <Button variant="destructive">
-                                                        <Trash2 className="h-4 w-4" />
-                                                        Remove Outline
-                                                    </Button>
-                                                </DialogTrigger>
-                                                <DialogContent className="max-w-md">
-                                                    <DialogHeader>
-                                                        <DialogTitle>Confirm Removal</DialogTitle>
-                                                        <DialogDescription>
-                                                            Are you sure you want to permanently remove this outline and all
-                                                            associated documents?
-                                                        </DialogDescription>
-                                                    </DialogHeader>
-                                                    <DialogFooter>
-                                                        <DialogClose asChild>
-                                                            <Button variant="outline">Cancel</Button>
-                                                        </DialogClose>
-                                                        <Button variant="destructive">Delete Permanently</Button>
-                                                    </DialogFooter>
-                                                </DialogContent>
-                                            </Dialog>
-
-                                            <div className="flex gap-2">
-                                                <DialogClose asChild>
-                                                    <Button variant="outline">Cancel</Button>
-                                                </DialogClose>
-                                                <Button variant="black" type="submit">
-                                                    Save Changes
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
-                        ) : (
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <span className="cursor-pointer">
-                                    {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
-                                    </span>
+                                    {!outline.container ? (
+                                        <span className="cursor-pointer">
+                                        {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
+                                        </span>
+                                    ) : (
+                                        <span className="cursor-pointer underline">
+                                        {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
+                                        </span>
+                                    )}
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
@@ -295,7 +191,6 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                 <input
                                                     id="outline_number"
                                                     type="text"
-                                                    required
                                                     autoFocus
                                                     tabIndex={1}
                                                     value={dataOutline.outline_number}
@@ -312,11 +207,20 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
 
                                             {/* Edit Outline Section */}
                                             <div>
-                                                <h3 className='text-sm font-medium text-muted-foreground mb-1'>Edit Outline Description</h3>
+                                                <label className='text-sm font-medium text-muted-foreground mb-1'>Edit Outline Description</label>
                                                 <textarea
+                                                    id="outline_description"
+                                                    autoFocus
+                                                    tabIndex={2}
+                                                    value={dataOutline.outline_description}
+                                                    onChange={(e) => setOutlineData('outline_description', e.target.value)}
+                                                    disabled={processingOutline}
                                                     className="min-h-[120px] text-sm w-full rounded border p-3 focus:border-transparent focus:ring-2 focus:ring-blue-500 max-h-[20vw]"
-                                                    defaultValue="The institution has a system of determining the Vision and Mission."
-                                                    placeholder="Enter outline description..."
+                                                    placeholder="Enter new outline description..."
+                                                />
+                                                <InputError
+                                                    message={errorsOutline.outline_description}
+                                                    className="mt-2"
                                                 />
                                             </div>
 
@@ -383,7 +287,12 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                             </p>
                                                             <p className="text-xs text-gray-500">PDF (MAX. 10MB)</p>
                                                         </div>
-                                                        <input type="file" className="hidden" accept=".pdf" />
+                                                        <input
+                                                            type="file"
+                                                            className="hidden"
+                                                            accept=".pdf"
+                                                            onChange={(e) => setOutlineData('outline_file', e.target.files[0])}
+                                                        />
                                                     </label>
                                                 </div>
                                             </div>
@@ -413,7 +322,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                                 variant="destructive"
                                                                 disabled={processingOutline}
                                                                 onClick={() => deleteOutline(outline.parameter_outline_id)}
-                                                                type="submit"
+                                                                // type="submit"
                                                             >
                                                                 Delete Permanently
                                                             </Button>
@@ -425,7 +334,12 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                     <DialogClose asChild>
                                                         <Button variant="outline">Cancel</Button>
                                                     </DialogClose>
-                                                    <Button variant="black" type="submit">
+                                                    <Button
+                                                        variant="black"
+                                                        type="submit"
+                                                        onClick={(e) => setOutlineData('parameter_outline_id', outline.parameter_outline_id)}
+                                                        disabled={processingOutline}
+                                                    >
                                                         Save Changes
                                                     </Button>
                                                 </div>
@@ -434,7 +348,6 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                     </form>
                                 </DialogContent>
                             </Dialog>
-                        )}
                         {outline.children && outline.children.length > 0 && (
                             <RecursiveOutlineForForm outlines={outline.children} />
                         )}

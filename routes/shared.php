@@ -43,9 +43,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             });
 
             Route::controller(AreaFormsController::class)->group(function () {
-                // Route::post('/{area_id}/storeForm', 'store')->name('area.addForm');
-                // Route::patch('/{area_id}/{form_id}/updateForm', 'update')->name('area.updateForm');
-                // Route::delete('/{area_id}/{form_id}/deleteForm', 'destroy')->name('area.deleteForm');
+                Route::post('/{area_id}/storeForm', 'store')->name('area.addForm');
+                Route::patch('/{area_id}/{form_id}/updateForm', 'update')->name('area.updateForm');
+                Route::delete('/{area_id}/{form_id}/deleteForm', 'destroy')->name('area.deleteForm');
             });
         });
     });
@@ -58,9 +58,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('users', [UserController::class, 'index'])
         ->name('users');
 });
-
-Route::post('manage-program/{program_name}/{area_id}/storeForm', [AreaFormsController::class, 'store'])
-    ->name('test.addForm');
-
-Route::post('manage-program/{program_name}/{area_id}/{form_id}/updateForm', [AreaFormsController::class, 'update'])
-    ->name('test.updateForm');

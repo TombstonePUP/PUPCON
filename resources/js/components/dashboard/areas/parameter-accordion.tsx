@@ -31,6 +31,22 @@ interface ParameterAccordionProps {
     parameterOutlineCategories?: ParameterOutlineCategory[];
 }
 
+interface ParameterForm {
+    area_id?: number;
+    area_parameter_id?: number; // Optional for adding new parameters
+    parameter_name: string;
+    parameter_description: string;
+}
+
+interface ParameterOutlineForm {
+    parameter_outline_id?: number; // Optional for adding new outlines
+    area_parameter_id: number;
+    parameter_outline_category_id: number;
+    outline_number: string | number;
+    outline_description: string;
+    container: boolean;
+}
+
 export default function ParameterAccordion({ area_id, program, areaParameters, parameterOutlineCategories }: ParameterAccordionProps) {
 
     const {
