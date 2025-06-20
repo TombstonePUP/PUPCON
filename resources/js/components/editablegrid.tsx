@@ -158,7 +158,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
             case 'areas':
                 return (
                     <>
-                        <h1 className="font-black">{item.area_number}</h1>
+                        <h1 className="font-bold">{item.area_number}</h1>
                         <p className="text-[#858585]">{item.area_name}</p>
                     </>
                 );
@@ -226,7 +226,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>
                         <Button
-                            variant="black"
+                            variant="bold"
                             onClick={() => {
                                 if (item) {
                                     handleEdit(item.id, '', {
@@ -328,7 +328,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>
                         <Button
-                            variant="black"
+                            variant="bold"
                             onClick={() => {
                                 if (item) {
                                     handleEdit(item.id, '', {
@@ -363,7 +363,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>
                         <Button
-                            variant="black"
+                            variant="bold"
                             onClick={() => {
                                 if (item) {
                                     handleEdit(item.id, newContent || item.content || '');
@@ -398,10 +398,10 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
             {/* Collapsible Header */}
             <button
                 type="button"
-                className="mt-2 rounded  p-1 text-center text-[1vw] font-black text-white transition-colors hover:bg-[#3b3a3a]"
+                className="mt-2 rounded  p-1 text-center text-[1vw] font-bold text-white transition-colors hover:bg-[#3b3a3a]"
                 onClick={() => setIsContentVisible(!isContentVisible)}
             >
-                <div className="flex items-center justify-between rounded bg-[#3b3a3a] p-2 px-3">
+                <div className="flex items-center justify-between rounded-sm bg-[#3b3a3a] p-2 px-3">
                     <span className='flex-1'>{mode.toUpperCase()}</span>
                     <span>{isContentVisible ? '−' : '+'}</span>
                 </div>

@@ -25,7 +25,7 @@ export default function Users({ program }: ProgramProps) {
             <Head title="Information Technology" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="rounded border-2 p-10 px-12">
-                    <h1 className="left-[-10vw] z-10 mb-[-0.3vw] text-[1.45vw] font-black">{program.degree_type + ' in ' + program.program_name}</h1>
+                    <h1 className="left-[-10vw] z-10 mb-[-0.3vw] text-[1.45vw] font-bold">{program.degree_type + ' in ' + program.program_name}</h1>
                     <h1 className="text-[#858585] italic">Preliminary Survey Visit</h1>
                 </div>
 
@@ -92,7 +92,7 @@ export default function Users({ program }: ProgramProps) {
                     <div className="mb-10 flex justify-center">
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button className="mt-10 flex w-[80%] items-center justify-center rounded border-none p-3 text-[1vw] font-black shadow-md">
+                                <Button className="mt-10 flex w-[80%] items-center justify-center rounded border-none p-3 text-[1vw] font-bold shadow-md">
                                     SUBMIT
                                 </Button>
                             </DialogTrigger>

@@ -37,12 +37,12 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                         <p className='text-white text-[1vw]'>
                             {area.area_numeral != ' ' ? `Area ${area.area_numeral}` : `Area ${area.area_number}`}
                         </p>
-                        <h1 className='text-white font-black text-[1.7vw] leading-[1.7vw]'>Mission, Goals, and Objectives</h1>
+                        <h1 className='text-white font-bold text-[1.7vw] leading-[1.7vw]'>Mission, Goals, and Objectives</h1>
                     </div>
                     <img className='object-cover w-[45%] rounded-tl-[1vw] rounded-br-[1vw] rounded-tr-[1vw]' src="/images/placeholder.png" alt="placeholder" />
                 </div>
                 <div className='flex justify-center'>
-                    <p className='indent-[2vw] text-justify w-[68%] py-[1.5vw] px-[3vw] border rounded-[1vw] border-[#B4B4B4]'>
+                    <p className='indent-[2vw] text-justify w-[68%] py-[1.5vw] px-[3vw] border rounded-[1vw] border-[#7f1414]/25 hover:border-[#7f1414] transition duration-300'>
                         {area.area_description || 'No area description available.'}
                     </p>
                 </div>
@@ -50,10 +50,10 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                     <Accordion type="single" collapsible className='w-[68%] flex flex-col gap-[1vw]'>
                         {area.area_parameters?.length > 0 ? (
                             area.area_parameters?.map((parameter, index) => (
-                                <AccordionItem className='cursor-pointer' value={`parameter-${index}`} key={index}>
-                                    <AccordionTrigger className='flex flex-row justify-between cursor-pointer my-1 '>
+                                <AccordionItem className='group transition duration-300' value={`parameter-${index}`} key={index}>
+                                    <AccordionTrigger className='flex flex-row justify-between group-hover:cursor-pointer  my-1 '>
                                         <div className="flex flex-row justify-between w-full">
-                                            <h1 className='text-[#7f1414] font-bold'>
+                                            <h1 className='text-[#7f1414] group-hover:text-[#a01818] font-bold'>
                                                 { parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}` : parameter.parameter_name }
                                             </h1>
                                             <p>{parameter.parameter_description}</p>

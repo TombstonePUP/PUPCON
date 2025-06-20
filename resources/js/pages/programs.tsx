@@ -27,7 +27,7 @@ export default function Programs({ programs }: ProgramsProps) {
                         </div>
                     </div>
 
-                    <div className="mx-auto max-w-7xl px-12 py-20">
+                    <div className="mx-auto w-[75%] mt-10">
                         {programs?.length > 0 ? (
                             <div className="grid gap-12 md:gap-16">
                                 {programs.map((program) => (

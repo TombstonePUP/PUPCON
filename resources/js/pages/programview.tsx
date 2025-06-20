@@ -67,14 +67,14 @@ export default function Programs({ program }: PerProgramProps) {
                             <p>{program.overview_description || 'No program overview available.'}</p>
                         </div>
                         <div className='w-[25vw] rounded-xl overflow-hidden'>
-                            <img className="transition duration-300 hover:scale-110" src="/images/campus/comlab.jpg" alt="computer lab" />
+                            <img className="h-full object-cover transition duration-300 hover:scale-110" src="/images/campus/comlab.jpg" alt="computer lab" />
                         </div>
                     </div>
                     <div className="flex h-[23vw] w-full items-center justify-center bg-cover" id="goals">
                         <h1>No Program Objective</h1>
                     </div>
                     <div className="grid w-[75%] place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
-                        <h1 className="text-4xl font-black">Gallery of Excellence</h1>
+                        <h1 className="text-4xl font-bold">Gallery of Excellence</h1>
                         <p>Showcasing the moments that define our passion and commitment.</p>
                     </div>
                     <ImageRow
@@ -111,7 +111,7 @@ export default function Programs({ program }: PerProgramProps) {
                         </svg>
                     </div>
                     <div className="grid w-[75%] place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
-                        <h1 className="text-4xl font-black">Areas Under Survey</h1>
+                        <h1 className="text-4xl font-bold">Areas Under Survey</h1>
                         <p>ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES</p>
                     </div>
                     <div className="flex h-fit w-full flex-row flex-wrap justify-center gap-[1.5vw] px-[13vw] py-3" id="areas">

@@ -105,7 +105,7 @@ export default function UserManagement({ userRecords }: UsersProps) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Users" />
             <div className="flex h-full flex-1 flex-col gap-2 p-6">
-                <div className="flex flex-col justify-end gap-4 sm:flex-row sm:items-center">
+                <div className="flex flex-col gap-4">
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button className="border-none">
@@ -116,7 +116,7 @@ export default function UserManagement({ userRecords }: UsersProps) {
                         <DialogContent className="max-h-[90vh] w-5xl overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle className="flex items-center gap-2 text-xl font-semibold">
-                                    <UserPlus className="h-5 w-5 text-[#7f1414]" />
+                                    <UserPlus className="h-5 text-[#7f1414]" />
                                     Create New User Account
                                 </DialogTitle>
                                 <DialogDescription>Fill in the details to create a new user account with appropriate permissions</DialogDescription>
