@@ -161,10 +161,10 @@ export default function Layout({ children }: LayoutProps) {
             </header>
 
             {/* Main */}
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 bg-[#f4f4f4] pb-15">{children}</main>
 
             {/* Footer */}
-            <footer className="mt-10 w-full bg-gray-800 py-6 text-center text-gray-300">
+            <footer className="text-center">
                 <div className="footer1">
                     <img src="/images/pupcon-logo-white.png" alt="Logo" />
                     <h2>Maharlika Technologies</h2>

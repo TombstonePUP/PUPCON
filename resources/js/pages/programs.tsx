@@ -15,7 +15,6 @@ export default function Programs({ programs }: ProgramsProps) {
             </Head>
             <Layout>
                 <div className="flex flex-col items-center">
-                    {/* Hero Banner */}
                     <div className="relative mt-7 z-10 flex h-[10vw] w-[75%] items-center justify-center overflow-hidden rounded-xl">
                         <img src="/images/campus/ground.jpg" alt="Programs Banner" className="absolute inset-0 h-full w-full object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-r from-[#7f1414] via-[#7f1414]/70 to-transparent"></div>
@@ -56,7 +55,7 @@ export default function Programs({ programs }: ProgramsProps) {
                                                             </h2>
                                                         </div>
 
-                                                        <p className="mb-8 line-clamp-4 text-lg leading-relaxed text-gray-600">
+                                                        <p className="mb-8 line-clamp-4 leading-relaxed text-gray-600">
                                                             {program.program_description}
                                                         </p>
 

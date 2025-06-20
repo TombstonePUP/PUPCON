@@ -1,14 +1,5 @@
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Layout from '@/layouts/landing-layout';
 import { Head } from '@inertiajs/react';
 
@@ -21,9 +12,18 @@ export default function Programs() {
             </Head>
             <Layout>
                 <div className="flex flex-col items-center gap-8">
-                    <div className="mt-7 grid w-[75%] place-items-center rounded-xl bg-[#7f1414] py-5 text-6xl h-[10vw] font-bold text-white">Exhibits</div>
-                    <div className="grid w-[75%] grid-cols-4 gap-2 ">
-                        <div className="group overflow-hidden rounded-xl border bg-white border-[#7f1414]/25 hover:border-[#7f1414] duration-300">
+                    <div className="relative z-10 mt-7 flex h-[10vw] w-[75%] items-center justify-center overflow-hidden rounded-xl">
+                        <img src="/images/campus/ground.jpg" alt="Programs Banner" className="absolute inset-0 h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#7f1414] via-[#7f1414]/70 to-transparent"></div>
+                        <div className="relative z-10 px-8 text-center text-white">
+                            <h1 className="text-6xl font-bold">Exhibits</h1>
+                            <h2 className="mt-2">
+                                Polytechnic University of the Philippines <b>San Juan Campus</b>
+                            </h2>
+                        </div>
+                    </div>{' '}
+                    <div className="grid w-[75%] grid-cols-4 gap-2">
+                        <div className="group overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white duration-300 hover:border-[#7f1414]">
                             <div className="grid place-items-center bg-[linear-gradient(120deg,#7f1414_0%,#c12c2c_100%)]">
                                 <img
                                     className="my-5 h-40 transition duration-300 group-hover:scale-110"
@@ -37,7 +37,7 @@ export default function Programs() {
                                 <div className="flex justify-end">
                                     <Dialog>
                                         <DialogTrigger asChild>
-                                            <Button className="mt-10 w-30 rounded-full border-none bg-[linear-gradient(130deg,#7f1414_0%,#c12c2c_50%,#7f1414_100%)] bg-[length:200%_200%] font-bold text-white hover:text-white transition-all duration-300 hover:bg-left hover:scale-105 cursor-pointer">
+                                            <Button className="mt-10 w-30 cursor-pointer rounded-full border-none bg-[linear-gradient(130deg,#7f1414_0%,#c12c2c_50%,#7f1414_100%)] bg-[length:200%_200%] font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-left hover:text-white">
                                                 View
                                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path
@@ -55,9 +55,7 @@ export default function Programs() {
                                                 <DialogDescription>none</DialogDescription>
                                             </DialogHeader>
                                             {/* content */}
-                                            <div>
-
-                                            </div>
+                                            <div></div>
                                         </DialogContent>
                                     </Dialog>
                                 </div>

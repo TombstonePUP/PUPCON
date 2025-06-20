@@ -44,7 +44,7 @@ export function AreaCard({
             </h1>
 
             <Link
-                className="transition duration-300 text-white text-sm text-center rounded-[1vw] bg-[#7f1414] w-full py-[0.2vw] hover:bg-[#7f1414]/70"
+                className="transition duration-300 text-white text-sm text-center rounded-[1vw] bg-[#7f1414] w-full py-[0.2vw] hover:bg-[#a01818]"
                 href={href}
             >
                 View
