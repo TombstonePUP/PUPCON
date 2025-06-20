@@ -42,7 +42,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             Route::controller(AreaParameterOutlinesController::class)->group(function () {
                 Route::post('/{area_id}/storeOutline', 'store')->name('area.addOutline');
-                Route::patch('/{area_id}/{outline_id}/updateOutline', 'update')->name('area.updateOutline');
+                Route::get('/{area_id}/{outline_id}/viewOutlineFile', 'show')->name('area.viewOutlineFile');
+                Route::post('/{area_id}/{outline_id}/updateOutline', 'update')->name('area.updateOutline');
                 Route::delete('/{area_id}/{outline_id}/deleteOutline', 'destroy')->name('area.deleteOutline');
             });
 

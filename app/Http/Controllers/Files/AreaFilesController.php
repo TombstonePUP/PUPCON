@@ -10,6 +10,8 @@ use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 
 class AreaFilesController extends Controller
 {
@@ -42,68 +44,37 @@ class AreaFilesController extends Controller
             'ParameterOutlines.AreaParameter.Areas'])
             ->get();
 
-        // $parameters = $area->AreaParameters()
-        //     ->with(['ParameterOutlines.ParameterOutlineCategory', 'ParameterOutlines.AreaFiles.FileStatus'])
-        //     ->get();
-        //
-        // $areaForms = $area->AreaForms()
-        //     ->with(['AreaFormCategory', 'FileStatus'])
-        //     ->get();
-
-        /* $parameterOutlines = collect();
-        foreach ($parameters as $parameter) {
-            $parameterOutlines = $parameterOutlines->merge($parameter->ParameterOutlines);
+        /* foreach ($area->AreaParameters ?? [] as $parameter) {
+            foreach ($parameter->ParameterOutlines ?? [] as $outline) {
+                foreach ($outline->AreaFiles ?? [] as $file) {
+                    try {
+                        $file->file_name = Crypt::decryptString($file->file_name);
+                        $file->file_path = Crypt::decryptString($file->file_path);
+                    } catch (\Exception $e) {
+                        $file->file_name = $file->file_name;
+                        $file->file_path = $file->file_path;
+                    }
+                }
+            }
+        } */
+        foreach ($area->AreaParameters ?? [] as $parameter) {
+            foreach ($parameter->ParameterOutlines ?? [] as $outline) {
+                foreach ($outline->AreaFiles ?? [] as $file) {
+                    if (is_object($file) && isset($file->file_name)) {
+                        $file->file_name = Crypt::decryptString($file->file_name);
+                        $file->file_path = Crypt::decryptString($file->file_path);
+                    }
+                }
+            }
         }
-        $areaFormCategories = AreaFormCategory::all(); */
-        /* $areaForms = AreaForms::from('area_forms as af')
-            ->leftjoin('areas as a', 'af.area_id', '=', 'a.area_id')
-            ->leftjoin('area_form_categories as afc', 'af.area_form_category_id', '=', 'afc.area_form_category_id')
-            ->leftjoin('file_status as fs', 'af.file_status_id', '=', 'fs.file_status_id')
-            ->where('a.area_id', $area->area_id)
-            ->select(
-                'af.area_form_id',
-                'afc.category_name',
-                'af.form_image_name',
-                'af.form_image_path',
-                'af.file_name',
-                'af.file_path',
-                'fs.status_name as file_status',
-                'af.file_rejection_reason'
-            )
-            ->get();
 
-        $areaFiles = AreaFiles::from('area_files as af')
-            ->leftjoin('parameter_outlines as po', 'af.parameter_outline_id', '=', 'po.parameter_outline_id')
-            ->leftjoin('file_status as fs', 'af.file_status_id', '=', 'fs.file_status_id')
-            ->leftjoin('parameter_outline_category as poc', 'po.parameter_outline_category_id', '=', 'poc.parameter_outline_category_id')
-            ->leftjoin('area_parameters as ap', 'po.area_parameter_id', '=', 'ap.area_parameter_id')
-            ->leftjoin('areas as a', 'ap.area_id', '=', 'a.area_id')
-            ->leftjoin('programs as p', 'a.program_id', '=', 'p.program_id')
-            ->where('ap.area_id', $area->area_id)
-            ->select(
-                'af.area_file_id',
-                'ap.parameter_name',
-                'ap.parameter_description',
-                'po.parameter_outline_id',
-                'po.outline_number',
-                'po.outline_name',
-                'poc.category_name',
-                'af.file_name',
-                'af.file_path',
-                'fs.status_name as file_status',
-                'af.file_rejection_reason'
-            )
-            ->get(); */
+        dd($area->AreaParameters->where('parameter_name', 'provident'));
 
         return inertia('document/area', [
             'program' => $program,
             'area' => $area,
             'parameterOutlineCategories' => $parameterOutlineCategories,
-            // 'parameters' => $parameters,
-            /* 'parameterOutlines' => $parameterOutlines,
-            'areaFormCategories' => $areaFormCategories, */
-            // 'areaForms' => $areaForms,
-            // 'areaFiles' => $areaFiles,
         ]);
     }
+
 }

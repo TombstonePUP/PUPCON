@@ -222,7 +222,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                 if (outlines.length === 0) return null;
                                 {outlines.map((outline) => (
                                     outline.initial = category.category_name == 'No Category' ?
-                                        parameter.parameter_name == ' ' ? '' : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
+                                        parameter.parameter_name == '' ? '' : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
                                         : category.category_name.match(/^[A-Za-z]/)
                                 ))}
 
