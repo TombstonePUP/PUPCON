@@ -12,7 +12,7 @@ interface LoginFormLayoutProps {
 
 export default function LoginFormLayout({ children, title, description, className }: LoginFormLayoutProps) {
     return (
-        <div className={cn('bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10', className)}>
+        <div className={cn('bg-[#f4f4f4] flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10', className)}>
             <div className="w-full max-w-4xl">
                 <div className="flex flex-col gap-8">
                     <div className="flex flex-col items-center gap-4">
