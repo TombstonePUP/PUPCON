@@ -25,13 +25,13 @@ interface OutlineProps {
 }
 
 interface ParameterOutlineForm {
-    parameter_outline_id?: number; // Optional for adding new outlines
+    // parameter_outline_id?: number; // Optional for adding new outlines
     parameter_outline_category_id: number;
     outline_number: string | number;
     outline_description: string;
     container: boolean;
     area_file_id?: number | null;
-    outline_file?: File | null;
+    outline_file?: null;
 }
 
 function sortOutlinesByNumber(outlines) {
@@ -104,16 +104,16 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
         data: dataOutline,
         setData: setOutlineData,
         delete: destroyOutline,
-        patch: updateOutline,
+        post: updateOutline,
         processing: processingOutline,
         errors: errorsOutline,
         reset: resetOutline,
     } = useForm<ParameterOutlineForm>({
-        parameter_outline_id: undefined,
+        // parameter_outline_id: undefined,
         parameter_outline_category_id: null,
-        outline_number: '',
-        outline_description: '',
-        container: false,
+        outline_number: undefined,
+        outline_description: undefined,
+        container: undefined,
         area_file_id: undefined,
         outline_file: null,
     });
@@ -128,10 +128,11 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
     };
 
     const editOutline = (e: React.FormEvent) => {
-        console.log('Editing outline:', dataOutline);
+        console.log(dataOutline.outline_file);
         e.preventDefault();
 
         updateOutline(route('manage.area.updateOutline', [program, area_id, dataOutline.parameter_outline_id]), {
+            onProgress: (e) => console.log(e.percentage),
             forceFormData: true,
             onSuccess: () => {
                 resetOutline('parameter_outline_id', 'parameter_outline_category_id', 'outline_number', 'outline_description', 'container', 'outline_file');
@@ -147,7 +148,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                     <li key={outline.parameter_outline_id}>
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    {!outline.container ? (
+                                    {outline.container ? (
                                         <span className="cursor-pointer">
                                         {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                                         </span>
@@ -165,7 +166,6 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                         </DialogDescription>
                                     </DialogHeader>
 
-                                    <form onSubmit={editOutline}>
                                         <div className="flex flex-col gap-3 ">
                                             {/* Current Document Section */}
                                             <div>
@@ -178,14 +178,24 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                         <p className="text-sm text-gray-500">Uploaded on Jan 15, 2023</p>
                                                         */}
                                                     </div>
-                                                    <Button variant="outline" size="sm" disabled={true}>
+                                                    <a
+                                                        // variant="button"
+                                                        // size="sm"
+                                                        // disabled={false}
+                                                        href={route('manage.area.viewOutlineFile', {
+                                                          program_name: program,
+                                                          area_id: area_id,
+                                                          outline_id: outline.parameter_outline_id,
+                                                        })}
+                                                        >
                                                         <Eye className="mr-2 h-4 w-4" />
                                                         View PDF
-                                                    </Button>
+                                                    </a>
                                                 </div>
                                             </div>
 
                                             {/* Edit Outline Number Section */}
+                                            <form onSubmit={editOutline}>
                                             <div>
                                                 <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Number</label>
                                                 <input
@@ -344,8 +354,8 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                     </Button>
                                                 </div>
                                             </div>
-                                        </div>
                                     </form>
+                                        </div>
                                 </DialogContent>
                             </Dialog>
                         {outline.children && outline.children.length > 0 && (

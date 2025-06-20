@@ -65,9 +65,9 @@ return new class extends Migration
             $table->foreignId('area_form_category_id')->nullable()->references('area_form_category_id')
                 ->on('area_form_categories')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->string('form_image_name')->nullable();
+            $table->text('form_image_name')->nullable();
             $table->text('form_image_path')->nullable();
-            $table->string('file_name')->nullable();
+            $table->text('file_name')->nullable();
             $table->text('file_path')->nullable();
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
@@ -78,7 +78,7 @@ return new class extends Migration
             $table->id(column: 'area_file_id')->autoIncrement()->primary();
             $table->foreignId('parameter_outline_id')->references('parameter_outline_id')->on('parameter_outlines')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->string('file_name');
+            $table->text('file_name');
             $table->text('file_path');
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 -> onUpdate('cascade')->onDelete('cascade');
@@ -102,7 +102,7 @@ return new class extends Migration
             $table->id(column: 'exhibit_file_id')->autoIncrement()->primary();
             $table->foreignId('exhibit_outline_id')->references('exhibit_outline_id')->on('exhibit_outlines')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->string('file_name');
+            $table->text('file_name');
             $table->text('file_path');
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
@@ -114,6 +114,7 @@ return new class extends Migration
             SELECT
                 CONCAT('Area', '-', a.area_number, '-','Parameter', '-', ap.parameter_name) file_type, -- area_name and parameter_name
                 po.outline_description outline,
+                af.area_file_id file_id,
                 af.file_name file_name,
                 af.file_path file_path,
                 fs.status_name file_status,
@@ -127,6 +128,7 @@ return new class extends Migration
             SELECT
                 'area-form' file_type,
                 CONCAT(a.area_name,'-', afc.category_name) outline,
+                afo.area_form_id file_id,
                 afo.file_name file_name,
                 afo.file_path file_path,
                 fs.status_name file_status,
@@ -139,6 +141,7 @@ return new class extends Migration
             SELECT
                 'exhibit-file' file_type,
                 eo.outline_description outline,
+                ef.exhibit_file_id file_id,
                 ef.file_name file_name,
                 ef.file_path file_path,
                 fs.status_name file_status,
