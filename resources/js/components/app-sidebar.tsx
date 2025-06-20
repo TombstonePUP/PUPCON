@@ -1,6 +1,6 @@
 'use client';
 
-import { AudioWaveform, Bot, Braces, Command, GalleryVerticalEnd, SquareTerminal, Boxes } from 'lucide-react';
+import { AudioWaveform, Book, Bot, Boxes, Braces, Command, GalleryVerticalEnd, SquareTerminal } from 'lucide-react';
 import * as React from 'react';
 
 import { NavMain } from '@/components/nav-main';
@@ -87,6 +87,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             isActive: true,
             collapsible: true,
             items: programItems,
+        },
+        {
+            title: 'Exhibits',
+            url: '/manage-exhibits',
+            icon: Book,
         },
     ];
     return (

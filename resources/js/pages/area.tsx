@@ -50,10 +50,10 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                     <Accordion type="single" collapsible className='w-[68%] flex flex-col gap-[1vw]'>
                         {area.area_parameters?.length > 0 ? (
                             area.area_parameters?.map((parameter, index) => (
-                                <AccordionItem value={`parameter-${index}`} key={index}>
-                                    <AccordionTrigger className='flex flex-row justify-between'>
+                                <AccordionItem className='cursor-pointer' value={`parameter-${index}`} key={index}>
+                                    <AccordionTrigger className='flex flex-row justify-between cursor-pointer my-1 '>
                                         <div className="flex flex-row justify-between w-full">
-                                            <h1 className='text-[#7f1414] font-black'>
+                                            <h1 className='text-[#7f1414] font-bold'>
                                                 { parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}` : parameter.parameter_name }
                                             </h1>
                                             <p>{parameter.parameter_description}</p>
@@ -74,8 +74,8 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                             const sortedOutlines = buildOutlineTree({ outlines });
 
                                             return (
-                                                <div key={category.parameter_outline_category_id} className='bg-[#D9D9D9] p-[2vw] rounded'>
-                                                    <h1 className='font-black text-[1vw]'>{category.category_name == 'No Category' ? '' : category.category_name}</h1>
+                                                <div key={category.parameter_outline_category_id} className='bg-[#D9D9D9]/25 p-[2vw] rounded'>
+                                                    <h1 className='font-bold'>{category.category_name == 'No Category' ? '' : category.category_name}</h1>
                                                     <RecursiveOutline outlines={sortedOutlines} />
                                                 </div>
                                             );

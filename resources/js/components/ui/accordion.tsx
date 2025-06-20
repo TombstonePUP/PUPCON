@@ -17,7 +17,7 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn("relative border rounded-[0.5vw] px-[1vw] before:content-[''] before:absolute before:bg-[#7f1414] before:w-[0.6vw] before:h-full before:top-[0vw] before:left-[0vw] overflow-hidden pl-[3vw]", className)}
+      className={cn("relative border transition duration-300 border-[#7f1414]/25 hover:border-[#7f1414]/50 rounded-[0.5vw] px-[1vw] before:content-[''] before:absolute before:bg-[#7f1414] before:w-[0.6vw] before:h-full before:top-[0vw] before:left-[0vw] overflow-hidden pl-[3vw]", className)}
       {...props}
     />
   )

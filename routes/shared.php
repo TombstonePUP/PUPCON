@@ -22,6 +22,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('document/document-request');
     })->name('requests');
 
+    Route::get('manage-exhibits', function () {
+        return Inertia::render('document/exhibits');
+    })->name('manage-exhibits');
+
     Route::get('manage-programs', function () {
         return Inertia::render('manage-programs');
     })->name('manage-programs');
