@@ -9,6 +9,7 @@ use App\Models\AreaForms;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
@@ -43,32 +44,6 @@ class AreaFilesController extends Controller
             'ParameterOutlines.AreaFiles.FileStatus',
             'ParameterOutlines.AreaParameter.Areas'])
             ->get();
-
-        /* foreach ($area->AreaParameters ?? [] as $parameter) {
-            foreach ($parameter->ParameterOutlines ?? [] as $outline) {
-                foreach ($outline->AreaFiles ?? [] as $file) {
-                    try {
-                        $file->file_name = Crypt::decryptString($file->file_name);
-                        $file->file_path = Crypt::decryptString($file->file_path);
-                    } catch (\Exception $e) {
-                        $file->file_name = $file->file_name;
-                        $file->file_path = $file->file_path;
-                    }
-                }
-            }
-        } */
-        foreach ($area->AreaParameters ?? [] as $parameter) {
-            foreach ($parameter->ParameterOutlines ?? [] as $outline) {
-                foreach ($outline->AreaFiles ?? [] as $file) {
-                    if (is_object($file) && isset($file->file_name)) {
-                        $file->file_name = Crypt::decryptString($file->file_name);
-                        $file->file_path = Crypt::decryptString($file->file_path);
-                    }
-                }
-            }
-        }
-
-        dd($area->AreaParameters->where('parameter_name', 'provident'));
 
         return inertia('document/area', [
             'program' => $program,

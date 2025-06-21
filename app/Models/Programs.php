@@ -35,6 +35,15 @@ class Programs extends Model
         'page_banner_image_path'
     ];
 
+    protected $casts = [
+        'program_image_name' => 'encrypted',
+        'program_image_path' => 'encrypted',
+        'overview_image_name' => 'encrypted',
+        'overview_image_path' => 'encrypted',
+        'page_banner_image_name' => 'encrypted',
+        'page_banner_image_path' => 'encrypted'
+    ];
+
     /**
      * @return BelongsToMany<User,Programs>
      */

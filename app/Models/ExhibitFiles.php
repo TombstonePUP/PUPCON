@@ -27,6 +27,10 @@ class ExhibitFiles extends Model
         'file_reject_reason',
     ];
 
+    protected $casts = [
+        'file_name' => 'encrypted',
+        'file_path' => 'encrypted',
+    ];
 
     /**
      * @return BelongsTo<ExhibitOutlines,ExhibitFiles>

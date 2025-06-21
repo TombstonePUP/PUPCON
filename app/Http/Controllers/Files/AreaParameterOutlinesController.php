@@ -125,9 +125,6 @@ class AreaParameterOutlinesController extends Controller
 
             $filePath = "{$filePath}/{$fileName}";
 
-            $fileName = Crypt::encryptString($fileName);
-            $filePath = Crypt::encryptString($filePath);
-
             $file_status = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
             $parameterOutline->AreaFiles()->create([
                 'file_name' => $fileName,

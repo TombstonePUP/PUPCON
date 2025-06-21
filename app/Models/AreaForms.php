@@ -30,6 +30,13 @@ class AreaForms extends Model
         'file_reject_reason',
     ];
 
+    protected $casts = [
+        'form_image_name' => 'encrypted',
+        'form_image_path' => 'encrypted',
+        'file_name' => 'encrypted',
+        'file_path' => 'encrypted',
+    ];
+
     /**
      * @return BelongsTo<Areas,AreaForms>
      */

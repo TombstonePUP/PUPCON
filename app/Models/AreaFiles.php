@@ -27,6 +27,11 @@ class AreaFiles extends Model
         'file_rejection_reason',
     ];
 
+    protected $casts = [
+        'file_name' => 'encrypted',
+        'file_path' => 'encrypted',
+    ];
+
     /**
      * @return BelongsTo<ParameterOutlines,AreaFiles>
      */
