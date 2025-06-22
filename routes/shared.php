@@ -14,10 +14,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::get('manage-programs/program', function () {
-        return Inertia::render('content/program');
-    })->name('program_name');
-
     Route::get('requests', function () {
         return Inertia::render('document/document-request');
     })->name('requests');
@@ -26,14 +22,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('document/exhibits');
     })->name('manage-exhibits');
 
-    Route::get('manage-programs', function () {
-        return Inertia::render('manage-programs');
-    })->name('manage-programs');
-
-    Route::controller(ManageProgramController::class)->prefix('manage-program')->as('manage.')->group(function () {
+    Route::controller(ManageProgramController::class)->prefix('manage-programs')->as('manage.')->group(function () {
         Route::get('/{program_name}', 'index')->name('program');
+        Route::get('/', 'show')->name('manage-programs');
+
         Route::controller(AreaFilesController::class)->prefix('{program_name}')->group(function () {
             Route::get('/{area_id}', 'index')->name('area');
+
             Route::controller(AreaParameterController::class)->group(function () {
                 Route::post('/{area_id}/storeParameter', 'store')->name('area.addParameter');
                 Route::patch('/{area_id}/{parameter_id}/updateParameter', 'update')->name('area.updateParameter');
@@ -42,15 +37,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             Route::controller(AreaParameterOutlinesController::class)->group(function () {
                 Route::post('/{area_id}/storeOutline', 'store')->name('area.addOutline');
-                Route::get('/{area_id}/{outline_id}/viewOutlineFile', 'show')->name('area.viewOutlineFile');
                 Route::post('/{area_id}/{outline_id}/updateOutline', 'update')->name('area.updateOutline');
                 Route::delete('/{area_id}/{outline_id}/deleteOutline', 'destroy')->name('area.deleteOutline');
             });
 
             Route::controller(AreaFormsController::class)->group(function () {
-                Route::post('/{area_id}/storeForm', 'store')->name('area.addForm');
-                Route::patch('/{area_id}/{form_id}/updateForm', 'update')->name('area.updateForm');
-                Route::delete('/{area_id}/{form_id}/deleteForm', 'destroy')->name('area.deleteForm');
+                Route::post('/{area_id}/storeForm', 'store')->name('area.addAreaForm');
+                Route::patch('/{area_id}/{form_id}/updateForm', 'update')->name('area.updateAreaForm');
+                Route::delete('/{area_id}/{form_id}/deleteForm', 'destroy')->name('area.deleteAreaForm');
             });
         });
     });

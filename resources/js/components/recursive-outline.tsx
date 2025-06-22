@@ -2,10 +2,11 @@
 
 import { ParameterOutlineCategory, type ParameterOutlines } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Eye, Trash2 } from 'lucide-react';
+import { CheckCircle2Icon, Eye, Trash2 } from 'lucide-react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import {
     Dialog,
     DialogClose,
@@ -16,6 +17,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 interface OutlineProps {
     outlines: ParameterOutlines[];
@@ -32,6 +34,10 @@ interface ParameterOutlineForm {
     container: boolean;
     area_file_id?: number | null;
     outline_file?: null;
+}
+
+interface AreaFileForm {
+    area_file_id?: number;
 }
 
 function sortOutlinesByNumber(outlines) {
@@ -136,11 +142,17 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
             forceFormData: true,
             onSuccess: () => {
                 resetOutline('parameter_outline_id', 'parameter_outline_category_id', 'outline_number', 'outline_description', 'container', 'outline_file');
-                console.log('Outline updated successfully');
             },
         });
     };
 
+    const [showIframe, setShowIframe] = useState(false);
+
+    const handleViewPDF = () => {
+        setShowIframe(!showIframe);
+    };
+
+    console.log(outlines);
     return (
         <>
             <ul className="pl-[1vw]">
@@ -148,7 +160,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                     <li key={outline.parameter_outline_id}>
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    {outline.container ? (
+                                    {outline.container == true ? (
                                         <span className="cursor-pointer">
                                         {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                                         </span>
@@ -172,25 +184,19 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                 <h1 className='text-sm font-medium text-muted-foreground mb-1'>Current Document</h1>
                                                 <div className="flex items-center gap-4 rounded border bg-gray-50 p-4">
                                                     <div className="flex-1">
-                                                        <p className="text-sm text-gray-600">No document uploaded</p>
-                                                        {/* When document exists:
-                                                        <p className="font-medium">vision_mission_system.pdf</p>
-                                                        <p className="text-sm text-gray-500">Uploaded on Jan 15, 2023</p>
-                                                        */}
+                                                        {!outline.area_files && (
+                                                            <p className="text-sm text-gray-600">No document uploaded</p>
+                                                        )}
                                                     </div>
-                                                    <a
-                                                        // variant="button"
-                                                        // size="sm"
-                                                        // disabled={false}
-                                                        href={route('manage.area.viewOutlineFile', {
-                                                          program_name: program,
-                                                          area_id: area_id,
-                                                          outline_id: outline.parameter_outline_id,
-                                                        })}
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        disabled={false}
+                                                        onClick={handleViewPDF}
                                                         >
                                                         <Eye className="mr-2 h-4 w-4" />
                                                         View PDF
-                                                    </a>
+                                                    </Button>
                                                 </div>
                                             </div>
 
@@ -247,7 +253,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                     onChange={(e) => setOutlineData('parameter_outline_category_id', parseInt(e.target.value))}
                                                     disabled={processingOutline}
                                                 >
-                                                    <option value="" disabled>
+                                                    <option value="">
                                                         Select Category
                                                     </option>
                                                     {outlineCategory?.map((category) => {
@@ -265,7 +271,12 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
 
                                             <div className="flex cursor-pointer items-center">
                                                 <label className="flex gap-2 text-sm">
-                                                    <input type="checkbox" className="accent-ring" />
+                                                    <input
+                                                        type="checkbox"
+                                                        className="accent-ring"
+                                                        checked={dataOutline.container}
+                                                        onChange={(e) => setOutlineData('container', e.target.checked)}
+                                                    />
                                                     Outline Container
                                                 </label>
                                             </div>
@@ -295,7 +306,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                                 <span className="font-semibold">Click to upload</span> or drag and
                                                                 drop
                                                             </p>
-                                                            <p className="text-xs text-gray-500">PDF (MAX. 10MB)</p>
+                                                            <p className="text-xs text-gray-500">PDF</p>
                                                         </div>
                                                         <input
                                                             type="file"
@@ -364,6 +375,14 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                     </li>
                 ))}
             </ul>
+            {showIframe && (
+                <iframe
+                    // src={outline.area_files?.file_path}
+                    width="100%"
+                    height="600"
+                    className="mt-4 border rounded"
+                ></iframe>
+            )}
         </>
     );
 }

@@ -56,18 +56,8 @@ class AreaParameterOutlinesController extends Controller
      * Display the specified resource.
      * @return void
      */
-    public function show(Request $request, ParameterOutlines $parameterOutlines)
+    public function show(ParameterOutlines $parameterOutlines)
     {
-        $parameterOutline = $parameterOutlines->where('parameter_outline_id', $request->outline_id)
-            ->with(['areaFiles'])
-            ->firstOrFail();
-
-        $parameterOutline->areaFiles->file_name = Crypt::decryptString($parameterOutline->areaFiles->file_name);
-        $parameterOutline->areaFiles->file_path = Crypt::decryptString($parameterOutline->areaFiles->file_path);
-        // dd(Crypt::decryptString($parameterOutline->areaFiles->file_name), Crypt::decryptString($parameterOutline->areaFiles->file_path));
-        dd($parameterOutline->areaFiles->file_name, $parameterOutline->areaFiles->file_path);
-
-        return response()->json($parameterOutline->areaFiles);
     }
 
     /**

@@ -197,7 +197,7 @@ class DatabaseSeeder extends Seeder
         foreach ($parameterCategory as $attributes) {
             ParameterOutlineCategory::factory()->create($attributes);
         }
-        ParameterOutlines::factory(200)->create();
+        ParameterOutlines::factory(20)->create();
         $file_status = [
             ['status_name' => 'Approved'],
             ['status_name' => 'Pending'],
@@ -206,9 +206,16 @@ class DatabaseSeeder extends Seeder
         foreach ($file_status as $attributes) {
             FileStatus::factory()->create($attributes);
         }
-        AreaFormCategory::factory(3)->create();
+        $area_forms_category = [
+            ['category_name' => 'Program Performance Profile'],
+            ['category_name' => 'Self-Survey'],
+            ['category_name' => 'Compliance Report']
+        ];
+        foreach ($area_forms_category as $attributes) {
+            AreaFormCategory::factory()->create($attributes);
+        }
         AreaForms::factory(50)->create();
-        AreaFiles::factory(200)->create();
+        // AreaFiles::factory(200)->create();
         Exhibits::factory(10)->create();
         ExhibitOutlines::factory(10)->create();
         ExhibitFiles::factory(10)->create();

@@ -41,6 +41,7 @@ function toTitleCase(str: string) {
 }
 
 export function OverallProgress({ data = [] }: OverallProgressProps) {
+    console.log("OverallProgress data", data)
     const pieData = React.useMemo(() => {
         let missing = 0
         const mainData = data.flatMap((item) => {

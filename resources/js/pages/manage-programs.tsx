@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
+import { PerProgramUnderSurvey } from '@/types';
 import { type BreadcrumbItem, type UserRecords } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 
@@ -21,11 +22,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface UsersProps {
-    userRecords: UserRecords[];
+interface ProgramsProps {
+    programs: PerProgramUnderSurvey[];
 }
 
-export default function ManagePrograms({ userRecords }: UsersProps) {
+export default function ManagePrograms({ programs }: ProgramsProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Manage Programs" />
@@ -67,14 +68,6 @@ export default function ManagePrograms({ userRecords }: UsersProps) {
                                             />
                                         </div>
                                     </div>
-
-                                    <div>
-                                        <div className="grid grid-cols-3 gap-2">
-                                            <label className="mt-4 flex items-center gap-2 text-sm">
-                                                <input type="checkbox" className="accent-ring" /> Under Survey
-                                            </label>
-                                        </div>
-                                    </div>
                                 </TabsContent>
                                 <TabsContent value="desc" className="flex flex-col gap-4">
                                     <textarea
@@ -92,48 +85,19 @@ export default function ManagePrograms({ userRecords }: UsersProps) {
                         </DialogContent>
                     </Dialog>
                     <div className="mt-4 grid w-full grid-cols-2 gap-4">
-                        <Link
-                            href="/manage-programs/program"
-                            className="rounded border p-7 text-center duration-300 hover:border-[#7f1414]/20 hover:text-[#7f1414]"
-                        >
-                            Bachelor of Science in Information Technology
-                        </Link>{' '}
-                        <Link
-                            href="/manage-programs/program"
-                            className="rounded border p-7 text-center duration-300 hover:border-[#7f1414]/20 hover:text-[#7f1414]"
-                        >
-                            Bachelor of Science in Information Technology
-                        </Link>{' '}
-                        <Link
-                            href="/manage-programs/program"
-                            className="rounded border p-7 text-center duration-300 hover:border-[#7f1414]/20 hover:text-[#7f1414]"
-                        >
-                            Bachelor of Science in Information Technology
-                        </Link>{' '}
-                        <Link
-                            href="/manage-programs/program"
-                            className="rounded border p-7 text-center duration-300 hover:border-[#7f1414]/20 hover:text-[#7f1414]"
-                        >
-                            Bachelor of Science in Information Technology
-                        </Link>{' '}
-                        <Link
-                            href="/manage-programs/program"
-                            className="rounded border p-7 text-center duration-300 hover:border-[#7f1414]/20 hover:text-[#7f1414]"
-                        >
-                            Bachelor of Science in Information Technology
-                        </Link>{' '}
-                        <Link
-                            href="/manage-programs/program"
-                            className="rounded border p-7 text-center duration-300 hover:border-[#7f1414]/20 hover:text-[#7f1414]"
-                        >
-                            Bachelor of Science in Information Technology
-                        </Link>{' '}
-                        <Link
-                            href="/manage-programs/program"
-                            className="rounded border p-7 text-center duration-300 hover:border-[#7f1414]/20 hover:text-[#7f1414]"
-                        >
-                            Bachelor of Science in Information Technology
-                        </Link>
+                        {programs?.length > 0 ? (
+                            programs.map((program) => (
+                                <Link
+                                    key={program.program_id}
+                                    href={route('manage.program', {program_name: program.program_name})}
+                                    className="rounded border p-7 text-center duration-300 hover:border-[#7f1414]/20 hover:text-[#7f1414]"
+                                >
+                                    {`${program.degree_type} in ${program.program_name}`}
+                                </Link>
+                            ))
+                        ) : (
+                            <p className="text-muted-foreground">No programs available.</p>
+                        )}
                     </div>
                 </div>
             </div>

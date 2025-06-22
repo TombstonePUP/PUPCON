@@ -45,10 +45,30 @@ class AreaFilesController extends Controller
             'ParameterOutlines.AreaParameter.Areas'])
             ->get();
 
+        $areaFormsCategories = AreaFormCategory::select('*')->get();
+
+        $area->AreaParameters->map(function ($parameter) {
+            $parameter->ParameterOutlines->map(function ($outline) {
+                if ($outline->AreaFiles) {
+                    $outline->AreaFiles->file_path = Storage::url($outline->AreaFiles->file_path);
+                }
+                return $outline;
+            });
+            return $parameter;
+        });
+
+        $area->AreaForms->map(function ($form) {
+            if ($form->AreaFiles) {
+                $form->AreaFiles->file_path = Storage::url($form->AreaFiles->file_path);
+            }
+            return $form;
+        });
+
         return inertia('document/area', [
             'program' => $program,
             'area' => $area,
             'parameterOutlineCategories' => $parameterOutlineCategories,
+            'areaFormsCategories' => $areaFormsCategories,
         ]);
     }
 

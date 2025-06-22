@@ -37,10 +37,11 @@ class AreaFormsController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // dd($request->all());
         $validated = $request->validate([
             'area_id' => 'required|integer|exists:areas,area_id',
             'area_form_category_id' => 'required|integer|exists:area_form_categories,area_form_category_id',
-            'form_image' => 'nullable|file|mimes:jpg,jpeg,png',
+            // 'form_image' => 'nullable|file|mimes:jpg,jpeg,png',
             'form_file' => 'nullable|file|mimes:pdf',
         ]);
 
@@ -51,7 +52,7 @@ class AreaFormsController extends Controller
             ->first()->category_name;
         $pending = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
 
-        $formImage = $request->file('form_image');
+        // $formImage = $request->file('form_image');
         $formFile = $request->file('form_file');
 
         if ($validated->hasFile('form_file')) {
@@ -61,20 +62,20 @@ class AreaFormsController extends Controller
             $formFilePath = "{$program}/{$area->area_name}/area-forms/files/{$formFileName}";
         }
 
-        if ($validated->hasFile('form_image')) {
+        /* if ($validated->hasFile('form_image')) {
             $formImageName = "{$area->area_name}-{$category}-form-image.{$validated->file('form_image')->getClientOriginalExtension()}";
             $formImagePath = "{$program}/{$area->area_name}/area-forms/images";
             $validated->file('form_image')->storeAs($formImagePath, $formImageName, 'public');
             $formImagePath = "{$program}/{$area->area_name}/area-forms/images/{$formImageName}";
-        }
+        } */
 
 
         $areaForm = new AreaForms();
         $areaForm = [
             'area_id' => $validated['area_id'],
             'area_form_category_id' => $validated['area_form_category_id'],
-            'form_image_name' => $formImageName,
-            'form_image_path' => $formImagePath,
+            /* 'form_image_name' => $formImageName,
+            'form_image_path' => $formImagePath, */
             'form_file_name' => $formFileName,
             'file_path' => $formFilePath,
             'file_status_id' => $pending,

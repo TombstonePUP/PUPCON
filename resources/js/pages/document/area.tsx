@@ -14,7 +14,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app-layout';
-import { type Area, type BreadcrumbItem, type ParameterOutlineCategory, type Program } from '@/types';
+import { AreaFormCategory, type Area, type BreadcrumbItem, type ParameterOutlineCategory, type Program } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { Eye, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -24,10 +24,11 @@ interface AreaFilesProps {
     program: Program;
     area?: Area;
     parameterOutlineCategories?: ParameterOutlineCategory[];
+    areaFormsCategories?: AreaFormCategory[];
 }
 
-export default function Areas({ program, area, parameterOutlineCategories }: AreaFilesProps) {
-    const [cards, setCards] = useState<CardType[]>([]);
+export default function Areas({ program, area, parameterOutlineCategories, areaFormsCategories }: AreaFilesProps) {
+    // const [cards, setCards] = useState<CardType[]>([]);
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: program.program_name,
@@ -72,13 +73,15 @@ export default function Areas({ program, area, parameterOutlineCategories }: Are
                 <div className="flex flex-col gap-2">
                     <div>
                         <AreaCards
-                            program={{ program_name: `${program.program_name}` }}
-                            cards={cards}
-                            onAdd={(newCard) => setCards([...cards, newCard])}
-                            onEdit={(id, updates) => {
-                                setCards(cards.map((card) => (card.id === id ? { ...card, ...updates } : card)));
-                            }}
-                            onRemove={(id) => setCards(cards.filter((card) => card.id !== id))}
+                            program={{ program_name: `${program.program_name}`, degree_type: program.degree_type }}
+                            forms={area?.area_forms}
+                            areaId={area?.area_id}
+                            categories={areaFormsCategories}
+                            // onAdd={(newCard) => setCards([...cards, newCard])}
+                            // onEdit={(id, updates) => {
+                            //     setCards(cards.map((card) => (card.id === id ? { ...card, ...updates } : card)));
+                            // }}
+                            // onRemove={(id) => setCards(cards.filter((card) => card.id !== id))}
                         />
                     </div>
                 </div>

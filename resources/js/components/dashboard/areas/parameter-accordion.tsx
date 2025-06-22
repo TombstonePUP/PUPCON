@@ -100,8 +100,9 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
     const addOutline = (e: React.FormEvent) => {
         e.preventDefault();
         postOutline(route('manage.area.addOutline', [program, area_id]), {
-            onFinish: () => {
+            onSuccess: () => {
                 resetOutline('area_parameter_id', 'parameter_outline_category_id', 'outline_number', 'outline_description', 'container');
+                console.log('Outline added successfully');
             },
         });
     };
@@ -301,7 +302,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                 onChange={(e) => setOutlineData('parameter_outline_category_id', parseInt(e.target.value))}
                                                 disabled={processingOutline}
                                             >
-                                                <option value="" disabled>
+                                                <option value="">
                                                     Select Category
                                                 </option>
                                                 {parameterOutlineCategories?.map((category) => {
@@ -318,7 +319,12 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                         </div>
                                         <div className="flex cursor-pointer items-center">
                                             <label className="flex gap-2 text-sm">
-                                                <input type="checkbox" className="accent-ring" />
+                                                <input
+                                                    type="checkbox"
+                                                    className="accent-ring"
+                                                    checked={dataOutline.container}
+                                                    onChange={(e) => setOutlineData('container', e.target.checked)}
+                                                />
                                                 Outline Container
                                             </label>
                                         </div>

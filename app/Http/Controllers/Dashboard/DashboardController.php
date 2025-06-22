@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
+use App\Models\AreaForms;
 use App\Models\FilesOverview;
 use App\Models\ExhibitOutlines;
 use App\Models\ParameterOutlines;
@@ -95,14 +96,20 @@ class DashboardController extends Controller
             ->leftJoin('area_files AS af', 'po.parameter_outline_id', '=', 'af.parameter_outline_id')
             ->selectRaw("
                 'area_file' AS document_type,
-                GREATEST(COUNT(*) FILTER (WHERE po.container = 'true') - COUNT(af.area_file_id),0) AS outlines,
+                GREATEST(COUNT(*) FILTER (WHERE po.container = 'false') - COUNT(af.area_file_id),0) AS outlines,
                 COUNT(af.area_file_id) AS documents
             ");
+        /* $area_forms = AreaForms::from('parameter_outlines AS po')
+            ->selectRaw("
+                'area_form' AS document_type,
+                GREATEST(COUNT(*) FILTER (WHERE po.container = 'false') - COUNT(af.area_form_id),0) AS outlines,
+                COUNT(af.area_form_id) AS documents
+            "); */
         $exhibit_files = ExhibitOutlines::from('exhibit_outlines AS eo')
             ->leftJoin('exhibit_files AS ef', 'eo.exhibit_outline_id', '=', 'ef.exhibit_outline_id')
             ->selectRaw("
                 'exhibit_file' AS document_type,
-                GREATEST(COUNT(*) FILTER (WHERE eo.container = 'true') - COUNT(ef.exhibit_file_id),0) AS outlines,
+                GREATEST(COUNT(*) FILTER (WHERE eo.container = 'false') - COUNT(ef.exhibit_file_id),0) AS outlines,
                 COUNT(ef.exhibit_file_id) AS documents
             ");
         $overall_uploads = $area_files->union($exhibit_files)->get();

@@ -62,7 +62,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     const programItems = privileges.map((program) => ({
         title: program.title,
-        url: `/manage-program/${program.title}`,
+        url: `/manage-programs/${program.title}`,
     }));
     const accre = [
         {

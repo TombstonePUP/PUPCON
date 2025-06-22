@@ -21,4 +21,12 @@ class ManageProgramController extends Controller
         ]);
     }
 
+    public function show()
+    {
+        $programs = Programs::select('*')->get();
+        return inertia('manage-programs', [
+            'programs' => $programs,
+        ]);
+    }
+
 }
