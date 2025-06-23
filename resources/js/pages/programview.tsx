@@ -77,18 +77,19 @@ export default function Programs({ program }: PerProgramProps) {
                         <h1 className="text-4xl font-bold">Gallery of Excellence</h1>
                         <p>Showcasing the moments that define our passion and commitment.</p>
                     </div>
+                    <div className='w-[75%]'>
                     <ImageRow
                         height="h-112"
                         images={[
                             { id: 1, src: '/images/gallery/it/1.jpg', alt: '' },
-                            { id: 2, src: '/images/gallery/it/1.jpg', alt: '' },
-                            { id: 3, src: '/images/gallery/it/1.jpg', alt: '' },
-                            { id: 4, src: '/images/gallery/it/1.jpg', alt: '' },
-                            { id: 5, src: '/images/gallery/it/1.jpg', alt: '' },
-                            { id: 6, src: '/images/gallery/it/1.jpg', alt: '' },
-                            { id: 7, src: '/images/gallery/it/1.jpg', alt: '' },
+                            { id: 2, src: '/images/gallery/it/2.jpg', alt: '' },
+                            { id: 3, src: '/images/gallery/it/3.jpg', alt: '' },
+                            { id: 4, src: '/images/gallery/it/4.jpg', alt: '' },
+                            { id: 5, src: '/images/gallery/it/5.jpg', alt: '' },
+                            { id: 6, src: '/images/gallery/it/6.jpg', alt: '' },
                         ]}
                     />
+                    </div>
                     <div className="flex w-[75%] items-center justify-center overflow-x-hidden py-6">
                         <svg height="55" viewBox="0 0 1156 47" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
