@@ -68,7 +68,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
             <Head title={`${area.area_name} - ${program.program_name}`} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="rounded border-2">
-                    <h1 className="mt-3 mb-3 text-center text-[1.8vw] font-black">{area.area_name.toUpperCase()}</h1>
+                    <h1 className="mt-3 mb-3 text-center text-[1.8vw] font-bold">{area.area_name.toUpperCase()}</h1>
                 </div>
                 <div className="flex flex-col gap-2">
                     <div>
@@ -88,7 +88,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                 <div className="border-sidebar-border/70 relative space-y-5 overflow-y-auto rounded-xl border p-4">
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button variant="black">Add Parameter</Button>
+                            <Button className='border-none'>Add Parameter</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>

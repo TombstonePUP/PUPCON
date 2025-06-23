@@ -112,10 +112,10 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
             <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
             {areaParameters?.length > 0 ? (
                 areaParameters.map((parameter) => (
-                <AccordionItem value={`item-${parameter.area_parameter_id}`} className="before:bg-[#171717]">
+                <AccordionItem value={`item-${parameter.area_parameter_id}`} >
                     <AccordionTrigger className="flex flex-row items-center justify-between">
                         <div className="flex h-full w-full flex-row items-center">
-                            <h1 className="font-black text-[#171717]">
+                            <h1 className="font-bold text-[#171717]">
                                 { parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}` : parameter.parameter_name }
                             </h1>
                             <p className="flex-1 text-center">{parameter.parameter_description}</p>
@@ -123,7 +123,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                         <div className="flex justify-center gap-3">
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <Button variant="black">Edit</Button>
+                                    <Button className="border-none">Edit</Button>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
@@ -232,7 +232,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                 return (
                                     <>
                                         <div className="rounded bg-[#D9D9D9] p-[2vw]">
-                                            <h1 className="text-[1vw] font-black">{category.category_name == 'No Category' ? '' : category.category_name}</h1>
+                                            <h1 className="text-[1vw] font-bold">{category.category_name == 'No Category' ? '' : category.category_name}</h1>
                                             <RecursiveOutlineForm outlines={sortedOutlines} program={program} area_id={area_id}  outlineCategory={parameterOutlineCategories}/>
                                         </div>
                                     </>

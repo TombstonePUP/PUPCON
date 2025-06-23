@@ -58,7 +58,7 @@ export const columns: ColumnDef<UserRecords>[] = [
         cell: ({ row }) => {
             return <div className="text-left w-32">
                 <Badge variant="outline" className="px-1.5 text-muted-foreground">
-                    {row.getValue("role")}
+                    {row.getValue("role") ? row.getValue("role") : 'No role'}
                 </Badge>
             </div>
         },

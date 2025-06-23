@@ -14,6 +14,13 @@ import AppLayout from '@/layouts/app-layout';
 import { PerProgramUnderSurvey } from '@/types';
 import { type BreadcrumbItem, type UserRecords } from '@/types';
 import { Head, Link } from '@inertiajs/react';
+import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectItem,
+} from "@/components/ui/select"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -41,41 +48,29 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             <DialogHeader>
                                 <DialogTitle>Add Program</DialogTitle>
                                 <DialogDescription>Add new program for PUP San Juan</DialogDescription>
-                            </DialogHeader>{' '}
-                            <Tabs defaultValue="name" className="w-full">
-                                <TabsList className="w-full">
-                                    <TabsTrigger value="name">Name</TabsTrigger>
-                                    <TabsTrigger value="desc">Description</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="name">
-                                    <div className="flex flex-col gap-4">
-                                        <div>
-                                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Degree</label>
-                                            <select
-                                                className="bg-background focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
-                                                defaultValue="ppp"
-                                            >
-                                                <option value="ppp">Bachelor Science</option>
-                                                <option value="self-survey">Diploma</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Program Name</label>
-                                            <input
-                                                type="text"
-                                                className="bg-background focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
-                                                placeholder="Enter program name"
-                                            />
-                                        </div>
-                                    </div>
-                                </TabsContent>
-                                <TabsContent value="desc" className="flex flex-col gap-4">
-                                    <textarea
-                                        placeholder="Enter program overview"
-                                        className="focus:border-ring focus:ring-ring min-h-[100px] w-full resize-y rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                            </DialogHeader>
+                            <div className="flex flex-col gap-4">
+                                <div>
+                                    <label className="text-muted-foreground mb-1 block text-sm font-medium">Degree</label>
+                                    <Select defaultValue="ppp">
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Select Degree" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="ppp">Bachelor Science</SelectItem>
+                                            <SelectItem value="self-survey">Diploma</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div>
+                                    <label className="text-muted-foreground mb-1 block text-sm font-medium">Program Name</label>
+                                    <input
+                                        type="text"
+                                        className="bg-background focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                                        placeholder="Enter program name"
                                     />
-                                </TabsContent>
-                            </Tabs>
+                                </div>
+                            </div>
                             <DialogFooter>
                                 <DialogClose asChild>
                                     <Button variant="outline">Cancel</Button>
@@ -89,7 +84,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             programs.map((program) => (
                                 <Link
                                     key={program.program_id}
-                                    href={route('manage.program', {program_name: program.program_name})}
+                                    href={route('manage.program', { program_name: program.program_name })}
                                     className="rounded border p-7 text-center duration-300 hover:border-[#7f1414]/20 hover:text-[#7f1414]"
                                 >
                                     {`${program.degree_type} in ${program.program_name}`}

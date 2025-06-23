@@ -425,9 +425,9 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                             key={item.id}
                             className={`group relative ${
                                 mode === 'areas'
-                                    ? 'rounded border p-7 shadow'
+                                    ? 'rounded border p-7 '
                                     : mode === 'faculty'
-                                      ? 'rounded-lg border p-4 shadow-sm transition-shadow hover:shadow-md'
+                                      ? 'rounded-lg border p-4'
                                       : 'flex h-[13vw] min-w-[15vw] flex-1 items-center justify-center overflow-hidden rounded border bg-gray-50 p-1 transition-all duration-300 hover:bg-gray-100'
                             }`}
                         >
@@ -455,7 +455,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                                             className={`${
                                                 mode === 'areas' || mode === 'faculty'
                                                     ? 'h-8 w-8 rounded-full p-0 hover:bg-gray-200'
-                                                    : 'flex h-8 w-8 items-center justify-center rounded bg-[#171717] text-white shadow-md'
+                                                    : 'flex h-8 w-8 items-center justify-center rounded bg-[#171717] text-white'
                                             }`}
                                             onClick={(e) => (mode === 'areas' || mode === 'faculty') && e.preventDefault()}
                                         >
@@ -479,7 +479,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                                             className={`${
                                                 mode === 'areas' || mode === 'faculty'
                                                     ? 'h-8 w-8 rounded-full p-0'
-                                                    : 'flex h-8 w-8 items-center justify-center rounded border-none shadow-md'
+                                                    : 'flex h-8 w-8 items-center justify-center rounded border-none'
                                             } border-none`}
                                             onClick={(e) => (mode === 'areas' || mode === 'faculty') && e.preventDefault()}
                                         >

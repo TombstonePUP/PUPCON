@@ -45,7 +45,7 @@ export const columns: ColumnDef<ActivityLogs>[] = [
         accessorKey: 'activity_date',
         header: ({ column }) => {
             return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button className="text-left w-[10px]" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
                     Date
                     <ArrowUpDown className="ml-2 h-4" />
                 </Button>
@@ -57,7 +57,7 @@ export const columns: ColumnDef<ActivityLogs>[] = [
         accessorKey: 'activity_status',
         header: ({ column }) => {
             return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button className="text-left w-[10px]" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
                     Status
                     <ArrowUpDown className="ml-2 h-4" />
                 </Button>

@@ -12,11 +12,19 @@ import {
     DialogClose
 } from "@/components/ui/dialog";
 import { Plus, Trash2, Edit, Eye } from "lucide-react";
-import {  Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { useState } from "react";
 import { AreaFormCategory, AreaForms } from "@/types";
 import InputError from "@/components/input-error";
 import { Input } from "@headlessui/react";
+import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectItem,
+} from "@/components/ui/select"
+
 
 type AreaCardsProps = {
     program: {
@@ -89,16 +97,16 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
             <div className="flex gap-2 justify-center w-full">
                 {/* Render existing forms */}
                 {forms.map((card) => (
-                    <div key={card.area_form_id} className="group relative grid w-fit place-items-center gap-1 rounded border p-2">
+                    <div key={card.area_form_id} className="group relative grid w-full place-items-center gap-1 rounded border p-2">
                         <img className="rounded w-full h-40 object-cover" src="/images/placeholder.png" alt="" />
                         <p className="mt-3 mb-[-0.3vw] text-center text-sm text-[#858585]">AACCUP | Level II</p>
-                        <h1 className="w-80 text-center text-2xl leading-none font-black">
+                        <h1 className="w-80 text-center text-2xl leading-none font-bold">
                             {card.area_form_category?.category_name}
                         </h1>
                         <p className="my-5 text-center text-sm">{`${program.degree_type} in ${program.program_name}`}</p>
 
                         {/* Edit/Remove buttons (appear on hover) */}
-                        <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <div className="absolute inset-0 rounded flex items-center justify-center gap-2 bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                             <Dialog className="w-full">
                                 <DialogTrigger asChild>
                                     <Button
@@ -111,7 +119,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                 </DialogTrigger>
                                 <DialogContent className="max-w-md">
                                     <DialogHeader>
-                                        <DialogTitle className="text-2xl font-black">View</DialogTitle>
+                                        <DialogTitle className="text-2xl font-bold">View</DialogTitle>
                                         <DialogDescription>
                                             <iframe
                                                 src={card.file_path}
@@ -136,32 +144,45 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                 </DialogTrigger>
                                 <DialogContent className="max-w-md">
                                     <DialogHeader>
-                                        <DialogTitle className="text-2xl font-black">Edit Card</DialogTitle>
+                                        <DialogTitle className="text-2xl font-bold">Edit Card</DialogTitle>
                                         <DialogDescription>
-                                            Update the  details
+                                            Update the details  of {card.area_form_category?.category_name}
                                         </DialogDescription>
                                     </DialogHeader>
                                     <form onSubmit={(e) => updateAreaForm(e)}>
-                                        <div className="flex flex-col gap-4 py-4">
+                                        <div className="flex flex-col pb-4">
                                             <div>
-                                                <label className="block text-sm font-medium text-muted-foreground mb-1">Card Type</label>
-                                                <select
-                                                    name="cardType"
-                                                    className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    value={dataForms.area_form_category_id}
-                                                    onChange={(e) => setFormsData('area_form_category_id', e.target.value)}
+                                                {/* <label className="block text-sm font-medium text-muted-foreground mb-1">
+                                                    Card Type
+                                                </label>
+                                                <Select
+                                                    value={dataForms.area_form_category_id?.toString() || ""}
+                                                    onValueChange={(value) => setFormsData("area_form_category_id", value)}
                                                     disabled={processingForms}
-                                                    defaultValue=''
-                                                    required
                                                 >
-                                                <option value="">Select Category</option>
-                                                {categories.map((category) => (
-                                                    <option key={category.area_form_category_id} value={category.area_form_category_id}>
-                                                        {category.category_name}
-                                                    </option>
-                                                ))}
-                                                </select>
-                                                <InputError message={errorsForms.area_form_category_id} className="mt-2"/>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Select Category" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {categories
+                                                            .filter(
+                                                                (category) =>
+                                                                    !forms.some(
+                                                                        (form) =>
+                                                                            form.area_form_category_id === category.area_form_category_id
+                                                                    )
+                                                            )
+                                                            .map((category) => (
+                                                                <SelectItem
+                                                                    key={category.area_form_category_id}
+                                                                    value={category.area_form_category_id.toString()}
+                                                                >
+                                                                    {category.category_name}
+                                                                </SelectItem>
+                                                            ))}
+                                                    </SelectContent>
+                                                </Select> */}
+                                                <InputError message={errorsForms.area_form_category_id} className="mt-2" />
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-muted-foreground mb-1">
@@ -171,17 +192,10 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                                     <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                             <svg className="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                                             </svg>
-                                                            <p className="mb-2 text-sm text-gray-500">
-                                                                <span className="font-semibold">Click to upload</span> or drag and drop
-                                                            </p>
-                                                            {card.file_name && (
-                                                                <p className="text-xs text-gray-700 mt-1">
-                                                                    Current: {card.file_name}
-                                                                </p>
-                                                            )}
-                                                            <p className="text-xs text-gray-500">PDF (MAX. 5MB)</p>
+                                                            <p className="text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                                            <p className="text-xs text-gray-500">PDF</p>
                                                         </div>
                                                         <input
                                                             name="document"
@@ -191,7 +205,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                                             onChange={(e) => setFormsData('form_file', e.target.files ? e.target.files[0] : null)}
                                                         />
                                                     </label>
-                                                    <InputError message={errorsForms.form_file} className="mt-2"/>
+                                                    <InputError message={errorsForms.form_file} className="mt-2" />
                                                 </div>
                                             </div>
                                         </div>
@@ -203,7 +217,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                             </DialogClose>
                                             <Button
                                                 type="submit"
-                                                variant="black"
+                                                variant="noborder"
                                                 disabled={processingForms}
                                                 onClick={(e) => setFormsData('area_form_id', card.area_form_id)}
                                             >
@@ -226,7 +240,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                 </DialogTrigger>
                                 <DialogContent className="max-w-md">
                                     <DialogHeader>
-                                        <DialogTitle className="text-2xl font-black">Are you sure?</DialogTitle>
+                                        <DialogTitle className="text-2xl font-bold">Are you sure?</DialogTitle>
                                         <DialogDescription>
                                             Are you sure you want to remove this ?
                                         </DialogDescription>
@@ -239,7 +253,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                         </DialogClose>
                                         <Button
                                             type="button"
-                                            variant="destructive"
+                                            variant="noborder"
                                             onClick={() => deleteAreaForm(card.area_form_id)}
                                         >
                                             Remove
@@ -251,7 +265,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                     </div>
                 ))}
                 {/* Add Card Form */}
-                <div className={`border p-2 rounded grid place-items-center gap-1 ${forms.length > 0 ? 'w-fit' : 'w-full'}`}>
+                {forms.length < 3 ? (<div className={`border p-2 rounded grid place-items-center gap-1 w-full`}>
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button
@@ -266,7 +280,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                         </DialogTrigger>
                         <DialogContent className="max-w-md">
                             <DialogHeader>
-                                <DialogTitle className="text-2xl font-black">Add Card</DialogTitle>
+                                <DialogTitle className="text-2xl font-bold">Add Card</DialogTitle>
                                 <DialogDescription>
                                     Make a new card for Program Performance Profile, Self-Survey, or Compliance Report
                                 </DialogDescription>
@@ -274,25 +288,38 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                             <form onSubmit={(e) => addAreaForm(e)}>
                                 <div className="flex flex-col gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-muted-foreground mb-1">Card Type</label>
-                                        <select
-                                            name="cardType"
-                                            className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                            id="area_form_category_id"
-                                            value={dataForms.area_form_category_id}
-                                            onChange={(e) => setFormsData('area_form_category_id', e.target.value)}
+                                        <label className="block text-sm font-medium text-muted-foreground mb-1">
+                                            Card Type
+                                        </label>
+                                        <Select
+                                            value={dataForms.area_form_category_id?.toString() || ""}
+                                            onValueChange={(value) => setFormsData("area_form_category_id", value)}
                                             disabled={processingForms}
-                                            defaultValue=""
-                                            required
                                         >
-                                            <option value="">Select Category</option>
-                                            {categories.map((category) => (
-                                                <option key={category.area_form_category_id} value={category.area_form_category_id}>
-                                                    {category.category_name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <InputError message={errorsForms.area_form_category_id} className="mt-2"/>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select Category" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {categories
+                                                    .filter(
+                                                        (category) =>
+                                                            !forms.some(
+                                                                (form) =>
+                                                                    form.area_form_category_id === category.area_form_category_id
+                                                            )
+                                                    )
+                                                    .map((category) => (
+                                                        <SelectItem
+                                                            key={category.area_form_category_id}
+                                                            value={category.area_form_category_id.toString()}
+                                                        >
+                                                            {category.category_name}
+                                                        </SelectItem>
+                                                    ))}
+
+                                            </SelectContent>
+                                        </Select>
+                                        <InputError message={errorsForms.area_form_category_id} className="mt-2" />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-muted-foreground mb-1">Upload Document</label>
@@ -300,9 +327,9 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                             <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <svg className="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                                     </svg>
-                                                    <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                                    <p className="text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
                                                     <p className="text-xs text-gray-500">PDF</p>
                                                 </div>
                                                 <input
@@ -313,7 +340,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                                     onChange={(e) => setFormsData('form_file', e.target.files ? e.target.files[0] : null)}
                                                 />
                                             </label>
-                                            <InputError message={errorsForms.form_file} className="mt-2"/>
+                                            <InputError message={errorsForms.form_file} className="mt-2" />
                                         </div>
                                     </div>
                                 </div>
@@ -323,12 +350,13 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                             Cancel
                                         </Button>
                                     </DialogClose>
-                                    <Button  type="submit" variant="black" disabled={processingForms}>Submit</Button>
+                                    <Button type="submit" className="border-none" disabled={processingForms}>Submit</Button>
                                 </DialogFooter>
                             </form>
                         </DialogContent>
                     </Dialog>
-                </div>
+                </div>) : ('')}
+
             </div>
         </div>
     );

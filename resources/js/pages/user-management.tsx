@@ -1,5 +1,5 @@
 import { DataTable } from '@/components/charts/data-table';
-import { columns } from '@/components/charts/users/columns';
+import { columns } from '@/components/charts/data-table-columns/users';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

@@ -47,7 +47,7 @@ export default function Users({ program }: ProgramProps) {
                     </div>
 
                     {/* objectives */}
-                    <EditableGrid
+                    {/* <EditableGrid
                         mode="objectives"
                         initialItems={[
                             { id: '1', content: 'First objective...', type: 'text' },
@@ -56,10 +56,10 @@ export default function Users({ program }: ProgramProps) {
                         onAdd={(content) => console.log('Adding:', content)}
                         onEdit={(id, content) => console.log('Editing:', id, content)}
                         onRemove={(id) => console.log('Removing:', id)}
-                    />
+                    /> */}
 
                     {/* gallery  */}
-                    <EditableGrid
+                    {/* <EditableGrid
                         mode="gallery"
                         initialItems={[
                             { id: '1', content: '/images/image1.jpg', type: 'image' },
@@ -67,17 +67,17 @@ export default function Users({ program }: ProgramProps) {
                         ]}
                         onUpload={(file) => console.log('Uploading:', file)}
                         onRemove={(id) => console.log('Removing image:', id)}
-                    />
+                    /> */}
 
                     {/* FACULTIES */}
-                    <EditableGrid
+                    {/* <EditableGrid
                         mode="faculty"
                         initialItems={[]}
                         onAdd={(facultyData) => console.log('Add faculty', facultyData)}
                         onEdit={(id, facultyData) => console.log('Edit faculty', id, facultyData)}
                         onRemove={(id) => console.log('Remove faculty', id)}
                         onUpload={(file) => console.log('Upload faculty image', file)}
-                    />
+                    /> */}
 
                     {/* AREAS */}
                     <EditableGrid
