@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             Route::controller(AreaFormsController::class)->group(function () {
                 Route::post('/{area_id}/storeForm', 'store')->name('area.addAreaForm');
-                Route::patch('/{area_id}/{form_id}/updateForm', 'update')->name('area.updateAreaForm');
+                Route::post('/{area_id}/{form_id}/updateForm', 'update')->name('area.updateAreaForm');
                 Route::delete('/{area_id}/{form_id}/deleteForm', 'destroy')->name('area.deleteAreaForm');
             });
         });

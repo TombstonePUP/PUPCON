@@ -96,6 +96,7 @@ class AreaParameterOutlinesController extends Controller
                 Storage::disk('public')->delete($file->file_path);
                 $file->delete();
             }
+
             $file = $request->outline_file;
 
             $categoryName = $parameterOutline->parameterOutlineCategory->category_name;

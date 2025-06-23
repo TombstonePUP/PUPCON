@@ -32,7 +32,7 @@ interface AreaFormsForm {
     area_form_id?: number | null;
     area_id?: number | null;
     area_form_category_id?: number | null;
-    area_form_file?: File | null;
+    form_file?: File | null;
 }
 
 export default function AreaCards({ program, forms, areaId, categories }: AreaCardsProps) {
@@ -40,8 +40,8 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
         data: dataForms,
         setData: setFormsData,
         delete: destroyForms,
-        post: addForms,
-        patch: updateForms,
+        post: postForms,
+        // patch: updateForms,
         processing: processingForms,
         errors: errorsForms,
         reset: resetForms,
@@ -49,12 +49,13 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
         area_form_id: null,
         area_id: areaId,
         area_form_category_id: null,
-        area_form_file: null,
+        form_file: null,
     });
 
     const addAreaForm = (e: React.FormEvent) => {
+        console.log(dataForms);
         e.preventDefault();
-        addForms(route('manage.area.addAreaForm', [program.program_name, areaId]), {
+        postForms(route('manage.area.addAreaForm', [program.program_name, areaId]), {
             onSuccess: () => {
                 resetForms();
             },
@@ -62,21 +63,26 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
     }
 
     const updateAreaForm = (e: React.FormEvent) => {
+        console.log(dataForms);
         e.preventDefault();
-        updateForms(route('manage.area.updateAreaForm', [program.program_name, areaId, dataForms.area_form_id]), {
+        postForms(route('manage.area.updateAreaForm', [program.program_name, areaId, dataForms.area_form_id]), {
             onSuccess: () => {
+                console.log('TESTING SHITS');
                 resetForms();
             },
         });
     };
 
     const deleteAreaForm = (areaFormId: number) => {
+        console.log(areaFormId);
         destroyForms(route('manage.area.deleteAreaForm', [program.program_name, areaId, areaFormId]), {
             onSuccess: () => {
                 resetForms();
             },
         });
     }
+
+    console.log(forms);
 
     return (
         <div className="flex flex-col gap-2">
@@ -135,20 +141,27 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                             Update the  details
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <form>
+                                    <form onSubmit={(e) => updateAreaForm(e)}>
                                         <div className="flex flex-col gap-4 py-4">
                                             <div>
                                                 <label className="block text-sm font-medium text-muted-foreground mb-1">Card Type</label>
                                                 <select
                                                     name="cardType"
                                                     className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    defaultValue={card.area_form_category?.category_name}
+                                                    value={dataForms.area_form_category_id}
+                                                    onChange={(e) => setFormsData('area_form_category_id', e.target.value)}
+                                                    disabled={processingForms}
+                                                    defaultValue=''
                                                     required
                                                 >
-                                                    <option value="ppp">Program Performance Profile</option>
-                                                    <option value="self-survey">Self-Survey</option>
-                                                    <option value="compliance">Compliance Report</option>
+                                                <option value="">Select Category</option>
+                                                {categories.map((category) => (
+                                                    <option key={category.area_form_category_id} value={category.area_form_category_id}>
+                                                        {category.category_name}
+                                                    </option>
+                                                ))}
                                                 </select>
+                                                <InputError message={errorsForms.area_form_category_id} className="mt-2"/>
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-muted-foreground mb-1">
@@ -175,18 +188,27 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                                             type="file"
                                                             className="hidden"
                                                             accept=".pdf"
+                                                            onChange={(e) => setFormsData('form_file', e.target.files ? e.target.files[0] : null)}
                                                         />
                                                     </label>
+                                                    <InputError message={errorsForms.form_file} className="mt-2"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <DialogFooter>
                                             <DialogClose asChild>
-                                                <Button type="button" variant="outline" id="edit-card-dialog-close">
+                                                <Button type="button" variant="outline" id="edit-card-dialog-close" disabled={processingForms}>
                                                     Cancel
                                                 </Button>
                                             </DialogClose>
-                                            <Button type="submit" variant="black">Save Changes</Button>
+                                            <Button
+                                                type="submit"
+                                                variant="black"
+                                                disabled={processingForms}
+                                                onClick={(e) => setFormsData('area_form_id', card.area_form_id)}
+                                            >
+                                                Save Changes
+                                            </Button>
                                         </DialogFooter>
                                     </form>
                                 </DialogContent>
@@ -218,7 +240,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                         <Button
                                             type="button"
                                             variant="destructive"
-                                            // onClick={() => handleRemoveCard(card.id)}
+                                            onClick={() => deleteAreaForm(card.area_form_id)}
                                         >
                                             Remove
                                         </Button>
@@ -288,10 +310,10 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                                     type="file"
                                                     className="hidden"
                                                     accept=".pdf"
-                                                    onChange={(e) => setFormsData('area_form_file', e.target.files ? e.target.files[0] : null)}
+                                                    onChange={(e) => setFormsData('form_file', e.target.files ? e.target.files[0] : null)}
                                                 />
                                             </label>
-                                            <InputError message={errorsForms.area_form_file} className="mt-2"/>
+                                            <InputError message={errorsForms.form_file} className="mt-2"/>
                                         </div>
                                     </div>
                                 </div>

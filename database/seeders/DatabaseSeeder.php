@@ -214,7 +214,7 @@ class DatabaseSeeder extends Seeder
         foreach ($area_forms_category as $attributes) {
             AreaFormCategory::factory()->create($attributes);
         }
-        AreaForms::factory(50)->create();
+        AreaForms::factory(20)->create();
         // AreaFiles::factory(200)->create();
         Exhibits::factory(10)->create();
         ExhibitOutlines::factory(10)->create();

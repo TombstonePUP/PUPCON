@@ -58,11 +58,12 @@ class AreaFilesController extends Controller
         });
 
         $area->AreaForms->map(function ($form) {
-            if ($form->AreaFiles) {
-                $form->AreaFiles->file_path = Storage::url($form->AreaFiles->file_path);
+            if ($form) {
+                $form->file_path = Storage::url($form->file_path);
             }
             return $form;
         });
+
 
         return inertia('document/area', [
             'program' => $program,

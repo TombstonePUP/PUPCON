@@ -69,7 +69,7 @@ return new class extends Migration
             $table->text('form_image_path')->nullable();
             $table->text('file_name')->nullable();
             $table->text('file_path')->nullable();
-            $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
+            $table->foreignId('file_status_id')->nullable()->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
         });
