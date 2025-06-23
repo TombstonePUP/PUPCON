@@ -109,7 +109,7 @@ class AreaParameterOutlinesController extends Controller
 
             $categoryName = $categoryName === "Outcome/s" ? substr($categoryName, 0, -2) : $categoryName;
 
-            $fileName = $initial . '.' . $parameterOutline->outline_number . '.' . $parameterOutline->outline_description . $file->getClientOriginalExtension();
+            $fileName = $initial . '.' . $parameterOutline->outline_number . '.' . $parameterOutline->outline_description . '.' . $file->getClientOriginalExtension();
             $filePath = "{$program}/{$area->area_name}/{$parameterName}/{$categoryName}";
             $request->file('outline_file')->storeAs($filePath, $fileName, 'public');
 

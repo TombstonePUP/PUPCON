@@ -184,19 +184,29 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                 <h1 className='text-sm font-medium text-muted-foreground mb-1'>Current Document</h1>
                                                 <div className="flex items-center gap-4 rounded border bg-gray-50 p-4">
                                                     <div className="flex-1">
-                                                        {!outline.area_files && (
+                                                        {!outline.area_files ? (
                                                             <p className="text-sm text-gray-600">No document uploaded</p>
+                                                        ) : (
+                                                            <p className="text-sm text-gray-600">{`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}</p>
                                                         )}
                                                     </div>
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
-                                                        disabled={false}
+                                                        disabled={outline.area_files ? false : true }
                                                         onClick={handleViewPDF}
                                                         >
                                                         <Eye className="mr-2 h-4 w-4" />
                                                         View PDF
                                                     </Button>
+                                                    {showIframe && (
+                                                        <iframe
+                                                            src={outline.area_files?.file_path}
+                                                            width="100%"
+                                                            height="600"
+                                                            className="mt-4 border rounded"
+                                                        ></iframe>
+                                                    )}
                                                 </div>
                                             </div>
 
@@ -375,14 +385,6 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                     </li>
                 ))}
             </ul>
-            {showIframe && (
-                <iframe
-                    // src={outline.area_files?.file_path}
-                    width="100%"
-                    height="600"
-                    className="mt-4 border rounded"
-                ></iframe>
-            )}
         </>
     );
 }

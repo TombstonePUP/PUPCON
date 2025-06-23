@@ -37,11 +37,11 @@ class AreaFormsController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // dd($request->all());
+        dd($request->all());
         $validated = $request->validate([
             'area_id' => 'required|integer|exists:areas,area_id',
             'area_form_category_id' => 'required|integer|exists:area_form_categories,area_form_category_id',
-            // 'form_image' => 'nullable|file|mimes:jpg,jpeg,png',
+            'form_image' => 'nullable|file|mimes:jpg,jpeg,png',
             'form_file' => 'nullable|file|mimes:pdf',
         ]);
 
@@ -55,7 +55,7 @@ class AreaFormsController extends Controller
         // $formImage = $request->file('form_image');
         $formFile = $request->file('form_file');
 
-        if ($validated->hasFile('form_file')) {
+        if ($request->hasFile('form_file')) {
             $formFileName = "{$area->area_name}-{$category}-form-file.{$validated->file('form_file')->getClientOriginalExtension()}";
             $formFilePath = "{$program}/{$area->area_name}/area-forms/files";
             $validated->file('form_file')->storeAs($formFilePath, $formFileName, 'public');
