@@ -139,7 +139,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                                             Cancel
                                         </Button>
                                     </DialogClose>
-                                    <Button variant="black" type="submit" onClick={addParameter} tabIndex={4}>
+                                    <Button variant="noborder" type="submit" onClick={addParameter} tabIndex={4}>
                                         Submit
                                     </Button>
                                 </DialogFooter>
