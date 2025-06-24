@@ -16,6 +16,14 @@ import {
 } from '@tanstack/react-table';
 
 import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+
+import {
     Tabs,
     TabsContent,
     TabsList,
@@ -97,54 +105,24 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = React.useState('');
+    const [tab, setTab] = React.useState<'pending' | 'approved' | 'rejected'>('pending');
 
-    const pending = data.filter((file: any) => file.file_status === "Pending");
-    const approved = data.filter((file: any) => file.file_status === "Approved");
-    const rejected = data.filter((file: any) => file.file_status === "Rejected");
+    const filteredData = React.useMemo(() => {
+        return data.filter(file => file.file_status === tab.charAt(0).toUpperCase() + tab.slice(1));
+    }, [data, tab]);
 
-    const pendingTable = useReactTable({
-        data: pending,
+    const table = useReactTable({
+        data: filteredData,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
-        // globalFilterFn,
         onGlobalFilterChange: setGlobalFilter,
         getFilteredRowModel: getFilteredRowModel(),
         state: {
-            globalFilter,
-            sorting,
-        },
-    });
-    const approvedTable = useReactTable({
-        data: approved,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        onSortingChange: setSorting,
-        getSortedRowModel: getSortedRowModel(),
-        // globalFilterFn,
-        onGlobalFilterChange: setGlobalFilter,
-        getFilteredRowModel: getFilteredRowModel(),
-        state: {
-            globalFilter,
-            sorting,
-        },
-    });
-    const rejectedTable = useReactTable({
-        data: rejected,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        onSortingChange: setSorting,
-        getSortedRowModel: getSortedRowModel(),
-        // globalFilterFn,
-        onGlobalFilterChange: setGlobalFilter,
-        getFilteredRowModel: getFilteredRowModel(),
-        state: {
-            globalFilter,
-            sorting,
+          globalFilter,
+          sorting,
         },
     });
 
@@ -155,25 +133,27 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
         >
             <div className="flex items-center py-4 gap-3">
                 <Input placeholder="Search..." value={globalFilter ?? ''} onChange={(e) => setGlobalFilter(e.target.value)} className="max-w-sm" />
-                <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-                    <TabsTrigger value="pending">Pending</TabsTrigger>
-                    <TabsTrigger value="approved">
-                        Approved<Badge variant="secondary">3</Badge>
-                    </TabsTrigger>
-                    <TabsTrigger value="rejected">
-                        Rejected <Badge variant="secondary">2</Badge>
-                    </TabsTrigger>
-                </TabsList>
-                <DataTableViewOptions table={pendingTable} />
+            <TabsList>
+                <TabsTrigger value="pending" onClick={() => setTab('pending')}>
+                    Pending <Badge variant="secondary">{data.filter(d => d.file_status === 'Pending').length}</Badge>
+                </TabsTrigger>
+                <TabsTrigger value="approved" onClick={() => setTab('approved')}>
+                    Approved <Badge variant="secondary">{data.filter(d => d.file_status === 'Approved').length}</Badge>
+                </TabsTrigger>
+                <TabsTrigger value="rejected" onClick={() => setTab('rejected')}>
+                    Rejected <Badge variant="secondary">{data.filter(d => d.file_status === 'Rejected').length}</Badge>
+                </TabsTrigger>
+            </TabsList>
+                <DataTableViewOptions table={table} />
             </div>
             <TabsContent
-                value="pending"
-                className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+                value={tab}
+                // className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
             >
                 <div className="mb-4 rounded-md border">
                     <Table>
                         <TableHeader className="bg-muted sticky top-0 z-10">
-                            {pendingTable.getHeaderGroups().map((headerGroup) => (
+                            {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
                                     {headerGroup.headers.map((header) => {
                                         return (
@@ -186,8 +166,8 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                             ))}
                         </TableHeader>
                         <TableBody>
-                            {pendingTable.getRowModel().rows?.length ? (
-                                pendingTable.getRowModel().rows.map((row) => (
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
                                     <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
@@ -204,87 +184,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                         </TableBody>
                     </Table>
                 </div>
-                <DataTablePagination table={pendingTable} />
-            </TabsContent>
-            <TabsContent
-                value="approved"
-                className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
-            >
-                <div className="mb-4 rounded-md border">
-                    <Table>
-                        <TableHeader className="bg-muted sticky top-0 z-10">
-                            {approvedTable.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
-                                        return (
-                                            <TableHead key={header.id}>
-                                                {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                                            </TableHead>
-                                        );
-                                    })}
-                                </TableRow>
-                            ))}
-                        </TableHeader>
-                        <TableBody>
-                            {approvedTable.getRowModel().rows?.length ? (
-                                approvedTable.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                                        No results.
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
-                <DataTablePagination table={approvedTable} />
-            </TabsContent>
-            <TabsContent
-                value="rejected"
-                className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
-            >
-                <div className="mb-4 rounded-md border">
-                    <Table>
-                        <TableHeader className="bg-muted sticky top-0 z-10">
-                            {rejectedTable.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
-                                        return (
-                                            <TableHead key={header.id}>
-                                                {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                                            </TableHead>
-                                        );
-                                    })}
-                                </TableRow>
-                            ))}
-                        </TableHeader>
-                        <TableBody>
-                            {rejectedTable.getRowModel().rows?.length ? (
-                                rejectedTable.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                                        No results.
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
-                <DataTablePagination table={rejectedTable} />
+                <DataTablePagination table={table} />
             </TabsContent>
         </Tabs>
     );
