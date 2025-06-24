@@ -121,7 +121,7 @@ class AreaFormsController extends Controller
         $validated = $request->validate([
             'area_form_id' => 'required|integer|exists:area_forms,area_form_id',
             'area_id' => 'required|integer|exists:areas,area_id',
-            'area_form_category_id' => 'required|integer|exists:area_form_categories,area_form_category_id',
+            // 'area_form_category_id' => 'required|integer|exists:area_form_categories,area_form_category_id',
             'form_image' => 'nullable|file|mimes:jpg,jpeg,png',
             'form_file' => 'nullable|file|mimes:pdf',
         ]);
@@ -131,11 +131,12 @@ class AreaFormsController extends Controller
         $area = Areas::where('area_id', $validated['area_id'])->first();
         $program = $request->program_name;
 
-        $category = AreaFormCategory::where('area_form_category_id', $validated['area_form_category_id'])
-            ->first()->category_name;
+        /* $category = AreaFormCategory::where('area_form_category_id', $validated['area_form_category_id'])
+            ->first()->category_name; */
         $pending = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
 
         $areaForm = $areaForms->find($validated['area_form_id']);
+        $category = $areaForm->AreaFormCategory->category_name;
 
         if ($request->hasFile('form_file')) {
             if($file = $areaForm->file_path) {
