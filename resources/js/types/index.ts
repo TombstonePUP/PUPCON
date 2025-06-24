@@ -253,3 +253,13 @@ export interface AreaFormCategory {
     areaForms?: AreaForms[];
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface FilesOverview {
+    file_type: string;
+    outline: string;
+    file_id: string;
+    file_name: string;
+    file_path: string;
+    file_status: string;
+    rejection_reason: string;
+}

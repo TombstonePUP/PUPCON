@@ -8,6 +8,7 @@ use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AreasController extends Controller
 {
@@ -38,6 +39,23 @@ class AreasController extends Controller
 
         $area->area_numeral = ProgramsController::numericalToRoman($area->area_number);
         $parameterOutlineCategories = ParameterOutlineCategory::select('*')->get();
+
+        $area->AreaParameters->map(function ($parameter) {
+            $parameter->ParameterOutlines->map(function ($outline) {
+                if ($outline->AreaFiles) {
+                    $outline->AreaFiles->file_path = Storage::url($outline->AreaFiles->file_path);
+                }
+                return $outline;
+            });
+            return $parameter;
+        });
+
+        $area->AreaForms->map(function ($form) {
+            if ($form) {
+                $form->file_path = Storage::url($form->file_path);
+            }
+            return $form;
+        });
 
         return inertia('area', [
             'area' => $area,

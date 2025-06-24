@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password@123'),
         ]);
         User::factory(10)->create();
-        ActivityLog::factory(20)->create();
+        ActivityLog::factory(10)->create();
         $roles = [
             [
                 'role_id' => 1,
@@ -214,7 +214,7 @@ class DatabaseSeeder extends Seeder
         foreach ($area_forms_category as $attributes) {
             AreaFormCategory::factory()->create($attributes);
         }
-        AreaForms::factory(20)->create();
+        // AreaForms::factory(20)->create();
         // AreaFiles::factory(200)->create();
         Exhibits::factory(10)->create();
         ExhibitOutlines::factory(10)->create();

@@ -5,6 +5,7 @@ use App\Http\Controllers\Files\AreaFilesController;
 use App\Http\Controllers\Files\AreaFormsController;
 use App\Http\Controllers\Files\AreaParameterController;
 use App\Http\Controllers\Files\AreaParameterOutlinesController;
+use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
@@ -14,9 +15,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::get('requests', function () {
-        return Inertia::render('document/document-request');
-    })->name('requests');
+    Route::get('requests', [DocumentRequestController::class, 'index'])
+        ->name('requests');
 
     Route::get('manage-exhibits', function () {
         return Inertia::render('document/exhibits');
