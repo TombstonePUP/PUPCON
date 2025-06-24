@@ -237,7 +237,7 @@ export default function Users({ program }: ProgramProps) {
         {/* Module 1: Program Banner & Description */}
         <div className="bg-white border border-gray-200 rounded-lg p-6">
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Module 1: Program Overview</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Program Overview</h2>
             <p className="text-sm text-gray-600">Manage program banner and description</p>
           </div>
 
