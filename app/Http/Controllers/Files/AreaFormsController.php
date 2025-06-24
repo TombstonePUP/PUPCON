@@ -171,7 +171,7 @@ class AreaFormsController extends Controller
             $formImagePath = "{$program}/{$area->area_name}/area-forms/images/{$formImageName}";
         } */
 
-        $areaForm->area_form_category_id = $validated['area_form_category_id'];
+        // $areaForm->area_form_category_id = $validated['area_form_category_id'];
 
         $areaForm->save();
 
