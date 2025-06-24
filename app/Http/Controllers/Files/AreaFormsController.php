@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\AreaFormCategory;
 use App\Models\AreaForms;
 
@@ -10,8 +11,10 @@ use App\Models\Areas;
 use App\Models\FileStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use function Symfony\Component\Clock\now;
 
 class AreaFormsController extends Controller
 {
@@ -45,6 +48,8 @@ class AreaFormsController extends Controller
             'form_file' => 'nullable|file|mimes:pdf',
         ]);
 
+        $user = Auth::user();
+
         $area = Areas::where('area_id', $validated['area_id'])->first();
         $program = $request->program_name;
 
@@ -63,6 +68,14 @@ class AreaFormsController extends Controller
             $areaForm->file_name = $formFileName;
             $areaForm->file_path = $formFilePath;
             $areaForm->file_status_id = $pending;
+            $activityLog = new ActivityLog();
+            $activityLog->user_id = $user->user_id;
+            $activityLog->area = $area->area_name;
+            $activityLog->program = $program;
+            $activityLog->file_name = $formFileName;
+            $activityLog->activity = "Upload Document";
+            $activityLog->activity_date = now();
+            $activityLog->save();
         }
 
         /* if ($request->hasFile('form_image')) {
@@ -113,6 +126,8 @@ class AreaFormsController extends Controller
             'form_file' => 'nullable|file|mimes:pdf',
         ]);
 
+        $user = Auth::user();
+
         $area = Areas::where('area_id', $validated['area_id'])->first();
         $program = $request->program_name;
 
@@ -125,7 +140,11 @@ class AreaFormsController extends Controller
         if ($request->hasFile('form_file')) {
             if($file = $areaForm->file_path) {
                 Storage::disk('public')->delete($file);
+                $activityLog->activity = "Update Document";
+            } else {
+                $activityLog->activity = "Upload Document";
             }
+            $activityLog = new ActivityLog();
             $formFileName = "{$category}.{$validated['form_file']->getClientOriginalExtension()}";
             $formFilePath = "{$program}/{$area->area_name}/area-forms/files";
             $request->file('form_file')->storeAs($formFilePath, $formFileName, 'public');
@@ -133,6 +152,12 @@ class AreaFormsController extends Controller
             $areaForm->file_name = $formFileName;
             $areaForm->file_path = $formFilePath;
             $areaForm->file_status_id = $pending;
+            $activityLog->user_id = $user->user_id;
+            $activityLog->area = $area->area_name;
+            $activityLog->program = $program;
+            $activityLog->file_name = $formFileName;
+            $activityLog->activity_date = now();
+            $activityLog->save();
         }
 
         /* if ($request->hasFile('form_image')) {
@@ -160,9 +185,22 @@ class AreaFormsController extends Controller
     public function destroy(Request $request, AreaForms $areaForms): RedirectResponse
     {
         $areaForm = $areaForms->find($request->form_id);
+        $user = Auth::user();
+        $area = Areas::where('area_id', $request->area_id)->first();
+        $program = $request->program_name;
+
         if ($areaForm->file_path) {
             Storage::disk('public')->delete($areaForm->file_path);
+            $activityLog = new ActivityLog();
+            $activityLog->user_id = $user->user_id;
+            $activityLog->area = $area->area_name;
+            $activityLog->program = $program;
+            $activityLog->file_name = $areaForm->file_name;
+            $activityLog->activity = "Delete Document";
+            $activityLog->activity_date = now();
+            $activityLog->save();
         }
+
         $areaForm->delete();
 
         return redirect()->back()

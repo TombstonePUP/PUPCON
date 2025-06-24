@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password@123'),
         ]);
         User::factory(10)->create();
-        ActivityLog::factory(100)->create();
+        ActivityLog::factory(20)->create();
         $roles = [
             [
                 'role_id' => 1,
