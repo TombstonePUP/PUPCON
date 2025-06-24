@@ -1,94 +1,191 @@
-import { Head, Link } from '@inertiajs/react';
-import Layout from '@/layouts/landing-layout';
-import {
-    Accordion,
-    AccordionItem,
-    AccordionTrigger,
-    AccordionContent,
-} from "@/components/ui/accordion"
-import {
-    Area,
-    PerProgram,
-    ParameterOutlineCategory
-} from '@/types';
-import { buildOutlineTree, RecursiveOutline } from '@/components/recursive-outline';
+import { Head } from "@inertiajs/react"
+import Layout from "@/layouts/landing-layout"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
+import type { Area, PerProgram, ParameterOutlineCategory } from "@/types"
+import { buildOutlineTree, RecursiveOutline } from "@/components/recursive-outline"
 
 interface AreaProps {
-    program: PerProgram;
-    area: Area;
-    categories: ParameterOutlineCategory[];
+  program: PerProgram
+  area: Area
+  categories: ParameterOutlineCategory[]
 }
 
 export default function AreaPage({ program, area, categories }: AreaProps) {
-    // area.area_parameters = area.area_parameters.sor
-    return (
-        <>
-            <Head
-                title={
-                    area.area_numeral != ' ' ? `Area ${area.area_numeral} - ${program.program_name}` : `${area.area_name} - ${program.program_name}`
-                }
-            >
-                <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-            </Head>
-            <Layout>
-                <div className='flex flex-row w-full justify-center gap-[1vw] h-[18vw] p-[2vw]'>
-                    <div className='bg-[#7f1414] w-[25%] rounded-tl-[1vw] rounded-bl-[1vw] rounded-tr-[1vw] flex flex-col justify-center px-[4vw]'>
-                        <p className='text-white text-[1vw]'>
-                            {area.area_numeral != ' ' ? `Area ${area.area_numeral}` : `Area ${area.area_number}`}
-                        </p>
-                        <h1 className='text-white font-bold text-[1.7vw] leading-[1.7vw]'>Mission, Goals, and Objectives</h1>
+  // area.area_parameters = area.area_parameters.sor
+  return (
+    <>
+      <Head
+        title={
+          area.area_numeral != " "
+            ? `Area ${area.area_numeral} - ${program.program_name}`
+            : `${area.area_name} - ${program.program_name}`
+        }
+      >
+        <link rel="preconnect" href="https://fonts.bunny.net" />
+        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+      </Head>
+      <Layout>
+        <div className="flex flex-row w-full justify-center gap-[1vw] h-[18vw] p-[2vw]">
+          <div className="bg-[#7f1414] w-[25%] rounded-tl-[1vw] rounded-bl-[1vw] rounded-tr-[1vw] flex flex-col justify-center px-[4vw]">
+            <p className="text-white text-[1vw]">
+              {area.area_numeral != " " ? `Area ${area.area_numeral}` : `Area ${area.area_number}`}
+            </p>
+            <h1 className="text-white font-bold text-[1.7vw] leading-[1.7vw]">Mission, Goals, and Objectives</h1>
+          </div>
+          <img
+            className="object-cover w-[45%] rounded-tl-[1vw] rounded-br-[1vw] rounded-tr-[1vw]"
+            src="/images/placeholder.png"
+            alt="placeholder"
+          />
+        </div>
+        <div className="flex justify-center">
+          <p className="indent-[2vw] text-justify w-[68%] py-[1.5vw] px-[3vw] border rounded-[1vw] border-[#7f1414]/25 hover:border-[#7f1414] transition duration-300">
+            {area.area_description || "No area description available."}
+          </p>
+        </div>
+
+        {/* Document Cards Section */}
+        <div className="flex justify-center py-[2vw]">
+          <div className="w-[68%] grid grid-cols-1 md:grid-cols-3 gap-[2vw]">
+            {/* Self Survey Card */}
+            <div className="group relative bg-white border border-[#7f1414]/25 rounded-[1vw] p-[2vw] hover:border-[#7f1414] hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-[8vw] h-[8vw] bg-gray-100 rounded-[0.5vw] mb-[1vw] flex items-center justify-center group-hover:bg-[#7f1414]/10 transition-colors duration-300">
+                  <svg
+                    className="w-[4vw] h-[4vw] text-gray-400 group-hover:text-[#7f1414] transition-colors duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">Self Survey</h3>
+                <p className="text-[0.9vw] text-gray-600 leading-relaxed">
+                  Comprehensive self-assessment document evaluating the program's compliance with accreditation
+                  standards.
+                </p>
+                <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
+                  <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Compliance Report Card */}
+            <div className="group relative bg-white border border-[#7f1414]/25 rounded-[1vw] p-[2vw] hover:border-[#7f1414] hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-[8vw] h-[8vw] bg-gray-100 rounded-[0.5vw] mb-[1vw] flex items-center justify-center group-hover:bg-[#7f1414]/10 transition-colors duration-300">
+                  <svg
+                    className="w-[4vw] h-[4vw] text-gray-400 group-hover:text-[#7f1414] transition-colors duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">Compliance Report</h3>
+                <p className="text-[0.9vw] text-gray-600 leading-relaxed">
+                  Detailed compliance report demonstrating adherence to regulatory requirements and quality standards.
+                </p>
+                <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
+                  <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
+                </div>
+              </div>
+            </div>
+
+            {/* PPP Card */}
+            <div className="group relative bg-white border border-[#7f1414]/25 rounded-[1vw] p-[2vw] hover:border-[#7f1414] hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-[8vw] h-[8vw] bg-gray-100 rounded-[0.5vw] mb-[1vw] flex items-center justify-center group-hover:bg-[#7f1414]/10 transition-colors duration-300">
+                  <svg
+                    className="w-[4vw] h-[4vw] text-gray-400 group-hover:text-[#7f1414] transition-colors duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">Program Performance Profile</h3>
+                <p className="text-[0.9vw] text-gray-600 leading-relaxed">
+                  Performance profile showcasing program achievements, outcomes, and continuous improvement initiatives.
+                </p>
+                <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
+                  <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full flex justify-center py-[2vw]">
+          <Accordion type="single" collapsible className="w-[68%] flex flex-col gap-[1vw]">
+            {area.area_parameters?.length > 0 ? (
+              area.area_parameters?.map((parameter, index) => (
+                <AccordionItem className="group transition duration-300" value={`parameter-${index}`} key={index}>
+                  <AccordionTrigger className="flex flex-row justify-between group-hover:cursor-pointer  my-1 ">
+                    <div className="flex flex-row justify-between w-full">
+                      <h1 className="text-[#7f1414] group-hover:text-[#a01818] font-bold">
+                        {parameter.parameter_name != " "
+                          ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
+                          : parameter.parameter_name}
+                      </h1>
+                      <p>{parameter.parameter_description}</p>
                     </div>
-                    <img className='object-cover w-[45%] rounded-tl-[1vw] rounded-br-[1vw] rounded-tr-[1vw]' src="/images/placeholder.png" alt="placeholder" />
-                </div>
-                <div className='flex justify-center'>
-                    <p className='indent-[2vw] text-justify w-[68%] py-[1.5vw] px-[3vw] border rounded-[1vw] border-[#7f1414]/25 hover:border-[#7f1414] transition duration-300'>
-                        {area.area_description || 'No area description available.'}
-                    </p>
-                </div>
-                <div className='w-full flex justify-center py-[2vw]'>
-                    <Accordion type="single" collapsible className='w-[68%] flex flex-col gap-[1vw]'>
-                        {area.area_parameters?.length > 0 ? (
-                            area.area_parameters?.map((parameter, index) => (
-                                <AccordionItem className='group transition duration-300' value={`parameter-${index}`} key={index}>
-                                    <AccordionTrigger className='flex flex-row justify-between group-hover:cursor-pointer  my-1 '>
-                                        <div className="flex flex-row justify-between w-full">
-                                            <h1 className='text-[#7f1414] group-hover:text-[#a01818] font-bold'>
-                                                { parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}` : parameter.parameter_name }
-                                            </h1>
-                                            <p>{parameter.parameter_description}</p>
-                                        </div>
-                                    </AccordionTrigger>
-                                    <AccordionContent>
-                                        {categories.map((category) => {
-                                            const outlines = parameter.parameter_outlines?.filter(
-                                                outline => outline.parameter_outline_category_id === category.parameter_outline_category_id
-                                            ) || [];
-                                            if (outlines.length === 0) return null;
-                                            {outlines.map((outline) => (
-                                                outline.initial = category.category_name == 'No Category' ?
-                                                    parameter.parameter_name == ' ' ? '' : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
-                                                    : category.category_name.match(/^[A-Za-z]/)
-                                            ))}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {categories.map((category) => {
+                      const outlines =
+                        parameter.parameter_outlines?.filter(
+                          (outline) => outline.parameter_outline_category_id === category.parameter_outline_category_id,
+                        ) || []
+                      if (outlines.length === 0) return null
+                      outlines.map(
+                        (outline) =>
+                          (outline.initial =
+                            category.category_name == "No Category"
+                              ? parameter.parameter_name == " "
+                                ? ""
+                                : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
+                              : category.category_name.match(/^[A-Za-z]/)),
+                      )
 
-                                            const sortedOutlines = buildOutlineTree({ outlines });
+                      const sortedOutlines = buildOutlineTree({ outlines })
 
-                                            return (
-                                                <div key={category.parameter_outline_category_id} className='bg-[#D9D9D9]/25 p-[2vw] rounded'>
-                                                    <h1 className='font-bold'>{category.category_name == 'No Category' ? '' : category.category_name}</h1>
-                                                    <RecursiveOutline outlines={sortedOutlines} />
-                                                </div>
-                                            );
-                                        })}
-                                    </AccordionContent>
-                                </AccordionItem>
-                            ))
-                        ) : (
-                            <p className='text-center text-gray-500'>No parameters available for this area.</p>
-                        )}
-                    </Accordion>
-                </div>
-            </Layout>
-        </>
-    )
+                      return (
+                        <div key={category.parameter_outline_category_id} className="bg-[#D9D9D9]/25 p-[2vw] rounded">
+                          <h1 className="font-bold">
+                            {category.category_name == "No Category" ? "" : category.category_name}
+                          </h1>
+                          <RecursiveOutline outlines={sortedOutlines} />
+                        </div>
+                      )
+                    })}
+                  </AccordionContent>
+                </AccordionItem>
+              ))
+            ) : (
+              <p className="text-center text-gray-500">No parameters available for this area.</p>
+            )}
+          </Accordion>
+        </div>
+      </Layout>
+    </>
+  )
 }
