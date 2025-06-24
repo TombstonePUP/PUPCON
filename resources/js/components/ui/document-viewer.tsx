@@ -23,8 +23,11 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
   title,
 }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-6xl max-h-[95vh]">
-      <DialogHeader>
+    <DialogContent
+      className="!max-w-none !w-[98vw] !h-[96vh] p-0 flex flex-col"
+      style={{ maxWidth: "98vw", width: "98vw", height: "96vh" }}
+    >
+      <DialogHeader className="p-6 pb-2">
         <DialogTitle className="text-2xl font-bold flex items-center justify-between">
           <span>{title || "View Document"}</span>
           <div className="flex gap-2">
@@ -39,12 +42,12 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
           </div>
         </DialogTitle>
       </DialogHeader>
-      <DialogDescription>
+      <DialogDescription className="flex-1">
         <iframe
           src={fileUrl}
           width="100%"
-          height="700"
-          className="rounded border border-gray-300"
+          height="100%"
+          className="rounded-b-lg border-0 w-full h-full"
           title={title || "Document"}
         />
       </DialogDescription>
