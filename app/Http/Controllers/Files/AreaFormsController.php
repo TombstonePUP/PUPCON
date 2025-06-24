@@ -123,7 +123,7 @@ class AreaFormsController extends Controller
             'area_id' => 'required|integer|exists:areas,area_id',
             // 'area_form_category_id' => 'required|integer|exists:area_form_categories,area_form_category_id',
             'form_image' => 'nullable|file|mimes:jpg,jpeg,png',
-            'form_file' => 'nullable|file|mimes:pdf',
+            'form_file' => 'required|file|mimes:pdf',
         ]);
 
         $user = Auth::user();
