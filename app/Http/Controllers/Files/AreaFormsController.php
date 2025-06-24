@@ -139,13 +139,13 @@ class AreaFormsController extends Controller
         $category = $areaForm->AreaFormCategory->category_name;
 
         if ($request->hasFile('form_file')) {
+            $activityLog = new ActivityLog();
             if($file = $areaForm->file_path) {
                 Storage::disk('public')->delete($file);
                 $activityLog->activity = "Update Document";
             } else {
                 $activityLog->activity = "Upload Document";
             }
-            $activityLog = new ActivityLog();
             $formFileName = "{$category}.{$validated['form_file']->getClientOriginalExtension()}";
             $formFilePath = "{$program}/{$area->area_name}/area-forms/files";
             $request->file('form_file')->storeAs($formFilePath, $formFileName, 'public');
