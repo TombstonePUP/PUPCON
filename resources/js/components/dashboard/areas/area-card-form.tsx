@@ -12,6 +12,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { DocumentViewer } from '@/components/ui/document-viewer';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AreaFormCategory, AreaForms } from '@/types';
 import { useForm } from '@inertiajs/react';
@@ -53,6 +54,9 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
 
     const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [viewerOpen, setViewerOpen] = useState(false);
+    const [viewerUrl, setViewerUrl] = useState('');
+    const [viewerTitle, setViewerTitle] = useState('');
 
     const addAreaForm = (e: React.FormEvent) => {
         e.preventDefault();
@@ -95,26 +99,19 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
 
                         {/* Edit/Remove buttons (appear on hover) */}
                         <div className="absolute inset-0 flex items-center justify-center gap-2 rounded bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                            <Dialog className="w-full">
-                                <DialogTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/80 hover:bg-white">
-                                        <Eye className="h-4 w-4" />
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-w-md">
-                                    <DialogHeader>
-                                        <DialogTitle className="text-2xl font-bold">View</DialogTitle>
-                                        <DialogDescription>
-                                            <iframe
-                                                src={card.file_path}
-                                                width="100%"
-                                                height="500"
-                                                className="rounded border border-gray-300"
-                                            ></iframe>
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                </DialogContent>
-                            </Dialog>
+                            {/* View Button - only sets state, no Dialog here */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                                onClick={() => {
+                                    setViewerUrl(card.file_path);
+                                    setViewerTitle(card.area_form_category?.category_name || 'Document');
+                                    setViewerOpen(true);
+                                }}
+                            >
+                                <Eye className="h-4 w-4" />
+                            </Button>
                             <Dialog>
                                 <DialogTrigger asChild>
                                     <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/80 hover:bg-white">
@@ -349,6 +346,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                     ''
                 )}
             </div>
+            <DocumentViewer open={viewerOpen} onOpenChange={setViewerOpen} fileUrl={viewerUrl} title={viewerTitle} />
         </div>
     );
 }
