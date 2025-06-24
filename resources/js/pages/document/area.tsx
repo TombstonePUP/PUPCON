@@ -1,7 +1,6 @@
 import AreaCards from '@/components/dashboard/areas/area-card-form';
 import ParameterAccordion from '@/components/dashboard/areas/parameter-accordion';
 import InputError from '@/components/input-error';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -16,8 +15,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { AreaFormCategory, type Area, type BreadcrumbItem, type ParameterOutlineCategory, type Program } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Eye, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 // charts components
 interface AreaFilesProps {
@@ -54,11 +52,14 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
         parameter_description: '',
     });
 
+    const [dialogOpen, setDialogOpen] = useState(false);
+
     const addParameter = (e: React.FormEvent) => {
         e.preventDefault();
         postParams(route('manage.area.addParameter', [program.program_name, area?.area_id]), {
             onFinish: () => {
                 resetParams('parameter_name', 'parameter_description');
+                setDialogOpen(false); // Close the dialog after submit
             },
         });
     };
@@ -86,9 +87,11 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                     </div>
                 </div>
                 <div className="border-sidebar-border/70 relative space-y-5 overflow-y-auto rounded-xl border p-4">
-                    <Dialog>
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button className='border-none'>Add Parameter</Button>
+                            <Button className="border-none" onClick={() => setDialogOpen(true)}>
+                                Add Parameter
+                            </Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -102,7 +105,6 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                                         <input
                                             id="parameter_name"
                                             type="text"
-                                            // required
                                             autoFocus
                                             maxLength={1}
                                             tabIndex={1}
@@ -133,7 +135,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                                 <InputError message={errorsParams.parameter_description} className="mt-2" />
                                 <DialogFooter>
                                     <DialogClose asChild>
-                                        <Button tabIndex={3} variant="outline">
+                                        <Button tabIndex={3} variant="outline" onClick={() => setDialogOpen(false)}>
                                             Cancel
                                         </Button>
                                     </DialogClose>
@@ -148,8 +150,9 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         <ParameterAccordion
                             area_id={area?.area_id}
                             program={program.program_name}
-                            areaParameters={area?.area_parameters}
-                            parameterOutlineCategories={parameterOutlineCategories} />
+                            areaParameters={[...(area?.area_parameters ?? [])].sort((a, b) => a.parameter_name.localeCompare(b.parameter_name))}
+                            parameterOutlineCategories={parameterOutlineCategories}
+                        />
                     </div>
                 </div>
             </div>
