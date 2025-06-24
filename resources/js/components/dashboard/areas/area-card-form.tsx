@@ -54,9 +54,11 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
 
     const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [viewerOpen, setViewerOpen] = useState(false);
     const [viewerUrl, setViewerUrl] = useState('');
     const [viewerTitle, setViewerTitle] = useState('');
+    const [editingCard, setEditingCard] = useState<AreaForms | null>(null);
 
     const addAreaForm = (e: React.FormEvent) => {
         e.preventDefault();
@@ -73,7 +75,9 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
         e.preventDefault();
         postForms(route('manage.area.updateAreaForm', [program.program_name, areaId, dataForms.area_form_id]), {
             onSuccess: () => {
-                resetForms();
+                resetForms("form_file");
+                setSelectedFileName(null);
+                setEditDialogOpen(false);
             },
         });
     };
@@ -94,7 +98,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                     <div key={card.area_form_id} className="group relative grid w-full place-items-center gap-1 rounded border p-2">
                         <img className="h-40 w-full rounded object-cover" src="/images/placeholder.png" alt="" />
                         <p className="mt-3 mb-[-0.3vw] text-center text-sm text-[#858585]">AACCUP | Level II</p>
-                        <h1 className="w-80 text-center text-2xl leading-none font-bold">{card.area_form_category?.category_name}</h1>
+                        <h1 className="w-80 text-center text-2xl leading-none font-bold">{(card.area_form_category as AreaFormCategory | undefined)?.category_name}</h1>
                         <p className="my-5 text-center text-sm">{`${program.degree_type} in ${program.program_name}`}</p>
 
                         {/* Edit/Remove buttons (appear on hover) */}
@@ -106,96 +110,34 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                 className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
                                 onClick={() => {
                                     setViewerUrl(card.file_path);
-                                    setViewerTitle(card.area_form_category?.category_name || 'Document');
+                                    setViewerTitle((card.area_form_category as AreaFormCategory | undefined)?.category_name || 'Document');
                                     setViewerOpen(true);
                                 }}
                             >
                                 <Eye className="h-4 w-4" />
                             </Button>
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/80 hover:bg-white">
-                                        <Edit className="h-4 w-4" />
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-w-md">
-                                    <DialogHeader>
-                                        <DialogTitle className="text-2xl font-bold">Edit Card</DialogTitle>
-                                        <DialogDescription>Update the details of {card.area_form_category?.category_name}</DialogDescription>
-                                    </DialogHeader>
-                                    <form onSubmit={(e) => updateAreaForm(e)}>
-                                        <div className="flex flex-col pb-4">
-                                            <div>
-                                                <InputError message={errorsForms.area_form_category_id} className="mt-2" />
-                                            </div>
-                                            <div>
-                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">
-                                                    {card.file_path ? 'Replace Document' : 'Upload Document'}
-                                                </label>
-                                                <div className="flex w-full items-center justify-center">
-                                                    <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
-                                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                            <svg
-                                                                className="mb-4 h-8 w-8 text-gray-500"
-                                                                aria-hidden="true"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                fill="none"
-                                                                viewBox="0 0 20 16"
-                                                            >
-                                                                <path
-                                                                    stroke="currentColor"
-                                                                    strokeLinecap="round"
-                                                                    strokeLinejoin="round"
-                                                                    strokeWidth="2"
-                                                                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                                                                />
-                                                            </svg>
-                                                            <p className="text-sm text-gray-500">
-                                                                <span className="font-semibold">Click to upload</span> or drag and drop
-                                                            </p>
-                                                            <p className="text-xs text-gray-500">PDF</p>
-                                                        </div>
-                                                        <input
-                                                            name="document"
-                                                            type="file"
-                                                            className="hidden"
-                                                            accept=".pdf"
-                                                            onChange={(e) => setFormsData('form_file', e.target.files ? e.target.files[0] : null)}
-                                                        />
-                                                    </label>
-                                                    <InputError message={errorsForms.form_file} className="mt-2" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <DialogFooter>
-                                            <DialogClose asChild>
-                                                <Button type="button" variant="outline" id="edit-card-dialog-close" disabled={processingForms}>
-                                                    Cancel
-                                                </Button>
-                                            </DialogClose>
-                                            <Button
-                                                type="submit"
-                                                variant="noborder"
-                                                disabled={processingForms}
-                                                onClick={(e) => setFormsData('area_form_id', card.area_form_id)}
-                                            >
-                                                Save Changes
-                                            </Button>
-                                        </DialogFooter>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
-
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                                onClick={() => {
+                                    setFormsData('area_form_id', card.area_form_id);
+                                    setEditingCard(card);
+                                    setEditDialogOpen(true);
+                                }}
+                            >
+                                <Edit className="h-4 w-4" />
+                            </Button>
                             <Dialog>
                                 <DialogTrigger asChild>
                                     <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/80 hover:bg-white">
                                         <Trash2 className="h-4 w-4 text-red-500" />
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-md">
+                                <DialogContent className="w-100">
                                     <DialogHeader>
                                         <DialogTitle className="text-2xl font-bold">Are you sure?</DialogTitle>
-                                        <DialogDescription>Are you sure you want to remove this ?</DialogDescription>
+                                        <DialogDescription>This action will permanently remove the card in the area.</DialogDescription>
                                     </DialogHeader>
                                     <DialogFooter>
                                         <DialogClose asChild>
@@ -245,7 +187,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                             <label className="text-muted-foreground mb-1 block text-sm font-medium">Card Type</label>
                                             <Select
                                                 value={dataForms.area_form_category_id?.toString() || ''}
-                                                onValueChange={(value) => setFormsData('area_form_category_id', value)}
+                                                onValueChange={(value) => setFormsData('area_form_category_id', Number(value))}
                                                 disabled={processingForms}
                                             >
                                                 <SelectTrigger className="w-full">
@@ -308,7 +250,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                                                         />
                                                     </label>
                                                 ) : (
-                                                    <div className="flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-50">
+                                                    <div className="flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-50 p-5 text-center">
                                                         <span className="text-sm font-semibold text-gray-700">{selectedFileName}</span>
                                                         <Button
                                                             type="button"
@@ -347,6 +289,102 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                 )}
             </div>
             <DocumentViewer open={viewerOpen} onOpenChange={setViewerOpen} fileUrl={viewerUrl} title={viewerTitle} />
+
+            {/* Edit Dialog - only one instance, like Add Dialog */}
+            {editingCard && (
+                <Dialog open={editDialogOpen} onOpenChange={(open) => {
+                    setEditDialogOpen(open);
+                    if (!open) setEditingCard(null);
+                }}>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-bold">Edit Card</DialogTitle>
+                            <DialogDescription>Update the details of {(editingCard.area_form_category as AreaFormCategory | undefined)?.category_name}</DialogDescription>
+                        </DialogHeader>
+                        <form onSubmit={(e) => updateAreaForm(e)}>
+                            <div className="flex flex-col pb-4">
+                                <div>
+                                    <InputError message={errorsForms.area_form_category_id} className="mt-2" />
+                                </div>
+                                <div>
+                                    <label className="text-muted-foreground mb-1 block text-sm font-medium">
+                                        {editingCard.file_path ? 'Replace Document' : 'Upload Document'}
+                                    </label>
+                                    <div className="flex w-full items-center justify-center">
+                                        {!selectedFileName ? (
+                                            <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                                <div className="flex flex-col items-center justify-center pt-5 pb-6 w-100">
+                                                    <svg
+                                                        className="mb-4 h-8 w-8 text-gray-500"
+                                                        aria-hidden="true"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none"
+                                                        viewBox="0 0 20 16"
+                                                    >
+                                                        <path
+                                                            stroke="currentColor"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                                        />
+                                                    </svg>
+                                                    <p className="text-sm text-gray-500">
+                                                        <span className="font-semibold">Click to upload</span> or drag and drop
+                                                    </p>
+                                                    <p className="text-xs text-gray-500">PDF</p>
+                                                </div>
+                                                <input
+                                                    name="document"
+                                                    type="file"
+                                                    className="hidden"
+                                                    accept=".pdf"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files ? e.target.files[0] : null;
+                                                        setFormsData('form_file', file);
+                                                        setSelectedFileName(file ? file.name : null);
+                                                    }}
+                                                />
+                                            </label>
+                                        ) : (
+                                            <div className="flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-50 p-5 text-center">
+                                                <span className="text-sm font-semibold text-gray-700">{selectedFileName}</span>
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="mt-2"
+                                                    onClick={() => {
+                                                        setFormsData('form_file', null);
+                                                        setSelectedFileName(null);
+                                                    }}
+                                                >
+                                                    Remove
+                                                </Button>
+                                            </div>
+                                        )}
+                                        <InputError message={errorsForms.form_file} className="mt-2" />
+                                    </div>
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button type="button" variant="outline" id="edit-card-dialog-close" disabled={processingForms} onClick={() => setEditingCard(null)}>
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+                                <Button
+                                    type="submit"
+                                    variant="noborder"
+                                    disabled={processingForms}
+                                >
+                                    Save Changes
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+            )}
         </div>
     );
 }

@@ -90,7 +90,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     </div>
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button className="bg-[#7f1414] text-white hover:bg-[#8b1515]">
+                            <Button variant="noborder">
                                 <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
@@ -197,48 +197,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                     />
                                 </svg>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Search and Filter */}
-                <div className="rounded-lg border border-gray-200 bg-white p-4">
-                    <div className="flex flex-col gap-4 sm:flex-row">
-                        <div className="flex-1">
-                            <div className="relative">
-                                <svg
-                                    className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                    />
-                                </svg>
-                                <input
-                                    type="text"
-                                    placeholder="Search programs..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 focus:border-transparent focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
-                                />
-                            </div>
-                        </div>
-                        <div className="w-full sm:w-48">
-                            <Select value={filterDegree} onValueChange={setFilterDegree}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Filter by degree" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All Degrees</SelectItem>
-                                    <SelectItem value="Bachelor Science">Bachelor Science</SelectItem>
-                                    <SelectItem value="Diploma">Diploma</SelectItem>
-                                </SelectContent>
-                            </Select>
                         </div>
                     </div>
                 </div>

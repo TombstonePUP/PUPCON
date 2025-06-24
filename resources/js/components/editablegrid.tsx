@@ -225,8 +225,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                         <DialogClose asChild>
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>
-                        <Button
-                            variant="bold"
+                        <Button variant="noborder"
                             onClick={() => {
                                 if (item) {
                                     handleEdit(item.id, '', {
@@ -328,7 +327,6 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>
                         <Button
-                            variant="bold"
                             onClick={() => {
                                 if (item) {
                                     handleEdit(item.id, '', {
@@ -363,7 +361,6 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>
                         <Button
-                            variant="bold"
                             onClick={() => {
                                 if (item) {
                                     handleEdit(item.id, newContent || item.content || '');
@@ -398,11 +395,11 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
             {/* Collapsible Header */}
             <button
                 type="button"
-                className="mt-2 rounded  p-1 text-center text-[1vw] font-bold text-white transition-colors hover:bg-[#3b3a3a]"
+                className="mt-2 rounded  p-1 text-center text-[1vw] font-bold text-white transition-colors bg-[#3b3a3a] group cursor-pointer"
                 onClick={() => setIsContentVisible(!isContentVisible)}
             >
-                <div className="flex items-center justify-between rounded-sm bg-[#3b3a3a] p-2 px-3">
-                    <span className='flex-1'>{mode.toUpperCase()}</span>
+                <div className="flex items-center justify-between rounded-sm p-2 px-3">
+                    <span className='flex-1 group-hover:scale-105 transition'>{mode.toUpperCase()}</span>
                     <span>{isContentVisible ? '−' : '+'}</span>
                 </div>
             </button>
@@ -425,14 +422,14 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                             key={item.id}
                             className={`group relative ${
                                 mode === 'areas'
-                                    ? 'rounded border p-7 '
+                                    ? 'rounded border p-7 hover:border-[#7f1414]/20 hover:text-[#7f1414]'
                                     : mode === 'faculty'
                                       ? 'rounded-lg border p-4'
                                       : 'flex h-[13vw] min-w-[15vw] flex-1 items-center justify-center overflow-hidden rounded border bg-gray-50 p-1 transition-all duration-300 hover:bg-gray-100'
                             }`}
                         >
                             {mode === 'areas' ? (
-                                <Link href={programName ? route('manage.area', [programName, item.area_id || item.id]) : '#'} className="block">
+                                <Link href={programName ? route('manage.area', [programName, item.area_id || item.id]) : '#'} className="block  ">
                                     {renderItemContent(item)}
                                 </Link>
                             ) : (
