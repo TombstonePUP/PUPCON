@@ -52,7 +52,7 @@ class DocumentRequestController extends Controller
             $file = AreaFiles::findOrFail($validated['file_id']);
         }
 
-        $file->file_status_id = FileStatus::where('status_name', 'Approved')->get()->file_status_id;
+        $file->file_status_id = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
         $file->save();
 
         return redirect()->back()
@@ -73,16 +73,14 @@ class DocumentRequestController extends Controller
 
         if ($validated['file_type'] = 'exhibits') {
             $file = ExhibitFiles::findOrFail($validated['file_id']);
-            $file->file_status_id = FileStatus->where('status_name', 'Approved')->get()->file_status_id;
         } elseif ($validated['file_type'] = 'area-forms') {
             $file = AreaForms::findOrFail($validated['file_id']);
-            $file->file_status_id = FileStatus->where('status_name', 'Approved')->get()->file_status_id;
         } else {
             $file = AreaFiles::findOrFail($validated['file_id']);
-            $file->file_status_id = FileStatus::where('status_name', 'Approved')->get()->file_status_id;
         }
 
-        $file->rejecttion_reason = $validated['rejection_reason'];
+        $file->file_status_id = FileStatus::where('status_name', 'Reject')->first()->file_status_id;
+        $file->rejection_reason = $validated['rejection_reason'];
         $file->save();
 
         return redirect()->back()
@@ -100,6 +98,8 @@ class DocumentRequestController extends Controller
             'file_type' => 'nullable|string'
         ]);
 
+        $file = null;
+
         if ($validated['file_type'] = 'exhibits') {
             $file = ExhibitFiles::findOrFail($validated['file_id']);
         } elseif ($validated['file_type'] = 'area-forms') {
@@ -108,7 +108,7 @@ class DocumentRequestController extends Controller
             $file = AreaFiles::findOrFail($validated['file_id']);
         }
 
-        $file->file_status_id = FileStatus::where('status_name', 'Pending')->get()->file_status_id;
+        $file->file_status_id = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
         $file->save();
 
         return redirect()->back()
