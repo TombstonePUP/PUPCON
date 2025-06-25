@@ -2,7 +2,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { IconDotsVertical } from '@tabler/icons-react';
+import { MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { type FilesOverview } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
@@ -138,7 +138,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
                                 className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
                                 size="icon"
                             >
-                                <IconDotsVertical />
+                                <MoreVertical className="h-4 w-4" />
                                 <span className="sr-only">Open menu</span>
                             </Button>
                         </DropdownMenuTrigger>
