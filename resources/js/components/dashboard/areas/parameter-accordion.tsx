@@ -264,7 +264,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                 onChange={(e) => setOutlineData('outline_number', e.target.value)}
                                                 disabled={processingOutline}
                                                 placeholder="1.1.3"
-                                                className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                                                className="focus:border-ring focus:ring-ring w-100 rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                                             />
                                             <InputError
                                                 message={errorsOutline.outline_number}

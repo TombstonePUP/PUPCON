@@ -76,8 +76,8 @@ export function AreaProgress({ data }: DocumentStatisticsProps) {
                             content={
                                 <ChartTooltipContent hideLabel
                                 indicator="line"
-                                nameKey={entry.file_status}
-                                color={chartConfig[entry.file_status].color}
+                                nameKey={entry?.file_status}
+                                color={chartConfig[entry.file_status]?.color}
                                 />
                             }
                         />
@@ -86,7 +86,7 @@ export function AreaProgress({ data }: DocumentStatisticsProps) {
                             {data.map((entry) => (
                                 <Cell
                                     key={entry.file_status}
-                                    fill={chartConfig[entry.file_status].color}
+                                    fill={chartConfig[entry.file_status]?.color}
                                 />
                             ))}
                         </Bar>

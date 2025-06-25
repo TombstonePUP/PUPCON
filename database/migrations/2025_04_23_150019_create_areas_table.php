@@ -126,7 +126,7 @@ return new class extends Migration
                 LEFT JOIN file_status fs ON fs.file_status_id = af.file_status_id
             UNION ALL
             SELECT
-                'area-form' file_type,
+                'area-forms' file_type,
                 CONCAT(a.area_name,'-', afc.category_name) outline,
                 afo.area_form_id file_id,
                 afo.file_name file_name,
@@ -139,7 +139,7 @@ return new class extends Migration
                 LEFT JOIN file_status fs ON fs.file_status_id = afo.file_status_id
             UNION ALL
             SELECT
-                'exhibit-file' file_type,
+                'exhibits' file_type,
                 eo.outline_description outline,
                 ef.exhibit_file_id file_id,
                 ef.file_name file_name,

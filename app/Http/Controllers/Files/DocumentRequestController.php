@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
+use App\Models\AreaFiles;
+use App\Models\AreaForms;
+use App\Models\ExhibitFiles;
+use App\Models\FileStatus;
 use App\Models\FilesOverview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -17,8 +21,11 @@ class DocumentRequestController extends Controller
     {
         $filesOverview = FilesOverview::select('*')->get();
         $filesOverview->map(function ($file) {
-            $file->file_path = Storage::url(Crypt::decryptString($file->file_path));
-            $file->file_name = Crypt::decryptString($file->file_name);
+            if ($file->file_path && $file->file_name) {
+                $file->file_path = Storage::url(Crypt::decryptString($file->file_path));
+                $file->file_name = Crypt::decryptString($file->file_name);
+                return $file;
+            }
             return $file;
         });
 
@@ -28,50 +35,83 @@ class DocumentRequestController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Update the specified resource in storage.
      */
-    public function create()
+    public function approve(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'file_id' => 'required|integer',
+            'file_type' => 'required|string'
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if ($validated['file_type'] = 'exhibits') {
+            $file = ExhibitFiles::findOrFail($validated['file_id']);
+        } elseif ($validated['file_type'] = 'area-forms') {
+            $file = AreaForms::findOrFail($validated['file_id']);
+        } else {
+            $file = AreaFiles::findOrFail($validated['file_id']);
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(FilesOverview $filesOverview)
-    {
-        //
-    }
+        $file->file_status_id = FileStatus::where('status_name', 'Approved')->get()->file_status_id;
+        $file->save();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FilesOverview $filesOverview)
-    {
-        //
+        return redirect()->back()
+            ->with('success', 'File Approved Successfully');
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, FilesOverview $filesOverview)
+    public function reject(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'file_id' => 'required|integer',
+            'file_type' => 'required|string',
+            'rejection_reason' => 'required|string',
+        ]);
+
+        if ($validated['file_type'] = 'exhibits') {
+            $file = ExhibitFiles::findOrFail($validated['file_id']);
+            $file->file_status_id = FileStatus->where('status_name', 'Approved')->get()->file_status_id;
+        } elseif ($validated['file_type'] = 'area-forms') {
+            $file = AreaForms::findOrFail($validated['file_id']);
+            $file->file_status_id = FileStatus->where('status_name', 'Approved')->get()->file_status_id;
+        } else {
+            $file = AreaFiles::findOrFail($validated['file_id']);
+            $file->file_status_id = FileStatus::where('status_name', 'Approved')->get()->file_status_id;
+        }
+
+        $file->rejecttion_reason = $validated['rejection_reason'];
+        $file->save();
+
+        return redirect()->back()
+            ->with('success', 'File Approved Successfully');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Update the specified resource in storage.
      */
-    public function destroy(FilesOverview $filesOverview)
+    public function revert(Request $request)
     {
-        //
+        // dd($request->all());
+        $validated = $request->validate([
+            'file_id' => 'required|integer',
+            'file_type' => 'nullable|string'
+        ]);
+
+        if ($validated['file_type'] = 'exhibits') {
+            $file = ExhibitFiles::findOrFail($validated['file_id']);
+        } elseif ($validated['file_type'] = 'area-forms') {
+            $file = AreaForms::findOrFail($validated['file_id']);
+        } else {
+            $file = AreaFiles::findOrFail($validated['file_id']);
+        }
+
+        $file->file_status_id = FileStatus::where('status_name', 'Pending')->get()->file_status_id;
+        $file->save();
+
+        return redirect()->back()
+            ->with('success', 'File Approved Successfully');
     }
 }
