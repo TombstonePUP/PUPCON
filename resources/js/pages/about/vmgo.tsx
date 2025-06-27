@@ -1,83 +1,8 @@
 import Layout from "@/layouts/landing-layout"
 import { Head } from "@inertiajs/react"
 import { motion } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
 
 export default function VMGO() {
-  const videoRef = useRef<HTMLDivElement>(null)
-  const playerRef = useRef<any>(null)
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
-
-  useEffect(() => {
-    // Load YouTube IFrame API
-    const tag = document.createElement("script")
-    tag.src = "https://www.youtube.com/iframe_api"
-    const firstScriptTag = document.getElementsByTagName("script")[0]
-    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
-
-    // YouTube API ready callback
-    ;(window as any).onYouTubeIframeAPIReady = () => {
-      setIsVideoLoaded(true)
-    }
-
-    return () => {
-      // Cleanup
-      if (playerRef.current) {
-        playerRef.current.destroy()
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!isVideoLoaded || !videoRef.current) return
-
-    // Initialize YouTube player
-    playerRef.current = new (window as any).YT.Player("youtube-player", {
-      height: "100%",
-      width: "100%",
-      videoId: "Lp_x4dWvLs4",
-      playerVars: {
-        autoplay: 0,
-        mute: 0, // Enable sound
-        controls: 1,
-        rel: 0,
-        showinfo: 0,
-        modestbranding: 1,
-      },
-      events: {
-        onReady: (event: any) => {
-          // Set up intersection observer when player is ready
-          const observer = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                  // Video is in view - play with sound
-                  if (playerRef.current && playerRef.current.playVideo) {
-                    playerRef.current.unMute()
-                    playerRef.current.playVideo()
-                  }
-                } else {
-                  // Video is out of view - pause
-                  if (playerRef.current && playerRef.current.pauseVideo) {
-                    playerRef.current.pauseVideo()
-                  }
-                }
-              })
-            },
-            {
-              threshold: 0.5, // Trigger when 50% of video is visible
-              rootMargin: "0px 0px -100px 0px", // Stop playing when scrolled 100px below
-            },
-          )
-
-          if (videoRef.current) {
-            observer.observe(videoRef.current)
-          }
-        },
-      },
-    })
-  }, [isVideoLoaded])
-
   return (
     <>
       <Head title="Vision, Mission and Goals - PUP San Juan">
@@ -100,7 +25,7 @@ export default function VMGO() {
 
           {/* University Overview Section */}
           <article className="mission-vision-page mt-8 w-[75%]">
-            <div className="university-overview mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
+            <div className="university-overview mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
               <h3 className="mb-4 text-2xl font-bold text-[#7f1414]">
                 From an Epistemic Community Towards a National Polytechnic University of the Philippines
               </h3>
@@ -119,7 +44,7 @@ export default function VMGO() {
             </div>
 
             {/* Video Section with Background Image and Overlay */}
-            <section className="school-video relative mb-12 overflow-hidden" ref={videoRef}>
+            <section className="school-video relative mb-12 overflow-hidden">
               {/* Background Image */}
               <img
                 className="absolute inset-0 h-full w-full object-cover opacity-30 grayscale transition-opacity duration-300 ease-in-out"
@@ -136,7 +61,14 @@ export default function VMGO() {
                 <div className="map-left lg:w-2/3">
                   <div className="map-wrapper relative overflow-hidden rounded-lg">
                     <div className="aspect-video w-full rounded-lg">
-                      <iframe id="youtube-player" className="h-full w-full rounded-lg"></iframe>
+                      <iframe
+                        className="h-full w-full rounded-lg"
+                        src="https://www.youtube.com/embed/Lp_x4dWvLs4?autoplay=1&mute=0&controls=1&rel=0&showinfo=0&modestbranding=1"
+                        title="University Development Plan"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      ></iframe>
                     </div>
                     {/* Glow Effect */}
                     <div className="map-glow absolute -inset-1 rounded-lg bg-gradient-to-r from-[#7f1414]/20 to-transparent blur-sm"></div>
@@ -171,10 +103,10 @@ export default function VMGO() {
                     new era of excellence.
                   </motion.p>
                   <motion.a
-                    href="https://www.youtube.com/watch?v=0n1dd1XZ9F8"
+                    href="https://www.youtube.com/watch?v=Lp_x4dWvLs4"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="fade-in delay-3 cta-btn inline-block rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-all duration-300 hover:bg-[#a01818] hover: "
+                    className="fade-in delay-3 cta-btn inline-block rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-all duration-300 hover:bg-[#a01818] hover:shadow-lg"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1 }}
@@ -188,7 +120,7 @@ export default function VMGO() {
             {/* Vision Statement */}
             <section className="template-statement mb-8">
               <div className="header-wrapper">
-                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
+                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
                   <div className="header-box mb-4">
                     <h2 className="text-3xl font-bold text-[#7f1414]">Vision Statement</h2>
                   </div>
@@ -202,7 +134,7 @@ export default function VMGO() {
             {/* Mission Statement */}
             <section className="template-statement mb-8">
               <div className="header-wrapper">
-                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
+                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
                   <div className="header-box mb-4">
                     <h2 className="text-3xl font-bold text-[#7f1414]">Mission Statement</h2>
                   </div>
@@ -371,7 +303,7 @@ export default function VMGO() {
             {/* PUP San Juan Goals */}
             <section className="template-statement mb-8">
               <div className="header-wrapper">
-                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
+                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
                   <div className="header-box mb-6">
                     <h2 className="text-3xl font-bold text-[#7f1414]">PUP San Juan Goals</h2>
                   </div>
