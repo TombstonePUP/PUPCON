@@ -44,13 +44,14 @@ class DocumentRequestController extends Controller
             'file_type' => 'required|string'
         ]);
 
-        if ($validated['file_type'] = 'exhibits') {
+        $file = null;
+        if ($validated['file_type'] === 'exhibits') {
             $file = ExhibitFiles::findOrFail($validated['file_id']);
-        } elseif ($validated['file_type'] = 'area-forms') {
+        } elseif ($validated['file_type'] === 'area-forms') {
             $file = AreaForms::findOrFail($validated['file_id']);
-        } else {
+        } elseif (substr($validated['file_type'], 0, 4) === 'Area') {
             $file = AreaFiles::findOrFail($validated['file_id']);
-        }
+        };
 
         $file->file_status_id = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
         $file->file_rejection_reason = '';
@@ -66,21 +67,23 @@ class DocumentRequestController extends Controller
      */
     public function reject(Request $request)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'file_id' => 'required|integer',
             'file_type' => 'required|string',
             'rejection_reason' => 'required|string',
         ]);
 
-        if ($validated['file_type'] = 'exhibits') {
+        $file = null;
+        if ($validated['file_type'] === 'exhibits') {
             $file = ExhibitFiles::findOrFail($validated['file_id']);
-        } elseif ($validated['file_type'] = 'area-forms') {
+        } elseif ($validated['file_type'] === 'area-forms') {
             $file = AreaForms::findOrFail($validated['file_id']);
-        } else {
+        } elseif (substr($validated['file_type'], 0, 4) === 'Area') {
             $file = AreaFiles::findOrFail($validated['file_id']);
-        }
+        };
 
-        $file->file_status_id = FileStatus::where('status_name', 'Reject')->first()->file_status_id;
+        $file->file_status_id = FileStatus::where('status_name', 'Rejected')->first()->file_status_id;
         $file->file_rejection_reason = $validated['rejection_reason'];
         $file->save();
 
@@ -96,18 +99,18 @@ class DocumentRequestController extends Controller
         // dd($request->all());
         $validated = $request->validate([
             'file_id' => 'required|integer',
-            'file_type' => 'nullable|string'
+            'file_type' => 'required|string'
         ]);
 
         $file = null;
 
-        if ($validated['file_type'] = 'exhibits') {
+        if ($validated['file_type'] === 'exhibits') {
             $file = ExhibitFiles::findOrFail($validated['file_id']);
-        } elseif ($validated['file_type'] = 'area-forms') {
+        } elseif ($validated['file_type'] === 'area-forms') {
             $file = AreaForms::findOrFail($validated['file_id']);
-        } else {
+        } elseif (substr($validated['file_type'], 0, 4) === 'Area') {
             $file = AreaFiles::findOrFail($validated['file_id']);
-        }
+        };
 
         $file->file_status_id = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
         $file->file_rejection_reason = '';

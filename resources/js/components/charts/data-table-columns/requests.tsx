@@ -47,23 +47,29 @@ export const columns: ColumnDef<FilesOverview>[] = [
         cell: ({ row }) => {
             const [dialogOpen, setDialogOpen] = useState(false);
             return (
-            <>
-                <div className="text-left">
-                    <Button variant="link" onClick={() => setDialogOpen(true)}>
-                        {row.getValue('outline')}
-                    </Button>
-                </div>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Viewingsahsahs</DialogTitle>
-                            <DialogDescription>Viewing hsasah</DialogDescription>
-                        </DialogHeader>
-                        <div>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            </>
+                <>
+                    <div className="text-left">
+                        <Button variant="link" onClick={() => setDialogOpen(true)}>
+                            {row.getValue('outline')}
+                        </Button>
+                    </div>
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Viewing Document</DialogTitle>
+                                <DialogDescription>{row.getValue('outline')}</DialogDescription>
+                            </DialogHeader>
+                            <div>
+                                <iframe
+                                    src={row.original.file_path}
+                                    width="100%"
+                                    height="600"
+                                    className="mt-4 border rounded"
+                                ></iframe>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </>
             );
         },
         enableGlobalFilter: true,
@@ -98,7 +104,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
                 reset: resetDocs,
             } = useForm<DocumentRequestForm>({
                 file_id: row.original.file_id,
-                file_type: '',
+                file_type: row.original.file_type,
                 rejection_reason: null,
             });
 
@@ -113,6 +119,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
 
             const rejectDocument = (e: React.FormEvent) => {
                 e.preventDefault();
+                setRejectDialogOpen(false);
                 postDocs(route('rejectDocument', [dataDocs.file_id]), {
                     onSuccess: () => {
                         resetDocs();
@@ -121,9 +128,8 @@ export const columns: ColumnDef<FilesOverview>[] = [
             }
 
             const revertDocument = (e: React.FormEvent) => {
-                console.log(dataDocs);
-                setRevertDialogOpen(false);
                 e.preventDefault();
+                setRevertDialogOpen(false);
                 postDocs(route('revertDocument', [dataDocs.file_id]), {
                     onSuccess: () => {
                         resetDocs();
@@ -145,10 +151,26 @@ export const columns: ColumnDef<FilesOverview>[] = [
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-32">
-                            <DropdownMenuItem>Approve</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setRevertDialogOpen(true)}>Revert</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => setRejectDialogOpen(true)} variant="destructive">Reject</DropdownMenuItem>
+                            {row.original.file_status != 'Approved' &&
+                            <DropdownMenuItem
+                                onClick={
+                                    (e) => {
+                                        approveDocument(e);
+                                    }
+                                }
+                            >
+                                Approve
+                            </DropdownMenuItem>
+                            }
+                            {row.original.file_status != 'Pending' &&
+                                <DropdownMenuItem onClick={() => setRevertDialogOpen(true)}>Revert</DropdownMenuItem>
+                            }
+                            {row.original.file_status != 'Rejected' &&
+                                <>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => setRejectDialogOpen(true)} variant="destructive">Reject</DropdownMenuItem>
+                                </>
+                            }
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <Dialog open={revertDialogOpen} onOpenChange={setRevertDialogOpen}>
@@ -183,7 +205,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
                                 <DialogTitle>Reject Document</DialogTitle>
                                 <DialogDescription>Documennt</DialogDescription>
                             </DialogHeader>
-                            <form>
+                            <form onSubmit={(e) => rejectDocument(e)}>
                                 <div>
                                     <label className="text-muted-foreground mb-1 block text-sm font-medium w-100">Rejection Comments</label>
                                     <textarea
@@ -191,9 +213,9 @@ export const columns: ColumnDef<FilesOverview>[] = [
                                         required
                                         autoFocus
                                         tabIndex={1}
-                                        // value=
-                                        // onChange=
-                                        // disabled=
+                                        value={dataDocs.rejection_reason}
+                                        onChange={(e) => setDocsData('rejection_reason', e.target.value)}
+                                        disabled={processingDocs}
                                         placeholder="Enter outline description"
                                         className="focus:border-ring focus:ring-ring min-h-[100px] w-100 resize-y rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                                     />
@@ -202,17 +224,25 @@ export const columns: ColumnDef<FilesOverview>[] = [
                                         className="mt-2"
                                     />
                                 </div>
-                            </form>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button tabIndex={3} variant="outline" onClick={() => setRejectDialogOpen(false)}>
-                                        Cancel
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                        <Button
+                                            tabIndex={3}
+                                            variant="outline"
+                                            onClick={() => setRejectDialogOpen(false)}
+                                            disabled={processingDocs}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </DialogClose>
+                                    <Button tabIndex={4}
+                                        type="submit"
+                                        disabled={processingDocs}
+                                    >
+                                        Reject
                                     </Button>
-                                </DialogClose>
-                                <Button tabIndex={4}>
-                                    Reject
-                                </Button>
-                            </DialogFooter>
+                                </DialogFooter>
+                            </form>
                         </DialogContent>
                     </Dialog>
                 </>

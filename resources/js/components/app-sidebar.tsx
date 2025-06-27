@@ -72,20 +72,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: '/dashboard',
             icon: SquareTerminal,
         },
-            privilege
+            ...(role === 'Admin' || role === 'Coordinator'
         ? [{
             title: 'User Management',
             url: '/users',
             icon: Bot,
         }]
-        : [],
-           privilege
+        : []),
+            ...(role === 'Admin' || role === 'Coordinator'
         ? [{
             title: 'Requests',
             url: '/requests',
             icon: Boxes,
         }]
-        : [],
+        : []),
         {
             title: 'Programs',
             url: '/manage-programs',
@@ -94,16 +94,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             collapsible: true,
             items: programItems,
         },
-            privilege
+            ...(role === 'Admin' || role === 'Coordinator'
         ? [{
             title: 'Exhibits',
             url: '/manage-exhibits',
             icon: Book,
         }]
-        : [],
+        : []),
     ];
     const content = [
-            privilege
+            ...(role === 'Admin' || role === 'Coordinator'
         ? [
             {
                 title: 'News',
@@ -132,7 +132,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 ],
             },
         ]
-        : [],
+        : []),
     ];
     return (
         <Sidebar collapsible="icon" {...props}>
