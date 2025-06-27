@@ -27,7 +27,7 @@ interface DashboardProps {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Analytics',
         href: '/dashboard',
     },
 ];

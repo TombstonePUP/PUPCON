@@ -1,6 +1,6 @@
 'use client';
 
-import { AudioWaveform, Book, Bot, Boxes, Braces, Command, GalleryVerticalEnd, SquareTerminal } from 'lucide-react';
+import { AudioWaveform, Book, ChartArea, Bot, Boxes, Braces, Notebook, Command, GalleryVerticalEnd, SquareTerminal, SquareUser } from 'lucide-react';
 import * as React from 'react';
 
 import { NavMain } from '@/components/nav-main';
@@ -70,13 +70,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {
             title: 'Analytics',
             url: '/dashboard',
-            icon: SquareTerminal,
+            icon: ChartArea,
         },
             ...(role === 'Admin' || role === 'Coordinator'
         ? [{
             title: 'User Management',
             url: '/users',
-            icon: Bot,
+            icon: SquareUser,
         }]
         : []),
             ...(role === 'Admin' || role === 'Coordinator'
@@ -89,7 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {
             title: 'Programs',
             url: '/manage-programs',
-            icon: Braces,
+            icon: Notebook,
             isActive: true,
             collapsible: true,
             items: programItems,
@@ -139,9 +139,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {/* <SidebarHeader>
                 <LevelSwitcher teams={data.levels} />
             </SidebarHeader> */}
-            <SidebarContent className="mt-5">
+            <SidebarContent className="mt-3">
                 <NavMain label="Accreditation" items={accre} />
-                <NavMain label="Content" items={content} />
+                {/* <NavMain label="Content" items={content} /> */}
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />

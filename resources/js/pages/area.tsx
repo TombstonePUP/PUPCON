@@ -49,8 +49,8 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
             alt="placeholder"
           />
         </div>
-        <div className="flex justify-center">
-          <p className="indent-[2vw] text-justify w-[68%] py-[1.5vw] px-[3vw] border rounded-[1vw] border-[#7f1414]/25 hover:border-[#7f1414] transition duration-300">
+        <div className="flex justify-center ">
+          <p className="indent-[2vw] text-justify w-[68%] py-[1.5vw] px-[3vw] border rounded-[1vw] border-[#7f1414]/25 hover:border-[#7f1414] transition duration-300 bg-white">
             {area.area_description || "No area description available."}
           </p>
         </div>
@@ -59,7 +59,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
         <div className="flex justify-center py-[2vw]">
           <div className="w-[68%] grid grid-cols-1 md:grid-cols-3 gap-[2vw]">
             {/* Self Survey Card */}
-            <div className="group relative bg-white border border-[#7f1414]/25 rounded-[1vw] p-[2vw] hover:border-[#7f1414] hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="group relative bg-white border border-[#7f1414]/25 rounded-[1vw] p-[2vw] hover:border-[#7f1414] hover:shadow-lg transition-all duration-300 ">
               <div className="flex flex-col items-center text-center">
                 <div className="w-[8vw] h-[8vw] bg-gray-100 rounded-[0.5vw] mb-[1vw] flex items-center justify-center group-hover:bg-[#7f1414]/10 transition-colors duration-300">
                   <svg
@@ -81,7 +81,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                   {` ${program.program_name}`}
                 </p>
                 <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
-                  <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
+                  <span className="text-[0.8vw] text-[#7f1414] font-medium cursor-pointer">View Document</span>
                 </div>
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                   return a.parameter_name?.localeCompare(b.parameter_name || "") || 0;
                 })
                 .map((parameter, index) => (
-                  <AccordionItem className="group transition duration-300" value={`parameter-${index}`} key={index}>
+                  <AccordionItem className="group transition duration-300 bg-white" value={`parameter-${index}`} key={index}>
                     <AccordionTrigger className="flex flex-row justify-between group-hover:cursor-pointer  my-1 ">
                       <div className="flex flex-row justify-between w-full">
                         <h1 className="text-[#7f1414] group-hover:text-[#a01818] font-bold">

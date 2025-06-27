@@ -124,7 +124,6 @@ export default function Users({ userRecords }: UsersProps) {
 
                                     <div>
                                         <Label htmlFor="email" className="flex items-center gap-2 mb-2">
-                                            <Mail className="h-4 w-4" />
                                             Email Address
                                         </Label>
                                         <input
