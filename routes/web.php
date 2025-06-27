@@ -9,6 +9,36 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+
+
+Route::get('about', function () {
+    return Inertia::render('about/about');
+})->name('about');
+
+Route::get('about/vision-mission-goals', function () {
+    return Inertia::render('about/vmgo');
+})->name('vmgo');
+
+Route::get('about/history', function () {
+    return Inertia::render('about/history');
+})->name('history');
+
+Route::get('about/administration', function () {
+    return Inertia::render('about/admin');
+})->name('administration');
+
+Route::get('about/facilities', function () {
+    return Inertia::render('about/facilities');
+})->name('facilities');
+
+Route::get('about/faculty-and-staff', function () {
+    return Inertia::render('about/faculty');
+})->name('faculty-and-staff');
+
+Route::get('about/local-task-force', function () {
+    return Inertia::render('about/local-task-force');
+})->name('local-task-force');
+
 Route::get('exhibits', function () {
     return Inertia::render('exhibits');
 })->name('exhibits');

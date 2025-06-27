@@ -264,7 +264,7 @@ export default function Users({ program }: ProgramProps) {
                         </div>
 
                         <div className="flex justify-end border-t border-gray-100 pt-4">
-                            <Button type="submit" disabled={processingProgramInfo} className="bg-[#7f1414] px-6 text-white hover:bg-[#8b1515]">
+                            <Button type="submit" disabled={processingProgramInfo} variant="noborder">
                                 Save Program Overview
                             </Button>
                         </div>
@@ -335,7 +335,7 @@ export default function Users({ program }: ProgramProps) {
                                             <Button
                                                 type="submit"
                                                 disabled={processingObjective}
-                                                className="bg-[#7f1414] text-white hover:bg-[#8b1515]"
+                                                variant="noborder"
                                             >
                                                 {editingObjective ? 'Update' : 'Add'} Objective
                                             </Button>
@@ -388,7 +388,7 @@ export default function Users({ program }: ProgramProps) {
                         )}
 
                         <div className="mt-4 flex justify-end border-t border-gray-100 pt-4">
-                            <Button className="bg-[#7f1414] px-6 text-white hover:bg-[#8b1515]">Save Objectives</Button>
+                            <Button variant="noborder">Save Objectives</Button>
                         </div>
                     </div>
 
@@ -410,7 +410,7 @@ export default function Users({ program }: ProgramProps) {
                                             setGalleryDialogOpen(true);
                                         }}
                                     >
-                                        add image
+                                        Add Image
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent>
@@ -448,7 +448,7 @@ export default function Users({ program }: ProgramProps) {
                                                     Cancel
                                                 </Button>
                                             </DialogClose>
-                                            <Button type="submit" disabled={processingGallery} className="bg-[#7f1414] text-white hover:bg-[#8b1515]">
+                                            <Button type="submit" disabled={processingGallery} variant="noborder">
                                                 Add Image
                                             </Button>
                                         </DialogFooter>
@@ -560,7 +560,7 @@ export default function Users({ program }: ProgramProps) {
                                                 Cancel
                                             </Button>
                                         </DialogClose>
-                                        <Button type="submit" disabled={processingFaculty} className="bg-[#7f1414] text-white hover:bg-[#8b1515]">
+                                        <Button type="submit" disabled={processingFaculty} variant="noborder">
                                             {editingFaculty ? 'Update' : 'Add'} Faculty
                                         </Button>
                                     </DialogFooter>
@@ -613,7 +613,7 @@ export default function Users({ program }: ProgramProps) {
                     )}
 
                     <div className="mt-4 flex justify-end border-t border-gray-100 pt-4">
-                        <Button className="bg-[#7f1414] px-6 text-white hover:bg-[#8b1515]">Save Faculty</Button>
+                        <Button variant="noborder">Save Faculty</Button>
                     </div>
                 </div>
 
@@ -659,7 +659,7 @@ export default function Users({ program }: ProgramProps) {
                                             Cancel
                                         </Button>
                                     </DialogClose>
-                                    <Button className="bg-[#7f1414] text-white hover:bg-[#8b1515]">Submit Program</Button>
+                                    <Button variant="noborder">Submit Program</Button>
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>

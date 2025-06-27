@@ -17,7 +17,7 @@ const leftNav = [
             { label: 'History', href: '/about/history' },
             { label: 'Administration', href: '/about/administration' },
             { label: 'Facilities', href: '/about/facilities' },
-            { label: 'Faculty and Staff', href: '/about/faculty-staff' },
+            { label: 'Faculty and Staff', href: '/about/faculty-and-staff' },
             { label: 'Local Task Force', href: '/about/local-task-force' },
         ],
     },
