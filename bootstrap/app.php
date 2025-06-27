@@ -6,6 +6,8 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use App\Http\Middleware\Admin as AdminPrivileges;
+use App\Http\Middleware\UserProgramPrivileges;
+use App\Http\Middleware\UserAreaPrivileges;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
          $middleware->alias( [
             'admin' => AdminPrivileges::class,
+            'userProgramRole' => UserProgramPrivileges::class,
+            'userAreaRole' => UserAreaPrivileges::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

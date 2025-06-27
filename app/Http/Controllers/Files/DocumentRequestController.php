@@ -53,6 +53,7 @@ class DocumentRequestController extends Controller
         }
 
         $file->file_status_id = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
+        $file->file_rejection_reason = '';
         $file->save();
 
         return redirect()->back()
@@ -80,7 +81,7 @@ class DocumentRequestController extends Controller
         }
 
         $file->file_status_id = FileStatus::where('status_name', 'Reject')->first()->file_status_id;
-        $file->rejection_reason = $validated['rejection_reason'];
+        $file->file_rejection_reason = $validated['rejection_reason'];
         $file->save();
 
         return redirect()->back()
@@ -109,6 +110,7 @@ class DocumentRequestController extends Controller
         }
 
         $file->file_status_id = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
+        $file->file_rejection_reason = '';
         $file->save();
 
         return redirect()->back()
