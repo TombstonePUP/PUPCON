@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\ParameterOutlines;
 use App\Models\Programs;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
@@ -43,6 +44,10 @@ class HandleInertiaRequests extends Middleware
             ->where('under_survey', true)
             ->get();
 
+        $outlines = ParameterOutlines::select('*')
+            ->with(['AreaParameter', 'AreaParameter.Areas', 'AreaParameter.Areas.Programs', 'ParameterOutlineCategory'])
+            ->get();
+
         $role = $request->user()?->Roles->first()?->role_name;
 
         if ($role === 'Admin' || $role === 'Coordinator') {
@@ -62,7 +67,8 @@ class HandleInertiaRequests extends Middleware
                 'programs' => $programs,
             ],
             'guest' => [
-                'programs' => $programs_under_survey
+                'programs' => $programs_under_survey,
+                'outlines' => $outlines,
             ],
         ];
     }

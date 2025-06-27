@@ -32,6 +32,7 @@ export interface SharedData {
 
 export interface GuestNavigation {
     programs: NavPrograms[];
+    outlines?: ParameterOutlines[];
     [key: string]: unknown; // This allows for additional properties...
 }
 

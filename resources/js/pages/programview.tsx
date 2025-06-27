@@ -41,7 +41,7 @@ export default function Programs({ program }: PerProgramProps) {
                             </a>
                         </div>
                     </div>
-                    <div id="overview" className="group flex w-[75%] justify-center gap-4 rounded-xl rounded-tr-none border border-[#7f1414]/25 p-4 duration-300 hover:border-[#7f1414]">
+                    <div id="overview" className="group flex w-[75%] justify-center gap-4 rounded-xl rounded-tr-none border bg-white border-[#7f1414]/25 p-4 duration-300 hover:border-[#7f1414]">
                         <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-bold hover:text-[#7f1414] transition duration-300">
                             <p className="mb-[-0.1vw] text-sm font-normal">Student Population</p>
                             1000
@@ -61,8 +61,8 @@ export default function Programs({ program }: PerProgramProps) {
                             100
                         </h1>
                     </div>
-                    <div className="group flex w-[75%] flex-row justify-between gap-4 rounded-xl" >
-                        <div className="flex-1 rounded-xl border border-[#7f1414]/25 p-8 px-13 duration-300 hover:border-[#7f1414]">
+                    <div className="group flex w-[75%] flex-row justify-between gap-4 rounded-xl " >
+                        <div className="flex-1 rounded-xl border border-[#7f1414]/25 p-8 px-13 duration-300 hover:border-[#7f1414]  bg-white ">
                             <h1 className="mb-4 text-3xl font-bold text-[#7f1414] group-hover:text-[#a01818] transition duration-300">Program Overview</h1>
                             <p className='text-gray-600'>{program.overview_description || 'No program overview available.'}</p>
                         </div>

@@ -20,7 +20,7 @@ export function AreaCard({
 
     return (
         <div
-            className={`border group border-[#7f1414]/25 hover:border-[#7f1414] transition duration-300 rounded-[0.5vw] flex flex-col w-fit h-fit p-[0.5vw] items-center ${className}`}
+            className={`border group border-[#7f1414]/25 hover:border-[#7f1414] transition duration-300 rounded-[0.5vw] flex flex-col w-fit h-fit p-[0.5vw] items-center bg-white ${className}`}
         >
             <div className='overflow-hidden rounded-xl'>
             <img

@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/charts/data-table"
-import { columns } from "@/components/charts/users/columns"
+import { columns } from "@/components/charts/data-table-columns/users"
 import { type UserRecords } from "@/types"
 import { useState } from 'react';
 import { UserPlus, Mail, User, Shield, Settings, BookOpen, CheckCircle, User2 } from "lucide-react"

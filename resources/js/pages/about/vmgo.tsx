@@ -100,7 +100,7 @@ export default function VMGO() {
 
           {/* University Overview Section */}
           <article className="mission-vision-page mt-8 w-[75%]">
-            <div className="university-overview mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+            <div className="university-overview mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
               <h3 className="mb-4 text-2xl font-bold text-[#7f1414]">
                 From an Epistemic Community Towards a National Polytechnic University of the Philippines
               </h3>
@@ -136,7 +136,7 @@ export default function VMGO() {
                 <div className="map-left lg:w-2/3">
                   <div className="map-wrapper relative overflow-hidden rounded-lg">
                     <div className="aspect-video w-full rounded-lg">
-                      <div id="youtube-player" className="h-full w-full rounded-lg"></div>
+                      <iframe id="youtube-player" className="h-full w-full rounded-lg"></iframe>
                     </div>
                     {/* Glow Effect */}
                     <div className="map-glow absolute -inset-1 rounded-lg bg-gradient-to-r from-[#7f1414]/20 to-transparent blur-sm"></div>
@@ -174,7 +174,7 @@ export default function VMGO() {
                     href="https://www.youtube.com/watch?v=0n1dd1XZ9F8"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="fade-in delay-3 cta-btn inline-block rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-all duration-300 hover:bg-[#a01818] hover:shadow-lg"
+                    className="fade-in delay-3 cta-btn inline-block rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-all duration-300 hover:bg-[#a01818] hover: "
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1 }}
@@ -188,7 +188,7 @@ export default function VMGO() {
             {/* Vision Statement */}
             <section className="template-statement mb-8">
               <div className="header-wrapper">
-                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
                   <div className="header-box mb-4">
                     <h2 className="text-3xl font-bold text-[#7f1414]">Vision Statement</h2>
                   </div>
@@ -202,7 +202,7 @@ export default function VMGO() {
             {/* Mission Statement */}
             <section className="template-statement mb-8">
               <div className="header-wrapper">
-                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
                   <div className="header-box mb-4">
                     <h2 className="text-3xl font-bold text-[#7f1414]">Mission Statement</h2>
                   </div>
@@ -371,7 +371,7 @@ export default function VMGO() {
             {/* PUP San Juan Goals */}
             <section className="template-statement mb-8">
               <div className="header-wrapper">
-                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
                   <div className="header-box mb-6">
                     <h2 className="text-3xl font-bold text-[#7f1414]">PUP San Juan Goals</h2>
                   </div>

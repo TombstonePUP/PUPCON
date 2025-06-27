@@ -118,7 +118,7 @@ export default function Facilities() {
 
           {/* Facilities Introduction */}
           <article className="facilities-page mt-8 w-[75%]">
-            <section className="card-fx mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+            <section className="card-fx mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
               <h2 className="mb-4 text-3xl font-bold text-[#7f1414]">Campus Facilities</h2>
               <p className="text-lg leading-relaxed text-gray-700">
                 PUP San Juan Campus is equipped with modern facilities designed to support academic excellence and
@@ -134,7 +134,7 @@ export default function Facilities() {
                 {facilities.map((facility, index) => (
                   <motion.div
                     key={facility.id}
-                    className="facility-card group relative overflow-hidden rounded-xl bg-white shadow-lg transition-all duration-500 hover:shadow-2xl"
+                    className="facility-card group relative overflow-hidden rounded-xl bg-white   transition-all duration-500 hover:shadow-2xl"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
@@ -240,14 +240,14 @@ export default function Facilities() {
 
             {/* Call to Action */}
             <section className="cta-section mt-12 text-center">
-              <div className="rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+              <div className="rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
                 <h2 className="mb-4 text-3xl font-bold text-[#7f1414]">Experience Our Campus</h2>
                 <p className="mb-6 text-lg text-gray-700">
                   Ready to explore our world-class facilities? Schedule a campus tour and see firsthand what makes PUP
                   San Juan the perfect place for your academic journey.
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
-                  <button className="rounded-lg bg-[#7f1414] px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-[#a01818] hover:shadow-lg">
+                  <button className="rounded-lg bg-[#7f1414] px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-[#a01818] hover: ">
                     Schedule Campus Tour
                   </button>
                   <button className="rounded-lg border-2 border-[#7f1414] px-8 py-3 font-semibold text-[#7f1414] transition-all duration-300 hover:bg-[#7f1414] hover:text-white">

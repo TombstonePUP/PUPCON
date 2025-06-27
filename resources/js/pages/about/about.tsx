@@ -29,7 +29,7 @@ export default function About() {
                     {/* Main Content Area with Sidebar */}
                     <div className="mt-8 flex w-[75%] gap-8">
                         {/* Navigation Buttons Section (Sidebar) */}
-                        <aside className="w-1/3">
+                        <aside className="w-1/4">
                             <div className="flex flex-col gap-3">
                                 <Link
                                     href="/about/vision-mission-goals"
@@ -71,7 +71,7 @@ export default function About() {
                         </aside>
 
                         {/* Main Content Description */}
-                        <article className="about-page w-2/3">
+                        <article className="about-page w-full">
                             <section className="card-fx rounded-xl border border-[#7f1414]/25 bg-white p-8" id="about-desc">
                                 <p className="text-lg leading-relaxed text-gray-700">
                                     Despite its proximity to the Manila Main Campus, the Polytechnic University of the Philippines – San Juan City

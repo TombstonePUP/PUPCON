@@ -82,7 +82,7 @@ export default function History() {
                                         href="https://www.pup.edu.ph/sanjuan/history"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="fade-in cta-btn inline-block rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-all delay-3 duration-300 hover:bg-[#a01818] hover:shadow-lg"
+                                        className="fade-in cta-btn inline-block rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-all delay-3 duration-300 hover:bg-[#a01818] hover: "
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.8 }}
@@ -98,7 +98,7 @@ export default function History() {
                             {/* Background Image */}
                             <img
                                 className="absolute inset-0 h-full w-full object-cover opacity-[0.07]"
-                                src="/images/others/gallery-bg.jpg"
+                                src="/images/campus/ground.jpg"
                                 alt="Gallery Background"
                             />
 
@@ -124,7 +124,7 @@ export default function History() {
                                     {galleryImages.map((image, index) => (
                                         <motion.div
                                             key={image}
-                                            className="gallery-item overflow-hidden rounded-lg shadow-lg transition-transform duration-300 hover:scale-110"
+                                            className="gallery-item overflow-hidden rounded-lg   transition-transform duration-300 hover:scale-105"
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             transition={{ delay: index * 0.05 }}
@@ -132,7 +132,7 @@ export default function History() {
                                             <img
                                                 src={`/images/events/${image}`}
                                                 alt="Campus Photo"
-                                                className="h-full w-full object-cover transition-transform duration-500 hover:scale-200"
+                                                className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
                                                 loading="lazy"
                                             />
                                         </motion.div>
@@ -170,7 +170,7 @@ export default function History() {
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: index * 0.2 }}
                                         >
-                                            <div className="timeline-marker absolute top-1 -left-[1.15rem] h-5 w-5 rounded-full border-3 border-white bg-[#8c1d40] shadow-lg"></div>
+                                            <div className="timeline-marker absolute top-1 -left-[1.15rem] h-5 w-5 rounded-full border-3 border-white bg-[#8c1d40]  "></div>
                                             <div className="timeline-content">
                                                 <span className="timeline-year text-xl font-bold text-gray-800">{milestone.year}</span>
                                                 <p className="timeline-event mt-1 text-base text-gray-600">{milestone.event}</p>

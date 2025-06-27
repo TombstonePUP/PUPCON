@@ -140,7 +140,7 @@ export default function Administration() {
           <div className="admin-wrapper mt-8 w-[75%]">
             <article className="admin-main">
               {/* Admin Card Section */}
-              <section className="admin-card mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+              <section className="admin-card mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
                 <h1 className="mb-6 text-3xl font-bold text-[#7f1414]">The Administration</h1>
                 <p className="text-lg leading-relaxed text-gray-700">
                   Governance of <strong>PUP</strong> is vested upon the <strong>Board of Regents</strong>, which
@@ -161,7 +161,7 @@ export default function Administration() {
                   {universityOfficials.map((official, index) => (
                     <motion.div
                       key={official.name}
-                      className="official-card overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                      className="official-card overflow-hidden rounded-xl border border-gray-200 bg-white   transition-all duration-300 hover:scale-105 hover:shadow-xl"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
@@ -197,7 +197,7 @@ export default function Administration() {
                   {campusOfficials.map((official, index) => (
                     <motion.div
                       key={official.name}
-                      className="official-card overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                      className="official-card overflow-hidden rounded-xl border border-gray-200 bg-white   transition-all duration-300 hover:scale-105 hover:shadow-xl"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}

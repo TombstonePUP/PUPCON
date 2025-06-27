@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
-import { GuestNavigation } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import type { GuestNavigation } from '@/types';
 
 interface LayoutProps {
     children: ReactNode;
@@ -32,17 +32,21 @@ function isActive(path: string) {
     return window.location.pathname.startsWith(path);
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout({ children, footerText }: LayoutProps) {
     const { guest } = usePage<GuestNavigation>().props;
 
-    const underSurveyPrograms = guest?.programs?.length
-        ? guest.programs.map((program) => ({
-              label: program.program_name,
-              href: `/programs/${program.program_name}`,
-          }))
+    const underSurveyPrograms = (guest as any)?.programs?.length
+        ? (guest as any).programs.map((program: any) => ({
+            label: program.program_name,
+            href: `/programs/${program.program_name}`,
+        }))
         : [];
 
     const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         let lastScrollY = window.scrollY;
@@ -77,6 +81,47 @@ export default function Layout({ children }: LayoutProps) {
         },
     ];
 
+    // Search handler
+    const handleSearch = (term: string) => {
+        if (!term.trim()) {
+            setSearchResults([]);
+            return;
+        }
+
+        const searchTerm = term.toLowerCase();
+
+        const results: any[] = (guest as any)?.outlines
+            ?.filter((outline: any) => {
+                // Search in multiple fields
+                return (
+                    outline.outline_description?.toLowerCase().includes(searchTerm) ||
+                    outline.area_parameters?.parameter_name?.toLowerCase().includes(searchTerm) ||
+                    outline.area_parameters?.area?.area_name?.toLowerCase().includes(searchTerm) ||
+                    outline.area_parameters?.area?.program?.program_name?.toLowerCase().includes(searchTerm)
+                );
+            })
+            ?.map((outline: any) => ({
+                outline: outline.outline_description,
+                outlineId: outline.parameter_outline_id,
+                program: outline.area_parameters?.area?.program?.program_name,
+                area: outline.area_parameters?.area?.area_name,
+                parameter: outline.area_parameters?.parameter_name,
+            })) || [];
+
+        setSearchResults(results);
+    };
+
+    // Add debouncing to prevent excessive searches
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (searchTerm) {
+                handleSearch(searchTerm);
+            }
+        }, 300); // 300ms delay
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
     return (
         <div className="flex min-h-screen flex-col">
             {/* Header */}
@@ -86,7 +131,6 @@ export default function Layout({ children }: LayoutProps) {
                     scrollDir === 'down' ? '-translate-y-full' : 'translate-y-0',
                 )}
             >
-                {' '}
                 {/* Badge */}
                 <div className="relative flex h-[3vw] min-w-full items-center justify-center bg-[#630101] opacity-85"></div>
                 <Link href="/" className="absolute top-[-0.5vw] grid w-screen place-items-center">
@@ -143,7 +187,7 @@ export default function Layout({ children }: LayoutProps) {
 
                                 {item.dropdown.length > 0 && (
                                     <div className="border-radius-[1vw] absolute mt-[0.5vw] hidden flex-col overflow-hidden rounded-md bg-white text-sm shadow-lg group-hover:flex">
-                                        {item.dropdown.map((drop) => (
+                                        {item.dropdown.map((drop: any) => (
                                             <Link
                                                 key={drop.label}
                                                 href={drop.href}
@@ -158,10 +202,96 @@ export default function Layout({ children }: LayoutProps) {
                         ))}
                     </ul>
                 </div>
+
+                {/* Search Button */}
+                <button
+                    className="absolute right-[3vw] top-[0.5vw] flex items-center gap-2 rounded px-3 py-1 cursor-pointer"
+                    onClick={() => setSearchOpen(true)}
+                    title="Search Outlines"
+                >
+                    <svg className="w-8 h-8 text-[#7f1414] hover:scale-110" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                </button>
             </header>
 
+            {/* Search Modal */}
+            {searchOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40">
+                    <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative">
+                        <button
+                            className="absolute top-3 right-3 text-gray-400 hover:text-[#7f1414]"
+                            onClick={() => {
+                                setSearchOpen(false);
+                                setSearchTerm('');
+                                setSearchResults([]);
+                            }}
+                            aria-label="Close"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                        <h2 className="text-xl font-bold mb-4 text-[#7f1414]">Search Outlines</h2>
+                        <div className="mb-4">
+                            <input
+                                ref={inputRef}
+                                type="text"
+                                className="w-full rounded border border-gray-300 p-2 text-sm focus:border-[#7f1414] focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
+                                placeholder="Search outlines..."
+                                value={searchTerm}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                }}
+                                autoFocus
+                            />
+                        </div>
+                        <div className="max-h-[50vh] overflow-y-auto">
+                            {searchTerm ? (
+                                searchResults.length === 0 ? (
+                                    <p className="text-gray-500 text-center">No results found for "{searchTerm}"</p>
+                                ) : (
+                                    <ul className="space-y-4">
+                                        {searchResults.map((result, idx) => {
+                                            const regex = new RegExp(`(${searchTerm})`, 'gi');
+
+                                            // Highlight matches in all fields
+                                            const highlightedProgram = result.program?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.program;
+                                            const highlightedArea = result.area?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.area;
+                                            const highlightedParameter = result.parameter?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.parameter;
+                                            const highlightedOutline = result.outline?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.outline;
+
+                                            return (
+                                                <li key={idx} className="border-b pb-2">
+                                                    <div
+                                                        className="text-xs text-gray-500 mb-1"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: `${highlightedProgram} &rarr; ${highlightedArea} &rarr; ${highlightedParameter}`
+                                                        }}
+                                                    />
+                                                    <div
+                                                        className="text-sm"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: highlightedOutline
+                                                        }}
+                                                    />
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                )
+                            ) : (
+                                <p className="text-gray-500 text-center">Start typing to search outlines</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Main */}
-            <main className="flex-1 bg-[#f4f4f4] pb-15">{children}</main>
+            <main className="flex-1 pb-15">{children}</main>
 
             {/* Footer */}
             <footer className="text-center">

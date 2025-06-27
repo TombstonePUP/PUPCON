@@ -1,8 +1,9 @@
-import { Head } from "@inertiajs/react"
+import { Head, usePage } from "@inertiajs/react"
 import Layout from "@/layouts/landing-layout"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import type { Area, PerProgram, ParameterOutlineCategory } from "@/types"
 import { buildOutlineTree, RecursiveOutline } from "@/components/recursive-outline"
+import { useEffect } from 'react';
 
 interface AreaProps {
   program: PerProgram
@@ -11,7 +12,17 @@ interface AreaProps {
 }
 
 export default function AreaPage({ program, area, categories }: AreaProps) {
-  // area.area_parameters = area.area_parameters.sor
+  // Get search keyword from query string
+  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const searchKeyword = searchParams?.get('search') || '';
+
+  // Helper to highlight keyword in outline
+  function highlight(text: string) {
+    if (!searchKeyword) return text;
+    const regex = new RegExp(`(${searchKeyword})`, 'gi');
+    return text.replace(regex, '<mark class="bg-yellow-200">$1</mark>');
+  }
+
   return (
     <>
       <Head
@@ -181,7 +192,12 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                             <h1 className="font-bold">
                               {category.category_name == "No Category" ? "" : category.category_name}
                             </h1>
-                            <RecursiveOutline outlines={sortedOutlines} />
+                            {/* Highlight keyword in all outline text */}
+                            <RecursiveOutline
+                              outlines={sortedOutlines}
+                              highlightKeyword={searchKeyword}
+                              highlightFn={highlight}
+                            />
                           </div>
                         )
                       })

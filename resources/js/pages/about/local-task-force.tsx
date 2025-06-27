@@ -30,7 +30,7 @@ export default function LocalTaskForce() {
           {/* Local Task Force Page Content */}
           <article className="local-task-force-page mt-8 w-[75%]">
             {/* Main Content Section */}
-            <section className="main-content mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-12 shadow-lg text-center">
+            <section className="main-content mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-12   text-center">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -95,7 +95,7 @@ export default function LocalTaskForce() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.6 }}
-                  className="rounded-xl border border-gray-200 bg-white p-6 shadow-lg hover:shadow-xl transition-shadow"
+                  className="rounded-xl border border-gray-200 bg-white p-6   hover:shadow-xl transition-shadow"
                 >
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]/10">
                     <svg className="h-6 w-6 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,7 +119,7 @@ export default function LocalTaskForce() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.6 }}
-                  className="rounded-xl border border-gray-200 bg-white p-6 shadow-lg hover:shadow-xl transition-shadow"
+                  className="rounded-xl border border-gray-200 bg-white p-6   hover:shadow-xl transition-shadow"
                 >
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]/10">
                     <svg className="h-6 w-6 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,7 +143,7 @@ export default function LocalTaskForce() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.6 }}
-                  className="rounded-xl border border-gray-200 bg-white p-6 shadow-lg hover:shadow-xl transition-shadow"
+                  className="rounded-xl border border-gray-200 bg-white p-6   hover:shadow-xl transition-shadow"
                 >
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]/10">
                     <svg className="h-6 w-6 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,7 +165,7 @@ export default function LocalTaskForce() {
             </section>
 
             {/* Timeline Section */}
-            <section className="timeline-section mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+            <section className="timeline-section mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
               <h2 className="mb-8 text-center text-3xl font-bold text-[#7f1414]">Accreditation Timeline</h2>
               <div className="mx-auto max-w-2xl">
                 <div className="relative">
@@ -228,14 +228,14 @@ export default function LocalTaskForce() {
 
             {/* Contact Section */}
             <section className="contact-section text-center">
-              <div className="rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+              <div className="rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
                 <h2 className="mb-4 text-3xl font-bold text-[#7f1414]">Stay Updated</h2>
                 <p className="mb-6 text-lg text-gray-700">
                   For more information about our accreditation process and future Local Task Force developments, please
                   contact our administration office.
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
-                  <button className="rounded-lg bg-[#7f1414] px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-[#a01818] hover:shadow-lg">
+                  <button className="rounded-lg bg-[#7f1414] px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-[#a01818] hover: ">
                     Contact Administration
                   </button>
                   <button className="rounded-lg border-2 border-[#7f1414] px-8 py-3 font-semibold text-[#7f1414] transition-all duration-300 hover:bg-[#7f1414] hover:text-white">
