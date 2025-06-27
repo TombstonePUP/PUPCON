@@ -60,7 +60,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { auth } = usePage().props;
     const privileges = auth.programs || [];
     const role = auth.user.roles[0].role_name;
-    const privilege = role === 'Admin' || role === 'Coordinator';
 
     const programItems = privileges.map((program) => ({
         title: program.title,

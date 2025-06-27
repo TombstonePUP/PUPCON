@@ -33,11 +33,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
 
-    Route::middleware(['userProgramRole'])->group(function () {
-        Route::controller(ManageProgramController::class)->prefix('manage-programs')->as('manage.')->group(function () {
+    Route::controller(ManageProgramController::class)->prefix('manage-programs')->as('manage.')->group(function () {
+        Route::get('/', 'show')->name('manage-programs');
 
+        Route::middleware(['userProgramRole'])->group(function () {
             Route::get('/{program_name}', 'index')->name('program');
-            Route::get('/', 'show')->name('manage-programs');
 
             Route::middleware(['userAreaRole'])->group(function () {
                 Route::controller(AreaFilesController::class)->prefix('{program_name}')->group(function () {

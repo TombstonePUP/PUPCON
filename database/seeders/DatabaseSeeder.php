@@ -257,8 +257,8 @@ class DatabaseSeeder extends Seeder
         // AreaForms::factory(20)->create();
         // AreaFiles::factory(200)->create();
         Exhibits::factory(10)->create();
-        ExhibitOutlines::factory(10)->create();
-        ExhibitFiles::factory(10)->create();
+        // ExhibitOutlines::factory(10)->create();
+        // ExhibitFiles::factory(10)->create();
 
     }
 }

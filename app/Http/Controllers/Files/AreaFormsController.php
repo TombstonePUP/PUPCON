@@ -185,6 +185,7 @@ class AreaFormsController extends Controller
      */
     public function destroy(Request $request, AreaForms $areaForms): RedirectResponse
     {
+        dd($request->all());
         $areaForm = $areaForms->find($request->form_id);
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();

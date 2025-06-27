@@ -23,7 +23,7 @@ class ManageProgramController extends Controller
 
     public function show()
     {
-        $programs = Programs::select('*')->get();
+        $programs = Programs::select('*')->with('Areas')->get();
         return inertia('manage-programs', [
             'programs' => $programs,
         ]);

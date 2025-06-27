@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Areas;
 use App\Models\FileStatus;
 use App\Models\ParameterOutlines;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
@@ -84,6 +86,8 @@ class AreaParameterOutlinesController extends Controller
             'outline_file' => 'nullable|file|mimes:pdf',
         ]);
 
+        $user = Auth::user();
+
         $program = $request->program_name;
         $area = Areas::where('area_id', $request->area_id)->first();
 
@@ -91,10 +95,15 @@ class AreaParameterOutlinesController extends Controller
         $parameterOutline->fill(array_filter($validated, fn($value) => $value !== null));
         $parameterOutline->save();
 
+        $activityLog = new ActivityLog();
+
         if ($request->hasFile('outline_file')) {
             if ($file = $parameterOutline->areaFiles) {
                 Storage::disk('public')->delete($file->file_path);
                 $file->delete();
+                $activityLog->activity = "Update Document";
+            } else {
+                $activityLog->activity = "Upload Document";
             }
 
             $file = $request->outline_file;
@@ -116,6 +125,13 @@ class AreaParameterOutlinesController extends Controller
 
             $filePath = "{$filePath}/{$fileName}";
 
+            $activityLog->user_id = $user->user_id;
+            $activityLog->area = $area->area_name;
+            $activityLog->program = $program;
+            $activityLog->activity_date = now();
+            $activityLog->file_name = $fileName;
+            $activityLog->save();
+
             $file_status = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
             $parameterOutline->AreaFiles()->create([
                 'file_name' => $fileName,
@@ -133,8 +149,25 @@ class AreaParameterOutlinesController extends Controller
      */
     public function destroy(Request $request, ParameterOutlines $parameterOutlines): RedirectResponse
     {
-        $parameterOutlines->find($request->outline_id)
-            ->delete();
+        $parameterOutline = $parameterOutlines->where('parameter_outline_id', $request->outline_id)->first();
+        $user = Auth::user();
+        $area = Areas::where('area_id', $request->area_id)->first();
+        $program = $request->program_name;
+
+        if ($parameterOutline->AreaFiles) {
+            $file = $parameterOutline->AreaFiles;
+            Storage::disk('public')->delete($file->file_path);
+            $activityLog = new ActivityLog();
+            $activityLog->user_id = $user->user_id;
+            $activityLog->area = $area->area_name;
+            $activityLog->program = $program;
+            $activityLog->file_name = $file->file_name;
+            $activityLog->activity = "Delete Document";
+            $activityLog->activity_date = now();
+            $activityLog->save();
+        }
+
+        $parameterOutline->delete();
 
         return redirect()->back()
             ->with('success', 'Parameter outline deleted successfully.');

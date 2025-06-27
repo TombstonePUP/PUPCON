@@ -14,7 +14,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,8 +28,12 @@ interface ProgramsProps {
 }
 
 export default function ManagePrograms({ programs }: ProgramsProps) {
+    const { auth } = usePage().props;
+    const userPrograms = auth.programs;
     const [searchTerm, setSearchTerm] = useState('');
     const [filterDegree, setFilterDegree] = useState<string>('all');
+
+    console.log(auth.user);
 
     const filteredPrograms =
         programs?.filter((program) => {
@@ -37,6 +41,8 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
             const matchesDegree = filterDegree === 'all' || program.degree_type === filterDegree;
             return matchesSearch && matchesDegree;
         }) || [];
+
+
 
     const getDegreeIcon = (degreeType: string) => {
         switch (degreeType.toLowerCase()) {
@@ -244,7 +250,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                         <p className="mb-3 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name}`}</p>
 
                                         <div className="flex items-center gap-4 text-xs text-gray-500">
-                                            <div className="flex items-center gap-1">
+                                            {/* <div className="flex items-center gap-1">
                                                 <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path
                                                         strokeLinecap="round"
@@ -254,7 +260,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                     />
                                                 </svg>
                                                 <span>124 students</span>
-                                            </div>
+                                            </div> */}
                                             <div className="flex items-center gap-1">
                                                 <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path
@@ -264,7 +270,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                         d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                                                     />
                                                 </svg>
-                                                <span>8 areas</span>
+                                                <span>{program.areas?.length} areas</span>
                                             </div>
                                         </div>
                                     </div>

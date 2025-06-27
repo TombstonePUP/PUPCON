@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import React, { useRef, useState } from 'react';
 
 type ItemType = {
@@ -43,6 +43,8 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
     const [newAreaName, setNewAreaName] = useState('');
     const [isContentVisible, setIsContentVisible] = useState(true);
     const dialogCloseRef = useRef<HTMLButtonElement>(null);
+    const { auth } = usePage().props;
+    const role = auth.user.roles[0].role_name;
 
     // Faculty state
     const [newFaculty, setNewFaculty] = useState<FacultyData>({
@@ -512,26 +514,28 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                         <div
                             className={`${mode === 'areas' ? 'col-span-2' : mode === 'faculty' ? 'col-span-2 md:col-span-3 lg:col-span-4' : 'w-full'}`}
                         >
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        className={`flex h-[8vw] w-full cursor-pointer flex-col rounded border border-dashed transition-colors duration-300 hover:bg-gray-50`}
-                                    >
-                                        <PlusIcon />
-                                        <h1 className="text-[#B4B4B4]">
-                                            {mode === 'areas' ? 'Add Area' : mode === 'faculty' ? 'Add Faculty Member' : 'Add Objective'}
-                                        </h1>
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className={mode === 'faculty' ? 'max-w-md' : ''}>
-                                    <DialogTitle>Add {mode === 'areas' ? 'Area' : mode === 'faculty' ? 'Faculty Member' : 'Objective'}</DialogTitle>
-                                    <DialogDescription>{renderDialogContent()}</DialogDescription>
-                                    <DialogClose asChild>
-                                        <button ref={dialogCloseRef} className="hidden" />
-                                    </DialogClose>
-                                </DialogContent>
-                            </Dialog>
+                            {(role === 'Admin' || role === 'Coordinator') && (
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            className={`flex h-[8vw] w-full cursor-pointer flex-col rounded border border-dashed transition-colors duration-300 hover:bg-gray-50`}
+                                        >
+                                            <PlusIcon />
+                                            <h1 className="text-[#B4B4B4]">
+                                                {mode === 'areas' ? 'Add Area' : mode === 'faculty' ? 'Add Faculty Member' : 'Add Objective'}
+                                            </h1>
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className={mode === 'faculty' ? 'max-w-md' : ''}>
+                                        <DialogTitle>Add {mode === 'areas' ? 'Area' : mode === 'faculty' ? 'Faculty Member' : 'Objective'}</DialogTitle>
+                                        <DialogDescription>{renderDialogContent()}</DialogDescription>
+                                        <DialogClose asChild>
+                                            <button ref={dialogCloseRef} className="hidden" />
+                                        </DialogClose>
+                                    </DialogContent>
+                                </Dialog>
+                            )}
                         </div>
                     )}
                 </div>
