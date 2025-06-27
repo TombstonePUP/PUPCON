@@ -234,13 +234,13 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                 <line x1="6" y1="6" x2="18" y2="18" />
                             </svg>
                         </button>
-                        <h2 className="text-xl font-bold mb-4 text-[#7f1414]">Search Outlines</h2>
+                        <h2 className="text-xl font-bold mb-4 text-[#7f1414]">Search</h2>
                         <div className="mb-4">
                             <input
                                 ref={inputRef}
                                 type="text"
                                 className="w-full rounded border border-gray-300 p-2 text-sm focus:border-[#7f1414] focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
-                                placeholder="Search outlines..."
+                                placeholder="Search outlines, parameters, and programs..."
                                 value={searchTerm}
                                 onChange={(e) => {
                                     setSearchTerm(e.target.value);
@@ -283,7 +283,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                     </ul>
                                 )
                             ) : (
-                                <p className="text-gray-500 text-center">Start typing to search outlines</p>
+                                <p className="text-gray-500 text-center">Start typing to search</p>
                             )}
                         </div>
                     </div>

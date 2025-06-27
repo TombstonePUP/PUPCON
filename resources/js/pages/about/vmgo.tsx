@@ -12,7 +12,7 @@ export default function VMGO() {
       <Layout>
         <div className="flex flex-col items-center">
           {/* Header Banner Section */}
-          <div className="relative z-10 mt-7 flex h-[10vw] w-[75%] items-center justify-center overflow-hidden rounded-xl">
+          <div className="relative z-10 mt-7 flex h-[10vw] w-[75%] items-center justify-center overflow-hidden rounded-xl ">
             <img src="/images/campus/ground.jpg" alt="VMGO Banner" className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-r from-[#7f1414] via-[#7f1414]/70 to-transparent"></div>
             <div className="relative z-10 px-8 text-center text-white">
@@ -25,7 +25,7 @@ export default function VMGO() {
 
           {/* University Overview Section */}
           <article className="mission-vision-page mt-8 w-[75%]">
-            <div className="university-overview mb-12 rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
+            <div className="mb-2 rounded-xl rounded-b-none border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
               <h3 className="mb-4 text-2xl font-bold text-[#7f1414]">
                 From an Epistemic Community Towards a National Polytechnic University of the Philippines
               </h3>
@@ -43,10 +43,42 @@ export default function VMGO() {
               </p>
             </div>
 
+            <div className="flex gap-2">
+              {/* Vision Statement */}
+              <section className="mb-8 ">
+                <div className="header-wrapper">
+                  <div className="section-header rounded-bl-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
+                    <div className="header-box mb-4">
+                      <h2 className="text-3xl font-bold text-[#7f1414]">Vision Statement</h2>
+                    </div>
+                    <div className="section-content">
+                      <p className="text-xl text-gray-700">A Leading Comprehensive Polytechnic University in Asia</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Mission Statement */}
+              <section className="mb-8">
+                <div className="header-wrapper">
+                  <div className="section-header rounded-br-xl border rounded-t-none duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
+                    <div className="header-box mb-4">
+                      <h2 className="text-3xl font-bold text-[#7f1414]">Mission Statement</h2>
+                    </div>
+                    <div className="section-content">
+                      <p className="text-xl text-gray-700" id="mission-text">
+                        Advance an inclusive, equitable, and globally relevant polytechnic education towards national
+                        development.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
 
 
             {/* Video Section with Background Image and Overlay */}
-            <section className="relative mb-12 overflow-hidden">
+            <section className="relative mb-12 overflow-hidden rounded-lg">
               {/* Background Image */}
               <img
                 className="absolute inset-0 h-full w-full object-cover opacity-30 grayscale transition-opacity duration-300 ease-in-out"
@@ -117,36 +149,8 @@ export default function VMGO() {
               </div>
             </section>
 
-            {/* Vision Statement */}
-            <section className="template-statement mb-8 ">
-              <div className="header-wrapper">
-                <div className="section-header rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
-                  <div className="header-box mb-4">
-                    <h2 className="text-3xl font-bold text-[#7f1414]">Vision Statement</h2>
-                  </div>
-                  <div className="section-content">
-                    <p className="text-xl text-gray-700">A Leading Comprehensive Polytechnic University in Asia</p>
-                  </div>
-                </div>
-              </div>
-            </section>
 
-            {/* Mission Statement */}
-            <section className="template-statement mb-8">
-              <div className="header-wrapper">
-                <div className="section-header rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
-                  <div className="header-box mb-4">
-                    <h2 className="text-3xl font-bold text-[#7f1414]">Mission Statement</h2>
-                  </div>
-                  <div className="section-content">
-                    <p className="text-xl text-gray-700" id="mission-text">
-                      Advance an inclusive, equitable, and globally relevant polytechnic education towards national
-                      development.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </section>
+
 
             {/* Decorative SVG Divider */}
             <div className="svg-wrapper mb-8 flex justify-center">
@@ -172,8 +176,8 @@ export default function VMGO() {
             </div>
 
             {/* University Strategic Goals */}
-            <section className="template-statement mb-8">
-              <div className="header-wrapper rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] p-2">
+            <section className="mb-8 ">
+              <div className="header-wrapper rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] p-6 bg-white">
                 <div className="section-header text-center">
                   <div className="header-box mb-6 inline-block w-full rounded-lg bg-[#7f1414] px-8 py-4">
                     <h2 className="m-0 text-3xl font-bold text-gray-100">University Strategic Goals</h2>
@@ -301,13 +305,12 @@ export default function VMGO() {
             </section>
 
             {/* PUP San Juan Goals */}
-            <section className="template-statement mb-8">
+            <section className="template-statement mb-8 ">
               <div className="header-wrapper">
-                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
-                  <div className="header-box mb-6">
-                    <h2 className="text-3xl font-bold text-[#7f1414]">PUP San Juan Goals</h2>
+                <div className="section-header rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
+                  <div className="header-box mb-6 inline-block w-full rounded-lg bg-[#7f1414] px-8 py-4">
+                    <h2 className="m-0 text-3xl font-bold text-gray-100 text-center">PUP San Juan Goals</h2>
                   </div>
-
                   <div className="goals-list space-y-6">
                     <div className="goal-item rounded-lg border-l-4 border-[#7f1414] bg-gray-50 p-6">
                       <h3 className="mb-3 text-xl font-bold text-[#7f1414]">Goal 1: Academic Excellence</h3>
