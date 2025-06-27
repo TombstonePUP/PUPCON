@@ -43,6 +43,10 @@ Route::get('exhibits', function () {
     return Inertia::render('exhibits');
 })->name('exhibits');
 
+Route::get('certificate', function () {
+    return Inertia::render('certificate');
+})->name('certificate');
+
 Route::controller(ProgramsController::class)->prefix('programs')->group(function () {
     Route::get('/', 'index')->name('programs.index');
     Route::get('/{program_name}', 'show')->name('programs.show');

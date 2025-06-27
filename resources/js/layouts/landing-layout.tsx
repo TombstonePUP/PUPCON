@@ -23,7 +23,7 @@ const leftNav = [
     },
     {
         label: 'CERTIFICATE OF AUTHENTICITY',
-        href: '/', //'/certificate',
+        href: '/certificate', //'/certificate',
         dropdown: [],
     },
 ];
