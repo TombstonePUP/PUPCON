@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('local_task_force', function (Blueprint $table) {
             $table->id(column: 'local_task_force_id')->autoIncrement()->primary();
             // $table->foreignId('user_id')->references('user_id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('area_id')->references('area_id')->on('areas')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('area');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('profile_image_name')->nullable();

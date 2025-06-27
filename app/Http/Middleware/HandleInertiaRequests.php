@@ -47,7 +47,7 @@ class HandleInertiaRequests extends Middleware
 
         if ($role === 'Admin' || $role === 'Coordinator') {
             $programs = Programs::select('program_name as title')->get();
-        } elseif ($role === 'Area Chair') {
+        } elseif ($role === 'Chairman') {
             $programs = $request->user()?->Programs()->select('program_name as title')->get();
         } else {
             $programs = [];

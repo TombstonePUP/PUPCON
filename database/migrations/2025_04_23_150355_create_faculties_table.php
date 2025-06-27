@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('suffix')->nullable();
             $table->string('faculty_status');
             $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('program_coordinator')->default('false');
+            $table->boolean('program_coordinator')->default('false');
             $table->string('faculty_image_name')->nullable();
             $table->text('faculty_image_path')->nullable();
         });

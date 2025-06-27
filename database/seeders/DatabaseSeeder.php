@@ -35,15 +35,25 @@ class DatabaseSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        User::factory()->create([
-            'user_id' => 11111,
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password@123'),
-        ]);
-        User::factory(10)->create();
-        // ActivityLog::factory(10)->create();
+        $users = [
+            [
+                'user_id' => 22222,
+                'first_name' => 'Keith',
+                'last_name' =>  'Lee',
+                'email' => 'keithlee@example.com',
+                'password' => bcrypt('password@456'),
+            ],
+            [
+                'user_id' => 11111,
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'email' => 'test@example.com',
+                'password' => bcrypt('password@123'),
+            ],
+        ];
+        foreach ($users as $attributes) {
+            User::factory()->create($attributes);
+        }
         $roles = [
             [
                 'role_id' => 1,
@@ -65,19 +75,26 @@ class DatabaseSeeder extends Seeder
                 'role_id' => 5,
                 'role_name' => 'Member'
             ],
-            [
-                'role_id' => 6,
-                'role_name' => 'Content Manager'
-            ],
         ];
         foreach ($roles as $attributes) {
             Roles::factory()->create($attributes);
         }
-        UserRoles::factory()->create([
-            'user_id' => 11111,
-            'role_id' => 1,
-        ]);
-        UserRoles::factory(10)->create();
+        $userRoles = [
+            [
+                'user_role_id' => 11,
+                'user_id' => 11111,
+                'role_id' => 1,
+            ],
+            [
+                'user_role_id' => 22,
+                'user_id' => 22222,
+                'role_id' => 3,
+            ],
+        ];
+        foreach ($userRoles as $attributes) {
+            UserRoles::factory()->create($attributes);
+        }
+        // UserRoles::factory(10)->create();
         $programs = [
             [
                 'program_id' => 1,
@@ -113,11 +130,23 @@ class DatabaseSeeder extends Seeder
         foreach ($programs as $attributes) {
             Programs::factory()->create($attributes);
         }
-        UserProgramRoles::factory()->create([
-            'user_id' => 11111,
-            'program_id' => 1, // Assuming program_id 1 is for a specific program
-        ]);
-        UserProgramRoles::factory(10)->create();
+        $userProgramRoles = [
+            /* [
+                'user_id' => 11111,
+                'program_id' => 1, // Assuming program_id 1 is for a specific program
+            ], */
+            [
+                'user_id' => 22222,
+                'program_id' => 1, // Assuming program_id 1 is for a specific program
+            ],
+            [
+                'user_id' => 22222,
+                'program_id' => 2, // Assuming program_id 1 is for a specific program
+            ],
+        ];
+        foreach ($userProgramRoles as $attributes) {
+            UserProgramRoles::factory()->create($attributes);
+        }
         $areas = [
             [
                 'area_id' => 1,
@@ -183,8 +212,19 @@ class DatabaseSeeder extends Seeder
         foreach ($areas as $attributes) {
             Areas::factory()->create($attributes);
         }
-        UserAreaRoles::factory(10)->create();
-        LocalTaskForce::factory(10)->create();
+        $userAreaRoles = [
+            [
+                'user_role_id' => 22,
+                'area_id' => 10,
+            ],
+            [
+                'user_role_id' => 22,
+                'area_id' => 9,
+            ],
+        ];
+        foreach ($userAreaRoles as $attributes) {
+            UserAreaRoles::factory()->create($attributes);
+        }
         Facilities::factory(10)->create();
         ProgramObjectives::factory(10)->create();
         AreaParameters::factory(50)->create();
