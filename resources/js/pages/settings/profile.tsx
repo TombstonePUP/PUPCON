@@ -45,7 +45,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
                     <form onSubmit={submit} className="space-y-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="name">Last Name</Label>
 
                             <Input
                                 id="name"
@@ -54,7 +54,23 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 onChange={(e) => setData('name', e.target.value)}
                                 required
                                 autoComplete="name"
-                                placeholder="Full name"
+                                placeholder="Last name"
+                            />
+
+                            <InputError className="mt-2" message={errors.name} />
+                        </div>
+                        
+                        <div className="grid gap-2">
+                            <Label htmlFor="name">First Name</Label>
+
+                            <Input
+                                id="name"
+                                className="mt-1 block w-full"
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+                                required
+                                autoComplete="name"
+                                placeholder="First name"
                             />
 
                             <InputError className="mt-2" message={errors.name} />
@@ -100,7 +116,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                         )}
 
                         <div className="flex items-center gap-4">
-                            <Button disabled={processing}>Save</Button>
+                            <Button variant={'noborder'} disabled={processing}>Save</Button>
 
                             <Transition
                                 show={recentlySuccessful}

@@ -189,7 +189,7 @@ export default function ArchiveComponent() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Archive" />
       <SettingsLayout>
-        <div className="space-y-6">
+        <div className="space-y-6 w-300">
           <HeadingSmall title="Archive Management" description="Manage archived content from all system modules" />
 
           {/* Stats Overview */}
