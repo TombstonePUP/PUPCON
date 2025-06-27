@@ -43,10 +43,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::controller(AreaFilesController::class)->prefix('{program_name}')->group(function () {
                     Route::get('/{area_id}', 'index')->name('area');
 
-                    Route::controller(AreaParameterController::class)->group(function () {
-                        Route::post('/{area_id}/storeParameter', 'store')->name('area.addParameter');
-                        Route::patch('/{area_id}/{parameter_id}/updateParameter', 'update')->name('area.updateParameter');
-                        Route::delete('/{area_id}/{parameter_id}/deleteParameter', 'destroy')->name('area.deleteParameter');
+                    Route::middleware(['admin'])->group(function () {
+                        Route::controller(AreaParameterController::class)->group(function () {
+                            Route::post('/{area_id}/storeParameter', 'store')->name('area.addParameter');
+                            Route::patch('/{area_id}/{parameter_id}/updateParameter', 'update')->name('area.updateParameter');
+                            Route::delete('/{area_id}/{parameter_id}/deleteParameter', 'destroy')->name('area.deleteParameter');
+                        });
                     });
 
                     Route::controller(AreaParameterOutlinesController::class)->group(function () {
