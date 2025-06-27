@@ -4,6 +4,8 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import type { Area, PerProgram, ParameterOutlineCategory } from "@/types"
 import { buildOutlineTree, RecursiveOutline } from "@/components/recursive-outline"
 import { useEffect } from 'react';
+import React, { useState } from 'react';
+import { DocumentViewer } from "@/components/ui/document-viewer";
 
 interface AreaProps {
   program: PerProgram
@@ -15,6 +17,15 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
   // Get search keyword from query string
   const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const searchKeyword = searchParams?.get('search') || '';
+
+
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerFile, setViewerFile] = useState({ url: '', title: '' });
+
+  const openViewer = (fileUrl: string, title: string) => {
+    setViewerFile({ url: fileUrl, title });
+    setViewerOpen(true);
+  };
 
   // Helper to highlight keyword in outline
   function highlight(text: string) {
@@ -80,9 +91,13 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 <p className="text-[0.9vw] text-gray-600 leading-relaxed">
                   {` ${program.program_name}`}
                 </p>
-                <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
-                  <span className="text-[0.8vw] text-[#7f1414] font-medium cursor-pointer">View Document</span>
+                <div
+                  onClick={() => openViewer('/files/self-survey.pdf', 'Self Survey')}
+                  className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 hover:bg-[#7f1414]/25 transition duration-300 rounded-full cursor-pointer"
+                >
+                  <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
                 </div>
+
               </div>
             </div>
 
@@ -108,7 +123,10 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 <p className="text-[0.9vw] text-gray-600 leading-relaxed">
                   {` ${program.program_name}`}
                 </p>
-                <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
+                <div
+                  onClick={() => openViewer('/files/compliance-report.pdf', 'Compliance Report')}
+                  className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 hover:bg-[#7f1414]/25 transition duration-300 rounded-full cursor-pointer"
+                >
                   <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
                 </div>
               </div>
@@ -136,7 +154,10 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 <p className="text-[0.9vw] text-gray-600 leading-relaxed">
                   {` ${program.program_name}`}
                 </p>
-                <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
+                <div
+                  onClick={() => openViewer('/files/ppp.pdf', 'Program Performance Profile')}
+                  className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 hover:bg-[#7f1414]/25 transition duration-300 rounded-full cursor-pointer"
+                >
                   <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
                 </div>
               </div>
@@ -144,7 +165,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
           </div>
         </div>
 
-        <div className="w-full flex justify-center py-[2vw]">
+        <div className="w-full flex justify-center py-2">
           <Accordion type="single" collapsible className="w-[68%] flex flex-col gap-[1vw]">
             {area.area_parameters?.length > 0 ? (
               [...area.area_parameters]
@@ -232,6 +253,12 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
             )}
           </Accordion>
         </div>
+        <DocumentViewer
+          open={viewerOpen}
+          onOpenChange={setViewerOpen}
+          fileUrl={viewerFile.url}
+          title={viewerFile.title}
+        />
       </Layout>
     </>
   )

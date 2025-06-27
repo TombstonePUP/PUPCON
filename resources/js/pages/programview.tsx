@@ -3,6 +3,7 @@ import { AreaCard } from '@/components/ui/area-card';
 import Layout from '@/layouts/landing-layout';
 import type { PerProgramUnderSurvey } from '@/types';
 import { Head } from '@inertiajs/react';
+import { GraduationCap, FlaskConical, Handshake } from 'lucide-react';
 
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
@@ -18,20 +19,21 @@ export default function Programs({ program }: PerProgramProps) {
             title: 'Academic Excellence',
             description:
                 'To provide high-quality education that meets international standards and prepares students for successful careers in their chosen field.',
-            icon: '🎓',
+            icon: GraduationCap,
         },
         {
             id: 2,
             title: 'Innovation & Research',
-            description: 'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
-            icon: '🔬',
+            description:
+                'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
+            icon: FlaskConical,
         },
         {
             id: 3,
             title: 'Industry Partnership',
             description:
                 'To establish strong partnerships with industry leaders to ensure curriculum relevance and provide practical learning opportunities.',
-            icon: '🤝',
+            icon: Handshake,
         },
     ];
 
@@ -42,7 +44,7 @@ export default function Programs({ program }: PerProgramProps) {
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
             <Layout>
-                <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-col items-center gap-13">
                     <div className="relative mt-7 flex h-[20vw] w-[75%] items-center overflow-hidden rounded-t-2xl rounded-bl-2xl before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#7f1414] before:to-transparent before:content-['']">
                         <img className="w-full" src="/images/campus/comlab.jpg" alt="banner" />
                         <h2 className="absolute top-[7vw] left-20 text-white">
@@ -124,12 +126,8 @@ export default function Programs({ program }: PerProgramProps) {
                             {programObjectives.map((objective, index) => (
                                 <div
                                     key={objective.id}
-                                    className="group relative overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg transition-all duration-300 hover:scale-105 hover:border-[#7f1414] hover:shadow-xl"
+                                    className="group relative overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg transition-all duration-300 hover:scale-101 hover:border-[#7f1414] hover:shadow-xl"
                                 >
-                                    {/* Background Pattern */}
-                                    <div className="absolute top-0 right-0 h-20 w-20 opacity-5">
-                                        <div className="rotate-12 transform text-6xl text-[#7f1414]">{objective.icon}</div>
-                                    </div>
 
                                     {/* Objective Number */}
                                     <div className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#7f1414]/10 font-bold text-[#7f1414] transition-colors group-hover:bg-[#7f1414] group-hover:text-white">
@@ -139,7 +137,7 @@ export default function Programs({ program }: PerProgramProps) {
                                     {/* Icon */}
                                     <div className="mt-8 mb-6 flex justify-center">
                                         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#7f1414] to-[#a01818] text-3xl text-white shadow-lg transition-transform group-hover:scale-110">
-                                            {objective.icon}
+                                            <objective.icon className="h-10 w-10" />
                                         </div>
                                     </div>
 
@@ -156,37 +154,31 @@ export default function Programs({ program }: PerProgramProps) {
                                 </div>
                             ))}
                         </div>
-
-                        {/* Additional Info Section */}
-                        <div className="mt-8 rounded-xl border border-[#7f1414]/25 bg-white p-6 text-center">
-                            <h3 className="mb-3 text-lg font-semibold text-[#7f1414]">Our Commitment</h3>
-                            <p className="text-gray-600">
-                                These objectives guide our program development and ensure that our graduates are well-prepared to meet the challenges
-                                of the modern professional landscape while contributing meaningfully to society.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="grid w-[75%] place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
-                        <h1 className="text-4xl font-bold">Gallery of Excellence</h1>
-                        <p>Showcasing the moments that define our passion and commitment.</p>
                     </div>
 
                     <div className="w-[75%]">
-                        <ImageRow
-                            height="h-112"
-                            images={[
-                                { id: 1, src: '/images/gallery/it/1.jpg', alt: '' },
-                                { id: 2, src: '/images/gallery/it/2.jpg', alt: '' },
-                                { id: 3, src: '/images/gallery/it/3.jpg', alt: '' },
-                                { id: 4, src: '/images/gallery/it/4.jpg', alt: '' },
-                                { id: 5, src: '/images/gallery/it/5.jpg', alt: '' },
-                                { id: 6, src: '/images/gallery/it/6.jpg', alt: '' },
-                            ]}
-                        />
+                        <div className="grid place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
+                            <h1 className="text-4xl font-bold">Gallery of Excellence</h1>
+                            <p>Showcasing the moments that define our passion and commitment.</p>
+                        </div>
+
+                        <div >
+                            <ImageRow
+                                height="h-112"
+                                images={[
+                                    { id: 1, src: '/images/gallery/it/1.jpg', alt: '' },
+                                    { id: 2, src: '/images/gallery/it/2.jpg', alt: '' },
+                                    { id: 3, src: '/images/gallery/it/3.jpg', alt: '' },
+                                    { id: 4, src: '/images/gallery/it/4.jpg', alt: '' },
+                                    { id: 5, src: '/images/gallery/it/5.jpg', alt: '' },
+                                    { id: 6, src: '/images/gallery/it/6.jpg', alt: '' },
+                                ]}
+                            />
+                        </div>
                     </div>
 
-                    <div className="flex w-[75%] items-center justify-center overflow-x-hidden py-6">
+
+                    <div className="flex w-[75%] items-center justify-center overflow-x-hidden">
                         <svg height="55" viewBox="0 0 1156 47" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M558.066 44.1741L559.801 36.6052L553.983 31.5144L561.669 30.841L564.657 23.7031L567.646 30.841L575.332 31.5144L569.514 36.6052L571.249 44.1741L564.657 40.1607L558.066 44.1741Z"
@@ -208,26 +200,29 @@ export default function Programs({ program }: PerProgramProps) {
                         </svg>
                     </div>
 
-                    <div className="grid w-[75%] place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
-                        <h1 className="text-4xl font-bold">Areas Under Survey</h1>
-                        <p>ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES</p>
+                    <div className=' w-[75%]'>
+                        <div className="grid place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
+                            <h1 className="text-4xl font-bold">Areas Under Survey</h1>
+                            <p>ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES</p>
+                        </div>
+
+                        <div className="flex h-fit w-full flex-row flex-wrap justify-center gap-[1.5vw] py-3" id="areas">
+                            {program?.areas?.length > 0 ? (
+                                program.areas.map((area, index) => (
+                                    <AreaCard
+                                        key={index}
+                                        imageSrc={area.image_path || '/images/placeholder.png'}
+                                        heading={area.area_name}
+                                        circleLetter={area.area_numeral}
+                                        href={route('programs.areas.show', [program.program_name, area.area_id])}
+                                    />
+                                ))
+                            ) : (
+                                <p className="text-center text-gray-500">No areas under survey.</p>
+                            )}
+                        </div>
                     </div>
 
-                    <div className="flex h-fit w-full flex-row flex-wrap justify-center gap-[1.5vw] px-[13vw] py-3" id="areas">
-                        {program?.areas?.length > 0 ? (
-                            program.areas.map((area, index) => (
-                                <AreaCard
-                                    key={index}
-                                    imageSrc={area.image_path || '/images/placeholder.png'}
-                                    heading={area.area_name}
-                                    circleLetter={area.area_numeral}
-                                    href={route('programs.areas.show', [program.program_name, area.area_id])}
-                                />
-                            ))
-                        ) : (
-                            <p className="text-center text-gray-500">No areas under survey.</p>
-                        )}
-                    </div>
                 </div>
             </Layout>
         </>
