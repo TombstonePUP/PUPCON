@@ -118,9 +118,9 @@ export default function Facilities() {
 
           {/* Facilities Introduction */}
           <article className="facilities-page mt-8 w-[75%]">
-            <section className="card-fx mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8  ">
+            <section className="card-fx mb-12 rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8  ">
               <h2 className="mb-4 text-3xl font-bold text-[#7f1414]">Campus Facilities</h2>
-              <p className="text-lg leading-relaxed text-gray-700">
+              <p className="leading-relaxed text-gray-700">
                 PUP San Juan Campus is equipped with modern facilities designed to support academic excellence and
                 student development. Our state-of-the-art infrastructure provides an optimal learning environment for
                 all students, faculty, and staff. Explore our comprehensive range of facilities that make learning
@@ -134,12 +134,10 @@ export default function Facilities() {
                 {facilities.map((facility, index) => (
                   <motion.div
                     key={facility.id}
-                    className="facility-card group relative overflow-hidden rounded-xl bg-white   transition-all duration-500 hover:shadow-2xl"
+                    className="facility-card group relative overflow-hidden rounded-xl bg-white border duration-300 border-[#7f1414]/25 hover:border-[#7f1414]  transition-all duration-500 "
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    onMouseEnter={() => setHoveredCard(facility.id)}
-                    onMouseLeave={() => setHoveredCard(null)}
                   >
                     {/* Card Front */}
                     <div
@@ -157,17 +155,6 @@ export default function Facilities() {
                           {facility.name}
                         </h3>
                         <p className="text-gray-600 line-clamp-3">{facility.description}</p>
-                        <div className="mt-4 flex items-center text-[#7f1414] font-semibold">
-                          <span>Learn More</span>
-                          <svg
-                            className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                          </svg>
-                        </div>
                       </div>
                     </div>
 

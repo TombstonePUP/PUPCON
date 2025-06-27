@@ -62,7 +62,7 @@ export default function Programs({ program }: PerProgramProps) {
                         </h1>
                     </div>
                     <div className="group flex w-[75%] flex-row justify-between gap-4 rounded-xl " >
-                        <div className="flex-1 rounded-xl border border-[#7f1414]/25 p-8 px-13 duration-300 hover:border-[#7f1414]  bg-white ">
+                        <div className="flex-1 rounded-xl border p-8 px-13 duration-300 border-[#7f1414]/25 hover:border-[#7f1414]  bg-white ">
                             <h1 className="mb-4 text-3xl font-bold text-[#7f1414] group-hover:text-[#a01818] transition duration-300">Program Overview</h1>
                             <p className='text-gray-600'>{program.overview_description || 'No program overview available.'}</p>
                         </div>

@@ -72,8 +72,8 @@ export default function About() {
 
                         {/* Main Content Description */}
                         <article className="about-page w-full">
-                            <section className="card-fx rounded-xl border border-[#7f1414]/25 bg-white p-8" id="about-desc">
-                                <p className="text-lg leading-relaxed text-gray-700">
+                            <section className="card-fx rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8" id="about-desc">
+                                <p className="leading-relaxed text-gray-700">
                                     Despite its proximity to the Manila Main Campus, the Polytechnic University of the Philippines – San Juan City
                                     Campus which started as a locally funded campus by the City Government of San Juan established in 2008 by Mayor
                                     Joseph Victor "JV" G. Ejercito, is now a viable institution by virtue of Republic Act 11348. This is one of its

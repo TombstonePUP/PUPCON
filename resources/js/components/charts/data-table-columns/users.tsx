@@ -26,6 +26,16 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Label } from "@/components/ui/label"
+import { UserPlus, Mail, User, Shield, Settings, BookOpen, CheckCircle, User2 } from "lucide-react"
+
+const programColors: Record<string, string> = {
+    "Communication": "border-red-500",
+    "Information Technology": "border-blue-500",
+    "Business": "border-yellow-500",
+    "Engineering": "border-green-500",
+    // Add more program-to-color mappings here
+};
 
 export const columns: ColumnDef<UserRecords>[] = [
     {
@@ -67,14 +77,43 @@ export const columns: ColumnDef<UserRecords>[] = [
         accessorKey: "program_roles",
         header: () => <div className="text-left">Program/s</div>,
         cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue("program_roles")} </div>
+            const programs: string[] = row.getValue("program_roles")?.replace(/[{}"]/g, "").split(",") || [];
+
+            return (
+                <div className="flex flex-wrap gap-1 text-left">
+                    {programs.map((program) => (
+                        <Badge
+                            key={program}
+                            variant="outline"
+                            className={`px-1.5 text-muted-foreground ${programColors[program.trim()] || "border-gray-300"}`}
+                        >
+                            {program.trim()}
+                        </Badge>
+                    ))}
+                </div>
+            );
         },
     },
     {
         accessorKey: "area_roles",
         header: () => <div className="text-left">Area/s</div>,
         cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue("area_roles")} </div>
+            const areas: string[] = row.getValue("area_roles")?.replace(/[{}"]/g, "").split("} {").flatMap(a => a.split(",")).map(a => a.trim()) || [];
+
+            // You can optionally match area to program and apply same color. Here's a basic fallback color approach:
+            return (
+                <div className="flex flex-wrap gap-1 text-left">
+                    {areas.map((area, idx) => (
+                        <Badge
+                            key={idx}
+                            variant="outline"
+                            className="px-1.5 text-muted-foreground border-gray-400"
+                        >
+                            {area}
+                        </Badge>
+                    ))}
+                </div>
+            );
         },
     },
     {
@@ -87,8 +126,25 @@ export const columns: ColumnDef<UserRecords>[] = [
                 'Psychology'
             ];
 
-            const [selectedPrograms, setSelectedPrograms] = useState<string[]>([]);
-            const [selectedAreas, setSelectedAreas] = useState<Record<string, number[]>>({});
+            const initialPrograms = user.program_roles?.replace(/[{}"]/g, "").split(",").map(p => p.trim()) || [];
+            const initialAreas = (() => {
+                const areaMap: Record<string, number[]> = {};
+                if (user.area_roles) {
+                    const areaGroups = user.area_roles.match(/{[^}]+}/g) || [];
+                    areaGroups.forEach((group, i) => {
+                        const program = initialPrograms[i]; // match based on index
+                        if (program) {
+                            const areas = group.replace(/[{}"]/g, "").split(",").map(a => parseInt(a.trim(), 10));
+                            areaMap[program] = areas;
+                        }
+                    });
+                }
+                return areaMap;
+            })();
+
+            const [selectedPrograms, setSelectedPrograms] = useState<string[]>(initialPrograms);
+            const [selectedAreas, setSelectedAreas] = useState<Record<string, number[]>>(initialAreas);
+
 
             const toggleProgram = (program: string) => {
                 setSelectedPrograms((prev) => {
@@ -133,156 +189,134 @@ export const columns: ColumnDef<UserRecords>[] = [
                             <MoreVertical className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-10">
+                    <DropdownMenuContent align="end" className="w-10 space-y-1">
                         <Dialog>
                             <DialogTrigger asChild>
                                 <Button variant="ghost" className='w-full flex-start'>
-                                    Edit Account
+                                    Edit User
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Edit Account</DialogTitle>
-                                    <DialogDescription>
-                                        Account Name
-                                    </DialogDescription>
-                                </DialogHeader>
+                            <DialogContent><DialogHeader>
+                                <DialogTitle className='flex items-center gap-2'>
+                                    <User2 className="h-5 w-5 text-[#7f1414]" />
+                                    Edit User
+                                </DialogTitle>
+                                <DialogDescription>
+                                    Fill in the details to create a new account
+                                </DialogDescription>
+                            </DialogHeader>
                                 <Tabs defaultValue="account" className="w-full">
-                                    <TabsList className='w-full'>
+                                    <TabsList className='w-full mb-4'>
                                         <TabsTrigger value="account">Information</TabsTrigger>
-                                        <TabsTrigger value="password">Access</TabsTrigger>
+                                        <TabsTrigger value="access">Access</TabsTrigger>
                                     </TabsList>
                                     <TabsContent value="account">
                                         <div className="flex flex-col gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-muted-foreground mb-1">First Name</label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    placeholder="Account first name"
-                                                />
+                                            <div className='flex gap-2'>
+                                                <div className='flex flex-col flex-1 gap-2'>
+                                                    <Label >First Name</Label>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                        placeholder="Enter first name"
+                                                    />
+                                                </div>
+                                                <div className='flex flex-col flex-1 gap-2'>
+                                                    <Label >Last Name</Label>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
+                                                        placeholder="Enter last name"
+                                                    />
+                                                </div>
                                             </div>
+
                                             <div>
-                                                <label className="block text-sm font-medium text-muted-foreground mb-1">Last Name</label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    placeholder="Account last name"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-muted-foreground mb-1">Email</label>
+                                                <Label htmlFor="email" className="flex items-center gap-2 mb-2">
+                                                    <Mail className="h-4 w-4" />
+                                                    Email Address
+                                                </Label>
                                                 <input
                                                     type="email"
                                                     className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                                                    placeholder="Account email address"
+                                                    placeholder="Enter email address"
                                                 />
                                             </div>
                                         </div>
                                     </TabsContent>
-                                    <TabsContent value="password" className='flex flex-col gap-4'>
+                                    <TabsContent value="access" className="flex flex-col gap-5 overflow-x-auto">
                                         <div>
-                                            <label className="block text-sm font-medium text-muted-foreground mb-1">Programs</label>
-                                            <div className="grid grid-cols-2 gap-2">
+                                            <Label className="mb-1 block text-sm font-medium mb-2">Programs & Areas</Label>
+                                            <div className="flex flex-col gap-3">
                                                 {programList.map(program => (
-                                                    <label key={program} className="flex items-center gap-2  text-sm">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="accent-ring"
-                                                            checked={isProgramSelected(program)}
-                                                            onChange={() => toggleProgram(program)}
-                                                        />
-                                                        {program}
-                                                    </label>
+                                                    <div key={program}>
+                                                        <label className="flex items-center gap-3 text-sm mb-0 font-normal text-foreground">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="accent-ring"
+                                                                checked={isProgramSelected(program)}
+                                                                onChange={() => toggleProgram(program)}
+                                                            />
+                                                            {program}
+                                                        </label>
+                                                        {isProgramSelected(program) && (
+                                                            <div className="ml-6 mt-2">
+                                                                <div className="grid grid-cols-5 gap-2 flex-wrap">
+                                                                    {Array.from({ length: 10 }).map((_, i) => (
+                                                                        <label key={i} className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground">
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                className="accent-ring"
+                                                                                checked={(selectedAreas[program] || []).includes(i + 1)}
+                                                                                onChange={() => toggleArea(program, i + 1)}
+                                                                            />
+                                                                            Area {i + 1}
+                                                                        </label>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 ))}
                                             </div>
                                         </div>
-
-                                        {programList.map((program) =>
-                                            isProgramSelected(program) ? (
-                                                <div key={program}>
-                                                    <label className="block text-sm font-medium text-muted-foreground mb-1">
-                                                        Areas - {program}
-                                                    </label>
-                                                    <div className="grid grid-cols-5 gap-2">
-                                                        {Array.from({ length: 10 }).map((_, i) => (
-                                                            <label key={i} className="flex items-center gap-2 text-sm">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    className="accent-ring"
-                                                                    checked={(selectedAreas[program] || []).includes(i + 1)}
-                                                                    onChange={() => toggleArea(program, i + 1)}
-                                                                />
-                                                                Area {i + 1}
-                                                            </label>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ) : null
-                                        )}
-
-
                                         <div>
-                                            <label className="block text-sm font-medium text-muted-foreground mb-1">Additional Access</label>
+                                            <Label className="mb-1 block text-sm font-medium">Additional Access</Label>
                                             <div className="grid grid-cols-3 gap-2">
-                                                <label className="flex items-center gap-2 text-sm">
-                                                    <input type="checkbox" className="accent-ring" /> Exhibits
-                                                </label>
-                                                <label className="flex items-center gap-2 text-sm">
-                                                    <input type="checkbox" className="accent-ring" /> Accre Coordinator
+                                                {/* <label className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground">
+                                            <input type="checkbox" className="accent-ring" /> Exhibits
+                                        </label> */}
+                                                <label className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground whitespace-nowrap">
+                                                    <input type="checkbox" className="accent-ring " /> Coordinator
                                                 </label>
                                             </div>
                                         </div>
                                     </TabsContent>
                                 </Tabs>
-                                <DialogFooter className="sm:justify-between">
-                                    <div className="flex gap-2">
-
-                                        <Dialog>
-                                            <DialogTrigger asChild>
-                                                <Button variant="destructive">Reset Password</Button>
-                                            </DialogTrigger>
-                                            <DialogContent>
-                                                <DialogHeader>
-                                                    <DialogTitle>Are you sure?</DialogTitle>
-                                                    <DialogDescription>
-                                                        This action cannot be undone. This will generate a random password for<b>Account Name</b> that will be sent to their email.
-                                                    </DialogDescription>
-                                                </DialogHeader>
-                                                <DialogFooter>
-                                                    <DialogClose asChild>
-                                                        <Button variant="outline">Cancel</Button>
-                                                    </DialogClose>
-                                                    <Button variant="destructive" >Reset Password</Button>
-                                                </DialogFooter>
-                                            </DialogContent>
-                                        </Dialog>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <DialogClose asChild>
-                                            <Button variant="outline">Cancel</Button>
-                                        </DialogClose>
-                                        <Button variant="black">Submit</Button>
-                                    </div>
-                                </DialogFooter>
-                            </DialogContent>
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                        <Button variant="outline">Cancel</Button>
+                                    </DialogClose>
+                                    <Button variant="noborder">Submit</Button>
+                                </DialogFooter></DialogContent>
                         </Dialog>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="destructive" className='w-full flex-start'>Remove</Button>
+                                <Button variant="noborder" className='w-full flex-start'>Remove</Button>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
-                                    <DialogTitle>Are you sure?</DialogTitle>
+                                    <DialogTitle>Remove User {user.first_name} {user.last_name}?</DialogTitle>
                                     <DialogDescription>
-                                        This action cannot be undone. This will permanently delete the <b>Parameter A</b>.
+                                        This action cannot be undone. This will permanently delete the user <b>{user.first_name} {user.last_name}</b>.
                                     </DialogDescription>
+
                                 </DialogHeader>
                                 <DialogFooter>
                                     <DialogClose asChild>
                                         <Button variant="outline">Cancel</Button>
                                     </DialogClose>
-                                    <Button variant="destructive">Remove</Button>
+                                    <Button variant="noborder">Remove</Button>
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>

@@ -78,8 +78,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 </div>
                 <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">Self Survey</h3>
                 <p className="text-[0.9vw] text-gray-600 leading-relaxed">
-                  Comprehensive self-assessment document evaluating the program's compliance with accreditation
-                  standards.
+                  {` ${program.program_name}`}
                 </p>
                 <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
                   <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
@@ -107,7 +106,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 </div>
                 <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">Compliance Report</h3>
                 <p className="text-[0.9vw] text-gray-600 leading-relaxed">
-                  Detailed compliance report demonstrating adherence to regulatory requirements and quality standards.
+                  {` ${program.program_name}`}
                 </p>
                 <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
                   <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
@@ -135,7 +134,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 </div>
                 <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">Program Performance Profile</h3>
                 <p className="text-[0.9vw] text-gray-600 leading-relaxed">
-                  Performance profile showcasing program achievements, outcomes, and continuous improvement initiatives.
+                  {` ${program.program_name}`}
                 </p>
                 <div className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 rounded-full">
                   <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
@@ -183,12 +182,12 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                           if (outlines.length === 0) return null
                           outlines.map(
                             (outline) =>
-                              (outline.initial =
-                                category.category_name == "No Category"
-                                  ? parameter.parameter_name == " "
-                                    ? ""
-                                    : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
-                                  : category.category_name.match(/^[A-Za-z]/)),
+                            (outline.initial =
+                              category.category_name == "No Category"
+                                ? parameter.parameter_name == " "
+                                  ? ""
+                                  : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
+                                : category.category_name.match(/^[A-Za-z]/)),
                           )
 
                           const sortedOutlines = buildOutlineTree({ outlines })

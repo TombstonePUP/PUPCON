@@ -18,18 +18,18 @@ export default function VMGO() {
             <div className="relative z-10 px-8 text-center text-white">
               <h1 className="text-6xl font-bold">Vision and Mission</h1>
               <h2 className="mt-2">
-                                Polytechnic University of the Philippines <b>San Juan Campus</b>
-                            </h2>
+                Polytechnic University of the Philippines <b>San Juan Campus</b>
+              </h2>
             </div>
           </div>
 
           {/* University Overview Section */}
           <article className="mission-vision-page mt-8 w-[75%]">
-            <div className="university-overview mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+            <div className="university-overview mb-12 rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
               <h3 className="mb-4 text-2xl font-bold text-[#7f1414]">
                 From an Epistemic Community Towards a National Polytechnic University of the Philippines
               </h3>
-              <p className="mb-4 text-lg leading-relaxed text-gray-700">
+              <p className="mb-4 leading-relaxed text-gray-700">
                 The stellar accomplishments of the PUP San Juan Branch is ably founded on the University's vision: first
                 as an epistemic community towards a National Polytechnic University of the Philippines. In an effort to
                 get there, the Program is also strongly supporting the mission and development agenda of the University
@@ -43,8 +43,10 @@ export default function VMGO() {
               </p>
             </div>
 
+
+
             {/* Video Section with Background Image and Overlay */}
-            <section className="school-video relative mb-12 overflow-hidden">
+            <section className="relative mb-12 overflow-hidden">
               {/* Background Image */}
               <img
                 className="absolute inset-0 h-full w-full object-cover opacity-30 grayscale transition-opacity duration-300 ease-in-out"
@@ -56,22 +58,20 @@ export default function VMGO() {
               <div className="absolute inset-0 bg-gradient-to-l from-white/90 via-white/60 to-transparent z-10"></div>
 
               {/* Content Container */}
-              <div className="map-container relative z-20 flex flex-col gap-8 p-8 lg:flex-row lg:items-center">
+              <div className="relative z-20 flex flex-col gap-8 p-8 lg:flex-row lg:items-center">
                 {/* Video Section (Left) */}
-                <div className="map-left lg:w-2/3">
-                  <div className="map-wrapper relative overflow-hidden rounded-lg">
+                <div className="lg:w-2/3">
+                  <div className="relative overflow-hidden rounded-lg">
                     <div className="aspect-video w-full rounded-lg">
                       <iframe
                         className="h-full w-full rounded-lg"
                         src="https://www.youtube.com/embed/Lp_x4dWvLs4?autoplay=1&mute=0&controls=1&rel=0&showinfo=0&modestbranding=1"
                         title="University Development Plan"
                         frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
                       ></iframe>
                     </div>
-                    {/* Glow Effect */}
-                    <div className="map-glow absolute -inset-1 rounded-lg bg-gradient-to-r from-[#7f1414]/20 to-transparent blur-sm"></div>
                   </div>
                 </div>
 
@@ -118,9 +118,9 @@ export default function VMGO() {
             </section>
 
             {/* Vision Statement */}
-            <section className="template-statement mb-8">
+            <section className="template-statement mb-8 ">
               <div className="header-wrapper">
-                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+                <div className="section-header rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
                   <div className="header-box mb-4">
                     <h2 className="text-3xl font-bold text-[#7f1414]">Vision Statement</h2>
                   </div>
@@ -134,7 +134,7 @@ export default function VMGO() {
             {/* Mission Statement */}
             <section className="template-statement mb-8">
               <div className="header-wrapper">
-                <div className="section-header rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg">
+                <div className="section-header rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white p-8">
                   <div className="header-box mb-4">
                     <h2 className="text-3xl font-bold text-[#7f1414]">Mission Statement</h2>
                   </div>
@@ -173,41 +173,41 @@ export default function VMGO() {
 
             {/* University Strategic Goals */}
             <section className="template-statement mb-8">
-              <div className="header-wrapper rounded-xl border-2 border-gray-300 p-1">
+              <div className="header-wrapper rounded-xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] p-2">
                 <div className="section-header text-center">
                   <div className="header-box mb-6 inline-block w-full rounded-lg bg-[#7f1414] px-8 py-4">
                     <h2 className="m-0 text-3xl font-bold text-gray-100">University Strategic Goals</h2>
                   </div>
-                  <div className="section-content grid grid-cols-1 gap-6 px-8 pb-8 lg:grid-cols-3" id="goal-box">
+                  <div className="section-content grid grid-cols-1 gap-6 px-1 pb-8 lg:grid-cols-3" id="goal-box">
                     {/* Pillar 1 */}
                     <div className="pillar flex flex-col">
                       <div className="goal-card mb-4 overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                        <div className="goal-title bg-[#7f1414] px-4 py-3 text-sm font-semibold text-white">
+                        <div className="goal-title bg-[#7f1414] px-4 py-3 font-semibold text-white">
                           Pillar 1: Teaching and Learning
                         </div>
                       </div>
                       <div className="flex-1 space-y-3">
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 1
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">
+                          <div className="goal-description p-3 text-sm text-gray-800">
                             Innovative Curricula and Instruction
                           </div>
                         </div>
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 2
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">
+                          <div className="goal-description p-3 text-sm text-gray-800">
                             Empowered, Expert, and Productive Faculty Members
                           </div>
                         </div>
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 3
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">Holistic Student Development</div>
+                          <div className="goal-description p-3 text-sm text-gray-800">Holistic Student Development</div>
                         </div>
                       </div>
                     </div>
@@ -215,32 +215,32 @@ export default function VMGO() {
                     {/* Pillar 2 */}
                     <div className="pillar flex flex-col">
                       <div className="goal-card mb-4 overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                        <div className="goal-title bg-[#7f1414] px-4 py-3 text-sm font-semibold text-white">
+                        <div className="goal-title bg-[#7f1414] px-4 py-3 font-semibold text-white">
                           Pillar 2: Research and Extension
                         </div>
                       </div>
                       <div className="flex-1 space-y-3">
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 4
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">
+                          <div className="goal-description p-3 text-sm text-gray-800">
                             Intensified Research Innovation, Dissemination and Utilization
                           </div>
                         </div>
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 5
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">
+                          <div className="goal-description p-3 text-sm text-gray-800">
                             Strengthened Sustainable and Impactful Extension Program
                           </div>
                         </div>
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 6
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">
+                          <div className="goal-description p-3 text-sm text-gray-800">
                             Expanded Research and Extension Networks with Local, National, and International Partners
                           </div>
                         </div>
@@ -250,48 +250,48 @@ export default function VMGO() {
                     {/* Pillar 3 */}
                     <div className="pillar flex flex-col">
                       <div className="goal-card mb-4 overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                        <div className="goal-title bg-[#7f1414] px-4 py-3 text-sm font-semibold text-white">
+                        <div className="goal-title bg-[#7f1414] px-4 py-3 font-semibold text-white">
                           Pillar 3: Internal Governance
                         </div>
                       </div>
                       <div className="flex-1 space-y-3">
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 7
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">
+                          <div className="goal-description p-3 text-sm text-gray-800">
                             Transformational University Leadership
                           </div>
                         </div>
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 8
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">
+                          <div className="goal-description p-3 text-sm text-gray-800">
                             Judicious and Ethical Stewardship of Physical and Financial Resources
                           </div>
                         </div>
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 9
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">
+                          <div className="goal-description p-3 text-sm text-gray-800">
                             Effective and Efficient Human Resource Management
                           </div>
                         </div>
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 10
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">
+                          <div className="goal-description p-3 text-sm text-gray-800">
                             Excellent Citizen/Client Satisfaction
                           </div>
                         </div>
                         <div className="goal-card overflow-hidden rounded-xl border border-gray-300 bg-gray-50 text-center shadow-md">
-                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-xs font-semibold text-white">
+                          <div className="goal-title bg-[#7f1414] px-3 py-2 text-sm font-semibold text-white">
                             Strategic Goal 11
                           </div>
-                          <div className="goal-description p-3 text-xs text-gray-800">Smart Campuses</div>
+                          <div className="goal-description p-3 text-sm text-gray-800">Smart Campuses</div>
                         </div>
                       </div>
                     </div>

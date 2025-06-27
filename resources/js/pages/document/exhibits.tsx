@@ -91,8 +91,8 @@ export default function ExhibitAdmin() {
                     {/* Add New Exhibit Dialog */}
                     <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button className="bg-[#7f1414] text-white hover:bg-[#8b1515]">
-                                <Plus className="mr-2 h-4 w-4" />
+                            <Button variant={'noborder'}>
+                                <Plus className="h-4 w-4" />
                                 Add New Exhibit
                             </Button>
                         </DialogTrigger>
@@ -133,8 +133,8 @@ export default function ExhibitAdmin() {
                                     <DialogClose asChild>
                                         <Button variant="outline">Cancel</Button>
                                     </DialogClose>
-                                    <Button type="submit" className="bg-[#7f1414] hover:bg-[#8b1515]">
-                                        <Upload className="mr-2 h-4 w-4" />
+                                    <Button type="submit" variant={'noborder'}>
+                                        <Upload className="h-4 w-4" />
                                         Upload
                                     </Button>
                                 </DialogFooter>
@@ -156,11 +156,11 @@ export default function ExhibitAdmin() {
                                 key={exhibit.id}
                                 className="overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow duration-200 hover:shadow-lg"
                             >
-                                <div className="flex aspect-video items-center justify-center bg-gray-100">
+                                <div className="flex aspect-video items-center justify-center ">
                                     <img
                                         src={exhibit.image || '/placeholder.svg?height=200&width=300'}
                                         alt={exhibit.title}
-                                        className="h-full w-full object-cover"
+                                        className="h-full object-cover"
                                     />
                                 </div>
                                 <div className="p-4">
@@ -169,14 +169,13 @@ export default function ExhibitAdmin() {
 
                                     <div className="flex items-center gap-2">
                                         <Button variant="outline" size="sm" onClick={() => handleViewExhibit(exhibit)} className="flex-1">
-                                            <Eye className="mr-2 h-4 w-4" />
+                                            <Eye className="  h-4 w-4" />
                                             View
                                         </Button>
                                         <Button
-                                            variant="outline"
+                                            variant="noborder"
                                             size="sm"
                                             onClick={() => handleEditClick(exhibit)}
-                                            className="border-[#7f1414] text-[#7f1414] hover:bg-[#7f1414] hover:text-white"
                                         >
                                             <Edit className="h-4 w-4" />
                                         </Button>
@@ -249,7 +248,7 @@ export default function ExhibitAdmin() {
                                     <DialogClose asChild>
                                         <Button variant="outline">Cancel</Button>
                                     </DialogClose>
-                                    <Button type="submit" className="bg-[#7f1414] hover:bg-[#8b1515]">
+                                    <Button type="submit" variant={'noborder'}>
                                         Save Changes
                                     </Button>
                                 </div>

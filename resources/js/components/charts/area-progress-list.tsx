@@ -56,7 +56,7 @@ export function AreaProgress({ data }: DocumentStatisticsProps) {
                         data={data}
                         layout="vertical"
                         margin={{
-                            left: 15,
+                            left: 20,
                         }}
                     >
                         <YAxis

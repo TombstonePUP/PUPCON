@@ -99,7 +99,7 @@ export default function Users({ userRecords }: UsersProps) {
                         <Tabs defaultValue="account" className="w-full">
                             <TabsList className='w-full mb-4'>
                                 <TabsTrigger value="account">Information</TabsTrigger>
-                                <TabsTrigger value="password">Access</TabsTrigger>
+                                <TabsTrigger value="access">Access</TabsTrigger>
                             </TabsList>
                             <TabsContent value="account">
                                 <div className="flex flex-col gap-4">
@@ -135,7 +135,7 @@ export default function Users({ userRecords }: UsersProps) {
                                     </div>
                                 </div>
                             </TabsContent>
-                            <TabsContent value="password" className="flex flex-col gap-5 overflow-x-auto">
+                            <TabsContent value="access" className="flex flex-col gap-5 overflow-x-auto">
                                 <div>
                                     <Label className="mb-1 block text-sm font-medium mb-2">Programs & Areas</Label>
                                     <div className="flex flex-col gap-3">
@@ -174,11 +174,11 @@ export default function Users({ userRecords }: UsersProps) {
                                 <div>
                                     <Label className="mb-1 block text-sm font-medium">Additional Access</Label>
                                     <div className="grid grid-cols-3 gap-2">
-                                        <label className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground">
+                                        {/* <label className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground">
                                             <input type="checkbox" className="accent-ring" /> Exhibits
-                                        </label>
+                                        </label> */}
                                         <label className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground whitespace-nowrap">
-                                            <input type="checkbox" className="accent-ring " /> Accre Coordinator
+                                            <input type="checkbox" className="accent-ring " /> Coordinator
                                         </label>
                                     </div>
                                 </div>
@@ -195,7 +195,10 @@ export default function Users({ userRecords }: UsersProps) {
 
                 {/* Data Table */}
                 <div className="rounded-lg border bg-white p-4">
-                    <DataTable columns={columns} data={userRecords} />
+                    <DataTable
+                        columns={columns}
+                        data={userRecords.filter(user => user.role?.toLowerCase() !== "admin")}
+                    />
                 </div>
             </div>
         </AppLayout>
