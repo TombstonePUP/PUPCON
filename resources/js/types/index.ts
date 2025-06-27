@@ -76,7 +76,7 @@ export interface ProgramPrivilege {
 }
 
 export interface User {
-    id: number;
+    user_id: number;
     first_name: string;
     last_name: string;
     email: string;
@@ -84,7 +84,23 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    userRoles: UserRoles;
     [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface Roles {
+    role_id: number;
+    role_name: string;
+    userRoles: UserRoles[];
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface UserRoles {
+    user_id: number;
+    role_id: number;
+    user: User;
+    role: Roles;
+    [key: string]: unknown;
 }
 
 export interface ActivityLogs {
