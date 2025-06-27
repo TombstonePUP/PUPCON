@@ -11,14 +11,14 @@ interface LayoutProps {
 const leftNav = [
     {
         label: 'ABOUT',
-        href: '/', //'/about',
+        href: '/about',
         dropdown: [
-            // { label: 'Vision, Mission, and Goals', href: '/about/vision-mission-goals' },
-            // { label: 'History', href: '/about/history' },
-            // { label: 'Administration', href: '/about/administration' },
-            // { label: 'Facilities', href: '/about/facilities' },
-            // { label: 'Faculty and Staff', href: '/about/faculty-staff' },
-            // { label: 'Local Task Force', href: '/about/local-task-force' },
+            { label: 'Vision, Mission, and Goals', href: '/about/vision-mission-goals' },
+            { label: 'History', href: '/about/history' },
+            { label: 'Administration', href: '/about/administration' },
+            { label: 'Facilities', href: '/about/facilities' },
+            { label: 'Faculty and Staff', href: '/about/faculty-staff' },
+            { label: 'Local Task Force', href: '/about/local-task-force' },
         ],
     },
     {
@@ -37,9 +37,9 @@ export default function Layout({ children }: LayoutProps) {
 
     const underSurveyPrograms = guest?.programs?.length
         ? guest.programs.map((program) => ({
-            label: program.program_name,
-            href: `/programs/${program.program_name}`,
-        }))
+              label: program.program_name,
+              href: `/programs/${program.program_name}`,
+          }))
         : [];
 
     const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
@@ -206,7 +206,7 @@ export default function Layout({ children }: LayoutProps) {
                             <a href="https://sis8.pup.edu.ph/" target="_blank">
                                 PUPSIS
                             </a>
-                        </li> 
+                        </li>
                         <li>
                             <Link href="/login" target="_blank">
                                 PUPCON Login
