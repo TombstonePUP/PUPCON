@@ -19,11 +19,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('document/exhibits');
     })->name('manage-exhibits');
 
-    Route::controller(DocumentRequestController::class)->prefix('requests')->group(function () {
-        Route::get('/', 'index')->name('requests');
-        Route::post('/{file_id}/approveDocument', 'approve')->name('approveDocument');
-        Route::post('/{file_id}/rejectDocument', 'reject')->name('rejectDocument');
-        Route::post('/{file_id}/revertDocument', 'revert')->name('revertDocument');
+    Route::middleware(['admin'])->group(function () {
+        Route::controller(DocumentRequestController::class)->prefix('requests')->group(function () {
+            Route::get('/', 'index')->name('requests');
+            Route::post('/{file_id}/approveDocument', 'approve')->name('approveDocument');
+            Route::post('/{file_id}/rejectDocument', 'reject')->name('rejectDocument');
+            Route::post('/{file_id}/revertDocument', 'revert')->name('revertDocument');
+        });
     });
 
     Route::controller(ManageProgramController::class)->prefix('manage-programs')->as('manage.')->group(function () {

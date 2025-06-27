@@ -15,6 +15,13 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        $role = $request->user()?->Roles->first()?->role_name;
+
+        if ($role === 'Admin' || $role === 'Coordinator') {
+            return $next($request);
+        }
+        else {
+            return redirect()->back()->with('error', 'You do not have permission to access this page.');
+        }
     }
 }

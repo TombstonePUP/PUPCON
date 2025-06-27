@@ -37,9 +37,9 @@ export default function Layout({ children }: LayoutProps) {
 
     const underSurveyPrograms = guest?.programs?.length
         ? guest.programs.map((program) => ({
-              label: program.program_name,
-              href: `/programs/${program.program_name}`,
-          }))
+            label: program.program_name,
+            href: `/programs/${program.program_name}`,
+        }))
         : [];
 
     const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
@@ -206,6 +206,11 @@ export default function Layout({ children }: LayoutProps) {
                             <a href="https://sis8.pup.edu.ph/" target="_blank">
                                 PUPSIS
                             </a>
+                        </li> 
+                        <li>
+                            <Link href="/login" target="_blank">
+                                PUPCON Login
+                            </Link>
                         </li>
                     </ul>
                 </div>
