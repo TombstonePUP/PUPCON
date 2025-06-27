@@ -199,3 +199,7 @@ footer {
 body {
     background: #f4f4f4;
 }
+
+#nprogress .bar {
+  height: 6px !important; // Change to your desired height
+}

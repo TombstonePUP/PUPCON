@@ -222,10 +222,10 @@ export default function Users({ program }: ProgramProps) {
                             </h1>
                             <p className="mt-1 text-sm text-gray-600">Preliminary Survey Visit</p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        {/* <div className="flex items-center gap-2">
                             <div className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">Draft</div>
                             <div className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">Last saved: 2 hours ago</div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -275,12 +275,11 @@ export default function Users({ program }: ProgramProps) {
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     {/* Program Objectives */}
                     <div className="rounded-lg border border-gray-200 bg-white p-6">
-                        <div className="mb-6">
-                            <h2 className="text-lg font-semibold text-gray-900">Program Objectives</h2>
-                            <p className="text-sm text-gray-600">Define learning outcomes and goals</p>
-                        </div>
-                        <div className="mb-4 flex items-center justify-between">
-                            <div></div>
+                        <div className="mb-6 flex justify-between">
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-900">Program Objectives</h2>
+                                <p className="text-sm text-gray-600">Define learning outcomes and goals</p>
+                            </div>
                             <Dialog open={objectiveDialogOpen} onOpenChange={setObjectiveDialogOpen}>
                                 <DialogTrigger asChild>
                                     <Button
@@ -292,7 +291,7 @@ export default function Users({ program }: ProgramProps) {
                                             setObjectiveDialogOpen(true);
                                         }}
                                     >
-                                        Add program
+                                        Add Objective
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent>
@@ -386,21 +385,15 @@ export default function Users({ program }: ProgramProps) {
                                 <p className="text-center text-gray-500">No objectives added yet</p>
                             </div>
                         )}
-
-                        <div className="mt-4 flex justify-end border-t border-gray-100 pt-4">
-                            <Button variant="noborder">Save Objectives</Button>
-                        </div>
                     </div>
 
                     {/* Gallery of Excellence */}
                     <div className="rounded-lg border border-gray-200 bg-white p-6">
-                        <div className="mb-6">
-                            <h2 className="text-lg font-semibold text-gray-900">Gallery of Excellence</h2>
-                            <p className="text-sm text-gray-600">Showcase program facilities and activities</p>
-                        </div>
-                        <div className="mb-4 flex items-center justify-between">
-                            <div></div>
-                            <Dialog open={galleryDialogOpen} onOpenChange={setGalleryDialogOpen}>
+                        <div className="mb-6 flex justify-between">
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-900">Gallery of Excellence</h2>
+                                <p className="text-sm text-gray-600">Showcase program facilities and activities</p>
+                            </div>      <Dialog open={galleryDialogOpen} onOpenChange={setGalleryDialogOpen}>
                                 <DialogTrigger asChild>
                                     <Button
                                         variant="outline"
@@ -492,13 +485,11 @@ export default function Users({ program }: ProgramProps) {
 
                 {/* Module 3: Faculty */}
                 <div className="rounded-lg border border-gray-200 bg-white p-6">
-                    <div className="mb-6">
-                        <h2 className="text-lg font-semibold text-gray-900">Faculty Members</h2>
-                        <p className="text-sm text-gray-600">Manage program faculty and staff</p>
-                    </div>
-                    <div className="mb-4 flex items-center justify-between">
-                        <div></div>
-                        <Dialog open={facultyDialogOpen} onOpenChange={setFacultyDialogOpen}>
+                    <div className="mb-6 flex justify-between">
+                        <div>
+                            <h2 className="text-lg font-semibold text-gray-900">Faculty Members</h2>
+                            <p className="text-sm text-gray-600">Manage program faculty and staff</p>
+                        </div>  <Dialog open={facultyDialogOpen} onOpenChange={setFacultyDialogOpen}>
                             <DialogTrigger asChild>
                                 <Button
                                     variant="outline"
@@ -611,10 +602,6 @@ export default function Users({ program }: ProgramProps) {
                             <p className="text-center text-gray-500">No faculty members added yet</p>
                         </div>
                     )}
-
-                    <div className="mt-4 flex justify-end border-t border-gray-100 pt-4">
-                        <Button variant="noborder">Save Faculty</Button>
-                    </div>
                 </div>
 
                 {/* Areas Section*/}
@@ -634,7 +621,7 @@ export default function Users({ program }: ProgramProps) {
                 </div>
 
                 {/* Final Action Buttons */}
-                <div className="rounded-lg border border-gray-200 bg-white p-6">
+                {/* <div className="rounded-lg border border-gray-200 bg-white p-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <Button variant="outline" className="border-gray-300 text-gray-600 hover:bg-gray-50">
@@ -664,7 +651,7 @@ export default function Users({ program }: ProgramProps) {
                             </DialogContent>
                         </Dialog>
                     </div>
-                </div>
+                </div> */}
             </div>
         </AppLayout>
     );

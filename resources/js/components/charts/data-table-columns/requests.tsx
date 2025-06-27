@@ -33,7 +33,11 @@ export const columns: ColumnDef<FilesOverview>[] = [
                 <ArrowUpDown className="ml-2 h-4" />
             </Button>
         ),
-        cell: ({ row }) => <div className="text-left">{row.getValue('file_type')}</div>,
+        cell: ({ row }) => {
+            const fileType = row.getValue('file_type') as string;
+            const capitalized = fileType.charAt(0).toUpperCase() + fileType.slice(1).toLowerCase();
+            return <div className="text-left">{capitalized}</div>;
+        },
         enableGlobalFilter: true,
     },
     {
@@ -128,18 +132,15 @@ export const columns: ColumnDef<FilesOverview>[] = [
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-32">
                             {row.original.file_status !== 'Approved' && (
-                                <DropdownMenuItem onClick={approveDocument}>Approve</DropdownMenuItem>
+                                <DropdownMenuItem className='cursor-pointer' onClick={approveDocument}>Approve</DropdownMenuItem>
                             )}
                             {row.original.file_status !== 'Pending' && (
-                                <DropdownMenuItem onClick={() => setRevertDialogOpen(true)}>Revert</DropdownMenuItem>
+                                <DropdownMenuItem className='cursor-pointer' onClick={() => setRevertDialogOpen(true)}>Revert</DropdownMenuItem>
                             )}
                             {row.original.file_status !== 'Rejected' && (
-                                <>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => setRejectDialogOpen(true)} variant="destructive">
-                                        Reject
-                                    </DropdownMenuItem>
-                                </>
+                                <DropdownMenuItem className='cursor-pointer' onClick={() => setRejectDialogOpen(true)} variant="destructive">
+                                    Reject
+                                </DropdownMenuItem>
                             )}
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -174,23 +175,25 @@ export const columns: ColumnDef<FilesOverview>[] = [
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>Reject Document</DialogTitle>
-                                <DialogDescription>Document</DialogDescription>
+                                <DialogDescription>
+                                    {row.original.file_type.charAt(0).toUpperCase() + row.original.file_type.slice(1).toLowerCase()} - {row.original.outline}
+                                </DialogDescription>
                             </DialogHeader>
                             <form onSubmit={rejectDocument}>
-                                <div>
+                                <div className='mb-2'>
                                     <label className="text-muted-foreground mb-1 block text-sm font-medium w-100">
                                         Rejection Comments
                                     </label>
                                     <textarea
-                                        id="outline_description"
+                                        id="rejection_reason"
                                         required
                                         autoFocus
                                         tabIndex={1}
                                         value={dataDocs.rejection_reason}
                                         onChange={(e) => setDocsData('rejection_reason', e.target.value)}
                                         disabled={processingDocs}
-                                        placeholder="Enter outline description"
-                                        className="focus:border-ring focus:ring-ring min-h-[100px] w-100 resize-y rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                                        placeholder="Enter comments here..."
+                                        className="focus:border-ring focus:ring-ring min-h-[100px] w-full resize-y rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                                     />
                                     <InputError className="mt-2" />
                                 </div>
@@ -205,7 +208,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
                                             Cancel
                                         </Button>
                                     </DialogClose>
-                                    <Button tabIndex={4} type="submit" disabled={processingDocs}>
+                                    <Button tabIndex={4} variant={'noborder'} disabled={processingDocs}>
                                         Reject
                                     </Button>
                                 </DialogFooter>
