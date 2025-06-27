@@ -70,98 +70,43 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
         <div className="flex justify-center py-[2vw]">
           <div className="w-[68%] grid grid-cols-1 md:grid-cols-3 gap-[2vw]">
             {/* Self Survey Card */}
-            <div className="group relative bg-white border border-[#7f1414]/25 rounded-[1vw] p-[2vw] hover:border-[#7f1414] hover:shadow-lg transition-all duration-300 ">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-[8vw] h-[8vw] bg-gray-100 rounded-[0.5vw] mb-[1vw] flex items-center justify-center group-hover:bg-[#7f1414]/10 transition-colors duration-300">
-                  <svg
-                    className="w-[4vw] h-[4vw] text-gray-400 group-hover:text-[#7f1414] transition-colors duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">Self Survey</h3>
-                <p className="text-[0.9vw] text-gray-600 leading-relaxed">
-                  {` ${program.program_name}`}
-                </p>
-                <div
-                  onClick={() => openViewer('/files/self-survey.pdf', 'Self Survey')}
-                  className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 hover:bg-[#7f1414]/25 transition duration-300 rounded-full cursor-pointer"
-                >
-                  <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
-                </div>
+            {area.area_forms?.length > 0 ? (
+                area.area_forms?.map((area_form) => (
+                    <div className="group relative bg-white border border-[#7f1414]/25 rounded-[1vw] p-[2vw] hover:border-[#7f1414] hover:shadow-lg transition-all duration-300 ">
+                      <div className="flex flex-col items-center text-center">
+                        <div className="w-[8vw] h-[8vw] bg-gray-100 rounded-[0.5vw] mb-[1vw] flex items-center justify-center group-hover:bg-[#7f1414]/10 transition-colors duration-300">
+                          <svg
+                            className="w-[4vw] h-[4vw] text-gray-400 group-hover:text-[#7f1414] transition-colors duration-300"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                        </div>
+                        <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">{area_form.area_form_category.category_name}</h3>
+                        <p className="text-[0.9vw] text-gray-600 leading-relaxed">
+                          {` ${program.program_name}`}
+                        </p>
+                        <div
+                          onClick={() => openViewer(`${area_form.file_path}`, `${area_form.area_form_category.category_name}`)}
+                          className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 hover:bg-[#7f1414]/25 transition duration-300 rounded-full cursor-pointer"
+                        >
+                          <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
+                        </div>
 
-              </div>
-            </div>
-
-            {/* Compliance Report Card */}
-            <div className="group relative bg-white border border-[#7f1414]/25 rounded-[1vw] p-[2vw] hover:border-[#7f1414] hover:shadow-lg transition-all duration-300 cursor-pointer">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-[8vw] h-[8vw] bg-gray-100 rounded-[0.5vw] mb-[1vw] flex items-center justify-center group-hover:bg-[#7f1414]/10 transition-colors duration-300">
-                  <svg
-                    className="w-[4vw] h-[4vw] text-gray-400 group-hover:text-[#7f1414] transition-colors duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                    />
-                  </svg>
+                      </div>
+                    </div>
+                ))
+            ) : (
+                <div>
                 </div>
-                <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">Compliance Report</h3>
-                <p className="text-[0.9vw] text-gray-600 leading-relaxed">
-                  {` ${program.program_name}`}
-                </p>
-                <div
-                  onClick={() => openViewer('/files/compliance-report.pdf', 'Compliance Report')}
-                  className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 hover:bg-[#7f1414]/25 transition duration-300 rounded-full cursor-pointer"
-                >
-                  <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
-                </div>
-              </div>
-            </div>
-
-            {/* PPP Card */}
-            <div className="group relative bg-white border border-[#7f1414]/25 rounded-[1vw] p-[2vw] hover:border-[#7f1414] hover:shadow-lg transition-all duration-300 cursor-pointer">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-[8vw] h-[8vw] bg-gray-100 rounded-[0.5vw] mb-[1vw] flex items-center justify-center group-hover:bg-[#7f1414]/10 transition-colors duration-300">
-                  <svg
-                    className="w-[4vw] h-[4vw] text-gray-400 group-hover:text-[#7f1414] transition-colors duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-[1.2vw] font-bold text-[#7f1414] mb-[0.5vw]">Program Performance Profile</h3>
-                <p className="text-[0.9vw] text-gray-600 leading-relaxed">
-                  {` ${program.program_name}`}
-                </p>
-                <div
-                  onClick={() => openViewer('/files/ppp.pdf', 'Program Performance Profile')}
-                  className="mt-[1vw] px-[1.5vw] py-[0.5vw] bg-[#7f1414]/10 hover:bg-[#7f1414]/25 transition duration-300 rounded-full cursor-pointer"
-                >
-                  <span className="text-[0.8vw] text-[#7f1414] font-medium">View Document</span>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
