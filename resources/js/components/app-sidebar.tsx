@@ -60,6 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { auth } = usePage().props;
     const privileges = auth.programs || [];
     const role = auth.user.roles[0].role_name;
+    const privilege = role === 'Admin' || role === 'Coordinator';
 
     const programItems = privileges.map((program) => ({
         title: program.title,
@@ -71,20 +72,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: '/dashboard',
             icon: SquareTerminal,
         },
-            ...(role === 'Admin' || role === 'Coordinator'
+            privilege
         ? [{
             title: 'User Management',
             url: '/users',
             icon: Bot,
         }]
-        : []),
-            ...(role === 'Admin' || role === 'Coordinator'
+        : [],
+           privilege
         ? [{
             title: 'Requests',
             url: '/requests',
             icon: Boxes,
         }]
-        : []),
+        : [],
         {
             title: 'Programs',
             url: '/manage-programs',
@@ -93,13 +94,45 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             collapsible: true,
             items: programItems,
         },
-            ...(role === 'Admin' || role === 'Coordinator'
+            privilege
         ? [{
             title: 'Exhibits',
             url: '/manage-exhibits',
             icon: Book,
         }]
-        : []),
+        : [],
+    ];
+    const content = [
+            privilege
+        ? [
+            {
+                title: 'News',
+                url: '/dashboard',
+                icon: SquareTerminal,
+            },
+            {
+                title: 'Programs',
+                url: '/embed',
+                icon: Bot,
+                isActive: true,
+                collapsible: true,
+                items: [
+                    {
+                        title: 'Accountancy',
+                        url: '/accountancy',
+                    },
+                    {
+                        title: 'Accountancy',
+                        url: '/accountancy',
+                    },
+                    {
+                        title: 'Accountancy',
+                        url: '/accountancy',
+                    },
+                ],
+            },
+        ]
+        : [],
     ];
     return (
         <Sidebar collapsible="icon" {...props}>
@@ -108,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader> */}
             <SidebarContent className="mt-5">
                 <NavMain label="Accreditation" items={accre} />
-                <NavMain label="Content" items={data.content} />
+                <NavMain label="Content" items={content} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />

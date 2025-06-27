@@ -14,6 +14,7 @@ import InputError from '@/components/input-error';
 
 interface DocumentRequestForm {
     file_id: number;
+    file_type: string;
     rejection_reason?: string;
 }
 
@@ -97,6 +98,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
                 reset: resetDocs,
             } = useForm<DocumentRequestForm>({
                 file_id: row.original.file_id,
+                file_type: '',
                 rejection_reason: null,
             });
 
