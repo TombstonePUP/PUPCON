@@ -15,11 +15,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::get('manage-exhibits', function () {
-        return Inertia::render('document/exhibits');
-    })->name('manage-exhibits');
-
     Route::middleware(['admin'])->group(function () {
+
+        Route::get('users', [UserController::class, 'index'])
+            ->name('users');
+
+        Route::get('manage-exhibits', function () {
+            return Inertia::render('document/exhibits');
+        })->name('manage-exhibits');
+
         Route::controller(DocumentRequestController::class)->prefix('requests')->group(function () {
             Route::get('/', 'index')->name('requests');
             Route::post('/{file_id}/approveDocument', 'approve')->name('approveDocument');
@@ -54,11 +58,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
             });
         });
     });
-
-
-    // Route::get('/document/program/area', function () {
-    //     return Inertia::render('document/area');
-    // })->name('area');
-    Route::get('users', [UserController::class, 'index'])
-        ->name('users');
 });
