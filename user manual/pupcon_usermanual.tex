@@ -1,0 +1,332 @@
+% -----------------------------
+% PUCON User Manual (LaTeX)
+% File: PUCON_User_Manual.tex
+% Two versions included below:
+%  1) Commented version (contains inline comments explaining each part)
+%  2) Clean/uncommented version (ready to compile)
+% -----------------------------
+
+% -----------------------------
+% 1) Commented version
+% -----------------------------
+% The commented version explains packages and structure. Remove the commented
+% blocks or use the clean version below if you only need the source to compile.
+
+% -----------------------------
+% BEGIN COMMENTED VERSION
+% -----------------------------
+% Document class: article is simple and portable. For a longer manual consider
+% book or report.
+\documentclass[11pt,a4paper]{article}
+
+% Basic packages
+% geometry controls margins, graphicx loads images, hyperref for links,
+% fancyhdr for headers/footers, caption for figure captions, setspace for
+% spacing and enumitem for nicer lists.
+\usepackage[margin=1in]{geometry} % adjust margins
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{titlesec}
+\usepackage{tocloft}
+
+% Header/Footer setup
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{PUCON}
+\rhead{User Manual}
+\cfoot{Page \thepage}
+
+% Title formatting
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    pdftitle={PUCON User Manual},
+    pdfauthor={PUCON Team}
+}
+
+% spacing
+\onehalfspacing
+
+% Begin document
+\begin{document}
+
+% Title page
+\begin{titlepage}
+    \centering
+    {\Huge \bfseries PUCON User Manual \\[0.5em]}
+    {\Large PUPCON Accreditation System \\}
+    \\[2em]
+    {\large Version: 1.0 \\
+    Prepared by: PUCON Team \\
+    Date: \today}
+    \\
+    \vfill
+    % Optional logo (uncomment and replace path if needed)
+    % \includegraphics[width=0.3\textwidth]{assets/logo.png}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% -----------------------------
+% Sections: follow the structure provided earlier
+% -----------------------------
+
+\section{Introduction}
+% Short description of the system and purpose of manual
+PUCON (PUPCON Accreditation System) is a web-based platform designed to
+streamline the accreditation process for coordinators, area chairs, and
+evaluators. This manual explains how to access and use key features.
+
+\section{System Requirements}
+\begin{itemize}
+    \item \textbf{Supported Browsers:} Google Chrome, Mozilla Firefox, Microsoft Edge
+    \item \textbf{Internet:} Stable connection recommended (\textgreater= 5 Mbps)
+    \item \textbf{Device:} Desktop or Laptop (recommended resolution: 1366x768 or higher)
+\end{itemize}
+
+\section{Accessing the System}
+\begin{enumerate}
+    \item Open your web browser.
+    \item Navigate to: \url{https://pucon.example.com}.
+    \item Enter your registered \textbf{Username} and \textbf{Password}.
+    \item Click \textbf{Login}.
+\end{enumerate}
+
+\subsection{Forgot Password}
+If you forgot your password, click the \textbf{Forgot Password} link and follow the
+recovery instructions sent to your registered email.
+
+\section{User Roles}
+\begin{description}[leftmargin=!,labelwidth=3cm]
+    \item[Accreditation Coordinator] Oversees and manages the entire accreditation process.
+    \item[Area Chair] Uploads, reviews, and monitors documents for specific areas.
+    \item[Evaluator] Reviews submissions and provides feedback.
+    \item[Admin] Manages users and system settings.
+\end{description}
+
+\section{Main Features}
+\subsection{Dashboard}
+Displays pending tasks, recent activities, and system notifications.
+
+\subsection{Document Management}
+Upload, view, and download accreditation-related files. Organize documents by accreditation area.
+
+\subsection{Evaluation Module}
+Submit evaluation forms and view consolidated feedback and results.
+
+\subsection{Reports}
+Generate and download summary reports. Filter by date, area, or evaluator.
+
+\section{Common Tasks}
+\subsection{Uploading a Document}
+\begin{enumerate}
+    \item Go to \textbf{Document Management}.
+    \item Select the appropriate \textbf{Accreditation Area}.
+    \item Click \textbf{Upload File}.
+    \item Browse and select your file.
+    \item Click \textbf{Submit}.
+\end{enumerate}
+
+\subsection{Viewing Evaluation Results}
+\begin{enumerate}
+    \item Navigate to \textbf{Evaluation Module}.
+    \item Select your submitted documents.
+    \item Click \textbf{View Results} to see feedback and scores.
+\end{enumerate}
+
+\section{Troubleshooting}
+\begin{itemize}
+    \item \textbf{Login Issues:} Check your username/password. Use \textbf{Forgot Password} if needed.
+    \item \textbf{File Upload Fails:} Ensure the file is within allowed size and format.
+    \item \textbf{Page Not Loading:} Refresh the page or check your internet connection.
+\end{itemize}
+
+\section{Support}
+For assistance, contact the PUCON Support Team at:
+\begin{itemize}
+    \item Email: \href{mailto:support@pucon.example.com}{support@pucon.example.com}
+    \item Phone: +63-XXX-XXX-XXXX
+\end{itemize}
+
+% Optional: Appendix with screenshots or diagrams
+\newpage
+\appendix
+\section{Appendix A: Screenshots}
+% Example of including an inline image. Replace path as needed.
+\begin{center}
+    % Uncomment and set correct path to include diagram
+    % \includegraphics[width=0.8\textwidth]{assets/architecture_dia_pupsched.png}
+    \captionof{figure}{Architecture diagram (optional).}
+\end{center}
+
+\section{Appendix B: Change Log}
+\begin{longtable}{p{3cm} p{10cm}}
+\textbf{Version} & \textbf{Changes} \\
+1.0 & Initial release of the user manual. \\
+\end{longtable}
+
+\end{document}
+
+% -----------------------------
+% END COMMENTED VERSION
+% -----------------------------
+
+
+% -----------------------------
+% 2) Clean / Uncommented version (ready to compile)
+% -----------------------------
+
+% Use the content below if you prefer a compact file without explanatory comments.
+
+% ----- BEGIN CLEAN VERSION -----
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{titlesec}
+\usepackage{tocloft}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{PUCON}
+\rhead{User Manual}
+\cfoot{Page \thepage}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    pdftitle={PUCON User Manual},
+    pdfauthor={PUCON Team}
+}
+
+\onehalfspacing
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    {\Huge \bfseries PUCON User Manual \\[0.5em]}
+    {\Large PUPCON Accreditation System \\}
+    \\[2em]
+    {\large Version: 1.0 \\
+    Prepared by: PUCON Team \\
+    Date: \today}
+    \\[2em]
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+PUCON (PUPCON Accreditation System) is a web-based platform designed to
+streamline the accreditation process for coordinators, area chairs, and
+evaluators. This manual explains how to access and use key features.
+
+\section{System Requirements}
+\begin{itemize}
+    \item \textbf{Supported Browsers:} Google Chrome, Mozilla Firefox, Microsoft Edge
+    \item \textbf{Internet:} Stable connection recommended (\textgreater= 5 Mbps)
+    \item \textbf{Device:} Desktop or Laptop (recommended resolution: 1366x768 or higher)
+\end{itemize}
+
+\section{Accessing the System}
+\begin{enumerate}
+    \item Open your web browser.
+    \item Navigate to: \url{https://pucon.example.com}.
+    \item Enter your registered \textbf{Username} and \textbf{Password}.
+    \item Click \textbf{Login}.
+\end{enumerate}
+
+\subsection{Forgot Password}
+If you forgot your password, click the \textbf{Forgot Password} link and follow the
+recovery instructions sent to your registered email.
+
+\section{User Roles}
+\begin{description}[leftmargin=!,labelwidth=3cm]
+    \item[Accreditation Coordinator] Oversees and manages the entire accreditation process.
+    \item[Area Chair] Uploads, reviews, and monitors documents for specific areas.
+    \item[Evaluator] Reviews submissions and provides feedback.
+    \item[Admin] Manages users and system settings.
+\end{description}
+
+\section{Main Features}
+\subsection{Dashboard}
+Displays pending tasks, recent activities, and system notifications.
+
+\subsection{Document Management}
+Upload, view, and download accreditation-related files. Organize documents by accreditation area.
+
+\subsection{Evaluation Module}
+Submit evaluation forms and view consolidated feedback and results.
+
+\subsection{Reports}
+Generate and download summary reports. Filter by date, area, or evaluator.
+
+\section{Common Tasks}
+\subsection{Uploading a Document}
+\begin{enumerate}
+    \item Go to \textbf{Document Management}.
+    \item Select the appropriate \textbf{Accreditation Area}.
+    \item Click \textbf{Upload File}.
+    \item Browse and select your file.
+    \item Click \textbf{Submit}.
+\end{enumerate}
+
+\subsection{Viewing Evaluation Results}
+\begin{enumerate}
+    \item Navigate to \textbf{Evaluation Module}.
+    \item Select your submitted documents.
+    \item Click \textbf{View Results} to see feedback and scores.
+\end{enumerate}
+
+\section{Troubleshooting}
+\begin{itemize}
+    \item \textbf{Login Issues:} Check your username/password. Use \textbf{Forgot Password} if needed.
+    \item \textbf{File Upload Fails:} Ensure the file is within allowed size and format.
+    \item \textbf{Page Not Loading:} Refresh the page or check your internet connection.
+\end{itemize}
+
+\section{Support}
+For assistance, contact the PUCON Support Team at:
+\begin{itemize}
+    \item Email: \href{mailto:support@pucon.example.com}{support@pucon.example.com}
+    \item Phone: +63-XXX-XXX-XXXX
+\end{itemize}
+
+\appendix
+\section{Appendix A: Screenshots}
+\begin{center}
+    % \includegraphics[width=0.8\textwidth]{assets/architecture_dia_pupsched.png}
+    \captionof{figure}{Architecture diagram (optional).}
+\end{center}
+
+\section{Appendix B: Change Log}
+\begin{longtable}{p{3cm} p{10cm}}
+\textbf{Version} & \textbf{Changes} \\
+1.0 & Initial release of the user manual. \\
+\end{longtable}
+
+\end{document}
+
+% ----- END CLEAN VERSION -----
