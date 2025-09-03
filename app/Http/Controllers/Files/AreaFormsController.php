@@ -65,9 +65,11 @@ class AreaFormsController extends Controller
             $formFilePath = "{$program}/{$area->area_name}/area-forms/files";
             $request->file('form_file')->storeAs($formFilePath, $formFileName, 'public');
             $formFilePath = "{$formFilePath}/{$formFileName}";
+            //Populate the areaForm model
             $areaForm->file_name = $formFileName;
             $areaForm->file_path = $formFilePath;
             $areaForm->file_status_id = $pending;
+            //Log the activity
             $activityLog = new ActivityLog();
             $activityLog->user_id = $user->user_id;
             $activityLog->area = $area->area_name;
