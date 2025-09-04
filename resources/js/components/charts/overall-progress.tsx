@@ -27,6 +27,7 @@ interface OverallProgressProps {
 
 const chartConfig = {
     "Area Files": { color: "hsl(var(--chart-1))" },
+    "Area Forms": { color: "hsl(var(--chart-2))" },
     "Exhibit Files": { color: "hsl(var(--chart-3))" },
     "Missing Files": { color: "hsl(var(--chart-5))" },
 } satisfies ChartConfig
@@ -34,18 +35,17 @@ const chartConfig = {
 function toTitleCase(str: string) {
     return str
         .replace(/_/g, " ")         // snake_case → words
-        .replace(/\bfile\b/gi, "")  // remove 'file'
+        // .replace(/\bfile\b/gi, "")  // remove 'file'
         .replace(/\s+/g, " ")       // remove extra spaces
         .trim()
         .replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 export function OverallProgress({ data = [] }: OverallProgressProps) {
-    console.log("OverallProgress data", data)
     const pieData = React.useMemo(() => {
         let missing = 0
         const mainData = data.flatMap((item) => {
-            const label = `${toTitleCase(item.document_type)} Files`
+            const label = `${toTitleCase(item.document_type)}`
             missing += item.outlines || 0
             return [{ name: label, value: item.documents }]
         })

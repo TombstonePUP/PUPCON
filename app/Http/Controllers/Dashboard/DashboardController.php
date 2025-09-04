@@ -95,24 +95,26 @@ class DashboardController extends Controller
         $area_files = ParameterOutlines::from('parameter_outlines AS po')
             ->leftJoin('area_files AS af', 'po.parameter_outline_id', '=', 'af.parameter_outline_id')
             ->selectRaw("
-                'area_file' AS document_type,
+                'area_files' AS document_type,
                 GREATEST(COUNT(*) FILTER (WHERE po.container = 'false') - COUNT(af.area_file_id),0) AS outlines,
                 COUNT(af.area_file_id) AS documents
             ");
-        /* $area_forms = AreaForms::from('parameter_outlines AS po')
+        $area_forms = AreaForms::from('area_forms AS afs')
             ->selectRaw("
-                'area_form' AS document_type,
-                GREATEST(COUNT(*) FILTER (WHERE po.container = 'false') - COUNT(af.area_form_id),0) AS outlines,
-                COUNT(af.area_form_id) AS documents
-            "); */
+                'area_forms' AS document_type,
+                GREATEST(COUNT(*) FILTER (WHERE afs.file_path IS NOT NULL) - COUNT(afs.area_form_id),0) AS outlines,
+                COUNT(afs.area_form_id) AS documents
+            ");
         $exhibit_files = ExhibitOutlines::from('exhibit_outlines AS eo')
             ->leftJoin('exhibit_files AS ef', 'eo.exhibit_outline_id', '=', 'ef.exhibit_outline_id')
             ->selectRaw("
-                'exhibit_file' AS document_type,
+                'exhibit_files' AS document_type,
                 GREATEST(COUNT(*) FILTER (WHERE eo.container = 'false') - COUNT(ef.exhibit_file_id),0) AS outlines,
                 COUNT(ef.exhibit_file_id) AS documents
             ");
-        $overall_uploads = $area_files->union($exhibit_files)->get();
+        $overall_uploads = $area_files
+            ->unionAll($area_forms)
+            ->unionAll($exhibit_files)->get();
         return $overall_uploads;
     }
 }
