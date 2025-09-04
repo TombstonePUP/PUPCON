@@ -113,14 +113,14 @@
 % ====== HEADER & FOOTER ======
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\raisebox{5pt}{\includegraphics[height=15pt]{assets/pupsched_header.png}}}
+\fancyhead[L]{\raisebox{5pt}{\includegraphics[height=20pt]{assets/pupcon_logo.pdf}}}
 \fancyhead[R]{\raisebox{5pt}{\textcolor{darkgray}{\small v1.0}}}
 \renewcommand{\headrulewidth}{0.4pt}
 
 \fancyfoot[L]{%
   \raisebox{-10pt}{\parbox[t]{0.5\textwidth}{%
     {\small Polytechnic University of the Philippines}\\
-    {\small Software Technical Documentation}
+    {\small User Maintenance Manual}
   }}
 }
 \fancyfoot[R]{\raisebox{-10pt}{{\small \sffamily \textcolor{darkgray}{\thepage}}}}
@@ -174,42 +174,45 @@
 \newcommand{\coverpage}{
 \begin{titlepage}
     \centering
-    \vspace*{1cm}
-    \includegraphics[width=0.6\textwidth,keepaspectratio]{assets/pupsched_logo.pdf}\\[0.5cm]
-    {\large\sffamily\itshape System Technical Documentation}\\[6cm]
+    \vspace*{0.5cm}
+    \includegraphics[width=0.6\textwidth,keepaspectratio]{assets/pupcon_logo.pdf}\\[0.5cm]
+    {\large\sffamily\itshape User Maintenance Manual}\\
+    {\small\textit{\textcolor[gray]{0.5}{Version 1.0}}}\\[4.5cm]
     
     \begin{flushleft}
         \begin{minipage}{\textwidth}
             {\sffamily\itshape\textcolor{gray}{
-            This is a comprehensive faculty load management system designed to streamline the scheduling process at Polytechnic University of the Philippines - San Juan Campus.}}
+           This document serves as a comprehensive guide for developers, maintenance personnel, and end-users of the PUPCON system. It provides detailed instructions and reference materials to ensure proper usage, effective maintenance, and efficient management of the system’s features.}}
         \end{minipage}
     \end{flushleft}
     
     \vspace{1.5cm}
-    \noindent\rule{\textwidth}{0.4pt}\\[1.5cm]
+    \noindent\rule{\textwidth}{0.9pt}\\[1.5cm]
     
-    \begin{minipage}[t]{0.5\textwidth}
+    \begin{minipage}[t]{0.55\textwidth}
         \raggedright
         {\normalsize \textbf{Polytechnic University of the Philippines}}\\[0cm]
         {\normalsize College of Computer and Information Sciences}\\[0cm]
         {\normalsize Department of Information Technology}\\[1cm]
         
-        {\normalsize Assoc. Prof. Noel Gagolinan}\\
-        {\normalsize Instructor}\\[0.1cm]
+        {\normalsize Asst. Prof. Elias Austia}\\
+         {\normalsize Inst. Alfeo Mendoza}\\
+        {\normalsize Advisers}\\
     \end{minipage}
     \hfill
-    \begin{minipage}[t]{0.48\textwidth}
+    \begin{minipage}[t]{0.30\textwidth}
         \raggedleft
         {\normalsize Justine Lloyd Bautista}\\
         {\normalsize Mark Jason Fulguerinas}\\
         {\normalsize Charles Ezra Ilarde}\\
-        {\normalsize Regie San Juan}\\
-        {\normalsize Jesse Mari Mirabel}\\
+        {\normalsize Tamara Geronimo}\\
+        {\normalsize Regie San Juan}\\[1cm]
+        {\normalsize \today}
     \end{minipage}
     
     \vfill
     \centering
-    {\normalsize \today}
+
 \end{titlepage}
 }
 

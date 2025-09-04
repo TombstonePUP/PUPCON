@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.8.18)  29 AUG 2025 02:21
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.8.18)  5 SEP 2025 00:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/augustine/Documents/Git/PUPSCHED/documentation/pupsched
-(/home/augustine/Documents/Git/PUPSCHED/documentation/pupsched.tex
+**/home/augustine/Documents/Git/PUPCON/documentation/pupcon_manual
+(/home/augustine/Documents/Git/PUPCON/documentation/pupcon_manual.tex
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-08-13>
 (/mnt/storage/texlive/2025/texmf-dist/tex/latex/base/article.cls
@@ -648,8 +648,8 @@ Package fontspec Info:
 (fontspec)             - 'bold italic' (b/it) with NFSS spec.:
 (fontspec)             <->"[font/JetBrains_Mono/static/JetBrainsMono-BoldItalic.ttf]/OT:script=latn;language=dflt;"
 
-) (./pupsched.aux)
-\openout1 = `pupsched.aux'.
+) (./pupcon_manual.aux)
+\openout1 = `pupcon_manual.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
 LaTeX Font Info:    ... okay on input line 6.
@@ -762,8 +762,13 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 \c@lstlisting=\count355
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-File: assets/pupsched_logo.pdf Graphic file (type pdf)
-<use assets/pupsched_logo.pdf>
+File: assets/pupcon_logo.pdf Graphic file (type pdf)
+<use assets/pupcon_logo.pdf>
+
+Underfull \hbox (badness 3312) in paragraph at lines 8--8
+[][]\TU/Manrope(0)/m/it/12 This document serves as a comprehensive guide for developers, maintenance
+ []
+
 
 
 [1
@@ -837,14 +842,14 @@ File: assets/architecture_dia_pupsched.png Graphic file (type bmp)
 <assets/architecture_dia_pupsched.png>
 
 
-File: assets/pupsched_header.png Graphic file (type bmp)
-<assets/pupsched_header.png>
+File: assets/pupcon_logo.pdf Graphic file (type pdf)
+<use assets/pupcon_logo.pdf>
 
 Package fancyhdr Warning: \headheight is too small (20.0pt): 
-(fancyhdr)                Make it at least 24.35004pt, for example:
-(fancyhdr)                \setlength{\headheight}{24.35004pt}.
+(fancyhdr)                Make it at least 29.35004pt, for example:
+(fancyhdr)                \setlength{\headheight}{29.35004pt}.
 (fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-4.35004pt}.
+(fancyhdr)                \addtolength{\topmargin}{-9.35004pt}.
 
 [1]
 
@@ -854,14 +859,14 @@ See the caption package documentation for explanation.
 
 
 
-File: assets/pupsched_header.png Graphic file (type bmp)
-<assets/pupsched_header.png>
+File: assets/pupcon_logo.pdf Graphic file (type pdf)
+<use assets/pupcon_logo.pdf>
 
 Package fancyhdr Warning: \headheight is too small (20.0pt): 
-(fancyhdr)                Make it at least 24.35004pt, for example:
-(fancyhdr)                \setlength{\headheight}{24.35004pt}.
+(fancyhdr)                Make it at least 29.35004pt, for example:
+(fancyhdr)                \setlength{\headheight}{29.35004pt}.
 (fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-4.35004pt}.
+(fancyhdr)                \addtolength{\topmargin}{-9.35004pt}.
 
 [2]
 
@@ -874,27 +879,27 @@ File: lstlang1.sty 2024/09/23 1.10c listings language file
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
 
-File: assets/pupsched_header.png Graphic file (type bmp)
-<assets/pupsched_header.png>
+File: assets/pupcon_logo.pdf Graphic file (type pdf)
+<use assets/pupcon_logo.pdf>
 
 Package fancyhdr Warning: \headheight is too small (20.0pt): 
-(fancyhdr)                Make it at least 24.35004pt, for example:
-(fancyhdr)                \setlength{\headheight}{24.35004pt}.
+(fancyhdr)                Make it at least 29.35004pt, for example:
+(fancyhdr)                \setlength{\headheight}{29.35004pt}.
 (fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-4.35004pt}.
+(fancyhdr)                \addtolength{\topmargin}{-9.35004pt}.
 
 [3]
 
-File: assets/pupsched_header.png Graphic file (type bmp)
-<assets/pupsched_header.png>
+File: assets/pupcon_logo.pdf Graphic file (type pdf)
+<use assets/pupcon_logo.pdf>
 
 Package fancyhdr Warning: \headheight is too small (20.0pt): 
-(fancyhdr)                Make it at least 24.35004pt, for example:
-(fancyhdr)                \setlength{\headheight}{24.35004pt}.
+(fancyhdr)                Make it at least 29.35004pt, for example:
+(fancyhdr)                \setlength{\headheight}{29.35004pt}.
 (fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-4.35004pt}.
+(fancyhdr)                \addtolength{\topmargin}{-9.35004pt}.
 
-[4] (./pupsched.aux)
+[4] (./pupcon_manual.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-08-13>
@@ -905,12 +910,12 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 27466 strings out of 468441
- 614662 string characters out of 5444625
- 1309355 words of memory out of 5000000
- 55484 multiletter control sequences out of 15000+600000
- 630483 words of font info for 83 fonts, out of 8000000 for 9000
+ 27459 strings out of 468441
+ 614534 string characters out of 5444625
+ 1309447 words of memory out of 5000000
+ 55477 multiletter control sequences out of 15000+600000
+ 630491 words of font info for 84 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 103i,15n,104p,522b,1826s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 103i,17n,104p,525b,1839s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on pupsched.pdf (5 pages).
+Output written on pupcon_manual.pdf (5 pages).
