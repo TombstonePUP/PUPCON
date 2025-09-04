@@ -112,10 +112,10 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
             <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
             {areaParameters?.length > 0 ? (
                 areaParameters.map((parameter) => (
-                <AccordionItem value={`item-${parameter.area_parameter_id}`} >
-                    <AccordionTrigger className="flex flex-row items-center justify-between">
+                <AccordionItem value={`item-${parameter.area_parameter_id}`} className="group">
+                    <AccordionTrigger className="flex flex-row items-center group-hover:cursor-pointer justify-between">
                         <div className="flex h-full w-full flex-row items-center">
-                            <h1 className="font-bold text-[#171717]">
+                        <h1 className="text-[#7f1414] group-hover:text-[#a01818] font-bold">
                                 { parameter.parameter_name != ' ' ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}` : parameter.parameter_name }
                             </h1>
                             <p className="flex-1 text-center">{parameter.parameter_description}</p>

@@ -424,7 +424,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                             key={item.id}
                             className={`group relative ${
                                 mode === 'areas'
-                                    ? 'rounded border p-7 hover:border-[#7f1414]/20 hover:text-[#7f1414]'
+                                    ? 'rounded border p-7 hover:border-[#7f1414] border-[#7f1414]/20 hover:text-[#7f1414] transition'
                                     : mode === 'faculty'
                                       ? 'rounded-lg border p-4'
                                       : 'flex h-[13vw] min-w-[15vw] flex-1 items-center justify-center overflow-hidden rounded border bg-gray-50 p-1 transition-all duration-300 hover:bg-gray-100'
