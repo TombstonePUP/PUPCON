@@ -154,7 +154,7 @@ export default function ExhibitAdmin() {
                         {mockExhibits.map((exhibit) => (
                             <div
                                 key={exhibit.id}
-                                className="overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow duration-200 hover:shadow-lg"
+                                className="overflow-hidden rounded-lg border border-[#7f1414]/20 hover:border-[#7f1414] bg-white transition"
                             >
                                 <div className="flex aspect-video items-center justify-center ">
                                     <img

@@ -33,7 +33,7 @@ const programList = [
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Users',
+        title: 'User Management',
         href: '/users',
     },
 ];
@@ -77,12 +77,19 @@ export default function Users({ userRecords }: UsersProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Users" />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <Dialog>
+            <Head title="User Management" />
+            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
+                   <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl font-semibold text-gray-900">User Management</h1>
+                        <p className="mt-1 text-sm text-gray-600">Manage user accounts and permissions</p>
+                    </div>
+
+                    {/* Add New User Dialog */}
+                   <Dialog>
                     <DialogTrigger asChild>
-                        <Button variant="noborder" className='w-full'>
-                            <User2 className="h-5 w-5 " />
+                        <Button variant="noborder" className='w-50'>
+                            <User2 className="h-4 w-4 " />
                             Add User
                         </Button>
                     </DialogTrigger>
@@ -191,6 +198,8 @@ export default function Users({ userRecords }: UsersProps) {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
+                </div>
+                
 
                 {/* Data Table */}
                 <div className="rounded-lg border bg-white p-4">
