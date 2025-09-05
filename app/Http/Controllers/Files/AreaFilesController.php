@@ -9,9 +9,7 @@ use App\Models\AreaForms;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class AreaFilesController extends Controller
@@ -21,10 +19,12 @@ class AreaFilesController extends Controller
      */
     public function index(string $program_name, string $area_id)
     {
+        $program = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::select('program_id', 'program_name', 'degree_type')
-            ->where('program_name', $program_name)
+            ->where('program_name', $program)
             ->with('Areas')
             ->firstOrFail();
+        $program->program_link = $program_name;
         $area = Areas::select('area_id', 'area_name', 'area_number', 'program_id')
             ->where('area_id', $area_id)
             ->where('program_id', $program->program_id)

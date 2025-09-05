@@ -53,14 +53,14 @@ const mockObjectives: any[] = [];
 const mockGallery: any[] = [];
 const mockFaculty: any[] = [];
 
-export default function Users({ program }: ProgramProps) {
+export default function Programs({ program }: ProgramProps) {
     const { auth } = usePage().props;
     const role = auth.user.roles[0].role_name;
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: program.program_name,
-            href: `/manage-program/${program.program_id}`,
+            href: `/manage-program/${program.program_link}`,
         },
     ];
 
@@ -614,7 +614,7 @@ export default function Users({ program }: ProgramProps) {
                         onAdd={(area) => console.log('Add area', area)}
                         onEdit={(id, area) => console.log('Edit area', id, area)}
                         onRemove={(id) => console.log('Remove area', id)}
-                        programName={program.program_name}
+                        programName={program.program_link}
                     />
                 </div>
 

@@ -30,11 +30,11 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: program.program_name,
-            href: `/manage-programs/${program.program_name}`,
+            href: `/manage-programs/${program.program_link}`,
         },
         {
             title: area?.area_name,
-            href: `/manage-programs/${program.program_name}/${area?.area_id}`,
+            href: `/manage-programs/${program.program_link}/${area?.area_id}`,
         },
     ];
 

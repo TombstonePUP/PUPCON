@@ -8,54 +8,6 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarRail } from '@/components/ui/sidebar';
 import { usePage } from '@inertiajs/react';
 
-const data = {
-    levels: [
-        {
-            name: 'Acme Inc',
-            logo: GalleryVerticalEnd,
-            plan: 'Enterprise',
-        },
-        {
-            name: 'Acme Corp.',
-            logo: AudioWaveform,
-            plan: 'Startup',
-        },
-        {
-            name: 'Evil Corp.',
-            logo: Command,
-            plan: 'Free',
-        },
-    ],
-    content: [
-        {
-            title: 'News',
-            url: '/dashboard',
-            icon: SquareTerminal,
-        },
-        {
-            title: 'Programs',
-            url: '/embed',
-            icon: Bot,
-            isActive: true,
-            collapsible: true,
-            items: [
-                {
-                    title: 'Accountancy',
-                    url: '/accountancy',
-                },
-                {
-                    title: 'Accountancy',
-                    url: '/accountancy',
-                },
-                {
-                    title: 'Accountancy',
-                    url: '/accountancy',
-                },
-            ],
-        },
-    ],
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { auth } = usePage().props;
     const privileges = auth.programs || [];
@@ -63,7 +15,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     const programItems = privileges.map((program) => ({
         title: program.title,
-        url: `/manage-programs/${program.title}`,
+        url: `/manage-programs/${program.program_link}`,
     }));
     const accre = [
         {

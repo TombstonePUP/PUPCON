@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\ParameterOutlines;
 use App\Models\Programs;
 use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -44,6 +45,11 @@ class HandleInertiaRequests extends Middleware
             ->where('under_survey', true)
             ->get();
 
+        $programs_under_survey = $programs_under_survey->map(function ($program) {
+            $program->program_link = Str::of($program->program_name)->snake();
+            return $program;
+        });
+
         $outlines = ParameterOutlines::select('*')
             ->with(['AreaParameter', 'AreaParameter.Areas', 'AreaParameter.Areas.Programs', 'ParameterOutlineCategory'])
             ->get();
@@ -56,6 +62,12 @@ class HandleInertiaRequests extends Middleware
             $programs = $request->user()?->Programs()->select('program_name as title')->get();
         } else {
             $programs = [];
+        }
+        if ($programs !== null) {
+            $programs = $programs->map(function ($program) {
+                $program->program_link = Str::of($program->title)->snake();
+                return $program;
+            });
         }
 
         return [

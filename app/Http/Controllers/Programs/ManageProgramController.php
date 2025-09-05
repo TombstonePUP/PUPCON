@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Programs;
 use App\Http\Controllers\Controller;
 use App\Models\Areas;
 use App\Models\Programs;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class ManageProgramController extends Controller
@@ -14,7 +15,9 @@ class ManageProgramController extends Controller
      */
     public function index(Request $request, string $program_name)
     {
-        $program = Programs::where('program_name', $program_name)->with('Areas')->firstOrFail();
+        $program = Str::of($program_name)->replace('_', ' ')->title();
+        $program = Programs::where('program_name', $program)->with('Areas')->firstOrFail();
+        $program->program_link = $program_name;
         return inertia('document/program', [
             'program' => $program,
             // 'areas' => $areas,
@@ -24,6 +27,10 @@ class ManageProgramController extends Controller
     public function show()
     {
         $programs = Programs::select('*')->with('Areas')->get();
+        $programs = $programs->map(function ($program) {
+            $program->program_link = Str::of($program->program_name)->snake();
+            return $program;
+        });
         return inertia('manage-programs', [
             'programs' => $programs,
         ]);

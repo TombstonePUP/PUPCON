@@ -39,6 +39,7 @@ export interface GuestNavigation {
 export interface NavPrograms {
     program_id: number;
     program_name: string;
+    program_link: string;
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -50,6 +51,7 @@ export interface ProgramsUnderSurvey {
     accreditation_level: string;
     program_image_name: string;
     program_image_path: string;
+    program_link: string;
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -57,6 +59,7 @@ export interface PerProgramUnderSurvey {
     program_id: number;
     degree_type: string;
     program_name: string;
+    program_link: string;
     program_description: string;
     accreditation_level: number;
     under_survey: boolean;
@@ -73,6 +76,7 @@ export interface PerProgramUnderSurvey {
 
 export interface ProgramPrivilege {
     program_name: string;
+    program_link: string;
     [key: string]: unknown;
 }
 
@@ -149,6 +153,7 @@ export interface PerProgram {
     program_id: number;
     degree_type: string;
     program_name: string;
+    program_link: string;
     program_description: string;
     accreditation_level: string;
     under_survey: boolean;
@@ -180,6 +185,7 @@ export interface Program {
     program_id: number;
     degree_type: string;
     program_name: string;
+    program_link: string;
     area?: Area;
     [key: string]: unknown; // This allows for additional properties...
 }

@@ -46,6 +46,8 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
     const { auth } = usePage().props;
     const role = auth.user.roles[0].role_name;
 
+    console.log(programName);
+
     // Faculty state
     const [newFaculty, setNewFaculty] = useState<FacultyData>({
         image: '',
@@ -431,7 +433,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                             }`}
                         >
                             {mode === 'areas' ? (
-                                <Link href={programName ? route('manage.area', [programName, item.area_id || item.id]) : '#'} className="block  ">
+                                <Link href={route('manage.area', {program_name: programName, area_id: item.area_id || item.id})} className="block  ">
                                     {renderItemContent(item)}
                                 </Link>
                             ) : (
