@@ -44,7 +44,8 @@ interface ParameterOutlineForm {
 }
 
 export default function ParameterAccordion({ area_id, program, areaParameters, parameterOutlineCategories }: ParameterAccordionProps) {
-    // Add state to control the Add Outline dialog
+    // Add state for outline container checkbox in ADD outline
+    const [isOutlineContainer, setIsOutlineContainer] = useState(false);
     const [addOutlineDialogOpen, setAddOutlineDialogOpen] = useState(false);
 
     const {
@@ -100,7 +101,8 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
         postOutline(route('manage.area.addOutline', [program, area_id]), {
             onSuccess: () => {
                 resetOutline('area_parameter_id', 'parameter_outline_category_id', 'outline_number', 'outline_description', 'container');
-                setAddOutlineDialogOpen(false); // Close the dialog on success
+                setAddOutlineDialogOpen(false);
+                setIsOutlineContainer(false); // Reset container state
                 console.log('Outline added successfully');
             },
         });
@@ -256,101 +258,158 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                     <p className="text-center text-gray-500">No outlines available for this parameter.</p>
                                 )}
 
-                                {/* Updated Add Outline Dialog */}
+                                {/* Add Outline Dialog */}
                                 <Dialog open={addOutlineDialogOpen} onOpenChange={setAddOutlineDialogOpen}>
                                     <DialogTrigger asChild>
-                                        <a className="cursor-pointer underline" onClick={() => setAddOutlineDialogOpen(true)}>
+                                        <a
+                                            className="cursor-pointer underline"
+                                            onClick={() => {
+                                                setAddOutlineDialogOpen(true);
+                                                setIsOutlineContainer(false); // Reset on open
+                                            }}
+                                        >
                                             Add Outline
                                         </a>
                                     </DialogTrigger>
-                                    <DialogContent>
+                                    <DialogContent className="max-w-2xl">
                                         <DialogHeader>
                                             <DialogTitle>Add Outline</DialogTitle>
                                             <DialogDescription>
-                                                Make a new outline for{' '}
+                                                Create a new outline for{' '}
                                                 {parameter.parameter_name != ' '
                                                     ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
                                                     : parameter.parameter_name}
                                             </DialogDescription>
                                         </DialogHeader>
+
                                         <form onSubmit={(e) => addOutline(e)} className="flex flex-col gap-4">
-                                            <div className="flex flex-col gap-4">
-                                                <div>
-                                                    <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Number</label>
-                                                    <input
-                                                        id="outline_number"
-                                                        type="text"
-                                                        required
-                                                        autoFocus
-                                                        tabIndex={1}
-                                                        value={dataOutline.outline_number}
-                                                        onChange={(e) => setOutlineData('outline_number', e.target.value)}
-                                                        disabled={processingOutline}
-                                                        placeholder="1.1.3"
-                                                        className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
-                                                    />
-                                                    <InputError message={errorsOutline.outline_number} className="mt-2" />
-                                                </div>
-                                                <div>
-                                                    <label className="text-muted-foreground mb-1 block text-sm font-medium">
-                                                        Outline Description
-                                                    </label>
-                                                    <textarea
-                                                        id="outline_description"
-                                                        required
-                                                        autoFocus
-                                                        tabIndex={2}
-                                                        value={dataOutline.outline_description}
-                                                        onChange={(e) => setOutlineData('outline_description', e.target.value)}
-                                                        disabled={processingOutline}
-                                                        placeholder="Enter outline description"
-                                                        className="focus:border-ring focus:ring-ring min-h-[100px] w-full resize-y rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
-                                                    />
-                                                    <InputError message={errorsOutline.outline_description} className="mt-2" />
-                                                </div>
-                                                <div>
-                                                    <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Category</label>
-                                                    <select
-                                                        className="bg-background focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
-                                                        id="parameter_outline_category_id"
-                                                        tabIndex={3}
-                                                        autoFocus
-                                                        value={dataOutline.parameter_outline_category_id}
-                                                        onChange={(e) => setOutlineData('parameter_outline_category_id', parseInt(e.target.value))}
-                                                        disabled={processingOutline}
-                                                    >
-                                                        <option value="">Select Category</option>
-                                                        {parameterOutlineCategories?.map((category) => {
-                                                            return (
-                                                                <option
-                                                                    key={category.parameter_outline_category_id}
-                                                                    value={category.parameter_outline_category_id}
-                                                                >
-                                                                    {category.category_name}
-                                                                </option>
-                                                            );
-                                                        })}
-                                                    </select>
-                                                </div>
-                                                <div className="flex cursor-pointer items-center">
-                                                    <label className="flex gap-2 text-sm">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="accent-ring"
-                                                            checked={dataOutline.container}
-                                                            onChange={(e) => setOutlineData('container', e.target.checked)}
-                                                        />
-                                                        Outline Container
-                                                    </label>
-                                                </div>
+                                            {/* Outline Number */}
+                                            <div>
+                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Number</label>
+                                                <input
+                                                    id="outline_number"
+                                                    type="text"
+                                                    required
+                                                    autoFocus
+                                                    tabIndex={1}
+                                                    value={dataOutline.outline_number}
+                                                    onChange={(e) => setOutlineData('outline_number', e.target.value)}
+                                                    disabled={processingOutline}
+                                                    placeholder="1.1"
+                                                    className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                                                />
+                                                <InputError message={errorsOutline.outline_number} className="mt-2" />
                                             </div>
+
+                                            {/* Outline Description */}
+                                            <div>
+                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Description</label>
+                                                <textarea
+                                                    id="outline_description"
+                                                    required
+                                                    tabIndex={2}
+                                                    value={dataOutline.outline_description}
+                                                    onChange={(e) => setOutlineData('outline_description', e.target.value)}
+                                                    disabled={processingOutline}
+                                                    className="min-h-[100px] w-full rounded-md border border-gray-300 p-2 text-sm focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="Enter outline description..."
+                                                />
+                                                <InputError message={errorsOutline.outline_description} className="mt-2" />
+                                            </div>
+
+                                            {/* Outline Category */}
+                                            <div>
+                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Category</label>
+                                                <select
+                                                    className="bg-background focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                                                    id="parameter_outline_category_id"
+                                                    tabIndex={3}
+                                                    required
+                                                    value={dataOutline.parameter_outline_category_id}
+                                                    onChange={(e) => setOutlineData('parameter_outline_category_id', parseInt(e.target.value))}
+                                                    disabled={processingOutline}
+                                                >
+                                                    <option value="">Select Category</option>
+                                                    {parameterOutlineCategories?.map((category) => (
+                                                        <option
+                                                            key={category.parameter_outline_category_id}
+                                                            value={category.parameter_outline_category_id}
+                                                        >
+                                                            {category.category_name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <InputError message={errorsOutline.parameter_outline_category_id} className="mt-2" />
+                                            </div>
+
+                                            {/* Container Checkbox */}
+                                            <div className="flex cursor-pointer items-center">
+                                                <label className="flex gap-2 text-sm">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="accent-ring"
+                                                        checked={isOutlineContainer}
+                                                        onChange={(e) => {
+                                                            const isChecked = e.target.checked;
+                                                            setIsOutlineContainer(isChecked);
+                                                            setOutlineData('container', isChecked);
+                                                        }}
+                                                    />
+                                                    Outline Container
+                                                </label>
+                                            </div>
+
+                                            {/* Upload Document Section - Only show if NOT container */}
+                                            {!isOutlineContainer && (
+                                                <div className="space-y-2">
+                                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Upload Document</h3>
+                                                    <div className="flex w-full items-center justify-center">
+                                                        <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                                <svg
+                                                                    className="mb-4 h-8 w-8 text-gray-500"
+                                                                    aria-hidden="true"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    fill="none"
+                                                                    viewBox="0 0 20 16"
+                                                                >
+                                                                    <path
+                                                                        stroke="currentColor"
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                        strokeWidth="2"
+                                                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                                                    />
+                                                                </svg>
+                                                                <p className="text-sm text-gray-500">
+                                                                    <span className="font-semibold">Click to upload</span> or drag and drop
+                                                                </p>
+                                                                <p className="text-xs text-gray-500">PDF, DOC, DOCX</p>
+                                                            </div>
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                accept=".pdf,.doc,.docx"
+                                                                onChange={(e) => {
+                                                                    const file = e.target.files ? e.target.files[0] : null;
+                                                                    setOutlineData('outline_file', file);
+                                                                }}
+                                                            />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            )}
+
                                             <DialogFooter>
                                                 <DialogClose asChild>
                                                     <Button
                                                         tabIndex={5}
                                                         disabled={processingOutline}
                                                         variant="outline"
-                                                        onClick={() => setAddOutlineDialogOpen(false)}
+                                                        onClick={() => {
+                                                            setAddOutlineDialogOpen(false);
+                                                            setIsOutlineContainer(false);
+                                                        }}
                                                     >
                                                         Cancel
                                                     </Button>
@@ -362,7 +421,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                     onClick={() => setOutlineData('area_parameter_id', parameter.area_parameter_id)}
                                                     disabled={processingOutline}
                                                 >
-                                                    Submit
+                                                    {processingOutline ? 'Adding...' : 'Add Outline'}
                                                 </Button>
                                             </DialogFooter>
                                         </form>
