@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { useForm } from '@inertiajs/react';
+import { useState } from 'react';
 
 import { type AreaParameters, type ParameterOutlineCategory } from '@/types';
 
@@ -43,6 +44,9 @@ interface ParameterOutlineForm {
 }
 
 export default function ParameterAccordion({ area_id, program, areaParameters, parameterOutlineCategories }: ParameterAccordionProps) {
+    // Add state to control the Add Outline dialog
+    const [addOutlineDialogOpen, setAddOutlineDialogOpen] = useState(false);
+
     const {
         data: dataParams,
         setData: setParamsData,
@@ -96,6 +100,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
         postOutline(route('manage.area.addOutline', [program, area_id]), {
             onSuccess: () => {
                 resetOutline('area_parameter_id', 'parameter_outline_category_id', 'outline_number', 'outline_description', 'container');
+                setAddOutlineDialogOpen(false); // Close the dialog on success
                 console.log('Outline added successfully');
             },
         });
@@ -106,7 +111,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
             <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
                 {areaParameters?.length > 0 ? (
                     areaParameters.map((parameter) => (
-                        <AccordionItem value={`item-${parameter.area_parameter_id}`} className="group">
+                        <AccordionItem value={`item-${parameter.area_parameter_id}`} className="group" key={parameter.area_parameter_id}>
                             <AccordionTrigger className="flex flex-row items-center justify-between group-hover:cursor-pointer">
                                 <div className="flex h-full w-full flex-row items-center">
                                     <h1 className="font-bold text-[#7f1414] group-hover:text-[#a01818]">
@@ -250,9 +255,13 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                 ) : (
                                     <p className="text-center text-gray-500">No outlines available for this parameter.</p>
                                 )}
-                                <Dialog>
+
+                                {/* Updated Add Outline Dialog */}
+                                <Dialog open={addOutlineDialogOpen} onOpenChange={setAddOutlineDialogOpen}>
                                     <DialogTrigger asChild>
-                                        <a className="cursor-pointer underline">Add Outline</a>
+                                        <a className="cursor-pointer underline" onClick={() => setAddOutlineDialogOpen(true)}>
+                                            Add Outline
+                                        </a>
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
@@ -337,7 +346,12 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                             </div>
                                             <DialogFooter>
                                                 <DialogClose asChild>
-                                                    <Button tabIndex={5} disabled={processingOutline} variant="outline">
+                                                    <Button
+                                                        tabIndex={5}
+                                                        disabled={processingOutline}
+                                                        variant="outline"
+                                                        onClick={() => setAddOutlineDialogOpen(false)}
+                                                    >
                                                         Cancel
                                                     </Button>
                                                 </DialogClose>
