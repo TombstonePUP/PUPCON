@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Programs;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -17,16 +18,22 @@ class UserProgramPrivileges
     public function handle(Request $request, Closure $next): Response
     {
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $userRole = $request->user()?->Roles->first()?->role_name;
 
-        if ($userRole === 'Admin' || $userRole === 'Coordinator') {
+        if ($this->programAccess($request->user(), $program)) {
             return $next($request);
-        } elseif ($userRole === 'Chairman') {
-            $userProgramRole = $request->user()->Programs;
-            if ($userProgramRole->firstWhere('program_name', $program)) {
-                return $next($request);
-            }
         }
+
         return redirect()->back()->with('error', 'You do not have permission to access this page.');
+    }
+
+    private function programAccess($user, $program)
+    {
+        $role = $user->Roles->first()?->role_name;
+
+        return match ($role) {
+            'Admin', 'Coordinator' => Programs::where('program_name', $program)->exists(),
+            'Chairman' => $user->Programs->contains('program_name', $program),
+            default => false,
+        };
     }
 }
