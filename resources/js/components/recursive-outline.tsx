@@ -1,12 +1,7 @@
-"use client"
+'use client';
 
-import { ParameterOutlineCategory, type ParameterOutlines } from '@/types';
-import { Link } from '@inertiajs/react';
-import { CheckCircle2Icon, Eye, Trash2 } from 'lucide-react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { useForm } from '@inertiajs/react';
-import { useState } from 'react';
 import {
     Dialog,
     DialogClose,
@@ -17,8 +12,11 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { DocumentViewer } from "@/components/ui/document-viewer";
+import { DocumentViewer } from '@/components/ui/document-viewer';
+import { ParameterOutlineCategory, type ParameterOutlines } from '@/types';
+import { useForm } from '@inertiajs/react';
+import { Eye, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface OutlineProps {
     outlines: ParameterOutlines[];
@@ -41,40 +39,69 @@ interface AreaFileForm {
     area_file_id?: number;
 }
 
-function sortOutlinesByNumber(outlines) {
-    return outlines.slice().sort((a, b) => {
-        const aParts = a.outline_number.split('.').map(Number);
-        const bParts = b.outline_number.split('.').map(Number);
-        const len = Math.max(aParts.length, bParts.length);
-        for (let i = 0; i < len; i++) {
-            const aVal = aParts[i] ?? 0;
-            const bVal = bParts[i] ?? 0;
-            if (aVal !== bVal) return aVal - bVal;
+interface OutlineNode extends ParameterOutlines {
+    children: OutlineNode[];
+}
+
+export function buildOutlineTree({ outlines }: { outlines: ParameterOutlines[] }): OutlineNode[] {
+    // Sort outlines by their outline_number to ensure proper hierarchy
+    const sortedOutlines = outlines.sort((a, b) => {
+        const aNum = a.outline_number || '';
+        const bNum = b.outline_number || '';
+
+        // Split by dots and compare each part numerically
+        const aParts = aNum.split('.').map((part) => parseInt(part) || 0);
+        const bParts = bNum.split('.').map((part) => parseInt(part) || 0);
+
+        for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+            const aVal = aParts[i] || 0;
+            const bVal = bParts[i] || 0;
+            if (aVal !== bVal) {
+                return aVal - bVal;
+            }
         }
         return 0;
     });
-}
 
-export function buildOutlineTree({ outlines }: OutlineProps) {
-    const sortedOutlines = sortOutlinesByNumber(outlines);
-    const outlineMap = new Map();
-    const rootOutlines = [];
+    const tree: OutlineNode[] = [];
+    const nodeMap = new Map<string, OutlineNode>();
 
+    // Create all nodes first
     sortedOutlines.forEach((outline) => {
-        outlineMap.set(outline.parameter_outline_id, { ...outline, children: [] });
+        const node: OutlineNode = {
+            ...outline,
+            children: [],
+        };
+        nodeMap.set(outline.outline_number || '', node);
     });
 
-    sortedOutlines.forEach(outline => {
-        if (outline.parent_outline_id) {
-            const parent = outlineMap.get(outline.parent_outline_id);
-            if (parent) {
-                parent.children.push(outlineMap.get(outline.parameter_outline_id));
+    // Build the hierarchy
+    sortedOutlines.forEach((outline) => {
+        const outlineNumber = outline.outline_number || '';
+        const node = nodeMap.get(outlineNumber)!;
+
+        // Find parent by checking if this is a sub-outline
+        const parts = outlineNumber.split('.');
+
+        if (parts.length > 1) {
+            // This is a sub-outline (e.g., "1.1", "1.2", "2.1.1")
+            // Find the parent by removing the last part
+            const parentNumber = parts.slice(0, -1).join('.');
+            const parentNode = nodeMap.get(parentNumber);
+
+            if (parentNode) {
+                parentNode.children.push(node);
+            } else {
+                // If parent not found, add to root
+                tree.push(node);
             }
         } else {
-            rootOutlines.push(outlineMap.get(outline.parameter_outline_id));
+            // This is a root outline (e.g., "1", "2", "A")
+            tree.push(node);
         }
     });
-    return rootOutlines;
+
+    return tree;
 }
 
 export function RecursiveOutline({ outlines }: OutlineProps) {
@@ -103,24 +130,15 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
                 {outlines.map((outline) => (
                     <li key={outline.parameter_outline_id}>
                         {!outline.container ? (
-                            <a
-                                className="cursor-pointer underline"
-                                onClick={() => handleViewPDF(outline)}
-                            >
-                                {outline.initial}.
-                                {outline.outline_number}.
-                                {outline.outline_description}
+                            <a className="cursor-pointer underline" onClick={() => handleViewPDF(outline)}>
+                                {outline.initial}.{outline.outline_number}.{outline.outline_description}
                             </a>
                         ) : (
                             <span>
-                                {outline.initial}.
-                                {outline.outline_number}.
-                                {outline.outline_description}
+                                {outline.initial}.{outline.outline_number}.{outline.outline_description}
                             </span>
                         )}
-                        {outline.children && outline.children.length > 0 && (
-                            <RecursiveOutline outlines={outline.children} />
-                        )}
+                        {outline.children && outline.children.length > 0 && <RecursiveOutline outlines={outline.children} />}
                     </li>
                 ))}
             </ul>
@@ -164,7 +182,14 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
             onProgress: (e) => console.log(e.percentage),
             forceFormData: true,
             onSuccess: () => {
-                resetOutline('parameter_outline_id', 'parameter_outline_category_id', 'outline_number', 'outline_description', 'container', 'outline_file');
+                resetOutline(
+                    'parameter_outline_id',
+                    'parameter_outline_category_id',
+                    'outline_number',
+                    'outline_description',
+                    'container',
+                    'outline_file',
+                );
                 // Close the dialog after successful submission
                 document.querySelector('[aria-label="Close"]')?.click();
             },
@@ -212,7 +237,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                 <div className="flex flex-col gap-3">
                                     {/* Current Document Section */}
                                     <div>
-                                        <h1 className='text-sm font-medium text-muted-foreground mb-1'>Current Document</h1>
+                                        <h1 className="text-muted-foreground mb-1 text-sm font-medium">Current Document</h1>
                                         <div className="flex items-center gap-4 rounded border bg-gray-50 p-4">
                                             <div className="flex-1">
                                                 {!outline.area_files ? (
@@ -221,12 +246,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                     <p className="text-sm text-gray-600">{`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}</p>
                                                 )}
                                             </div>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                disabled={!outline.area_files}
-                                                onClick={() => handleViewPDF(outline)}
-                                            >
+                                            <Button variant="outline" size="sm" disabled={!outline.area_files} onClick={() => handleViewPDF(outline)}>
                                                 <Eye className="mr-2 h-4 w-4" />
                                                 View PDF
                                             </Button>
@@ -249,15 +269,12 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                 placeholder="1.1.3"
                                                 className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                                             />
-                                            <InputError
-                                                message={errorsOutline.outline_number}
-                                                className="mt-2"
-                                            />
+                                            <InputError message={errorsOutline.outline_number} className="mt-2" />
                                         </div>
 
                                         {/* Outline Description Section */}
                                         <div>
-                                            <label className='text-sm font-medium text-muted-foreground mb-1'>Edit Outline Description</label>
+                                            <label className="text-muted-foreground mb-1 text-sm font-medium">Edit Outline Description</label>
                                             <textarea
                                                 id="outline_description"
                                                 autoFocus
@@ -265,20 +282,15 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                 value={dataOutline.outline_description}
                                                 onChange={(e) => setOutlineData('outline_description', e.target.value)}
                                                 disabled={processingOutline}
-                                                className="min-h-[120px] text-sm w-full rounded border p-3 focus:border-transparent focus:ring-2 focus:ring-blue-500 max-h-[20vw]"
+                                                className="max-h-[20vw] min-h-[120px] w-full rounded border p-3 text-sm focus:border-transparent focus:ring-2 focus:ring-blue-500"
                                                 placeholder="Enter new outline description..."
                                             />
-                                            <InputError
-                                                message={errorsOutline.outline_description}
-                                                className="mt-2"
-                                            />
+                                            <InputError message={errorsOutline.outline_description} className="mt-2" />
                                         </div>
 
                                         {/* Outline Category Section */}
                                         <div>
-                                            <label className="text-muted-foreground mb-1 block text-sm font-medium">
-                                                Outline Category
-                                            </label>
+                                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Category</label>
                                             <select
                                                 className="bg-background focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                                                 id="parameter_outline_category_id"
@@ -316,7 +328,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                         {/* Upload File Section */}
                                         <div className="space-y-2">
                                             <div>
-                                                <h3 className='text-sm font-medium text-muted-foreground mb-1'>Upload Document</h3>
+                                                <h3 className="text-muted-foreground mb-1 text-sm font-medium">Upload Document</h3>
                                                 <div className="flex w-full items-center justify-center">
                                                     {!dataOutline.outline_file ? (
                                                         <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
@@ -387,8 +399,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                                     <DialogHeader>
                                                         <DialogTitle>Confirm Removal</DialogTitle>
                                                         <DialogDescription>
-                                                            Are you sure you want to permanently remove this outline and all
-                                                            associated documents?
+                                                            Are you sure you want to permanently remove this outline and all associated documents?
                                                         </DialogDescription>
                                                     </DialogHeader>
                                                     <DialogFooter>
@@ -424,9 +435,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, outlineCatego
                                 </div>
                             </DialogContent>
                         </Dialog>
-                        {outline.children && outline.children.length > 0 && (
-                            <RecursiveOutlineForm outlines={outline.children} />
-                        )}
+                        {outline.children && outline.children.length > 0 && <RecursiveOutlineForm outlines={outline.children} />}
                     </li>
                 ))}
             </ul>
