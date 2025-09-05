@@ -12,9 +12,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { auth } = usePage().props;
     const privileges = auth.programs || [];
     const role = auth.user.roles[0].role_name;
+    console.log(privileges);
 
     const programItems = privileges.map((program) => ({
-        title: program.title,
+        title: program.program_name,
         url: `/manage-programs/${program.program_link}`,
     }));
     const accre = [
@@ -60,27 +61,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 title: 'News',
                 url: '/dashboard',
                 icon: SquareTerminal,
-            },
-            {
-                title: 'Programs',
-                url: '/embed',
-                icon: Bot,
-                isActive: true,
-                collapsible: true,
-                items: [
-                    {
-                        title: 'Accountancy',
-                        url: '/accountancy',
-                    },
-                    {
-                        title: 'Accountancy',
-                        url: '/accountancy',
-                    },
-                    {
-                        title: 'Accountancy',
-                        url: '/accountancy',
-                    },
-                ],
             },
         ]
         : []),

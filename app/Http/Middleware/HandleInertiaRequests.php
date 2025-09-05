@@ -30,6 +30,14 @@ class HandleInertiaRequests extends Middleware
         return parent::version($request);
     }
 
+    private function formatPrograms($programs)
+    {
+        return $programs = $programs->map(function ($program) {
+            $program->program_link = Str::of($program->program_name)->snake();
+            return $program;
+        });
+    }
+
     /**
      * Define the props that are shared by default.
      *
@@ -45,30 +53,23 @@ class HandleInertiaRequests extends Middleware
             ->where('under_survey', true)
             ->get();
 
-        $programs_under_survey = $programs_under_survey->map(function ($program) {
-            $program->program_link = Str::of($program->program_name)->snake();
-            return $program;
-        });
-
         $outlines = ParameterOutlines::select('*')
             ->with(['AreaParameter', 'AreaParameter.Areas', 'AreaParameter.Areas.Programs', 'ParameterOutlineCategory'])
             ->get();
 
         $role = $request->user()?->Roles->first()?->role_name;
+        $programs = [];
 
         if ($role === 'Admin' || $role === 'Coordinator') {
-            $programs = Programs::select('program_name as title')->get();
+            $programs = Programs::select('program_name')->get();
         } elseif ($role === 'Chairman') {
-            $programs = $request->user()?->Programs()->select('program_name as title')->get();
+            $programs = $request->user()?->Programs()->select('program_name')->get();
         } else {
-            $programs = [];
+            $programs = collect();
         }
-        if ($programs !== null) {
-            $programs = $programs->map(function ($program) {
-                $program->program_link = Str::of($program->title)->snake();
-                return $program;
-            });
-        }
+
+        $programs_under_survey = $this->formatPrograms($programs_under_survey);
+        $programs = $this->formatPrograms($programs);
 
         return [
             ...parent::share($request),
