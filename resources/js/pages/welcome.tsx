@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button';
-import { CardDescription, CardHeader, CardImage, HomeCard, HomeCardTitle, HomeCardDescription } from '@/components/ui/card';
+import { CardDescription, CardHeader, CardImage, HomeCard, HomeCardDescription, HomeCardTitle } from '@/components/ui/card';
 import Layout from '@/layouts/landing-layout';
 import { Head, Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
+import {BookOpen, Calendar, GraduationCap} from "lucide-react";
 
 export default function Welcome() {
     return (
@@ -12,18 +12,44 @@ export default function Welcome() {
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
             <Layout>
-                <div className="grid h-[70vh] w-full place-items-center overflow-y-hidden">
-                    <iframe
-                        className="pointer-events-none h-[240%] w-[100%]"
-                        src="https://www.youtube.com/embed/QtioU1IZS_Y?autoplay=1&controls=0&modestbranding=1&rel=0&mute=1&loop=1&playlist=QtioU1IZS_Y"
-                        allow="autoplay; encrypted-media"
-                    ></iframe>
+                <div className="relative grid h-[70vh] w-full place-items-center overflow-y-hidden">
+                    {/* Background Image */}
+                    <img src="/images/homepage-slides/1.png" alt="Preview" className="h-full w-auto object-cover object-top" />
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>
+
+                    {/* Content Overlay */}
+                    <div className="absolute inset-0 z-20 flex flex-col items-start justify-center space-y-6 px-12 pr-10 pl-70 text-white">
+                        {/* Extra image overlay (optional) */}
+                        <img src="/images/pupsj_motto.png" alt="Logo" className="h-auto w-120" />
+                        {/* Subtitle */}
+                        <h2 className="text-2xl italic">Years of academic excellence and service</h2>
+                     
+
+
+                        <div className="mt-10 flex space-x-4">
+                            {/* Primary button - Book */}
+                            <button className="flex items-center space-x-2 rounded-md bg-white px-6 py-2 font-semibold text-black shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                                <BookOpen className="h-5 w-5" />
+                                <span>Programs</span>
+                            </button>
+
+                            {/* Secondary button - Events (Calendar) */}
+                            <button className="flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-200 hover:bg-white/20">
+                                <Calendar className="h-5 w-5" />
+                                <span>Events</span>
+                            </button>
+
+                            {/* Secondary button - Academe (GraduationCap / Medal) */}
+                            <button className="flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-200 hover:bg-white/20">
+                                <GraduationCap className="h-5 w-5" />
+                                <span>Academe</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div className="flex h-[7vw] items-center justify-center gap-7 bg-[#7f1414]">
-                    <Button className="px-[2vw] py-[1.5vw] text-[0.8vw]">OVERVIEW</Button>
-                    <Button className="px-[2vw] py-[1.5vw] text-[0.8vw]">CONTACT US</Button>
-                    <Button className="px-[2vw] py-[1.5vw] text-[0.8vw]">VISIT CAMPUS</Button>
-                </div>
+
                 <div className="flex h-[70vh] w-full flex-col items-center justify-center gap-7 bg-[url('/images/bg.png')] bg-cover bg-center">
                     <p className="text-[1.7vw] font-bold">LATEST UPDATES</p>
                     <div className="h-[0.3%] w-[10%] bg-[#7f1414]"></div>
@@ -44,9 +70,7 @@ export default function Welcome() {
                                 <CardImage src="/images/cpale.jpg" alt="cpale" />
                                 <CardHeader>
                                     <HomeCardTitle>CPALE 2024 Passers</HomeCardTitle>
-                                    <HomeCardDescription
-                                    >Pagpupugay sa bagong CPA ng ating Sintang Paaralan.
-                                    </HomeCardDescription>
+                                    <HomeCardDescription>Pagpupugay sa bagong CPA ng ating Sintang Paaralan.</HomeCardDescription>
                                 </CardHeader>
                             </HomeCard>
                         </Link>
