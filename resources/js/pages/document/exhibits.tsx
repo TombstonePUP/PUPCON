@@ -15,7 +15,7 @@ import { DocumentViewer } from '@/components/ui/document-viewer';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { Edit, Eye, Plus, Trash2, Upload } from 'lucide-react';
+import { Edit, Eye, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -80,7 +80,7 @@ export default function ExhibitAdmin() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Exhibits" />
-            <div className="flex h-full flex-1 flex-col gap-6 p-6">
+            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
                 {/* Header Section */}
                 <div className="flex items-center justify-between">
                     <div>
@@ -88,17 +88,17 @@ export default function ExhibitAdmin() {
                         <p className="mt-1 text-sm text-gray-600">Manage program exhibits and documentation</p>
                     </div>
 
-                    {/* Add New Exhibit Dialog */}
+                    {/* Add Exhibit Dialog */}
                     <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button variant={'noborder'}>
+                            <Button variant="noborder" className='w-50'>
                                 <Plus className="h-4 w-4" />
-                                Add New Exhibit
+                                Add Exhibit
                             </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-md">
                             <DialogHeader>
-                                <DialogTitle>Add New Exhibit</DialogTitle>
+                                <DialogTitle>Add Exhibit</DialogTitle>
                                 <DialogDescription>Please provide the exhibit title and upload an image and file.</DialogDescription>
                             </DialogHeader>
                             <form onSubmit={handleAddExhibit} className="space-y-4">
@@ -134,8 +134,7 @@ export default function ExhibitAdmin() {
                                         <Button variant="outline">Cancel</Button>
                                     </DialogClose>
                                     <Button type="submit" variant={'noborder'}>
-                                        <Upload className="h-4 w-4" />
-                                        Upload
+                                        Submit
                                     </Button>
                                 </DialogFooter>
                             </form>
@@ -144,7 +143,7 @@ export default function ExhibitAdmin() {
                 </div>
 
                 {/* Exhibits Grid */}
-                <div className="rounded-lg border border-gray-200 bg-white p-6">
+                <div className="rounded-lg border border-gray-200 bg-white p-6 ">
                     <div className="mb-4">
                         <h2 className="text-lg font-semibold text-gray-900">Available Exhibits</h2>
                         <p className="text-sm text-gray-600">Manage your program exhibits and documentation</p>
@@ -154,7 +153,7 @@ export default function ExhibitAdmin() {
                         {mockExhibits.map((exhibit) => (
                             <div
                                 key={exhibit.id}
-                                className="overflow-hidden rounded-lg border border-[#7f1414]/20 hover:border-[#7f1414] bg-white transition"
+                                className="overflow-hidden rounded-lg border border-[#7f1414]/20 hover:border-[#7f1414] transition hover:bg-red-50/50 transition-all duration-200"
                             >
                                 <div className="flex aspect-video items-center justify-center ">
                                     <img
@@ -179,14 +178,14 @@ export default function ExhibitAdmin() {
                                         >
                                             <Edit className="h-4 w-4" />
                                         </Button>
-                                        <Button
+                                        {/* <Button
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleDeleteExhibit(exhibit.id)}
                                             className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
                                         >
                                             <Trash2 className="h-4 w-4" />
-                                        </Button>
+                                        </Button> */}
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +234,7 @@ export default function ExhibitAdmin() {
                                     className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
                                 />
                             </div>
-                            <DialogFooter className="flex justify-between">
+                            <DialogFooter className="sm:justify-between">
                                 <Button
                                     type="button"
                                     variant="outline"

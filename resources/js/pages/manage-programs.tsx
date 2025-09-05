@@ -96,19 +96,24 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     </div>
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button variant="noborder">
-                                <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            <Button variant="noborder" className='w-50'>
+                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                                    />
                                 </svg>
                                 Add Program
                             </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-md">
                             <DialogHeader>
-                                <DialogTitle className="text-lg font-semibold">Add New Program</DialogTitle>
+                                <DialogTitle className="text-lg font-semibold">Add Program</DialogTitle>
                                 <DialogDescription>Create a new academic program for PUP San Juan</DialogDescription>
                             </DialogHeader>
-                            <div className="flex flex-col gap-4 py-4">
+                            <div className="flex flex-col gap-4">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-700">Degree Type</label>
                                     <Select defaultValue="">
@@ -136,7 +141,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                 <DialogClose asChild>
                                     <Button variant="outline">Cancel</Button>
                                 </DialogClose>
-                                <Button className="bg-[#7f1414] hover:bg-[#8b1515]">Create Program</Button>
+                                <Button variant="noborder">Submit</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -222,14 +227,13 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                     href={route('manage.program', { program_name: program.program_name })}
                                     className="group"
                                 >
-                                    <div className="rounded-lg border border-gray-200 p-4 transition-all duration-200 hover:border-[#7f1414]/30 hover:bg-red-50/50">
+                                    <div className="rounded-lg border border-[#7f1414]/20 hover:border-[#7f1414] p-4 transition-all duration-200 hover:bg-red-50/50">
                                         <div className="mb-3 flex items-center justify-between">
                                             <div
-                                                className={`inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium ${
-                                                    program.degree_type.toLowerCase().includes('bachelor')
+                                                className={`inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium ${program.degree_type.toLowerCase().includes('bachelor')
                                                         ? 'bg-red-100 text-[#7f1414]'
                                                         : 'bg-green-100 text-green-700'
-                                                }`}
+                                                    }`}
                                             >
                                                 {/* {getDegreeIcon(program.degree_type)} */}
                                                 {program.degree_type}
@@ -302,15 +306,15 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                             <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                             </svg>
-                                            Create Your First Program
+                                            No Program Available
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent className="sm:max-w-md">
                                         <DialogHeader>
-                                            <DialogTitle className="text-lg font-semibold">Add New Program</DialogTitle>
+                                            <DialogTitle className="text-lg font-semibold">Add Program</DialogTitle>
                                             <DialogDescription>Create a new academic program for PUP San Juan</DialogDescription>
                                         </DialogHeader>
-                                        <div className="flex flex-col gap-4 py-4">
+                                        <div className="flex flex-col gap-4">
                                             <div className="space-y-2">
                                                 <label className="text-sm font-medium text-gray-700">Degree Type</label>
                                                 <Select defaultValue="">
@@ -338,7 +342,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                             <DialogClose asChild>
                                                 <Button variant="outline">Cancel</Button>
                                             </DialogClose>
-                                            <Button className="bg-[#7f1414] hover:bg-[#8b1515]">Create Program</Button>
+                                            <Button variant="noborder">Submit</Button>
                                         </DialogFooter>
                                     </DialogContent>
                                 </Dialog>

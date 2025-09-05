@@ -76,7 +76,6 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
 
                     <div
-                        id="overview"
                         className="group flex w-[75%] justify-center gap-4 rounded-xl rounded-tr-none border border-[#7f1414]/25 bg-white p-4 duration-300 hover:border-[#7f1414]"
                     >
                         <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-bold transition duration-300 hover:text-[#7f1414]">
@@ -99,7 +98,7 @@ export default function Programs({ program }: PerProgramProps) {
                         </h1>
                     </div>
 
-                    <div className="group flex w-[75%] flex-row justify-between gap-4 rounded-xl">
+                    <div className="group flex w-[75%] flex-row justify-between gap-4 rounded-xl"  id="overview">
                         <div className="flex-1 rounded-xl border border-[#7f1414]/25 bg-white p-8 px-13 duration-300 hover:border-[#7f1414]">
                             <h1 className="mb-4 text-3xl font-bold text-[#7f1414] transition duration-300 group-hover:text-[#a01818]">
                                 Program Overview
@@ -200,13 +199,13 @@ export default function Programs({ program }: PerProgramProps) {
                         </svg>
                     </div>
 
-                    <div className=' w-[75%]'>
+                    <div className=' w-[75%]' id="areas">
                         <div className="grid place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
                             <h1 className="text-4xl font-bold">Areas Under Survey</h1>
                             <p>ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES</p>
                         </div>
 
-                        <div className="flex h-fit w-full flex-row flex-wrap justify-center gap-[1.5vw] py-3" id="areas">
+                        <div className="flex h-fit w-full flex-row flex-wrap justify-center gap-[1.5vw] py-3" >
                             {program?.areas?.length > 0 ? (
                                 program.areas.map((area, index) => (
                                     <AreaCard
