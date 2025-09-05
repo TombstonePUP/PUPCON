@@ -52,7 +52,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     </div>
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button variant="noborder" className='w-50'>
+                            <Button variant="noborder" className="w-50">
                                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         strokeLinecap="round"
@@ -183,13 +183,14 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                     href={route('manage.program', { program_name: program.program_link })}
                                     className="group"
                                 >
-                                    <div className="rounded-lg border border-[#7f1414]/20 hover:border-[#7f1414] p-4 transition-all duration-200 hover:bg-red-50/50">
+                                    <div className="rounded-lg border border-[#7f1414]/20 p-4 transition-all duration-200 hover:border-[#7f1414] hover:bg-red-50/50">
                                         <div className="mb-3 flex items-center justify-between">
                                             <div
-                                                className={`inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium ${program.degree_type.toLowerCase().includes('bachelor')
+                                                className={`inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium ${
+                                                    program.degree_type.toLowerCase().includes('bachelor')
                                                         ? 'bg-red-100 text-[#7f1414]'
                                                         : 'bg-green-100 text-green-700'
-                                                    }`}
+                                                }`}
                                             >
                                                 {/* {getDegreeIcon(program.degree_type)} */}
                                                 {program.degree_type}
