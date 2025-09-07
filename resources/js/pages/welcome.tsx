@@ -1,8 +1,8 @@
-import { CardDescription, CardHeader, CardImage, HomeCard, HomeCardDescription, HomeCardTitle } from '@/components/ui/card';
+import { CardHeader, CardImage, HomeCard, HomeCardDescription, HomeCardTitle } from '@/components/ui/card';
 import Layout from '@/layouts/landing-layout';
 import { Head, Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import {BookOpen, Calendar, GraduationCap} from "lucide-react";
+import { BookOpen, Calendar, GraduationCap } from 'lucide-react';
 
 export default function Welcome() {
     return (
@@ -25,8 +25,6 @@ export default function Welcome() {
                         <img src="/images/pupsj_motto.png" alt="Logo" className="h-auto w-120" />
                         {/* Subtitle */}
                         <h2 className="text-2xl italic">Years of academic excellence and service</h2>
-                     
-
 
                         <div className="mt-10 flex space-x-4">
                             {/* Primary button - Book */}
@@ -50,48 +48,82 @@ export default function Welcome() {
                     </div>
                 </div>
 
-                <div className="flex h-[70vh] w-full flex-col items-center justify-center gap-7 bg-[url('/images/bg.png')] bg-cover bg-center">
-                    <p className="text-[1.7vw] font-bold">LATEST UPDATES</p>
-                    <div className="h-[0.3%] w-[10%] bg-[#7f1414]"></div>
-                    <div className="flex flex-row gap-5">
+                <div className="flex min-h-[80vh] w-full flex-col items-center justify-center gap-20 bg-gray-50 px-6 py-16">
+                    {/* Section Header */}
+                    <div className="flex flex-col items-center text-center">
+                        <p className="text-3xl font-bold text-gray-900">What’s New on Campus</p>
+                        <p className="mt-0.5 text-lg text-gray-600">Catch up on events, announcements, and campus highlights.</p>
+                    </div>
+
+                    {/* News Cards */}
+                    <div className="flex flex-row flex-wrap justify-center gap-8">
+                        {/* Card 1 */}
                         <Link href="/">
-                            <HomeCard className="w-[18vw] pb-6 hover:border-[#7f1414]">
+                            <HomeCard className="group w-[18vw] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-[#7f1414] hover:shadow-lg">
                                 <CardImage src="/images/pupcet.jpg" alt="pupcet" />
-                                <CardHeader>
-                                    <HomeCardTitle>PUPSJ PUPCET</HomeCardTitle>
-                                    <HomeCardDescription>
+                                <CardHeader className="p-4">
+                                    <HomeCardTitle className="font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
+                                        PUPSJ PUPCET
+                                    </HomeCardTitle>
+                                    <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
+                                        <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-500 group-hover:scale-x-100"></div>
+                                    </div>
+                                    <HomeCardDescription className="text-sm text-gray-600">
                                         The PUPSJ PUPCET Online Application for Academic Year 2025-2026 starts on December 15, 2024 - April 15, 2025.
                                     </HomeCardDescription>
                                 </CardHeader>
                             </HomeCard>
                         </Link>
+
+                        {/* Card 2 */}
                         <Link href="/">
-                            <HomeCard className="w-[18vw] pb-6 hover:border-[#7f1414]">
+                            <HomeCard className="group w-[18vw] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-[#7f1414] hover:shadow-lg">
                                 <CardImage src="/images/cpale.jpg" alt="cpale" />
-                                <CardHeader>
-                                    <HomeCardTitle>CPALE 2024 Passers</HomeCardTitle>
-                                    <HomeCardDescription>Pagpupugay sa bagong CPA ng ating Sintang Paaralan.</HomeCardDescription>
-                                </CardHeader>
-                            </HomeCard>
-                        </Link>
-                        <Link href="/">
-                            <HomeCard className="w-[18vw] pb-6 hover:border-[#7f1414]">
-                                <CardImage src="/images/mental.jpg" alt="mental health" />
-                                <CardHeader>
-                                    <HomeCardTitle>Mental Health Matters</HomeCardTitle>
-                                    <HomeCardDescription>
-                                        The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow
-                                        tips for boosting your
+                                <CardHeader className="p-4">
+                                    <HomeCardTitle className="font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
+                                        CPALE 2024 Passers
+                                    </HomeCardTitle>
+                                    <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
+                                        <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-500 group-hover:scale-x-100"></div>
+                                    </div>
+                                    <HomeCardDescription className="text-sm text-gray-600">
+                                        Pagpupugay sa bagong CPA ng ating Sintang Paaralan.
                                     </HomeCardDescription>
                                 </CardHeader>
                             </HomeCard>
                         </Link>
+
+                        {/* Card 3 */}
                         <Link href="/">
-                            <HomeCard className="w-[18vw] pb-6 hover:border-[#7f1414]">
+                            <HomeCard className="group w-[18vw] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-[#7f1414] hover:shadow-lg">
+                                <CardImage src="/images/mental.jpg" alt="mental health" />
+                                <CardHeader className="p-4">
+                                    <HomeCardTitle className="font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
+                                        Mental Health Matters
+                                    </HomeCardTitle>
+                                    <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
+                                        <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-500 group-hover:scale-x-100"></div>
+                                    </div>
+                                    <HomeCardDescription className="text-sm text-gray-600">
+                                        The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow
+                                        tips for boosting your well-being.
+                                    </HomeCardDescription>
+                                </CardHeader>
+                            </HomeCard>
+                        </Link>
+
+                        {/* Card 4 */}
+                        <Link href="/">
+                            <HomeCard className="group w-[18vw] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-[#7f1414] hover:shadow-lg">
                                 <CardImage src="/images/ceremony.jpg" alt="ceremony" />
-                                <CardHeader>
-                                    <HomeCardTitle>Ceremonial Signing</HomeCardTitle>
-                                    <HomeCardDescription>
+                                <CardHeader className="p-4">
+                                    <HomeCardTitle className="font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
+                                        Ceremonial Signing
+                                    </HomeCardTitle>
+                                    <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
+                                        <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-500 group-hover:scale-x-100"></div>
+                                    </div>
+                                    <HomeCardDescription className="text-sm text-gray-600">
                                         A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!
                                     </HomeCardDescription>
                                 </CardHeader>
@@ -99,45 +131,134 @@ export default function Welcome() {
                         </Link>
                     </div>
                 </div>
-                <div className="grid place-items-center py-10">
-                    <HomeCard className="flex h-[20vw] w-[70%] flex-row bg-[#f4f4f4]">
-                        <CardImage className="h-full w-[80%] pb-0" src="/images/pup-slogan.jpg" alt="pup slogan" />
-                        <CardHeader className="grid w-[80%] place-items-center p-[6vw]">
-                            <HomeCardTitle className="text-[1.5vw]">WELCOME ACCREDITORS!</HomeCardTitle>
-                            <CardDescription className="grid place-items-center text-center">
-                                <h1 className="mb-[0.5vw] text-[0.9vw] text-black">
-                                    "It is our honor to host you, esteemed accreditors, and we appreciate your role in our continued success."
-                                </h1>
-                                <br />
-                                <p>Level II AACCUP Survey Visit</p>
-                            </CardDescription>
-                        </CardHeader>
-                    </HomeCard>
-                </div>
+
+                {/* --- Director’s Message Section --- */}
                 <motion.section
-                    className="grid place-items-center bg-white py-10"
+                    className="bg-white py-20"
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
                 >
-                    <div className="flex w-[70%] flex-col items-center justify-center gap-5 lg:flex-row">
-                        <div className="flex w-full justify-center lg:w-[30%]">
-                            <div className="h-[15vw] w-[15vw] overflow-hidden rounded-full bg-gray-300 shadow-lg">
-                                <img src="/images/adfa/alagon.png" alt="Director" className="h-full w-full object-cover" />
-                            </div>
+                    <div className="mx-auto mb-12 max-w-4xl text-center">
+                        <h2 className="mb-2 text-3xl font-bold text-gray-900">Message from the Campus Director</h2>
+                        <p className="text-gray-600">A word of inspiration from our campus leadership.</p>
+                    </div>
+
+                    <div className="mx-auto flex w-[80%] max-w-[1000px] flex-col gap-2 lg:flex-row lg:items-stretch">
+                        {/* Left: Director’s Image */}
+                        <div className="relative mx-auto h-[350px] w-[280px] shrink-0 overflow-hidden rounded-xl shadow-lg lg:mx-0">
+                            <img src="/images/adfa-new/Cecilia-R.-Alagon.jpg" alt="Director" className="h-full w-full object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#7f1414]/20 to-transparent" />
                         </div>
-                        <div className="text-center lg:w-[60%] lg:text-left">
-                            <h2 className="mb-[1vw] text-[1.5vw] font-bold text-[#7f1414]">Message from the Director</h2>
-                            <p className="text-[0.9vw] leading-relaxed text-gray-700">
-                                Welcome to PUP San Juan! As the Campus Director, I am proud to see our institution thrive through innovation,
-                                collaboration, and excellence. We continue to build a community that uplifts each learner and shapes the future of
-                                education. Maraming salamat sa inyong suporta!
-                            </p>
-                            <p className="mt-[0.8vw] text-[0.85vw] font-medium text-gray-800">Dr. Cecilia R. Alagon, Campus Director</p>
+
+                        {/* Right: Director’s Message */}
+                        <div className="flex flex-1 flex-col gap-4 rounded-xl bg-[#7f1414] p-12 text-white shadow-md">
+                            {/* Quote Icon Placeholder */}
+                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#a83232]/80">
+                                <img src="/images/quote.png" alt="Quote Icon" className="h-4 w-4 object-contain" />
+                            </div>
+
+                            {/* Scrollable Message */}
+                            <div className="max-h-[120px] overflow-y-auto pr-2">
+                                <p className="text-left leading-relaxed">
+                                    Welcome to PUP San Juan! As the Campus Director, I am proud to see our institution thrive through innovation,
+                                    collaboration, and excellence. We continue to build a community that uplifts each learner and shapes the future of
+                                    education. Maraming salamat sa inyong suporta!
+                                </p>
+                            </div>
+                            {/* Name & Title */}
+                            <div className="mt-auto text-left">
+                                <p className="font-semibold">Dr. Cecilia R. Alagon</p>
+                                <p className="text-sm opacity-90">Campus Director</p>
+                            </div>
                         </div>
                     </div>
                 </motion.section>
+
+                {/* --- Welcome Accreditors Section --- */}
+                <section className="flex h-[50vh] items-center justify-center">
+                    <div className="flex w-[80%] max-w-[1200px] flex-col gap-12 rounded-xl border border-[#201e1e31] bg-white p-15  lg:flex-row">
+                        {/* Left Column (Text) */}
+                        <div className="flex flex-1 flex-col justify-center gap-6">
+                            {/* Header */}
+                            <h2 className="text-3xl font-bold text-gray-900">Welcome Accreditors!</h2>
+                            <p className="leading-relaxed text-gray-700">
+                                It is our honor to host you, esteemed accreditors, and we deeply appreciate your role in our continued success.
+                            </p>
+
+                            {/* Tags */}
+                            <div className="flex flex-wrap gap-3">
+                                <span className="rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-[#7f1414]">March 2025</span>
+                                <span className="rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-[#7f1414]">
+                                    Level II AACCUP Survey Visit
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Right Column (Cards) */}
+                        <div className="flex flex-1 flex-col gap-4 md:flex-row">
+                            {/* Card 1 */}
+                            <a
+                                href="#"
+                                className="flex flex-1 flex-col items-start gap-10 rounded-xl bg-[#7f1414] p-6 text-white shadow-md transition-all hover:-translate-y-1 hover:bg-[#a83232] hover:shadow-lg"
+                            >
+                                {/* Icon */}
+                                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-6 w-6 text-white"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M12 20l9-5-9-5-9 5 9 5zm0 0V10m0 10v-4"
+                                        />
+                                    </svg>
+                                </div>
+                                {/* Title & Desc */}
+                                <div>
+                                    <h3 className="mb-3 text-lg font-semibold">Academic Programs</h3>
+                                    <p className="text-sm opacity-90">Learn more about the process, documents, and evaluation steps.</p>
+                                </div>
+                            </a>
+
+                            {/* Card 2 */}
+                            <a
+                                href="#"
+                                className="flex flex-1 flex-col items-start gap-10 rounded-xl bg-[#7f1414] p-6 text-white shadow-md transition-all hover:-translate-y-1 hover:bg-[#a83232] hover:shadow-lg"
+                            >
+                                {/* Icon */}
+                                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-6 w-6 text-white"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M13 16h-1v-4h-1m1-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z"
+                                        />
+                                    </svg>
+                                </div>
+                                {/* Title & Desc */}
+                                <div>
+                                    <h3 className="mb-3 text-lg font-semibold">More Info</h3>
+                                    <p className="text-sm opacity-90">Important details and updates for the accreditation visit.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
                 <motion.section
                     className="relative flex min-h-[80vh] w-full items-center justify-center py-16"
                     initial={{ opacity: 0, y: 50 }}
@@ -149,7 +270,7 @@ export default function Welcome() {
                         className="absolute inset-0 bg-cover bg-center opacity-30 grayscale"
                         style={{ backgroundImage: "url('/images/homepage-slides/1.jpg')" }}
                     ></div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-l from-white/95 via-white/80 to-transparent"></div>
                     <div className="relative z-10 flex w-[85%] max-w-[1400px] flex-col items-center justify-center gap-16 lg:flex-row">
                         <div className="flex w-full justify-center lg:w-[50%]">
                             <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl">
@@ -218,9 +339,9 @@ export default function Welcome() {
                 >
                     <div
                         className="absolute inset-0 bg-cover bg-center opacity-30 grayscale"
-                        style={{ backgroundImage: "url('/images/others/street-sj.png')" }}
+                        style={{ backgroundImage: "url('/images/homepage-slides/street-sj.png')" }}
                     ></div>
-                    <div className="absolute inset-0 bg-gradient-to-l from-white/90 via-white/60 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
                     <div className="relative z-10 flex w-[85%] max-w-[1400px] flex-col items-center justify-center gap-16 lg:flex-row">
                         <div className="order-2 flex w-full flex-col justify-center text-center lg:order-1 lg:w-[50%] lg:text-left">
                             <motion.h2
