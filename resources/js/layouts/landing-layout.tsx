@@ -1,7 +1,8 @@
 import { cn } from '@/lib/utils';
-import { Link, usePage } from '@inertiajs/react';
-import { ReactNode, useEffect, useRef, useState } from 'react';
 import type { GuestNavigation } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, ExternalLink, Facebook, GraduationCap, Home, Mail } from 'lucide-react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 
 interface LayoutProps {
     children: ReactNode;
@@ -37,9 +38,9 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
     const underSurveyPrograms = (guest as any)?.programs?.length
         ? (guest as any).programs.map((program: any) => ({
-            label: program.program_name,
-            href: `/programs/${program.program_link}`,
-        }))
+              label: program.program_name,
+              href: `/programs/${program.program_link}`,
+          }))
         : [];
 
     const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
@@ -90,23 +91,24 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
         const searchTerm = term.toLowerCase();
 
-        const results: any[] = (guest as any)?.outlines
-            ?.filter((outline: any) => {
-                // Search in multiple fields
-                return (
-                    outline.outline_description?.toLowerCase().includes(searchTerm) ||
-                    outline.area_parameters?.parameter_name?.toLowerCase().includes(searchTerm) ||
-                    outline.area_parameters?.area?.area_name?.toLowerCase().includes(searchTerm) ||
-                    outline.area_parameters?.area?.program?.program_name?.toLowerCase().includes(searchTerm)
-                );
-            })
-            ?.map((outline: any) => ({
-                outline: outline.outline_description,
-                outlineId: outline.parameter_outline_id,
-                program: outline.area_parameters?.area?.program?.program_name,
-                area: outline.area_parameters?.area?.area_name,
-                parameter: outline.area_parameters?.parameter_name,
-            })) || [];
+        const results: any[] =
+            (guest as any)?.outlines
+                ?.filter((outline: any) => {
+                    // Search in multiple fields
+                    return (
+                        outline.outline_description?.toLowerCase().includes(searchTerm) ||
+                        outline.area_parameters?.parameter_name?.toLowerCase().includes(searchTerm) ||
+                        outline.area_parameters?.area?.area_name?.toLowerCase().includes(searchTerm) ||
+                        outline.area_parameters?.area?.program?.program_name?.toLowerCase().includes(searchTerm)
+                    );
+                })
+                ?.map((outline: any) => ({
+                    outline: outline.outline_description,
+                    outlineId: outline.parameter_outline_id,
+                    program: outline.area_parameters?.area?.program?.program_name,
+                    area: outline.area_parameters?.area?.area_name,
+                    parameter: outline.area_parameters?.parameter_name,
+                })) || [];
 
         setSearchResults(results);
     };
@@ -205,11 +207,11 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                 {/* Search Button */}
                 <button
-                    className="absolute right-[3vw] top-[0.5vw] flex items-center gap-2 rounded px-3 py-1 cursor-pointer"
+                    className="absolute top-[0.5vw] right-[3vw] flex cursor-pointer items-center gap-2 rounded px-3 py-1"
                     onClick={() => setSearchOpen(true)}
                     title="Search Outlines"
                 >
-                    <svg className="w-8 h-8 text-[#7f1414] hover:scale-110" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
+                    <svg className="h-8 w-8 text-[#7f1414] hover:scale-110" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
@@ -219,7 +221,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
             {/* Search Modal */}
             {searchOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative">
+                    <div className="relative w-full max-w-2xl rounded-lg bg-white p-6 shadow-lg">
                         <button
                             className="absolute top-3 right-3 text-gray-400 hover:text-[#7f1414]"
                             onClick={() => {
@@ -229,12 +231,12 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             }}
                             aria-label="Close"
                         >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <line x1="18" y1="6" x2="6" y2="18" />
                                 <line x1="6" y1="6" x2="18" y2="18" />
                             </svg>
                         </button>
-                        <h2 className="text-xl font-bold mb-4 text-[#7f1414]">Search</h2>
+                        <h2 className="mb-4 text-xl font-bold text-[#7f1414]">Search</h2>
                         <div className="mb-4">
                             <input
                                 ref={inputRef}
@@ -251,30 +253,34 @@ export default function Layout({ children, footerText }: LayoutProps) {
                         <div className="max-h-[50vh] overflow-y-auto">
                             {searchTerm ? (
                                 searchResults.length === 0 ? (
-                                    <p className="text-gray-500 text-center">No results found for "{searchTerm}"</p>
+                                    <p className="text-center text-gray-500">No results found for "{searchTerm}"</p>
                                 ) : (
                                     <ul className="space-y-4">
                                         {searchResults.map((result, idx) => {
                                             const regex = new RegExp(`(${searchTerm})`, 'gi');
 
                                             // Highlight matches in all fields
-                                            const highlightedProgram = result.program?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.program;
-                                            const highlightedArea = result.area?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.area;
-                                            const highlightedParameter = result.parameter?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.parameter;
-                                            const highlightedOutline = result.outline?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.outline;
+                                            const highlightedProgram =
+                                                result.program?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.program;
+                                            const highlightedArea =
+                                                result.area?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.area;
+                                            const highlightedParameter =
+                                                result.parameter?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.parameter;
+                                            const highlightedOutline =
+                                                result.outline?.replace(regex, '<mark class="bg-yellow-200">$1</mark>') || result.outline;
 
                                             return (
                                                 <li key={idx} className="border-b pb-2">
                                                     <div
-                                                        className="text-xs text-gray-500 mb-1"
+                                                        className="mb-1 text-xs text-gray-500"
                                                         dangerouslySetInnerHTML={{
-                                                            __html: `${highlightedProgram} &rarr; ${highlightedArea} &rarr; ${highlightedParameter}`
+                                                            __html: `${highlightedProgram} &rarr; ${highlightedArea} &rarr; ${highlightedParameter}`,
                                                         }}
                                                     />
                                                     <div
                                                         className="text-sm"
                                                         dangerouslySetInnerHTML={{
-                                                            __html: highlightedOutline
+                                                            __html: highlightedOutline,
                                                         }}
                                                     />
                                                 </li>
@@ -283,7 +289,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                     </ul>
                                 )
                             ) : (
-                                <p className="text-gray-500 text-center">Start typing to search</p>
+                                <p className="text-center text-gray-500">Start typing to search</p>
                             )}
                         </div>
                     </div>
@@ -293,74 +299,110 @@ export default function Layout({ children, footerText }: LayoutProps) {
             {/* Main */}
             <main className="flex-1 pb-15">{children}</main>
 
-            {/* Footer */}
-            <footer className="text-center">
-                <div className="footer1">
-                    <img src="/images/pupcon-logo-white.png" alt="Logo" />
-                    <h2>Maharlika Technologies</h2>
-                </div>
-                <div className="footer2">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li>
-                            <a href="https://pupsinta.freshservice.com/support/home" target="_blank">
-                                PUP SINTA
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://outlook.office.com/" target="_blank">
-                                PUP WebMail
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://www.pup.edu.ph/iapply/" target="_blank">
-                                PUP iApply
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div className="footer3">
-                    <h3>Portals</h3>
-                    <ul>
-                        <li>
-                            <a href="https://sis1.pup.edu.ph/student/" target="_blank">
-                                SIS for Students
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://sis2.pup.edu.ph/faculty/" target="_blank">
-                                SIS for Faculty
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://sis8.pup.edu.ph/" target="_blank">
-                                PUPSIS
-                            </a>
-                        </li>
-                        <li>
-                            <Link href="/login" target="_blank">
-                                PUPCON Login
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-                <div className="footer4">
-                    <h3>Socials</h3>
-                    <ul>
-                        <li>
-                            <a href="https://www.facebook.com/profile.php?id=100064299686924" target="_blank">
-                                PUPSJ Facebook
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://www.facebook.com/ThePUPOfficial" target="_blank">
-                                PUP Sta. Mesa Facebook
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/">Go to Home Page</a>
-                        </li>
-                    </ul>
+            <footer className="relative min-h-[500px] bg-[#7f1414] text-white">
+                {/* Background image with gradient overlay */}
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-25"
+                    style={{ backgroundImage: "url('/images/homepage-slides/3.jpg')" }}
+                ></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#7f1414]/90 via-[#7f1414]/70 to-[#7f1414]/80"></div>
+
+                {/* Container that fills the footer height */}
+                <div className="relative z-10 mx-auto flex h-full w-[90%] max-w-7xl flex-col items-center justify-center space-y-4">
+                    {/* Main content */}
+                    <div className="grid w-full grid-cols-1 gap-12 text-center md:grid-cols-2 lg:grid-cols-4 lg:text-left">
+                        {/* Logo & Tagline */}
+                        <div className="space-y-4">
+                            <img src="/images/pupcon-logo-white.png" alt="PUP Logo" className="mx-auto w-28 lg:mx-0" />
+                            <h2 className="text-lg leading-snug font-bold">Polytechnic University of the Philippines - San Juan</h2>
+                            <p className="text-sm italic opacity-90">The Country’s 1st Polytechnic University</p>
+                        </div>
+
+                        {/* Quick Links */}
+                        <div>
+                            <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Quick Links</h3>
+                            <ul className="space-y-3">
+                                <li>
+                                    <a
+                                        href="https://pupsinta.freshservice.com/support/home"
+                                        className="flex items-center gap-2 transition hover:text-yellow-300"
+                                    >
+                                        <Mail className="h-4 w-4" /> PUP SINTA
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://outlook.office.com/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                        <ExternalLink className="h-4 w-4" /> PUP WebMail
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://www.pup.edu.ph/iapply/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                        <BookOpen className="h-4 w-4" /> PUP iApply
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Portals */}
+                        <div>
+                            <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Portals</h3>
+                            <ul className="space-y-3">
+                                <li>
+                                    <a href="https://sis1.pup.edu.ph/student/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                        <GraduationCap className="h-4 w-4" /> SIS for Students
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://sis2.pup.edu.ph/faculty/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                        <BookOpen className="h-4 w-4" /> SIS for Faculty
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://sis8.pup.edu.ph/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                        <ExternalLink className="h-4 w-4" /> PUPSIS
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/login" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                        <Home className="h-4 w-4" /> PUPCON Login
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Socials */}
+                        <div>
+                            <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Socials</h3>
+                            <ul className="space-y-3">
+                                <li>
+                                    <a
+                                        href="https://www.facebook.com/profile.php?id=100064299686924"
+                                        className="flex items-center gap-2 transition hover:text-yellow-300"
+                                    >
+                                        <Facebook className="h-4 w-4" /> PUPSJ Facebook
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="https://www.facebook.com/ThePUPOfficial"
+                                        className="flex items-center gap-2 transition hover:text-yellow-300"
+                                    >
+                                        <Facebook className="h-4 w-4" /> PUP Sta. Mesa Facebook
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                        <Home className="h-4 w-4" /> Go to Home Page
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* Bottom Bar */}
+                    <div className="w-full pt-2 text-center text-sm opacity-80 mt-5">
+                        © {new Date().getFullYear()} Maharlika Technologies. All Rights Reserved.
+                    </div>
                 </div>
             </footer>
         </div>
