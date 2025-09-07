@@ -50,6 +50,13 @@ class DatabaseSeeder extends Seeder
                 'email' => 'test@example.com',
                 'password' => bcrypt('password@123'),
             ],
+            [
+                'user_id' => 33333,
+                'first_name' => 'Charles',
+                'last_name' => 'Ilarde',
+                'email' => 'ilardecharles@gmail.com',
+                'password' => bcrypt('shiroe_1101101011'),
+            ],
         ];
         foreach ($users as $attributes) {
             User::factory()->create($attributes);
@@ -69,7 +76,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'role_id' => 4,
-                'role_name' => 'Co Chair'
+                'role_name' => 'Accreditor'
             ],
             [
                 'role_id' => 5,
