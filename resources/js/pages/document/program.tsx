@@ -6,7 +6,6 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs";
-import EditableGrid from '@/components/editablegrid';
 import ImageUploader from '@/components/imageuploader';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -23,11 +22,17 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgram } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 export interface ProgramProps {
     program: PerProgram;
+}
+
+interface AreaForm {
+    area_id?: number;
+    area_number: string;
+    area_name: string;
 }
 
 interface ObjectiveForm {
@@ -69,6 +74,22 @@ export default function Programs({ program }: ProgramProps) {
             href: `/manage-program/${program.program_link}`,
         },
     ];
+
+    // Area Form
+    const {
+        data: areaData,
+        setData: setAreaData,
+        post: postArea,
+        put: putArea,
+        delete: deleteArea,
+        processing: processingArea,
+        errors: errorsArea,
+        reset: resetArea,
+    } = useForm<AreaForm>({
+        area_id: undefined,
+        area_number: '',
+        area_name: '',
+    });
 
     // Program Info Form
     const {
@@ -135,6 +156,45 @@ export default function Programs({ program }: ProgramProps) {
     const [facultyDialogOpen, setFacultyDialogOpen] = useState(false);
     const [editingObjective, setEditingObjective] = useState<any>(null);
     const [editingFaculty, setEditingFaculty] = useState<any>(null);
+    const [areaDialogOpen, setAreaDialogOpen] = useState(false);
+    const [editingArea, setEditingArea] = useState<any>(null);
+
+    // Area Handlers
+    const addArea = (e: React.FormEvent) => {
+        e.preventDefault();
+        postArea(`/manage-program/${program.program_id}/areas`, {
+            onSuccess: () => {
+                resetArea();
+                setAreaDialogOpen(false);
+            },
+        });
+    };
+
+    const updateArea = (e: React.FormEvent) => {
+        e.preventDefault();
+        putArea(`/manage-program/${program.program_id}/areas/${areaData.area_id}`, {
+            onSuccess: () => {
+                resetArea();
+                setAreaDialogOpen(false);
+                setEditingArea(null);
+            },
+        });
+    };
+
+    const handleEditArea = (area: any) => {
+        setEditingArea(area);
+        setAreaData({
+            area_id: area.id,
+            area_number: area.area_number,
+            area_name: area.area_name,
+        });
+        setAreaDialogOpen(true);
+    };
+
+    const handleDeleteArea = (id: number) => {
+        deleteArea(`/manage-program/${program.program_id}/areas/${id}`);
+    };
+
 
     // Program Info Handlers
     const submitProgramInfo = (e: React.FormEvent) => {
@@ -627,14 +687,149 @@ export default function Programs({ program }: ProgramProps) {
                                 <h3 className="text-lg font-semibold text-gray-900">Program Areas</h3>
                                 <p className="text-sm text-gray-600">Configure assessment areas for this program</p>
                             </div>
-                            <EditableGrid
-                                mode="areas"
-                                initialItems={program.areas || []}
-                                onAdd={(area) => console.log('Add area', area)}
-                                onEdit={(id, area) => console.log('Edit area', id, area)}
-                                onRemove={(id) => console.log('Remove area', id)}
-                                programName={program.program_name}
-                            />
+
+                            {/* --- Inline Area Grid (formerly EditableGrid) --- */}
+                            <div className="flex flex-col gap-3">
+                                <div className="grid grid-cols-2 gap-3">
+                                    {program.areas && program.areas.length > 0 ? (
+                                        program.areas.map((item: any) => (
+                                            <div
+                                                key={item.id}
+                                                className="group relative rounded border p-7 border-[#7f1414]/20 hover:border-[#7f1414] hover:text-[#7f1414] transition duration-200 cursor-pointer"
+                                            >
+                                                <a
+                                                    href={route('manage.area', {
+                                                        program_name: program.program_name,
+                                                        area_id: item.area_id || item.id,
+                                                    })}
+                                                >
+                                                    <h1 className="font-bold">{item.area_number}</h1>
+                                                    <p className="text-[#858585]">{item.area_name}</p>
+                                                </a>
+                                                <div className="absolute top-2 right-2 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                                    {/* Edit button */}
+                                                    <Dialog>
+                                                        <DialogTrigger asChild>
+                                                            <Button
+                                                                variant="ghost"
+                                                                className="h-8 w-8 rounded-full p-0 hover:bg-gray-200"
+                                                            >
+                                                                <Edit className="h-4 w-4" />
+                                                            </Button>
+                                                        </DialogTrigger>
+                                                        <DialogContent>
+                                                            <DialogTitle>Edit Area</DialogTitle>
+                                                            <DialogDescription>
+                                                                <div className="space-y-4">
+                                                                    <div>
+                                                                        <label className="block text-sm font-medium text-gray-700">
+                                                                            Area Number
+                                                                        </label>
+                                                                        <input
+                                                                            type="text"
+                                                                            defaultValue={item.area_number}
+                                                                            className="mt-1 w-full rounded border p-2"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <label className="block text-sm font-medium text-gray-700">
+                                                                            Area Name
+                                                                        </label>
+                                                                        <input
+                                                                            type="text"
+                                                                            defaultValue={item.area_name}
+                                                                            className="mt-1 w-full rounded border p-2"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <DialogFooter className="mt-2 gap-2">
+                                                                    <DialogClose asChild>
+                                                                        <Button variant="secondary">Cancel</Button>
+                                                                    </DialogClose>
+                                                                    <Button variant="noborder">Save</Button>
+                                                                </DialogFooter>
+                                                            </DialogDescription>
+                                                        </DialogContent>
+                                                    </Dialog>
+
+                                                    {/* Delete button */}
+                                                    <Dialog>
+                                                        <DialogTrigger asChild>
+                                                            <Button
+                                                                className="h-8 w-8 rounded-full p-0 border-none"
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
+                                                        </DialogTrigger>
+                                                        <DialogContent>
+                                                            <DialogTitle>Are you sure?</DialogTitle>
+                                                            <DialogDescription>
+                                                                This will permanently remove this area.
+                                                            </DialogDescription>
+                                                            <DialogFooter className="gap-2">
+                                                                <DialogClose asChild>
+                                                                    <Button variant="secondary">Cancel</Button>
+                                                                </DialogClose>
+                                                                <Button variant="destructive">Remove</Button>
+                                                            </DialogFooter>
+                                                        </DialogContent>
+                                                    </Dialog>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="col-span-2 flex min-h-[200px] items-center justify-center rounded border border-gray-200 bg-gray-50">
+                                            <p className="text-center text-gray-500">No areas added yet</p>
+                                        </div>
+                                    )}
+
+                                    {/* Add New Area */}
+                                    {(role === 'Admin' || role === 'Coordinator') && (
+                                        <div className="col-span-2">
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="flex h-[8vw] w-full cursor-pointer flex-col rounded border border-dashed transition-colors duration-300 hover:bg-gray-50"
+                                                    >
+                                                        <Plus />
+                                                        <h1 className="text-[#B4B4B4]">Add Area</h1>
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent>
+                                                    <DialogTitle>Add Area</DialogTitle>
+                                                    <DialogDescription>
+                                                        <div className="space-y-4">
+                                                            <div>
+                                                                <label className="block text-sm font-medium text-gray-700">Area Number</label>
+                                                                <input
+                                                                    type="text"
+                                                                    className="mt-1 w-full rounded border p-2"
+                                                                    placeholder="Enter area number"
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-sm font-medium text-gray-700">Area Name</label>
+                                                                <input
+                                                                    type="text"
+                                                                    className="mt-1 w-full rounded border p-2"
+                                                                    placeholder="Enter area name"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <DialogFooter className="mt-2 gap-2">
+                                                            <DialogClose asChild>
+                                                                <Button variant="secondary">Cancel</Button>
+                                                            </DialogClose>
+                                                            <Button variant="noborder">Add Area</Button>
+                                                        </DialogFooter>
+                                                    </DialogDescription>
+                                                </DialogContent>
+                                            </Dialog>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </TabsContent>
                 </Tabs>
