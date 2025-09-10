@@ -699,7 +699,7 @@ export default function Programs({ program }: ProgramProps) {
                                             >
                                                 <a
                                                     href={route('manage.area', {
-                                                        program_name: program.program_name,
+                                                        program_name: program.program_link,
                                                         area_id: item.area_id || item.id,
                                                     })}
                                                 >
