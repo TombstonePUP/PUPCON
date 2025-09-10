@@ -397,7 +397,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
     return (
         <div className="flex flex-col gap-3">
             {/* Collapsible Header */}
-            <button
+            {/* <button
                 type="button"
                 className="mt-2 rounded  p-1 text-center text-[1vw] font-bold text-white transition-colors bg-[#3b3a3a] group cursor-pointer"
                 onClick={() => setIsContentVisible(!isContentVisible)}
@@ -406,7 +406,7 @@ const EditableGrid: React.FC<EditableGridProps> = ({ mode = 'objectives', initia
                     <span className='flex-1 group-hover:scale-105 transition'>{mode.toUpperCase()}</span>
                     <span>{isContentVisible ? '−' : '+'}</span>
                 </div>
-            </button>
+            </button> */}
 
             {/* Content - conditionally rendered based on isContentVisible */}
             {isContentVisible && (
