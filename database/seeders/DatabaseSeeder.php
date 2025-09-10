@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'role_id' => 5,
-                'role_name' => 'Member'
+                'role_name' => 'Unassigned'
             ],
         ];
         foreach ($roles as $attributes) {
@@ -96,6 +96,11 @@ class DatabaseSeeder extends Seeder
                 'user_role_id' => 22,
                 'user_id' => 22222,
                 'role_id' => 3,
+            ],
+            [
+                'user_role_id' => 33,
+                'user_id' => 33333,
+                'role_id' => 5,
             ],
         ];
         foreach ($userRoles as $attributes) {
