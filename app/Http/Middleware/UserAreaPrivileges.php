@@ -16,12 +16,12 @@ class UserAreaPrivileges
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $userRole = $request->user()?->Roles->first()?->role_name;
+        $userRole = $request->user()->Roles->role_name;
 
         if ($userRole === 'Admin' || $userRole === 'Coordinator') {
             return $next($request);
         } elseif ($userRole === 'Chairman') {
-            $userAreaRole = $request->user()?->UserRoles->first()->Areas;
+            $userAreaRole = $request->user()->Areas;
             if ($userAreaRole->firstWhere('area_id', $request->area_id)) {
                 return $next($request);
             }

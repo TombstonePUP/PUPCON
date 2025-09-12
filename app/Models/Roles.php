@@ -25,19 +25,10 @@ class Roles extends Model
     ];
 
     /**
-     * @return HasMany<UserRoles,Roles>
+     * @return HasToMany
      */
-    public function UserRoles(): HasMany
+    public function Users(): HasMany
     {
-        return $this->hasMany(UserRoles::class, 'role_id', 'role_id');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function Users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'user_roles', 'role_id', 'user_id')
-            ->withPivot('user_role_id');
+        return $this->hasMany(User::class, 'user_id', 'user_id');
     }
 }

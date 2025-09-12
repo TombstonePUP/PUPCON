@@ -28,11 +28,19 @@ class UserProgramPrivileges
 
     private function programAccess($user, $program)
     {
-        $role = $user->Roles->first()?->role_name;
+        $role = $user->Roles->role_name;
 
         return match ($role) {
             'Admin', 'Coordinator' => Programs::where('program_name', $program)->exists(),
-            'Chairman' => $user->Programs->contains('program_name', $program),
+            'Chairman' => $user->Areas()
+                ->with(['Programs' => function ($query) {
+                    $query->select('programs.program_name', 'programs.program_id');
+                }])
+                ->get()
+                ->pluck('Programs')
+                ->flatten()
+                ->unique('program_id')
+                ->contains('program_name', $program),
             default => false,
         };
     }

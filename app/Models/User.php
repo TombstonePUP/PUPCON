@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,6 +27,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'role_id',
         'password',
     ];
 
@@ -53,30 +55,30 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany<UserRoles,User>
+     * @return BelongsTo<Roles,User>
      */
-    public function UserRoles(): HasMany
+    public function Roles(): BelongsTo
     {
-        return $this->hasMany(UserRoles::class, 'user_id', 'user_id');
+        return $this->belongsTo(Roles::class, 'role_id', 'role_id');
     }
 
     /**
-     * @return BelongsToMany<Roles,User>
+     * @return BelongsToMany<Programs,UserRoles>
      */
-    public function Roles(): BelongsToMany
+    public function Areas(): BelongsToMany
     {
-        return $this->belongsToMany(Roles::class, 'user_roles', 'user_id', 'role_id')
-            ->withPivot('user_role_id');
+        return $this->belongsToMany(Areas::class, 'user_area_roles', 'user_id', 'area_id')
+            ->withPivot('user_area_role_id');
     }
 
     /**
      * @return BelongsToMany<Programs,User>
      */
-    public function Programs(): BelongsToMany
+    /* public function Programs(): BelongsToMany
     {
         return $this->belongsToMany(Programs::class, 'user_program_roles', 'user_id', 'program_id')
             ->withPivot('user_program_role_id');
-    }
+    } */
 
     /**
      * @return HasMany<ActivityLog,User>

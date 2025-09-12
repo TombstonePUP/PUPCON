@@ -7,6 +7,7 @@ use App\Models\Programs;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -57,13 +58,20 @@ class HandleInertiaRequests extends Middleware
             ->with(['AreaParameter', 'AreaParameter.Areas', 'AreaParameter.Areas.Programs', 'ParameterOutlineCategory'])
             ->get();
 
-        $role = $request->user()?->Roles->first()?->role_name;
+        $role = $request->user()?->Roles->role_name;
         $programs = [];
 
         if ($role === 'Admin' || $role === 'Coordinator') {
             $programs = Programs::select('program_name')->get();
         } elseif ($role === 'Chairman') {
-            $programs = $request->user()?->Programs()->select('program_name')->get();
+            $programs = $request->user()->Areas()
+                ->with(['Programs' => function ($query) {
+                    $query->select('programs.program_name', 'programs.program_id');
+                }])
+                ->get()
+                ->pluck('Programs')
+                ->flatten()
+                ->unique('program_id');
         } else {
             $programs = collect();
         }
@@ -73,8 +81,6 @@ class HandleInertiaRequests extends Middleware
 
         return [
             ...parent::share($request),
-            // 'name' => config('app.name'),
-            // 'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
                 'programs' => $programs,

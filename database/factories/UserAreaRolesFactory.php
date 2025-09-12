@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Areas;
+use App\Models\User;
 use App\Models\UserRoles;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,11 +20,11 @@ class UserAreaRolesFactory extends Factory
      */
     public function definition(): array
     {
-        $userRole = UserRoles::inRandomOrder()->first();
+        $user = User::inRandomOrder()->first();
         $area = Areas::inRandomOrder()->first();
         return [
             'user_area_role_id' => fake()->unique()->randomNumber(),
-            'user_role_id' => $userRole->user_role_id,
+            'user_id' => $user->user_id,
             'area_id' => $area->area_id,
         ];
     }

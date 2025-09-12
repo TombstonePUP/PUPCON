@@ -20,16 +20,16 @@ class UserAreaRoles extends Model
     protected $table = 'user_area_roles';
     protected $primaryKey = 'user_area_role_id';
     protected $fillable = [
-        'user_role_id',
+        'user_id',
         'area_id',
     ];
 
     /**
      * @return BelongsTo<UserRoles,UserAreaRoles>
      */
-    public function UserRoles(): BelongsTo
+    public function Users(): BelongsTo
     {
-        return $this->belongsTo(UserRoles::class, 'user_role_id', 'user_role_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     /**

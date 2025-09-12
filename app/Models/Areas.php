@@ -65,9 +65,9 @@ class Areas extends Model
     /**
      * @return BelongsToMany<UserRoles,Areas>
      */
-    public function UserRoles(): BelongsToMany
+    public function Users(): BelongsToMany
     {
-        return $this->belongsToMany(UserRoles::class, 'user_area_roles', 'area_id', 'user_role_id')
+        return $this->belongsToMany(User::class, 'user_area_roles', 'area_id', 'user_id')
             ->withPivot('user_area_role_id');
     }
 }

@@ -35,32 +35,6 @@ class DatabaseSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        $users = [
-            [
-                'user_id' => 22222,
-                'first_name' => 'Keith',
-                'last_name' =>  'Lee',
-                'email' => 'keithlee@example.com',
-                'password' => bcrypt('password@456'),
-            ],
-            [
-                'user_id' => 11111,
-                'first_name' => 'John',
-                'last_name' => 'Doe',
-                'email' => 'test@example.com',
-                'password' => bcrypt('password@123'),
-            ],
-            [
-                'user_id' => 33333,
-                'first_name' => 'Charles',
-                'last_name' => 'Ilarde',
-                'email' => 'ilardecharles@gmail.com',
-                'password' => bcrypt('shiroe_1101101011'),
-            ],
-        ];
-        foreach ($users as $attributes) {
-            User::factory()->create($attributes);
-        }
         $roles = [
             [
                 'role_id' => 1,
@@ -86,25 +60,34 @@ class DatabaseSeeder extends Seeder
         foreach ($roles as $attributes) {
             Roles::factory()->create($attributes);
         }
-        $userRoles = [
+        $users = [
             [
-                'user_role_id' => 11,
-                'user_id' => 11111,
-                'role_id' => 1,
-            ],
-            [
-                'user_role_id' => 22,
                 'user_id' => 22222,
-                'role_id' => 3,
+                'first_name' => 'Keith',
+                'last_name' =>  'Lee',
+                'email' => 'keithlee@example.com',
+                'role_id' => 3, // Chairman
+                'password' => bcrypt('password@456'),
             ],
             [
-                'user_role_id' => 33,
+                'user_id' => 11111,
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'email' => 'test@example.com',
+                'role_id' => 1, // Admin
+                'password' => bcrypt('password@123'),
+            ],
+            [
                 'user_id' => 33333,
-                'role_id' => 5,
+                'first_name' => 'Charles',
+                'last_name' => 'Ilarde',
+                'email' => 'ilardecharles@gmail.com',
+                'role_id' => 3, // Chairman
+                'password' => bcrypt('shiroe_1101101011'),
             ],
         ];
-        foreach ($userRoles as $attributes) {
-            UserRoles::factory()->create($attributes);
+        foreach ($users as $attributes) {
+            User::factory()->create($attributes);
         }
         // UserRoles::factory(10)->create();
         $programs = [
@@ -141,23 +124,6 @@ class DatabaseSeeder extends Seeder
         ];
         foreach ($programs as $attributes) {
             Programs::factory()->create($attributes);
-        }
-        $userProgramRoles = [
-            /* [
-                'user_id' => 11111,
-                'program_id' => 1, // Assuming program_id 1 is for a specific program
-            ], */
-            [
-                'user_id' => 22222,
-                'program_id' => 1, // Assuming program_id 1 is for a specific program
-            ],
-            [
-                'user_id' => 22222,
-                'program_id' => 2, // Assuming program_id 1 is for a specific program
-            ],
-        ];
-        foreach ($userProgramRoles as $attributes) {
-            UserProgramRoles::factory()->create($attributes);
         }
         $areas = [
             [
@@ -226,11 +192,11 @@ class DatabaseSeeder extends Seeder
         }
         $userAreaRoles = [
             [
-                'user_role_id' => 22,
+                'user_id' => 22222,
                 'area_id' => 10,
             ],
             [
-                'user_role_id' => 22,
+                'user_id' => 22222,
                 'area_id' => 9,
             ],
         ];
