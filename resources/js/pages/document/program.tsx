@@ -66,7 +66,7 @@ const mockFaculty: any[] = [];
 
 export default function Programs({ program }: ProgramProps) {
     const { auth } = usePage().props;
-    const role = auth.user.roles[0].role_name;
+    const role = auth.user.roles.role_name;
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -703,7 +703,7 @@ export default function Programs({ program }: ProgramProps) {
                                                         area_id: item.area_id || item.id,
                                                     })}
                                                 >
-                                                    <h1 className="font-bold">{item.area_number}</h1>
+                                                    <h1 className="font-bold">{item.area_numeral}</h1>
                                                     <p className="text-[#858585]">{item.area_name}</p>
                                                 </a>
                                                 <div className="absolute top-2 right-2 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">

@@ -5,40 +5,14 @@ namespace App\Http\Controllers\Guest;
 use App\Http\Controllers\Controller;
 use App\Models\Programs;
 use App\Traits\ProgramLinkFormats;
+use App\Traits\AreaNumeralFormat;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProgramsController extends Controller
 {
-    use ProgramLinkFormats;
-
-    public static function numericalToRoman(int $number): string
-    {
-        $numerals = [
-            1 => 'I',
-            2 => 'II',
-            3 => 'III',
-            4 => 'IV',
-            5 => 'V',
-            6 => 'VI',
-            7 => 'VII',
-            8 => 'VIII',
-            9 => 'IX',
-            10 => 'X',
-            11 => 'XI',
-            12 => 'XII',
-            13 => 'XIII',
-            14 => 'XIV',
-            15 => 'XV',
-        ];
-
-        if ($number > 15) {
-            return ' ';
-        } else {
-            return $numerals[$number];
-        }
-    }
+    use ProgramLinkFormats, AreaNumeralFormat;
 
     /**
      * Display a listing of the resource.
@@ -69,7 +43,7 @@ class ProgramsController extends Controller
         $program->program_link = $program_name;
 
         $program->Areas = $program->Areas->map(function ($area) {
-            $area->area_numeral = $this->numericalToRoman($area->area_number);
+            $area->area_numeral = $this->toRoman($area->area_number);
             return $area;
         });
 
