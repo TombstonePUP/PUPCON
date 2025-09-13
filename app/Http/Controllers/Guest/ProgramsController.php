@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Programs;
+use App\Traits\ProgramLinkFormats;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProgramsController extends Controller
 {
+    use ProgramLinkFormats;
 
     public static function numericalToRoman(int $number): string
     {
@@ -48,9 +50,10 @@ class ProgramsController extends Controller
             ->get();
 
         $programs = $programs->map(function ($program) {
-            $program->program_link = Str::of($program->program_name)->snake();
+            $this->formatPrograms($program);
             return $program;
         });
+
         return inertia('programs', [
             'programs' => $programs,
         ]);
@@ -58,11 +61,12 @@ class ProgramsController extends Controller
 
     public function show(string $program_name): Response
     {
-        $program_name = Str::of($program_name)->replace('_', ' ')->title();
+        $program = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::select('*')
-            ->where('program_name', $program_name)
+            ->where('program_name', $program)
             ->with('Areas')
             ->firstOrFail();
+        $program->program_link = $program_name;
 
         $program->Areas = $program->Areas->map(function ($area) {
             $area->area_numeral = $this->numericalToRoman($area->area_number);

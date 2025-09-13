@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Programs;
 use App\Http\Controllers\Controller;
 use App\Models\Areas;
 use App\Models\Programs;
+use App\Traits\ProgramLinkFormats;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class ManageProgramController extends Controller
 {
+    use ProgramLinkFormats;
     /**
      * Display a listing of the resource.
      */
@@ -28,9 +30,10 @@ class ManageProgramController extends Controller
     {
         $programs = Programs::select('*')->with('Areas')->get();
         $programs = $programs->map(function ($program) {
-            $program->program_link = Str::of($program->program_name)->snake();
+            $this->formatPrograms($program);
             return $program;
         });
+
         return inertia('manage-programs', [
             'programs' => $programs,
         ]);

@@ -10,8 +10,7 @@ interface PerProgramProps {
 }
 
 export default function Programs({ program }: PerProgramProps) {
-    const numerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV'];
-
+    console.log(program);
     // Placeholder objectives
     const programObjectives = [
         {
@@ -213,7 +212,7 @@ export default function Programs({ program }: PerProgramProps) {
                                         imageSrc={area.image_path || '/images/placeholder.png'}
                                         heading={area.area_name}
                                         circleLetter={area.area_numeral}
-                                        href={route('programs.areas.show', [program.program_name, area.area_id])}
+                                        href={route('programs.areas.show', [program.program_link, area.area_id])}
                                     />
                                 ))
                             ) : (

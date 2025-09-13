@@ -7,7 +7,7 @@ use App\Http\Controllers\Guest\ProgramsController;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class AreasController extends Controller
@@ -17,6 +17,7 @@ class AreasController extends Controller
      */
     public function __invoke(string $program_name, int $area_id)
     {
+        $program_name = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::where('program_name',$program_name)->firstOrFail();
         $area = Areas::select('area_id', 'area_name', 'area_number', 'area_description', 'area_image_name', 'area_image_path', 'program_id')
             ->where('area_id', $area_id)
