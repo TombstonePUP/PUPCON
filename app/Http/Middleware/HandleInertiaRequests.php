@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\ParameterOutlines;
 use App\Models\Programs;
+use App\Traits\ProgramLinkFormats;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    use ProgramLinkFormats;
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -29,14 +31,6 @@ class HandleInertiaRequests extends Middleware
     public function version(Request $request): ?string
     {
         return parent::version($request);
-    }
-
-    private function formatPrograms($programs)
-    {
-        return $programs = $programs->map(function ($program) {
-            $program->program_link = Str::of($program->program_name)->snake();
-            return $program;
-        });
     }
 
     /**
@@ -76,8 +70,15 @@ class HandleInertiaRequests extends Middleware
             $programs = collect();
         }
 
-        $programs_under_survey = $this->formatPrograms($programs_under_survey);
-        $programs = $this->formatPrograms($programs);
+        $programs_under_survey = $programs_under_survey->map(function ($program) {
+            $this->formatPrograms($program);
+            return $program;
+        });
+
+        $programs = $programs->map(function ($program) {
+            $this->formatPrograms($program);
+            return $program;
+        });
 
         return [
             ...parent::share($request),
