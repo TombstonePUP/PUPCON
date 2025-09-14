@@ -7,11 +7,13 @@ use App\Http\Controllers\Guest\ProgramsController;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
+use App\Traits\AreaNumeralFormat;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class AreasController extends Controller
 {
+    use AreaNumeralFormat;
     /**
      * Handle the incoming request.
      */
@@ -38,7 +40,7 @@ class AreasController extends Controller
             ])
             ->firstOrFail();
 
-        $area->area_numeral = ProgramsController::numericalToRoman($area->area_number);
+        $area->area_numeral = $this->toRoman($area->area_number);
         $parameterOutlineCategories = ParameterOutlineCategory::select('*')->get();
 
         $area->AreaParameters->map(function ($parameter) {
