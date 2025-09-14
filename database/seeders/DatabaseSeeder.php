@@ -96,30 +96,35 @@ class DatabaseSeeder extends Seeder
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Information Technology',
                 'under_survey' => true,
+                'color' => 'blue',
             ],
             [
                 'program_id' => 2,
                 'degree_type' => 'Bachelor of Arts',
                 'program_name' => 'Communication',
                 'under_survey' => true,
+                'color' => 'red',
             ],
             [
                 'program_id' => 3,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Business Administration',
                 'under_survey' => true,
+                'color' => 'green',
             ],
             [
                 'program_id' => 4,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Psychology',
                 'under_survey' => true,
+                'color' => 'pink',
             ],
             [
                 'program_id' => 5,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Accountancy',
                 'under_survey' => false,
+                'color' => 'yellow',
             ],
         ];
         foreach ($programs as $attributes) {
@@ -186,6 +191,24 @@ class DatabaseSeeder extends Seeder
                 'area_number' => 10,
                 'area_name' => 'Administration',
             ],
+            [
+                'area_id' => 11,
+                'program_id' => 2,
+                'area_number' => 1,
+                'area_name' => 'Mission, Goals, and Objectives',
+            ],
+            [
+                'area_id' => 12,
+                'program_id' => 2,
+                'area_number' => 2,
+                'area_name' => 'Faculty',
+            ],
+            [
+                'area_id' => 13,
+                'program_id' => 2,
+                'area_number' => 3,
+                'area_name' => 'Curriculum and Instruction',
+            ],
         ];
         foreach ($areas as $attributes) {
             Areas::factory()->create($attributes);
@@ -198,6 +221,14 @@ class DatabaseSeeder extends Seeder
             [
                 'user_id' => 22222,
                 'area_id' => 9,
+            ],
+            [
+                'user_id' => 33333,
+                'area_id' => 12,
+            ],
+            [
+                'user_id' => 33333,
+                'area_id' => 1,
             ],
         ];
         foreach ($userAreaRoles as $attributes) {

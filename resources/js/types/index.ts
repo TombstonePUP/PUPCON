@@ -138,17 +138,6 @@ export interface OverallUploads {
     [key: string]: unknown;
 }
 
-export interface UserRecords {
-    user_id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-    role: string;
-    program_roles: string;
-    area_roles: string;
-    [key: string]: unknown;
-}
-
 export interface PerProgram {
     program_id: number;
     degree_type: string;

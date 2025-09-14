@@ -29,7 +29,8 @@ class ProgramsFactory extends Factory
             'overview_image_path' => fake()->imageUrl(),
             'overview_description' => fake()->paragraphs(4, true),
             'page_banner_image_name' => fake()->word(),
-            'page_banner_image_path' => fake()->imageUrl()
+            'page_banner_image_path' => fake()->imageUrl(),
+            'color' => fake()->colorName(),
         ];
     }
 }

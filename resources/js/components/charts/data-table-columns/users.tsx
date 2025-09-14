@@ -1,9 +1,9 @@
 "use client"
 
-import { type UserRecords } from "@/types"
+import { type UserRecords } from "@/types/user-management"
 import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
-import { MoreVertical } from "lucide-react"
+import { MoreVertical, Circle } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -28,14 +28,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { UserPlus, Mail, User, Shield, Settings, BookOpen, CheckCircle, User2 } from "lucide-react"
-
-const programColors: Record<string, string> = {
-    "Communication": "border-red-500",
-    "Information Technology": "border-blue-500",
-    "Business": "border-yellow-500",
-    "Engineering": "border-green-500",
-    // Add more program-to-color mappings here
-};
 
 export const columns: ColumnDef<UserRecords>[] = [
     {
@@ -63,55 +55,72 @@ export const columns: ColumnDef<UserRecords>[] = [
         enableGlobalFilter: true,
     },
     {
-        accessorKey: "role",
+        accessorFn: (row) => row.roles?.role_name,
+        accessorKey: "role_name",
         header: () => <div className="text-left">Role</div>,
         cell: ({ row }) => {
             return <div className="text-left w-32">
-                <Badge variant="outline" className="px-1.5 text-muted-foreground">
-                    {row.getValue("role") ? row.getValue("role") : 'No role'}
-                </Badge>
+                {row.getValue("role_name") ?
+                    <Badge variant="outline" className="px-1.5 text-muted-foreground">
+                        {row.getValue("role_name")}
+                    </Badge>
+                    : <span className="text-xs text-gray-500 italic">No Role Assigned</span>
+                }
             </div>
         },
     },
     {
-        accessorKey: "program_roles",
+        accessorKey: "programs",
         header: () => <div className="text-left">Program/s</div>,
         cell: ({ row }) => {
-            const programs: string[] = row.getValue("program_roles")?.replace(/[{}"]/g, "").split(",") || [];
+            let programs = row.original.areas?.map(p => ({
+                program_name: p.programs?.degree_type + ' ' + p.programs?.program_name,
+                color: p.programs?.color || "gray",
+                fill: "bg-" + (p.programs?.color || "gray") + "-500",
+            })) || [];
+
+            programs = programs.filter(
+                (program, index, self) =>
+                    index === self.findIndex(p => p.program_name === program.program_name)
+            );
+
 
             return (
                 <div className="flex flex-wrap gap-1 text-left">
-                    {programs.map((program) => (
+                    {programs.length > 0 ? programs.map((program) => (
                         <Badge
-                            key={program}
+                            key={program.program_name}
                             variant="outline"
-                            className={`px-1.5 text-muted-foreground ${programColors[program.trim()] || "border-gray-300"}`}
+                            className={`px-1.5 text-muted-foreground border-${program.color}-500`}
                         >
-                            {program.trim()}
+                            <Circle fill={`${program.color}`} strokeWidth={0}/>
+                            {program.program_name}
                         </Badge>
-                    ))}
+                    )):
+                        <span className="text-xs text-gray-500 italic">No Programs Assigned</span>
+                    }
                 </div>
             );
         },
     },
     {
-        accessorKey: "area_roles",
+        accessorKey: "areas",
         header: () => <div className="text-left">Area/s</div>,
         cell: ({ row }) => {
-            const areas: string[] = row.getValue("area_roles")?.replace(/[{}"]/g, "").split("} {").flatMap(a => a.split(",")).map(a => a.trim()) || [];
+            // const areas: string[] = row.getValue("area_name")?.replace(/[{}"]/g, "").split("} {").flatMap(a => a.split(",")).map(a => a.trim()) || [];
+            const areas = row.original.areas || [];
 
-            // You can optionally match area to program and apply same color. Here's a basic fallback color approach:
             return (
                 <div className="flex flex-wrap gap-1 text-left">
-                    {areas.map((area, idx) => (
+                    {areas.length > 0 ? areas.map((area, idx) => (
                         <Badge
                             key={idx}
                             variant="outline"
-                            className="px-1.5 text-muted-foreground border-gray-400"
+                            className={`1px-1.5 text-muted-foreground border-${area?.programs.color}-500`}
                         >
-                            {area}
+                            {area.area_name}
                         </Badge>
-                    ))}
+                    )) : <span className="text-xs text-gray-500 italic">No Areas Assigned</span>}
                 </div>
             );
         },

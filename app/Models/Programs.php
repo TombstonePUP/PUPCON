@@ -32,7 +32,8 @@ class Programs extends Model
         'overview_image_path',
         'overview_description',
         'page_banner_image_name',
-        'page_banner_image_path'
+        'page_banner_image_path',
+        'color'
     ];
 
     protected $casts = [
@@ -76,5 +77,4 @@ class Programs extends Model
     {
         return $this->hasMany(UserProgramRoles::class, 'program_id', 'program_id');
     }
-
 }

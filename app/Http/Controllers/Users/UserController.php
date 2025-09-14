@@ -14,23 +14,22 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = DB::table('users as u')
-            ->leftJoin('user_roles as ur', 'ur.user_id', '=', 'u.user_id')
-            ->leftJoin('roles as r', 'r.role_id', '=', 'ur.role_id')
-            ->leftJoin('user_program_roles as upr', 'upr.user_id', '=', 'u.user_id')
-            ->leftJoin('programs as p', 'p.program_id', '=', 'upr.program_id')
-            ->leftJoin('user_area_roles as uar', 'uar.user_role_id', '=', 'ur.user_role_id')
-            ->leftJoin('areas as a', 'a.area_id', '=', 'uar.area_id')
-            ->select(
-                'u.first_name',
-                'u.last_name',
-                'u.email',
-                'r.role_name as role',
-                DB::raw('ARRAY_REMOVE(ARRAY_AGG(DISTINCT p.program_name), NULL) as program_roles'),
-                DB::raw('ARRAY_REMOVE(ARRAY_AGG(DISTINCT a.area_name), NULL) as area_roles')
-            )
-            ->groupBy('u.user_id', 'u.first_name', 'u.last_name', 'u.email', 'r.role_name')
-            ->get();
+        $users = User::select('user_id', 'first_name', 'last_name', 'role_id', 'email')
+            ->whereDoesntHave('Roles', function ($query) {
+                $query->where('role_name', 'Admin');
+            })
+            ->with([
+                'Roles' => function ($query) {
+                    $query->select('roles.role_id', 'roles.role_name');
+                },
+                'Areas' => function ($query) {
+                    $query->select('areas.area_id', 'areas.area_number', 'areas.area_name', 'areas.program_id');
+                },
+                'Areas.Programs' => function ($query) {
+                    $query->select('programs.program_id', 'programs.degree_type', 'programs.program_name', 'programs.color');
+                },
+            ])->get();
+
         return inertia('user-management', [
             'userRecords' => $users,
         ]);

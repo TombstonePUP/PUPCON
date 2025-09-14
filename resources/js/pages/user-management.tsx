@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/charts/data-table"
 import { columns } from "@/components/charts/data-table-columns/users"
-import { type UserRecords } from "@/types"
+import { type UserRecords } from "@/types/user-management";
 import { useState } from 'react';
 import { UserPlus, Mail, User, Shield, Settings, BookOpen, CheckCircle, User2 } from "lucide-react"
 import { Label } from "@/components/ui/label"
@@ -205,7 +205,7 @@ export default function Users({ userRecords }: UsersProps) {
                 <div className="rounded-lg border bg-white p-4">
                     <DataTable
                         columns={columns}
-                        data={userRecords.filter(user => user.role?.toLowerCase() !== "admin")}
+                        data={userRecords}
                     />
                 </div>
             </div>
