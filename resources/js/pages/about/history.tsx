@@ -1,5 +1,5 @@
 import Layout from '@/layouts/landing-layout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 
 export default function History() {
@@ -24,14 +24,16 @@ export default function History() {
             <Layout>
                 <div className="flex flex-col items-center">
                     {/* Header Banner Section */}
-                    <div className="relative z-10 mt-7 flex h-[10vw] w-[75%] items-center justify-center overflow-hidden rounded-xl">
-                        <img src="/images/campus/ground.jpg" alt="History Banner" className="absolute inset-0 h-full w-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#7f1414] via-[#7f1414]/70 to-transparent"></div>
-                        <div className="relative z-10 px-8 text-center text-white">
-                            <h1 className="text-6xl font-bold">History</h1>
-                            <h2 className="mt-2">
-                                Polytechnic University of the Philippines <b>San Juan Campus</b>
-                            </h2>
+                    <div className="sticky top-0 z-30 w-full bg-gradient-to-r from-[#7f1414] to-[#a01818] py-4 shadow-sm">
+                        <div className="mx-auto flex w-[75%] items-center justify-between text-white">
+                            <h1 className="text-xl font-bold tracking-tight">History of PUP San Juan</h1>
+                            <nav className="flex items-center space-x-1 text-sm text-gray-200">
+                                <Link href="/" className="hover:text-white hover:underline">
+                                    Home
+                                </Link>
+                                <span>/</span>
+                                <span className="text-white">History</span>
+                            </nav>
                         </div>
                     </div>
 
@@ -82,7 +84,7 @@ export default function History() {
                                         href="https://www.pup.edu.ph/sanjuan/history"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="fade-in cta-btn inline-block rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-all delay-3 duration-300 hover:bg-[#a01818] hover: "
+                                        className="fade-in cta-btn hover: inline-block rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-all delay-3 duration-300 hover:bg-[#a01818]"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.8 }}
@@ -124,7 +126,7 @@ export default function History() {
                                     {galleryImages.map((image, index) => (
                                         <motion.div
                                             key={image}
-                                            className="gallery-item overflow-hidden rounded-lg   transition-transform duration-300 hover:scale-105"
+                                            className="gallery-item overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105"
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             transition={{ delay: index * 0.05 }}
@@ -170,7 +172,7 @@ export default function History() {
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: index * 0.2 }}
                                         >
-                                            <div className="timeline-marker absolute top-1 -left-[1.15rem] h-5 w-5 rounded-full border-3 border-white bg-[#8c1d40]  "></div>
+                                            <div className="timeline-marker absolute top-1 -left-[1.15rem] h-5 w-5 rounded-full border-3 border-white bg-[#8c1d40]"></div>
                                             <div className="timeline-content">
                                                 <span className="timeline-year text-xl font-bold text-gray-800">{milestone.year}</span>
                                                 <p className="timeline-event mt-1 text-base text-gray-600">{milestone.event}</p>
@@ -180,7 +182,6 @@ export default function History() {
                                 </div>
                             </div>
                         </section>
-
                     </article>
                 </div>
             </Layout>
