@@ -1,6 +1,7 @@
 import Layout from '@/layouts/landing-layout';
-import { Head, Link  } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
+import PageHeader from '@/components/guest-page-header';
 
 export default function VMGO() {
     return (
@@ -11,19 +12,13 @@ export default function VMGO() {
             </Head>
             <Layout>
                 <div className="flex flex-col items-center">
-                    {/* Header Banner Section */}
-                    <div className="sticky top-0 z-30 w-full bg-gradient-to-r from-[#7f1414] to-[#a01818] py-4 shadow-sm">
-                        <div className="mx-auto flex w-[75%] items-center justify-between text-white">
-                            <h1 className="text-xl font-bold tracking-tight">The Mission, Vision and Goals</h1>
-                            <nav className="flex items-center space-x-1 text-sm text-gray-200">
-                                <Link href="/" className="hover:text-white hover:underline">
-                                    Home
-                                </Link>
-                                <span>/</span>
-                                <span className="text-white">VGMO</span>
-                            </nav>
-                        </div>
-                    </div>
+                    <PageHeader
+                        title="Mission, Vision, and Goals"
+                        breadcrumbs={[
+                            { label: 'Home', href: '/' },
+                            { label: 'VMGO', href: '/vmgo' },
+                        ]}
+                    />
 
                     {/* University Overview Section */}
                     <article className="mission-vision-page mt-8 w-[75%]">

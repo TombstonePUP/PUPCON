@@ -1,3 +1,4 @@
+import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import type { ProgramsUnderSurvey } from '@/types';
 import { Head, Link } from '@inertiajs/react';
@@ -15,24 +16,21 @@ export default function Programs({ programs }: ProgramsProps) {
             </Head>
             <Layout>
                 <div className="flex flex-col items-center">
-                    <div className="relative mt-7 z-10 flex h-[10vw] w-[75%] items-center justify-center overflow-hidden rounded-xl">
-                        <img src="/images/campus/ground.jpg" alt="Programs Banner" className="absolute inset-0 h-full w-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#7f1414] via-[#7f1414]/70 to-transparent"></div>
-                        <div className="relative z-10 px-8 text-center text-white">
-                            <h1 className="text-6xl font-bold">Programs Under Survey</h1>
-                            <h2 className='mt-2'>
-                                Polytechnic University of the Philippines <b>San Juan Campus</b>
-                            </h2>
-                        </div>
-                    </div>
+                    <PageHeader
+                        title="Programs Under Survey"
+                        breadcrumbs={[
+                            { label: 'Home', href: '/' },
+                            { label: 'Programs', href: '/programs' },
+                        ]}
+                    />
 
-                    <div className="mx-auto w-[70%] mt-10">
+                    <div className="mx-auto mt-10 w-[70%]">
                         {programs?.length > 0 ? (
                             <div className="grid gap-10">
                                 {programs.map((program) => (
                                     <div key={program.program_id} className="group">
                                         <Link href={`/programs/${program.program_link}`} className="block">
-                                            <div className="overflow-hidden rounded-2xl border duration-300 border-[#7f1414]/25 hover:border-[#7f1414] bg-white transition-all duration-300">
+                                            <div className="overflow-hidden rounded-2xl border border-[#7f1414]/25 bg-white transition-all duration-300 hover:border-[#7f1414]">
                                                 <div className="md:flex">
                                                     {/* Program Image */}
                                                     <div className="relative h-64 overflow-hidden md:h-auto md:w-1/3">

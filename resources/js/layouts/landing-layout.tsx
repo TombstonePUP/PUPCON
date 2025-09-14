@@ -77,7 +77,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
         },
         {
             label: 'OTHERS',
-            href: '/', //'/others',
+            href: '/others', //'/others',
             dropdown: [],
         },
     ];

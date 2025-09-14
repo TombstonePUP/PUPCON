@@ -1,9 +1,9 @@
+import PageHeader from '@/components/guest-page-header';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DocumentViewer } from '@/components/ui/document-viewer';
 import Layout from '@/layouts/landing-layout';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { DocumentViewer } from '@/components/ui/document-viewer';
 
 export default function Programs() {
     const [viewDialogOpen, setViewDialogOpen] = useState(false);
@@ -11,7 +11,6 @@ export default function Programs() {
         fileUrl: '',
         title: '',
     });
-
 
     return (
         <>
@@ -21,16 +20,14 @@ export default function Programs() {
             </Head>
             <Layout>
                 <div className="flex flex-col items-center gap-8">
-                    <div className="relative z-10 mt-7 flex h-[10vw] w-[75%] items-center justify-center overflow-hidden rounded-xl">
-                        <img src="/images/campus/ground.jpg" alt="Programs Banner" className="absolute inset-0 h-full w-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#7f1414] via-[#7f1414]/70 to-transparent"></div>
-                        <div className="relative z-10 px-8 text-center text-white">
-                            <h1 className="text-6xl font-bold">Exhibits</h1>
-                            <h2 className="mt-2">
-                                Polytechnic University of the Philippines <b>San Juan Campus</b>
-                            </h2>
-                        </div>
-                    </div>{' '}
+                    <PageHeader
+                        title="Exhibits"
+                        breadcrumbs={[
+                            { label: 'Home', href: '/' },
+                            { label: 'Exhibits', href: '/exhibits' },
+                        ]}
+                    />
+
                     <div className="grid w-[75%] grid-cols-4 gap-2">
                         <div className="group overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white duration-300 hover:border-[#7f1414]">
                             <div className="grid place-items-center bg-[linear-gradient(120deg,#7f1414_0%,#c12c2c_100%)]">
@@ -70,12 +67,7 @@ export default function Programs() {
                     </div>
                 </div>
 
-                <DocumentViewer
-                    open={viewDialogOpen}
-                    onOpenChange={setViewDialogOpen}
-                    fileUrl={selectedDoc.fileUrl}
-                    title={selectedDoc.title}
-                />
+                <DocumentViewer open={viewDialogOpen} onOpenChange={setViewDialogOpen} fileUrl={selectedDoc.fileUrl} title={selectedDoc.title} />
             </Layout>
         </>
     );

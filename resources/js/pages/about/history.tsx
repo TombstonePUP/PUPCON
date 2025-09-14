@@ -1,5 +1,6 @@
+import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 
 export default function History() {
@@ -23,19 +24,13 @@ export default function History() {
             </Head>
             <Layout>
                 <div className="flex flex-col items-center">
-                    {/* Header Banner Section */}
-                    <div className="sticky top-0 z-30 w-full bg-gradient-to-r from-[#7f1414] to-[#a01818] py-4 shadow-sm">
-                        <div className="mx-auto flex w-[75%] items-center justify-between text-white">
-                            <h1 className="text-xl font-bold tracking-tight">History of PUP San Juan</h1>
-                            <nav className="flex items-center space-x-1 text-sm text-gray-200">
-                                <Link href="/" className="hover:text-white hover:underline">
-                                    Home
-                                </Link>
-                                <span>/</span>
-                                <span className="text-white">History</span>
-                            </nav>
-                        </div>
-                    </div>
+                    <PageHeader
+                        title="History"
+                        breadcrumbs={[
+                            { label: 'Home', href: '/' },
+                            { label: 'History', href: '/history' },
+                        ]}
+                    />
 
                     {/* History Page Content */}
                     <article className="history-page mt-8 flex w-[75%] flex-col items-center">

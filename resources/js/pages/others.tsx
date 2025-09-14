@@ -2,7 +2,7 @@ import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import { Head } from '@inertiajs/react';
 
-export default function Faculty() {
+export default function Others() {
     return (
         <>
             <Head title="PUP San Juan">
@@ -11,10 +11,10 @@ export default function Faculty() {
             </Head>
             <Layout>
                 <PageHeader
-                    title="Faculty and Staffs"
+                    title="Other Services and Portals"
                     breadcrumbs={[
                         { label: 'Home', href: '/' },
-                        { label: 'Faculty', href: '/faculty' },
+                        { label: 'Others', href: '/faculty' },
                     ]}
                 />
             </Layout>
