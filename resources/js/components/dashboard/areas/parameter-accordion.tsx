@@ -44,7 +44,7 @@ interface ParameterOutlineForm {
 }
 
 export default function ParameterAccordion({ area_id, program, areaParameters, parameterOutlineCategories }: ParameterAccordionProps) {
-    // Add state for outline container checkbox in ADD outline
+    // Add state for benchmark container checkbox in ADD outline
     const [isOutlineContainer, setIsOutlineContainer] = useState(false);
     const [addOutlineDialogOpen, setAddOutlineDialogOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -127,7 +127,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                 setAddOutlineDialogOpen(false);
                 setIsOutlineContainer(false);
                 setSelectedFile(null);
-                console.log('Outline added successfully');
+                console.log('Benchmark added successfully');
             },
         });
     };
@@ -291,7 +291,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                     <p className="text-center text-gray-500">No outlines available for this parameter.</p>
                                 )}
 
-                                {/* Add Outline Dialog */}
+                                {/* Add Benchmark Dialog */}
                                 <Dialog open={addOutlineDialogOpen} onOpenChange={setAddOutlineDialogOpen}>
                                     <DialogTrigger asChild>
                                         <a
@@ -302,14 +302,14 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                 setSelectedFile(null);
                                             }}
                                         >
-                                            Add Outline
+                                            Add Benchmark
                                         </a>
                                     </DialogTrigger>
                                     <DialogContent className="max-w-2xl">
                                         <DialogHeader>
-                                            <DialogTitle>Add Outline</DialogTitle>
+                                            <DialogTitle>Add Benchmark</DialogTitle>
                                             <DialogDescription>
-                                                Create a new outline for{' '}
+                                                Create a new benchmark for{' '}
                                                 {parameter.parameter_name != ' '
                                                     ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
                                                     : parameter.parameter_name}
@@ -317,9 +317,9 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                         </DialogHeader>
 
                                         <form onSubmit={(e) => addOutline(e)} className="flex flex-col gap-4">
-                                            {/* Outline Number */}
+                                            {/* Benchmark Number */}
                                             <div>
-                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Number</label>
+                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Benchmark Number</label>
                                                 <input
                                                     id="outline_number"
                                                     type="text"
@@ -335,9 +335,9 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                 <InputError message={errorsOutline.outline_number} className="mt-2" />
                                             </div>
 
-                                            {/* Outline Description */}
+                                            {/* Benchmark Description */}
                                             <div>
-                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Description</label>
+                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Benchmark Description</label>
                                                 <textarea
                                                     id="outline_description"
                                                     required
@@ -346,14 +346,14 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                     onChange={(e) => setOutlineData('outline_description', e.target.value)}
                                                     disabled={processingOutline}
                                                     className="min-h-[100px] w-full rounded-md border border-gray-300 p-2 text-sm focus:border-transparent focus:ring-2 focus:ring-blue-500"
-                                                    placeholder="Enter outline description..."
+                                                    placeholder="Enter benchmark description..."
                                                 />
                                                 <InputError message={errorsOutline.outline_description} className="mt-2" />
                                             </div>
 
-                                            {/* Outline Category */}
+                                            {/* Benchmark Category */}
                                             <div>
-                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Outline Category</label>
+                                                <label className="text-muted-foreground mb-1 block text-sm font-medium">Benchmark Category</label>
                                                 <select
                                                     className="bg-background focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                                                     id="parameter_outline_category_id"
@@ -393,7 +393,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                             }
                                                         }}
                                                     />
-                                                    Outline Container
+                                                    Benchmark Container
                                                 </label>
                                             </div>
 
