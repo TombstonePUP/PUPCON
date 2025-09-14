@@ -24,6 +24,7 @@ import type { BreadcrumbItem, PerProgram } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { Edit, Trash2, Plus } from 'lucide-react';
 import { useState } from 'react';
+import { Badge } from "@/components/ui/badge"
 
 export interface ProgramProps {
     program: PerProgram;
@@ -704,7 +705,19 @@ export default function Programs({ program }: ProgramProps) {
                                                     })}
                                                 >
                                                     <h1 className="font-bold">{item.area_numeral}</h1>
-                                                    <p className="text-[#858585]">{item.area_name}</p>
+                                                    <p className="text-[#858585] w-full justify-between flex mt-2 gap-1">{item.area_name}
+                                                        {(role !== 'Admin' && role !== 'Coordinator') && (
+                                                            // <Badge variant="outline">
+                                                            //     Assigned
+                                                            // </Badge> 
+                                                            <Badge variant="outline" className='bg-green-100 text-green-800 border-0'>
+                                                                Assigned
+                                                            </Badge>
+                                                        )}
+                                                    </p>
+                                                    <div className=''>
+
+                                                    </div>
                                                 </a>
                                                 <div className="absolute top-2 right-2 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                                     {/* Edit button */}
@@ -834,6 +847,6 @@ export default function Programs({ program }: ProgramProps) {
                     </TabsContent>
                 </Tabs>
             </div>
-        </AppLayout>
+        </AppLayout >
     );
 }

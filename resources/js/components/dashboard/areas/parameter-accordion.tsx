@@ -215,7 +215,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                             Cancel
                                                         </Button>
                                                     </DialogClose>
-                                                    <Button variant="black" type="submit" tabIndex={4}>
+                                                    <Button variant="noborder" type="submit" tabIndex={4}>
                                                         Submit
                                                     </Button>
                                                 </DialogFooter>
