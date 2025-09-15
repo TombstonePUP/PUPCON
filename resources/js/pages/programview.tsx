@@ -1,9 +1,10 @@
+import PageHeader from '@/components/guest-page-header';
 import ImageRow from '@/components/imagerow';
 import { AreaCard } from '@/components/ui/area-card';
 import Layout from '@/layouts/landing-layout';
 import type { PerProgramUnderSurvey } from '@/types';
 import { Head } from '@inertiajs/react';
-import { GraduationCap, FlaskConical, Handshake } from 'lucide-react';
+import { Building2, FlaskConical, GraduationCap, Handshake, School, Users } from 'lucide-react';
 
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
@@ -23,8 +24,7 @@ export default function Programs({ program }: PerProgramProps) {
         {
             id: 2,
             title: 'Innovation & Research',
-            description:
-                'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
+            description: 'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
             icon: FlaskConical,
         },
         {
@@ -36,6 +36,12 @@ export default function Programs({ program }: PerProgramProps) {
         },
     ];
 
+    const campusFacts = [
+        { icon: <School className="h-6 w-6 text-[#7f1414]" />, label: ' Students', value: '170+' },
+        { icon: <Users className="h-6 w-6 text-[#7f1414]" />, label: 'Faculty', value: '12+' },
+        { icon: <GraduationCap className="h-6 w-6 text-[#7f1414]" />, label: 'Years', value: '4' },
+    ];
+
     return (
         <>
             <Head title={`${program.degree_type} in ${program.program_name}`}>
@@ -43,38 +49,43 @@ export default function Programs({ program }: PerProgramProps) {
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
             <Layout>
-                <div className="flex flex-col items-center gap-13">
-                    <div className="relative mt-7 flex h-[20vw] w-[75%] items-center overflow-hidden rounded-t-2xl rounded-bl-2xl before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#7f1414] before:to-transparent before:content-['']">
-                        <img className="w-full" src="/images/campus/comlab.jpg" alt="banner" />
-                        <h2 className="absolute top-[7vw] left-20 text-white">
-                            {program.accreditation_level === 0 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + program.accreditation_level}
-                        </h2>
-                        <h1 className="absolute top-[8vw] left-19 w-full text-[3vw] font-bold text-white">
-                            {program.degree_type.match(/\b[A-Z]/g)} {program.program_name}
-                        </h1>
-                        <h2 className="absolute top-[11.8vw] left-20 text-white">
-                            Polytechnic University of the Philippines <b>San Juan Campus</b>
-                        </h2>
-                        <div className="absolute right-15 flex h-fit w-fit flex-col gap-[0.8vw] rounded-xl bg-white px-[2vw] py-[1vw] opacity-85">
-                            <a
-                                className="border-b border-[##0003] pb-[0.7vw] text-[#a6a6a6] transition duration-300 hover:text-[#7f1414]"
-                                href="#overview"
-                            >
-                                Program Overview
-                            </a>
-                            <a
-                                className="border-b border-[##0003] pb-[0.7vw] text-[#a6a6a6] transition duration-300 hover:text-[#7f1414]"
-                                href="#goals"
-                            >
-                                Program Goals
-                            </a>
-                            <a className="text-[#a6a6a6] transition duration-300 hover:text-[#7f1414]" href="#areas">
-                                Areas Under Survey
-                            </a>
-                        </div>
-                    </div>
+                <div className="flex flex-col items-center gap-20">
+                    <PageHeader
+                        title={``}
+                        breadcrumbs={[
+                            { label: 'Home', href: '/' },
+                            { label: 'Programs', href: '/programs' },
+                            { label: program.program_name, href: '#' },
+                        ]}
+                    />
+                    {/* Intro */}
+                    <section className="mb-8 w-[75%]">
+                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                            {/* Left: Program Title and Accreditation */}
+                            <div>
+                                <h1 className="text-4xl font-bold text-[#7f1414]">BS {program.program_name}</h1>
+                                <h2 className="text-xl font-normal text-[#7f1414]">Accreditation Level {program.accreditation_level}</h2>
+                            </div>
 
-                    <div
+                            {/* Right: Campus Facts Inline with Icons */}
+                            <div className="flex flex-wrap items-start gap-4 text-sm font-medium text-gray-700">
+                                {campusFacts.map((fact, i) => (
+                                    <div key={i} className="flex items-center gap-3">
+                                        {/* Icon */}
+                                        <span className="flex h-5 w-5 items-center justify-center text-[#7f1414]">{fact.icon}</span>
+                                        {/* Text */}
+                                        <span>
+                                            <span className="font-bold text-gray-900">{fact.value}</span> {fact.label}
+                                        </span>
+                                        {/* Separator, except after last item */}
+                                        {i < campusFacts.length - 1 && <span className="px-2 text-gray-400">|</span>}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* <div
                         className="group flex w-[75%] justify-center gap-4 rounded-xl rounded-tr-none border border-[#7f1414]/25 bg-white p-4 duration-300 hover:border-[#7f1414]"
                     >
                         <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-bold transition duration-300 hover:text-[#7f1414]">
@@ -95,11 +106,11 @@ export default function Programs({ program }: PerProgramProps) {
                             <p className="mb-[-0.1vw] text-sm font-normal">Latest graduates</p>
                             100
                         </h1>
-                    </div>
+                    </div> */}
 
-                    <div className="group flex w-[75%] flex-row justify-between gap-4 rounded-xl"  id="overview">
+                    <div className="group flex w-[75%] flex-row justify-between gap-4 rounded-xl" id="overview">
                         <div className="flex-1 rounded-xl border border-[#7f1414]/25 bg-white p-8 px-13 duration-300 hover:border-[#7f1414]">
-                            <h1 className="mb-4 text-3xl font-bold text-[#7f1414] transition duration-300 group-hover:text-[#a01818]">
+                            <h1 className="mb-4 text-3xl font-semibold text-[#7f1414] transition duration-300">
                                 Program Overview
                             </h1>
                             <p className="text-gray-600">{program.overview_description || 'No program overview available.'}</p>
@@ -126,7 +137,6 @@ export default function Programs({ program }: PerProgramProps) {
                                     key={objective.id}
                                     className="group relative overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg transition-all duration-300 hover:scale-101 hover:border-[#7f1414] hover:shadow-xl"
                                 >
-
                                     {/* Objective Number */}
                                     <div className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#7f1414]/10 font-bold text-[#7f1414] transition-colors group-hover:bg-[#7f1414] group-hover:text-white">
                                         {index + 1}
@@ -160,7 +170,7 @@ export default function Programs({ program }: PerProgramProps) {
                             <p>Showcasing the moments that define our passion and commitment.</p>
                         </div>
 
-                        <div >
+                        <div>
                             <ImageRow
                                 height="h-112"
                                 images={[
@@ -174,7 +184,6 @@ export default function Programs({ program }: PerProgramProps) {
                             />
                         </div>
                     </div>
-
 
                     <div className="flex w-[75%] items-center justify-center overflow-x-hidden">
                         <svg height="55" viewBox="0 0 1156 47" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -198,13 +207,13 @@ export default function Programs({ program }: PerProgramProps) {
                         </svg>
                     </div>
 
-                    <div className=' w-[75%]' id="areas">
+                    <div className="w-[75%]" id="areas">
                         <div className="grid place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
                             <h1 className="text-4xl font-bold">Areas Under Survey</h1>
                             <p>ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES</p>
                         </div>
 
-                        <div className="flex h-fit w-full flex-row flex-wrap justify-center gap-[1.5vw] py-3" >
+                        <div className="flex h-fit w-full flex-row flex-wrap justify-center gap-[1.5vw] py-3">
                             {program?.areas?.length > 0 ? (
                                 program.areas.map((area, index) => (
                                     <AreaCard
@@ -220,7 +229,6 @@ export default function Programs({ program }: PerProgramProps) {
                             )}
                         </div>
                     </div>
-
                 </div>
             </Layout>
         </>

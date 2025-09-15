@@ -11,6 +11,13 @@ export default function Welcome() {
     const [current, setCurrent] = React.useState(0);
 
     React.useEffect(() => {
+        images.forEach((src) => {
+            const img = new Image();
+            img.src = src;
+        });
+    }, []);
+
+    React.useEffect(() => {
         const interval = setInterval(() => {
             setCurrent((prev) => (prev + 1) % images.length);
         }, 4000); // change image every 4 seconds
