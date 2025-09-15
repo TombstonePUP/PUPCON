@@ -14,7 +14,6 @@ export default function About() {
     ];
 
     const pageSections = [
-        { label: 'Campus Snapshot', href: 'snapshot' },
         { label: 'Academic Organizations', href: 'academic-orgs' },
         { label: 'Non-Academic Organizations', href: 'non-academic-orgs' },
         { label: 'Program Accreditations', href: 'accreditations' },
@@ -104,7 +103,7 @@ export default function About() {
                                             href={`#${item.href}`}
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                document.getElementById(item.href)?.scrollIntoView({ behavior: 'smooth', block: 'center'  });
+                                                document.getElementById(item.href)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                             }}
                                             className="block px-1 py-1 font-normal text-gray-700 transition-all duration-150 hover:font-semibold hover:text-[#7f1414]"
                                         >
@@ -125,25 +124,24 @@ export default function About() {
                                     campus fosters innovation and inclusivity, offering a rich array of programs and facilities designed to prepare
                                     students for the future.
                                 </p>
-                                <div className="relative h-64 w-full overflow-hidden rounded-xl">
-                                    <img src="/images/homepage-slides/street-sj.png" alt="" className="h-full w-full object-cover" />
-                                </div>
-                            </section>
 
-                            {/* 1️⃣ Campus Snapshot */}
-                            <section id="snapshot">
-                                <h2 className="mb-6 text-2xl font-semibold text-[#7f1414]">Campus Snapshot</h2>
-                                <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-                                    {campusFacts.map((fact, i) => (
-                                        <div
-                                            key={i}
-                                            className="flex flex-col items-center rounded-xl border border-gray-200 bg-white p-4 text-center"
-                                        >
-                                            {fact.icon}
-                                            <p className="mt-2 text-xl font-bold text-gray-900">{fact.value}</p>
-                                            <p className="text-sm text-gray-600">{fact.label}</p>
-                                        </div>
-                                    ))}
+                                <div className="flex flex-col gap-6">
+                                    <div className="relative h-64 w-full overflow-hidden rounded-xl">
+                                        <img src="/images/homepage-slides/street-sj.png" alt="" className="h-full w-full object-cover" />
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+                                        {campusFacts.map((fact, i) => (
+                                            <div
+                                                key={i}
+                                                className="flex flex-col items-center rounded-xl border border-gray-200 bg-white p-4 text-center"
+                                            >
+                                                {fact.icon}
+                                                <p className="mt-2 text-xl font-bold text-gray-900">{fact.value}</p>
+                                                <p className="text-sm text-gray-600">{fact.label}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </section>
 
@@ -211,7 +209,7 @@ export default function About() {
                                 </div>
                             </section>
 
-                            {/* 7️⃣ Contact & Office Hours */}
+                            {/*Contact & Office Hours */}
                             <section id="contact">
                                 <h2 className="mb-4 text-2xl font-semibold text-[#7f1414]">Contact & Office Hours</h2>
                                 <div className="space-y-3 rounded-xl border border-gray-200 bg-white p-6 text-gray-700">
