@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -35,4 +34,8 @@ return [
         ],
     ],
 
+    'facebook' => [
+        'page_id' => env('FB_PAGE_ID'),
+        'page_access_token' => env('FB_PAGE_ACCESS_TOKEN'),
+    ],
 ];
