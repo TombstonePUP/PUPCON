@@ -8,12 +8,6 @@ export interface UserRecords {
     [key: string]: unknown;
 }
 
-/* export interface UserWithRoles {
-    user: UserRecords[];
-    userRoles: UserRecordRoles[];
-    [key: string]: unknown;
-} */
-
 export interface UserRecordRoles {
     role_id: number;
     role_name: string;
@@ -37,5 +31,27 @@ export interface AssignedPrograms {
     degree_type: string;
     color: string;
     areas?: AssignedAreas[];
+    [key: string]: unknown;
+}
+
+export interface AssignablePrograms {
+    program_id: number;
+    program_name: string;
+    areas: AssignableAreas[];
+    [key: string]: unknown;
+}
+
+export interface AssignableAreas {
+    area_id: number;
+    area_name: string;
+    area_number: string;
+    program_id: number;
+    programs?: AssignablePrograms;
+    [key: string]: unknown;
+}
+
+export interface AssignableRoles {
+    role_id: number;
+    role_name: string;
     [key: string]: unknown;
 }

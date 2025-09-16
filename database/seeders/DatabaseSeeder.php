@@ -52,10 +52,10 @@ class DatabaseSeeder extends Seeder
                 'role_id' => 4,
                 'role_name' => 'Accreditor'
             ],
-            [
+            /* [
                 'role_id' => 5,
                 'role_name' => 'Unassigned'
-            ],
+            ], */
         ];
         foreach ($roles as $attributes) {
             Roles::factory()->create($attributes);

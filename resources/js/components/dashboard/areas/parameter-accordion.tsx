@@ -41,6 +41,8 @@ interface ParameterOutlineForm {
     outline_number: string | number;
     outline_description: string;
     container: boolean;
+    file_name?: string;
+    file_path?: File | null;
 }
 
 export default function ParameterAccordion({ area_id, program, areaParameters, parameterOutlineCategories }: ParameterAccordionProps) {
@@ -72,7 +74,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
         processing: processingOutline,
         errors: errorsOutline,
         reset: resetOutline,
-    } = useForm<ParameterOutlineForm & { file_name?: string; file_path?: File | null }>({
+    } = useForm<ParameterOutlineForm>({
         parameter_outline_id: undefined,
         area_parameter_id: null,
         parameter_outline_category_id: null,

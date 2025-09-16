@@ -22,7 +22,13 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => ['required', 'integer', 'exists:users,user_id'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'lowercase', 'string', 'email', 'max:255'],
+            'role' => ['required', 'integer', 'exists:roles,role_id'],
+            'areas' => ['array', 'exists:areas,area_id'],
+            'program' => ['array', 'exists:programs,program_id'],
         ];
     }
 }

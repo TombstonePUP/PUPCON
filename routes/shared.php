@@ -17,8 +17,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware(['admin'])->group(function () {
 
-        Route::get('users', [UserController::class, 'index'])
-            ->name('users');
+        Route::controller(UserController::class)->group(function () {
+            Route::get('users', 'index')->name('users');
+            Route::post('users', 'store')->name('storeUser');
+            Route::patch('users/{user_id}/edit', 'edit')->name('editUser');
+            Route::delete('users/{user_id}/delete', 'destroy')->name('deleteUser');
+        });
 
         Route::get('manage-exhibits', function () {
             return Inertia::render('document/exhibits');
@@ -62,7 +66,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
                         Route::post('/{area_id}/{form_id}/updateForm', 'update')->name('area.updateAreaForm');
                         Route::delete('/{area_id}/{form_id}/deleteForm', 'destroy')->name('area.deleteAreaForm');
                     });
-                      // TAnginna
                 });
             });
         });

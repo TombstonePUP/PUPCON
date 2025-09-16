@@ -73,17 +73,20 @@ export const columns: ColumnDef<UserRecords>[] = [
         accessorKey: "programs",
         header: () => <div className="text-left">Program/s</div>,
         cell: ({ row }) => {
-            let programs = row.original.areas?.map(p => ({
-                program_name: p.programs?.degree_type + ' ' + p.programs?.program_name,
-                color: p.programs?.color || "gray",
-                fill: "bg-" + (p.programs?.color || "gray") + "-500",
-            })) || [];
+            let programs = row.original.areas?.map(p => {
+                const regex = /\b[A-Z]/g;
+                const program = p.programs?.program_name.match(regex).join('');
+                const degree_type = p.programs?.degree_type.match(regex).join('');
+                return {
+                    program_name: degree_type + program,
+                    color: p.programs?.color || "gray",
+                };
+            }) || [];
 
             programs = programs.filter(
                 (program, index, self) =>
                     index === self.findIndex(p => p.program_name === program.program_name)
             );
-
 
             return (
                 <div className="flex flex-wrap gap-1 text-left">
