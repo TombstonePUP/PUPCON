@@ -38,7 +38,7 @@ export default function Welcome() {
     const handleSelectType = (type: string) => {
         setUserType(type);
         setShowModal(false);
-        // You can also trigger analytics or state updates here
+        //Placeholder lang to trigger the freaking checkboxes
     };
 
     return (
@@ -91,7 +91,7 @@ export default function Welcome() {
                 {/* Modern Card-Style Welcome Modal */}
                 {showModal && (
                     <div className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                        <div className="animate-slideUp relative w-full max-w-4xl transform rounded-2xl bg-white p-12 shadow-2xl transition-all">
+                        <div className="animate-slideUp relative w-full max-w-4xl transform rounded-2xl bg-white/95 p-12 shadow-2xl transition-all">
                             <button
                                 onClick={() => setShowModal(false)}
                                 className="absolute top-3 right-3 text-gray-400 hover:text-[#7f1414]"
@@ -108,11 +108,14 @@ export default function Welcome() {
                                     <p className="text-gray-600">Select your role to continue:</p>
                                 </div>
 
-                                {/* Right: role buttons */}
+                                {/* Right: role buttons with links */}
                                 <div className="flex flex-col justify-center space-y-4">
                                     <div className="grid grid-cols-2 gap-4">
-                                        <button
-                                            onClick={() => handleSelectType('Faculty')}
+                                        <Link
+                                            href="/login"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={() => setShowModal(false)}
                                             className="flex flex-col items-center rounded-xl border p-4 text-center transition hover:bg-gray-50"
                                         >
                                             <svg className="mb-2 h-8 w-8 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,10 +124,13 @@ export default function Welcome() {
                                             </svg>
                                             <span className="font-medium">Faculty</span>
                                             <p className="mt-1 text-xs text-gray-500">Admins & chairs</p>
-                                        </button>
+                                        </Link>
 
-                                        <button
-                                            onClick={() => handleSelectType('Accreditor')}
+                                        <Link
+                                            href="/login"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={() => setShowModal(false)}
                                             className="flex flex-col items-center rounded-xl border p-4 text-center transition hover:bg-gray-50"
                                         >
                                             <svg className="mb-2 h-8 w-8 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,18 +138,16 @@ export default function Welcome() {
                                             </svg>
                                             <span className="font-medium">Accreditor</span>
                                             <p className="mt-1 text-xs text-gray-500">Evaluation team</p>
-                                        </button>
+                                        </Link>
                                     </div>
 
-                                    <button
-                                        onClick={() => handleSelectType('Guest/Student')}
-                                        className="w-full rounded-xl bg-[#7f1414] px-5 py-3 font-medium text-white shadow transition hover:scale-[1.02] hover:bg-[#a71d1d]"
+                                    <Link
+                                        href="/"
+                                        onClick={() => setShowModal(false)}
+                                        className="flex w-full items-center justify-center rounded-xl bg-[#7f1414] px-5 py-3 font-medium text-white shadow transition hover:scale-[1.02] hover:bg-[#a71d1d]"
                                     >
                                         Continue as Guest / Student
-                                    </button>
-                                    
-                                    
-                            
+                                    </Link>
                                 </div>
                             </div>
                         </div>
