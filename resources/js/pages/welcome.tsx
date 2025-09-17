@@ -3,12 +3,14 @@ import Layout from '@/layouts/landing-layout';
 import { Head, Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { BookOpen, Calendar, GraduationCap } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Welcome() {
     const images = ['/images/homepage-slides/1.png', '/images/homepage-slides/4.jpg', '/images/homepage-slides/6.jpg'];
 
     const [current, setCurrent] = React.useState(0);
+    const [showModal, setShowModal] = useState(false);
+    const [userType, setUserType] = useState<string | null>(null);
 
     React.useEffect(() => {
         images.forEach((src) => {
@@ -24,6 +26,21 @@ export default function Welcome() {
         return () => clearInterval(interval);
     }, []);
 
+    // Show modal once per session
+    useEffect(() => {
+        const visited = sessionStorage.getItem('welcomeModalShown');
+        if (!visited) {
+            setShowModal(true);
+            sessionStorage.setItem('welcomeModalShown', 'true');
+        }
+    }, []);
+
+    const handleSelectType = (type: string) => {
+        setUserType(type);
+        setShowModal(false);
+        // You can also trigger analytics or state updates here
+    };
+
     return (
         <>
             <Head title="PUP San Juan">
@@ -31,7 +48,7 @@ export default function Welcome() {
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
             <Layout>
-                <div className="relative grid h-[70vh] w-full place-items-center overflow-hidden">
+                <div className="relative grid h-[75vh] w-full place-items-center overflow-hidden">
                     {images.map((img, index) => (
                         <img
                             key={index}
@@ -47,27 +64,65 @@ export default function Welcome() {
                     <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>
 
                     {/* Content Overlay */}
-                    <div className="absolute inset-0 z-20 flex flex-col items-start justify-center space-y-6 px-12 pr-10 pl-70 text-white">
-                        <img src="/images/pupsj_motto.png" alt="Logo" className="h-auto w-120" />
-                        <h2 className="text-2xl italic">Years of academic excellence and service</h2>
+                    <div className="absolute inset-0 z-20 grid w-full grid-cols-1 px-12 pr-10 pl-70 text-white md:grid-cols-2">
+                        {/* Left Column */}
+                        <div className="flex flex-col justify-center space-y-6">
+                            <img src="/images/pupsj_motto.png" alt="Logo" className="h-auto w-120" />
+                            <h2 className="text-2xl italic">Years of academic excellence and service</h2>
 
-                        <div className="mt-10 flex space-x-4">
-                            <button className="flex items-center space-x-2 rounded-md bg-white px-6 py-2 font-semibold text-black shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg">
-                                <BookOpen className="h-5 w-5" />
-                                <span>Programs</span>
-                            </button>
-                            <button className="flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-200 hover:bg-white/20">
-                                <Calendar className="h-5 w-5" />
-                                <span>Events</span>
-                            </button>
-                            <button className="flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-200 hover:bg-white/20">
-                                <GraduationCap className="h-5 w-5" />
-                                <span>Academe</span>
-                            </button>
+                            <div className="mt-10 flex flex-wrap gap-4">
+                                <button className="flex items-center space-x-2 rounded-md bg-white px-6 py-2 font-semibold text-black shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                                    <BookOpen className="h-5 w-5" />
+                                    <span>Programs</span>
+                                </button>
+                                <button className="flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-200 hover:bg-white/20">
+                                    <Calendar className="h-5 w-5" />
+                                    <span>Events</span>
+                                </button>
+                                <button className="flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-200 hover:bg-white/20">
+                                    <GraduationCap className="h-5 w-5" />
+                                    <span>Academe</span>
+                                </button>
+                            </div>
                         </div>
+
+                        {/* Right Column (Quote Placeholder) */}
+                        {/* <div className="flex flex-col justify-center space-y-4 md:pl-12 lg:pl-20">
+      <blockquote className="text-lg italic text-white/100 mr-40">
+        "Mula Sa'yo, Para Sa Bayan"
+      </blockquote>
+      <span className="text-sm text-white/60">— Author / Source</span>
+    </div> */}
                     </div>
                 </div>
 
+                {/* Modern Animated Modal */}
+                {showModal && (
+                    <div className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+                        <div className="animate-slideUp relative w-full max-w-sm transform rounded-2xl bg-white p-8 shadow-2xl transition-all">
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="absolute top-3 right-3 text-gray-400 hover:text-[#7f1414]"
+                                aria-label="Close"
+                            >
+                                ✕
+                            </button>
+                            <h2 className="mb-5 text-2xl font-bold text-[#7f1414]">Welcome!</h2>
+                            <p className="mb-6 text-gray-600">Please select your role to continue:</p>
+                            <div className="space-y-3">
+                                {['Student', 'Faculty', 'Accreditor', 'Guest'].map((type) => (
+                                    <button
+                                        key={type}
+                                        onClick={() => handleSelectType(type)}
+                                        className="w-full rounded-xl bg-[#7f1414] px-5 py-3 font-medium text-white shadow transition-transform duration-200 hover:scale-[1.03] hover:bg-[#a71d1d]"
+                                    >
+                                        {type}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <motion.section
                     className="flex min-h-[80vh] w-full flex-col items-center justify-center gap-20 bg-gray-50 px-6 py-16"
                     initial="hidden"

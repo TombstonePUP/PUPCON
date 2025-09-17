@@ -12,8 +12,8 @@ interface PageHeaderProps {
 
 export default function PageHeader({ title, breadcrumbs }: PageHeaderProps) {
     return (
-        <div className="z-30 w-full bg-gradient-to-r from-[#7f1414] to-[#a01818] py-4 shadow-md">
-            <div className="mx-auto flex w-[75%] max-w-7xl items-center justify-between text-white">
+        <div className="z-30 w-full bg-gradient-to-r from-[#ffffff] to-[#ffffff] py-4 shadow-md">
+            <div className="mx-auto flex w-[75%] max-w-7xl items-center justify-between text-[#7f1414]">
                 <h1 className="md:text-l text-l font-semibold tracking-tight">{title}</h1>
 
                 <nav className="flex items-center text-sm">
@@ -22,13 +22,13 @@ export default function PageHeader({ title, breadcrumbs }: PageHeaderProps) {
                         return (
                             <span key={idx} className="flex items-center">
                                 {isLast ? (
-                                    <span className="font-semibold text-white">{crumb.label}</span>
+                                    <span className="font-semibold text-[#7f1414]">{crumb.label}</span>
                                 ) : (
-                                    <Link href={crumb.href} className="text-white/70 transition-colors hover:text-white">
+                                    <Link href={crumb.href} className="text-[#7f1414]/70 transition-colors hover:text-[#7f1414]">
                                         {crumb.label}
                                     </Link>
                                 )}
-                                {!isLast && <span className="mx-2 text-white/50">/</span>}
+                                {!isLast && <span className="mx-2 text-[#7f1414]/50">/</span>}
                             </span>
                         );
                     })}
