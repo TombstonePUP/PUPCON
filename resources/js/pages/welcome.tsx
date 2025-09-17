@@ -85,21 +85,13 @@ export default function Welcome() {
                                 </button>
                             </div>
                         </div>
-
-                        {/* Right Column (Quote Placeholder) */}
-                        {/* <div className="flex flex-col justify-center space-y-4 md:pl-12 lg:pl-20">
-      <blockquote className="text-lg italic text-white/100 mr-40">
-        "Mula Sa'yo, Para Sa Bayan"
-      </blockquote>
-      <span className="text-sm text-white/60">— Author / Source</span>
-    </div> */}
                     </div>
                 </div>
 
-                {/* Modern Animated Modal */}
+                {/* Modern Card-Style Welcome Modal */}
                 {showModal && (
-                    <div className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                        <div className="animate-slideUp relative w-full max-w-sm transform rounded-2xl bg-white p-8 shadow-2xl transition-all">
+                    <div className="animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                        <div className="animate-slideUp relative w-full max-w-4xl transform rounded-2xl bg-white p-12 shadow-2xl transition-all">
                             <button
                                 onClick={() => setShowModal(false)}
                                 className="absolute top-3 right-3 text-gray-400 hover:text-[#7f1414]"
@@ -107,22 +99,57 @@ export default function Welcome() {
                             >
                                 ✕
                             </button>
-                            <h2 className="mb-5 text-2xl font-bold text-[#7f1414]">Welcome!</h2>
-                            <p className="mb-6 text-gray-600">Please select your role to continue:</p>
-                            <div className="space-y-3">
-                                {['Student', 'Faculty', 'Accreditor', 'Guest'].map((type) => (
+
+                            <div className="grid gap-6 md:grid-cols-2">
+                                {/* Left: logo + title */}
+                                <div className="flex flex-col items-center justify-center space-y-3 text-center">
+                                    <img src="/images/pupcon-logo.png" alt="Logo" className="h-20 w-auto" />
+                                    <h2 className="text-2xl font-bold text-[#7f1414]">Mabuhay!</h2>
+                                    <p className="text-gray-600">Select your role to continue:</p>
+                                </div>
+
+                                {/* Right: role buttons */}
+                                <div className="flex flex-col justify-center space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <button
+                                            onClick={() => handleSelectType('Faculty')}
+                                            className="flex flex-col items-center rounded-xl border p-4 text-center transition hover:bg-gray-50"
+                                        >
+                                            <svg className="mb-2 h-8 w-8 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                                                <path d="M12 14l6.16-3.422A12.083 12.083 0 0118 12.08v.42a12.08 12.08 0 01-6 10.392A12.08 12.08 0 016 12.5v-.42a12.083 12.083 0 01-.16-.902L12 14z" />
+                                            </svg>
+                                            <span className="font-medium">Faculty</span>
+                                            <p className="mt-1 text-xs text-gray-500">Admins & chairs</p>
+                                        </button>
+
+                                        <button
+                                            onClick={() => handleSelectType('Accreditor')}
+                                            className="flex flex-col items-center rounded-xl border p-4 text-center transition hover:bg-gray-50"
+                                        >
+                                            <svg className="mb-2 h-8 w-8 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            <span className="font-medium">Accreditor</span>
+                                            <p className="mt-1 text-xs text-gray-500">Evaluation team</p>
+                                        </button>
+                                    </div>
+
                                     <button
-                                        key={type}
-                                        onClick={() => handleSelectType(type)}
-                                        className="w-full rounded-xl bg-[#7f1414] px-5 py-3 font-medium text-white shadow transition-transform duration-200 hover:scale-[1.03] hover:bg-[#a71d1d]"
+                                        onClick={() => handleSelectType('Guest/Student')}
+                                        className="w-full rounded-xl bg-[#7f1414] px-5 py-3 font-medium text-white shadow transition hover:scale-[1.02] hover:bg-[#a71d1d]"
                                     >
-                                        {type}
+                                        Continue as Guest / Student
                                     </button>
-                                ))}
+                                    
+                                    
+                            
+                                </div>
                             </div>
                         </div>
                     </div>
                 )}
+
                 <motion.section
                     className="flex min-h-[80vh] w-full flex-col items-center justify-center gap-20 bg-gray-50 px-6 py-16"
                     initial="hidden"
