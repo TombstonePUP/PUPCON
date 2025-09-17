@@ -19,9 +19,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::controller(UserController::class)->group(function () {
             Route::get('users', 'index')->name('users');
-            Route::post('users', 'store')->name('storeUser');
-            Route::patch('users/{user_id}/edit', 'edit')->name('editUser');
-            Route::delete('users/{user_id}/delete', 'destroy')->name('deleteUser');
+            Route::post('users', 'store')->name('users.store');
+            Route::patch('users/{user_id}/edit', 'edit')->name('users.edit');
+            Route::delete('users/{user_id}/delete', 'destroy')->name('users.delete');
         });
 
         Route::get('manage-exhibits', function () {

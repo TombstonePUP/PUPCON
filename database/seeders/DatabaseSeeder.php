@@ -77,14 +77,14 @@ class DatabaseSeeder extends Seeder
                 'role_id' => 1, // Admin
                 'password' => bcrypt('password@123'),
             ],
-            [
+            /* [
                 'user_id' => 33333,
                 'first_name' => 'Charles',
                 'last_name' => 'Ilarde',
                 'email' => 'ilardecharles@gmail.com',
-                'role_id' => 3, // Chairman
+                'role_id' => 2, // Chairman
                 'password' => bcrypt('shiroe_1101101011'),
-            ],
+            ], */
         ];
         foreach ($users as $attributes) {
             User::factory()->create($attributes);
@@ -222,14 +222,14 @@ class DatabaseSeeder extends Seeder
                 'user_id' => 22222,
                 'area_id' => 9,
             ],
-            [
+            /* [
                 'user_id' => 33333,
                 'area_id' => 12,
             ],
             [
                 'user_id' => 33333,
                 'area_id' => 1,
-            ],
+            ], */
         ];
         foreach ($userAreaRoles as $attributes) {
             UserAreaRoles::factory()->create($attributes);

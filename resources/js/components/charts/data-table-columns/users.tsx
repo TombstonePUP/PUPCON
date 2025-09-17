@@ -29,6 +29,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { UserPlus, Mail, User, Shield, Settings, BookOpen, CheckCircle, User2 } from "lucide-react"
 
+// Don't Remove this shit, it bugs out when it is removed
+const programColors: Record<string, string> = {
+    "Communication": "border-red-500",
+    "Information Technology": "border-blue-500",
+    "Business": "border-yellow-500",
+    "Engineering": "border-green-500",
+};
+
 export const columns: ColumnDef<UserRecords>[] = [
     {
         accessorKey: "first_name",
@@ -121,7 +129,7 @@ export const columns: ColumnDef<UserRecords>[] = [
                             variant="outline"
                             className={`1px-1.5 text-muted-foreground border-${area?.programs.color}-500`}
                         >
-                            {area.area_name}
+                            Area {area.area_number}
                         </Badge>
                     )) : <span className="text-xs text-gray-500 italic">No Areas Assigned</span>}
                 </div>

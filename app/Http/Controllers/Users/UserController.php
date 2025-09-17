@@ -8,6 +8,9 @@ use App\Models\Programs;
 use App\Models\Roles;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\UserAreaRoles;
+use App\Notifications\NewUser;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,6 +69,28 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $validated = $request->validated();
+
+        $user = new User();
+        $password = Str::password(16, true, true, false, false);
+
+        $user->first_name = $validated['first_name'];
+        $user->last_name = $validated['last_name'];
+        $user->email = $validated['email'];
+        $user->role_id = $validated['assigned_role'];
+        $user->password = bcrypt($password); // Set a default password or generate one
+        $user->save();
+
+        if ($validated['assigned_programs'] && $validated['assigned_areas']) {
+            $user->Areas()->attach($validated['assigned_areas']);
+        }
+
+        $name = $user->first_name . ' ' . $user->last_name;
+
+        $user->notify(new NewUser($user->email, $name, $password));
+
+        return redirect()->back()
+            ->with('success', 'User created successfully');
+
     }
 
     /**
@@ -73,6 +98,7 @@ class UserController extends Controller
      */
     public function edit(Request $request, int $user_id)
     {
+        dd('hello edit');
     }
 
     /**
@@ -80,6 +106,12 @@ class UserController extends Controller
      */
     public function destroy(int $user_id)
     {
+        $user = User::findOrFail($user_id);
+        $user->Areas()->detach();
+        $user->delete();
+
+        return redirect()->back()
+            ->with('success', 'User deleted successfully');
     }
 
 

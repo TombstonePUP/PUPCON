@@ -16,11 +16,12 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/charts/data-table"
 import { columns } from "@/components/charts/data-table-columns/users"
-import { AssignableRoles, AssignedPrograms, type UserRecords } from "@/types/user-management";
+import { AssignableRoles, AssignedAreas, AssignedPrograms, type UserRecords } from "@/types/user-management";
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
-import { UserPlus, Mail, User, Shield, Settings, BookOpen, CheckCircle, User2 } from "lucide-react"
+import { User2 } from "lucide-react"
 import { Label } from "@/components/ui/label"
+import InputError from '@/components/input-error';
 
 interface UsersProps {
     userRecords: UserRecords[];
@@ -34,7 +35,7 @@ interface NewUserForm {
     email: string;
     assigned_programs: number[];
     assigned_areas: number[];
-    assigned_roles: number;
+    assigned_role: number;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -45,56 +46,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Users({ userRecords, programRoles, roles }: UsersProps) {
-    const [selectedPrograms, setSelectedPrograms] = useState<string[]>([]);
-    const [selectedAreas, setSelectedAreas] = useState<Record<string, number[]>>({});
-
-    const toggleProgram = (program: string) => {
-        setSelectedPrograms((prev) => {
-            const isSelected = prev.includes(program);
-            const updated = isSelected
-                ? prev.filter((p) => p !== program)
-                : [...prev, program];
-
-            setNewUserData("assigned_programs", isSelected
-                ? newUserData.assigned_programs.filter(id=> id !== program.program_id)
-                : [...newUserData.assigned_programs, program.program_id]);
-
-            // If program is being unchecked, also clear its areas
-            if (isSelected) {
-                setSelectedAreas((prevAreas) => {
-                    const updatedAreas = { ...prevAreas };
-                    delete updatedAreas[program];
-                    return updatedAreas;
-                });
-
-                setNewUserData("assigned_areas", newUserData.assigned_areas.filter(
-                    id => !program.areas.map(area => area.area_id).includes(id)
-                ));
-            }
-            return updated;
-        });
-    };
-
-    const toggleArea = (program: string, area: number) => {
-        setSelectedAreas((prev) => {
-            const current = prev[program] || [];
-            const updated = current.includes(area);
-
-            setNewUserData("assigned_areas", current.includes(area)
-                ? newUserData.assigned_areas.filter(id => id !== area.area_id)
-                : [...newUserData.assigned_areas, area.area_id]);
-
-            return {
-                ...prev,
-                [program]: current.includes(area)
-                    ? current.filter((a) => a !== area)
-                    : [...current, area]
-            };
-        });
-
-    };
-
-    const isProgramSelected = (program: string) => selectedPrograms.includes(program);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const {
         data: newUserData,
@@ -109,14 +61,54 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
         email: '',
         assigned_programs: [],
         assigned_areas: [],
-        assigned_roles: null,
+        assigned_role: null,
     });
 
     const addNewUser = (e: React.FormEvent) => {
         e.preventDefault();
+        postNewUser(route('users.store'), {
+            onSuccess: () => {
+                resetNewUser();
+                setDialogOpen(false);
+            }
+        });
         console.log(newUserData);
     };
 
+    const onChangeProgram = (program: AssignedPrograms, e) => {
+        const isChecked = e.target.checked;
+        if (isChecked) {
+            // Add program
+            setNewUserData("assigned_programs", [...newUserData.assigned_programs, program.program_id]);
+        } else {
+            // Remove program
+            setNewUserData(
+                "assigned_programs",
+                newUserData.assigned_programs.filter(id => id !== program.program_id)
+            );
+            // Remove areas under this program
+            setNewUserData(
+                "assigned_areas",
+                newUserData.assigned_areas.filter(
+                    areaId => !program.areas.some(a => a.area_id === areaId)
+                )
+            );
+        }
+    }
+
+    const onChangeArea = (area: AssignedAreas, e) => {
+        const isChecked = e.target.checked;
+        if (isChecked) {
+            // Add area
+            setNewUserData("assigned_areas", [...newUserData.assigned_areas, area.area_id]);
+        } else {
+            // Remove area
+            setNewUserData(
+                "assigned_areas",
+                newUserData.assigned_areas.filter(id => id !== area.area_id)
+            );
+        }
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -129,15 +121,15 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                     </div>
 
                     {/* Add New User Dialog */}
-                    <Dialog>
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button variant="noborder" className='w-50'>
+                            <Button variant="noborder" className='w-50' onClick={() => setDialogOpen(true)}>
                                 <User2 className="h-4 w-4 " />
                                 Add User
                             </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-2xl">
-                            <form onSubmit={addNewUser}>
+                            <form>
                                 <DialogHeader>
                                     <DialogTitle className='flex items-center gap-2'>
                                         <User2 className="h-5 w-5 text-[#7f1414]" />
@@ -147,7 +139,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                         Fill in the details to create a new account
                                     </DialogDescription>
                                 </DialogHeader>
-                                <Tabs defaultValue="account" className="w-full">
+                                <Tabs defaultValue="account" className="w-full mt-3 mb-3">
                                     <TabsList className='w-full mb-4'>
                                         <TabsTrigger value="account">Information</TabsTrigger>
                                         <TabsTrigger value="access">Access</TabsTrigger>
@@ -156,12 +148,14 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                         <div className="flex flex-col gap-4">
                                             <div className='flex gap-2'>
                                                 <div className='flex flex-col flex-1 gap-2'>
-                                                    <Label >First Name</Label>
+                                                    <Label >
+                                                        First Name
+                                                        <Label className='text-[#7f1414]' >*</Label>
+                                                    </Label>
                                                     <input
                                                         id='first_name'
                                                         type="text"
-                                                        required
-                                                        tabIndex={0}
+                                                        tabIndex={1}
                                                         autoFocus
                                                         value={newUserData.first_name}
                                                         onChange={(e) => setNewUserData('first_name', e.target.value)}
@@ -169,14 +163,17 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                                         className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
                                                         placeholder="Enter first name"
                                                     />
+                                                    <InputError message={errorsNewUser.first_name} className='mt-1'/>
                                                 </div>
                                                 <div className='flex flex-col flex-1 gap-2'>
-                                                    <Label >Last Name</Label>
+                                                    <Label >
+                                                        Last Name
+                                                        <Label className='text-[#7f1414]' >*</Label>
+                                                    </Label>
                                                     <input
                                                         id='last_name'
                                                         type="text"
-                                                        required
-                                                        tabIndex={1}
+                                                        tabIndex={2}
                                                         autoFocus
                                                         value={newUserData.last_name}
                                                         onChange={(e) => setNewUserData('last_name', e.target.value)}
@@ -184,18 +181,19 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                                         className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
                                                         placeholder="Enter last name"
                                                     />
+                                                    <InputError message={errorsNewUser.last_name} className='mt-1'/>
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <Label htmlFor="email" className="flex items-center gap-2 mb-2">
                                                     Email Address
+                                                    <Label className='text-[#7f1414]' >*</Label>
                                                 </Label>
                                                 <input
                                                     id='email'
                                                     type="email"
-                                                    required
-                                                    tabIndex={2}
+                                                    tabIndex={3}
                                                     autoFocus
                                                     value={newUserData.email}
                                                     onChange={(e) => setNewUserData('email', e.target.value)}
@@ -203,56 +201,71 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                                     className="w-full rounded-md border bg-background border-gray-300 p-2 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
                                                     placeholder="Enter email address"
                                                 />
+                                                <InputError message={errorsNewUser.email} className='mt-1'/>
                                             </div>
                                         </div>
                                     </TabsContent>
                                     <TabsContent value="access" className="flex flex-col gap-5 overflow-x-auto">
                                         <div>
                                             <Label className="mb-1 block text-sm font-medium mb-2">Programs & Areas</Label>
+                                            {/*renderProgramsAndAreas(programRoles, newUserData, setNewUserData)*/}
                                             <div className="flex flex-col gap-3">
-                                                {programRoles.map(program => (
-                                                    <div key={program.program_id}>
-                                                        <label className="flex items-center gap-3 text-sm mb-0 font-normal text-foreground">
-                                                            <input
-                                                                id="assigned_programs"
-                                                                type="checkbox"
-                                                                className="accent-ring"
-                                                                value={program.program_id}
-                                                                autoFocus
-                                                                checked={isProgramSelected(program.program_name)}
-                                                                onChange={() => toggleProgram(program.program_name)}
-                                                            />
-                                                            {program.program_name}
-                                                        </label>
-                                                        {isProgramSelected(program.program_name) && (
-                                                            <div className="ml-6 mt-2">
-                                                                <div className="grid grid-cols-5 gap-2 flex-wrap">
-                                                                    {program.areas?.length > 0 ? program.areas?.map(area => (
-                                                                        <label key={area.area_id}
-                                                                            className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground">
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                className="accent-ring ml-2"
-                                                                                value={area.area_id}
-                                                                                checked={(selectedAreas[program.program_name] || []).includes(parseInt(area.area_id))}
-                                                                                onChange={() => toggleArea(program.program_name, parseInt(area.area_number), area.area_id)}
-                                                                            />
-                                                                            Area {area.area_number}
-                                                                        </label>
-                                                                    )):
-                                                                        <div className="col-span-5 text-sm text-gray-500 italic">
-                                                                            No areas available
-                                                                        </div>
-                                                                    }
+                                                {programRoles.map(program => {
+                                                    const isProgramChecked = newUserData.assigned_programs.includes(program.program_id);
+                                                    return (
+                                                        <div key={program.program_id}>
+                                                            <label className="flex items-center gap-3 text-sm mb-0 font-normal text-foreground">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="accent-ring"
+                                                                    value={program.program_id}
+                                                                    checked={isProgramChecked}
+                                                                    onChange={(e) => onChangeProgram(program, e)}
+                                                                />
+                                                                {program.program_name}
+                                                            </label>
+
+                                                            {/* Show areas only if program is checked */}
+                                                            {isProgramChecked && (
+                                                                <div className="ml-6 mt-2">
+                                                                    <div className="grid grid-cols-5 gap-2 flex-wrap">
+                                                                        {program.areas?.length > 0 ? (
+                                                                            program.areas.map(area => {
+                                                                                const isAreaChecked = newUserData.assigned_areas.includes(area.area_id);
+                                                                                return (
+                                                                                    <label
+                                                                                        key={area.area_id}
+                                                                                        className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground"
+                                                                                    >
+                                                                                        <input
+                                                                                            type="checkbox"
+                                                                                            className="accent-ring ml-2"
+                                                                                            value={area.area_id}
+                                                                                            checked={isAreaChecked}
+                                                                                            onChange={(e) => onChangeArea(area, e)}
+                                                                                        />
+                                                                                        Area {area.area_number}
+                                                                                    </label>
+                                                                                );
+                                                                            })
+                                                                        ) : (
+                                                                            <div className="col-span-5 text-sm text-gray-500 italic">
+                                                                                No areas available
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))}
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
                                         <div>
-                                            <Label className="mb-1 block text-sm font-medium">Additional Access</Label>
+                                            <Label className="mb-1 block text-sm font-medium">
+                                                Assign Role
+                                                <Label className='text-[#7f1414]' >*</Label>
+                                            </Label>
                                             <div className="grid grid-cols-3 gap-2">
                                                 {roles.map(role => (
                                                     <label
@@ -260,22 +273,27 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                                         className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground whitespace-nowrap">
                                                         <input
                                                             type="radio"
-                                                            name="assigned_roles"
+                                                            name="assigned_role"
                                                             value={role.role_id}
-                                                            onChange={() => setNewUserData("assigned_roles", role.role_id)}
+                                                            onChange={() => setNewUserData("assigned_role", role.role_id)}
                                                             className="accent-ring " />
                                                             {role.role_name}
                                                     </label>
                                                 ))}
                                             </div>
+                                            <InputError message={errorsNewUser.assigned_role} className='mt-1'/>
                                         </div>
                                     </TabsContent>
+                                    <label className="text-sm text-gray-500 mt-2">A temporary password will be emailed to the user.</label>
                                 </Tabs>
                                 <DialogFooter>
                                     <DialogClose asChild>
-                                        <Button variant="outline">Cancel</Button>
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => setDialogOpen(false)}
+                                        >Cancel</Button>
                                     </DialogClose>
-                                    <Button variant="noborder">Submit</Button>
+                                    <Button variant="noborder" type='submit' onClick={addNewUser}>Submit</Button>
                                 </DialogFooter>
                             </form>
                         </DialogContent>
