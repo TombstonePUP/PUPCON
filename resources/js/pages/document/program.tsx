@@ -696,7 +696,7 @@ export default function Programs({ program }: ProgramProps) {
                                         program.areas.map((item: any) => (
                                             <div
                                                 key={item.id}
-                                                className="group relative rounded border p-7 border-[#7f1414]/20 hover:border-[#7f1414] hover:text-[#7f1414] transition duration-200 cursor-pointer"
+                                                className="group relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
                                             >
                                                 <a
                                                     href={route('manage.area', {
@@ -715,9 +715,6 @@ export default function Programs({ program }: ProgramProps) {
                                                             </Badge>
                                                         )}
                                                     </p>
-                                                    <div className=''>
-
-                                                    </div>
                                                 </a>
                                                 <div className="absolute top-2 right-2 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                                     {/* Edit button */}

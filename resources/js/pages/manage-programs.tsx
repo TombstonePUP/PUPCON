@@ -183,7 +183,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                     href={route('manage.program', { program_name: program.program_link })}
                                     className="group"
                                 >
-                                    <div className="rounded-lg border border-[#7f1414]/20 p-4 transition-all duration-200 hover:border-[#7f1414] hover:bg-red-50/50">
+                                    <div className="rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm">
                                         <div className="mb-3 flex items-center justify-between">
                                             <div
                                                 className={`inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium ${
