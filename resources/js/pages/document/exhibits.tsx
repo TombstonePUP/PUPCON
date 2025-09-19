@@ -153,7 +153,7 @@ export default function ExhibitAdmin() {
                         {mockExhibits.map((exhibit) => (
                             <div
                                 key={exhibit.id}
-                                className="overflow-hidden rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
+                                className="overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
                             >
                                 <div className="flex aspect-video items-center justify-center ">
                                     <img
