@@ -1,4 +1,5 @@
 export interface NotificationContent {
+    type: string;
     title: string;
     message: string;
 }

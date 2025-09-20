@@ -21,7 +21,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::get('users', 'index')->name('users');
             Route::post('users', 'store')->name('users.store');
-            // Route::post('users/updateCredentials', 'updateUserCredentials')->name('users.update.credentials');
             Route::patch('users/updatePrivileges', 'updateUserPrivileges')->name('users.update.roles');
             Route::patch('users/{user_id}/disable', 'disable')->name('users.disable');
         });

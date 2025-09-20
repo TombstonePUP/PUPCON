@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UpdateUserCredentialsRequest;
+use App\Http\Requests\Users\UpdateUserRolesRequest;
 use App\Models\Programs;
 use App\Models\Roles;
 use Illuminate\Support\Facades\DB;
@@ -87,11 +88,16 @@ class UserController extends Controller
 
         $name = $user->first_name . ' ' . $user->last_name;
 
-        $user->notify(new NewUser($user->email, $name, $password));
+        if($user->Roles->role_name !== 'Accreditor'){
+            $user->notify(new NewUser($user->email, $name, $password));
+        } else {
+            $user->notify(new NewUser($user->email, $name, ''));
+        }
 
         return redirect()->back()
-            ->with('success', 'User created successfully');
-
+            ->with('type', 'success')
+            ->with('title', "User Created Successfully")
+            ->with('message', "A new user has been created and notified via email.");
     }
 
     /**
@@ -107,8 +113,26 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateUserPrivileges(Request $request)
+    public function updateUserPrivileges(UpdateUserRolesRequest $request)
     {
+        $validated = $request->validated();
+        $user = User::findOrFail($validated['user_id']);
+
+        if ($user->role_id != $validated['assigned_role']) {
+            $user->role_id = $validated['assigned_role'];
+        }
+        $user->save();
+
+        if ($user->Roles->role_name != 'Admin' && $user->Roles->role_name != 'Coordinator') {
+            $user->Areas()->sync($validated['assigned_areas']);
+        } else {
+            $user->Areas()->detach();
+        }
+
+        return redirect()->back()
+            ->with('type', 'success')
+            ->with('title', "User Updated Successfully")
+            ->with('message', "The user's roles and areas have been updated.");
     }
 
     /**
@@ -121,6 +145,7 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->back()
+            ->with('type', 'success')
             ->with('title', "User Disabled Successfully")
             ->with('message', "The user has been disabled.");
     }

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DataTable } from "@/components/charts/data-table"
+import { DataTable, UsersDataTable } from "@/components/charts/data-table"
 import { getUserColumns } from "@/components/charts/data-table-columns/users"
 import { AssignablePrograms, AssignableRoles, AssignedAreas, AssignedPrograms, type UserRecords } from "@/types/user-management";
 import { useEffect, useState } from 'react';
@@ -54,11 +54,16 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
 
     useEffect(() => {
         console.log(flash);
-        if (flash.title) {
+        if (flash?.type === 'success') {
             toast.success(flash.title, {
                 description: flash.message,
             });
+        }else if (flash?.type === 'error') {
+            toast.error(flash.title, {
+                description: flash.message,
+            });
         }
+
     }, [flash]);
 
     const {
@@ -315,13 +320,16 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
 
                 {/* Data Table */}
                 <div className="rounded-lg border bg-white p-4">
-                    <DataTable
+                    <UsersDataTable
                         columns={columns}
                         data={userRecords}
                     />
                 </div>
             </div>
-            <Toaster position='top-right' />
+            <Toaster
+                position='top-right'
+                expand={false}
+            />
         </AppLayout>
     );
 }

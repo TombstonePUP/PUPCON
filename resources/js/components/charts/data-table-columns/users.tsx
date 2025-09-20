@@ -65,6 +65,7 @@ export function getUserColumns({programRoles, roles}: RoleProps): ColumnDef<User
             accessorKey: "programs",
             header: () => <div className="text-left">Program/s</div>,
             cell: ({ row }) => {
+                const role = row.original.roles?.role_name || '';
                 let programs = row.original.areas?.map(p => {
                     const regex = /\b[A-Z]/g;
                     const program = p.programs?.program_name.match(regex).join('');
@@ -92,7 +93,11 @@ export function getUserColumns({programRoles, roles}: RoleProps): ColumnDef<User
                                 {program.program_name}
                             </Badge>
                         )):
-                            <span className="text-xs text-gray-500 italic">No Programs Assigned</span>
+                            <span className="text-xs text-gray-500 italic">
+                                {role === "Coordinator" || role === "Admin" ?
+                                    "Full Privileges"
+                                    : "No Programs Assigned" }
+                            </span>
                         }
                     </div>
                 );
@@ -104,6 +109,7 @@ export function getUserColumns({programRoles, roles}: RoleProps): ColumnDef<User
             cell: ({ row }) => {
                 // const areas: string[] = row.getValue("area_name")?.replace(/[{}"]/g, "").split("} {").flatMap(a => a.split(",")).map(a => a.trim()) || [];
                 const areas = row.original.areas || [];
+                const role = row.original.roles?.role_name || '';
 
                 return (
                     <div className="flex flex-wrap gap-1 text-left">
@@ -115,7 +121,11 @@ export function getUserColumns({programRoles, roles}: RoleProps): ColumnDef<User
                             >
                                 Area {area.area_number}
                             </Badge>
-                        )) : <span className="text-xs text-gray-500 italic">No Areas Assigned</span>}
+                        )) : <span className="text-xs text-gray-500 italic">
+                                {role === "Coordinator" || role === "Admin" ?
+                                    "Full Privileges"
+                                    : "No Areas Assigned" }
+                            </span>}
                     </div>
                 );
             },

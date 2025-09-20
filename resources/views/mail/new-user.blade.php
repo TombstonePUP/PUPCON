@@ -5,7 +5,9 @@ Your account has been created. Please click the button below access your account
 Here are your credentials:
 
 Email: {{ $email }} <br>
-Password: {{ $password }} <br>
+@if ($password)
+    Password: {{ $password }} <br>
+@endif
 
 @component('mail::button', ['url' => url('/login')])
 Login

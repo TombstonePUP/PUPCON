@@ -51,6 +51,8 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
     const [assignUserDialogOpen, setAssignUserDialogOpen] = useState(false);
     const [disableUserDialogOpen, setDisableUserDialogOpen] = useState(false);
 
+    const userStatus = user.is_active || '';
+
     const {
         data: assignRoleData,
         setData: setAssignRoleData,
@@ -60,15 +62,14 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
         reset: resetAssignRole,
     } = useForm<AssignUserRoleForm>({
         user_id: user.user_id,
-        assigned_programs: [],
-        assigned_areas: [],
-        assigned_role: null,
+        assigned_programs: user.areas?.map(p => p.program_id) || [],
+        assigned_areas: user.areas?.map(a => a.area_id) || [],
+        assigned_role: user.roles.role_id || null,
     });
 
     const {
         data: disableUserData,
         patch: patchDisableUser,
-        // errors: errorsDisableUser,
         reset: resetDisableUser,
     } = useForm<{ user_id: number }>({
         user_id: user.user_id,
@@ -76,6 +77,8 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
 
     const assignUserRole = (e: React.FormEvent) => {
         e.preventDefault();
+        setAssignRoleData('assigned_programs', Array.from(new Set(assignRoleData.assigned_programs)));
+        console.log(assignRoleData);
         patchAssignRole(route("users.update.roles"), {
             onSuccess: () => {
                 resetAssignRole();
@@ -115,6 +118,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
             );
         }
     }
+
     const onChangeArea = (area: AssignedAreas, e) => {
         const isChecked = e.target.checked;
         if (isChecked) {
@@ -144,17 +148,25 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                     >
                         Edit Privileges
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                        className="cursor-pointer"
-                        variant="destructive"
-                        onClick={() => setDisableUserDialogOpen(true)}
-                    >
-                        Disable User
-                    </DropdownMenuItem>
+                    {userStatus === true ? (
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            variant="destructive"
+                            onClick={() => setDisableUserDialogOpen(true)}
+                        >
+                            Disable User
+                        </DropdownMenuItem>
+                    ) : (
+                        <DropdownMenuItem
+                            className="cursot-pointer"
+                        >
+                            Enable User
+                        </DropdownMenuItem>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
             {/* Assign Role Dialog */}
-            {/* <Dialog open={assignUserDialogOpen} onOpenChange={setAssignUserDialogOpen}>
+            <Dialog open={assignUserDialogOpen} onOpenChange={setAssignUserDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle className='flex items-center gap-2'>
@@ -165,6 +177,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                             Assign a role to the user
                         </DialogDescription>
                     </DialogHeader>
+                    <form>
                         <div>
                             <Label className="mb-1 block text-sm font-medium mb-2">Programs & Areas</Label>
                             <div className="flex flex-col gap-3">
@@ -178,6 +191,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                                                     className="accent-ring"
                                                     value={program.program_id}
                                                     checked={isProgramChecked}
+                                                    disabled={processingAssignRole}
                                                     onChange={(e) => onChangeProgram(program, e)}
                                                 />
                                                 {program.program_name}
@@ -199,6 +213,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                                                                             className="accent-ring ml-2"
                                                                             value={area.area_id}
                                                                             checked={isAreaChecked}
+                                                                            disabled={processingAssignRole}
                                                                             onChange={(e) => onChangeArea(area, e)}
                                                                         />
                                                                         Area {area.area_number}
@@ -232,21 +247,36 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                                             type="radio"
                                             name="assigned_role"
                                             value={role.role_id}
-                                            onChange={() => setNewUserData("assigned_role", role.role_id)}
+                                            checked={assignRoleData.assigned_role === role.role_id}
+                                            onChange={() => setAssignRoleData("assigned_role", role.role_id)}
+                                            disabled={processingAssignRole}
                                             className="accent-ring " />
                                             {role.role_name}
                                     </label>
                                 ))}
                             </div>
+                            <InputError message={errorsAssignRole.assigned_role} className="mt-1"/>
                         </div>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                        </DialogClose>
-                        <Button variant="noborder">Submit</Button>
-                    </DialogFooter>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setAssignUserDialogOpen(false)}
+                                >
+                                    Cancel
+                                </Button>
+                            </DialogClose>
+                            <Button
+                                variant="noborder"
+                                type="submit"
+                                onClick={assignUserRole}
+                            >
+                                Submit
+                            </Button>
+                        </DialogFooter>
+                    </form>
                 </DialogContent>
-            </Dialog> */}
+            </Dialog>
             {/* Disable User Dialog */}
             <Dialog open={disableUserDialogOpen} onOpenChange={setDisableUserDialogOpen}>
                 <DialogContent>
