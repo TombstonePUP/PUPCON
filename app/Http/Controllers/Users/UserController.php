@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\StoreUserRequest;
+use App\Http\Requests\Users\UpdateUserCredentialsRequest;
 use App\Models\Programs;
 use App\Models\Roles;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +41,7 @@ class UserController extends Controller
             $roles = Roles::select('role_id', 'role_name')->get();
         }
 
-        $users = User::select('user_id', 'first_name', 'last_name', 'role_id', 'email')
+        $users = User::select('user_id', 'first_name', 'last_name', 'role_id', 'email', 'is_active')
             ->whereDoesntHave('Roles', function ($query) {
                 $query->where('role_name', 'Admin');
             })
@@ -96,22 +97,32 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function edit(Request $request, int $user_id)
+    public function updateUserCredentials(UpdateUserCredentialsRequest $request)
     {
-        dd('hello edit');
+        dd("hello");
+        $validated = $request->validated();
+        dd($validated);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateUserPrivileges(Request $request)
+    {
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $user_id)
+    public function disable(int $user_id)
     {
         $user = User::findOrFail($user_id);
-        $user->Areas()->detach();
-        $user->delete();
+        $user->is_active = false;
+        $user->save();
 
         return redirect()->back()
-            ->with('success', 'User deleted successfully');
+            ->with('title', "User Disabled Successfully")
+            ->with('message', "The user has been disabled.");
     }
 
 

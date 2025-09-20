@@ -4,14 +4,15 @@ namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRequest extends FormRequest
+class UpdateUserCredentialsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+        return $user && $user->Roles->whereIn('role_name', ['Admin', 'Coordinator'])->exists();
     }
 
     /**
@@ -26,9 +27,18 @@ class UpdateUserRequest extends FormRequest
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'lowercase', 'string', 'email', 'max:255'],
-            'role' => ['required', 'integer', 'exists:roles,role_id'],
-            'areas' => ['array', 'exists:areas,area_id'],
-            'program' => ['array', 'exists:programs,program_id'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'user_id.required' => 'User ID is required',
+            'user_id.exists' => 'The selected user does not exist',
+            'first_name.required' => 'First name is required',
+            'last_name.required' => 'Last name is required',
+            'email.required' => 'Email is required',
+            'email.email' => 'Email must be a valid email address',
         ];
     }
 }

@@ -81,7 +81,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
         enableGlobalFilter: true,
     },
     {
-        id: 'actons',
+        id: 'actions',
         cell: ({ row }) => {
             const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
             const [revertDialogOpen, setRevertDialogOpen] = useState(false);

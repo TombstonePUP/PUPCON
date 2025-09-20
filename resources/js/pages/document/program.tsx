@@ -704,12 +704,12 @@ export default function Programs({ program }: ProgramProps) {
                                                         area_id: item.area_id || item.id,
                                                     })}
                                                 >
-                                                    <h1 className="font-bold">{item.area_numeral}</h1>
+                                                    <h1 className="font-bold">Area {item.area_numeral}</h1>
                                                     <p className="text-[#858585] w-full justify-between flex mt-2 gap-1">{item.area_name}
                                                         {(role !== 'Admin' && role !== 'Coordinator') && (
                                                             // <Badge variant="outline">
                                                             //     Assigned
-                                                            // </Badge> 
+                                                            // </Badge>
                                                             <Badge variant="outline" className='bg-green-100 text-green-800 border-0'>
                                                                 Assigned
                                                             </Badge>

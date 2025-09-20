@@ -1,7 +1,7 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import {
     Dialog,
     DialogTrigger,
@@ -15,17 +15,19 @@ import {
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/charts/data-table"
-import { columns } from "@/components/charts/data-table-columns/users"
-import { AssignableRoles, AssignedAreas, AssignedPrograms, type UserRecords } from "@/types/user-management";
-import { useState } from 'react';
+import { getUserColumns } from "@/components/charts/data-table-columns/users"
+import { AssignablePrograms, AssignableRoles, AssignedAreas, AssignedPrograms, type UserRecords } from "@/types/user-management";
+import { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { User2 } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import InputError from '@/components/input-error';
+import { Toaster } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 
 interface UsersProps {
     userRecords: UserRecords[];
-    programRoles: AssignedPrograms[];
+    programRoles: AssignablePrograms[];
     roles: AssignableRoles[];
 }
 
@@ -47,6 +49,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Users({ userRecords, programRoles, roles }: UsersProps) {
     const [dialogOpen, setDialogOpen] = useState(false);
+    const columns = getUserColumns({programRoles, roles});
+    const { flash } = usePage().props;
+
+    useEffect(() => {
+        console.log(flash);
+        if (flash.title) {
+            toast.success(flash.title, {
+                description: flash.message,
+            });
+        }
+    }, [flash]);
 
     const {
         data: newUserData,
@@ -72,7 +85,6 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                 setDialogOpen(false);
             }
         });
-        console.log(newUserData);
     };
 
     const onChangeProgram = (program: AssignedPrograms, e) => {
@@ -309,6 +321,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                     />
                 </div>
             </div>
+            <Toaster position='top-right' />
         </AppLayout>
     );
 }

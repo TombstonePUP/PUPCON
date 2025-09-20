@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('last_name');
             // $table->string('suffix')->nullable();
             $table->string('email')->unique();
+            $table->boolean('is_active')->default(true);
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('role_id')->nullable()->references('role_id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
             $table->string('password');
