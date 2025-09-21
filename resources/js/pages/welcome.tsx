@@ -102,7 +102,7 @@ export default function Welcome() {
 
                             <div className="grid gap-6 md:grid-cols-2">
                                 {/* Left: logo + title */}
-                                <div className="flex flex-col items-center justify-center space-y-3 text-center">
+                                <div className="flex flex-col items-center justify-center space-y-2 text-center">
                                     <img src="/images/pupcon-logo.png" alt="Logo" className="h-20 w-auto" />
                                     <h2 className="text-2xl font-bold text-[#7f1414]">Mabuhay!</h2>
                                     <p className="text-gray-600">Select your role to continue:</p>
