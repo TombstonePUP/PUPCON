@@ -1,18 +1,19 @@
 <x-mail::message>
-# Grettings, {{ $name }}!
+# Greetings, {{ $name }}!
 
-Your account has been created. Please click the button below access your account.<br>
-Here are your credentials:
+We are excited to inform you that your account has been successfully created. You can now access your account using the credentials below:
 
-Email: {{ $email }} <br>
+**Email:** {{ $email }}  
 @if ($password)
-    Password: {{ $password }} <br>
+**Password:** {{ $password }}  
 @endif
 
-@component('mail::button', ['url' => url('/login')])
-Login
-@endcomponent
+<x-mail::button :url="url('/login')" color="primary">
+Login to Your Account
+</x-mail::button>
 
-Yours Truly,<br>
-{{ config('app.name') }}
+If you did not request this account or have any questions, please contact our support team.
+
+Best regards,<br>
+PUPCON Administrator
 </x-mail::message>

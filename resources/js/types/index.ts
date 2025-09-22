@@ -275,3 +275,17 @@ export interface FilesOverview {
     file_status: string;
     rejection_reason: string;
 }
+
+export interface Faculty {
+  faculty_id: number;
+  first_name: string;
+  middle_name?: string | null;
+  last_name: string;
+  suffix?: string | null;
+  faculty_status: string;
+  program_id: number;
+  program_coordinator: boolean;
+  faculty_image_name?: string | null;
+  faculty_image_path?: string | null;
+}
+

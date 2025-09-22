@@ -217,7 +217,7 @@ export default function Programs({ program }: PerProgramProps) {
                         : 'translate-y-8 opacity-0'
                 }`}
                 style={{ 
-                    transitionDelay: facultyInView ? `3ms` : '0ms' 
+                    transitionDelay: facultyInView ? `2ms` : '0ms' 
                 }}
             >
                 <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Guest\AreasController;
 use App\Http\Controllers\Guest\ProgramsController;
+use App\Http\Controllers\Guest\FacultyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -31,9 +32,8 @@ Route::get('about/facilities', function () {
     return Inertia::render('about/facilities');
 })->name('facilities');
 
-Route::get('about/faculty-and-staff', function () {
-    return Inertia::render('about/faculty');
-})->name('faculty-and-staff');
+Route::get('about/faculty-and-staff', [FacultyController::class, 'index'])
+     ->name('faculty-and-staff');
 
 Route::get('about/local-task-force', function () {
     return Inertia::render('about/local-task-force');
@@ -58,6 +58,8 @@ Route::controller(ProgramsController::class)->prefix('programs')->group(function
 
 Route::get('/programs/{program_name}/{area_id}', AreasController::class)
     ->name('programs.areas.show');
+
+
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
