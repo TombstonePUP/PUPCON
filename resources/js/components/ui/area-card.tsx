@@ -22,12 +22,12 @@ export function AreaCard({
   return (
     <div
       className={clsx(
-        'group relative w-64 h-80 rounded-xl border border-[#7f1414]/30 bg-white',
+        'group relative w-57 h-80 rounded-xl border border-[#7f1414]/30 bg-white',
         'overflow-hidden transition-transform duration-300 ease-out hover:scale-[1.02] hover:border-[#7f1414]',
         className
       )}
     >
-      {/* ---- Notch badge (fixed opacity) ---- */}
+      {/* ---- Notch badge ---- */}
       {circleLetter && (
         <div
           className="
@@ -54,20 +54,24 @@ export function AreaCard({
       </div>
 
       {/* ---- Body ---- */}
-      <div className="flex h-[calc(100%-9rem)] flex-col items-center justify-between px-4 py-6 text-center">
-        <h2
-          id={headingId}
-          className="text-base font-semibold text-[#7f1414] leading-snug"
-        >
-          {heading}
-        </h2>
+      <div className="relative flex h-[calc(100%-9rem)] flex-col px-4 pb-4">
+        {/* Centered heading text */}
+        <div className="flex flex-1 items-center justify-center text-center">
+          <h2
+            id={headingId}
+            className="text-base font-semibold text-[#7f1414] leading-snug"
+          >
+            {heading}
+          </h2>
+        </div>
 
+        {/* View button fixed at bottom */}
         <Link
           href={href}
           className="
-            mt-4 w-full rounded-md bg-[#7f1414]
+            w-full rounded-md bg-[#7f1414]
             px-5 py-2 text-sm font-medium text-white
-            transition-colors duration-300 ease-out
+            transition-colors duration-300 ease-out text-center
             hover:bg-[#a01818] focus:outline-none focus:ring-2 focus:ring-[#7f1414]/50
           "
         >
