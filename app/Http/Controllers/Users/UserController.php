@@ -43,9 +43,7 @@ class UserController extends Controller
         }
 
         $users = User::select('user_id', 'first_name', 'last_name', 'role_id', 'email', 'is_active')
-            ->whereDoesntHave('Roles', function ($query) {
-                $query->where('role_name', 'Admin');
-            })
+            ->where('user_id', '!=', $user->user_id)
             ->with([
                 'Roles' => function ($query) {
                     $query->select('roles.role_id', 'roles.role_name');

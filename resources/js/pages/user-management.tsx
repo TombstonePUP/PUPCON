@@ -92,7 +92,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
         });
     };
 
-    const onChangeProgram = (program: AssignedPrograms, e) => {
+    const onChangeProgram = (program: AssignablePrograms, e) => {
         const isChecked = e.target.checked;
         if (isChecked) {
             // Add program
@@ -298,8 +298,10 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                                     </label>
                                                 ))}
                                             </div>
-                                            <InputError message={errorsNewUser.assigned_role} className='mt-1'/>
                                         </div>
+                                        <InputError message={errorsNewUser.assigned_role} className='mt-1'/>
+                                        <InputError message={errorsNewUser.assigned_areas} className='mt-1'/>
+                                        <InputError message={errorsNewUser.assigned_programs} className='mt-1'/>
                                     </TabsContent>
                                     <label className="text-sm text-gray-500 mt-2">A temporary password will be emailed to the user.</label>
                                 </Tabs>
