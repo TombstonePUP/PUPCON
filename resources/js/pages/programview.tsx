@@ -3,16 +3,157 @@ import ImageRow from '@/components/imagerow';
 import { AreaCard } from '@/components/ui/area-card';
 import Layout from '@/layouts/landing-layout';
 import type { PerProgramUnderSurvey } from '@/types';
-import { Head } from '@inertiajs/react';
-import { Building2, FlaskConical, GraduationCap, Handshake, School, Users } from 'lucide-react';
+import { Head, router, usePage, useRemember } from '@inertiajs/react';
+import { ChevronRight, FlaskConical, GraduationCap, Handshake, Mail, School, Users } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
 }
 
+// CHarles na bahala sa db
+const Faculty = {
+    // --- Program Head ---
+    programHead: {
+        id: 1,
+        name: 'Maria Carina Corpuz',
+        photo: '/images/adfa-new/Maria-Carina-Corpuz.jpg',
+        position: 'Program Head',
+        email: 'mariacarina.corpuz@university.edu',
+    },
+    // --- Regular Faculty ---
+    regular: [
+        {
+            id: 2,
+            name: 'Alfred Pagalilawan',
+            photo: '/images/adfa-new/Alfred-Pagalilawan.jpg',
+            position: 'Associate Professor',
+            email: 'alfred.pagalilawan@university.edu',
+        },
+        {
+            id: 3,
+            name: 'Dianne Marie Villas',
+            photo: '/images/adfa-new/Dianne-Marie-Villas.jpg',
+            position: 'Assistant Professor',
+            email: 'diannemarie.villas@university.edu',
+        },
+        {
+            id: 4,
+            name: 'Martino Miguel Salcedo',
+            photo: '/images/adfa-new/Martino-Miguel-Salcedo.jpg',
+            position: 'Associate Professor',
+            email: 'martino.salcedo@university.edu',
+        },
+        {
+            id: 5,
+            name: 'Reynaldo Suarez',
+            photo: '/images/adfa-new/Reynaldo-Suarez.jpg',
+            position: 'Professor',
+            email: 'reynaldo.suarez@university.edu',
+        },
+    ],
+    // --- Part-Time Faculty ---
+    partTime: [
+        {
+            id: 6,
+            name: 'Joebert Silao',
+            photo: '/images/adfa-new/Joebert-Silao.jpg',
+            position: 'Part-time Instructor',
+            email: 'joebert.silao@university.edu',
+        },
+        {
+            id: 7,
+            name: 'Rizza Valdez Devera',
+            photo: '/images/adfa-new/Rizza-Valdez-Devera.jpg',
+            position: 'Part-time Lecturer',
+            email: 'rizza.devera@university.edu',
+        },
+        {
+            id: 8,
+            name: 'Samantha Karen Morano',
+            photo: '/images/adfa-new/Samantha-Karen-Morano.jpg',
+            position: 'Part-time Instructor',
+            email: 'samanthakaren.morano@university.edu',
+        },
+        {
+            id: 9,
+            name: 'Roehl Lumbao',
+            photo: '/images/adfa-new/Roehl-Lumbao.jpg',
+            position: 'Part-time Instructor',
+            email: 'roehl.lumbao@university.edu',
+        },
+    ],
+};
+
+// Animation hook for scroll-triggered animations
+const useInView = (threshold = 0.1) => {
+    const [inView, setInView] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setInView(true);
+                }
+            },
+            { threshold }
+        );
+
+        if (ref.current) {
+            observer.observe(ref.current);
+        }
+
+        return () => observer.disconnect();
+    }, [threshold]);
+
+    return [ref, inView] as const;
+};
+
 export default function Programs({ program }: PerProgramProps) {
-    console.log(program);
-    // Placeholder objectives
+    const { props } = usePage<{ program: PerProgramUnderSurvey }>();
+    const [level, setLevel] = useRemember(program.accreditation_level, 'level');
+    const [loading, setLoading] = useState(false);
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [facultyLoading, setFacultyLoading] = useState(true);
+    const [overviewImageLoading, setOverviewImageLoading] = useState(true);
+    
+    // Animation refs
+    const [overviewRef, overviewInView] = useInView(0.2);
+    const [facultyRef, facultyInView] = useInView(0.1);
+    const [objectivesRef, objectivesInView] = useInView(0.1);
+    const [galleryRef, galleryInView] = useInView(0.1);
+    const [areasRef, areasInView] = useInView(0.1);
+
+    // Simulate faculty loading
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setFacultyLoading(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    /** Router progress indicator */
+    useEffect(() => {
+        const start = router.on('start', () => setLoading(true));
+        const finish = router.on('finish', () => setLoading(false));
+        return () => {
+            start();
+            finish();
+        };
+    }, []);
+
+    const handleLevelChange = (newLevel: number) => {
+        setLevel(newLevel);
+        setTimeout(() => {
+            router.visit(route('program.show', { id: program.id, level: newLevel }), {
+                preserveScroll: true,
+                only: ['program'],
+            });
+        }, 200);
+    };
+
     const programObjectives = [
         {
             id: 1,
@@ -20,12 +161,14 @@ export default function Programs({ program }: PerProgramProps) {
             description:
                 'To provide high-quality education that meets international standards and prepares students for successful careers in their chosen field.',
             icon: GraduationCap,
+            color: 'from-red-900 to-red-900',
         },
         {
             id: 2,
             title: 'Innovation & Research',
             description: 'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
             icon: FlaskConical,
+            color: 'from-red-900 to-red-900',
         },
         {
             id: 3,
@@ -33,146 +176,341 @@ export default function Programs({ program }: PerProgramProps) {
             description:
                 'To establish strong partnerships with industry leaders to ensure curriculum relevance and provide practical learning opportunities.',
             icon: Handshake,
+            color: 'from-red-900 to-red-900',
         },
     ];
 
     const campusFacts = [
-        { icon: <School className="h-6 w-6 text-[#7f1414]" />, label: ' Students', value: '170+' },
-        { icon: <Users className="h-6 w-6 text-[#7f1414]" />, label: 'Faculty', value: '12+' },
-        { icon: <GraduationCap className="h-6 w-6 text-[#7f1414]" />, label: 'Years', value: '4' },
+        { icon: <School className="h-6 w-6" />, label: 'Students', value: '170+' },
+        { icon: <Users className="h-6 w-6" />, label: 'Faculty', value: '12+' },
+        { icon: <GraduationCap className="h-6 w-6" />, label: 'Years', value: '4' },
     ];
 
-    return (
-        <>
-            <Head title={`${program.degree_type} in ${program.program_name}`}>
-                <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-            </Head>
-            <Layout>
-                <div className="flex flex-col items-center gap-20">
-                    <PageHeader
-                        title={``}
-                        breadcrumbs={[
-                            { label: 'Home', href: '/' },
-                            { label: 'Programs', href: '/programs' },
-                            { label: program.program_name, href: '#' },
-                        ]}
-                    />
-                    {/* Intro */}
-                    <section className="mb-8 w-[75%]">
-                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                            {/* Left: Program Title and Accreditation */}
-                            <div>
-                                <h1 className="text-4xl font-bold text-[#7f1414]">BS {program.program_name}</h1>
-                                <h2 className="text-xl font-normal text-[#7f1414]">Accreditation Level {program.accreditation_level}</h2>
-                            </div>
+    const FacultyCard = ({ faculty, isLoading, index }: { faculty: any; isLoading: boolean; index: number }) => {
+        const [imgLoaded, setImgLoaded] = useState(false);
 
-                            {/* Right: Campus Facts Inline with Icons */}
-                            <div className="flex flex-wrap items-start gap-4 text-sm font-medium text-gray-700">
-                                {campusFacts.map((fact, i) => (
-                                    <div key={i} className="flex items-center gap-3">
-                                        {/* Icon */}
-                                        <span className="flex h-5 w-5 items-center justify-center text-[#7f1414]">{fact.icon}</span>
-                                        {/* Text */}
-                                        <span>
-                                            <span className="font-bold text-gray-900">{fact.value}</span> {fact.label}
-                                        </span>
-                                        {/* Separator, except after last item */}
-                                        {i < campusFacts.length - 1 && <span className="px-2 text-gray-400">|</span>}
+        if (isLoading) {
+            return (
+                <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 w-64">
+                    <div className="flex flex-col space-y-3">
+                        <div className="relative">
+                            <div className="aspect-square w-full animate-pulse rounded-xl bg-gray-300" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="h-6 w-6 animate-spin rounded-full border-4 border-[#7f1414] border-t-transparent" />
+                            </div>
+                        </div>
+                        <div className="w-full space-y-2 pt-1">
+                            <div className="mx-auto h-5 w-3/4 animate-pulse rounded bg-gray-300" />
+                            <div className="mx-auto h-3 w-1/2 animate-pulse rounded bg-gray-300" />
+                            <div className="mx-auto h-3 w-2/3 animate-pulse rounded bg-gray-300" />
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div 
+                className={`group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] w-64 ${
+                    facultyInView 
+                        ? 'translate-y-0 opacity-100' 
+                        : 'translate-y-8 opacity-0'
+                }`}
+                style={{ 
+                    transitionDelay: facultyInView ? `${index * 100}ms` : '0ms' 
+                }}
+            >
+                <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
+
+                <div className="flex flex-col space-y-3">
+                    <div className="relative overflow-hidden">
+                        <div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-100 ring-2 ring-[#7f1414]/10 transition-all duration-300 group-hover:ring-[#7f1414]/30">
+                            {!imgLoaded && (
+                                <div className="absolute inset-0 flex animate-pulse items-center justify-center bg-gray-200">
+                                    <div className="flex flex-col items-center space-y-2">
+                                        <div className="h-6 w-6 animate-spin rounded-full border-4 border-[#7f1414] border-t-transparent" />
+                                        {/* <span className="text-xs text-gray-500">Loading...</span> */}
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* <div
-                        className="group flex w-[75%] justify-center gap-4 rounded-xl rounded-tr-none border border-[#7f1414]/25 bg-white p-4 duration-300 hover:border-[#7f1414]"
-                    >
-                        <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-bold transition duration-300 hover:text-[#7f1414]">
-                            <p className="mb-[-0.1vw] text-sm font-normal">Student Population</p>
-                            1000
-                        </h1>
-                        <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-bold transition duration-300 hover:text-[#7f1414]">
-                            <p className="mb-[-0.1vw] text-sm font-normal">Years to take</p>4
-                        </h1>
-                        <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-bold transition duration-300 hover:text-[#7f1414]">
-                            <p className="mb-[-0.1vw] text-sm font-normal">Required credits</p>
-                            33
-                        </h1>
-                        <h1 className="border-r border-[#7f1414]/25 px-4 text-4xl font-bold transition duration-300 hover:text-[#7f1414]">
-                            <p className="mb-[-0.1vw] text-sm font-normal">Faculty population</p>9
-                        </h1>
-                        <h1 className="px-4 text-4xl font-bold transition duration-300 hover:text-[#7f1414]">
-                            <p className="mb-[-0.1vw] text-sm font-normal">Latest graduates</p>
-                            100
-                        </h1>
-                    </div> */}
-
-                    <div className="group flex w-[75%] flex-row justify-between gap-4 rounded-xl" id="overview">
-                        <div className="flex-1 rounded-xl border border-[#7f1414]/25 bg-white p-8 px-13 duration-300 hover:border-[#7f1414]">
-                            <h1 className="mb-4 text-3xl font-semibold text-[#7f1414] transition duration-300">
-                                Program Overview
-                            </h1>
-                            <p className="text-gray-600">{program.overview_description || 'No program overview available.'}</p>
-                        </div>
-                        <div className="w-[25vw] overflow-hidden rounded-xl">
+                                </div>
+                            )}
                             <img
-                                className="h-full object-cover transition duration-300 hover:scale-110"
-                                src="/images/campus/comlab.jpg"
-                                alt="computer lab"
+                                src={faculty.photo}
+                                alt={faculty.name}
+                                className={`h-full w-full object-cover transition-all duration-500 group-hover:scale-110 ${
+                                    imgLoaded ? 'opacity-100' : 'opacity-0'
+                                }`}
+                                onLoad={() => setImgLoaded(true)}
+                                onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(faculty.name)}&background=7f1414&color=fff&size=400&format=svg`;
+                                    setImgLoaded(true);
+                                }}
                             />
                         </div>
                     </div>
 
-                    {/* Program Objectives Section */}
-                    <div className="w-[75%]" id="goals">
-                        <div className="mb-6 grid place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
-                            <h1 className="text-4xl font-bold">Program Objectives</h1>
-                            <p>Our commitment to excellence through strategic goals and outcomes</p>
+                    <div className="space-y-2 pt-1 text-center">
+                        <div>
+                            <h3 className="text-base font-bold text-gray-900 transition-colors group-hover:text-[#7f1414]">{faculty.name}</h3>
+                            <p className="mt-1 text-xs font-medium text-gray-600">{faculty.position}</p>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                        <div className="border-t border-gray-100 pt-2">
+                            <a
+                                href={`mailto:${faculty.email}`}
+                                className="inline-flex items-center gap-2 rounded-lg bg-[#7f1414]/5 px-2.5 py-1.5 text-xs text-gray-600 transition-all duration-200 group-hover:scale-105 hover:bg-[#7f1414] hover:text-white"
+                            >
+                                <Mail className="h-3 w-3" />
+                                <span className="max-w-[140px] truncate">{faculty.email}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const SectionHeader = ({ title, subtitle, icon: Icon }: { title: string; subtitle: string; icon?: any }) => (
+        <div className="relative mb-12">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#7f1414]/5 via-[#7f1414]/10 to-[#7f1414]/5" />
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] px-8 py-12 text-center text-white">
+                <div
+                    className="absolute inset-0 opacity-30"
+                    style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                    }}
+                />
+                <div className="relative z-10">
+                    {Icon && <Icon className="mx-auto mb-4 h-12 w-12 opacity-90" />}
+                    <h2 className="mb-3 text-4xl font-bold tracking-tight">{title}</h2>
+                    <p className="mx-auto max-w-2xl text-lg leading-relaxed opacity-90">{subtitle}</p>
+                </div>
+            </div>
+        </div>
+    );
+
+    return (
+        <>
+            <Head title={`${program.degree_type} in ${program.program_name}`} />
+            <Layout>
+                <PageHeader
+                    title=""
+                    breadcrumbs={[
+                        { label: 'Home', href: '/' },
+                        { label: 'Programs', href: '/programs' },
+                        { label: program.program_name, href: '#' },
+                    ]}
+                />
+
+                {/* --- Enhanced Header Banner --- */}
+                <section className="relative w-full overflow-hidden bg-gradient-to-br from-[#7f1414] via-[#9a1a1a] to-[#b52020]">
+                    <div className="absolute inset-0">
+                        <div
+                            className="absolute inset-0 opacity-10"
+                            style={{
+                                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                            }}
+                        />
+                    </div>
+
+                    {/* Image Overlay */}
+                    <div className="absolute right-0 top-0 h-full w-2/3 opacity-20">
+                        <div className="relative h-full w-full">
+                            <img
+                                src="/images/homepage-slides/1.jpg"
+                                alt="Program Background"
+                                className="h-full w-full object-cover"
+                                style={{
+                                    maskImage: 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
+                                    WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)'
+                                }}
+                                onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    const container = target.parentElement?.parentElement;
+                                    if (container) container.style.display = 'none';
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center justify-between gap-8 px-8 py-16 md:flex-row">
+                        <div className="flex flex-col items-center text-white md:items-start animate-fade-in-up">
+                            <div className="mb-4">
+                                <span className="inline-block rounded-full bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm border border-white/30">
+                                    Bachelor of Science
+                                </span>
+                            </div>
+                            <h1 className="mb-6 text-5xl font-bold drop-shadow-lg">{program.program_name}</h1>
+
+                            {/* Enhanced Dropdown */}
+                            <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
+                                <label className="mb-3 block text-sm font-medium opacity-90">Accreditation Level</label>
+                                <div className="relative">
+                                    <div
+                                        onMouseEnter={() => setDropdownOpen(true)}
+                                        className="flex w-48 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
+                                    >
+                                        <span className="font-medium">Level {level}</span>
+                                        <ChevronRight className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                                    </div>
+
+                                    <div
+                                        className={`absolute top-0 left-48 h-full overflow-hidden rounded-r-xl border-t border-r border-b border-white/30 backdrop-blur-md transition-all duration-300 ${
+                                            dropdownOpen ? 'w-72 opacity-100' : 'w-0 opacity-0'
+                                        }`}
+                                    >
+                                        <div className="flex h-full bg-white/10">
+                                            {[1, 2, 3, 4, 5, 6].map((lvl) => (
+                                                <button
+                                                    key={lvl}
+                                                    onClick={() => handleLevelChange(lvl)}
+                                                    className={`text-white flex-1 px-3 py-3 text-sm transition-all duration-200 hover:bg-[#7f1414]/30 border-r border-white/20 last:border-r-0 ${
+                                                        level === lvl ? 'bg-[#7f1414]/20 font-semibold' : ''
+                                                    }`}
+                                                >
+                                                    {lvl}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Enhanced Campus Facts */}
+                        <div className="flex flex-col gap-4 text-white/90 animate-fade-in-left">
+                            {campusFacts.map((fact, i) => (
+                                <div
+                                    key={i}
+                                    className="flex items-center gap-4 rounded-xl bg-white/10 px-6 py-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 border border-white/20 hover:border-white/40"
+                                    style={{ animationDelay: `${i * 200}ms` }}
+                                >
+                                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 border border-white/30">
+                                        {fact.icon}
+                                    </div>
+                                    {loading ? (
+                                        <div className="h-6 w-24 animate-pulse rounded bg-white/30" />
+                                    ) : (
+                                        <div>
+                                            <div className="text-2xl font-bold">{fact.value}</div>
+                                            <div className="text-sm opacity-80">{fact.label}</div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <div className="flex flex-col items-center gap-20">
+                    {/* --- Overview --- */}
+                    <div 
+                        ref={overviewRef}
+                        className={`mt-16 flex w-[85%] max-w-7xl justify-between gap-8 rounded-2xl transition-all duration-700 ${
+                            overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                        }`}
+                    >
+                        <div className="flex-1 rounded-2xl border border-gray-200 bg-white p-10 transition-all duration-300 hover:border-[#7f1414]">
+                            <div className="mb-6 flex items-center gap-4">
+                                <div className="rounded-full bg-[#7f1414]/10 p-3">
+                                    <GraduationCap className="h-8 w-8 text-[#7f1414]" />
+                                </div>
+                                <h2 className="text-3xl font-bold text-[#7f1414]">Program Overview</h2>
+                            </div>
+                            <p className="text-lg leading-relaxed text-gray-700">
+                                {program.overview_description || 'No program overview available.'}
+                            </p>
+                        </div>
+
+                        <div className="relative w-[30vw] max-w-md overflow-hidden rounded-2xl border border-gray-200 transition-all duration-300 hover:border-[#7f1414]">
+                            {overviewImageLoading && (
+                                <div className="absolute inset-0 flex animate-pulse items-center justify-center bg-gray-200">
+                                    <div className="flex flex-col items-center space-y-4">
+                                        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#7f1414] border-t-transparent" />
+                                        <span className="text-sm text-gray-500">Loading image...</span>
+                                    </div>
+                                </div>
+                            )}
+                            <img
+                                src="/images/campus/comlab.jpg"
+                                alt="Computer Lab"
+                                className={`h-full w-full object-cover transition-all duration-500 hover:scale-110 ${
+                                    !overviewImageLoading ? 'opacity-100' : 'opacity-0'
+                                }`}
+                                onLoad={() => setOverviewImageLoading(false)}
+                            />
+                        </div>
+                    </div>
+
+                    {/* --- Faculty Section --- */}
+                    <div ref={facultyRef} className="w-[85%] max-w-7xl" id="faculty">
+                        <div className={`transition-all duration-700 ${
+                            facultyInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                        }`}>
+                            <SectionHeader title="Our Faculty" subtitle="Meet our dedicated educators who shape the future of technology" />
+                        </div>
+
+                        <div className="space-y-8">
+                            <div className="flex flex-wrap justify-center gap-6">
+                                <FacultyCard faculty={Faculty.programHead} isLoading={facultyLoading} index={0} />
+                                {Faculty.regular.map((faculty, index) => (
+                                    <FacultyCard key={faculty.id} faculty={faculty} isLoading={facultyLoading} index={index + 1} />
+                                ))}
+                                {Faculty.partTime.map((faculty, index) => (
+                                    <FacultyCard key={faculty.id} faculty={faculty} isLoading={facultyLoading} index={index + Faculty.regular.length + 1} />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* --- Objectives --- */}
+                    <div ref={objectivesRef} className="w-[85%] max-w-7xl" id="goals">
+                        <div className={`transition-all duration-700 ${
+                            objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                        }`}>
+                            <SectionHeader title="Program Objectives" subtitle="Our commitment to excellence through strategic goals and outcomes" />
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                             {programObjectives.map((objective, index) => (
                                 <div
                                     key={objective.id}
-                                    className="group relative overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white p-8 shadow-lg transition-all duration-300 hover:scale-101 hover:border-[#7f1414] hover:shadow-xl"
+                                    className={`group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
+                                        objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                    }`}
+                                    style={{ 
+                                        transitionDelay: objectivesInView ? `${index * 200}ms` : '0ms' 
+                                    }}
                                 >
-                                    {/* Objective Number */}
-                                    <div className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#7f1414]/10 font-bold text-[#7f1414] transition-colors group-hover:bg-[#7f1414] group-hover:text-white">
+                                    <div className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 font-bold text-gray-400 transition-all duration-300 group-hover:bg-[#7f1414] group-hover:text-white">
                                         {index + 1}
                                     </div>
 
-                                    {/* Icon */}
-                                    <div className="mt-8 mb-6 flex justify-center">
-                                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#7f1414] to-[#a01818] text-3xl text-white shadow-lg transition-transform group-hover:scale-110">
+                                    <div className="mb-6 flex justify-center">
+                                        <div
+                                            className={`flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${objective.color} text-white transition-all duration-300 group-hover:scale-110`}
+                                        >
                                             <objective.icon className="h-10 w-10" />
                                         </div>
                                     </div>
 
-                                    {/* Content */}
                                     <div className="text-center">
-                                        <h3 className="mb-4 text-xl font-bold text-[#7f1414] transition-colors group-hover:text-[#a01818]">
-                                            {objective.title}
-                                        </h3>
+                                        <h3 className="mb-4 text-xl font-bold text-gray-900">{objective.title}</h3>
                                         <p className="leading-relaxed text-gray-600">{objective.description}</p>
                                     </div>
-
-                                    {/* Hover Effect Border */}
-                                    <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-[#7f1414] to-[#a01818] transition-all duration-300 group-hover:w-full"></div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="w-[75%]">
-                        <div className="grid place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
-                            <h1 className="text-4xl font-bold">Gallery of Excellence</h1>
-                            <p>Showcasing the moments that define our passion and commitment.</p>
-                        </div>
-
-                        <div>
+                    {/* --- Gallery --- */}
+                    <div ref={galleryRef} className="w-[85%] max-w-7xl" id="gallery">
+                        <div className={`transition-all duration-700 ${
+                            galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                        }`}>
+                            <SectionHeader title="Gallery of Excellence" subtitle="Showcasing the moments that define our passion and commitment" />
                             <ImageRow
-                                height="h-112"
+                                height="h-96"
                                 images={[
                                     { id: 1, src: '/images/gallery/it/1.jpg', alt: '' },
                                     { id: 2, src: '/images/gallery/it/2.jpg', alt: '' },
@@ -185,51 +523,44 @@ export default function Programs({ program }: PerProgramProps) {
                         </div>
                     </div>
 
-                    <div className="flex w-[75%] items-center justify-center overflow-x-hidden">
-                        <svg height="55" viewBox="0 0 1156 47" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M558.066 44.1741L559.801 36.6052L553.983 31.5144L561.669 30.841L564.657 23.7031L567.646 30.841L575.332 31.5144L569.514 36.6052L571.249 44.1741L564.657 40.1607L558.066 44.1741Z"
-                                fill="#daa520"
-                                fillOpacity="0.44"
-                            ></path>
-                            <path
-                                d="M573.01 23.7031L574.744 16.1343L568.927 11.0435L576.612 10.3701L579.601 3.23218L582.59 10.3701L590.275 11.0435L584.458 16.1343L586.192 23.7031L579.601 19.6898L573.01 23.7031Z"
-                                fill="#daa520"
-                                fillOpacity="0.44"
-                            ></path>
-                            <path
-                                d="M585.819 44.1741L587.553 36.6052L581.736 31.5144L589.421 30.841L592.41 23.7031L595.399 30.841L603.084 31.5144L597.267 36.6052L599.001 44.1741L592.41 40.1607L585.819 44.1741Z"
-                                fill="#daa520"
-                                fillOpacity="0.44"
-                            ></path>
-                            <line x1="636" y1="27.5" x2="1156" y2="27.5" stroke="#7F1414" strokeOpacity="0.26"></line>
-                            <line y1="27.5" x2="520" y2="27.5" stroke="#7F1414" strokeOpacity="0.26"></line>
-                        </svg>
-                    </div>
+                    {/* --- Areas Under Survey --- */}
+                    <div ref={areasRef} className="w-[85%] max-w-7xl" id="areas">
+                        <div className={`transition-all duration-700 ${
+                            areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                        }`}>
+                            <SectionHeader
+                                title="Areas Under Survey"
+                                subtitle="ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES"
+                            />
 
-                    <div className="w-[75%]" id="areas">
-                        <div className="grid place-items-center rounded-xl bg-[#7f1414] py-8 text-white">
-                            <h1 className="text-4xl font-bold">Areas Under Survey</h1>
-                            <p>ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES</p>
-                        </div>
-
-                        <div className="flex h-fit w-full flex-row flex-wrap justify-center gap-[1.5vw] py-3">
-                            {program?.areas?.length > 0 ? (
-                                program.areas.map((area, index) => (
-                                    <AreaCard
-                                        key={index}
-                                        imageSrc={area.image_path || '/images/placeholder.png'}
-                                        heading={area.area_name}
-                                        circleLetter={area.area_numeral}
-                                        href={route('programs.areas.show', [program.program_link, area.area_id])}
-                                    />
-                                ))
-                            ) : (
-                                <p className="text-center text-gray-500">No areas under survey.</p>
-                            )}
+                            <div className="flex flex-wrap justify-center gap-8 py-6">
+                                {program?.areas?.length ? (
+                                    program.areas.map((area, index) => (
+                                        <div
+                                            key={area.area_id}
+                                            className={`transition-all duration-500 ${
+                                                areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                            }`}
+                                            style={{ 
+                                                transitionDelay: areasInView ? `${index * 100}ms` : '0ms' 
+                                            }}
+                                        >
+                                            <AreaCard
+                                                imageSrc={area.image_path || '/images/placeholder.png'}
+                                                heading={area.area_name}
+                                                circleLetter={area.area_numeral}
+                                                href={route('programs.areas.show', [program.program_link, area.area_id])}
+                                            />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-center text-lg text-gray-500">No areas under survey.</p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </Layout>
         </>
     );
