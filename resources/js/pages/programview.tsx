@@ -217,7 +217,7 @@ export default function Programs({ program }: PerProgramProps) {
                         : 'translate-y-8 opacity-0'
                 }`}
                 style={{ 
-                    transitionDelay: facultyInView ? `${index * 100}ms` : '0ms' 
+                    transitionDelay: facultyInView ? `3ms` : '0ms' 
                 }}
             >
                 <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
@@ -236,7 +236,7 @@ export default function Programs({ program }: PerProgramProps) {
                             <img
                                 src={faculty.photo}
                                 alt={faculty.name}
-                                className={`h-full w-full object-cover transition-all duration-500 group-hover:scale-110 ${
+                                className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${
                                     imgLoaded ? 'opacity-100' : 'opacity-0'
                                 }`}
                                 onLoad={() => setImgLoaded(true)}
@@ -437,7 +437,7 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Faculty Section --- */}
                     <div ref={facultyRef} className="w-[85%] max-w-7xl" id="faculty">
-                        <div className={`transition-all duration-700 ${
+                        <div className={`transition-all duration-300 ${
                             facultyInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                         }`}>
                             <SectionHeader title="Our Faculty" subtitle="Meet our dedicated educators who shape the future of technology" />
@@ -458,7 +458,7 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Objectives --- */}
                     <div ref={objectivesRef} className="w-[85%] max-w-7xl" id="goals">
-                        <div className={`transition-all duration-700 ${
+                        <div className={`transition-all duration-200 ${
                             objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                         }`}>
                             <SectionHeader title="Program Objectives" subtitle="Our commitment to excellence through strategic goals and outcomes" />
@@ -468,11 +468,11 @@ export default function Programs({ program }: PerProgramProps) {
                             {programObjectives.map((objective, index) => (
                                 <div
                                     key={objective.id}
-                                    className={`group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
+                                    className={`group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-200 hover:scale-[1.02] hover:border-[#7f1414] ${
                                         objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                                     }`}
                                     style={{ 
-                                        transitionDelay: objectivesInView ? `${index * 200}ms` : '0ms' 
+                                        transitionDelay: objectivesInView ? `3ms` : '0ms' 
                                     }}
                                 >
                                     <div className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 font-bold text-gray-400 transition-all duration-300 group-hover:bg-[#7f1414] group-hover:text-white">
