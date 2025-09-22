@@ -168,16 +168,16 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
             {/* Assign Role Dialog */}
             <Dialog open={assignUserDialogOpen} onOpenChange={setAssignUserDialogOpen}>
                 <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle className='flex items-center gap-2'>
-                            <User2 className="h-5 w-5 text-[#7f1414]" />
-                            Assign Roles
-                        </DialogTitle>
-                        <DialogDescription>
-                            Assign a role to the user
-                        </DialogDescription>
-                    </DialogHeader>
                     <form>
+                        <DialogHeader>
+                            <DialogTitle className='flex items-center gap-2'>
+                                <User2 className="h-5 w-5 text-[#7f1414]" />
+                                Assign Roles
+                            </DialogTitle>
+                            <DialogDescription>
+                                Assign a role to the user
+                            </DialogDescription>
+                        </DialogHeader>
                         <div>
                             <Label className="mb-1 block text-sm font-medium mb-2">Programs & Areas</Label>
                             <div className="flex flex-col gap-3">
