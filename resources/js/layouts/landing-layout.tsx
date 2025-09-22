@@ -155,86 +155,92 @@ export default function Layout({ children, footerText }: LayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header
-        className={cn(
-          'sticky top-0 z-50 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm transition-transform duration-400',
-          scrollDir === 'down' ? '-translate-y-full' : 'translate-y-0',
-        )}
-      >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <div className="h-10 w-auto overflow-hidden">
-              <img
-                src="/images/pupsjlogo-text.png"
-                alt="Logo"
-                className="h-full w-full object-cover"
-                draggable={false}
-              />
-            </div>
-          </Link>
-
-          {/* Navigation */}
-          <nav>
-            <ul className="flex gap-8 text-sm font-medium tracking-wide text-white/90">
-              {[...leftNav, ...rightNav].map((item) => (
-                <li key={item.label} className="group relative">
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      'relative px-3 py-2 transition-colors duration-1000',
-                      isActive(item.href) && 'text-white',
-                      'hover:text-white',
-                    )}
-                  >
-                    {item.label}
-                    <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white transition-all duration-300 group-hover:w-full" />
-                  </Link>
-
-                  {item.dropdown?.length > 0 && (
-                    <div className="absolute left-0 mt-7 max-h-0 w-auto overflow-hidden rounded-md bg-white text-sm opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:max-h-96 group-hover:opacity-100">
-                      <ul className="flex flex-col">
-                        {item.dropdown.map((drop) => (
-                          <li key={drop.label} className="border-b border-gray-100 last:border-none">
-                            <Link
-                              href={drop.href}
-                              className="flex items-center gap-2 px-4 py-3 text-[#7f1414] transition-colors hover:bg-[#7f1414] hover:text-white"
-                            >
-                              {drop.icon && <span className="flex-shrink-0 text-lg">{drop.icon}</span>}
-                              <span>{drop.label}</span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Search Button */}
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="relative flex items-center justify-center rounded-full bg-white/10 p-2 text-white ring-1 ring-white/20 transition-all duration-200 hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none"
-            title="Search"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </button>
+<header
+  className={cn(
+    'sticky top-0 z-50 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm transition-transform duration-400',
+    scrollDir === 'down' ? '-translate-y-full' : 'translate-y-0',
+  )}
+> <div className="absolute left-0 top-1/2 -translate-y-1/2">
+      <Link href="/" className="flex items-center">
+        <div className="h-full w-auto overflow-hidden">
+          <img
+            src="/images/pupsjlogo-text-exotic.png"
+            alt="Logo"
+            className="h-full w-full object-cover"
+            draggable={false}
+          />
         </div>
+      </Link>
+    </div>
+  <div className="relative mx-auto max-w-7xl">
+    {/* Logo */}
+   
 
-        {/* Overlay */}
-        <div
-          className={cn(
-            'fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300',
-            searchOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
-          )}
-          onClick={() => setSearchOpen(false)}
-        />
-      </header>
+    {/* Navigation + Search */}
+    <div className="flex justify-end items-center gap-8 px-8 py-4">
+      <nav>
+        <ul className="flex gap-8 text-sm font-medium tracking-wide text-white/90">
+          {[...leftNav, ...rightNav].map((item) => (
+            <li key={item.label} className="group relative">
+              <Link
+                href={item.href}
+                className={cn(
+                  'relative px-3 py-2 transition-colors duration-1000',
+                  isActive(item.href) && 'text-white',
+                  'hover:text-white',
+                )}
+              >
+                {item.label}
+                <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white transition-all duration-300 group-hover:w-full" />
+              </Link>
+
+              {item.dropdown?.length > 0 && (
+                <div className="absolute left-0 mt-7 max-h-0 w-auto overflow-hidden rounded-md bg-white text-sm opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:max-h-96 group-hover:opacity-100">
+                  <ul className="flex flex-col">
+                    {item.dropdown.map((drop) => (
+                      <li key={drop.label} className="border-b border-gray-100 last:border-none">
+                        <Link
+                          href={drop.href}
+                          className="flex items-center gap-2 px-4 py-3 text-[#7f1414] transition-colors hover:bg-[#7f1414] hover:text-white"
+                        >
+                          {drop.icon && <span className="flex-shrink-0 text-lg">{drop.icon}</span>}
+                          <span>{drop.label}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Search Button */}
+      <button
+        onClick={() => setSearchOpen(true)}
+        className="relative flex items-center justify-center rounded-full bg-white/10 p-2 text-white ring-1 ring-white/20 transition-all duration-200 hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none"
+        title="Search"
+      >
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  {/* Overlay */}
+  <div
+    className={cn(
+      'fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300',
+      searchOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
+    )}
+    onClick={() => setSearchOpen(false)}
+  />
+</header>
+
+
 
       {/* Dark backdrop */}
       <div
