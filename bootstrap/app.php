@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
-         $middleware->alias( [
+        $middleware->alias( [
             'admin' => AdminPrivileges::class,
             'userProgramRole' => UserProgramPrivileges::class,
             'userAreaRole' => UserAreaPrivileges::class,

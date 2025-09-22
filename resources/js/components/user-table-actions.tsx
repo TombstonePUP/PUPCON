@@ -1,5 +1,5 @@
 "use client"
-import { MoreVertical, UserMinus, User2 } from "lucide-react"
+import { MoreVertical, UserMinus, User2, User } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -27,13 +27,6 @@ import { toast } from "sonner"
 import { AssignablePrograms, AssignableRoles, UserRecords } from "@/types/user-management"
 import InputError from "./input-error"
 
-interface EditUserForm {
-    user_id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-}
-
 interface AssignUserRoleForm {
     user_id: number;
     assigned_programs?: number[];
@@ -50,6 +43,7 @@ interface UserActionsProps {
 export function UserTableActions({ user, programRoles, roles }: UserActionsProps) {
     const [assignUserDialogOpen, setAssignUserDialogOpen] = useState(false);
     const [disableUserDialogOpen, setDisableUserDialogOpen] = useState(false);
+    const [enableUserDialogOpen, setEnableUserDialogOpen] = useState(false);
 
     const userStatus = user.is_active || '';
 
@@ -62,9 +56,9 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
         reset: resetAssignRole,
     } = useForm<AssignUserRoleForm>({
         user_id: user.user_id,
+        assigned_role: user.roles.role_id || null,
         assigned_programs: user.areas?.map(p => p.program_id) || [],
         assigned_areas: user.areas?.map(a => a.area_id) || [],
-        assigned_role: user.roles.role_id || null,
     });
 
     const {
@@ -75,11 +69,21 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
         user_id: user.user_id,
     });
 
+    const {
+        data: enableUserData,
+        patch: patchEnableUser,
+        reset: resetEnableUser,
+    } = useForm<{ user_id: number }>({
+        user_id: user.user_id,
+    });
+
     const assignUserRole = (e: React.FormEvent) => {
         e.preventDefault();
         setAssignRoleData('assigned_programs', Array.from(new Set(assignRoleData.assigned_programs)));
-        console.log(assignRoleData);
         patchAssignRole(route("users.update.roles"), {
+            onError: () => {
+                console.error("Validation errors:", errorsAssignRole);
+            },
             onSuccess: () => {
                 resetAssignRole();
                 setAssignUserDialogOpen(false);
@@ -93,6 +97,16 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
             onSuccess: () => {
                 resetDisableUser();
                 setDisableUserDialogOpen(false);
+            },
+        });
+    };
+
+    const enableUser = (e: React.FormEvent) => {
+        e.preventDefault();
+        patchEnableUser(route("users.enable"), {
+            onSuccess: () => {
+                resetEnableUser();
+                setEnableUserDialogOpen(false);
             },
         });
     };
@@ -159,6 +173,8 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                     ) : (
                         <DropdownMenuItem
                             className="cursot-pointer"
+                            variant="default"
+                            onClick={() => setEnableUserDialogOpen(true)}
                         >
                             Enable User
                         </DropdownMenuItem>
@@ -179,61 +195,6 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                             </DialogDescription>
                         </DialogHeader>
                         <div>
-                            <Label className="mb-1 block text-sm font-medium mb-2">Programs & Areas</Label>
-                            <div className="flex flex-col gap-3">
-                                {programRoles.map(program => {
-                                    const isProgramChecked = assignRoleData.assigned_programs.includes(program.program_id);
-                                    return (
-                                        <div key={program.program_id}>
-                                            <label className="flex items-center gap-3 text-sm mb-0 font-normal text-foreground">
-                                                <input
-                                                    type="checkbox"
-                                                    className="accent-ring"
-                                                    value={program.program_id}
-                                                    checked={isProgramChecked}
-                                                    disabled={processingAssignRole}
-                                                    onChange={(e) => onChangeProgram(program, e)}
-                                                />
-                                                {program.program_name}
-                                            </label>
-
-                                            {isProgramChecked && (
-                                                <div className="ml-6 mt-2">
-                                                    <div className="grid grid-cols-5 gap-2 flex-wrap">
-                                                        {program.areas?.length > 0 ? (
-                                                            program.areas.map(area => {
-                                                                const isAreaChecked = assignRoleData.assigned_areas.includes(area.area_id);
-                                                                return (
-                                                                    <label
-                                                                        key={area.area_id}
-                                                                        className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground"
-                                                                    >
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            className="accent-ring ml-2"
-                                                                            value={area.area_id}
-                                                                            checked={isAreaChecked}
-                                                                            disabled={processingAssignRole}
-                                                                            onChange={(e) => onChangeArea(area, e)}
-                                                                        />
-                                                                        Area {area.area_number}
-                                                                    </label>
-                                                                );
-                                                            })
-                                                        ) : (
-                                                            <div className="col-span-5 text-sm text-gray-500 italic">
-                                                                No areas available
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                        <div>
                             <Label className="mb-1 block text-sm font-medium">
                                 Assign Role
                                 <Label className='text-[#7f1414]' >*</Label>
@@ -248,7 +209,9 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                                             name="assigned_role"
                                             value={role.role_id}
                                             checked={assignRoleData.assigned_role === role.role_id}
-                                            onChange={() => setAssignRoleData("assigned_role", role.role_id)}
+                                            onChange={() => {
+                                                setAssignRoleData("assigned_role", role.role_id);
+                                            }}
                                             disabled={processingAssignRole}
                                             className="accent-ring " />
                                             {role.role_name}
@@ -257,6 +220,65 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                             </div>
                             <InputError message={errorsAssignRole.assigned_role} className="mt-1"/>
                         </div>
+                        {(assignRoleData.assigned_role === 3 || assignRoleData.assigned_role === 4) && (
+                            <div>
+                                <Label className="mb-1 block text-sm font-medium mb-2">Programs & Areas</Label>
+                                <div className="flex flex-col gap-3">
+                                    {programRoles.map(program => {
+                                        const isProgramChecked = assignRoleData.assigned_programs.includes(program.program_id);
+                                        return (
+                                            <div key={program.program_id}>
+                                                <label className="flex items-center gap-3 text-sm mb-0 font-normal text-foreground">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="accent-ring"
+                                                        value={program.program_id}
+                                                        checked={isProgramChecked}
+                                                        disabled={processingAssignRole}
+                                                        onChange={(e) => onChangeProgram(program, e)}
+                                                    />
+                                                    {program.program_name}
+                                                </label>
+
+                                                {isProgramChecked && (
+                                                    <div className="ml-6 mt-2">
+                                                        <div className="grid grid-cols-5 gap-2 flex-wrap">
+                                                            {program.areas?.length > 0 ? (
+                                                                program.areas.map(area => {
+                                                                    const isAreaChecked = assignRoleData.assigned_areas.includes(area.area_id);
+                                                                    return (
+                                                                        <label
+                                                                            key={area.area_id}
+                                                                            className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground"
+                                                                        >
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                className="accent-ring ml-2"
+                                                                                value={area.area_id}
+                                                                                checked={isAreaChecked}
+                                                                                disabled={processingAssignRole}
+                                                                                onChange={(e) => onChangeArea(area, e)}
+                                                                            />
+                                                                            Area {area.area_number}
+                                                                        </label>
+                                                                    );
+                                                                })
+                                                            ) : (
+                                                                <div className="col-span-5 text-sm text-gray-500 italic">
+                                                                    No areas available
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <InputError message={errorsAssignRole.assigned_areas} className="mt-1" />
+                                <InputError message={errorsAssignRole.assigned_programs} className="mt-1" />
+                            </div>
+                        )}
                         <DialogFooter>
                             <DialogClose asChild>
                                 <Button
@@ -305,6 +327,40 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                             variant="noborder"
                             tabIndex={2}
                             onClick={disableUser}
+                        >
+                            Disable
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+            {/* Enable User Dialog */}
+            <Dialog open={enableUserDialogOpen} onOpenChange={setEnableUserDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className='flex items-center gap-2'>
+                            <User className="h-5 w-5 text-[#7f1414]" />
+                            Enable User
+                        </DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to enable this user?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <Label className="text-sm text-muted-foreground">
+                        This action will enable the user account. The user will be able to access the system again.
+                    </Label>
+                    <DialogFooter className="space-x-2">
+                        <DialogClose asChild>
+                            <Button
+                                variant="outline"
+                                tabIndex={1}
+                            >
+                                Cancel
+                            </Button>
+                        </DialogClose>
+                        <Button
+                            variant="noborder"
+                            tabIndex={2}
+                            onClick={enableUser}
                         >
                             Disable
                         </Button>

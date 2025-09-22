@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
@@ -27,22 +28,42 @@ class StoreUserRequest extends FormRequest
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'lowercase', 'string', 'email', 'max:255'],
             'assigned_role' => ['required', 'integer', 'exists:roles,role_id'],
-            'assigned_areas' => ['array', 'exists:areas,area_id'],
-            'assigned_programs' => ['array', 'exists:programs,program_id'],
+            'assigned_areas' => [
+                Rule::requiredIf(fn () => in_array($this->assigned_role, [3, 4])),
+                'array'
+            ],
+            'assigned_areas.*' => ['integer', 'exists:areas,area_id'],
+
+            'assigned_programs' => [
+                Rule::requiredIf(fn () => in_array($this->assigned_role, [3, 4])),
+                'array'
+            ],
+            'assigned_programs.*' => ['integer', 'exists:programs,program_id'],
         ];
     }
 
     public function messages(): array
     {
         return [
+            // General fields
             'first_name.required' => 'First name is required',
             'last_name.required' => 'Last name is required',
             'email.required' => 'Email is required',
             'email.email' => 'Email must be a valid email address',
+
+            // Role
             'assigned_role.required' => 'Assigned role is required',
-            'assigned_role.exists' => 'The selected assigned role does not exist',
-            'assigned_areas.exists' => 'One or more of the selected assigned areas do not exist',
-            'assigned_programs.exists' => 'One or more of the selected assigned programs do not exist',
+            'assigned_role.exists' => 'The selected role does not exist',
+
+            // Areas
+            'assigned_areas.required' => 'At least one area must be assigned',
+            'assigned_areas.array' => 'Areas must be provided as an array',
+            'assigned_areas.*.exists' => 'One or more of the selected areas do not exist',
+
+            // Programs
+            'assigned_programs.required' => 'At least one program must be assigned',
+            'assigned_programs.array' => 'Programs must be provided as an array',
+            'assigned_programs.*.exists' => 'One or more of the selected programs do not exist',
         ];
     }
 }

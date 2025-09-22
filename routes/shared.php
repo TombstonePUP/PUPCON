@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('users', 'store')->name('users.store');
             Route::patch('users/updatePrivileges', 'updateUserPrivileges')->name('users.update.roles');
             Route::patch('users/{user_id}/disable', 'disable')->name('users.disable');
+            Route::patch('users/enable', 'enable')->name('users.enable');
         });
 
         Route::get('manage-exhibits', function () {

@@ -148,5 +148,17 @@ class UserController extends Controller
             ->with('message', "The user has been disabled.");
     }
 
-
+    /**
+     * Enable the specified resource from storage.
+     */
+    public function enable(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+        $user->is_active = true;
+        $user->save();
+        return redirect()->back()
+            ->with('type', 'success')
+            ->with('title', "User Enabled Successfully")
+            ->with('message', "The user has been enabled.");
+    }
 }

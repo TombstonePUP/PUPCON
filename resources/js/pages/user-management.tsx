@@ -224,61 +224,6 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                     </TabsContent>
                                     <TabsContent value="access" className="flex flex-col gap-5 overflow-x-auto">
                                         <div>
-                                            <Label className="mb-1 block text-sm font-medium mb-2">Programs & Areas</Label>
-                                            {/*renderProgramsAndAreas(programRoles, newUserData, setNewUserData)*/}
-                                            <div className="flex flex-col gap-3">
-                                                {programRoles.map(program => {
-                                                    const isProgramChecked = newUserData.assigned_programs.includes(program.program_id);
-                                                    return (
-                                                        <div key={program.program_id}>
-                                                            <label className="flex items-center gap-3 text-sm mb-0 font-normal text-foreground">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    className="accent-ring"
-                                                                    value={program.program_id}
-                                                                    checked={isProgramChecked}
-                                                                    onChange={(e) => onChangeProgram(program, e)}
-                                                                />
-                                                                {program.program_name}
-                                                            </label>
-
-                                                            {/* Show areas only if program is checked */}
-                                                            {isProgramChecked && (
-                                                                <div className="ml-6 mt-2">
-                                                                    <div className="grid grid-cols-5 gap-2 flex-wrap">
-                                                                        {program.areas?.length > 0 ? (
-                                                                            program.areas.map(area => {
-                                                                                const isAreaChecked = newUserData.assigned_areas.includes(area.area_id);
-                                                                                return (
-                                                                                    <label
-                                                                                        key={area.area_id}
-                                                                                        className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground"
-                                                                                    >
-                                                                                        <input
-                                                                                            type="checkbox"
-                                                                                            className="accent-ring ml-2"
-                                                                                            value={area.area_id}
-                                                                                            checked={isAreaChecked}
-                                                                                            onChange={(e) => onChangeArea(area, e)}
-                                                                                        />
-                                                                                        Area {area.area_number}
-                                                                                    </label>
-                                                                                );
-                                                                            })
-                                                                        ) : (
-                                                                            <div className="col-span-5 text-sm text-gray-500 italic">
-                                                                                No areas available
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                        <div>
                                             <Label className="mb-1 block text-sm font-medium">
                                                 Assign Role
                                                 <Label className='text-[#7f1414]' >*</Label>
@@ -298,10 +243,69 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                                     </label>
                                                 ))}
                                             </div>
+                                            <InputError message={errorsNewUser.assigned_role} className='mt-1'/>
                                         </div>
-                                        <InputError message={errorsNewUser.assigned_role} className='mt-1'/>
-                                        <InputError message={errorsNewUser.assigned_areas} className='mt-1'/>
-                                        <InputError message={errorsNewUser.assigned_programs} className='mt-1'/>
+                                        {(newUserData.assigned_role === 3 || newUserData.assigned_role === 4) && (
+                                            <div>
+                                                <Label className="mb-1 block text-sm font-medium mb-2">
+                                                    Programs & Areas
+                                                    <Label className='text-[#7f1414]' >*</Label>
+                                                </Label>
+                                                <div className="flex flex-col gap-3">
+                                                    {programRoles.map(program => {
+                                                        const isProgramChecked = newUserData.assigned_programs.includes(program.program_id);
+                                                        return (
+                                                            <div key={program.program_id}>
+                                                                <label className="flex items-center gap-3 text-sm mb-0 font-normal text-foreground">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        className="accent-ring"
+                                                                        value={program.program_id}
+                                                                        checked={isProgramChecked}
+                                                                        onChange={(e) => onChangeProgram(program, e)}
+                                                                    />
+                                                                    {program.program_name}
+                                                                </label>
+
+                                                                {/* Show areas only if program is checked */}
+                                                                {isProgramChecked && (
+                                                                    <div className="ml-6 mt-2">
+                                                                        <div className="grid grid-cols-5 gap-2 flex-wrap">
+                                                                            {program.areas?.length > 0 ? (
+                                                                                program.areas.map(area => {
+                                                                                    const isAreaChecked = newUserData.assigned_areas.includes(area.area_id);
+                                                                                    return (
+                                                                                        <label
+                                                                                            key={area.area_id}
+                                                                                            className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground"
+                                                                                        >
+                                                                                            <input
+                                                                                                type="checkbox"
+                                                                                                className="accent-ring ml-2"
+                                                                                                value={area.area_id}
+                                                                                                checked={isAreaChecked}
+                                                                                                onChange={(e) => onChangeArea(area, e)}
+                                                                                            />
+                                                                                            Area {area.area_number}
+                                                                                        </label>
+                                                                                    );
+                                                                                })
+                                                                            ) : (
+                                                                                <div className="col-span-5 text-sm text-gray-500 italic">
+                                                                                    No areas available
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                                <InputError message={errorsNewUser.assigned_areas} className='mt-1'/>
+                                                <InputError message={errorsNewUser.assigned_programs} className='mt-1'/>
+                                            </div>
+                                        )}
                                     </TabsContent>
                                     <label className="text-sm text-gray-500 mt-2">A temporary password will be emailed to the user.</label>
                                 </Tabs>
