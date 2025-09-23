@@ -42,8 +42,6 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
-
         $programs_under_survey = Programs::select('program_name', 'program_id')
             ->where('under_survey', true)
             ->get();

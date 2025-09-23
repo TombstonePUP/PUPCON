@@ -5,7 +5,7 @@ namespace App\Http\Requests\Users;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreUserRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,28 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'lowercase', 'string', 'email', 'max:255'],
+            'user_id' => [
+                'integer',
+                'exists:users,user_id',
+                Rule::requiredIf(fn () => $this->method() === 'PATCH')
+            ],
+            'first_name' => [
+                'string',
+                'max:255',
+                Rule::requiredIf(fn () => $this->user_id === null && $this->method() === 'POST')
+            ],
+            'last_name' => [
+                'string',
+                'max:255',
+                Rule::requiredIf(fn () => $this->user_id === null && $this->method() === 'POST')
+            ],
+            'email' => [
+                'lowercase',
+                'string',
+                'email',
+                'max:255',
+                Rule::requiredIf(fn () => $this->user_id === null && $this->method() === 'POST')
+            ],
             'assigned_role' => ['required', 'integer', 'exists:roles,role_id'],
             'assigned_areas' => [
                 Rule::requiredIf(fn () => in_array($this->assigned_role, [3, 4])),
@@ -45,6 +64,9 @@ class StoreUserRequest extends FormRequest
     public function messages(): array
     {
         return [
+            // User ID
+            'user_id.required' => 'User ID is required',
+
             // General fields
             'first_name.required' => 'First name is required',
             'last_name.required' => 'Last name is required',

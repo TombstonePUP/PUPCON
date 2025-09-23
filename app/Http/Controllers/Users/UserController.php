@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Users\StoreUserRequest;
-use App\Http\Requests\Users\UpdateUserCredentialsRequest;
-use App\Http\Requests\Users\UpdateUserRolesRequest;
+use App\Http\Requests\Users\UserRequest;
 use App\Models\Programs;
 use App\Models\Roles;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use App\Models\UserAreaRoles;
 use App\Notifications\NewUser;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -66,7 +62,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
+    public function store(UserRequest $request)
     {
         $validated = $request->validated();
 
@@ -86,10 +82,10 @@ class UserController extends Controller
 
         $name = $user->first_name . ' ' . $user->last_name;
 
-        if($user->Roles->role_name !== 'Accreditor'){
-            $user->notify(new NewUser($user->email, $name, $password));
-        } else {
+        if($user->Roles->role_name === 'Accreditor'){
             $user->notify(new NewUser($user->email, $name, ''));
+        } else {
+            $user->notify(new NewUser($user->email, $name, $password));
         }
 
         return redirect()->back()
@@ -101,7 +97,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateUserCredentials(UpdateUserCredentialsRequest $request)
+    public function updateUserCredentials(UserRequest $request)
     {
         dd("hello");
         $validated = $request->validated();
@@ -111,7 +107,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateUserPrivileges(UpdateUserRolesRequest $request)
+    public function updateUserPrivileges(UserRequest $request)
     {
         $validated = $request->validated();
         $user = User::findOrFail($validated['user_id']);
@@ -121,10 +117,10 @@ class UserController extends Controller
         }
         $user->save();
 
-        if ($user->Roles->role_name != 'Admin' && $user->Roles->role_name != 'Coordinator') {
-            $user->Areas()->sync($validated['assigned_areas']);
-        } else {
+        if (in_array($validated['assigned_role'], [1, 2])) {
             $user->Areas()->detach();
+        } else {
+            $user->Areas()->sync($validated['assigned_areas']);
         }
 
         return redirect()->back()
@@ -136,9 +132,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function disable(int $user_id)
+    public function disable(Request $request)
     {
-        $user = User::findOrFail($user_id);
+        $user = User::findOrFail($request->user_id);
         $user->is_active = false;
         $user->save();
 

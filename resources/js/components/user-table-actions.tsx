@@ -1,6 +1,7 @@
 "use client"
 import { MoreVertical, UserMinus, User2, User } from "lucide-react"
 import { useState } from "react"
+import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -22,16 +23,15 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { useForm, usePage } from "@inertiajs/react"
-import { toast } from "sonner"
-import { AssignablePrograms, AssignableRoles, UserRecords } from "@/types/user-management"
+import { useForm } from "@inertiajs/react"
+import { AssignableAreas, AssignablePrograms, AssignableRoles, UserRecords } from "@/types/user-management"
 import InputError from "./input-error"
 
 interface AssignUserRoleForm {
     user_id: number;
-    assigned_programs?: number[];
-    assigned_areas?: number[];
-    assigned_role?: number;
+    assigned_programs: number[];
+    assigned_areas: number[];
+    assigned_role: number;
 }
 
 interface UserActionsProps {
@@ -45,7 +45,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
     const [disableUserDialogOpen, setDisableUserDialogOpen] = useState(false);
     const [enableUserDialogOpen, setEnableUserDialogOpen] = useState(false);
 
-    const userStatus = user.is_active || '';
+    const userStatus = user.is_active;
 
     const {
         data: assignRoleData,
@@ -56,9 +56,9 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
         reset: resetAssignRole,
     } = useForm<AssignUserRoleForm>({
         user_id: user.user_id,
-        assigned_role: user.roles.role_id || null,
         assigned_programs: user.areas?.map(p => p.program_id) || [],
         assigned_areas: user.areas?.map(a => a.area_id) || [],
+        assigned_role: user.roles?.role_id || null,
     });
 
     const {
@@ -79,11 +79,9 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
 
     const assignUserRole = (e: React.FormEvent) => {
         e.preventDefault();
-        setAssignRoleData('assigned_programs', Array.from(new Set(assignRoleData.assigned_programs)));
+        setAssignRoleData('assigned_programs', Array.from(new Set(assignRoleData.assigned_programs || [])));
+        setAssignRoleData('assigned_areas', Array.from(new Set(assignRoleData.assigned_areas || [])));
         patchAssignRole(route("users.update.roles"), {
-            onError: () => {
-                console.error("Validation errors:", errorsAssignRole);
-            },
             onSuccess: () => {
                 resetAssignRole();
                 setAssignUserDialogOpen(false);
@@ -93,7 +91,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
 
     const disableUser = (e: React.FormEvent) => {
         e.preventDefault();
-        patchDisableUser(route("users.disable", { user_id: disableUserData.user_id }), {
+        patchDisableUser(route("users.disable"), {
             onSuccess: () => {
                 resetDisableUser();
                 setDisableUserDialogOpen(false);
@@ -133,7 +131,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
         }
     }
 
-    const onChangeArea = (area: AssignedAreas, e) => {
+    const onChangeArea = (area: AssignableAreas, e) => {
         const isChecked = e.target.checked;
         if (isChecked) {
             // Add area
@@ -162,7 +160,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                     >
                         Edit Privileges
                     </DropdownMenuItem>
-                    {userStatus === true ? (
+                    {userStatus ? (
                         <DropdownMenuItem
                             className="cursor-pointer"
                             variant="destructive"
@@ -244,7 +242,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                                                     <div className="ml-6 mt-2">
                                                         <div className="grid grid-cols-5 gap-2 flex-wrap">
                                                             {program.areas?.length > 0 ? (
-                                                                program.areas.map(area => {
+                                                                program.areas.map((area) => {
                                                                     const isAreaChecked = assignRoleData.assigned_areas.includes(area.area_id);
                                                                     return (
                                                                         <label
@@ -362,7 +360,7 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
                             tabIndex={2}
                             onClick={enableUser}
                         >
-                            Disable
+                            Enable
                         </Button>
                     </DialogFooter>
                 </DialogContent>
