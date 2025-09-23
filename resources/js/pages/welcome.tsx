@@ -1,8 +1,8 @@
-import { CardHeader, CardImage, HomeCard, HomeCardDescription, HomeCardTitle } from '@/components/ui/card';
+import { CardHeader, HomeCard, HomeCardDescription, HomeCardTitle } from '@/components/ui/card';
 import Layout from '@/layouts/landing-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BookOpen, Calendar, GraduationCap, Play, MapPin } from 'lucide-react';
+import { BookOpen, Calendar, GraduationCap, MapPin, Play } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // Simple Image Component with prefetching
@@ -20,7 +20,7 @@ const ImageWithPreload = React.memo(({ src, alt, className, priority = false, ..
                         observer.disconnect();
                     }
                 },
-                { rootMargin: '100px' }
+                { rootMargin: '100px' },
             );
             if (imgRef.current) observer.observe(imgRef.current);
             return () => observer.disconnect();
@@ -31,22 +31,18 @@ const ImageWithPreload = React.memo(({ src, alt, className, priority = false, ..
         <div ref={imgRef} className={`relative overflow-hidden ${className}`}>
             {shouldLoad ? (
                 <>
-                    {!isLoaded && (
-                        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-                    )}
+                    {!isLoaded && <div className="absolute inset-0 animate-pulse bg-gray-200" />}
                     <img
                         src={src}
                         alt={alt}
-                        className={`w-full h-full object-cover transition-opacity duration-300 ${
-                            isLoaded ? 'opacity-100' : 'opacity-0'
-                        }`}
+                        className={`h-full w-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
                         onLoad={() => setIsLoaded(true)}
                         loading={priority ? 'eager' : 'lazy'}
                         {...props}
                     />
                 </>
             ) : (
-                <div className="w-full h-full bg-gray-200 animate-pulse" />
+                <div className="h-full w-full animate-pulse bg-gray-200" />
             )}
         </div>
     );
@@ -56,17 +52,17 @@ const ImageWithPreload = React.memo(({ src, alt, className, priority = false, ..
 const ActionButton = ({ href, children, icon: Icon, external = false, ...props }) => {
     const Component = external ? 'a' : Link;
     const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
-    
+
     return (
         <Component
             href={href}
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold bg-[#7f1414] border-2 border-[#7f1414] text-white hover:bg-[#6b1111] transition-colors duration-200"
+            className="inline-flex transform-none items-center justify-center gap-3 rounded-full border-2 border-[#7f1414] bg-[#7f1414] px-8 py-4 font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111]"
             {...externalProps}
             {...props}
         >
-            {Icon && <Icon className="w-5 h-5" />}
+            {Icon && <Icon className="h-5 w-5" />}
             <span>{children}</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
         </Component>
@@ -80,7 +76,8 @@ const SimpleCarousel = ({ images }) => {
     useEffect(() => {
         // Preload all images
         images.forEach((src, index) => {
-            if (index > 0) { // First image already preloaded in Head
+            if (index > 0) {
+                // First image already preloaded in Head
                 const img = new Image();
                 img.src = src;
             }
@@ -97,18 +94,8 @@ const SimpleCarousel = ({ images }) => {
     return (
         <div className="absolute inset-0">
             {images.map((src, index) => (
-                <div
-                    key={src}
-                    className={`absolute inset-0 transition-opacity duration-1000 ${
-                        index === current ? 'opacity-100' : 'opacity-0'
-                    }`}
-                >
-                    <img
-                        src={src}
-                        alt={`Slide ${index + 1}`}
-                        className="w-full h-full object-cover"
-                        loading={index === 0 ? 'eager' : 'lazy'}
-                    />
+                <div key={src} className={`absolute inset-0 transition-opacity duration-1000 ${index === current ? 'opacity-100' : 'opacity-0'}`}>
+                    <img src={src} alt={`Slide ${index + 1}`} className="h-full w-full object-cover" loading={index === 0 ? 'eager' : 'lazy'} />
                 </div>
             ))}
         </div>
@@ -121,58 +108,63 @@ export default function Welcome() {
     const [isPageReady, setIsPageReady] = useState(false);
     const shouldReduceMotion = useReducedMotion();
 
-    const images = useMemo(() => [
-        '/images/homepage-slides/1.png', 
-        '/images/homepage-slides/4.jpg', 
-        '/images/homepage-slides/6.jpg'
-    ], []);
+    const images = useMemo(() => ['/images/homepage-slides/1.png', '/images/homepage-slides/4.jpg', '/images/homepage-slides/6.jpg'], []);
 
-    const newsCards = useMemo(() => [
-        {
-            title: 'PUPSJ PUPCET',
-            img: '/images/pupcet.jpg',
-            desc: 'The PUPSJ PUPCET Online Application for Academic Year 2025-2026 starts on December 15, 2024 - April 15, 2025.',
-        },
-        {
-            title: 'CPALE 2024 Passers',
-            img: '/images/cpale.jpg',
-            desc: 'Pagpupugay sa bagong CPA ng ating Sintang Paaralan.',
-        },
-        {
-            title: 'Mental Health Matters',
-            img: '/images/mental.jpg',
-            desc: 'The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow tips for boosting your well-being.',
-        },
-        {
-            title: 'Ceremonial Signing',
-            img: '/images/ceremony.jpg',
-            desc: 'A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!',
-        },
-    ], []);
+    const newsCards = useMemo(
+        () => [
+            {
+                title: 'PUPSJ PUPCET',
+                img: '/images/pupcet.jpg',
+                desc: 'The PUPSJ PUPCET Online Application for Academic Year 2025-2026 starts on December 15, 2024 - April 15, 2025.',
+            },
+            {
+                title: 'CPALE 2024 Passers',
+                img: '/images/cpale.jpg',
+                desc: 'Pagpupugay sa bagong CPA ng ating Sintang Paaralan.',
+            },
+            {
+                title: 'Mental Health Matters',
+                img: '/images/mental.jpg',
+                desc: 'The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow tips for boosting your well-being.',
+            },
+            {
+                title: 'Ceremonial Signing',
+                img: '/images/ceremony.jpg',
+                desc: 'A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!',
+            },
+        ],
+        [],
+    );
 
     // Snappy animation variants
-    const containerVariants = useMemo(() => ({
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: shouldReduceMotion ? 0 : 0.1,
-                delayChildren: 0.2,
+    const containerVariants = useMemo(
+        () => ({
+            hidden: { opacity: 0 },
+            visible: {
+                opacity: 1,
+                transition: {
+                    staggerChildren: shouldReduceMotion ? 0 : 0.1,
+                    delayChildren: 0.2,
+                },
             },
-        },
-    }), [shouldReduceMotion]);
+        }),
+        [shouldReduceMotion],
+    );
 
-    const itemVariants = useMemo(() => ({
-        hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: shouldReduceMotion ? 0.1 : 0.3,
-                ease: "easeOut",
+    const itemVariants = useMemo(
+        () => ({
+            hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 20 },
+            visible: {
+                opacity: 1,
+                y: 0,
+                transition: {
+                    duration: shouldReduceMotion ? 0.1 : 0.3,
+                    ease: 'easeOut',
+                },
             },
-        },
-    }), [shouldReduceMotion]);
+        }),
+        [shouldReduceMotion],
+    );
 
     // Initialize page
     useEffect(() => {
@@ -201,11 +193,11 @@ export default function Welcome() {
     const handleSelectType = useCallback((type) => {
         setIsModalVisible(false);
         setTimeout(() => setShowModal(false), 200);
-        
+
         if (type === 'faculty' || type === 'accreditor') {
-            router.visit('/login', { 
+            router.visit('/login', {
                 method: 'get',
-                data: { role: type }
+                data: { role: type },
             });
         }
     }, []);
@@ -220,55 +212,43 @@ export default function Welcome() {
 
             <Layout>
                 {/* Hero Section with Animated Carousel */}
-                <motion.div 
+                <motion.div
                     className="relative h-[85vh] w-full overflow-hidden"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: isPageReady ? 1 : 0 }}
                     transition={{ duration: 0.5 }}
                 >
                     <SimpleCarousel images={images} />
-                    
+
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>
 
                     {/* Content Overlay with Animations */}
-                    <motion.div 
+                    <motion.div
                         className="absolute inset-0 z-20 grid w-full grid-cols-1 px-12 pr-10 pl-70 text-white md:grid-cols-2"
                         variants={containerVariants}
                         initial="hidden"
-                        animate={isPageReady ? "visible" : "hidden"}
+                        animate={isPageReady ? 'visible' : 'hidden'}
                     >
                         <div className="flex flex-col justify-center space-y-6">
-                            <motion.img 
-                                src="/images/pupsj_motto.png" 
-                                alt="Logo" 
-                                className="h-auto w-120"
-                                variants={itemVariants}
-                            />
-                            <motion.h2 
-                                className="text-2xl italic"
-                                variants={itemVariants}
-                            >
+                            <motion.img src="/images/pupsj_motto.png" alt="Logo" className="h-auto w-120" variants={itemVariants} />
+                            <motion.h2 className="text-2xl italic" variants={itemVariants}>
                                 Years of academic excellence and service
                             </motion.h2>
 
-                            <motion.div 
-                                className="mt-10 flex flex-wrap gap-4"
-                                variants={itemVariants}
-                            >
+                            <motion.div className="mt-10 flex flex-wrap gap-4" variants={itemVariants}>
                                 {[
-                                    { icon: BookOpen, text: "Programs", primary: true },
-                                    { icon: Calendar, text: "Events" },
-                                    { icon: GraduationCap, text: "Academe" }
+                                    { icon: BookOpen, text: 'Programs', primary: true },
+                                    { icon: Calendar, text: 'Events' },
+                                    { icon: GraduationCap, text: 'Academe' },
                                 ].map((btn) => (
                                     <motion.button
                                         key={btn.text}
-                                        className={btn.primary 
-                                            ? "flex items-center space-x-2 rounded-md bg-white px-6 py-2 font-semibold text-black transition-all duration-200 hover:bg-gray-100"
-                                            : "flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:border-gray-200 hover:bg-white/20"
+                                        className={
+                                            btn.primary
+                                                ? 'flex items-center space-x-2 rounded-md bg-white px-6 py-2 font-semibold text-black transition-all duration-200 hover:scale-105 hover:bg-gray-100'
+                                                : 'flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20'
                                         }
-                                        whileHover={{ scale: shouldReduceMotion ? 1 : 1.05 }}
-                                        whileTap={{ scale: shouldReduceMotion ? 1 : 0.95 }}
                                     >
                                         <btn.icon className="h-5 w-5" />
                                         <span>{btn.text}</span>
@@ -279,125 +259,89 @@ export default function Welcome() {
                     </motion.div>
                 </motion.div>
 
-                {/* Welcome Modal with Enhanced Animations */}
+                {/* Welcome Modal */}
                 {showModal && (
-                    <motion.div 
+                    <motion.div
                         className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: isModalVisible ? 1 : 0 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: 0.12, ease: 'easeInOut' }} // faster smooth fade
                         onClick={handleCloseModal}
                     >
-                        <motion.div 
-                            className="relative w-full max-w-4xl mx-4"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ 
-                                opacity: isModalVisible ? 1 : 0,
-                                scale: isModalVisible ? 1 : 0.9
-                            }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            transition={{ duration: 0.3, ease: "easeOut" }}
+                        <motion.div
+                            className="relative mx-4 w-full max-w-4xl"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: isModalVisible ? 1 : 0, scale: isModalVisible ? 1 : 0.95 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.12, ease: 'easeInOut' }} // fast open/close
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="relative overflow-hidden rounded-3xl bg-white border border-gray-200/50">
-                                {/* Animated background elements */}
+                            <div className="relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white">
+                                {/* Optional animated background elements */}
                                 {!shouldReduceMotion && (
                                     <>
-                                        <motion.div 
-                                            className="absolute -top-20 -right-20 w-40 h-40 bg-[#7f1414]/5 rounded-full blur-3xl"
-                                            animate={{ 
-                                                scale: [1, 1.2, 1],
-                                                opacity: [0.3, 0.6, 0.3]
-                                            }}
-                                            transition={{ 
-                                                duration: 4, 
-                                                repeat: Infinity, 
-                                                ease: "easeInOut" 
-                                            }}
+                                        <motion.div
+                                            className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#7f1414]/5 blur-3xl"
+                                            animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.6, 0.3] }}
+                                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                                         />
-                                        <motion.div 
-                                            className="absolute -bottom-10 -left-10 w-32 h-32 bg-red-500/5 rounded-full blur-2xl"
-                                            animate={{ 
-                                                scale: [1.2, 1, 1.2],
-                                                opacity: [0.2, 0.5, 0.2]
-                                            }}
-                                            transition={{ 
-                                                duration: 3, 
-                                                repeat: Infinity, 
-                                                ease: "easeInOut",
-                                                delay: 1
-                                            }}
+                                        <motion.div
+                                            className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-red-500/5 blur-2xl"
+                                            animate={{ scale: [1, 1.03, 1], opacity: [0.2, 0.5, 0.2] }}
+                                            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
                                         />
                                     </>
                                 )}
-                                
+
                                 {/* Close Button */}
                                 <motion.button
                                     onClick={handleCloseModal}
-                                    className="absolute top-6 right-6 z-10 p-2 rounded-full bg-white/80 hover:bg-white transition-colors duration-200"
-                                    whileHover={{ scale: shouldReduceMotion ? 1 : 1.1 }}
+                                    className="absolute top-6 right-6 z-10 rounded-full bg-white/80 p-2 transition-colors duration-150 hover:bg-white"
+                                    whileHover={{ scale: shouldReduceMotion ? 1 : 1.05 }}
                                     whileTap={{ scale: shouldReduceMotion ? 1 : 0.9 }}
                                     aria-label="Close"
                                 >
-                                    <svg className="w-5 h-5 text-gray-400 hover:text-[#7f1414] transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg
+                                        className="h-5 w-5 text-gray-400 transition-colors duration-150 hover:text-[#7f1414]"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </motion.button>
 
                                 <div className="relative p-12">
-                                    <div className="grid gap-12 md:grid-cols-2 items-center">
+                                    <div className="grid items-center gap-12 md:grid-cols-2">
                                         {/* Left: Logo + Welcome */}
-                                        <motion.div 
+                                        <motion.div
                                             className="flex flex-col items-center justify-center space-y-6 text-center"
                                             initial={{ opacity: 0, x: -30 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.2, duration: 0.4, ease: "easeOut" }}
+                                            transition={{ delay: 0.1, duration: 0.2, ease: 'easeOut' }}
                                         >
-                                            <motion.div 
-                                                className="relative"
-                                                whileHover={{ scale: shouldReduceMotion ? 1 : 1.05 }}
-                                                transition={{ duration: 0.2 }}
-                                            >
-                                                <img src="/images/pupcon-logo.png" alt="PUP Logo" className="h-24 w-auto" />
-                                                {!shouldReduceMotion && (
-                                                    <motion.div 
-                                                        className="absolute inset-0 w-24 h-24 bg-[#7f1414]/20 rounded-2xl blur-xl mx-auto"
-                                                        animate={{ 
-                                                            scale: [1, 1.1, 1],
-                                                            opacity: [0.3, 0.6, 0.3]
-                                                        }}
-                                                        transition={{ 
-                                                            duration: 2, 
-                                                            repeat: Infinity, 
-                                                            ease: "easeInOut" 
-                                                        }}
-                                                    />
-                                                )}
-                                            </motion.div>
-                                            
-                                            <motion.div 
+                                            <img src="/images/pupcon-logo.png" alt="PUP Logo" className="h-24 w-auto" />
+                                            <motion.div
                                                 className="space-y-3"
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.4, duration: 0.3 }}
+                                                transition={{ delay: 0.2, duration: 0.15 }}
                                             >
-                                                <h2 className="text-4xl font-bold bg-[#7f1414] bg-clip-text text-transparent">
-                                                    Mabuhay!
-                                                </h2>
-                                                <p className="text-gray-600 text-lg">Welcome to PUP San Juan</p>
+                                                <h2 className="bg-[#7f1414] bg-clip-text text-4xl font-bold text-transparent">Mabuhay!</h2>
+                                                <p className="text-lg text-gray-600">Welcome to PUP San Juan</p>
                                             </motion.div>
                                         </motion.div>
 
                                         {/* Right: Role Selection */}
-                                        <motion.div 
+                                        <motion.div
                                             className="space-y-6"
                                             initial={{ opacity: 0, x: 30 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.3, duration: 0.4, ease: "easeOut" }}
+                                            transition={{ duration: 0.2, ease: 'easeOut' }}
                                         >
-                                            <div className="text-center mb-8">
-                                                <h3 className="text-xl font-semibold text-black-900 mb-2">Select your role to continue</h3>
+                                            <div className="mb-8 text-center">
+                                                <h3 className="text-black-900 mb-2 text-xl font-semibold">Select your role to continue</h3>
                                                 <p className="text-gray-500">Choose the option that best describes you</p>
                                             </div>
 
@@ -408,45 +352,61 @@ export default function Welcome() {
                                                         title: 'Faculty',
                                                         desc: 'Administrators & Department Chairs',
                                                         icon: (
-                                                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422A12.083 12.083 0 0118 12.08v.42a12.08 12.08 0 01-6 10.392A12.08 12.08 0 016 12.5v-.42a12.083 12.083 0 01-.16-.902L12 14z" />
+                                                            <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth={2}
+                                                                    d="M12 14l9-5-9-5-9 5 9 5z"
+                                                                />
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth={2}
+                                                                    d="M12 14l6.16-3.422A12.083 12.083 0 0118 12.08v.42a12.08 12.08 0 01-6 10.392A12.08 12.08 0 016 12.5v-.42a12.083 12.083 0 01-.16-.902L12 14z"
+                                                                />
                                                             </svg>
-                                                        )
+                                                        ),
                                                     },
                                                     {
                                                         key: 'accreditor',
                                                         title: 'Accreditor',
                                                         desc: 'Evaluation Team Members',
                                                         icon: (
-                                                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth={2}
+                                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                                />
                                                             </svg>
-                                                        )
-                                                    }
+                                                        ),
+                                                    },
                                                 ].map((role, index) => (
                                                     <motion.button
                                                         key={role.key}
                                                         onClick={() => handleSelectType(role.key)}
-                                                        className="group w-full flex items-center p-6 rounded-2xl border border-gray-200 bg-white/80 hover:bg-white hover:border-[#7f1414] transition-colors duration-200"
-                                                        whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
-                                                        whileTap={{ scale: shouldReduceMotion ? 1 : 0.98 }}
                                                         initial={{ opacity: 0, y: 20 }}
                                                         animate={{ opacity: 1, y: 0 }}
-                                                        transition={{ delay: 0.5 + index * 0.1, duration: 0.3 }}
+                                                        transition={{ delay: 0.15 + index * 0.05, duration: 0.12, ease: 'easeOut' }}
+                                                        className="group flex w-full items-center rounded-2xl border border-gray-200 bg-white/80 p-6 transition-all duration-150 ease-out hover:border-[#7f1414] hover:bg-white"
                                                     >
-                                                        <motion.div 
-                                                            className="flex-shrink-0 w-14 h-14 bg-[#7f1414] rounded-xl flex items-center justify-center"
-                                                            whileHover={{ scale: shouldReduceMotion ? 1 : 1.1 }}
-                                                            transition={{ duration: 0.2 }}
-                                                        >
+                                                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-[#7f1414] transition-transform duration-150 ease-out group-hover:scale-105">
                                                             {role.icon}
-                                                        </motion.div>
-                                                        <div className="ml-6 text-left">
-                                                            <h4 className="text-lg font-semibold text-gray-800 group-hover:text-[#7f1414] transition-colors duration-200">{role.title}</h4>
-                                                            <p className="text-gray-500 text-sm">{role.desc}</p>
                                                         </div>
-                                                        <svg className="ml-auto w-5 h-5 text-gray-400 group-hover:text-[#7f1414] group-hover:translate-x-1 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <div className="ml-6 text-left">
+                                                            <h4 className="text-lg font-semibold text-gray-800 transition-colors duration-150 ease-out group-hover:text-[#7f1414]">
+                                                                {role.title}
+                                                            </h4>
+                                                            <p className="text-sm text-gray-500">{role.desc}</p>
+                                                        </div>
+                                                        <svg
+                                                            className="ml-auto h-5 w-5 text-gray-400 transition-all duration-150 ease-out group-hover:translate-x-1 group-hover:text-[#7f1414]"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                         </svg>
                                                     </motion.button>
@@ -455,48 +415,50 @@ export default function Welcome() {
                                                 {/* Guest/Student Role */}
                                                 <motion.button
                                                     onClick={() => handleSelectType('guest')}
-                                                    className="group w-full rounded-2xl bg-[#7f1414] p-6 text-white transition-colors duration-200 hover:bg-[#6b1111]"
-                                                    whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
-                                                    whileTap={{ scale: shouldReduceMotion ? 1 : 0.98 }}
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: 0.7, duration: 0.3 }}
+                                                    transition={{ delay: 0.25, duration: 0.12, ease: 'easeOut' }}
+                                                    className="group w-full rounded-2xl bg-[#7f1414] p-6 text-white transition-colors duration-150 ease-out hover:bg-[#6b1111]"
                                                 >
                                                     <div className="flex items-center justify-center space-x-3">
-                                                        <motion.svg 
-                                                            className="w-6 h-6" 
-                                                            fill="none" 
-                                                            stroke="currentColor" 
+                                                        <svg
+                                                            className="h-6 w-6 transition-transform duration-150 ease-out group-hover:scale-105"
+                                                            fill="none"
+                                                            stroke="currentColor"
                                                             viewBox="0 0 24 24"
-                                                            whileHover={{ scale: shouldReduceMotion ? 1 : 1.1 }}
-                                                            transition={{ duration: 0.2 }}
                                                         >
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                        </motion.svg>
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                                            />
+                                                        </svg>
                                                         <span className="text-lg font-semibold">Continue as Guest / Student</span>
-                                                        <motion.svg 
-                                                            className="w-5 h-5" 
-                                                            fill="none" 
-                                                            stroke="currentColor" 
+                                                        <svg
+                                                            className="h-5 w-5 transition-transform duration-150 ease-out group-hover:translate-x-1"
+                                                            fill="none"
+                                                            stroke="currentColor"
                                                             viewBox="0 0 24 24"
-                                                            whileHover={{ x: shouldReduceMotion ? 0 : 5 }}
-                                                            transition={{ duration: 0.2 }}
                                                         >
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                                        </motion.svg>
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M13 7l5 5m0 0l-5 5m5-5H6"
+                                                            />
+                                                        </svg>
                                                     </div>
                                                 </motion.button>
                                             </div>
 
-                                            <motion.div 
-                                                className="text-center pt-4"
+                                            <motion.div
+                                                className="pt-4 text-center"
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
-                                                transition={{ delay: 0.8, duration: 0.3 }}
+                                                transition={{ duration: 0.12 }}
                                             >
-                                                <p className="text-xs text-gray-400">
-                                                    By continuing, you agree to our terms and conditions
-                                                </p>
+                                                <p className="text-xs text-gray-400">By continuing, you agree to our terms and conditions</p>
                                             </motion.div>
                                         </motion.div>
                                     </div>
@@ -506,7 +468,7 @@ export default function Welcome() {
                     </motion.div>
                 )}
 
-                {/* News Section with Staggered Animations */}
+                {/* News Section */}
                 <motion.section
                     className="flex min-h-[80vh] w-full flex-col items-center justify-center gap-20 bg-gray-50 px-6 py-16"
                     initial="hidden"
@@ -520,34 +482,27 @@ export default function Welcome() {
                         },
                     }}
                 >
-                    <motion.div 
-                        className="flex flex-col items-center text-center"
-                        variants={itemVariants}
-                    >
+                    <motion.div className="flex flex-col items-center text-center" variants={itemVariants}>
                         <h2 className="text-3xl font-bold text-gray-900">What's New on Campus</h2>
                         <p className="mt-2 text-lg text-gray-600">Catch up on events, announcements, and campus highlights.</p>
                     </motion.div>
 
-                    {/* News Cards with enhanced hover effects */}
+                    {/* News Cards */}
                     <div className="flex flex-row flex-wrap justify-center gap-8">
                         {newsCards.map((card, i) => (
-                            <motion.div
-                                key={i}
-                                className="w-[18vw]"
-                                variants={itemVariants}
-                            >
+                            <motion.div key={i} className="w-[18vw]" variants={itemVariants}>
                                 <Link href="/">
                                     <motion.div
-                                        whileHover={{ 
+                                        whileHover={{
                                             scale: shouldReduceMotion ? 1 : 1.02,
-                                            y: shouldReduceMotion ? 0 : -5
+                                            y: shouldReduceMotion ? 0 : -5,
                                         }}
                                         transition={{ duration: 0.2 }}
                                     >
                                         <HomeCard className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-colors duration-200 hover:border-[#7f1414]">
                                             <div className="h-48 w-full overflow-hidden">
-                                                <ImageWithPreload 
-                                                    src={card.img} 
+                                                <ImageWithPreload
+                                                    src={card.img}
                                                     alt={card.title}
                                                     className="h-full w-full transition-transform duration-300 group-hover:scale-105"
                                                 />
@@ -569,13 +524,13 @@ export default function Welcome() {
                     </div>
                 </motion.section>
 
-                {/* Video Section with Animations */}
+                {/* Audio-Video Section */}
                 <motion.section
                     className="relative flex min-h-[80vh] w-full items-center justify-center py-16"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    viewport={{ once: true, margin: "100px" }}
+                    viewport={{ once: true, margin: '100px' }}
                 >
                     <div
                         className="absolute inset-0 bg-cover bg-center opacity-30 grayscale"
@@ -583,14 +538,14 @@ export default function Welcome() {
                     ></div>
                     <div className="absolute inset-0 bg-gradient-to-l from-white/95 via-white/80 to-transparent"></div>
                     <div className="relative z-10 flex w-[85%] max-w-[1400px] flex-col items-center justify-center gap-16 lg:flex-row">
-                        <motion.div 
+                        <motion.div
                             className="flex w-full justify-center lg:w-[50%]"
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 0.1 }}
                             viewport={{ once: true }}
                         >
-                            <motion.div 
+                            <motion.div
                                 className="relative h-[400px] w-full overflow-hidden rounded-2xl"
                                 whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
                                 transition={{ duration: 0.3 }}
@@ -605,34 +560,28 @@ export default function Welcome() {
                                 ></iframe>
                             </motion.div>
                         </motion.div>
-                        
-                        <motion.div 
+
+                        <motion.div
                             className="flex w-full flex-col justify-center text-center lg:w-[50%] lg:text-left"
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 0.2 }}
                             viewport={{ once: true }}
                         >
-                            <h2 className="mb-4 text-[2.5vw] font-bold text-[#7f1414] lg:text-[2rem]">
-                                Campus Audio-Visual Presentation
-                            </h2>
+                            <h2 className="mb-4 text-[2.5vw] font-bold text-[#7f1414] lg:text-[2rem]">Campus Audio-Visual Presentation</h2>
                             <p className="mb-4 text-[1.15rem] leading-relaxed text-gray-700">
                                 A Leading Comprehensive Polytechnic University in Asia
                             </p>
                             <p className="mb-8 text-[0.95rem] text-gray-600 italic">
-                                Discover the roadmap that shapes our future — goals, strategies, and developments leading PUP into a new era of excellence.
+                                Discover the roadmap that shapes our future — goals, strategies, and developments leading PUP into a new era of
+                                excellence.
                             </p>
-                            
+
                             <motion.div
-                                whileHover={{ scale: shouldReduceMotion ? 1 : 1.05 }}
-                                whileTap={{ scale: shouldReduceMotion ? 1 : 0.95 }}
-                                transition={{ duration: 0.2 }}
+                                whileHover={{}} // empty object disables scale
+                                whileTap={{}} // disable tap scale
                             >
-                                <ActionButton
-                                    href="https://www.youtube.com/watch?v=0n1dd1XZ9F8"
-                                    icon={Play}
-                                    external
-                                >
+                                <ActionButton href="..." icon={Play} external>
                                     Watch on YouTube
                                 </ActionButton>
                             </motion.div>
@@ -646,9 +595,9 @@ export default function Welcome() {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    viewport={{ once: true, margin: "100px" }}
+                    viewport={{ once: true, margin: '100px' }}
                 >
-                    <motion.div 
+                    <motion.div
                         className="mx-auto mb-12 max-w-4xl text-center"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -659,7 +608,7 @@ export default function Welcome() {
                         <p className="text-gray-600">A word of inspiration from our campus leadership.</p>
                     </motion.div>
 
-                    <motion.div 
+                    <motion.div
                         className="mx-auto flex w-[80%] max-w-[1000px] flex-col gap-2 lg:flex-row lg:items-stretch"
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -667,41 +616,33 @@ export default function Welcome() {
                         viewport={{ once: true }}
                     >
                         {/* Director's Image */}
-                        <motion.div 
+                        <motion.div
                             className="relative mx-auto h-[350px] w-[280px] shrink-0 overflow-hidden rounded-xl lg:mx-0"
                             whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <ImageWithPreload 
-                                src="/images/adfa-new/Cecilia-R.-Alagon.jpg" 
-                                alt="Director" 
-                                className="h-full w-full"
-                            />
+                            <ImageWithPreload src="/images/adfa-new/Cecilia-R.-Alagon.jpg" alt="Director" className="h-full w-full" />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#7f1414]/20 to-transparent" />
                         </motion.div>
 
                         {/* Director's Message */}
-                        <motion.div 
-                            className="flex flex-1 flex-col gap-4 rounded-xl bg-[#7f1414] p-12 text-white border-2 border-[#7f1414] transition-colors duration-200 hover:border-[#a71d1d]"
+                        <motion.div
+                            className="flex flex-1 flex-col gap-4 rounded-xl border-2 border-[#7f1414] bg-[#7f1414] p-12 text-white transition-colors duration-200 hover:border-[#a71d1d]"
                             whileHover={{ scale: shouldReduceMotion ? 1 : 1.01 }}
                             transition={{ duration: 0.2 }}
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#a83232]/80">
-                                <ImageWithPreload 
-                                    src="/images/quote.png" 
-                                    alt="Quote Icon" 
-                                    className="h-4 w-4 object-contain"
-                                />
+                                <ImageWithPreload src="/images/quote.png" alt="Quote Icon" className="h-4 w-4 object-contain" />
                             </div>
 
-                            <div className="max-h-[120px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/20">
+                            <div className="scrollbar-thin scrollbar-thumb-white/20 max-h-[120px] overflow-y-auto pr-2">
                                 <p className="text-left leading-relaxed">
                                     Welcome to PUP San Juan! As the Campus Director, I am proud to see our institution thrive through innovation,
                                     collaboration, and excellence. We continue to build a community that uplifts each learner and shapes the future of
                                     education. Maraming salamat sa inyong suporta!
                                 </p>
                             </div>
-                            
+
                             <div className="mt-auto text-left">
                                 <p className="font-semibold">Dr. Cecilia R. Alagon</p>
                                 <p className="text-sm opacity-90">Campus Director</p>
@@ -716,12 +657,12 @@ export default function Welcome() {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    viewport={{ once: true, margin: "100px" }}
+                    viewport={{ once: true, margin: '100px' }}
                 >
                     <section className="flex h-[50vh] items-center justify-center">
                         <div className="flex w-[80%] max-w-[1200px] flex-col gap-12 rounded-xl border border-[#201e1e31] bg-white p-15 lg:flex-row">
                             {/* Left Column (Text) */}
-                            <motion.div 
+                            <motion.div
                                 className="flex flex-1 flex-col justify-center gap-6"
                                 initial={{ opacity: 0, x: -30 }}
                                 whileInView={{ opacity: 1, x: 0 }}
@@ -751,7 +692,7 @@ export default function Welcome() {
                             </motion.div>
 
                             {/* Right Column (Cards) */}
-                            <motion.div 
+                            <motion.div
                                 className="flex flex-1 flex-col gap-4 md:flex-row"
                                 initial={{ opacity: 0, x: 30 }}
                                 whileInView={{ opacity: 1, x: 0 }}
@@ -760,31 +701,53 @@ export default function Welcome() {
                             >
                                 {[
                                     {
-                                        title: "Academic Programs",
-                                        desc: "Learn more about the process, documents, and evaluation steps.",
+                                        title: 'Academic Programs',
+                                        desc: 'Learn more about the process, documents, and evaluation steps.',
                                         icon: (
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 20l9-5-9-5-9 5 9 5zm0 0V10m0 10v-4" />
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-6 w-6 text-white"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M12 20l9-5-9-5-9 5 9 5zm0 0V10m0 10v-4"
+                                                />
                                             </svg>
-                                        )
+                                        ),
                                     },
                                     {
-                                        title: "More Info",
-                                        desc: "Important details and updates for the accreditation visit.",
+                                        title: 'More Info',
+                                        desc: 'Important details and updates for the accreditation visit.',
                                         icon: (
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-6 w-6 text-white"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z"
+                                                />
                                             </svg>
-                                        )
-                                    }
+                                        ),
+                                    },
                                 ].map((card, index) => (
                                     <motion.a
                                         key={card.title}
                                         href="#"
                                         className="flex flex-1 flex-col items-start gap-10 rounded-xl bg-[#7f1414] p-6 text-white transition-colors duration-200 hover:bg-[#a83232]"
-                                        whileHover={{ 
+                                        whileHover={{
                                             scale: shouldReduceMotion ? 1 : 1.02,
-                                            y: shouldReduceMotion ? 0 : -3
+                                            y: shouldReduceMotion ? 0 : -3,
                                         }}
                                         whileTap={{ scale: shouldReduceMotion ? 1 : 0.98 }}
                                         initial={{ opacity: 0, y: 20 }}
@@ -792,11 +755,11 @@ export default function Welcome() {
                                         transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
                                         viewport={{ once: true }}
                                     >
-                                        <motion.div 
+                                        <motion.div
                                             className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20"
-                                            whileHover={{ 
+                                            whileHover={{
                                                 scale: shouldReduceMotion ? 1 : 1.1,
-                                                rotate: shouldReduceMotion ? 0 : 5 
+                                                rotate: shouldReduceMotion ? 0 : 5,
                                             }}
                                             transition={{ duration: 0.2 }}
                                         >
@@ -819,7 +782,7 @@ export default function Welcome() {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    viewport={{ once: true, margin: "100px" }}
+                    viewport={{ once: true, margin: '100px' }}
                 >
                     <div
                         className="absolute inset-0 bg-cover bg-center opacity-30 grayscale"
@@ -827,47 +790,39 @@ export default function Welcome() {
                     ></div>
                     <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
                     <div className="relative z-10 flex w-[85%] max-w-[1400px] flex-col items-center justify-center gap-16 lg:flex-row">
-                        <motion.div 
+                        <motion.div
                             className="order-2 flex w-full flex-col justify-center text-center lg:order-1 lg:w-[50%] lg:text-left"
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 0.1 }}
                             viewport={{ once: true }}
                         >
-                            <h2 className="mb-4 text-[2.5vw] font-bold text-[#7f1414] lg:text-[2rem]">
-                                Explore Our Campus
-                            </h2>
+                            <h2 className="mb-4 text-[2.5vw] font-bold text-[#7f1414] lg:text-[2rem]">Explore Our Campus</h2>
                             <p className="mb-4 text-[1.15rem] leading-relaxed text-gray-700">
                                 Our strategically located campus is designed to inspire learning and innovation. Tap the map to explore buildings,
                                 facilities, and more.
                             </p>
-                            <p className="mb-8 text-[0.95rem] text-gray-600 italic">
-                                PUP San Juan, Pinaglabanan St., San Juan City
-                            </p>
-                            
+                            <p className="mb-8 text-[0.95rem] text-gray-600 italic">PUP San Juan, Pinaglabanan St., San Juan City</p>
+
                             <motion.div
-                                whileHover={{ scale: shouldReduceMotion ? 1 : 1.05 }}
-                                whileTap={{ scale: shouldReduceMotion ? 1 : 0.95 }}
-                                transition={{ duration: 0.2 }}
+                                whileHover={{ }}
+                                whileTap={{ }}
+                                transition={{ }}
                             >
-                                <ActionButton
-                                    href="https://maps.app.goo.gl/KLfy768XRV4DXY9t7"
-                                    icon={MapPin}
-                                    external
-                                >
+                                <ActionButton href="https://maps.app.goo.gl/KLfy768XRV4DXY9t7" icon={MapPin} external>
                                     View Full Map
                                 </ActionButton>
                             </motion.div>
                         </motion.div>
-                        
-                        <motion.div 
+
+                        <motion.div
                             className="order-1 flex w-full justify-center lg:order-2 lg:w-[50%]"
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 0.2 }}
                             viewport={{ once: true }}
                         >
-                            <motion.div 
+                            <motion.div
                                 className="relative h-[400px] w-full overflow-hidden rounded-2xl"
                                 whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
                                 transition={{ duration: 0.3 }}
