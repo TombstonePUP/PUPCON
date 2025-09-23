@@ -6,6 +6,19 @@ use App\Http\Controllers\Guest\FacultyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use Illuminate\Support\Facades\File;
+
+
+Route::get('/api/carousel-images', function () {
+    $folder = public_path('images/homepage-slides'); 
+    $files = File::files($folder);
+
+    $images = array_map(fn($file) => asset('images/homepage-slides/' . $file->getFilename()), $files);
+
+    return response()->json($images);
+});
+
+
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');

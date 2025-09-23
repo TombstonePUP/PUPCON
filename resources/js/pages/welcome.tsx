@@ -108,7 +108,14 @@ export default function Welcome() {
     const [isPageReady, setIsPageReady] = useState(false);
     const shouldReduceMotion = useReducedMotion();
 
-    const images = useMemo(() => ['/images/homepage-slides/1.png', '/images/homepage-slides/4.jpg', '/images/homepage-slides/6.jpg'], []);
+ const [images, setImages] = useState([]);
+
+useEffect(() => {
+  fetch('/api/carousel-images')
+    .then(res => res.json())
+    .then(setImages);
+}, []);
+
 
     const newsCards = useMemo(
         () => [
@@ -213,7 +220,7 @@ export default function Welcome() {
             <Layout>
                 {/* Hero Section with Animated Carousel */}
                 <motion.div
-                    className="relative h-[85vh] w-full overflow-hidden"
+                    className="relative h-[60vh] w-full overflow-hidden"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: isPageReady ? 1 : 0 }}
                     transition={{ duration: 0.5 }}
