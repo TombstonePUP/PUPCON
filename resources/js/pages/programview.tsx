@@ -5,7 +5,7 @@ import Layout from '@/layouts/landing-layout';
 import type { PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, useRemember } from '@inertiajs/react';
 import { ChevronRight, FlaskConical, GraduationCap, Handshake, Mail, School, Users } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
@@ -97,7 +97,7 @@ const useInView = (threshold = 0.1) => {
                     setInView(true);
                 }
             },
-            { threshold }
+            { threshold },
         );
 
         if (ref.current) {
@@ -118,7 +118,7 @@ export default function Programs({ program }: PerProgramProps) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [facultyLoading, setFacultyLoading] = useState(true);
     const [overviewImageLoading, setOverviewImageLoading] = useState(true);
-    
+
     // Animation refs
     const [overviewRef, overviewInView] = useInView(0.2);
     const [facultyRef, facultyInView] = useInView(0.1);
@@ -191,7 +191,7 @@ export default function Programs({ program }: PerProgramProps) {
 
         if (isLoading) {
             return (
-                <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 w-64">
+                <div className="group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5">
                     <div className="flex flex-col space-y-3">
                         <div className="relative">
                             <div className="aspect-square w-full animate-pulse rounded-xl bg-gray-300" />
@@ -210,14 +210,12 @@ export default function Programs({ program }: PerProgramProps) {
         }
 
         return (
-            <div 
-                className={`group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] w-64 ${
-                    facultyInView 
-                        ? 'translate-y-0 opacity-100' 
-                        : 'translate-y-8 opacity-0'
+            <div
+                className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
+                    facultyInView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
                 }`}
-                style={{ 
-                    transitionDelay: facultyInView ? `2ms` : '0ms' 
+                style={{
+                    transitionDelay: facultyInView ? `2ms` : '0ms',
                 }}
             >
                 <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
@@ -276,7 +274,7 @@ export default function Programs({ program }: PerProgramProps) {
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] px-8 py-10 text-center text-white">
                 <div className="relative z-10">
                     <h2 className="mb-3 text-4xl font-bold tracking-tight">{title}</h2>
-                    <p className="mx-auto max-w-3xl text-lg font-medium leading-relaxed opacity-90">{subtitle}</p>
+                    <p className="mx-auto max-w-3xl text-lg leading-relaxed font-medium opacity-90">{subtitle}</p>
                 </div>
             </div>
         </div>
@@ -307,7 +305,7 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
 
                     {/* Image Overlay */}
-                    <div className="absolute right-0 top-0 h-full w-2/3 opacity-20">
+                    <div className="absolute top-0 right-0 h-full w-2/3 opacity-20">
                         <div className="relative h-full w-full">
                             <img
                                 src="/images/homepage-slides/1.jpg"
@@ -315,7 +313,7 @@ export default function Programs({ program }: PerProgramProps) {
                                 className="h-full w-full object-cover"
                                 style={{
                                     maskImage: 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
-                                    WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)'
+                                    WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
                                 }}
                                 onError={(e) => {
                                     const target = e.target as HTMLImageElement;
@@ -327,9 +325,9 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
 
                     <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center justify-between gap-8 px-8 py-16 md:flex-row">
-                        <div className="flex flex-col items-center text-white md:items-start animate-fade-in-up">
+                        <div className="animate-fade-in-up flex flex-col items-center text-white md:items-start">
                             <div className="mb-4">
-                                <span className="inline-block rounded-full bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm border border-white/30">
+                                <span className="inline-block rounded-full border border-white/30 bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
                                     Bachelor of Science
                                 </span>
                             </div>
@@ -357,7 +355,7 @@ export default function Programs({ program }: PerProgramProps) {
                                                 <button
                                                     key={lvl}
                                                     onClick={() => handleLevelChange(lvl)}
-                                                    className={`text-white flex-1 px-3 py-3 text-sm transition-all duration-200 hover:bg-[#7f1414]/30 border-r border-white/20 last:border-r-0 ${
+                                                    className={`flex-1 border-r border-white/20 px-3 py-3 text-sm text-white transition-all duration-200 last:border-r-0 hover:bg-[#7f1414]/30 ${
                                                         level === lvl ? 'bg-[#7f1414]/20 font-semibold' : ''
                                                     }`}
                                                 >
@@ -371,14 +369,14 @@ export default function Programs({ program }: PerProgramProps) {
                         </div>
 
                         {/* Enhanced Campus Facts */}
-                        <div className="flex flex-col gap-4 text-white/90 animate-fade-in-left">
+                        <div className="animate-fade-in-left flex flex-col gap-4 text-white/90">
                             {campusFacts.map((fact, i) => (
                                 <div
                                     key={i}
-                                    className="flex items-center gap-4 rounded-xl bg-white/10 px-6 py-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 border border-white/20 hover:border-white/40"
+                                    className="flex items-center gap-4 rounded-xl border border-white/20 bg-white/10 px-6 py-4 backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20"
                                     style={{ animationDelay: `${i * 200}ms` }}
                                 >
-                                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 border border-white/30">
+                                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/20">
                                         {fact.icon}
                                     </div>
                                     {loading ? (
@@ -397,7 +395,7 @@ export default function Programs({ program }: PerProgramProps) {
 
                 <div className="flex flex-col items-center gap-20">
                     {/* --- Overview --- */}
-                    <div 
+                    <div
                         ref={overviewRef}
                         className={`mt-16 flex w-[85%] max-w-7xl justify-between gap-8 rounded-2xl transition-all duration-700 ${
                             overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
@@ -437,9 +435,7 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Faculty Section --- */}
                     <div ref={facultyRef} className="w-[85%] max-w-7xl" id="faculty">
-                        <div className={`transition-all duration-300 ${
-                            facultyInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                        }`}>
+                        <div className={`transition-all duration-300 ${facultyInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader title="Our Faculty" subtitle="Meet our dedicated educators who shape the future of technology" />
                         </div>
 
@@ -450,7 +446,12 @@ export default function Programs({ program }: PerProgramProps) {
                                     <FacultyCard key={faculty.id} faculty={faculty} isLoading={facultyLoading} index={index + 1} />
                                 ))}
                                 {Faculty.partTime.map((faculty, index) => (
-                                    <FacultyCard key={faculty.id} faculty={faculty} isLoading={facultyLoading} index={index + Faculty.regular.length + 1} />
+                                    <FacultyCard
+                                        key={faculty.id}
+                                        faculty={faculty}
+                                        isLoading={facultyLoading}
+                                        index={index + Faculty.regular.length + 1}
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -458,9 +459,7 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Objectives --- */}
                     <div ref={objectivesRef} className="w-[85%] max-w-7xl" id="goals">
-                        <div className={`transition-all duration-200 ${
-                            objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                        }`}>
+                        <div className={`transition-all duration-200 ${objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader title="Program Objectives" subtitle="Our commitment to excellence through strategic goals and outcomes" />
                         </div>
 
@@ -471,8 +470,8 @@ export default function Programs({ program }: PerProgramProps) {
                                     className={`group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-200 hover:scale-[1.02] hover:border-[#7f1414] ${
                                         objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                                     }`}
-                                    style={{ 
-                                        transitionDelay: objectivesInView ? `3ms` : '0ms' 
+                                    style={{
+                                        transitionDelay: objectivesInView ? `3ms` : '0ms',
                                     }}
                                 >
                                     <div className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 font-bold text-gray-400 transition-all duration-300 group-hover:bg-[#7f1414] group-hover:text-white">
@@ -498,9 +497,7 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Gallery --- */}
                     <div ref={galleryRef} className="w-[85%] max-w-7xl" id="gallery">
-                        <div className={`transition-all duration-700 ${
-                            galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                        }`}>
+                        <div className={`transition-all duration-700 ${galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader title="Gallery of Excellence" subtitle="Showcasing the moments that define our passion and commitment" />
                             <ImageRow
                                 height="h-96"
@@ -518,9 +515,7 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Areas Under Survey --- */}
                     <div ref={areasRef} className="w-[85%] max-w-7xl" id="areas">
-                        <div className={`transition-all duration-700 ${
-                            areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                        }`}>
+                        <div className={`transition-all duration-700 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader
                                 title="Areas Under Survey"
                                 subtitle="ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES"
@@ -528,24 +523,31 @@ export default function Programs({ program }: PerProgramProps) {
 
                             <div className="flex flex-wrap justify-center gap-8 py-6">
                                 {program?.areas?.length ? (
-                                    program.areas.map((area, index) => (
-                                        <div
-                                            key={area.area_id}
-                                            className={`transition-all duration-500 ${
-                                                areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                                            }`}
-                                            style={{ 
-                                                transitionDelay: areasInView ? `${index * 100}ms` : '0ms' 
-                                            }}
-                                        >
-                                            <AreaCard
-                                                imageSrc={area.image_path || '/images/placeholder.png'}
-                                                heading={area.area_name}
-                                                circleLetter={area.area_numeral}
-                                                href={route('programs.areas.show', [program.program_link, area.area_id])}
-                                            />
-                                        </div>
-                                    ))
+                                    program.areas
+                                        .slice()
+                                        .sort((a, b) => {
+                                            const aNum = Number(a.area_number) || 0;
+                                            const bNum = Number(b.area_number) || 0;
+                                            return aNum - bNum;
+                                        })
+                                        .map((area, index) => (
+                                            <div
+                                                key={area.area_id}
+                                                className={`transition-all duration-500 ${
+                                                    areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                                }`}
+                                                style={{
+                                                    transitionDelay: areasInView ? `${index * 120}ms` : '0ms',
+                                                }}
+                                            >
+                                                <AreaCard
+                                                    imageSrc={area.image_path || '/images/placeholder.png'}
+                                                    heading={area.area_name}
+                                                    circleLetter={area.area_numeral}
+                                                    href={route('programs.areas.show', [program.program_link, area.area_id])}
+                                                />
+                                            </div>
+                                        ))
                                 ) : (
                                     <p className="text-center text-lg text-gray-500">No areas under survey.</p>
                                 )}
@@ -553,7 +555,6 @@ export default function Programs({ program }: PerProgramProps) {
                         </div>
                     </div>
                 </div>
-
             </Layout>
         </>
     );

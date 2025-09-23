@@ -5,6 +5,7 @@ import { DocumentViewer } from '@/components/ui/document-viewer';
 import Layout from '@/layouts/landing-layout';
 import type { Area, ParameterOutlineCategory, PerProgram } from '@/types';
 import { Head } from '@inertiajs/react';
+import { ImageOff } from 'lucide-react';
 import { useState } from 'react';
 
 interface AreaProps {
@@ -65,11 +66,14 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
 
                         <h1 className="text-[1.7vw] leading-[1.7vw] font-bold text-white">{area.area_name}</h1>
                     </div>
-                    <img
-                        className="w-[45%] rounded-tl-[1vw] rounded-tr-[1vw] rounded-br-[1vw] object-cover"
-                        src="/images/placeholder.png"
-                        alt="placeholder"
-                    />
+                    {area.area_image_path ? (
+                        <img className="w-[45%] rounded-xl object-cover" src={area.area_image_path} alt={area.area_name} />
+                    ) : (
+                        <div className="flex w-[45%] flex-col items-center justify-center gap-3 rounded-xl bg-gray-100 p-6 text-gray-300">
+                            <ImageOff className="h-10 w-10 text-gray-300" aria-hidden="true" />
+                            <p className="text-lg font-semibold">No banner available</p>
+                        </div>
+                    )}
                 </div>
                 <div className="flex justify-center">
                     <p className="w-[68%] rounded-[1vw] border border-[#7f1414]/25 bg-white px-[3vw] py-[1.5vw] text-justify indent-[2vw] transition duration-300 hover:border-[#7f1414]">

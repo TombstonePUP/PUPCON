@@ -33,7 +33,7 @@ export function AreaCard({
       ) : (
         <div
           className={clsx(
-            'group relative w-57 h-80 rounded-xl border border-[#7f1414]/30 bg-white shadow-sm',
+            'group relative w-57 h-80 rounded-xl border border-[#7f1414]/30 bg-white',
             'overflow-hidden transition-transform duration-300 ease-out hover:scale-[1.02] hover:border-[#7f1414]',
             className
           )}
