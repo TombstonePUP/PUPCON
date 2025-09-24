@@ -79,8 +79,8 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
 
     const assignUserRole = (e: React.FormEvent) => {
         e.preventDefault();
-        setAssignRoleData('assigned_programs', Array.from(new Set(assignRoleData.assigned_programs || [])));
-        setAssignRoleData('assigned_areas', Array.from(new Set(assignRoleData.assigned_areas || [])));
+        /* setAssignRoleData('assigned_programs', Array.from(new Set(assignRoleData.assigned_programs || [])));
+        setAssignRoleData('assigned_areas', Array.from(new Set(assignRoleData.assigned_areas || []))); */
         patchAssignRole(route("users.update.roles"), {
             onSuccess: () => {
                 resetAssignRole();
@@ -114,36 +114,36 @@ export function UserTableActions({ user, programRoles, roles }: UserActionsProps
         const isChecked = e.target.checked;
         if (isChecked) {
             // Add program
-            setAssignRoleData("assigned_programs", [...assignRoleData.assigned_programs, program.program_id]);
+            setAssignRoleData('assigned_programs', [...assignRoleData.assigned_programs, program.program_id]);
         } else {
             // Remove program
             setAssignRoleData(
-                "assigned_programs",
-                assignRoleData.assigned_programs.filter(id => id !== program.program_id)
+                'assigned_programs',
+                assignRoleData.assigned_programs.filter((id) => id !== program.program_id),
             );
             // Remove areas under this program
             setAssignRoleData(
-                "assigned_areas",
+                'assigned_areas',
                 assignRoleData.assigned_areas.filter(
-                    areaId => !program.areas.some(a => a.area_id === areaId)
-                )
+                    areaId => !program.areas.some((a) => a.area_id === areaId)),
             );
         }
-    }
+    };
 
     const onChangeArea = (area: AssignableAreas, e) => {
         const isChecked = e.target.checked;
         if (isChecked) {
             // Add area
-            setAssignRoleData("assigned_areas", [...assignRoleData.assigned_areas, area.area_id]);
+            setAssignRoleData('assigned_areas', [...assignRoleData.assigned_areas, area.area_id]);
         } else {
             // Remove area
             setAssignRoleData(
-                "assigned_areas",
-                assignRoleData.assigned_areas.filter(id => id !== area.area_id)
+                'assigned_areas',
+                assignRoleData.assigned_areas.filter((id) => id !== area.area_id),
             );
         }
-    }
+    };
+
     return (
         <>
             <DropdownMenu>

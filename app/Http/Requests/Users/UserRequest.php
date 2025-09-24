@@ -49,13 +49,15 @@ class UserRequest extends FormRequest
             'assigned_role' => ['required', 'integer', 'exists:roles,role_id'],
             'assigned_areas' => [
                 Rule::requiredIf(fn () => in_array($this->assigned_role, [3, 4])),
-                'array'
+                'array',
+                'min:1',
             ],
             'assigned_areas.*' => ['integer', 'exists:areas,area_id'],
 
             'assigned_programs' => [
                 Rule::requiredIf(fn () => in_array($this->assigned_role, [3, 4])),
-                'array'
+                'array',
+                'min:1',
             ],
             'assigned_programs.*' => ['integer', 'exists:programs,program_id'],
         ];
@@ -80,11 +82,15 @@ class UserRequest extends FormRequest
             // Areas
             'assigned_areas.required' => 'At least one area must be assigned',
             'assigned_areas.array' => 'Areas must be provided as an array',
+            'assigned_areas.min' => 'At least one program must be assigned',
+            'assigned_areas.*.integer' => 'Each area must be a valid integer',
             'assigned_areas.*.exists' => 'One or more of the selected areas do not exist',
 
             // Programs
             'assigned_programs.required' => 'At least one program must be assigned',
             'assigned_programs.array' => 'Programs must be provided as an array',
+            'assigned_programs.min' => 'At least one program must be assigned',
+            'assigned_programs.*.integer' => 'Each area must be a valid integer',
             'assigned_programs.*.exists' => 'One or more of the selected programs do not exist',
         ];
     }
