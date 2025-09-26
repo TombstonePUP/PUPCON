@@ -5,6 +5,10 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, Calendar, GraduationCap, MapPin, Play } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+interface LandingProps {
+    carouselImages: string[];
+}
+
 // Simple Image Component with prefetching
 const ImageWithPreload = React.memo(({ src, alt, className, priority = false, ...props }) => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -102,20 +106,13 @@ const SimpleCarousel = ({ images }) => {
     );
 };
 
-export default function Welcome() {
+export default function Welcome({ carouselImages }: LandingProps) {
     const [showModal, setShowModal] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isPageReady, setIsPageReady] = useState(false);
     const shouldReduceMotion = useReducedMotion();
 
- const [images, setImages] = useState([]);
-
-useEffect(() => {
-  fetch('/api/carousel-images')
-    .then(res => res.json())
-    .then(setImages);
-}, []);
-
+    const images = carouselImages;
 
     const newsCards = useMemo(
         () => [
@@ -811,11 +808,7 @@ useEffect(() => {
                             </p>
                             <p className="mb-8 text-[0.95rem] text-gray-600 italic">PUP San Juan, Pinaglabanan St., San Juan City</p>
 
-                            <motion.div
-                                whileHover={{ }}
-                                whileTap={{ }}
-                                transition={{ }}
-                            >
+                            <motion.div whileHover={{}} whileTap={{}} transition={{}}>
                                 <ActionButton href="https://maps.app.goo.gl/KLfy768XRV4DXY9t7" icon={MapPin} external>
                                     View Full Map
                                 </ActionButton>

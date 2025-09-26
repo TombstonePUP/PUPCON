@@ -3,27 +3,11 @@
 use App\Http\Controllers\Guest\AreasController;
 use App\Http\Controllers\Guest\ProgramsController;
 use App\Http\Controllers\Guest\FacultyController;
+use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-use Illuminate\Support\Facades\File;
-
-
-Route::get('/api/carousel-images', function () {
-    $folder = public_path('images/homepage-slides'); 
-    $files = File::files($folder);
-
-    $images = array_map(fn($file) => asset('images/homepage-slides/' . $file->getFilename()), $files);
-
-    return response()->json($images);
-});
-
-
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
-
-
+Route::get('/', LandingController::class)->name('home');
 
 Route::get('about', function () {
     return Inertia::render('about/about');
@@ -77,3 +61,4 @@ Route::get('/programs/{program_name}/{area_id}', AreasController::class)
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/shared.php';
+require __DIR__ . '/accreditor.php';
