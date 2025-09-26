@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Notifications\UserVerification;
+use Carbon\Carbon;
 
 class EmailVerificationPromptController extends Controller
 {
@@ -15,8 +17,26 @@ class EmailVerificationPromptController extends Controller
      */
     public function __invoke(Request $request): Response|RedirectResponse
     {
-        return $request->user()->hasVerifiedEmail()
-                    ? redirect()->intended(route('dashboard', absolute: false))
-                    : Inertia::render('auth/verify-email', ['status' => $request->session()->get('status')]);
+        $user = $request->user();
+
+        if ($user && $user->hasVerifiedEmail()) {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+
+        // If no OTP yet or OTP expired, generate a new one
+        if (!$user->otp || $user->otp_expires_at < now()) {
+            $otp = rand(100000, 999999);
+
+            $user->otp = $otp;
+            $user->otp_expires_at = Carbon::now()->addMinutes(1);
+            $user->save();
+
+            // Send OTP email
+            $user->notify(new UserVerification($user->email, $otp));
+        }
+
+        return Inertia::render('auth/verify-email', [
+            'status' => $request->session()->get('status')
+        ]);
     }
 }

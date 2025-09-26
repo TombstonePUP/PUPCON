@@ -14,7 +14,7 @@ class UserVerification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(public string $email, public string $otp)
     {
         //
     }
@@ -34,7 +34,11 @@ class UserVerification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)->markdown('mail.user-verification');
+        return (new MailMessage)->
+            markdown('mail.user-verification', [
+                'email' => $this->email,
+                'otp' => $this->otp,
+            ]);
     }
 
     /**

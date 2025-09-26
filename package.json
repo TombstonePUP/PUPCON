@@ -59,6 +59,7 @@
         "concurrently": "^9.0.1",
         "framer-motion": "^12.16.0",
         "globals": "^15.14.0",
+        "input-otp": "^1.4.2",
         "laravel-vite-plugin": "^1.0",
         "lucide-react": "^0.475.0",
         "next-themes": "^0.4.6",

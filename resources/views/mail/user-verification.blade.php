@@ -1,12 +1,12 @@
 <x-mail::message>
-# Introduction
+# OTP Verification
+Please use the following One-Time Password (OTP) to verify your account:
 
-The body of your message.
+**OTP:** {{ $otp }}
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+This OTP is valid for the next 60 seconds. If you did not request this, please ignore this email.
 
-Thanks,<br>
+Best Regards,<br>
+PUPCON Administrator
 {{ config('app.name') }}
 </x-mail::message>

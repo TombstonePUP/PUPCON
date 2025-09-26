@@ -73,7 +73,8 @@ class UserController extends Controller
         $user->last_name = $validated['last_name'];
         $user->email = $validated['email'];
         $user->role_id = $validated['assigned_role'];
-        $user->password = bcrypt($password); // Set a default password or generate one
+        $user->password = bcrypt($password);
+        $user->created_at = now();
         $user->save();
 
         if ($validated['assigned_programs'] && $validated['assigned_areas']) {
@@ -114,6 +115,7 @@ class UserController extends Controller
 
         if ($user->role_id != $validated['assigned_role']) {
             $user->role_id = $validated['assigned_role'];
+            $user->updated_at = now();
         }
         $user->save();
 
@@ -136,6 +138,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($request->user_id);
         $user->is_active = false;
+        $user->updated_at = now();
         $user->save();
 
         return redirect()->back()
@@ -151,6 +154,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($request->user_id);
         $user->is_active = true;
+        $user->updated_at = now();
         $user->save();
         return redirect()->back()
             ->with('type', 'success')

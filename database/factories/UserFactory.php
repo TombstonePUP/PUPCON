@@ -30,6 +30,8 @@ class UserFactory extends Factory
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'is_active' => true,
+            'otp' => null,
+            'otp_expires_at' => null,
             'email_verified_at' => now(),
             'role_id' => $roles?->role_id,
             'password' => static::$password ??= Hash::make('password'),
@@ -44,6 +46,7 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+            'otp_created_at' => null,
         ]);
     }
 }
