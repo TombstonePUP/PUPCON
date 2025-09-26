@@ -51,7 +51,6 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
     const { flash } = usePage().props;
 
     useEffect(() => {
-        console.log(flash);
         if (flash?.type === 'success') {
             toast.success(flash.title, {
                 description: flash.message,

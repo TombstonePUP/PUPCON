@@ -1,7 +1,7 @@
 // Components
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler } from 'react';
 
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -9,31 +9,44 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/comp
 import AuthLayout from '@/layouts/auth-layout';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 
-export default function VerifyEmail({ status }: { status?: string }) {
-    const [otp, setOtp] = useState('');
-    const { post, processing } = useForm({});
+export default function VerifyEmail() {
+    const { flash } = usePage().props;
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+        reset,
+    } = useForm({
+        otp: '',
+    });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('verification.verify', [otp]));
-
+        post(route('verification.otp'), {
+            onSuccess: () => reset(),
+        });
     };
 
     return (
         <AuthLayout title="Verify email" description="Please enter the 6-digit code we sent to your email.">
             <Head title="Email verification" />
-            {status && (
-                <div className="mb-4 text-center text-sm font-small text-green-700">
-                    {status}
+
+            {flash && (
+                <div
+                    className={`mb-4 rounded-md p-4 text-center text-sm font-medium text-green-700`}>
+                    {flash?.message}
                 </div>
             )}
+
             <form onSubmit={submit} className="space-y-6 text-center">
                 {/* OTP Input */}
                 <InputOTP
                     maxLength={6}
-                    value={otp}
-                    onChange={(value) => setOtp(value)}
-                    className="mx-auto mb-4 w-full justify-center gap-3 sm:w-80"
+                    value={data.otp}
+                    onChange={(value) => setData('otp', value)}
+                    className="mx-auto mb-2 w-full justify-center gap-3 sm:w-80"
                     pattern={REGEXP_ONLY_DIGITS}
                 >
                     <InputOTPGroup>
@@ -52,8 +65,17 @@ export default function VerifyEmail({ status }: { status?: string }) {
                     </InputOTPGroup>
                 </InputOTP>
 
+                {/* Validation error */}
+                {errors.otp && (
+                    <div className="text-sm text-red-600">{errors.otp}</div>
+                )}
+
                 {/* Submit button */}
-                <Button type="submit" disabled={processing} className="mx-auto flex w-full max-w-xs items-center justify-center gap-2">
+                <Button
+                    type="submit"
+                    disabled={processing}
+                    className="mx-auto flex w-full max-w-xs items-center justify-center gap-2"
+                >
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     Verify
                 </Button>
@@ -77,3 +99,4 @@ export default function VerifyEmail({ status }: { status?: string }) {
         </AuthLayout>
     );
 }
+

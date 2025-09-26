@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Notifications\UserVerification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class EmailVerificationPromptController extends Controller
 {
@@ -27,16 +28,14 @@ class EmailVerificationPromptController extends Controller
         if (!$user->otp || $user->otp_expires_at < now()) {
             $otp = rand(100000, 999999);
 
-            $user->otp = $otp;
-            $user->otp_expires_at = Carbon::now()->addMinutes(1);
+            $user->otp = Hash::make($otp);
+            $user->otp_expires_at = now()->addMinutes(1);
             $user->save();
 
             // Send OTP email
             $user->notify(new UserVerification($user->email, $otp));
         }
 
-        return Inertia::render('auth/verify-email', [
-            'status' => $request->session()->get('status')
-        ]);
+        return Inertia::render('auth/verify-email');
     }
 }
