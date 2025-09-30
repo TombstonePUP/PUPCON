@@ -56,6 +56,11 @@ Route::controller(ProgramsController::class)->prefix('programs')->group(function
 Route::get('/programs/{program_name}/{area_id}', AreasController::class)
     ->name('programs.areas.show');
 
+Route::get('test/ui-testing', function () {
+    return Inertia::render('test/ui-testing');
+})->name('ui-testing');
+
+
 
 
 require __DIR__ . '/settings.php';
