@@ -71,16 +71,18 @@ class Programs extends Model
     }
 
     /**
-     * @return HasMany<UserProgramRoles,Programs>
+     * @return HasMany<Faculty,Programs>
      */
-    public function UserProgramRoles(): HasMany
-    {
-        return $this->hasMany(UserProgramRoles::class, 'program_id', 'program_id');
-    }
-
     public function Faculties(): HasMany
     {
         return $this->hasMany(Faculty::class, 'program_id', 'program_id');
     }
 
+    /**
+     * @return HasMany<ProgramGallery,Programs>
+     */
+    public function ProgramGallery(): HasMany
+    {
+        return $this->hasMany(ProgramGallery::class, 'program_id', 'program_id');
+    }
 }

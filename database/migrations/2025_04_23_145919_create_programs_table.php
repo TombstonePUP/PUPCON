@@ -28,6 +28,13 @@ return new class extends Migration
             $table->string('color')->nullable();
         });
 
+        Schema::create('program_gallery', function (Blueprint $table) {
+            $table->id(column: 'program_gallery_id')->autoIncrement()->primary();
+            $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('image_name');
+            $table->text('image_path');
+        });
+
         Schema::create('program_objectives', function (Blueprint $table) {
             $table->id(column: 'program_objective_id')->autoIncrement()->primary();
             $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
@@ -41,6 +48,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('programs');
+        Schema::dropIfExists('program_gallery');
         Schema::dropIfExists('program_objectives');
     }
 };

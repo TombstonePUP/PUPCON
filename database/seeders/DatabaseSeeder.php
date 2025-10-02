@@ -15,6 +15,7 @@ use App\Models\FileStatus;
 use App\Models\LocalTaskForce;
 use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
+use App\Models\ProgramGallery;
 use App\Models\ProgramObjectives;
 use App\Models\Programs;
 use App\Models\Roles;
@@ -70,6 +71,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'keithlee@example.com',
                 'role_id' => 3, // Chairman
                 'password' => bcrypt('password@456'),
+                'must_update_password' => true,
             ],
             [
                 'user_id' => 11111,
@@ -132,6 +134,7 @@ class DatabaseSeeder extends Seeder
         foreach ($programs as $attributes) {
             Programs::factory()->create($attributes);
         }
+        ProgramGallery::factory(10)->create();
         $areas = [
             [
                 'area_id' => 1,
