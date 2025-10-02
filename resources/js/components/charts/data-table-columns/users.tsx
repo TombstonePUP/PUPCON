@@ -17,10 +17,13 @@ const programColors: Record<string, string> = {
 interface RoleProps {
     programRoles: AssignablePrograms[];
     roles: AssignableRoles[];
+    onEdit: (user: UserRecords) => void;
+    onDisable: (user: UserRecords) => void;
+    onEnable: (user: UserRecords) => void;
 }
 
 // export const columns: ColumnDef<UserRecords>[] = [
-export function getUserColumns({programRoles, roles}: RoleProps): ColumnDef<UserRecords>[] {
+export function getUserColumns({programRoles, roles, onEdit, onDisable, onEnable}: RoleProps): ColumnDef<UserRecords>[] {
     return [
         {
             accessorKey: "first_name",
@@ -132,7 +135,13 @@ export function getUserColumns({programRoles, roles}: RoleProps): ColumnDef<User
         },
         {
             id: "actions",
-            cell: ({ row }) => <UserTableActions user={row.original} programRoles={programRoles} roles={roles} />
+            cell: ({ row }) =>
+                <UserTableActions
+                    user={row.original}
+                    onEdit={onEdit}
+                    onDisable={onDisable}
+                    onEnable={onEnable}
+                />
         },
     ]
 }
