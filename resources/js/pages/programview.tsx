@@ -2,88 +2,14 @@ import PageHeader from '@/components/guest-page-header';
 import ImageRow from '@/components/imagerow';
 import { AreaCard } from '@/components/ui/area-card';
 import Layout from '@/layouts/landing-layout';
-import type { PerProgramUnderSurvey } from '@/types';
+import { PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, useRemember } from '@inertiajs/react';
-import { ChevronRight, FlaskConical, GraduationCap, Handshake, Mail, School, Users } from 'lucide-react';
+import { ChevronRight, FlaskConical, GraduationCap, Handshake, School, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
 }
-
-// CHarles na bahala sa db
-const Faculty = {
-    // --- Program Head ---
-    programHead: {
-        id: 1,
-        name: 'Maria Carina Corpuz',
-        photo: '/images/adfa-new/Maria-Carina-Corpuz.jpg',
-        position: 'Program Head',
-        email: 'mariacarina.corpuz@university.edu',
-    },
-    // --- Regular Faculty ---
-    regular: [
-        {
-            id: 2,
-            name: 'Alfred Pagalilawan',
-            photo: '/images/adfa-new/Alfred-Pagalilawan.jpg',
-            position: 'Associate Professor',
-            email: 'alfred.pagalilawan@university.edu',
-        },
-        {
-            id: 3,
-            name: 'Dianne Marie Villas',
-            photo: '/images/adfa-new/Dianne-Marie-Villas.jpg',
-            position: 'Assistant Professor',
-            email: 'diannemarie.villas@university.edu',
-        },
-        {
-            id: 4,
-            name: 'Martino Miguel Salcedo',
-            photo: '/images/adfa-new/Martino-Miguel-Salcedo.jpg',
-            position: 'Associate Professor',
-            email: 'martino.salcedo@university.edu',
-        },
-        {
-            id: 5,
-            name: 'Reynaldo Suarez',
-            photo: '/images/adfa-new/Reynaldo-Suarez.jpg',
-            position: 'Professor',
-            email: 'reynaldo.suarez@university.edu',
-        },
-    ],
-    // --- Part-Time Faculty ---
-    partTime: [
-        {
-            id: 6,
-            name: 'Joebert Silao',
-            photo: '/images/adfa-new/Joebert-Silao.jpg',
-            position: 'Part-time Instructor',
-            email: 'joebert.silao@university.edu',
-        },
-        {
-            id: 7,
-            name: 'Rizza Valdez Devera',
-            photo: '/images/adfa-new/Rizza-Valdez-Devera.jpg',
-            position: 'Part-time Lecturer',
-            email: 'rizza.devera@university.edu',
-        },
-        {
-            id: 8,
-            name: 'Samantha Karen Morano',
-            photo: '/images/adfa-new/Samantha-Karen-Morano.jpg',
-            position: 'Part-time Instructor',
-            email: 'samanthakaren.morano@university.edu',
-        },
-        {
-            id: 9,
-            name: 'Roehl Lumbao',
-            photo: '/images/adfa-new/Roehl-Lumbao.jpg',
-            position: 'Part-time Instructor',
-            email: 'roehl.lumbao@university.edu',
-        },
-    ],
-};
 
 // Animation hook for scroll-triggered animations
 const useInView = (threshold = 0.1) => {
@@ -100,9 +26,7 @@ const useInView = (threshold = 0.1) => {
             { threshold },
         );
 
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
+        if (ref.current) observer.observe(ref.current);
 
         return () => observer.disconnect();
     }, [threshold]);
@@ -114,10 +38,9 @@ export default function Programs({ program }: PerProgramProps) {
     const { props } = usePage<{ program: PerProgramUnderSurvey }>();
     const [level, setLevel] = useRemember(program.accreditation_level, 'level');
     const [loading, setLoading] = useState(false);
-    const [imageLoaded, setImageLoaded] = useState(false);
+    const [overviewImageLoading, setOverviewImageLoading] = useState(true);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [facultyLoading, setFacultyLoading] = useState(true);
-    const [overviewImageLoading, setOverviewImageLoading] = useState(true);
 
     // Animation refs
     const [overviewRef, overviewInView] = useInView(0.2);
@@ -128,19 +51,19 @@ export default function Programs({ program }: PerProgramProps) {
 
     // Simulate faculty loading
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setFacultyLoading(false);
-        }, 2000);
+        const timer = setTimeout(() => setFacultyLoading(false), 2000);
         return () => clearTimeout(timer);
     }, []);
 
-    /** Router progress indicator */
+    // Router progress indicator
     useEffect(() => {
-        const start = router.on('start', () => setLoading(true));
-        const finish = router.on('finish', () => setLoading(false));
+        const start = () => setLoading(true);
+        const finish = () => setLoading(false);
+        router.on('start', start);
+        router.on('finish', finish);
         return () => {
-            start();
-            finish();
+            router.off('start', start);
+            router.off('finish', finish);
         };
     }, []);
 
@@ -166,7 +89,8 @@ export default function Programs({ program }: PerProgramProps) {
         {
             id: 2,
             title: 'Innovation & Research',
-            description: 'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
+            description:
+                'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
             icon: FlaskConical,
             color: 'from-red-900 to-red-900',
         },
@@ -186,18 +110,30 @@ export default function Programs({ program }: PerProgramProps) {
         { icon: <GraduationCap className="h-6 w-6" />, label: 'Years', value: '4' },
     ];
 
-    const FacultyCard = ({ faculty, isLoading, index }: { faculty: any; isLoading: boolean; index: number }) => {
+    const FacultyCard = ({
+        faculty,
+        isLoading,
+        inView,
+        index,
+    }: {
+        faculty: { name: string; photo: string; position: string };
+        isLoading: boolean;
+        inView: boolean;
+        index: number;
+    }) => {
         const [imgLoaded, setImgLoaded] = useState(false);
 
         if (isLoading) {
             return (
-                <div className="group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5">
+                <div
+                    className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
+                        inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-100'
+                    }`}
+                    style={{ transitionDelay: `${index * 50}ms` }}
+                >
                     <div className="flex flex-col space-y-3">
                         <div className="relative">
                             <div className="aspect-square w-full animate-pulse rounded-xl bg-gray-300" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="h-6 w-6 animate-spin rounded-full border-4 border-[#7f1414] border-t-transparent" />
-                            </div>
                         </div>
                         <div className="w-full space-y-2 pt-1">
                             <div className="mx-auto h-5 w-3/4 animate-pulse rounded bg-gray-300" />
@@ -212,25 +148,15 @@ export default function Programs({ program }: PerProgramProps) {
         return (
             <div
                 className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
-                    facultyInView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                    inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-100'
                 }`}
-                style={{
-                    transitionDelay: facultyInView ? `2ms` : '0ms',
-                }}
+                style={{ transitionDelay: `${index * 50}ms` }}
             >
                 <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
-
                 <div className="flex flex-col space-y-3">
                     <div className="relative overflow-hidden">
                         <div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-100 ring-2 ring-[#7f1414]/10 transition-all duration-300 group-hover:ring-[#7f1414]/30">
-                            {!imgLoaded && (
-                                <div className="absolute inset-0 flex animate-pulse items-center justify-center bg-gray-200">
-                                    <div className="flex flex-col items-center space-y-2">
-                                        <div className="h-6 w-6 animate-spin rounded-full border-4 border-[#7f1414] border-t-transparent" />
-                                        {/* <span className="text-xs text-gray-500">Loading...</span> */}
-                                    </div>
-                                </div>
-                            )}
+                            {!imgLoaded && <div className="absolute inset-0 flex animate-pulse items-center justify-center bg-gray-200" />}
                             <img
                                 src={faculty.photo}
                                 alt={faculty.name}
@@ -240,7 +166,9 @@ export default function Programs({ program }: PerProgramProps) {
                                 onLoad={() => setImgLoaded(true)}
                                 onError={(e) => {
                                     const target = e.target as HTMLImageElement;
-                                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(faculty.name)}&background=7f1414&color=fff&size=400&format=svg`;
+                                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                        faculty.name,
+                                    )}&background=7f1414&color=fff&size=400&format=svg`;
                                     setImgLoaded(true);
                                 }}
                             />
@@ -248,19 +176,12 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
 
                     <div className="space-y-2 pt-1 text-center">
-                        <div>
-                            <h3 className="text-base font-bold text-gray-900 transition-colors group-hover:text-[#7f1414]">{faculty.name}</h3>
-                            <p className="mt-1 text-xs font-medium text-gray-600">{faculty.position}</p>
-                        </div>
-
+                        <h3 className="text-base font-bold text-gray-900 transition-colors group-hover:text-[#7f1414]">{faculty.name}</h3>
+                        <p className="mt-1 text-xs font-medium text-gray-600">{faculty.position}</p>
                         <div className="border-t border-gray-100 pt-2">
-                            <a
-                                href={`mailto:${faculty.email}`}
-                                className="inline-flex items-center gap-2 rounded-lg bg-[#7f1414]/5 px-2.5 py-1.5 text-xs text-gray-600 transition-all duration-200 group-hover:scale-105 hover:bg-[#7f1414] hover:text-white"
-                            >
-                                <Mail className="h-3 w-3" />
-                                <span className="max-w-[140px] truncate">{faculty.email}</span>
-                            </a>
+                            <div className="inline-flex items-center gap-2 rounded-lg bg-[#7f1414]/5 px-2.5 py-1.5 text-xs text-gray-600 transition-all duration-200 group-hover:scale-105 hover:bg-[#7f1414] hover:text-white">
+                                <span className="max-w-[140px] truncate">Regular Faculty</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -312,8 +233,10 @@ export default function Programs({ program }: PerProgramProps) {
                                 alt="Program Background"
                                 className="h-full w-full object-cover"
                                 style={{
-                                    maskImage: 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
-                                    WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
+                                    maskImage:
+                                        'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
+                                    WebkitMaskImage:
+                                        'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
                                 }}
                                 onError={(e) => {
                                     const target = e.target as HTMLImageElement;
@@ -328,12 +251,12 @@ export default function Programs({ program }: PerProgramProps) {
                         <div className="animate-fade-in-up flex flex-col items-center text-white md:items-start">
                             <div className="mb-4">
                                 <span className="inline-block rounded-full border border-white/30 bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
-                                    Bachelor of Science
+                                    {program.degree_type}
                                 </span>
                             </div>
                             <h1 className="mb-6 text-5xl font-bold drop-shadow-lg">{program.program_name}</h1>
 
-                            {/* Enhanced Dropdown */}
+                            {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
                                 <label className="mb-3 block text-sm font-medium opacity-90">Accreditation Level</label>
                                 <div className="relative">
@@ -342,7 +265,9 @@ export default function Programs({ program }: PerProgramProps) {
                                         className="flex w-48 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
                                     >
                                         <span className="font-medium">Level {level}</span>
-                                        <ChevronRight className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                                        <ChevronRight
+                                            className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
+                                        />
                                     </div>
 
                                     <div
@@ -368,7 +293,7 @@ export default function Programs({ program }: PerProgramProps) {
                             </div>
                         </div>
 
-                        {/* Enhanced Campus Facts */}
+                        {/* Campus Facts */}
                         <div className="animate-fade-in-left flex flex-col gap-4 text-white/90">
                             {campusFacts.map((fact, i) => (
                                 <div
@@ -434,33 +359,46 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
 
                     {/* --- Faculty Section --- */}
-                    <div ref={facultyRef} className="w-[85%] max-w-7xl" id="faculty">
-                        <div className={`transition-all duration-300 ${facultyInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
-                            <SectionHeader title="Our Faculty" subtitle="Meet our dedicated educators who shape the future of technology" />
-                        </div>
+                    <div className="w-[85%] max-w-7xl" id="faculty">
+                        <SectionHeader
+                            title="Our Faculty"
+                            subtitle="Meet our dedicated educators who shape the future of technology"
+                        />
 
                         <div className="space-y-8">
                             <div className="flex flex-wrap justify-center gap-6">
-                                <FacultyCard faculty={Faculty.programHead} isLoading={facultyLoading} index={0} />
-                                {Faculty.regular.map((faculty, index) => (
-                                    <FacultyCard key={faculty.id} faculty={faculty} isLoading={facultyLoading} index={index + 1} />
-                                ))}
-                                {Faculty.partTime.map((faculty, index) => (
-                                    <FacultyCard
-                                        key={faculty.id}
-                                        faculty={faculty}
-                                        isLoading={facultyLoading}
-                                        index={index + Faculty.regular.length + 1}
-                                    />
-                                ))}
+                                {program.faculties
+                                    ?.filter((f) => f.program_id === program.program_id)
+                                    .map((f, i) => (
+                                        <FacultyCard
+                                            key={f.faculty_id}
+                                            faculty={{
+                                                name: [f.first_name, f.middle_name, f.last_name, f.suffix].filter(Boolean).join(' '),
+                                                photo:
+                                                    f.faculty_image_path ||
+                                                    `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
+                                                position: f.program_coordinator ? 'Program Head' : `${f.faculty_status} Faculty`,
+                                            }}
+                                            isLoading={facultyLoading}
+                                            inView={facultyInView}
+                                            index={i}
+                                        />
+                                    ))}
                             </div>
                         </div>
                     </div>
 
                     {/* --- Objectives --- */}
                     <div ref={objectivesRef} className="w-[85%] max-w-7xl" id="goals">
-                        <div className={`transition-all duration-200 ${objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
-                            <SectionHeader title="Program Objectives" subtitle="Our commitment to excellence through strategic goals and outcomes" />
+                        <div
+                            className={`transition-all duration-200 ${
+                                objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                            }`}
+                        >
+                            <SectionHeader
+                                title="Program Objectives"
+                                subtitle="Our commitment to excellence through strategic goals and outcomes"
+                            />
                         </div>
 
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -471,7 +409,7 @@ export default function Programs({ program }: PerProgramProps) {
                                         objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                                     }`}
                                     style={{
-                                        transitionDelay: objectivesInView ? `3ms` : '0ms',
+                                        transitionDelay: objectivesInView ? `${index * 50}ms` : '0ms',
                                     }}
                                 >
                                     <div className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 font-bold text-gray-400 transition-all duration-300 group-hover:bg-[#7f1414] group-hover:text-white">
@@ -497,8 +435,15 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Gallery --- */}
                     <div ref={galleryRef} className="w-[85%] max-w-7xl" id="gallery">
-                        <div className={`transition-all duration-700 ${galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
-                            <SectionHeader title="Gallery of Excellence" subtitle="Showcasing the moments that define our passion and commitment" />
+                        <div
+                            className={`transition-all duration-700 ${
+                                galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                            }`}
+                        >
+                            <SectionHeader
+                                title="Gallery of Excellence"
+                                subtitle="Showcasing the moments that define our passion and commitment"
+                            />
                             <ImageRow
                                 height="h-96"
                                 images={[
@@ -515,7 +460,11 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Areas Under Survey --- */}
                     <div ref={areasRef} className="w-[85%] max-w-7xl" id="areas">
-                        <div className={`transition-all duration-700 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+                        <div
+                            className={`transition-all duration-700 ${
+                                areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                            }`}
+                        >
                             <SectionHeader
                                 title="Areas Under Survey"
                                 subtitle="ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES"
@@ -525,11 +474,7 @@ export default function Programs({ program }: PerProgramProps) {
                                 {program?.areas?.length ? (
                                     program.areas
                                         .slice()
-                                        .sort((a, b) => {
-                                            const aNum = Number(a.area_number) || 0;
-                                            const bNum = Number(b.area_number) || 0;
-                                            return aNum - bNum;
-                                        })
+                                        .sort((a, b) => (Number(a.area_number) || 0) - (Number(b.area_number) || 0))
                                         .map((area, index) => (
                                             <div
                                                 key={area.area_id}

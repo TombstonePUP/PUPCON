@@ -77,4 +77,10 @@ class Programs extends Model
     {
         return $this->hasMany(UserProgramRoles::class, 'program_id', 'program_id');
     }
+
+    public function Faculties(): HasMany
+    {
+        return $this->hasMany(Faculty::class, 'program_id', 'program_id');
+    }
+
 }

@@ -1,4 +1,3 @@
-import Profile from '@/pages/settings/profile';
 import { LucideIcon } from 'lucide-react';
 
 export interface Auth {
@@ -70,8 +69,11 @@ export interface PerProgramUnderSurvey {
     overview_description: string;
     page_banner_image_name: string;
     page_banner_image_path: string;
+    color?: string;
+
     areas?: ProgramAreas[];
-    [key: string]: unknown; // This allows for additional properties...
+    faculties?: Faculty[];
+    [key: string]: unknown;
 }
 
 export interface ProgramPrivilege {
@@ -154,6 +156,7 @@ export interface PerProgram {
     page_banner_image_name: string;
     page_banner_image_path: string;
     areas?: ProgramAreas[];
+    faculties?: Faculty[];
     [key: string]: unknown;
 }
 
@@ -205,7 +208,7 @@ export interface AreaParameters {
 }
 
 export interface ParameterOutlines {
-    parameter_outline_id:number;
+    parameter_outline_id: number;
     area_parameter_id: number;
     parameter_outline_category_id: number;
     outline_number: string;
@@ -280,15 +283,16 @@ export interface FilesOverview {
 }
 
 export interface Faculty {
-  faculty_id: number;
-  first_name: string;
-  middle_name?: string | null;
-  last_name: string;
-  suffix?: string | null;
-  faculty_status: string;
-  program_id: number;
-  program_coordinator: boolean;
-  faculty_image_name?: string | null;
-  faculty_image_path?: string | null;
+    faculty_id: number;
+    first_name: string;
+    middle_name?: string | null;
+    last_name: string;
+    suffix?: string | null;
+    faculty_status: string;
+    program_id: number;
+    program_coordinator: boolean;
+    faculty_image_name?: string | null;
+    faculty_image_path?: string | null;
 }
+
 

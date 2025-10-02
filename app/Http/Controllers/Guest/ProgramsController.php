@@ -19,7 +19,7 @@ class ProgramsController extends Controller
      */
     public function index()
     {
-        $programs = Programs::select('program_id','degree_type', 'program_name', 'program_description', 'accreditation_level', 'program_image_name', 'program_image_path')
+        $programs = Programs::select('program_id', 'degree_type', 'program_name', 'program_description', 'accreditation_level', 'program_image_name', 'program_image_path')
             ->where('under_survey', true)
             ->get();
 
@@ -36,12 +36,14 @@ class ProgramsController extends Controller
     public function show(string $program_name): Response
     {
         $program = Str::of($program_name)->replace('_', ' ')->title();
-        $program = Programs::select('*')
-            ->where('program_name', $program)
-            ->with('Areas')
+
+        $program = Programs::where('program_name', $program)
+            ->with(['Areas', 'Faculties']) 
             ->firstOrFail();
+
         $program->program_link = $program_name;
 
+        // Format areas (Roman numeral conversion)
         $program->Areas = $program->Areas->map(function ($area) {
             $area->area_numeral = $this->toRoman($area->area_number);
             return $area;
@@ -51,4 +53,5 @@ class ProgramsController extends Controller
             'program' => $program,
         ]);
     }
+
 }

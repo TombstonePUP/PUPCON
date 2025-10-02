@@ -67,7 +67,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                         <h1 className="text-[1.7vw] leading-[1.7vw] font-bold text-white">{area.area_name}</h1>
                     </div>
                     {area.area_image_path ? (
-                        <img className="w-[45%] rounded-xl object-cover" src={area.area_image_path} alt={area.area_name} />
+                        <img className="w-[45%] rounded-xl object-cover" src={area.area_image_path} />
                     ) : (
                         <div className="flex w-[45%] flex-col items-center justify-center gap-3 rounded-xl bg-gray-100 p-6 text-gray-300">
                             <ImageOff className="h-10 w-10 text-gray-300" aria-hidden="true" />
@@ -81,7 +81,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                     </p>
                 </div>
 
-                {/* Document Cards Section */}
+                {/* Forms Section */}
                 <div className="flex justify-center py-[2vw]">
                     <div className="grid w-[68%] grid-cols-1 gap-[2vw] md:grid-cols-3">
                         {/* Self Survey Card */}
