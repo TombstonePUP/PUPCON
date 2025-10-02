@@ -183,6 +183,9 @@ export interface Area {
     area_id: number;
     program_id: number;
     area_name: string;
+    area_description: string;
+    area_image_name: string;
+    area_image_path: string;
     area_number: string;
     area_numeral?: string;
     program?: Program;

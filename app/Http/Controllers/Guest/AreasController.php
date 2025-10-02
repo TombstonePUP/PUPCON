@@ -23,7 +23,6 @@ class AreasController extends Controller
         $program = Programs::where('program_name',$program_name)->firstOrFail();
         $area = Areas::select('area_id', 'area_name', 'area_number', 'area_description', 'area_image_name', 'area_image_path', 'program_id')
             ->where('area_id', $area_id)
-            ->where('program_id', $program->program_id)
             ->with([
                 'AreaParameters.ParameterOutlines.AreaFiles' => function ($query) {
                     $query->whereHas('FileStatus', function ($q) {
