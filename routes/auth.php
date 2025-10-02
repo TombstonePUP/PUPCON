@@ -6,7 +6,7 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\UpdatePasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
         ->name('verification.notice');
 
     Route::post('verify-email', VerifyEmailController::class)
-        // ->middleware(['throttle:6,1'])
+        ->middleware(['throttle:6,1'])
         ->name('verification.otp');
 
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
@@ -50,6 +50,12 @@ Route::middleware('auth')->group(function () {
         ->name('password.confirm');
 
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+
+    Route::middleware('ensure.update.password')->group(function () {
+        Route::get('update-password', [UpdatePasswordController::class, 'show'])
+            ->name('password.create');
+        Route::patch('update-password', [UpdatePasswordController::class, 'update']);
+    });
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

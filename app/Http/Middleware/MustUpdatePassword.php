@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserDefaultPassword
+class MustUpdatePassword
 {
     /**
      * Handle an incoming request.
@@ -15,6 +15,10 @@ class UserDefaultPassword
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        $userPasswordStatus = $request->user()?->must_update_password;
+
+        return $userPasswordStatus
+            ? redirect()->route('password.create')->with('warning', 'You must update your password before proceeding.')
+            : $next($request);
     }
 }
