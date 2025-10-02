@@ -73,6 +73,7 @@ export interface PerProgramUnderSurvey {
 
     areas?: ProgramAreas[];
     faculties?: Faculty[];
+    objectives: Objectives[];
     [key: string]: unknown;
 }
 
@@ -295,4 +296,9 @@ export interface Faculty {
     faculty_image_path?: string | null;
 }
 
+export interface Objectives {
+    program_id: number;
+    objective_description: string | null;
+    program_objective_id: number;
+}
 

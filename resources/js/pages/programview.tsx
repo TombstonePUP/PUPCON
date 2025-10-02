@@ -4,7 +4,7 @@ import { AreaCard } from '@/components/ui/area-card';
 import Layout from '@/layouts/landing-layout';
 import { PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, useRemember } from '@inertiajs/react';
-import { ChevronRight, FlaskConical, GraduationCap, Handshake, School, Users } from 'lucide-react';
+import { ChevronRight, GraduationCap, School, Users } from 'lucide-react';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 
 interface PerProgramProps {
@@ -154,32 +154,6 @@ export default function Programs({ program }: PerProgramProps) {
         }, 200);
     };
 
-    const programObjectives = [
-        {
-            id: 1,
-            title: 'Academic Excellence',
-            description:
-                'To provide high-quality education that meets international standards and prepares students for successful careers in their chosen field.',
-            icon: GraduationCap,
-            color: 'from-red-900 to-red-900',
-        },
-        {
-            id: 2,
-            title: 'Innovation & Research',
-            description: 'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
-            icon: FlaskConical,
-            color: 'from-red-900 to-red-900',
-        },
-        {
-            id: 3,
-            title: 'Industry Partnership',
-            description:
-                'To establish strong partnerships with industry leaders to ensure curriculum relevance and provide practical learning opportunities.',
-            icon: Handshake,
-            color: 'from-red-900 to-red-900',
-        },
-    ];
-
     const campusFacts = [
         { icon: <School className="h-6 w-6" />, label: 'Students', value: '170+' },
         { icon: <Users className="h-6 w-6" />, label: 'Faculty', value: '12+' },
@@ -204,6 +178,12 @@ export default function Programs({ program }: PerProgramProps) {
             <Layout>
                 <PageHeader
                     title=""
+                    quickLinks={[
+                        { label: 'Overview', targetId: 'overview' },
+                        { label: 'Faculty', targetId: 'faculty' },
+                        { label: 'Objectives', targetId: 'goals' },
+                        { label: 'Areas', targetId: 'areas' },
+                    ]}
                     breadcrumbs={[
                         { label: 'Home', href: '/' },
                         { label: 'Programs', href: '/programs' },
@@ -215,7 +195,7 @@ export default function Programs({ program }: PerProgramProps) {
                 <section className="relative w-full overflow-hidden bg-gradient-to-br from-[#7f1414] via-[#9a1a1a] to-[#b52020]">
                     <div className="absolute inset-0">
                         <div
-                            className="absolute inset-0 opacity-10"
+                            className="absolute inset-0 opacity-20"
                             style={{
                                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
                             }}
@@ -223,7 +203,7 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
 
                     {/* Image Overlay */}
-                    <div className="absolute top-0 right-0 h-full w-2/3 opacity-20">
+                    <div className="absolute top-0 right-0 h-full w-2/3 opacity-40">
                         <div className="relative h-full w-full">
                             <img
                                 src="/images/homepage-slides/1.jpg"
@@ -242,7 +222,7 @@ export default function Programs({ program }: PerProgramProps) {
                         </div>
                     </div>
 
-                    <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center justify-between gap-8 px-8 py-16 md:flex-row">
+                    <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center justify-between gap-10 px-8 py-16 md:flex-row">
                         <div className="animate-fade-in-up flex flex-col items-center text-white md:items-start">
                             <div className="mb-4">
                                 <span className="inline-block rounded-full border border-white/30 bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
@@ -293,7 +273,6 @@ export default function Programs({ program }: PerProgramProps) {
                                     key={i}
                                     className="flex items-center gap-4 rounded-xl border border-white/20 bg-white/10 px-6 py-4 backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20"
                                     // style={{ animationDelay: `${i * 200}ms` }}
-
                                 >
                                     <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/20">
                                         {fact.icon}
@@ -312,12 +291,12 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
                 </section>
 
-                <div className="flex flex-col items-center gap-20">
-
+                <div className="flex flex-col items-center gap-40">
                     {/* --- Overview --- */}
                     <div
                         ref={overviewRef}
-                        className={`mt-16 flex w-[85%] max-w-7xl justify-between gap-8 rounded-2xl transition-all duration-700 ${
+                        id="overview"
+                        className={`mt-16 flex w-[85%] max-w-7xl justify-between gap-10 rounded-2xl transition-all duration-700 ${
                             overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                         }`}
                     >
@@ -338,7 +317,6 @@ export default function Programs({ program }: PerProgramProps) {
                                 <div className="absolute inset-0 flex animate-pulse items-center justify-center bg-gray-200">
                                     <div className="flex flex-col items-center space-y-4">
                                         <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#7f1414] border-t-transparent" />
-                                        <span className="text-sm text-gray-500">Loading image...</span>
                                     </div>
                                 </div>
                             )}
@@ -350,6 +328,38 @@ export default function Programs({ program }: PerProgramProps) {
                                 }`}
                                 onLoad={() => setOverviewImageLoading(false)}
                             />
+                        </div>
+                    </div>
+
+                    {/* Objectives Section */}
+                    <div ref={objectivesRef} className="w-[85%] max-w-7xl" id="goals">
+                        <div className={`transition-all duration-200 ${objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+                            <SectionHeader title="Program Objectives" subtitle="Our commitment to excellence through strategic goals and outcomes" />
+                        </div>
+
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {program.objectives?.map((objective, index) => (
+                                <div
+                                    key={objective.program_objective_id}
+                                    className={`group border-black-90 relative flex h-[260px] w-full max-w-3xs flex-col justify-start overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] ${
+                                        objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                    }`}
+                                >
+                                    {/* Objective Header */}
+                                    <div className="relative mb-6">
+                                        <div className="mb-2 inline-block rounded-full bg-gradient-to-r from-[#7f1414] to-[#a11d1d] px-6 py-2 transition-all duration-300">
+                                            <h3 className="text-sm font-bold tracking-wider text-white uppercase">Objective {index + 1}</h3>
+                                        </div>
+                                    </div>
+
+                                    {/* Objective Content */}
+                                    <p className="relative leading-relaxed text-gray-700 transition-all duration-300 group-hover:text-gray-900">
+                                        {objective.objective_description}
+                                    </p>
+
+                                    <div className="absolute bottom-0 left-0 h-1.5 w-full bg-gradient-to-r from-[#7f1414] via-[#a11d1d] to-[#7f1414] transition-all duration-300 group-hover:h-2"></div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
@@ -376,44 +386,6 @@ export default function Programs({ program }: PerProgramProps) {
                                     />
                                 );
                             })}
-                        </div>
-                    </div>
-
-                    {/* --- Objectives --- */}
-                    <div ref={objectivesRef} className="w-[85%] max-w-7xl" id="goals">
-                        <div className={`transition-all duration-200 ${objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
-                            <SectionHeader title="Program Objectives" subtitle="Our commitment to excellence through strategic goals and outcomes" />
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                            {programObjectives.map((objective, index) => (
-                                <div
-                                    key={objective.id}
-                                    className={`group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-200 hover:scale-[1.02] hover:border-[#7f1414] ${
-                                        objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                                    }`}
-                                    // style={{
-                                    //     transitionDelay: objectivesInView ? `${index * 50}ms` : '0ms',
-                                    // }}
-                                >
-                                    <div className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 font-bold text-gray-400 transition-all duration-300 group-hover:bg-[#7f1414] group-hover:text-white">
-                                        {index + 1}
-                                    </div>
-
-                                    <div className="mb-6 flex justify-center">
-                                        <div
-                                            className={`flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${objective.color} text-white transition-all duration-300 group-hover:scale-110`}
-                                        >
-                                            <objective.icon className="h-10 w-10" />
-                                        </div>
-                                    </div>
-
-                                    <div className="text-center">
-                                        <h3 className="mb-4 text-xl font-bold text-gray-900">{objective.title}</h3>
-                                        <p className="leading-relaxed text-gray-600">{objective.description}</p>
-                                    </div>
-                                </div>
-                            ))}
                         </div>
                     </div>
 

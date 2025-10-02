@@ -85,4 +85,10 @@ class Programs extends Model
     {
         return $this->hasMany(ProgramGallery::class, 'program_id', 'program_id');
     }
+
+    public function Objectives()
+{
+    return $this->hasMany(ProgramObjectives::class, 'program_id', 'program_id');
+}
+
 }
