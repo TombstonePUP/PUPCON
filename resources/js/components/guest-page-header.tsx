@@ -91,7 +91,7 @@ export default function PageHeader({ title, breadcrumbs, quickLinks }: PageHeade
                                 onClick={() => scrollToSection(link.targetId)}
                                 className={`relative rounded-md px-3 py-1.5 transition-all duration-300 ease-out ${
                                     activeSection === link.targetId
-                                        ? 'scale-105 font-semibold text-[#7f1414]'
+                                        ? ' text-[#7f1414]'
                                         : 'text-[#7f1414]/60 hover:text-[#7f1414]'
                                 } `}
                             >
