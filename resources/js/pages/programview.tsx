@@ -5,13 +5,12 @@ import Layout from '@/layouts/landing-layout';
 import { PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, useRemember } from '@inertiajs/react';
 import { ChevronRight, FlaskConical, GraduationCap, Handshake, School, Users } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
 }
 
-// Animation hook for scroll-triggered animations
 const useInView = (threshold = 0.1) => {
     const [inView, setInView] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
@@ -21,6 +20,7 @@ const useInView = (threshold = 0.1) => {
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setInView(true);
+                    observer.unobserve(entry.target);
                 }
             },
             { threshold },
@@ -34,6 +34,88 @@ const useInView = (threshold = 0.1) => {
     return [ref, inView] as const;
 };
 
+interface FacultyCardProps {
+    faculty: { name: string; photo: string; position: string };
+    isLoading: boolean;
+    inView: boolean;
+    index: number;
+}
+
+const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isLoading, inView, index }, ref) => {
+    const [imgLoaded, setImgLoaded] = useState(false);
+
+    if (isLoading) {
+        return (
+            <div
+                ref={ref}
+                className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:border-[#7f1414] ${
+                    inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                }`}
+                // style={{ transitionDelay: `${index * 50}ms` }}
+            >
+                <div className="flex flex-col space-y-3">
+                    <div className="relative">
+                        <div className="aspect-square w-full animate-pulse rounded-xl bg-gray-300" />
+                    </div>
+                    <div className="w-full space-y-2 pt-1">
+                        <div className="mx-auto h-5 w-3/4 animate-pulse rounded bg-gray-300" />
+                        <div className="mx-auto h-3 w-1/2 animate-pulse rounded bg-gray-300" />
+                        <div className="mx-auto h-3 w-2/3 animate-pulse rounded bg-gray-300" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div
+            ref={ref}
+            className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
+                inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+            }`}
+            // style={{ transitionDelay: `${index * 50}ms` }}
+        >
+            <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
+
+            <div className="flex flex-col space-y-3">
+                <div className="relative overflow-hidden">
+                    <div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-100 ring-2 ring-[#7f1414]/10 transition-all duration-300 group-hover:ring-[#7f1414]/30">
+                        {!imgLoaded && <div className="absolute inset-0 flex animate-pulse items-center justify-center bg-gray-200" />}
+                        <img
+                            src={faculty.photo}
+                            alt={faculty.name}
+                            className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${
+                                imgLoaded ? 'opacity-100' : 'opacity-0'
+                            }`}
+                            onLoad={() => setImgLoaded(true)}
+                            onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                    faculty.name,
+                                )}&background=7f1414&color=fff&size=400&format=svg`;
+                                setImgLoaded(true);
+                            }}
+                        />
+                    </div>
+                </div>
+
+                <div className="space-y-2 pt-1 text-center">
+                    <h3 className="text-base font-bold text-gray-900 transition-colors group-hover:text-[#7f1414]">{faculty.name}</h3>
+                    <p className="mt-1 text-xs font-medium text-gray-600">{faculty.position}</p>
+
+                    <div className="border-t border-gray-100 pt-2">
+                        <div className="inline-flex items-center gap-2 rounded-lg bg-[#7f1414]/5 px-2.5 py-1.5 text-xs text-gray-600 transition-all duration-200 group-hover:scale-105 hover:bg-[#7f1414] hover:text-white">
+                            <span className="max-w-[140px] truncate">Regular Faculty</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+});
+
+FacultyCard.displayName = 'FacultyCard';
+
 export default function Programs({ program }: PerProgramProps) {
     const { props } = usePage<{ program: PerProgramUnderSurvey }>();
     const [level, setLevel] = useRemember(program.accreditation_level, 'level');
@@ -44,7 +126,6 @@ export default function Programs({ program }: PerProgramProps) {
 
     // Animation refs
     const [overviewRef, overviewInView] = useInView(0.2);
-    const [facultyRef, facultyInView] = useInView(0.1);
     const [objectivesRef, objectivesInView] = useInView(0.1);
     const [galleryRef, galleryInView] = useInView(0.1);
     const [areasRef, areasInView] = useInView(0.1);
@@ -61,10 +142,6 @@ export default function Programs({ program }: PerProgramProps) {
         const finish = () => setLoading(false);
         router.on('start', start);
         router.on('finish', finish);
-        return () => {
-            router.off('start', start);
-            router.off('finish', finish);
-        };
     }, []);
 
     const handleLevelChange = (newLevel: number) => {
@@ -89,8 +166,7 @@ export default function Programs({ program }: PerProgramProps) {
         {
             id: 2,
             title: 'Innovation & Research',
-            description:
-                'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
+            description: 'To foster a culture of innovation and research that contributes to technological advancement and societal development.',
             icon: FlaskConical,
             color: 'from-red-900 to-red-900',
         },
@@ -109,85 +185,6 @@ export default function Programs({ program }: PerProgramProps) {
         { icon: <Users className="h-6 w-6" />, label: 'Faculty', value: '12+' },
         { icon: <GraduationCap className="h-6 w-6" />, label: 'Years', value: '4' },
     ];
-
-    const FacultyCard = ({
-        faculty,
-        isLoading,
-        inView,
-        index,
-    }: {
-        faculty: { name: string; photo: string; position: string };
-        isLoading: boolean;
-        inView: boolean;
-        index: number;
-    }) => {
-        const [imgLoaded, setImgLoaded] = useState(false);
-
-        if (isLoading) {
-            return (
-                <div
-                    className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
-                        inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-100'
-                    }`}
-                    style={{ transitionDelay: `${index * 50}ms` }}
-                >
-                    <div className="flex flex-col space-y-3">
-                        <div className="relative">
-                            <div className="aspect-square w-full animate-pulse rounded-xl bg-gray-300" />
-                        </div>
-                        <div className="w-full space-y-2 pt-1">
-                            <div className="mx-auto h-5 w-3/4 animate-pulse rounded bg-gray-300" />
-                            <div className="mx-auto h-3 w-1/2 animate-pulse rounded bg-gray-300" />
-                            <div className="mx-auto h-3 w-2/3 animate-pulse rounded bg-gray-300" />
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        return (
-            <div
-                className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
-                    inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-100'
-                }`}
-                style={{ transitionDelay: `${index * 50}ms` }}
-            >
-                <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
-                <div className="flex flex-col space-y-3">
-                    <div className="relative overflow-hidden">
-                        <div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-100 ring-2 ring-[#7f1414]/10 transition-all duration-300 group-hover:ring-[#7f1414]/30">
-                            {!imgLoaded && <div className="absolute inset-0 flex animate-pulse items-center justify-center bg-gray-200" />}
-                            <img
-                                src={faculty.photo}
-                                alt={faculty.name}
-                                className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${
-                                    imgLoaded ? 'opacity-100' : 'opacity-0'
-                                }`}
-                                onLoad={() => setImgLoaded(true)}
-                                onError={(e) => {
-                                    const target = e.target as HTMLImageElement;
-                                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                                        faculty.name,
-                                    )}&background=7f1414&color=fff&size=400&format=svg`;
-                                    setImgLoaded(true);
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-2 pt-1 text-center">
-                        <h3 className="text-base font-bold text-gray-900 transition-colors group-hover:text-[#7f1414]">{faculty.name}</h3>
-                        <p className="mt-1 text-xs font-medium text-gray-600">{faculty.position}</p>
-                        <div className="border-t border-gray-100 pt-2">
-                            <div className="inline-flex items-center gap-2 rounded-lg bg-[#7f1414]/5 px-2.5 py-1.5 text-xs text-gray-600 transition-all duration-200 group-hover:scale-105 hover:bg-[#7f1414] hover:text-white">
-                                <span className="max-w-[140px] truncate">Regular Faculty</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    };
 
     const SectionHeader = ({ title, subtitle, icon: Icon }: { title: string; subtitle: string; icon?: any }) => (
         <div className="relative mb-12">
@@ -233,10 +230,8 @@ export default function Programs({ program }: PerProgramProps) {
                                 alt="Program Background"
                                 className="h-full w-full object-cover"
                                 style={{
-                                    maskImage:
-                                        'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
-                                    WebkitMaskImage:
-                                        'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
+                                    maskImage: 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
+                                    WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%)',
                                 }}
                                 onError={(e) => {
                                     const target = e.target as HTMLImageElement;
@@ -265,9 +260,7 @@ export default function Programs({ program }: PerProgramProps) {
                                         className="flex w-48 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
                                     >
                                         <span className="font-medium">Level {level}</span>
-                                        <ChevronRight
-                                            className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
-                                        />
+                                        <ChevronRight className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
                                     </div>
 
                                     <div
@@ -299,7 +292,8 @@ export default function Programs({ program }: PerProgramProps) {
                                 <div
                                     key={i}
                                     className="flex items-center gap-4 rounded-xl border border-white/20 bg-white/10 px-6 py-4 backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20"
-                                    style={{ animationDelay: `${i * 200}ms` }}
+                                    // style={{ animationDelay: `${i * 200}ms` }}
+
                                 >
                                     <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/20">
                                         {fact.icon}
@@ -319,6 +313,7 @@ export default function Programs({ program }: PerProgramProps) {
                 </section>
 
                 <div className="flex flex-col items-center gap-20">
+
                     {/* --- Overview --- */}
                     <div
                         ref={overviewRef}
@@ -359,46 +354,35 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
 
                     {/* --- Faculty Section --- */}
-                    <div className="w-[85%] max-w-7xl" id="faculty">
-                        <SectionHeader
-                            title="Our Faculty"
-                            subtitle="Meet our dedicated educators who shape the future of technology"
-                        />
-
-                        <div className="space-y-8">
-                            <div className="flex flex-wrap justify-center gap-6">
-                                {program.faculties
-                                    ?.filter((f) => f.program_id === program.program_id)
-                                    .map((f, i) => (
-                                        <FacultyCard
-                                            key={f.faculty_id}
-                                            faculty={{
-                                                name: [f.first_name, f.middle_name, f.last_name, f.suffix].filter(Boolean).join(' '),
-                                                photo:
-                                                    f.faculty_image_path ||
-                                                    `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
-                                                position: f.program_coordinator ? 'Program Head' : `${f.faculty_status} Faculty`,
-                                            }}
-                                            isLoading={facultyLoading}
-                                            inView={facultyInView}
-                                            index={i}
-                                        />
-                                    ))}
-                            </div>
+                    <div className="mx-auto w-[85%] max-w-7xl" id="faculty">
+                        <SectionHeader title="Our Faculty" subtitle="Meet our dedicated educators who shape the future of technology" />
+                        <div className="flex flex-wrap justify-center gap-6">
+                            {program.faculties?.map((f, i) => {
+                                const [cardRef, cardInView] = useInView(0.2);
+                                return (
+                                    <FacultyCard
+                                        key={f.faculty_id}
+                                        ref={cardRef}
+                                        faculty={{
+                                            name: [f.first_name, f.middle_name, f.last_name, f.suffix].filter(Boolean).join(' '),
+                                            photo:
+                                                f.faculty_image_path ||
+                                                `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
+                                            position: f.program_coordinator ? 'Program Head' : `${f.faculty_status} Faculty`,
+                                        }}
+                                        isLoading={facultyLoading}
+                                        inView={cardInView}
+                                        index={i}
+                                    />
+                                );
+                            })}
                         </div>
                     </div>
 
                     {/* --- Objectives --- */}
                     <div ref={objectivesRef} className="w-[85%] max-w-7xl" id="goals">
-                        <div
-                            className={`transition-all duration-200 ${
-                                objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                            }`}
-                        >
-                            <SectionHeader
-                                title="Program Objectives"
-                                subtitle="Our commitment to excellence through strategic goals and outcomes"
-                            />
+                        <div className={`transition-all duration-200 ${objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+                            <SectionHeader title="Program Objectives" subtitle="Our commitment to excellence through strategic goals and outcomes" />
                         </div>
 
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -408,9 +392,9 @@ export default function Programs({ program }: PerProgramProps) {
                                     className={`group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-200 hover:scale-[1.02] hover:border-[#7f1414] ${
                                         objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                                     }`}
-                                    style={{
-                                        transitionDelay: objectivesInView ? `${index * 50}ms` : '0ms',
-                                    }}
+                                    // style={{
+                                    //     transitionDelay: objectivesInView ? `${index * 50}ms` : '0ms',
+                                    // }}
                                 >
                                     <div className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 font-bold text-gray-400 transition-all duration-300 group-hover:bg-[#7f1414] group-hover:text-white">
                                         {index + 1}
@@ -435,15 +419,8 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Gallery --- */}
                     <div ref={galleryRef} className="w-[85%] max-w-7xl" id="gallery">
-                        <div
-                            className={`transition-all duration-700 ${
-                                galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                            }`}
-                        >
-                            <SectionHeader
-                                title="Gallery of Excellence"
-                                subtitle="Showcasing the moments that define our passion and commitment"
-                            />
+                        <div className={`transition-all duration-700 ${galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+                            <SectionHeader title="Gallery of Excellence" subtitle="Showcasing the moments that define our passion and commitment" />
                             <ImageRow
                                 height="h-96"
                                 images={[
@@ -460,11 +437,7 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Areas Under Survey --- */}
                     <div ref={areasRef} className="w-[85%] max-w-7xl" id="areas">
-                        <div
-                            className={`transition-all duration-700 ${
-                                areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                            }`}
-                        >
+                        <div className={`transition-all duration-700 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader
                                 title="Areas Under Survey"
                                 subtitle="ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES"
@@ -481,9 +454,9 @@ export default function Programs({ program }: PerProgramProps) {
                                                 className={`transition-all duration-500 ${
                                                     areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                                                 }`}
-                                                style={{
-                                                    transitionDelay: areasInView ? `${index * 120}ms` : '0ms',
-                                                }}
+                                                // style={{
+                                                //     transitionDelay: areasInView ? `${index * 120}ms` : '0ms',
+                                                // }}
                                             >
                                                 <AreaCard
                                                     imageSrc={area.image_path || '/images/placeholder.png'}
