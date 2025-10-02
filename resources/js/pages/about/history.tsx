@@ -3,9 +3,9 @@ import Layout from '@/layouts/landing-layout';
 import { Head, Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Award, BookOpen, Building, Calendar, School, Star, Trophy } from 'lucide-react';
-import 'swiper/css';
-import 'swiper/css/effect-coverflow';
-import 'swiper/css/pagination';
+// import 'swiper/css';
+// import 'swiper/css/effect-coverflow';
+// import 'swiper/css/pagination';
 
 export default function History() {
     const milestones = [
@@ -335,6 +335,7 @@ export default function History() {
                             </section>
 
                             {/* PUP Hymn */}
+
                             <section id="hymn">
                                <h2 className="mb-8 text-2xl font-semibold text-[#7f1414]">PUP Hymn</h2>
 

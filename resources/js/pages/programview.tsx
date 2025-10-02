@@ -180,8 +180,8 @@ export default function Programs({ program }: PerProgramProps) {
                     title=""
                     quickLinks={[
                         { label: 'Overview', targetId: 'overview' },
-                        { label: 'Faculty', targetId: 'faculty' },
                         { label: 'Objectives', targetId: 'goals' },
+                        { label: 'Faculty', targetId: 'faculty' },
                         { label: 'Areas', targetId: 'areas' },
                     ]}
                     breadcrumbs={[
