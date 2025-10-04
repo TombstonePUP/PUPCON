@@ -124,6 +124,7 @@ export default function Programs({ program }: PerProgramProps) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [facultyLoading, setFacultyLoading] = useState(true);
 
+    console.log(program.program_gallery);
     // Animation refs
     const [overviewRef, overviewInView] = useInView(0.2);
     const [objectivesRef, objectivesInView] = useInView(0.1);
@@ -171,7 +172,6 @@ export default function Programs({ program }: PerProgramProps) {
             </div>
         </div>
     );
-
     return (
         <>
             <Head title={`${program.degree_type} in ${program.program_name}`} />
@@ -292,7 +292,7 @@ export default function Programs({ program }: PerProgramProps) {
                 </section>
 
                 <div className="flex flex-col items-center gap-40">
-                   {/* --- Overview --- */}
+                    {/* --- Overview --- */}
                     <div
                         ref={overviewRef}
                         id="overview"
@@ -301,10 +301,10 @@ export default function Programs({ program }: PerProgramProps) {
                         }`}
                     >
                         <div className="relative overflow-hidden rounded-xl">
-                            <div className="grid grid-cols-1 lg:grid-cols-5 border-black-90 border-1 hover:border-[#7f1414] transition-all duration-300 rounded-xl">
+                            <div className="border-black-90 grid grid-cols-1 rounded-xl border-1 transition-all duration-300 hover:border-[#7f1414] lg:grid-cols-5">
                                 {/* Text Content */}
-                                <div className="col-span-3 flex flex-col justify-center p-12 lg:p-20 rounded-l-xl  ">
-                                    <div className="mb-3 inline-block w-fit rounded-full bg-[#7f1414] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white">
+                                <div className="col-span-3 flex flex-col justify-center rounded-l-xl p-12 lg:p-20">
+                                    <div className="mb-3 inline-block w-fit rounded-full bg-[#7f1414] px-4 py-1.5 text-xs font-semibold tracking-wider text-white uppercase">
                                         About the Program
                                     </div>
                                     <h2 className="mb-6 text-lg font-bold text-gray-900 lg:text-4xl">Program Overview</h2>
@@ -395,16 +395,14 @@ export default function Programs({ program }: PerProgramProps) {
                     <div ref={galleryRef} className="w-[85%] max-w-7xl" id="gallery">
                         <div className={`transition-all duration-700 ${galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader title="Gallery of Excellence" subtitle="Showcasing the moments that define our passion and commitment" />
+
                             <ImageRow
                                 height="h-96"
-                                images={[
-                                    { id: 1, src: '/images/gallery/it/1.jpg', alt: '' },
-                                    { id: 2, src: '/images/gallery/it/2.jpg', alt: '' },
-                                    { id: 3, src: '/images/gallery/it/3.jpg', alt: '' },
-                                    { id: 4, src: '/images/gallery/it/4.jpg', alt: '' },
-                                    { id: 5, src: '/images/gallery/it/5.jpg', alt: '' },
-                                    { id: 6, src: '/images/gallery/it/6.jpg', alt: '' },
-                                ]}
+                                images={program.program_gallery.map((item) => ({
+                                    id: item.program_gallery_id,
+                                    src: `/images/gallery/it/${item.image_name}`,
+                                    alt: item.image_name,
+                                }))}
                             />
                         </div>
                     </div>
