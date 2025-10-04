@@ -38,7 +38,7 @@ class ProgramsController extends Controller
         $program = Str::of($program_name)->replace('_', ' ')->title();
 
         $program = Programs::where('program_name', $program)
-            ->with(['Areas', 'Faculties', 'Objectives']) 
+            ->with(['Areas', 'Faculties', 'Objectives', 'ProgramGallery']) 
             ->firstOrFail();
 
         $program->program_link = $program_name;
