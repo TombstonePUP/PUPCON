@@ -15,7 +15,7 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $role = $request->user()?->Roles->first()?->role_name;
+        $role = $request->user()->Roles->role_name;
 
         if ($role === 'Admin' || $role === 'Coordinator') {
             return $next($request);

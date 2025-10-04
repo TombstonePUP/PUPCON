@@ -251,7 +251,7 @@ class DatabaseSeeder extends Seeder
         foreach ($parameterCategory as $attributes) {
             ParameterOutlineCategory::factory()->create($attributes);
         }
-        ParameterOutlines::factory(20)->create();
+        ParameterOutlines::factory(500)->create();
         $file_status = [
             ['status_name' => 'Approved'],
             ['status_name' => 'Pending'],

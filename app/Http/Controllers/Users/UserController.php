@@ -74,6 +74,7 @@ class UserController extends Controller
         $user->email = $validated['email'];
         $user->role_id = $validated['assigned_role'];
         $user->password = bcrypt($password);
+        $user->must_update_password = true;
         $user->created_at = now();
         $user->save();
 
