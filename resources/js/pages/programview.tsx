@@ -292,42 +292,44 @@ export default function Programs({ program }: PerProgramProps) {
                 </section>
 
                 <div className="flex flex-col items-center gap-40">
-                    {/* --- Overview --- */}
+                   {/* --- Overview --- */}
                     <div
                         ref={overviewRef}
                         id="overview"
-                        className={`mt-16 flex w-[85%] max-w-7xl justify-between gap-10 rounded-2xl transition-all duration-700 ${
+                        className={`mt-16 w-full max-w-7xl transition-all duration-700 ${
                             overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                         }`}
                     >
-                        <div className="flex-1 rounded-2xl border border-gray-200 bg-white p-10 transition-all duration-300 hover:border-[#7f1414]">
-                            <div className="mb-6 flex items-center gap-4">
-                                <div className="rounded-full bg-[#7f1414]/10 p-3">
-                                    <GraduationCap className="h-8 w-8 text-[#7f1414]" />
-                                </div>
-                                <h2 className="text-3xl font-bold text-[#7f1414]">Program Overview</h2>
-                            </div>
-                            <p className="text-lg leading-relaxed text-gray-700">
-                                {program.overview_description || 'No program overview available.'}
-                            </p>
-                        </div>
-
-                        <div className="relative w-[30vw] max-w-md overflow-hidden rounded-2xl border border-gray-200 transition-all duration-300 hover:border-[#7f1414]">
-                            {overviewImageLoading && (
-                                <div className="absolute inset-0 flex animate-pulse items-center justify-center bg-gray-200">
-                                    <div className="flex flex-col items-center space-y-4">
-                                        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#7f1414] border-t-transparent" />
+                        <div className="relative overflow-hidden rounded-xl">
+                            <div className="grid grid-cols-1 lg:grid-cols-5 border-black-90 border-1 hover:border-[#7f1414] transition-all duration-300 rounded-xl">
+                                {/* Text Content */}
+                                <div className="col-span-3 flex flex-col justify-center p-12 lg:p-20 rounded-l-xl  ">
+                                    <div className="mb-3 inline-block w-fit rounded-full bg-[#7f1414] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white">
+                                        About the Program
                                     </div>
+                                    <h2 className="mb-6 text-lg font-bold text-gray-900 lg:text-4xl">Program Overview</h2>
+                                    <p className="text-md leading-relaxed text-gray-700">
+                                        {program.overview_description || 'No program overview available.'}
+                                    </p>
                                 </div>
-                            )}
-                            <img
-                                src="/images/campus/comlab.jpg"
-                                alt="Computer Lab"
-                                className={`h-full w-full object-cover transition-all duration-500 hover:scale-110 ${
-                                    !overviewImageLoading ? 'opacity-100' : 'opacity-0'
-                                }`}
-                                onLoad={() => setOverviewImageLoading(false)}
-                            />
+
+                                {/* Image */}
+                                <div className="relative col-span-2 h-[300px] lg:h-auto">
+                                    {overviewImageLoading && (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                                            <div className="h-12 w-12 animate-spin rounded-full" />
+                                        </div>
+                                    )}
+                                    <img
+                                        src="/images/campus/comlab.jpg"
+                                        alt="Computer Lab"
+                                        className={`h-full w-full object-cover transition-all duration-700 ${
+                                            !overviewImageLoading ? 'opacity-100' : 'opacity-0'
+                                        }`}
+                                        onLoad={() => setOverviewImageLoading(false)}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
 

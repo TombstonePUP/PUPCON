@@ -60,7 +60,9 @@ Route::get('test/ui-testing', function () {
     return Inertia::render('test/ui-testing');
 })->name('ui-testing');
 
-
+Route::get('accreditor/accreditor-view', function () {
+    return Inertia::render('accreditor/accreditor-view');
+})->name('accreditor');
 
 
 require __DIR__ . '/settings.php';
