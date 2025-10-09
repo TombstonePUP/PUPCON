@@ -31,9 +31,14 @@ Route::middleware(['auth', 'verified', 'update.password'])->group(function () {
                     });
 
                     Route::controller(AreaParameterOutlinesController::class)->group(function () {
-                        Route::post('/{area_id}/storeOutline', 'store')->name('area.addOutline');
-                        Route::post('/{area_id}/{outline_id}/updateOutline', 'update')->name('area.updateOutline');
-                        Route::delete('/{area_id}/{outline_id}/deleteOutline', 'destroy')->name('area.deleteOutline');
+                        Route::post('/{area_id}/storeBenchmark', 'store')->name('area.addBenchmark');
+                        Route::patch('/{area_id}/{outline_id}/updateBenchmark', 'update')->name('area.updateBenchmark');
+                        Route::delete('/{area_id}/{outline_id}/deleteBenchmark', 'destroy')->name('area.deleteBenchmark');
+                    });
+
+                    Route::controller(AreaFilesController::class)->group(function () {
+                        Route::post('/{area_id}/uploadFile', 'store')->name('area.upload.file');
+                        Route::delete('/{area_id}/deleteFile', 'destroy')->name('area.delete.file');
                     });
 
                     Route::controller(AreaFormsController::class)->group(function () {

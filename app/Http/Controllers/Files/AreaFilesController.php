@@ -9,6 +9,7 @@ use App\Models\AreaForms;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -73,4 +74,18 @@ class AreaFilesController extends Controller
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        dd($request->program_name, $request->area_id, $request->all());
+    }
+
+    /**
+     * Destroy the specified resource from storage.
+     */
+    public function destroy(Request $request)
+    {
+    }
 }

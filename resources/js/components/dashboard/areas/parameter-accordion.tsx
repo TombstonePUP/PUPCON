@@ -16,15 +16,21 @@ import {
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
-import { type AreaParameters, type ParameterOutlineCategory } from '@/types';
+import { type AreaParameters, type ParameterOutlineCategory, ParameterOutlines} from '@/types';
 
 import { buildOutlineTree, RecursiveOutlineForm } from '@/components/recursive-outline';
+
+interface DialogParams {
+    type: 'view-document' | 'upload-document' | 'delete-document' | 'edit-benchmark' | 'delete-benchmark';
+    benchmark: ParameterOutlines;
+}
 
 interface ParameterAccordionProps {
     area_id?: number;
     program: string;
     areaParameters?: AreaParameters[];
     parameterOutlineCategories?: ParameterOutlineCategory[];
+    resolveDialog: ({type, benchmark}: DialogParams) => void;
 }
 
 interface ParameterForm {
@@ -45,7 +51,7 @@ interface ParameterOutlineForm {
     file_path?: File | null;
 }
 
-export default function ParameterAccordion({ area_id, program, areaParameters, parameterOutlineCategories }: ParameterAccordionProps) {
+export default function ParameterAccordion({ area_id, program, areaParameters, parameterOutlineCategories, resolveDialog }: ParameterAccordionProps) {
     // Add state for benchmark container checkbox in ADD outline
     const [isOutlineContainer, setIsOutlineContainer] = useState(false);
     const [addOutlineDialogOpen, setAddOutlineDialogOpen] = useState(false);
@@ -276,7 +282,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                         return (
                                             <>
                                                 <div className="rounded bg-[#D9D9D9] p-[2vw]">
-                                                    <h1 className="text-[1vw] font-bold">
+                                                    <h1 className="text-[1vw] font-bold mb-2.5">
                                                         {category.category_name == 'No Category' ? '' : category.category_name}
                                                     </h1>
                                                     <RecursiveOutlineForm
@@ -284,6 +290,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                         program={program}
                                                         area_id={area_id}
                                                         outlineCategory={parameterOutlineCategories}
+                                                        resolveDialog={resolveDialog}
                                                     />
                                                 </div>
                                             </>

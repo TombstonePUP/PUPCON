@@ -1,13 +1,14 @@
+"use state"
 import React, { useState, useEffect, useRef } from "react"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "./dialog"
-import { Button } from "./button"
-import { 
-  Maximize2, 
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import {
+  Maximize2,
   Minimize2,
   RotateCw,
   Loader2,
@@ -15,7 +16,6 @@ import {
   Moon,
   Sun
 } from "lucide-react"
-import Programs from "@/pages/exhibits"
 
 interface DocumentViewerProps {
   open: boolean
@@ -42,7 +42,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (!open) return
-      
+
       if (e.key === 'Escape') {
         onOpenChange(false)
       }
@@ -102,7 +102,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
             <DialogTitle className={`text-lg font-medium ${textColor} truncate flex-1`}>
               {title || "Document Viewer"}
             </DialogTitle>
-            
+
             <div className="flex items-center gap-2 flex-wrap">
               {/* Rotate */}
               <Button
@@ -113,7 +113,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
               >
                 <RotateCw className="h-4 w-4" />
               </Button>
-              
+
               {/* Dark Mode */}
               <Button
                 variant="outline"
@@ -123,7 +123,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
               >
                 {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
-              
+
               {/* Fullscreen */}
               <Button
                 variant="outline"
@@ -136,7 +136,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
             </div>
           </div>
         </DialogHeader>
-        
+
         <div className="flex-1 p-4 overflow-hidden relative">
           <div className={`w-full h-full ${containerBg} rounded-lg shadow-sm border overflow-auto transition-all duration-300 relative flex items-center justify-center`}>
             {/* Loading State */}
@@ -150,7 +150,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                 </div>
               </div>
             )}
-            
+
             {/* Error State */}
             {hasError && (
               <div className={`absolute inset-0 flex items-center justify-center ${isDarkMode ? 'bg-slate-900' : 'bg-white'} z-10`}>
@@ -159,9 +159,9 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                   <p className={`text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
                     Failed to load document
                   </p>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => {
                       setHasError(false)
                       setIsLoading(true)
@@ -175,9 +175,9 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                 </div>
               </div>
             )}
-            
+
             {/* PDF Iframe */}
-            <div 
+            <div
               className="flex items-center justify-center transition-all duration-300 ease-out"
               style={{
                 width: `${Math.max(zoom, 100)}%`,
@@ -192,7 +192,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                 width="100%"
                 height="100%"
                 className="border-0 transition-transform duration-300 ease-out"
-                title={title || "Document"} 
+                title={title || "Document"}
                 onLoad={handleIframeLoad}
                 onError={handleIframeError}
                 style={{

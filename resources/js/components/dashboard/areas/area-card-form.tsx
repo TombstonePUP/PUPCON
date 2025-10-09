@@ -12,7 +12,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { DocumentViewer } from '@/components/ui/document-viewer';
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AreaFormCategory, AreaForms } from '@/types';
 import { useForm } from '@inertiajs/react';
