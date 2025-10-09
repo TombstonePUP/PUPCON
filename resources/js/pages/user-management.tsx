@@ -1,8 +1,8 @@
 import { UsersDataTable } from '@/components/charts/data-table';
 import { getUserColumns } from '@/components/charts/data-table-columns/users';
-import { AssignRoleDialog } from '@/components/dialogs/assign-role-dialog';
-import { DisableUserDialog } from '@/components/dialogs/disable-user-dialog';
-import { EnableUserDialog } from '@/components/dialogs/enable-user-dialog';
+import { AssignRoleDialog } from '@/components/dialogs/users/assign-role';
+import { DisableUserDialog } from '@/components/dialogs/users/disable-user';
+import { EnableUserDialog } from '@/components/dialogs/users/enable-user';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
@@ -41,6 +41,11 @@ interface NewUserForm {
     assigned_role: number;
 }
 
+interface DialogProps {
+    type: 'add' | 'assign' | 'disable' | 'enable' | null;
+    user: UserRecords;
+}
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'User Management',
@@ -53,9 +58,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
     const columns = getUserColumns({
         programRoles,
         roles,
-        onEdit: (user) => openDialog('assign', user),
-        onDisable: (user) => openDialog('disable', user),
-        onEnable: (user) => openDialog('enable', user),
+        resolveDialog: ({type, user}: DialogProps) => openDialog(type, user),
     });
     const { flash } = usePage().props;
     const [selectedUser, setSelectedUser] = useState<UserRecords | null>(null);
@@ -78,6 +81,10 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
             });
         } else if (flash?.type === 'error') {
             toast.error(flash.title, {
+                description: flash.message,
+            });
+        } else if (flash?.type === 'info') {
+            toast.info(flash.title, {
                 description: flash.message,
             });
         }
@@ -140,6 +147,35 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                 'assigned_areas',
                 newUserData.assigned_areas.filter((id) => id !== area.area_id),
             );
+        }
+    };
+
+    const renderDialog=() => {
+        if(!selectedUser) return null;
+
+        switch(dialogType) {
+            case 'assign':
+                return (
+                    <AssignRoleDialog
+                        user={selectedUser}
+                        programRoles={programRoles}
+                        roles={roles}
+                        onClose={closeDialog} />
+                );
+            case 'disable':
+                return(
+                    <DisableUserDialog
+                        user={selectedUser}
+                        onClose={closeDialog} />
+                );
+            case 'enable':
+                return(
+                    <EnableUserDialog
+                        user={selectedUser}
+                        onClose={closeDialog} />
+                );
+            default:
+                return null;
         }
     };
 
@@ -352,23 +388,8 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                 </div>
                 <Toaster position="top-right" expand={false} />
             </AppLayout>
-            {dialogType === 'assign' && selectedUser && (
-                <AssignRoleDialog
-                        user={selectedUser}
-                        programRoles={programRoles}
-                        roles={roles}
-                        onClose={closeDialog} />
-            )}
-            {dialogType === 'disable' && selectedUser && (
-                <DisableUserDialog
-                    user={selectedUser}
-                    onClose={closeDialog} />
-            )}
-            {dialogType === 'enable' && selectedUser && (
-                <EnableUserDialog
-                    user={selectedUser}
-                    onClose={closeDialog} />
-            )}
+            {renderDialog()}
         </>
     );
 }
+

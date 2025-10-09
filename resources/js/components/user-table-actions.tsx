@@ -9,14 +9,17 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { UserRecords } from "@/types/user-management"
 
-interface UserActionsProps {
+interface dialogProps {
+    type: 'add' | 'assign' | 'disable' | 'enable' | null;
     user: UserRecords;
-    onEdit: (user: UserRecords) => void;
-    onDisable: (user: UserRecords) => void;
-    onEnable: (user: UserRecords) => void;
 }
 
-export function UserTableActions({ user, onEdit, onDisable, onEnable }: UserActionsProps) {
+interface UserActionsProps {
+    user: UserRecords;
+    resolveDialog: ({type, user}: dialogProps) => void;
+}
+
+export function UserTableActions({ user, resolveDialog}: UserActionsProps) {
     const userStatus = user.is_active;
 
     return (
@@ -30,7 +33,7 @@ export function UserTableActions({ user, onEdit, onDisable, onEnable }: UserActi
             <DropdownMenuContent align="end" className="w-10 space-y-1">
                 <DropdownMenuItem
                     className="cursor-pointer"
-                    onClick={() => onEdit(user)}
+                    onClick={() => resolveDialog({type: 'assign', user: user})}
                 >
                     Edit Privileges
                 </DropdownMenuItem>
@@ -38,7 +41,7 @@ export function UserTableActions({ user, onEdit, onDisable, onEnable }: UserActi
                     <DropdownMenuItem
                         className="cursor-pointer"
                         variant="destructive"
-                        onClick={() => onDisable(user)}
+                        onClick={() => resolveDialog({type: 'disable', user: user})}
                     >
                         Disable User
                     </DropdownMenuItem>
@@ -46,7 +49,7 @@ export function UserTableActions({ user, onEdit, onDisable, onEnable }: UserActi
                     <DropdownMenuItem
                         className="cursot-pointer"
                         variant="default"
-                        onClick={() => onEnable(user)}
+                        onClick={() => resolveDialog({type: 'enable', user: user})}
                     >
                         Enable User
                     </DropdownMenuItem>

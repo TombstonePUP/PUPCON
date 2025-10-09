@@ -14,16 +14,19 @@ const programColors: Record<string, string> = {
     "Engineering": "border-green-500",
 };
 
-interface RoleProps {
+interface DialogProps {
+    type: 'add' | 'assign' | 'disable' | 'enable' | null;
+    user: UserRecords;
+}
+
+interface UserRecordProps {
     programRoles: AssignablePrograms[];
     roles: AssignableRoles[];
-    onEdit: (user: UserRecords) => void;
-    onDisable: (user: UserRecords) => void;
-    onEnable: (user: UserRecords) => void;
+    resolveDialog: ({type, user}: DialogProps) => void;
 }
 
 // export const columns: ColumnDef<UserRecords>[] = [
-export function getUserColumns({programRoles, roles, onEdit, onDisable, onEnable}: RoleProps): ColumnDef<UserRecords>[] {
+export function getUserColumns({programRoles, roles, resolveDialog}: UserRecordProps): ColumnDef<UserRecords>[] {
     return [
         {
             accessorKey: "first_name",
@@ -138,9 +141,7 @@ export function getUserColumns({programRoles, roles, onEdit, onDisable, onEnable
             cell: ({ row }) =>
                 <UserTableActions
                     user={row.original}
-                    onEdit={onEdit}
-                    onDisable={onDisable}
-                    onEnable={onEnable}
+                    resolveDialog={resolveDialog}
                 />
         },
     ]

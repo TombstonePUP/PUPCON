@@ -1,5 +1,5 @@
 "use client"
-import { User, UserMinus } from "lucide-react"
+import { User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
