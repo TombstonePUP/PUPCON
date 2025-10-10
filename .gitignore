@@ -22,7 +22,3 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-resources/js/layouts/app/auth/auth-splitCard-layout.tsx
-resources/js/layouts/app/auth/auth-simple-layout.tsx
-resources/js/layouts/app/auth/auth-card-layout.tsx
-resources/js/layouts/app/auth/auth-split-layout.tsx
