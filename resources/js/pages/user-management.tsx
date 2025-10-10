@@ -24,7 +24,6 @@ import { AssignableAreas, AssignablePrograms, AssignableRoles, type UserRecords 
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { User2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 interface UsersProps {
     userRecords: UserRecords[];
@@ -60,7 +59,6 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
         roles,
         resolveDialog: ({type, user}: DialogProps) => openDialog(type, user),
     });
-    const { flash } = usePage().props;
     const [selectedUser, setSelectedUser] = useState<UserRecords | null>(null);
     const [dialogType, setDialogType] = useState<'add' | 'assign' | 'disable' | 'enable' | null>(null);
 
@@ -73,22 +71,6 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
         setSelectedUser(null);
         setDialogType(null);
     }
-
-    useEffect(() => {
-        if (flash?.type === 'success') {
-            toast.success(flash.title, {
-                description: flash.message,
-            });
-        } else if (flash?.type === 'error') {
-            toast.error(flash.title, {
-                description: flash.message,
-            });
-        } else if (flash?.type === 'info') {
-            toast.info(flash.title, {
-                description: flash.message,
-            });
-        }
-    }, [flash]);
 
     const {
         data: newUserData,
@@ -386,7 +368,6 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                         <UsersDataTable columns={columns} data={userRecords} />
                     </div>
                 </div>
-                <Toaster position="top-right" expand={false} />
             </AppLayout>
             {renderDialog()}
         </>

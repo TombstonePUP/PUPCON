@@ -1,5 +1,4 @@
 import AuthLayoutTemplate from '@/layouts/auth/auth-simple-layout';
-
 interface AuthLayoutProps {
     children: React.ReactNode;
     title: string;

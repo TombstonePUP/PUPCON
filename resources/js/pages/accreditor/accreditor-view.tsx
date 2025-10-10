@@ -1,16 +1,34 @@
-import React, { useState } from 'react';
-import { CheckCircle, FileText, Calendar, Award, ChevronDown, ChevronRight, Download, FileSpreadsheet, X, Check, AlertCircle } from 'lucide-react';
+"use client";
+
+import React, { useState } from "react";
+import {
+    CheckCircle,
+    FileText,
+    Calendar,
+    Award,
+    ChevronDown,
+    ChevronRight,
+    Download,
+    FileSpreadsheet,
+    Check,
+    AlertCircle,
+} from "lucide-react";
+import { DocumentViewer } from "@/components/dialogs/documents/view-document";
 
 export default function AccreditorDashboard() {
     const [expandedAreas, setExpandedAreas] = useState({});
     const [expandedParameters, setExpandedParameters] = useState({});
-    const [pdfDialog, setPdfDialog] = useState({ open: false, url: '', title: '' });
+    const [viewerOpen, setViewerOpen] = useState(false);
+    const [viewerFile, setViewerFile] = useState({ url: "", title: "" });
     const [exportDropdown, setExportDropdown] = useState({});
+    const [exportAreaDropdown, setExportAreaDropdown] = useState({});
+    const [ratings, setRatings] = useState({});
+    const [means, setMeans] = useState({});
 
     const accreditor = {
-        name: 'Dr. Maria Santos',
-        role: 'AACCUP Accreditor',
-        specialty: 'Engineering Programs'
+        name: "Dr. Maria Santos",
+        role: "AACCUP Accreditor",
+        specialty: "Engineering Programs",
     };
 
     const programs = [
@@ -28,31 +46,48 @@ export default function AccreditorDashboard() {
                     progress: 0,
                     parameters: [
                         {
-                            id: 'A',
-                            label: 'Campus Buildings',
-                            status: 'approved',
+                            id: "A",
+                            label: "Program Goals and Objectives",
+                            status: "approved",
                             benchmarks: [
-                                { id: 1, text: 'Building infrastructure meets safety standards', pdfUrl: '/docs/safety-standards.pdf' },
-                                { id: 2, text: 'Adequate classroom space for student population', pdfUrl: '/docs/classroom-specs.pdf' },
-                                { id: 3, text: 'Accessibility compliance for PWD', pdfUrl: '/docs/pwd-compliance.pdf' }
-                            ]
-                        },
-                        {
-                            id: 'B',
-                            label: 'Library Resources',
-                            status: 'pending',
-                            benchmarks: [
-                                { id: 1, text: 'Book collection meets minimum requirements', pdfUrl: '/docs/library-standards.pdf' },
-                                { id: 2, text: 'Digital resources and database subscriptions', pdfUrl: '/docs/digital-resources.pdf' }
-                            ]
-                        },
-                        {
-                            id: 'C',
-                            label: 'Laboratory Facilities',
-                            status: 'needs_revision',
-                            benchmarks: [
-                                { id: 1, text: 'Computer lab equipment specifications', pdfUrl: '/docs/lab-equipment.pdf' },
-                                { id: 2, text: 'Lab maintenance and upgrade schedule', pdfUrl: '/docs/maintenance.pdf' }
+                                {
+                                    id: 1,
+                                    category: "S",
+                                    text: "S.4. The Goals are clearly stated, and are consistent with the Mission of the Institution.",
+                                    pdfUrl: "/docs/goals.pdf"
+                                },
+                                {
+                                    id: 2,
+                                    category: "S",
+                                    text: "S.5. The Objectives of the program clearly state the expected outcomes in terms of competencies (skills and knowledge), values, and other attributes of the graduates which include the development of:",
+                                    pdfUrl: "/docs/objectives.pdf",
+                                    children: [
+                                        {
+                                            id: 3,
+                                            category: "S",
+                                            text: "S.5.1. technical skills in Hotel and Restaurant Management/TM/HM/TrM;",
+                                            pdfUrl: "/docs/skills.pdf"
+                                        },
+                                        {
+                                            id: 4,
+                                            category: "S",
+                                            text: "S.5.2. scientific habit thought;",
+                                            pdfUrl: "/docs/habit.pdf"
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 5,
+                                    category: "I",
+                                    text: "I.7. Implementation aligns with institutional goals.",
+                                    pdfUrl: "/docs/implementation.pdf"
+                                },
+                                {
+                                    id: 6,
+                                    category: "O",
+                                    text: "O.10. Graduates exhibit competencies aligned with program objectives.",
+                                    pdfUrl: "/docs/outcomes.pdf"
+                                }
                             ]
                         }
                     ]
@@ -68,21 +103,43 @@ export default function AccreditorDashboard() {
                             label: 'Faculty Qualifications',
                             status: 'approved',
                             benchmarks: [
-                                { id: 1, text: 'Percentage of faculty with doctoral degrees', pdfUrl: '/docs/faculty-qualifications.pdf' },
-                                { id: 2, text: 'Faculty specialization alignment', pdfUrl: '/docs/specializations.pdf' }
-                            ]
+                                // Systems
+                                { id: 1, text: 'S.2.01. Percentage of faculty with doctoral degrees.', pdfUrl: '/docs/faculty-qualifications.pdf' },
+                                { id: 2, text: 'S.3.04. Accreditation compliance for faculty ranks.', pdfUrl: '/docs/accreditation.pdf' },
+                                { id: 3, text: 'S.5.06. Consistent professional portfolio updates.', pdfUrl: '/docs/portfolio.pdf' },
+
+                                // Implementation
+                                { id: 4, text: 'I.5.15. Continuous professional development programs.', pdfUrl: '/docs/dev-programs.pdf' },
+                                { id: 5, text: 'I.6.19. Peer mentoring systems implemented.', pdfUrl: '/docs/mentorship.pdf' },
+                                { id: 6, text: 'I.7.21. Faculty training on new technologies.', pdfUrl: '/docs/training.pdf' },
+
+                                // Outcome/s
+                                { id: 7, text: 'O.7.25. Improved instructional quality outcomes.', pdfUrl: '/docs/instruction.pdf' },
+                                { id: 8, text: 'O.8.28. Increased research publication output.', pdfUrl: '/docs/research.pdf' },
+                                { id: 9, text: 'O.9.30. Faculty award recognitions increased yearly.', pdfUrl: '/docs/awards.pdf' },
+                            ],
                         },
                         {
                             id: 'B',
                             label: 'Faculty Development',
                             status: 'pending',
                             benchmarks: [
-                                { id: 1, text: 'Professional development programs', pdfUrl: '/docs/dev-programs.pdf' }
-                            ]
-                        }
-                    ]
-                }
-            ]
+                                // Systems
+                                { id: 1, text: 'S.1.1. Development plan is aligned with VMGO.', pdfUrl: '/docs/faculty-plan.pdf' },
+                                { id: 2, text: 'S.1.2. Resources allocated for continuous training.', pdfUrl: '/docs/training-budget.pdf' },
+
+                                // Implementation
+                                { id: 3, text: 'I.1.4. Training schedules implemented bi-annually.', pdfUrl: '/docs/schedule.pdf' },
+                                { id: 4, text: 'I.1.5. Collaboration with external institutions established.', pdfUrl: '/docs/collab.pdf' },
+
+                                // Outcome/s
+                                { id: 5, text: 'O.2.7. Faculty performance evaluation improved by 15%.', pdfUrl: '/docs/evaluation.pdf' },
+                                { id: 6, text: 'O.2.8. More faculty members promoted internally.', pdfUrl: '/docs/promotions.pdf' },
+                            ],
+                        },
+                    ],
+                },
+            ],
         },
         {
             id: 2,
@@ -92,7 +149,7 @@ export default function AccreditorDashboard() {
             campus: 'Main Campus',
             assigned_areas: [
                 {
-                    id: 4,
+                    id: 3,
                     area_name: 'Area IV: Support to Students',
                     status: 'completed',
                     progress: 100,
@@ -102,61 +159,134 @@ export default function AccreditorDashboard() {
                             label: 'Student Services',
                             status: 'approved',
                             benchmarks: [
-                                { id: 1, text: 'Counseling services availability', pdfUrl: '/docs/counseling.pdf' }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
+                                { id: 1, text: 'S.1.11. Counseling office provides regular sessions.', pdfUrl: '/docs/counseling.pdf' },
+                                { id: 2, text: 'S.2.12. Career center conducts job fairs annually.', pdfUrl: '/docs/jobfair.pdf' },
+                                { id: 3, text: 'I.3.13. Workshops and seminars organized quarterly.', pdfUrl: '/docs/workshops.pdf' },
+                                { id: 4, text: 'O.4.14. Student satisfaction surveys show 90% positive rating.', pdfUrl: '/docs/survey.pdf' },
+                                { id: 5, text: 'O.5.15. Employment rate of graduates exceeds 85%.', pdfUrl: '/docs/employment.pdf' },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
     ];
 
-    const toggleArea = (areaId) => {
-        setExpandedAreas(prev => ({ ...prev, [areaId]: !prev[areaId] }));
+    const computeParentMean = (areaId, paramId, children) => {
+        const childRatings = children
+            .map((child) => parseFloat(ratings[`${areaId}-${paramId}-${child.id}`]))
+            .filter((v) => !isNaN(v));
+
+        if (childRatings.length === 0) return "—";
+
+        const avg =
+            childRatings.reduce((sum, val) => sum + val, 0) / childRatings.length;
+
+        return avg.toFixed(2);
     };
 
-    const toggleParameter = (parameterId) => {
-        setExpandedParameters(prev => ({ ...prev, [parameterId]: !prev[parameterId] }));
+
+    // Helpers
+    const openViewer = (fileUrl, title) => {
+        setViewerFile({ url: fileUrl, title });
+        setViewerOpen(true);
     };
 
+    const toggleArea = (areaId) =>
+        setExpandedAreas((prev) => ({ ...prev, [areaId]: !prev[areaId] }));
+    const toggleParameter = (paramId) =>
+        setExpandedParameters((prev) => ({ ...prev, [paramId]: !prev[paramId] }));
+
+    // Toggle Export Dropdown per program
     const toggleExport = (programId) => {
-        setExportDropdown(prev => ({ ...prev, [programId]: !prev[programId] }));
+        setExportDropdown((prev) => {
+            const updated = {};
+            Object.keys(prev).forEach((key) => {
+                updated[key] = false; // close all other dropdowns
+            });
+            updated[programId] = !prev[programId]; // toggle the clicked one
+            return updated;
+        });
     };
 
-    const handleExport = (programId, format) => {
-        alert(`Exporting Program ${programId} as ${format.toUpperCase()}`);
-        setExportDropdown({});
+    // Handle Export Actions (Excel/PDF)
+    const handleExport = (programId, type) => {
+        const program = programs.find((p) => p.id === programId);
+        if (!program) return;
+
+        console.log(`Exporting "${program.program_name}" as ${type.toUpperCase()}`);
+
+        alert(` Exporting ${program.program_name} as ${type.toUpperCase()}`);
+
+        setExportDropdown((prev) => ({ ...prev, [programId]: false }));
     };
 
-    const openPdfDialog = (url, title) => {
-        setPdfDialog({ open: true, url, title });
+    // Toggle Export Dropdown per area
+    const toggleAreaExport = (areaId) => {
+        setExportAreaDropdown((prev) => {
+            const updated = {};
+            Object.keys(prev).forEach((key) => {
+                updated[key] = false; // close all other dropdowns
+            });
+            updated[areaId] = !prev[areaId]; // toggle clicked area
+            return updated;
+        });
     };
 
-    const closePdfDialog = () => {
-        setPdfDialog({ open: false, url: '', title: '' });
+    // Handle Export Actions for areas
+    const handleAreaExport = (areaId, type) => {
+        const area = programs.flatMap(p => p.assigned_areas).find(a => a.id === areaId);
+        if (!area) return;
+
+        console.log(`Exporting "${area.area_name}" as ${type.toUpperCase()}`);
+        alert(`Exporting ${area.area_name} as ${type.toUpperCase()}`);
+
+        setExportAreaDropdown((prev) => ({ ...prev, [areaId]: false }));
     };
+
+
+    // Close dropdowns when clicking outside
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            const exportButtons = document.querySelectorAll(".export-dropdown");
+            let clickedInside = false;
+            exportButtons.forEach((btn) => {
+                if (btn.contains(event.target)) clickedInside = true;
+            });
+            if (!clickedInside) setExportDropdown({});
+        };
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
+    }, []);
+
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'completed': return 'bg-green-100 text-green-800 border-green-300';
-            case 'in_progress': return 'bg-blue-100 text-blue-800 border-blue-300';
-            default: return 'bg-gray-100 text-gray-800 border-gray-300';
+            case "completed":
+                return "bg-green-100 text-green-800 border-green-300";
+            case "in_progress":
+                return "bg-blue-100 text-blue-800 border-blue-300";
+            default:
+                return "bg-gray-100 text-gray-800 border-gray-300";
         }
     };
 
     const getStatusText = (status) => {
         switch (status) {
-            case 'completed': return 'Completed';
-            case 'in_progress': return 'In Progress';
-            default: return 'Pending';
+            case "completed":
+                return "Completed";
+            case "in_progress":
+                return "In Progress";
+            default:
+                return "Pending";
         }
     };
 
     const getParameterStatusIcon = (status) => {
         switch (status) {
-            case 'approved':
+            case "approved":
                 return <Check className="h-4 w-4 text-green-600" />;
-            case 'needs_revision':
+            case "needs_revision":
                 return <AlertCircle className="h-4 w-4 text-amber-600" />;
             default:
                 return <div className="h-4 w-4 rounded-full border-2 border-gray-300" />;
@@ -165,280 +295,350 @@ export default function AccreditorDashboard() {
 
     const getParameterStatusBadge = (status) => {
         switch (status) {
-            case 'approved':
-                return 'bg-green-100 text-green-700 border-green-300';
-            case 'needs_revision':
-                return 'bg-amber-100 text-amber-700 border-amber-300';
+            case "approved":
+                return "bg-green-100 text-green-700 border-green-300";
+            case "needs_revision":
+                return "bg-amber-100 text-amber-700 border-amber-300";
             default:
-                return 'bg-gray-100 text-gray-600 border-gray-300';
+                return "bg-gray-100 text-gray-600 border-gray-300";
         }
     };
 
     const getParameterStatusText = (status) => {
         switch (status) {
-            case 'approved': return 'Approved';
-            case 'needs_revision': return 'Needs Revision';
-            default: return 'Pending Review';
+            case "approved":
+                return "Approved";
+            case "needs_revision":
+                return "Needs Revision";
+            default:
+                return "Pending Review";
         }
+    };
+
+    const handleRatingChange = (key, value) => {
+        setRatings((prev) => {
+            const newRatings = { ...prev, [key]: value };
+            const [areaId, paramId] = key.split("-").slice(0, 2);
+            const paramKey = `${areaId}-${paramId}`;
+            const paramRatings = Object.entries(newRatings)
+                .filter(([k]) => k.startsWith(paramKey))
+                .map(([, v]) => v)
+                .filter((v) => v !== "N/A" && v !== "" && !isNaN(v))
+                .map(Number);
+            const paramMean =
+                paramRatings.length > 0
+                    ? (
+                        paramRatings.reduce((a, b) => a + b, 0) / paramRatings.length
+                    ).toFixed(2)
+                    : "—";
+            setMeans((prevMeans) => {
+                const updated = { ...prevMeans, [paramKey]: paramMean };
+                const areaMeans = Object.entries(updated)
+                    .filter(([k]) => k.startsWith(areaId + "-"))
+                    .map(([, v]) => parseFloat(v))
+                    .filter((v) => !isNaN(v));
+                const areaMean =
+                    areaMeans.length > 0
+                        ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2)
+                        : "—";
+                updated[areaId] = areaMean;
+                return updated;
+            });
+            return newRatings;
+        });
     };
 
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="mx-auto w-[85%] max-w-7xl px-6 py-12">
-                {/* Welcome Section */}
                 <section className="mb-12 rounded-xl border border-[#7f1414]/25 bg-gradient-to-br from-white to-gray-50 p-8">
-                    <div className="flex items-start justify-between">
-                        <div>
-                            <h1 className="mb-2 text-3xl font-bold text-[#7f1414]">
-                                Welcome back, {accreditor.name}
-                            </h1>
-                            <p className="mb-1 text-lg text-gray-700">
-                                {accreditor.role} • {accreditor.specialty}
-                            </p>
-                            <p className="leading-relaxed text-gray-600">
-                                You have been assigned to evaluate {programs.length} program{programs.length > 1 ? 's' : ''} for AACCUP accreditation.
-                            </p>
-                        </div>
-                        <div className="hidden lg:block">
-                            <Award className="h-24 w-24 text-[#7f1414]/20" />
-                        </div>
-                    </div>
-
-                    {/* Stats Cards */}
-                    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                        <div className="rounded-lg bg-white p-4 shadow-sm">
-                            <div className="flex items-center gap-3">
-                                <div className="rounded-lg bg-[#7f1414]/10 p-2">
-                                    <FileText className="h-5 w-5 text-[#7f1414]" />
-                                </div>
-                                <div>
-                                    <div className="text-2xl font-bold text-gray-900">
-                                        {programs.reduce((sum, p) => sum + p.assigned_areas.length, 0)}
-                                    </div>
-                                    <div className="text-sm text-gray-600">Total Areas</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="rounded-lg bg-white p-4 shadow-sm">
-                            <div className="flex items-center gap-3">
-                                <div className="rounded-lg bg-green-100 p-2">
-                                    <CheckCircle className="h-5 w-5 text-green-600" />
-                                </div>
-                                <div>
-                                    <div className="text-2xl font-bold text-gray-900">
-                                        {programs.reduce((sum, p) => sum + p.assigned_areas.filter(a => a.status === 'completed').length, 0)}
-                                    </div>
-                                    <div className="text-sm text-gray-600">Completed</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="rounded-lg bg-white p-4 shadow-sm">
-                            <div className="flex items-center gap-3">
-                                <div className="rounded-lg bg-blue-100 p-2">
-                                    <Calendar className="h-5 w-5 text-blue-600" />
-                                </div>
-                                <div>
-                                    <div className="text-2xl font-bold text-gray-900">
-                                        {programs.reduce((sum, p) => sum + p.assigned_areas.filter(a => a.status === 'in_progress').length, 0)}
-                                    </div>
-                                    <div className="text-sm text-gray-600">In Progress</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h1 className="mb-2 text-3xl font-bold text-[#7f1414]">
+                        Welcome back, {accreditor.name}
+                    </h1>
+                    <p className="text-lg text-gray-700">
+                        {accreditor.role} • {accreditor.specialty}
+                    </p>
+                    <p className="text-gray-600">
+                        You have been assigned to evaluate {programs.length} program
+                        {programs.length > 1 ? "s" : ""}.
+                    </p>
                 </section>
 
-                {/* Programs Section */}
+                {/* Programs */}
                 <section>
-                    <h2 className="mb-6 text-2xl font-bold text-gray-900">Your Assigned Programs</h2>
+                    {programs.map((program) => (
+                        <div
+                            key={program.id}
+                            className="mb-6 rounded-xl border border-gray-200 bg-white shadow-sm"
+                        >
+                            <div className="border-b border-gray-100 bg-[#7f1414]/5 p-6">
+                                <h3 className="text-xl font-bold text-[#7f1414]">
+                                    {program.program_name}
+                                </h3>
+                                <p className="text-sm text-gray-600">{program.campus}</p>
+                            </div>
 
-                    <div className="space-y-6">
-                        {programs.map((program) => (
-                            <div
-                                key={program.id}
-                                className="rounded-xl border border-gray-200 bg-white shadow-sm"
-                            >
-                                {/* Program Header */}
-                                <div className="border-b border-gray-100 bg-gradient-to-r from-[#7f1414]/5 to-transparent p-6">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex-1">
-                                            <div className="mb-2 flex items-center gap-2">
-                                                <span className="rounded-full bg-[#7f1414] px-3 py-1 text-xs font-semibold text-white">
-                                                    {program.degree_type}
-                                                </span>
-                                                <span className="rounded-full border border-[#7f1414] px-3 py-1 text-xs font-semibold text-[#7f1414]">
-                                                    Level {program.accreditation_level}
+
+
+
+                            {/* Areas */}
+                            <div className="p-6">
+                                {program.assigned_areas.map((area) => (
+                                    <div
+                                        key={area.id}
+                                        className="mb-4 rounded-lg border border-gray-200 bg-gray-50"
+                                    >
+                                        <button
+                                            onClick={() => toggleArea(area.id)}
+                                            className="flex w-full items-center justify-between p-4 text-left hover:bg-white"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                {expandedAreas[area.id] ? (
+                                                    <ChevronDown className="h-5 w-5 text-gray-500" />
+                                                ) : (
+                                                    <ChevronRight className="h-5 w-5 text-gray-500" />
+                                                )}
+                                                <h4 className="font-semibold text-gray-900">
+                                                    {area.area_name}
+                                                </h4>
+                                                <span
+                                                    className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getStatusColor(
+                                                        area.status
+                                                    )}`}
+                                                >
+                                                    {getStatusText(area.status)}
                                                 </span>
                                             </div>
-                                            <h3 className="text-xl font-bold text-gray-900">{program.program_name}</h3>
-                                            <p className="text-sm text-gray-600">{program.campus}</p>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-right">
-                                                <div className="text-sm text-gray-600">Areas Assigned</div>
-                                                <div className="text-2xl font-bold text-[#7f1414]">{program.assigned_areas.length}</div>
-                                            </div>
+
                                             {/* Export Dropdown */}
-                                            <div className="relative">
+                                            <div className="relative export-dropdown inline-block ml-6">
                                                 <button
-                                                    onClick={() => toggleExport(program.id)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        toggleAreaExport(area.id);
+                                                    }}
                                                     className="flex items-center gap-2 rounded-lg bg-[#7f1414] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#6a1111]"
                                                 >
-                                                    <Download className="h-4 w-4" />
-                                                    Export
+                                                    <Download className="h-4 w-4" /> Export
                                                 </button>
-                                                {exportDropdown[program.id] && (
-                                                    <div className="absolute right-0 top-full z-10 mt-2 w-40 rounded-lg border border-gray-200 bg-white shadow-lg">
+
+                                                {exportAreaDropdown[area.id] && (
+                                                    <div className="absolute right-0 top-full z-20 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow-lg">
                                                         <button
-                                                            onClick={() => handleExport(program.id, 'excel')}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleAreaExport(area.id, "excel");
+                                                            }}
                                                             className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                                         >
-                                                            <FileSpreadsheet className="h-4 w-4 text-green-600" />
-                                                            Export as Excel
+                                                            <FileSpreadsheet className="h-4 w-4 text-green-600" /> Export as Excel
                                                         </button>
                                                         <button
-                                                            onClick={() => handleExport(program.id, 'pdf')}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleAreaExport(area.id, "pdf");
+                                                            }}
                                                             className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                                         >
-                                                            <FileText className="h-4 w-4 text-red-600" />
-                                                            Export as PDF
+                                                            <FileText className="h-4 w-4 text-red-600" /> Export as PDF
                                                         </button>
                                                     </div>
                                                 )}
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                {/* Areas List */}
-                                <div className="p-6">
-                                    <div className="space-y-3">
-                                        {program.assigned_areas.map((area) => (
-                                            <div key={area.id} className="rounded-lg border border-gray-200 bg-gray-50">
-                                                {/* Area Header - Clickable */}
-                                                <button
-                                                    onClick={() => toggleArea(area.id)}
-                                                    className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-white"
-                                                >
-                                                    <div className="flex flex-1 items-center gap-3">
-                                                        {expandedAreas[area.id] ? (
-                                                            <ChevronDown className="h-5 w-5 text-gray-500" />
-                                                        ) : (
-                                                            <ChevronRight className="h-5 w-5 text-gray-500" />
-                                                        )}
-                                                        <div className="flex-1">
+                                        </button>
+
+                                        {expandedAreas[area.id] && (
+                                            <div className="border-t border-gray-200 bg-white p-4">
+                                                {area.parameters.map((param) => (
+                                                    <div
+                                                        key={param.id}
+                                                        className="mb-3 rounded-lg border border-gray-200"
+                                                    >
+                                                        <button
+                                                            onClick={() =>
+                                                                toggleParameter(`${area.id}-${param.id}`)
+                                                            }
+                                                            className="flex w-full items-center justify-between p-3 hover:bg-gray-50"
+                                                        >
                                                             <div className="flex items-center gap-3">
-                                                                <h4 className="font-semibold text-gray-900">{area.area_name}</h4>
-                                                                <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getStatusColor(area.status)}`}>
-                                                                    {getStatusText(area.status)}
+                                                                {expandedParameters[`${area.id}-${param.id}`] ? (
+                                                                    <ChevronDown className="h-4 w-4 text-gray-500" />
+                                                                ) : (
+                                                                    <ChevronRight className="h-4 w-4 text-gray-500" />
+                                                                )}
+                                                                {getParameterStatusIcon(param.status)}
+                                                                <span className="font-medium text-[#7f1414]">
+                                                                    Parameter {param.id}
                                                                 </span>
+                                                                <span className="text-gray-600">{param.label}</span>
                                                             </div>
-                                                            {area.status !== 'pending' && (
-                                                                <div className="mt-2">
-                                                                    <div className="flex items-center gap-2">
-                                                                        <div className="h-2 w-48 overflow-hidden rounded-full bg-gray-200">
-                                                                            <div
-                                                                                className="h-full bg-[#7f1414] transition-all duration-500"
-                                                                                style={{ width: `${area.progress}%` }}
-                                                                            />
-                                                                        </div>
-                                                                        <span className="text-xs font-medium text-gray-600">{area.progress}%</span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </button>
+                                                            <span
+                                                                className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getParameterStatusBadge(
+                                                                    param.status
+                                                                )}`}
+                                                            >
+                                                                {getParameterStatusText(param.status)}
+                                                            </span>
+                                                        </button>
 
-                                                {/* Parameters - Expanded Content */}
-                                                {expandedAreas[area.id] && (
-                                                    <div className="border-t border-gray-200 bg-white p-4">
-                                                        <div className="space-y-2">
-                                                            {area.parameters.map((param) => (
-                                                                <div key={param.id} className="rounded-lg border border-gray-200">
-                                                                    {/* Parameter Header */}
-                                                                    <button
-                                                                        onClick={() => toggleParameter(`${area.id}-${param.id}`)}
-                                                                        className="flex w-full items-center justify-between p-3 text-left transition-colors hover:bg-gray-50"
-                                                                    >
-                                                                        <div className="flex items-center gap-3">
-                                                                            {expandedParameters[`${area.id}-${param.id}`] ? (
-                                                                                <ChevronDown className="h-4 w-4 text-gray-500" />
-                                                                            ) : (
-                                                                                <ChevronRight className="h-4 w-4 text-gray-500" />
-                                                                            )}
-                                                                            {getParameterStatusIcon(param.status)}
-                                                                            <span className="font-medium text-gray-900">
-                                                                                Parameter {param.id}
-                                                                            </span>
-                                                                            <span className="text-gray-600">{param.label}</span>
-                                                                        </div>
-                                                                        <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getParameterStatusBadge(param.status)}`}>
-                                                                            {getParameterStatusText(param.status)}
-                                                                        </span>
-                                                                    </button>
+                                                        {expandedParameters[`${area.id}-${param.id}`] && (
+                                                            <div className="space-y-4 p-3">
+                                                                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                                                                    <h4 className="mb-2 font-bold text-[#7f1414]">
+                                                                        Indicators and Ratings
+                                                                    </h4>
 
-                                                                    {/* Benchmarks - Expanded Content */}
-                                                                    {expandedParameters[`${area.id}-${param.id}`] && (
-                                                                        <div className="border-t border-gray-200 bg-gray-50 p-4">
-                                                                            <h5 className="mb-3 text-sm font-semibold text-gray-700">Benchmarks:</h5>
-                                                                            <ul className="space-y-2">
-                                                                                {param.benchmarks.map((benchmark) => (
-                                                                                    <li key={benchmark.id} className="flex items-start gap-2">
-                                                                                        <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#7f1414]" />
-                                                                                        <button
-                                                                                            onClick={() => openPdfDialog(benchmark.pdfUrl, benchmark.text)}
-                                                                                            className="flex-1 text-left text-sm text-gray-700 transition-colors hover:text-[#7f1414] hover:underline"
-                                                                                        >
-                                                                                            {benchmark.text}
-                                                                                        </button>
-                                                                                    </li>
-                                                                                ))}
-                                                                            </ul>
-                                                                        </div>
-                                                                    )}
+                                                                    <table className="w-full text-sm text-gray-700 border-t border-gray-200">
+                                                                        <thead>
+                                                                            <tr className="bg-white">
+                                                                                <th className="text-left font-semibold py-3 px-3">
+                                                                                    Indicators
+                                                                                </th>
+                                                                                <th className="text-center font-semibold py-3">
+                                                                                    Item Rating
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody>
+                                                                            {param.benchmarks.map((benchmark, idx) => (
+                                                                                <React.Fragment key={benchmark.id}>
+                                                                                    <tr
+                                                                                        className={`
+                  ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} 
+                  hover:bg-gray-100 transition
+                `}
+                                                                                    >
+                                                                                        <td className="px-3 py-2 align-top border-t border-gray-200">
+                                                                                            <button
+                                                                                                onClick={() =>
+                                                                                                    openViewer(benchmark.pdfUrl, benchmark.text)
+                                                                                                }
+                                                                                                className="text-left text-gray-700 hover:text-[#7f1414] hover:underline"
+                                                                                            >
+                                                                                                {benchmark.text}
+                                                                                            </button>
+
+                                                                                            {/* Render nested children */}
+                                                                                            {benchmark.children && benchmark.children.length > 0 && (
+                                                                                                <ul className="mt-2 space-y-1 pl-6">
+                                                                                                    {benchmark.children.map((child, cidx) => (
+                                                                                                        <li
+                                                                                                            key={child.id}
+                                                                                                            className={`
+                            flex items-center justify-between text-sm text-gray-700 
+                            ${cidx % 2 === 0 ? "bg-gray-50" : "bg-white"} 
+                            rounded-md px-2 py-1
+                          `}
+                                                                                                        >
+                                                                                                            <button
+                                                                                                                onClick={() =>
+                                                                                                                    openViewer(child.pdfUrl, child.text)
+                                                                                                                }
+                                                                                                                className="text-left hover:text-[#7f1414] hover:underline"
+                                                                                                            >
+                                                                                                                {child.text}
+                                                                                                            </button>
+                                                                                                            <select
+                                                                                                                className="rounded-md border-none bg-transparent text-center focus:outline-none focus:ring-0 ml-4"
+                                                                                                                value={
+                                                                                                                    ratings[`${area.id}-${param.id}-${child.id}`] ||
+                                                                                                                    "N/A"
+                                                                                                                }
+                                                                                                                onChange={(e) =>
+                                                                                                                    handleRatingChange(
+                                                                                                                        `${area.id}-${param.id}-${child.id}`,
+                                                                                                                        e.target.value
+                                                                                                                    )
+                                                                                                                }
+                                                                                                            >
+                                                                                                                <option value="N/A">N/A</option>
+                                                                                                                {[0, 1, 2, 3, 4, 5].map((num) => (
+                                                                                                                    <option key={num} value={num}>
+                                                                                                                        {num}
+                                                                                                                    </option>
+                                                                                                                ))}
+                                                                                                            </select>
+                                                                                                        </li>
+                                                                                                    ))}
+                                                                                                </ul>
+                                                                                            )}
+                                                                                        </td>
+
+                                                                                        {/* Rating / Mean Column */}
+                                                                                        <td className="px-3 py-2 text-center border-t border-gray-200 font-semibold">
+                                                                                            {benchmark.children && benchmark.children.length > 0
+                                                                                                ? computeParentMean(area.id, param.id, benchmark.children)
+                                                                                                : (
+                                                                                                    <select
+                                                                                                        className="rounded-md border-none bg-transparent text-center focus:outline-none focus:ring-0"
+                                                                                                        value={
+                                                                                                            ratings[`${area.id}-${param.id}-${benchmark.id}`] ||
+                                                                                                            "N/A"
+                                                                                                        }
+                                                                                                        onChange={(e) =>
+                                                                                                            handleRatingChange(
+                                                                                                                `${area.id}-${param.id}-${benchmark.id}`,
+                                                                                                                e.target.value
+                                                                                                            )
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <option value="N/A">N/A</option>
+                                                                                                        {[0, 1, 2, 3, 4, 5].map((num) => (
+                                                                                                            <option key={num} value={num}>
+                                                                                                                {num}
+                                                                                                            </option>
+                                                                                                        ))}
+                                                                                                    </select>
+                                                                                                )}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </React.Fragment>
+                                                                            ))}
+
+                                                                            {/* One unified mean row */}
+                                                                            <tr className="bg-[#f7f7f7] font-semibold">
+                                                                                <td className="px-3 py-2 text-right border-t border-gray-300">
+                                                                                    System – Implementation – Outcome Means
+                                                                                </td>
+                                                                                <td className="px-3 py-2 text-center border-t border-gray-300 text-[#7f1414]">
+                                                                                    {means[`${area.id}-${param.id}`] ?? "—"}
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
                                                                 </div>
-                                                            ))}
-                                                        </div>
+                                                            </div>
+                                                        )}
+
+
                                                     </div>
-                                                )}
+                                                ))}
+
+                                                {/* Area Mean */}
+                                                <div className="mt-4 text-right text-sm font-semibold text-gray-800">
+                                                    Parameter Mean:{" "}
+                                                    <span className="text-[#7f1414]">
+                                                        {means[`${area.id}`] ?? "—"}
+                                                    </span>
+                                                </div>
                                             </div>
-                                        ))}
+                                        )}
                                     </div>
-                                </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </section>
             </div>
 
-            {/* PDF Dialog */}
-            {pdfDialog.open && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="relative w-full max-w-4xl rounded-xl bg-white shadow-2xl" style={{ height: '85vh' }}>
-                        {/* Dialog Header */}
-                        <div className="flex items-center justify-between border-b border-gray-200 p-4">
-                            <h3 className="text-lg font-semibold text-gray-900">{pdfDialog.title}</h3>
-                            <button
-                                onClick={closePdfDialog}
-                                className="rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-                            >
-                                <X className="h-5 w-5" />
-                            </button>
-                        </div>
-                        {/* PDF Viewer */}
-                        <div className="p-4" style={{ height: 'calc(85vh - 80px)' }}>
-                            <div className="flex h-full items-center justify-center rounded-lg bg-gray-100">
-                                <div className="text-center">
-                                    <FileText className="mx-auto mb-3 h-16 w-16 text-gray-400" />
-                                    <p className="text-sm text-gray-600">PDF Viewer</p>
-                                    <p className="text-xs text-gray-500 mt-1">Document: {pdfDialog.url}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <DocumentViewer
+                open={viewerOpen}
+                onOpenChange={setViewerOpen}
+                fileUrl={viewerFile.url}
+                title={viewerFile.title}
+            />
         </div>
     );
 }

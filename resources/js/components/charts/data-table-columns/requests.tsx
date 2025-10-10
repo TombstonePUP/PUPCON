@@ -16,7 +16,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { useForm } from '@inertiajs/react';
 import InputError from '@/components/input-error';
-import { DocumentViewer } from '@/components/ui/document-viewer';
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 
 interface DocumentRequestForm {
     file_id: number;

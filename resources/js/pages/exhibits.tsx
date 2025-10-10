@@ -1,6 +1,6 @@
 import PageHeader from '@/components/guest-page-header';
 import { Button } from '@/components/ui/button';
-import { DocumentViewer } from '@/components/ui/document-viewer';
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import Layout from '@/layouts/landing-layout';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
