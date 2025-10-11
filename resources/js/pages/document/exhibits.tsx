@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { DocumentViewer } from '@/components/ui/document-viewer';
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';

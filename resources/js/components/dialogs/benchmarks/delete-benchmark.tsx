@@ -1,5 +1,5 @@
 "use client"
-import { User, UserMinus } from "lucide-react"
+import { TrashIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -12,30 +12,30 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { useForm } from "@inertiajs/react"
-import { UserRecords } from "@/types/user-management"
+import { ParameterOutlines } from "@/types"
 
-interface EnableUserDialogProps {
-    user: UserRecords;
+interface DeleteBenchmarkProps {
+    outline: ParameterOutlines
     onClose: () => void;
 }
 
-export function EnableUserDialog({ user, onClose }: EnableUserDialogProps) {
+export function DeleteBenchmark({ outline, onClose }: DeleteBenchmarkProps) {
     const {
         data,
         patch,
         reset,
-    } = useForm<{ user_id: number }>({
-        user_id: user.user_id,
+    } = useForm<{ outline_id: number }>({
+        outline_id: outline.parameter_outline_id,
     });
 
-    const enableUser = (e: React.FormEvent) => {
+    const deleteBenchmark = (e: React.FormEvent) => {
         e.preventDefault();
-        patch(route("users.enable"), {
+        /* patch(route("users.disable"), {
             onSuccess: () => {
                 reset();
                 onClose();
             },
-        });
+        }); */
     };
 
     return (
@@ -43,15 +43,15 @@ export function EnableUserDialog({ user, onClose }: EnableUserDialogProps) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className='flex items-center gap-2'>
-                        <User className="h-5 w-5 text-[#7f1414]" />
-                        Enable User
+                        <TrashIcon className="h-5 w-5 text-[#7f1414]" />
+                        Delete Benchmark
                     </DialogTitle>
                     <DialogDescription>
-                        Are you sure you want to enable this user?
+                        Are you sure you want to delete this benchmark?
                     </DialogDescription>
                 </DialogHeader>
                 <Label className="text-sm text-muted-foreground">
-                    This action will enable the user account. The user will be able to access the system again.
+                    This action will permanently delete the benchmark and associated document (if any). This action cannot be undone.
                 </Label>
                 <DialogFooter className="space-x-2">
                     <DialogClose asChild>
@@ -65,9 +65,9 @@ export function EnableUserDialog({ user, onClose }: EnableUserDialogProps) {
                     <Button
                         variant="noborder"
                         tabIndex={2}
-                        onClick={enableUser}
+                        onClick={deleteBenchmark}
                     >
-                        Enable
+                        Delete
                     </Button>
                 </DialogFooter>
             </DialogContent>

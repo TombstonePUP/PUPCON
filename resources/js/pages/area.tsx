@@ -1,7 +1,7 @@
 import PageHeader from '@/components/guest-page-header';
 import { buildOutlineTree, RecursiveOutline } from '@/components/recursive-outline';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { DocumentViewer } from '@/components/ui/document-viewer';
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import Layout from '@/layouts/landing-layout';
 import type { Area, ParameterOutlineCategory, PerProgram } from '@/types';
 import { Head } from '@inertiajs/react';

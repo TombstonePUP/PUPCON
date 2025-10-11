@@ -1,11 +1,11 @@
 "use client"
 
 import { AssignableAreas, AssignablePrograms, AssignableRoles, UserRecords } from "@/types/user-management"
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button"
 import { useForm } from "@inertiajs/react";
 import { User2 } from "lucide-react";
-import { Label } from "../ui/label";
-import InputError from "../input-error";
+import { Label } from "@/components/ui/label";
+import InputError from "@/components/input-error";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog"
 
 
