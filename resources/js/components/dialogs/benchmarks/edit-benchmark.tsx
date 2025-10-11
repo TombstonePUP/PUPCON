@@ -9,10 +9,19 @@ import { EditIcon } from "lucide-react";
 
 interface BenchmarkProps {
     outline: ParameterOutlines;
+    program: string;
+    area_id: number;
     onClose: () => void;
 }
 
-export function EditBenchmark({ outline, onClose }: BenchmarkProps) {
+interface EditBenchmarkForm {
+    benchmark_number: string;
+    benchmark_description: string;
+    benchmark_category: string;
+    is_container: boolean;
+}
+
+export function EditBenchmark({ outline, program, area_id, onClose }: BenchmarkProps) {
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>

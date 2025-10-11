@@ -13,16 +13,19 @@ import {
 import { Label } from "@/components/ui/label"
 import { useForm } from "@inertiajs/react"
 import { ParameterOutlines } from "@/types"
+import { toast } from "sonner"
 
 interface DeleteDocumentProps {
     outline: ParameterOutlines
+    program: string;
+    area_id: number;
     onClose: () => void;
 }
 
-export function DeleteDocument({ outline, onClose }: DeleteDocumentProps) {
+export function DeleteDocument({ outline, program, area_id, onClose }: DeleteDocumentProps) {
     const {
         data,
-        patch,
+        delete: destroy,
         reset,
     } = useForm<{ outline_id: number }>({
         outline_id: outline.parameter_outline_id,
@@ -30,12 +33,18 @@ export function DeleteDocument({ outline, onClose }: DeleteDocumentProps) {
 
     const deleteDocument = (e: React.FormEvent) => {
         e.preventDefault();
-        /* patch(route("users.disable"), {
+        destroy(route("manage.area.delete.file", {program_name: program, area_id: area_id, outline_id: outline.parameter_outline_id}), {
             onSuccess: () => {
                 reset();
                 onClose();
             },
-        }); */
+            onError: () => {
+                toast.error("Failed to delete document", {
+                    description: "Please try again.",
+                    id: "delete-document-error",
+                });
+            }
+        });
     };
 
     return (

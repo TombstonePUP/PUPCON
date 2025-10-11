@@ -5,6 +5,8 @@ import { useForm } from "@inertiajs/react";
 import InputError from "@/components/input-error";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import { ParameterOutlines } from "@/types";
+import { toast } from "sonner";
+import { Progress } from "@/components/ui/progress";
 
 
 interface UploadDocumentProps {
@@ -34,12 +36,34 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
 
     const uploadDocument = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(data);
         post(route("manage.area.upload.file", {program_name: program, area_id: area_id, outline_id: outline.parameter_outline_id}), {
+            onProgress: (progress) => {
+                if (progress?.percentage) {
+                    toast.custom(() => (
+                    <div className="bg-white dark:bg-neutral-900 p-4 rounded-lg shadow-lg w-72">
+                        <p className="font-medium">Uploading...</p>
+                        <Progress value={progress?.percentage} className="h-2 mt-2" />
+                        <p className="text-xs text-gray-500 mt-1">
+                            {progress.percentage}%
+                        </p>
+                    </div>
+                    ), {
+                        id: "uploading"
+                    });
+                }
+            },
             onSuccess: () => {
+                toast.dismiss("uploading");
                 reset();
                 onClose();
             },
+            onError: () => {
+                toast.dismiss("uploading");
+                toast.error("Failed to upload document", {
+                    description: "There was an error uploading the document.",
+                    id: "upload-error",
+                });
+            }
         });
     };
 

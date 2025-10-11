@@ -17,10 +17,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { Toaster } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 import AppLayout from '@/layouts/app-layout';
 import { Area, AreaFormCategory, BreadcrumbItem, ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import React, { useState } from 'react';
+import { Head, useForm, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 
 // charts components
 interface AreaFilesProps {
@@ -101,6 +103,8 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                 return (
                     <DeleteDocument
                         outline={selectedOutline}
+                        program={program?.program_link}
+                        area_id={area?.area_id}
                         onClose={closeDialog}
                     />
                 );
@@ -108,6 +112,8 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                 return (
                     <EditBenchmark
                         outline={selectedOutline}
+                        program={program?.program_link}
+                        area_id={area?.area_id}
                         onClose={closeDialog}
                     />
                 );
@@ -115,6 +121,8 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                 return (
                     <DeleteBenchmark
                         outline={selectedOutline}
+                        program={program?.program_link}
+                        area_id={area?.area_id}
                         onClose={closeDialog}
                     />
                 );

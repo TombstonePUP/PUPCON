@@ -7,9 +7,11 @@ use App\Models\ActivityLog;
 use App\Models\Areas;
 use App\Models\FileStatus;
 use App\Models\ParameterOutlines;
+use App\Models\Programs;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
@@ -147,29 +149,37 @@ class AreaParameterOutlinesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, ParameterOutlines $parameterOutlines): RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
-        $parameterOutline = $parameterOutlines->where('parameter_outline_id', $request->outline_id)->first();
+        $parameterOutlines = ParameterOutlines::where('parameter_outline_id', $request->outline_id)->first();
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        $program = $request->program_name;
+        $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::where('program_name', $program)->first();
 
-        if ($parameterOutline->AreaFiles) {
-            $file = $parameterOutline->AreaFiles;
+        $message = "";
+
+        if ($file = $parameterOutlines->AreaFiles) {
             Storage::disk('public')->delete($file->file_path);
+            $file->delete();
             $activityLog = new ActivityLog();
             $activityLog->user_id = $user->user_id;
             $activityLog->area = $area->area_name;
-            $activityLog->program = $program;
+            $activityLog->program = $program->program_name;
             $activityLog->file_name = $file->file_name;
             $activityLog->activity = "Delete Document";
             $activityLog->activity_date = now();
             $activityLog->save();
+            $message = "The benchmark and its associated document have been deleted.";
+        } else {
+            $message = "The benchmark has been deleted.";
         }
 
-        $parameterOutline->delete();
+        $parameterOutlines->delete();
 
         return redirect()->back()
-            ->with('success', 'Parameter outline deleted successfully.');
+            ->with('type', 'success')
+            ->with('title', 'Delete Successful')
+            ->with('message', $message);
     }
 }
