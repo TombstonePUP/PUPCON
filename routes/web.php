@@ -60,7 +60,7 @@ Route::get('test/ui-testing', function () {
     return Inertia::render('test/ui-testing');
 })->name('ui-testing');
 
-Route::get('accreditor/accreditor-view', function () {
+Route::get('accreditor', function () {
     return Inertia::render('accreditor/accreditor-view');
 })->name('accreditor');
 

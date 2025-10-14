@@ -234,7 +234,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
         <div className="flex min-h-screen flex-col">
             {/* Header */}
             <motion.header
-                className={cn('sticky top-0 z-50 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm')}
+                className={cn('sticky top-0 z-50 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm flex justify-between items-center')}
                 animate={{
                     y: scrollDir === 'down' ? '-100%' : '0%',
                 }}
@@ -243,7 +243,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                     ease: 'easeInOut',
                 }}
             >
-                <div className="absolute top-1/2 left-0 -translate-y-1/2">
+                <div>
                     <Link href="/" className="flex items-center" preserveScroll>
                         <motion.div className="h-full w-auto overflow-hidden">
                             <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} />
@@ -251,7 +251,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                     </Link>
                 </div>
 
-                <div className="relative mx-auto max-w-7xl">
+                <div className="relative max-w-7xl mr-50">
                     {/* Navigation + Search */}
                     <div className="flex items-center justify-end gap-8 px-8 py-4">
                         <nav>

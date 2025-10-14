@@ -172,6 +172,7 @@ export default function Programs({ program }: PerProgramProps) {
             </div>
         </div>
     );
+    
     return (
         <>
             <Head title={`${program.degree_type} in ${program.program_name}`} />
