@@ -14,7 +14,6 @@ import {
     Home,
     Info,
     Mail,
-    Menu,
     Search,
     ShieldCheck,
     Users,
@@ -46,7 +45,6 @@ export default function Layout({ children, footerText }: LayoutProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [isSearching, setIsSearching] = useState(false);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const searchRef = useRef<HTMLDivElement>(null);
 
@@ -185,20 +183,6 @@ export default function Layout({ children, footerText }: LayoutProps) {
         };
     }, [searchOpen]);
 
-    // Close mobile menu on escape
-    useEffect(() => {
-        if (!mobileMenuOpen) return;
-
-        function handleEsc(e: KeyboardEvent) {
-            if (e.key === 'Escape') {
-                setMobileMenuOpen(false);
-            }
-        }
-
-        document.addEventListener('keydown', handleEsc);
-        return () => document.removeEventListener('keydown', handleEsc);
-    }, [mobileMenuOpen]);
-
     // Framer Motion variants
     const backdropVariants = {
         hidden: { opacity: 0 },
@@ -250,7 +234,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
         <div className="flex min-h-screen flex-col">
             {/* Header */}
             <motion.header
-                className={cn('sticky top-0 z-50 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm')}
+                className={cn('sticky top-0 z-50 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm flex justify-between items-center')}
                 animate={{
                     y: scrollDir === 'down' ? '-100%' : '0%',
                 }}
@@ -259,45 +243,17 @@ export default function Layout({ children, footerText }: LayoutProps) {
                     ease: 'easeInOut',
                 }}
             >
-                <div className="relative mx-auto max-w-7xl">
-                    {/* Logo - Responsive positioning */}
-                    <div className="absolute top-1/2 left-4 z-10 -translate-y-1/2 md:left-0">
-                        <Link href="/" className="flex items-center" preserveScroll>
-                            <motion.div className="h-12 w-auto overflow-hidden md:h-16">
-                                <img
-                                    src="/images/pupsjlogo-text-exotic.png"
-                                    alt="PUP San Juan Logo"
-                                    className="h-full w-full object-cover"
-                                    draggable={false}
-                                />
-                            </motion.div>
-                        </Link>
-                    </div>
+                <div>
+                    <Link href="/" className="flex items-center" preserveScroll>
+                        <motion.div className="h-full w-auto overflow-hidden">
+                            <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} />
+                        </motion.div>
+                    </Link>
+                </div>
 
-                    {/* Mobile Menu Buttons (Hamburger + Search) */}
-                    <div className="flex items-center justify-end gap-2 px-4 py-4 md:hidden">
-                        <motion.button
-                            onClick={() => setSearchOpen(true)}
-                            className="flex items-center justify-center rounded-full bg-white/10 p-2 text-white ring-1 ring-white/20 hover:bg-white/20"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            aria-label="Search"
-                        >
-                            <Search className="h-5 w-5" />
-                        </motion.button>
-                        <motion.button
-                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="flex items-center justify-center rounded-full bg-white/10 p-2 text-white ring-1 ring-white/20 hover:bg-white/20"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            aria-label="Menu"
-                        >
-                            <Menu className="h-6 w-6" />
-                        </motion.button>
-                    </div>
-
-                    {/* Desktop Navigation */}
-                    <div className="hidden items-center justify-end gap-8 px-8 py-4 md:flex">
+                <div className="relative max-w-7xl mr-50">
+                    {/* Navigation + Search */}
+                    <div className="flex items-center justify-end gap-8 px-8 py-4">
                         <nav>
                             <ul className="flex gap-8 text-sm font-medium tracking-wide text-white/90">
                                 {[...leftNav, ...rightNav].map((item) => (
@@ -317,7 +273,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                                         {item.dropdown?.length > 0 && (
                                             <div className="absolute left-0 mt-7 max-h-0 w-auto overflow-hidden rounded-md bg-white text-sm opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:max-h-96 group-hover:opacity-100">
-                                                <ul className="flex flex-col whitespace-nowrap">
+                                                <ul className="flex flex-col">
                                                     {item.dropdown.map((drop) => (
                                                         <li key={drop.label} className="border-b border-gray-100 last:border-none">
                                                             <Link
@@ -338,7 +294,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             </ul>
                         </nav>
 
-                        {/* Desktop Search Button */}
+                        {/* Enhanced Search Button */}
                         <motion.button
                             onClick={() => setSearchOpen(true)}
                             className="relative flex items-center justify-center rounded-full bg-white/10 p-2 text-white ring-1 ring-white/20 hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none"
@@ -352,77 +308,6 @@ export default function Layout({ children, footerText }: LayoutProps) {
                     </div>
                 </div>
             </motion.header>
-
-            {/* Mobile Menu Drawer */}
-            <AnimatePresence>
-                {mobileMenuOpen && (
-                    <>
-                        <motion.div
-                            className="fixed inset-0 z-40 bg-black/50"
-                            variants={backdropVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="hidden"
-                            onClick={() => setMobileMenuOpen(false)}
-                        />
-                        <motion.aside
-                            className="fixed top-0 right-0 z-50 h-full w-[280px] bg-white shadow-2xl sm:w-[320px]"
-                            variants={sidebarVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="hidden"
-                        >
-                            <div className="flex items-center justify-between border-b border-gray-200 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] px-4 py-4">
-                                <h2 className="text-lg font-bold text-white">Menu</h2>
-                                <motion.button
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="rounded-lg p-2 text-white transition-colors hover:bg-white/20"
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.9 }}
-                                >
-                                    <X className="h-5 w-5" />
-                                </motion.button>
-                            </div>
-                            <nav className="custom-scrollbar h-full overflow-y-auto p-4 pb-20">
-                                <ul className="space-y-2">
-                                    {[...leftNav, ...rightNav].map((item) => (
-                                        <li key={item.label}>
-                                            <Link
-                                                href={item.href}
-                                                className={cn(
-                                                    'block rounded-lg px-4 py-3 font-medium transition-colors',
-                                                    isActive(item.href) ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100',
-                                                )}
-                                                onClick={() => setMobileMenuOpen(false)}
-                                                preserveScroll
-                                            >
-                                                {item.label}
-                                            </Link>
-                                            {item.dropdown?.length > 0 && (
-                                                <ul className="mt-2 ml-4 space-y-1">
-                                                    {item.dropdown.map((drop) => (
-                                                        <li key={drop.label}>
-                                                            <Link
-                                                                href={drop.href}
-                                                                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#7f1414]"
-                                                                onClick={() => setMobileMenuOpen(false)}
-                                                                preserveScroll
-                                                            >
-                                                                {drop.icon && <span className="flex-shrink-0">{drop.icon}</span>}
-                                                                <span>{drop.label}</span>
-                                                            </Link>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </nav>
-                        </motion.aside>
-                    </>
-                )}
-            </AnimatePresence>
 
             {/* Search Modal */}
             <AnimatePresence>
