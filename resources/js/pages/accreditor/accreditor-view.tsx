@@ -14,6 +14,8 @@ import {
     AlertCircle,
 } from "lucide-react";
 import { DocumentViewer } from "@/components/dialogs/documents/view-document";
+import AccreditorLayout from '@/layouts/accreditor-layout';
+
 
 export default function AccreditorDashboard() {
     const [expandedAreas, setExpandedAreas] = useState({});
@@ -349,6 +351,9 @@ export default function AccreditorDashboard() {
     };
 
     return (
+
+<AccreditorLayout>
+
         <div className="min-h-screen bg-gray-50">
             <div className="mx-auto w-[85%] max-w-7xl px-6 py-12">
                 <section className="mb-12 rounded-xl border border-[#7f1414]/25 bg-gradient-to-br from-white to-gray-50 p-8">
@@ -640,5 +645,6 @@ export default function AccreditorDashboard() {
                 title={viewerFile.title}
             />
         </div>
+        </AccreditorLayout>
     );
 }
