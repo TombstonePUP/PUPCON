@@ -1,78 +1,149 @@
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
-const HomeCard = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
-      className
-    )}
-    {...props}
-  />
-))
-HomeCard.displayName = "HomeCard"
+function HomeCard({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card"
+      className={cn(
+        "group bg-card text-card-foreground flex flex-col gap-6 rounded-xl border overflow-hidden shadow-sm mx-auto ",
+        className
+      )}
+      {...props}
+    />
+  )
+}
 
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-4 sm:p-6", className)}
-    {...props}
-  />
-))
-CardHeader.displayName = "CardHeader"
+function Card({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card"
+      className={cn(
+        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6",
+        className
+      )}
+      {...props}
+    />
+  )
+}
 
-const HomeCardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn(
-      "text-base sm:text-lg md:text-xl font-semibold leading-none tracking-tight",
-      className
-    )}
-    {...props}
-  />
-))
-HomeCardTitle.displayName = "HomeCardTitle"
+function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-header"
+      className={cn(
+        "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6",
+        className
+      )}
+      {...props}
+    />
+  )
+}
 
-const HomeCardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-xs sm:text-sm text-muted-foreground", className)}
-    {...props}
-  />
-))
-HomeCardDescription.displayName = "HomeCardDescription"
+function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-title"
+      className={cn("leading-none font-semibold", className)}
+      {...props}
+    />
+  )
+}
 
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-4 sm:p-6 pt-0", className)} {...props} />
-))
-CardContent.displayName = "CardContent"
+function HomeCardTitle({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-title"
+      className={cn("leading-none font-semibold text-[1.2vw] text-[#7f1414]", className)}
+      {...props}
+    />
+  )
+}
 
-const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex items-center p-4 sm:p-6 pt-0", className)}
-    {...props}
-  />
-))
-CardFooter.displayName = "CardFooter"
+function HomeCardDescription({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-description"
+      className={cn(
+        "text-muted-foreground text-sm h-[4.5vw] overflow-hidden text-ellipsis",
+        "whitespace-normal overflow-hidden",
+        className
+      )}
+      {...props}
+    />
+  )
+}
 
-export { HomeCard, CardHeader, HomeCardTitle, HomeCardDescription, CardContent, CardFooter }
+function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-description"
+      className={cn(
+        "text-muted-foreground text-sm h-fit overflow-hidden text-ellipsis",
+        "whitespace-normal overflow-hidden [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function CardAction({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-action"
+      className={cn(
+        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function CardContent({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-content"
+      className={cn("px-6", className)}
+      {...props}
+    />
+  )
+}
+
+function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-footer"
+      className={cn("flex items-center px-6 [.border-t]:pt-6", className)}
+      {...props}
+    />
+  )
+}
+
+function CardImage({ src, alt, className }: { src: string; alt: string; className?: string }) {
+  return (
+    <div className={cn("w-full h-[12vw] overflow-hidden", className)}>
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-120"
+      />
+    </div>
+  )
+}
+
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardAction,
+  CardDescription,
+  CardContent,
+  CardImage,
+  HomeCard,
+  HomeCardTitle,
+  HomeCardDescription
+}

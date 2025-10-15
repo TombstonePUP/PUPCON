@@ -52,7 +52,7 @@ const ImageWithPreload = React.memo(({ src, alt, className, priority = false, ..
     );
 });
 
-// Simple Action Button - Made Responsive
+// Simple Action Button
 const ActionButton = ({ href, children, icon: Icon, external = false, ...props }) => {
     const Component = external ? 'a' : Link;
     const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
@@ -60,13 +60,13 @@ const ActionButton = ({ href, children, icon: Icon, external = false, ...props }
     return (
         <Component
             href={href}
-            className="inline-flex transform-none items-center justify-center gap-2 rounded-full border-2 border-[#7f1414] bg-[#7f1414] px-4 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111] sm:gap-3 sm:px-6 sm:py-4 sm:text-base md:px-8"
+            className="inline-flex transform-none items-center justify-center gap-3 rounded-full border-2 border-[#7f1414] bg-[#7f1414] px-8 py-4 font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111]"
             {...externalProps}
             {...props}
         >
-            {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5" />}
-            <span className="whitespace-nowrap">{children}</span>
-            <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {Icon && <Icon className="h-5 w-5" />}
+            <span>{children}</span>
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
         </Component>
@@ -81,6 +81,7 @@ const SimpleCarousel = ({ images }) => {
         // Preload all images
         images.forEach((src, index) => {
             if (index > 0) {
+                // First image already preloaded in Head
                 const img = new Image();
                 img.src = src;
             }
@@ -214,9 +215,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
             </Head>
 
             <Layout>
-                {/* Hero Section with Animated Carousel - Responsive */}
+                {/* Hero Section with Animated Carousel */}
                 <motion.div
-                    className="relative h-[50vh] w-full overflow-hidden sm:h-[60vh] lg:h-[70vh]"
+                    className="relative h-[60vh] w-full overflow-hidden"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: isPageReady ? 1 : 0 }}
                     transition={{ duration: 0.5 }}
@@ -224,27 +225,22 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     <SimpleCarousel images={images} />
 
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 via-[#800000]/70 to-transparent sm:via-transparent"></div>
+                    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>
 
-                    {/* Content Overlay with Animations - Responsive */}
+                    {/* Content Overlay with Animations */}
                     <motion.div
-                        className="absolute inset-0 z-20 grid w-full grid-cols-1 px-4 text-white sm:px-8 md:px-12 lg:pl-20"
+                        className="absolute inset-0 z-20 grid w-full grid-cols-1 px-12 pr-10 pl-70 text-white md:grid-cols-2"
                         variants={containerVariants}
                         initial="hidden"
                         animate={isPageReady ? 'visible' : 'hidden'}
                     >
-                        <div className="flex max-w-2xl flex-col justify-center space-y-4 sm:space-y-6">
-                            <motion.img
-                                src="/images/pupsj_motto.png"
-                                alt="Logo"
-                                className="h-auto w-48 sm:w-64 md:w-80 lg:w-96"
-                                variants={itemVariants}
-                            />
-                            <motion.h2 className="text-base italic sm:text-lg md:text-xl lg:text-2xl" variants={itemVariants}>
+                        <div className="flex flex-col justify-center space-y-6">
+                            <motion.img src="/images/pupsj_motto.png" alt="Logo" className="h-auto w-120" variants={itemVariants} />
+                            <motion.h2 className="text-2xl italic" variants={itemVariants}>
                                 Years of academic excellence and service
                             </motion.h2>
 
-                            <motion.div className="mt-4 flex flex-wrap gap-2 sm:mt-6 sm:gap-3 md:mt-10 md:gap-4" variants={itemVariants}>
+                            <motion.div className="mt-10 flex flex-wrap gap-4" variants={itemVariants}>
                                 {[
                                     { icon: BookOpen, text: 'Programs', primary: true },
                                     { icon: Calendar, text: 'Events' },
@@ -254,11 +250,11 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         key={btn.text}
                                         className={
                                             btn.primary
-                                                ? 'flex items-center space-x-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-black transition-all duration-200 hover:scale-105 hover:bg-gray-100 sm:space-x-2 sm:px-4 sm:py-2 sm:text-sm md:px-6 md:text-base'
-                                                : 'flex items-center space-x-1.5 rounded-md border border-gray-300/70 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20 sm:space-x-2 sm:px-4 sm:py-2 sm:text-sm md:px-6 md:text-base'
+                                                ? 'flex items-center space-x-2 rounded-md bg-white px-6 py-2 font-semibold text-black transition-all duration-200 hover:scale-105 hover:bg-gray-100'
+                                                : 'flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20'
                                         }
                                     >
-                                        <btn.icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                                        <btn.icon className="h-5 w-5" />
                                         <span>{btn.text}</span>
                                     </motion.button>
                                 ))}
@@ -267,25 +263,25 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     </motion.div>
                 </motion.div>
 
-                {/* Welcome Modal - Responsive */}
+                {/* Welcome Modal */}
                 {showModal && (
                     <motion.div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: isModalVisible ? 1 : 0 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.12, ease: 'easeInOut' }}
+                        transition={{ duration: 0.12, ease: 'easeInOut' }} // faster smooth fade
                         onClick={handleCloseModal}
                     >
                         <motion.div
-                            className="relative w-full max-w-4xl"
+                            className="relative mx-4 w-full max-w-4xl"
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: isModalVisible ? 1 : 0, scale: isModalVisible ? 1 : 0.95 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.12, ease: 'easeInOut' }}
+                            transition={{ duration: 0.12, ease: 'easeInOut' }} // fast open/close
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="relative overflow-hidden rounded-2xl border border-gray-200/50 bg-white sm:rounded-3xl">
+                            <div className="relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white">
                                 {/* Optional animated background elements */}
                                 {!shouldReduceMotion && (
                                     <>
@@ -305,7 +301,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 {/* Close Button */}
                                 <motion.button
                                     onClick={handleCloseModal}
-                                    className="absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 transition-colors duration-150 hover:bg-white sm:top-6 sm:right-6"
+                                    className="absolute top-6 right-6 z-10 rounded-full bg-white/80 p-2 transition-colors duration-150 hover:bg-white"
                                     whileHover={{ scale: shouldReduceMotion ? 1 : 1.05 }}
                                     whileTap={{ scale: shouldReduceMotion ? 1 : 0.9 }}
                                     aria-label="Close"
@@ -320,54 +316,47 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                     </svg>
                                 </motion.button>
 
-                                <div className="relative p-6 sm:p-8 md:p-12">
-                                    <div className="grid items-center gap-8 sm:gap-10 md:grid-cols-2 md:gap-12">
+                                <div className="relative p-12">
+                                    <div className="grid items-center gap-12 md:grid-cols-2">
                                         {/* Left: Logo + Welcome */}
                                         <motion.div
-                                            className="flex flex-col items-center justify-center space-y-4 text-center sm:space-y-6"
+                                            className="flex flex-col items-center justify-center space-y-6 text-center"
                                             initial={{ opacity: 0, x: -30 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.1, duration: 0.2, ease: 'easeOut' }}
                                         >
-                                            <img src="/images/pupcon-logo.png" alt="PUP Logo" className="h-16 w-auto sm:h-20 md:h-24" />
+                                            <img src="/images/pupcon-logo.png" alt="PUP Logo" className="h-24 w-auto" />
                                             <motion.div
-                                                className="space-y-2 sm:space-y-3"
+                                                className="space-y-3"
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: 0.2, duration: 0.15 }}
                                             >
-                                                <h2 className="bg-[#7f1414] bg-clip-text text-3xl font-bold text-transparent sm:text-4xl">
-                                                    Mabuhay!
-                                                </h2>
-                                                <p className="text-base text-gray-600 sm:text-lg">Welcome to PUP San Juan</p>
+                                                <h2 className="bg-[#7f1414] bg-clip-text text-4xl font-bold text-transparent">Mabuhay!</h2>
+                                                <p className="text-lg text-gray-600">Welcome to PUP San Juan</p>
                                             </motion.div>
                                         </motion.div>
 
                                         {/* Right: Role Selection */}
                                         <motion.div
-                                            className="space-y-4 sm:space-y-6"
+                                            className="space-y-6"
                                             initial={{ opacity: 0, x: 30 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ duration: 0.2, ease: 'easeOut' }}
                                         >
-                                            <div className="mb-6 text-center sm:mb-8">
-                                                <h3 className="text-black-900 mb-2 text-lg font-semibold sm:text-xl">Select your role to continue</h3>
-                                                <p className="text-sm text-gray-500 sm:text-base">Choose the option that best describes you</p>
+                                            <div className="mb-8 text-center">
+                                                <h3 className="text-black-900 mb-2 text-xl font-semibold">Select your role to continue</h3>
+                                                <p className="text-gray-500">Choose the option that best describes you</p>
                                             </div>
 
-                                            <div className="space-y-3 sm:space-y-4">
+                                            <div className="space-y-4">
                                                 {[
                                                     {
                                                         key: 'faculty',
                                                         title: 'Faculty',
                                                         desc: 'Administrators & Department Chairs',
                                                         icon: (
-                                                            <svg
-                                                                className="h-6 w-6 text-white sm:h-7 sm:w-7"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                viewBox="0 0 24 24"
-                                                            >
+                                                            <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path
                                                                     strokeLinecap="round"
                                                                     strokeLinejoin="round"
@@ -388,12 +377,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                         title: 'Accreditor',
                                                         desc: 'Evaluation Team Members',
                                                         icon: (
-                                                            <svg
-                                                                className="h-6 w-6 text-white sm:h-7 sm:w-7"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                viewBox="0 0 24 24"
-                                                            >
+                                                            <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path
                                                                     strokeLinecap="round"
                                                                     strokeLinejoin="round"
@@ -410,16 +394,16 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                         initial={{ opacity: 0, y: 20 }}
                                                         animate={{ opacity: 1, y: 0 }}
                                                         transition={{ delay: 0.15 + index * 0.05, duration: 0.12, ease: 'easeOut' }}
-                                                        className="group flex w-full items-center rounded-xl border border-gray-200 bg-white/80 p-4 transition-all duration-150 ease-out hover:border-[#7f1414] hover:bg-white sm:rounded-2xl sm:p-6"
+                                                        className="group flex w-full items-center rounded-2xl border border-gray-200 bg-white/80 p-6 transition-all duration-150 ease-out hover:border-[#7f1414] hover:bg-white"
                                                     >
-                                                        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#7f1414] transition-transform duration-150 ease-out group-hover:scale-105 sm:h-14 sm:w-14 sm:rounded-xl">
+                                                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-[#7f1414] transition-transform duration-150 ease-out group-hover:scale-105">
                                                             {role.icon}
                                                         </div>
-                                                        <div className="ml-4 text-left sm:ml-6">
-                                                            <h4 className="text-base font-semibold text-gray-800 transition-colors duration-150 ease-out group-hover:text-[#7f1414] sm:text-lg">
+                                                        <div className="ml-6 text-left">
+                                                            <h4 className="text-lg font-semibold text-gray-800 transition-colors duration-150 ease-out group-hover:text-[#7f1414]">
                                                                 {role.title}
                                                             </h4>
-                                                            <p className="text-xs text-gray-500 sm:text-sm">{role.desc}</p>
+                                                            <p className="text-sm text-gray-500">{role.desc}</p>
                                                         </div>
                                                         <svg
                                                             className="ml-auto h-5 w-5 text-gray-400 transition-all duration-150 ease-out group-hover:translate-x-1 group-hover:text-[#7f1414]"
@@ -438,11 +422,11 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     transition={{ delay: 0.25, duration: 0.12, ease: 'easeOut' }}
-                                                    className="group w-full rounded-xl bg-[#7f1414] p-4 text-white transition-colors duration-150 ease-out hover:bg-[#6b1111] sm:rounded-2xl sm:p-6"
+                                                    className="group w-full rounded-2xl bg-[#7f1414] p-6 text-white transition-colors duration-150 ease-out hover:bg-[#6b1111]"
                                                 >
-                                                    <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+                                                    <div className="flex items-center justify-center space-x-3">
                                                         <svg
-                                                            className="h-5 w-5 transition-transform duration-150 ease-out group-hover:scale-105 sm:h-6 sm:w-6"
+                                                            className="h-6 w-6 transition-transform duration-150 ease-out group-hover:scale-105"
                                                             fill="none"
                                                             stroke="currentColor"
                                                             viewBox="0 0 24 24"
@@ -454,9 +438,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                                                             />
                                                         </svg>
-                                                        <span className="text-base font-semibold sm:text-lg">Continue as Guest / Student</span>
+                                                        <span className="text-lg font-semibold">Continue as Guest / Student</span>
                                                         <svg
-                                                            className="h-4 w-4 transition-transform duration-150 ease-out group-hover:translate-x-1 sm:h-5 sm:w-5"
+                                                            className="h-5 w-5 transition-transform duration-150 ease-out group-hover:translate-x-1"
                                                             fill="none"
                                                             stroke="currentColor"
                                                             viewBox="0 0 24 24"
@@ -473,7 +457,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                             </div>
 
                                             <motion.div
-                                                className="pt-2 text-center sm:pt-4"
+                                                className="pt-4 text-center"
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                                 transition={{ duration: 0.12 }}
@@ -488,9 +472,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     </motion.div>
                 )}
 
-                {/* News Section - Responsive */}
+                {/* News Section */}
                 <motion.section
-                    className="flex min-h-screen w-full flex-col items-center justify-center gap-12 bg-gray-50 px-4 py-12 sm:gap-16 sm:px-6 sm:py-16 md:gap-20"
+                    className="flex min-h-[80vh] w-full flex-col items-center justify-center gap-20 bg-gray-50 px-6 py-16"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
@@ -502,15 +486,15 @@ export default function Welcome({ carouselImages }: LandingProps) {
                         },
                     }}
                 >
-                    <motion.div className="flex flex-col items-center px-4 text-center" variants={itemVariants}>
-                        <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">What's New on Campus</h2>
-                        <p className="mt-2 text-base text-gray-600 sm:text-lg">Catch up on events, announcements, and campus highlights.</p>
+                    <motion.div className="flex flex-col items-center text-center" variants={itemVariants}>
+                        <h2 className="text-3xl font-bold text-gray-900">What's New on Campus</h2>
+                        <p className="mt-2 text-lg text-gray-600">Catch up on events, announcements, and campus highlights.</p>
                     </motion.div>
 
-                    {/* News Cards - Responsive Grid */}
-                    <div className="grid w-full max-w-7xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6 md:gap-8 lg:grid-cols-4">
+                    {/* News Cards */}
+                    <div className="flex flex-row flex-wrap justify-center gap-8">
                         {newsCards.map((card, i) => (
-                            <motion.div key={i} variants={itemVariants}>
+                            <motion.div key={i} className="w-[18vw]" variants={itemVariants}>
                                 <Link href="/">
                                     <motion.div
                                         whileHover={{
@@ -520,21 +504,21 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         transition={{ duration: 0.2 }}
                                     >
                                         <HomeCard className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-colors duration-200 hover:border-[#7f1414]">
-                                            <div className="h-40 w-full overflow-hidden sm:h-48">
+                                            <div className="h-48 w-full overflow-hidden">
                                                 <ImageWithPreload
                                                     src={card.img}
                                                     alt={card.title}
                                                     className="h-full w-full transition-transform duration-300 group-hover:scale-105"
                                                 />
                                             </div>
-                                            <CardHeader className="p-3 sm:p-4">
-                                                <HomeCardTitle className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
+                                            <CardHeader className="p-4">
+                                                <HomeCardTitle className="font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
                                                     {card.title}
                                                 </HomeCardTitle>
                                                 <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
                                                     <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 group-hover:scale-x-100"></div>
                                                 </div>
-                                                <HomeCardDescription className="text-xs text-gray-600 sm:text-sm">{card.desc}</HomeCardDescription>
+                                                <HomeCardDescription className="text-sm text-gray-600">{card.desc}</HomeCardDescription>
                                             </CardHeader>
                                         </HomeCard>
                                     </motion.div>
@@ -544,9 +528,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     </div>
                 </motion.section>
 
-                {/* Audio-Video Section - Responsive */}
+                {/* Audio-Video Section */}
                 <motion.section
-                    className="relative flex min-h-screen w-full items-center justify-center py-12 sm:py-16"
+                    className="relative flex min-h-[80vh] w-full items-center justify-center py-16"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
@@ -556,8 +540,8 @@ export default function Welcome({ carouselImages }: LandingProps) {
                         className="absolute inset-0 bg-cover bg-center opacity-30 grayscale"
                         style={{ backgroundImage: "url('/images/homepage-slides/1.jpg')" }}
                     ></div>
-                    <div className="absolute inset-0 bg-gradient-to-l from-white/95 via-white/80 to-white/60 sm:to-transparent"></div>
-                    <div className="relative z-10 flex w-[90%] max-w-[1400px] flex-col items-center justify-center gap-8 sm:w-[85%] sm:gap-12 lg:flex-row lg:gap-16">
+                    <div className="absolute inset-0 bg-gradient-to-l from-white/95 via-white/80 to-transparent"></div>
+                    <div className="relative z-10 flex w-[85%] max-w-[1400px] flex-col items-center justify-center gap-16 lg:flex-row">
                         <motion.div
                             className="flex w-full justify-center lg:w-[50%]"
                             initial={{ opacity: 0, x: -30 }}
@@ -566,7 +550,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                             viewport={{ once: true }}
                         >
                             <motion.div
-                                className="relative h-[250px] w-full overflow-hidden rounded-xl sm:h-[350px] sm:rounded-2xl md:h-[400px]"
+                                className="relative h-[400px] w-full overflow-hidden rounded-2xl"
                                 whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
                                 transition={{ duration: 0.3 }}
                             >
@@ -582,24 +566,25 @@ export default function Welcome({ carouselImages }: LandingProps) {
                         </motion.div>
 
                         <motion.div
-                            className="flex w-full flex-col justify-center px-4 text-center sm:px-0 lg:w-[50%] lg:text-left"
+                            className="flex w-full flex-col justify-center text-center lg:w-[50%] lg:text-left"
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 0.2 }}
                             viewport={{ once: true }}
                         >
-                            <h2 className="mb-3 text-xl font-bold text-[#7f1414] sm:mb-4 sm:text-2xl lg:text-[2rem]">
-                                Campus Audio-Visual Presentation
-                            </h2>
-                            <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">
+                            <h2 className="mb-4 text-[2.5vw] font-bold text-[#7f1414] lg:text-[2rem]">Campus Audio-Visual Presentation</h2>
+                            <p className="mb-4 text-[1.15rem] leading-relaxed text-gray-700">
                                 A Leading Comprehensive Polytechnic University in Asia
                             </p>
-                            <p className="mb-6 text-sm text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">
+                            <p className="mb-8 text-[0.95rem] text-gray-600 italic">
                                 Discover the roadmap that shapes our future — goals, strategies, and developments leading PUP into a new era of
                                 excellence.
                             </p>
 
-                            <motion.div whileHover={{}} whileTap={{}} className="flex justify-center lg:justify-start">
+                            <motion.div
+                                whileHover={{}} // empty object disables scale
+                                whileTap={{}} // disable tap scale
+                            >
                                 <ActionButton href="..." icon={Play} external>
                                     Watch on YouTube
                                 </ActionButton>
@@ -608,27 +593,27 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     </div>
                 </motion.section>
 
-                {/* Director's Message Section - Responsive */}
+                {/* Director's Message Section with Animations */}
                 <motion.section
-                    className="bg-white py-12 sm:py-16 md:py-20"
+                    className="bg-white py-20"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                     viewport={{ once: true, margin: '100px' }}
                 >
                     <motion.div
-                        className="mx-auto mb-8 max-w-4xl px-4 text-center sm:mb-12"
+                        className="mx-auto mb-12 max-w-4xl text-center"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl">Message from the Campus Director</h2>
-                        <p className="text-sm text-gray-600 sm:text-base">A word of inspiration from our campus leadership.</p>
+                        <h2 className="mb-2 text-3xl font-bold text-gray-900">Message from the Campus Director</h2>
+                        <p className="text-gray-600">A word of inspiration from our campus leadership.</p>
                     </motion.div>
 
                     <motion.div
-                        className="mx-auto flex w-[90%] max-w-[1000px] flex-col gap-4 sm:w-[85%] sm:gap-6 md:w-[80%] lg:flex-row lg:items-stretch"
+                        className="mx-auto flex w-[80%] max-w-[1000px] flex-col gap-2 lg:flex-row lg:items-stretch"
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: 0.1 }}
@@ -636,7 +621,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     >
                         {/* Director's Image */}
                         <motion.div
-                            className="relative mx-auto h-[300px] w-[240px] shrink-0 overflow-hidden rounded-xl sm:h-[350px] sm:w-[280px] lg:mx-0"
+                            className="relative mx-auto h-[350px] w-[280px] shrink-0 overflow-hidden rounded-xl lg:mx-0"
                             whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
                             transition={{ duration: 0.3 }}
                         >
@@ -646,16 +631,16 @@ export default function Welcome({ carouselImages }: LandingProps) {
 
                         {/* Director's Message */}
                         <motion.div
-                            className="flex flex-1 flex-col gap-4 rounded-xl border-2 border-[#7f1414] bg-[#7f1414] p-6 text-white transition-colors duration-200 hover:border-[#a71d1d] sm:gap-6 sm:p-8 md:p-12"
+                            className="flex flex-1 flex-col gap-4 rounded-xl border-2 border-[#7f1414] bg-[#7f1414] p-12 text-white transition-colors duration-200 hover:border-[#a71d1d]"
                             whileHover={{ scale: shouldReduceMotion ? 1 : 1.01 }}
                             transition={{ duration: 0.2 }}
                         >
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#a83232]/80 sm:h-12 sm:w-12">
-                                <ImageWithPreload src="/images/quote.png" alt="Quote Icon" className="h-3 w-3 object-contain sm:h-4 sm:w-4" />
+                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#a83232]/80">
+                                <ImageWithPreload src="/images/quote.png" alt="Quote Icon" className="h-4 w-4 object-contain" />
                             </div>
 
-                            <div className="scrollbar-thin scrollbar-thumb-white/20 max-h-[100px] overflow-y-auto pr-2 sm:max-h-[120px]">
-                                <p className="text-left text-sm leading-relaxed sm:text-base">
+                            <div className="scrollbar-thin scrollbar-thumb-white/20 max-h-[120px] overflow-y-auto pr-2">
+                                <p className="text-left leading-relaxed">
                                     Welcome to PUP San Juan! As the Campus Director, I am proud to see our institution thrive through innovation,
                                     collaboration, and excellence. We continue to build a community that uplifts each learner and shapes the future of
                                     education. Maraming salamat sa inyong suporta!
@@ -663,41 +648,41 @@ export default function Welcome({ carouselImages }: LandingProps) {
                             </div>
 
                             <div className="mt-auto text-left">
-                                <p className="text-base font-semibold sm:text-lg">Dr. Cecilia R. Alagon</p>
-                                <p className="text-xs opacity-90 sm:text-sm">Campus Director</p>
+                                <p className="font-semibold">Dr. Cecilia R. Alagon</p>
+                                <p className="text-sm opacity-90">Campus Director</p>
                             </div>
                         </motion.div>
                     </motion.div>
                 </motion.section>
 
-                {/* Accreditors Section - Responsive */}
+                {/* Accreditors Section with Card Animations */}
                 <motion.section
-                    className="w-full items-center justify-center py-8 sm:py-12"
+                    className="w-full items-center justify-center"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                     viewport={{ once: true, margin: '100px' }}
                 >
-                    <section className="flex min-h-[50vh] items-center justify-center px-4">
-                        <div className="flex w-full max-w-[1200px] flex-col gap-8 rounded-xl border border-[#201e1e31] bg-white p-6 sm:w-[90%] sm:gap-10 sm:p-8 md:w-[85%] md:gap-12 md:p-12 lg:w-[80%] lg:flex-row lg:p-15">
+                    <section className="flex h-[50vh] items-center justify-center">
+                        <div className="flex w-[80%] max-w-[1200px] flex-col gap-12 rounded-xl border border-[#201e1e31] bg-white p-15 lg:flex-row">
                             {/* Left Column (Text) */}
                             <motion.div
-                                className="flex flex-1 flex-col justify-center gap-4 sm:gap-6"
+                                className="flex flex-1 flex-col justify-center gap-6"
                                 initial={{ opacity: 0, x: -30 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.4, delay: 0.1 }}
                                 viewport={{ once: true }}
                             >
-                                <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Welcome Accreditors!</h2>
-                                <p className="text-sm leading-relaxed text-gray-700 sm:text-base">
+                                <h2 className="text-3xl font-bold text-gray-900">Welcome Accreditors!</h2>
+                                <p className="leading-relaxed text-gray-700">
                                     It is our honor to host you, esteemed accreditors, and we deeply appreciate your role in our continued success.
                                 </p>
 
-                                <div className="flex flex-wrap gap-2 sm:gap-3">
+                                <div className="flex flex-wrap gap-3">
                                     {['March 2025', 'Level II AACCUP Survey Visit'].map((tag, index) => (
                                         <motion.span
                                             key={tag}
-                                            className="rounded-sm border border-[#201e1e31] px-4 py-1.5 text-xs font-medium text-[#7f1414] sm:px-6 sm:py-2 sm:text-sm md:px-8"
+                                            className="rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-[#7f1414]"
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             whileInView={{ opacity: 1, scale: 1 }}
                                             transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
@@ -712,7 +697,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
 
                             {/* Right Column (Cards) */}
                             <motion.div
-                                className="flex flex-1 flex-col gap-3 sm:gap-4 md:flex-row"
+                                className="flex flex-1 flex-col gap-4 md:flex-row"
                                 initial={{ opacity: 0, x: 30 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.4, delay: 0.2 }}
@@ -725,7 +710,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         icon: (
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                className="h-5 w-5 text-white sm:h-6 sm:w-6"
+                                                className="h-6 w-6 text-white"
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor"
@@ -745,7 +730,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         icon: (
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                className="h-5 w-5 text-white sm:h-6 sm:w-6"
+                                                className="h-6 w-6 text-white"
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor"
@@ -763,7 +748,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                     <motion.a
                                         key={card.title}
                                         href="#"
-                                        className="flex flex-1 flex-col items-start gap-6 rounded-xl bg-[#7f1414] p-4 text-white transition-colors duration-200 hover:bg-[#a83232] sm:gap-8 sm:p-5 md:gap-10 md:p-6"
+                                        className="flex flex-1 flex-col items-start gap-10 rounded-xl bg-[#7f1414] p-6 text-white transition-colors duration-200 hover:bg-[#a83232]"
                                         whileHover={{
                                             scale: shouldReduceMotion ? 1 : 1.02,
                                             y: shouldReduceMotion ? 0 : -3,
@@ -775,7 +760,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         viewport={{ once: true }}
                                     >
                                         <motion.div
-                                            className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 sm:h-12 sm:w-12"
+                                            className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20"
                                             whileHover={{
                                                 scale: shouldReduceMotion ? 1 : 1.1,
                                                 rotate: shouldReduceMotion ? 0 : 5,
@@ -785,8 +770,8 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                             {card.icon}
                                         </motion.div>
                                         <div>
-                                            <h3 className="mb-2 text-base font-semibold sm:mb-3 sm:text-lg">{card.title}</h3>
-                                            <p className="text-xs opacity-90 sm:text-sm">{card.desc}</p>
+                                            <h3 className="mb-3 text-lg font-semibold">{card.title}</h3>
+                                            <p className="text-sm opacity-90">{card.desc}</p>
                                         </div>
                                     </motion.a>
                                 ))}
@@ -795,9 +780,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     </section>
                 </motion.section>
 
-                {/* Campus Map Section - Responsive */}
+                {/* Campus Map Section with Animations */}
                 <motion.section
-                    className="relative flex min-h-screen w-full items-center justify-center py-12 sm:py-16"
+                    className="relative flex min-h-[80vh] w-full items-center justify-center py-16"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
@@ -807,25 +792,23 @@ export default function Welcome({ carouselImages }: LandingProps) {
                         className="absolute inset-0 bg-cover bg-center opacity-30 grayscale"
                         style={{ backgroundImage: "url('/images/homepage-slides/street-sj.png')" }}
                     ></div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-white/60 sm:to-transparent"></div>
-                    <div className="relative z-10 flex w-[90%] max-w-[1400px] flex-col items-center justify-center gap-8 sm:w-[85%] sm:gap-12 lg:flex-row lg:gap-16">
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
+                    <div className="relative z-10 flex w-[85%] max-w-[1400px] flex-col items-center justify-center gap-16 lg:flex-row">
                         <motion.div
-                            className="order-2 flex w-full flex-col justify-center px-4 text-center sm:px-0 lg:order-1 lg:w-[50%] lg:text-left"
+                            className="order-2 flex w-full flex-col justify-center text-center lg:order-1 lg:w-[50%] lg:text-left"
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 0.1 }}
                             viewport={{ once: true }}
                         >
-                            <h2 className="mb-3 text-xl font-bold text-[#7f1414] sm:mb-4 sm:text-2xl lg:text-[2rem]">Explore Our Campus</h2>
-                            <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">
+                            <h2 className="mb-4 text-[2.5vw] font-bold text-[#7f1414] lg:text-[2rem]">Explore Our Campus</h2>
+                            <p className="mb-4 text-[1.15rem] leading-relaxed text-gray-700">
                                 Our strategically located campus is designed to inspire learning and innovation. Tap the map to explore buildings,
                                 facilities, and more.
                             </p>
-                            <p className="mb-6 text-sm text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">
-                                PUP San Juan, Pinaglabanan St., San Juan City
-                            </p>
+                            <p className="mb-8 text-[0.95rem] text-gray-600 italic">PUP San Juan, Pinaglabanan St., San Juan City</p>
 
-                            <motion.div whileHover={{}} whileTap={{}} transition={{}} className="flex justify-center lg:justify-start">
+                            <motion.div whileHover={{}} whileTap={{}} transition={{}}>
                                 <ActionButton href="https://maps.app.goo.gl/KLfy768XRV4DXY9t7" icon={MapPin} external>
                                     View Full Map
                                 </ActionButton>
@@ -840,7 +823,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                             viewport={{ once: true }}
                         >
                             <motion.div
-                                className="relative h-[250px] w-full overflow-hidden rounded-xl sm:h-[350px] sm:rounded-2xl md:h-[400px]"
+                                className="relative h-[400px] w-full overflow-hidden rounded-2xl"
                                 whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
                                 transition={{ duration: 0.3 }}
                             >
