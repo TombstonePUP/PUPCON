@@ -21,6 +21,10 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         return Inertia::render('document/exhibits');
     })->name('manage-exhibits');
 
+    Route::get('ratings', function () {
+        return Inertia::render('document/ratings');
+    })->name('ratings'); 
+
     Route::prefix('manage-programs/{program_name}/{area_id}')->as('manage.')->group(function () {
         Route::controller(AreaParameterController::class)->group(function () {
             Route::post('/storeParameter', 'store')->name('area.addParameter');

@@ -5,7 +5,7 @@ import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import Layout from '@/layouts/landing-layout';
 import type { Area, ParameterOutlineCategory, PerProgram } from '@/types';
 import { Head } from '@inertiajs/react';
-import { ImageOff } from 'lucide-react';
+import { ImageOff, ImagePlay, ImagePlus } from 'lucide-react';
 import { useState } from 'react';
 
 interface AreaProps {
@@ -66,14 +66,14 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
 
                         <h1 className="text-[1.7vw] leading-[1.7vw] font-bold text-white">{area.area_name}</h1>
                     </div>
-                    {area.area_image_path ? (
+                    {/* {area.area_image_path ? (
                         <img className="w-[45%] rounded-xl object-cover" src={area.area_image_path} />
                     ) : (
-                        <div className="flex w-[45%] flex-col items-center justify-center gap-3 rounded-xl bg-gray-100 p-6 text-gray-300">
-                            <ImageOff className="h-10 w-10 text-gray-300" aria-hidden="true" />
-                            <p className="text-lg font-semibold">No banner available</p>
-                        </div>
-                    )}
+                        <img className="w-[45%] rounded-xl object-cover" src="/images/placeholder.png" />
+                    )} */}
+
+                    <img className="w-[45%] rounded-xl object-cover" src="/images/placeholder.png" />
+
                 </div>
                 <div className="flex justify-center">
                     <p className="w-[68%] rounded-[1vw] border border-[#7f1414]/25 bg-white px-[3vw] py-[1.5vw] text-justify indent-[2vw] transition duration-300 hover:border-[#7f1414]">
@@ -118,7 +118,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                 </div>
                             ))
                         ) : (
-                            <div></div>
+                            <p className="text-center text-gray-500 w-full">No forms available for this area.</p>
                         )}
                     </div>
                 </div>
@@ -161,12 +161,12 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                                     if (outlines.length === 0) return null;
                                                     outlines.map(
                                                         (outline) =>
-                                                            (outline.initial =
-                                                                category.category_name == 'No Category'
-                                                                    ? parameter.parameter_name == ' '
-                                                                        ? ''
-                                                                        : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
-                                                                    : category.category_name.match(/^[A-Za-z]/)),
+                                                        (outline.initial =
+                                                            category.category_name == 'No Category'
+                                                                ? parameter.parameter_name == ' '
+                                                                    ? ''
+                                                                    : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
+                                                                : category.category_name.match(/^[A-Za-z]/)),
                                                     );
 
                                                     const sortedOutlines = buildOutlineTree({ outlines });

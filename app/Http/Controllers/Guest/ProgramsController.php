@@ -33,12 +33,27 @@ class ProgramsController extends Controller
         ]);
     }
 
+    public function ratings()
+    {
+        $programs = Programs::select('program_id', 'degree_type', 'program_name', 'program_description', 'accreditation_level', 'program_image_name', 'program_image_path')
+            ->where('under_survey', true)
+            ->get();
+
+        $programs = $programs->map(function ($program) {
+            $this->formatPrograms($program);
+            return $program;
+        });
+
+        return inertia('document/ratings', [
+            'programs' => $programs,
+        ]);
+    }
     public function show(string $program_name): Response
     {
         $program = Str::of($program_name)->replace('_', ' ')->title();
 
         $program = Programs::where('program_name', $program)
-            ->with(['Areas', 'Faculties', 'Objectives', 'ProgramGallery']) 
+            ->with(['Areas', 'Faculties', 'Objectives', 'ProgramGallery'])
             ->firstOrFail();
 
         $program->program_link = $program_name;
@@ -53,6 +68,4 @@ class ProgramsController extends Controller
             'program' => $program,
         ]);
     }
-
-
 }

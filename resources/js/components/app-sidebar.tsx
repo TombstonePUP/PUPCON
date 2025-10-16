@@ -1,6 +1,6 @@
 'use client';
 
-import { AudioWaveform, Book, ChartArea, Bot, Boxes, Braces, Notebook, Command, GalleryVerticalEnd, SquareTerminal, SquareUser } from 'lucide-react';
+import { AudioWaveform, Book, ChartArea, Bot, Boxes, Braces, Notebook, Command, GalleryVerticalEnd, SquareTerminal, SquareUser, Trophy, FileChartColumnIncreasing } from 'lucide-react';
 import * as React from 'react';
 
 import { NavMain } from '@/components/nav-main';
@@ -51,6 +51,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: 'Exhibits',
             url: '/manage-exhibits',
             icon: Book,
+        }]
+        : []),
+        ...(role === 'Admin' || role === 'Coordinator'
+        ? [{
+            title: 'Ratings',
+            url: '/ratings',
+            icon: FileChartColumnIncreasing,
         }]
         : []),
     ];
