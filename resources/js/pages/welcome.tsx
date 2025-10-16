@@ -832,7 +832,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                     allowFullScreen
                                     loading="lazy"
                                     referrerPolicy="no-referrer-when-downgrade"
-                                ></iframe>
+                                />
                             </motion.div>
                         </motion.div>
                     </div>
