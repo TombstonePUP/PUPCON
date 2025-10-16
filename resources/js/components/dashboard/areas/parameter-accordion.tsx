@@ -210,7 +210,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
 
                                         return (
                                             <>
-                                                <div className="rounded bg-[#D9D9D9] p-[2vw]">
+                                                <div className="rounded bg-[#f4f4f4] p-[2vw]">
                                                     <h1 className="text-[1vw] font-bold mb-2.5">
                                                         {category.category_name == 'No Category' ? '' : category.category_name}
                                                     </h1>
