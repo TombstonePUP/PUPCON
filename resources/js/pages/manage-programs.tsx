@@ -18,7 +18,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Manage Programs',
+        title: 'Programs',
         href: '/manage-programs',
     },
 ];

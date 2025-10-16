@@ -46,12 +46,12 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
     const [selectedOutline, setSelectedOutline] = useState<ParameterOutlines | null>(null);
     const [selectedParameter, setSelectedParameter] = useState<AreaParameters | null>(null);
 
-    const dialogHandlers = ({type, benchmark, parameter}: DialogParams) => openDialog(type, benchmark, parameter);
+    const dialogHandlers = ({ type, benchmark, parameter }: DialogParams) => openDialog(type, benchmark, parameter);
     const openDialog = (type: 'view-document' | 'upload-document' | 'delete-document' |
-        'add-benchmark' |'edit-benchmark' | 'delete-benchmark', benchmark: ParameterOutlines, parameter: AreaParameters) => {
-            setDialogType(type);
-            setSelectedOutline(benchmark);
-            setSelectedParameter(parameter);
+        'add-benchmark' | 'edit-benchmark' | 'delete-benchmark', benchmark: ParameterOutlines, parameter: AreaParameters) => {
+        setDialogType(type);
+        setSelectedOutline(benchmark);
+        setSelectedParameter(parameter);
     };
 
     const closeDialog = () => {
@@ -60,10 +60,10 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
         setSelectedParameter(null);
     }
 
-    const renderDialog=() => {
+    const renderDialog = () => {
         // if(!selectedOutline) return null;
 
-        switch(dialogType) {
+        switch (dialogType) {
             case 'view-document':
                 return (
                     selectedOutline.area_files?.file_path ? (
@@ -151,6 +151,10 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
     };
 
     const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'Programs',
+            href: '/manage-programs',
+        },
         {
             title: program.program_name,
             href: `/manage-programs/${program.program_link}`,

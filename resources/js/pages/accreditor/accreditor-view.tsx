@@ -16,6 +16,23 @@ import {
 import { DocumentViewer } from "@/components/dialogs/documents/view-document";
 import AccreditorLayout from '@/layouts/accreditor-layout';
 import { Head, useForm, usePage } from '@inertiajs/react';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 
 export default function AccreditorDashboard() {
     const [expandedAreas, setExpandedAreas] = useState({});
@@ -26,6 +43,7 @@ export default function AccreditorDashboard() {
     const [exportAreaDropdown, setExportAreaDropdown] = useState({});
     const [ratings, setRatings] = useState({});
     const [means, setMeans] = useState({});
+    const [selectedLevels, setSelectedLevels] = useState({});
 
     const accreditor = {
         name: "Dr. Maria Santos",
@@ -37,7 +55,6 @@ export default function AccreditorDashboard() {
         {
             id: 1,
             program_name: 'Bachelor of Science in Computer Science',
-            degree_type: 'Undergraduate',
             accreditation_level: 3,
             campus: 'Main Campus',
             assigned_areas: [
@@ -146,7 +163,6 @@ export default function AccreditorDashboard() {
         {
             id: 2,
             program_name: 'Bachelor of Science in Information Technology',
-            degree_type: 'Undergraduate',
             accreditation_level: 2,
             campus: 'Main Campus',
             assigned_areas: [
@@ -350,7 +366,6 @@ export default function AccreditorDashboard() {
         });
     };
 
-
     return (
         <>
             <Head title="Accreditor Form">
@@ -392,10 +407,31 @@ export default function AccreditorDashboard() {
                                         key={program.id}
                                         className="mb-6 rounded-xl border border-gray-200 bg-white"
                                     >
-                                        <div className="border-b border-gray-100 bg-[#7f1414]/5 p-6">
+                                        <div className="border-b border-gray-100 bg-[#7f1414]/5 p-6 flex items-center justify-between">
                                             <h3 className="text-xl font-bold text-[#7f1414]">
                                                 {program.program_name}
                                             </h3>
+                                            <Select
+                                                onValueChange={(value) =>
+                                                    setSelectedLevels((prev) => ({ ...prev, [program.id]: value }))
+                                                }
+                                            >
+                                                <SelectTrigger className="w-fit gap-2 bg-white">
+                                                    <SelectValue
+                                                        placeholder={`Level ${program.accreditation_level}`}
+                                                    />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Level</SelectLabel>
+                                                        {[1, 2, 3, 4, 5].map((num) => (
+                                                            <SelectItem key={num} value={num.toString()}>
+                                                                {num}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
                                         </div>
 
                                         {/* Areas */}
@@ -428,40 +464,29 @@ export default function AccreditorDashboard() {
                                                         </div>
 
                                                         {/* Export Dropdown */}
-                                                        <div className="relative export-dropdown inline-block ml-6">
-                                                            <button
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    toggleAreaExport(area.id);
-                                                                }}
-                                                                className="flex items-center gap-2 rounded-lg bg-[#7f1414] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#6a1111]"
-                                                            >
-                                                                <Download className="h-4 w-4" /> Export
-                                                            </button>
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                    variant="noborder"
+                                                                >
+                                                                    <Download className="h-4 w-4" />
+                                                                    Export
+                                                                </Button>
+                                                            </DropdownMenuTrigger>
 
-                                                            {exportAreaDropdown[area.id] && (
-                                                                <div className="absolute right-0 top-full z-20 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow-lg">
-                                                                    <button
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            handleAreaExport(area.id, "excel");
-                                                                        }}
-                                                                        className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                                                                    >
-                                                                        <FileSpreadsheet className="h-4 w-4 text-green-600" /> Export as Excel
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            handleAreaExport(area.id, "pdf");
-                                                                        }}
-                                                                        className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                                                                    >
-                                                                        <FileText className="h-4 w-4 text-red-600" /> Export as PDF
-                                                                    </button>
-                                                                </div>
-                                                            )}
-                                                        </div>
+                                                            <DropdownMenuContent align="end">
+                                                                {/* <DropdownMenuLabel>Export {area.area_name}</DropdownMenuLabel> */}
+                                                                <DropdownMenuItem onClick={() => handleAreaExport(area.id, "excel")}>
+                                                                    <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                                                    Export as Excel
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => handleAreaExport(area.id, "pdf")}>
+                                                                    <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                                                    Export as PDF
+                                                                </DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
                                                     </button>
 
                                                     {expandedAreas[area.id] && (
@@ -680,48 +705,29 @@ export default function AccreditorDashboard() {
                         {/* Program Means Summary Section */}
                         <section className="mt-12 rounded-xl border border-gray-200 bg-white shadow-sm p-8">
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-2xl font-bold text-[#7f1414]">
-                                    Overall Program Means
-                                </h2>
+                                <h2 className="text-2xl font-bold text-[#7f1414]">Overall Program Means</h2>
 
-                                {/* Export Dropdown */}
-                                <div className="relative export-dropdown inline-block">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setExportDropdown((prev) => ({
-                                                ...prev,
-                                                allPrograms: !prev.allPrograms,
-                                            }));
-                                        }}
-                                        className="flex items-center gap-2 rounded-lg bg-[#7f1414] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#6a1111]"
-                                    >
-                                        <Download className="h-4 w-4" /> Export All
-                                    </button>
+                                {/* Export All Dropdown */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="noborder"
+                                        >
+                                            <Download className="h-4 w-4" /> Export Program Means
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem>
+                                            <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                            Excel
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem >
+                                            <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                            PDF
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
 
-                                    {exportDropdown.allPrograms && (
-                                        <div className="absolute right-0 top-full z-20 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow-lg">
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleAllProgramsExport("excel");
-                                                }}
-                                                className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                                            >
-                                                <FileSpreadsheet className="h-4 w-4 text-green-600" /> Export as Excel
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleAllProgramsExport("pdf");
-                                                }}
-                                                className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                                            >
-                                                <FileText className="h-4 w-4 text-red-600" /> Export as PDF
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
                             </div>
 
                             {/* Table of Program Means */}
@@ -729,8 +735,9 @@ export default function AccreditorDashboard() {
                                 <thead className="bg-[#7f1414]/10">
                                     <tr>
                                         <th className="text-left px-4 py-3 font-semibold">Program Name</th>
-                                        <th className="text-left px-4 py-3 font-semibold">Degree Type</th>
+                                        <th className="px-4 py-3 text-center font-semibold">Accreditation Level</th>
                                         <th className="text-center px-4 py-3 font-semibold">Program Mean</th>
+                                        <th className="text-center px-4 py-3 font-semibold">Export Area Means</th> {/* New Column */}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -751,9 +758,33 @@ export default function AccreditorDashboard() {
                                                     } border-t border-gray-200`}
                                             >
                                                 <td className="px-4 py-3">{program.program_name}</td>
-                                                <td className="px-4 py-3">{program.degree_type}</td>
+                                                <td className="px-4 py-3 text-center font-semibold">
+                                                    {selectedLevels[program.id] || program.accreditation_level}
+                                                </td>
                                                 <td className="px-4 py-3 text-center font-semibold text-[#7f1414]">
                                                     {programMean}
+                                                </td>
+
+                                                {/* Export Column */}
+                                                <td className="px-4 py-3 text-center flex  justify-center">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="noborder">
+                                                                <Download className="h-4 w-4" />
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            {/* <DropdownMenuLabel>Export {program.program_name}</DropdownMenuLabel> */}
+                                                            <DropdownMenuItem >
+                                                                <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                                                Excel
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem >
+                                                                <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                                                PDF
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
                                                 </td>
                                             </tr>
                                         );
