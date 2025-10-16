@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Files\DocumentRequestController;
+use App\Http\Controllers\Files\AreaParameterController;
+use App\Http\Controllers\Files\AreaParameterOutlinesController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,6 +20,20 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     Route::get('manage-exhibits', function () {
         return Inertia::render('document/exhibits');
     })->name('manage-exhibits');
+
+    Route::prefix('manage-programs/{program_name}/{area_id}')->as('manage.')->group(function () {
+        Route::controller(AreaParameterController::class)->group(function () {
+            Route::post('/storeParameter', 'store')->name('area.addParameter');
+            Route::patch('/{parameter_id}/updateParameter', 'update')->name('area.updateParameter');
+            Route::delete('/{parameter_id}/deleteParameter', 'destroy')->name('area.deleteParameter');
+        });
+
+        Route::controller(AreaParameterOutlinesController::class)->group(function () {
+            Route::post('/storeBenchmark', 'store')->name('area.add.benchmark');
+            Route::patch('/{outline_id}/editBenchmark', 'edit')->name('area.edit.benchmark');
+            Route::delete('/{outline_id}/deleteBenchmark', 'destroy')->name('area.delete.benchmark');
+        });
+    });
 
     Route::controller(DocumentRequestController::class)->prefix('requests')->group(function () {
         Route::get('/', 'index')->name('requests');

@@ -21,8 +21,9 @@ import { type AreaParameters, type ParameterOutlineCategory, ParameterOutlines} 
 import { buildOutlineTree, RecursiveOutlineForm } from '@/components/recursive-outline';
 
 interface DialogParams {
-    type: 'view-document' | 'upload-document' | 'delete-document' | 'edit-benchmark' | 'delete-benchmark';
-    benchmark: ParameterOutlines;
+    type: 'view-document' | 'upload-document' | 'delete-document' | 'add-benchmark' | 'edit-benchmark' | 'delete-benchmark';
+    benchmark?: ParameterOutlines;
+    parameter?: AreaParameters;
 }
 
 interface ParameterAccordionProps {
@@ -40,22 +41,10 @@ interface ParameterForm {
     parameter_description: string;
 }
 
-interface ParameterOutlineForm {
-    parameter_outline_id?: number; // Optional for adding new outlines
-    area_parameter_id: number;
-    parameter_outline_category_id: number;
-    outline_number: string | number;
-    outline_description: string;
-    container: boolean;
-    file_name?: string;
-    file_path?: File | null;
-}
-
 export default function ParameterAccordion({ area_id, program, areaParameters, parameterOutlineCategories, resolveDialog }: ParameterAccordionProps) {
     // Add state for benchmark container checkbox in ADD outline
     const [isOutlineContainer, setIsOutlineContainer] = useState(false);
     const [addOutlineDialogOpen, setAddOutlineDialogOpen] = useState(false);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const {
         data: dataParams,
@@ -70,25 +59,6 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
         area_parameter_id: undefined,
         parameter_name: '',
         parameter_description: '',
-    });
-
-    // Update the useForm for outline to include file fields
-    const {
-        data: dataOutline,
-        setData: setOutlineData,
-        post: postOutline,
-        processing: processingOutline,
-        errors: errorsOutline,
-        reset: resetOutline,
-    } = useForm<ParameterOutlineForm>({
-        parameter_outline_id: undefined,
-        area_parameter_id: null,
-        parameter_outline_category_id: null,
-        outline_number: null,
-        outline_description: '',
-        container: false,
-        file_name: '',
-        file_path: null,
     });
 
     const editParameter = (e: React.FormEvent) => {
@@ -106,47 +76,6 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                 console.log('Parameter deleted successfully');
             },
         });
-    };
-
-    const addOutline = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        // Create FormData for file upload
-        const formData = new FormData();
-        formData.append('area_parameter_id', dataOutline.area_parameter_id?.toString() || '');
-        formData.append('parameter_outline_category_id', dataOutline.parameter_outline_category_id?.toString() || '');
-        formData.append('outline_number', dataOutline.outline_number?.toString() || '');
-        formData.append('outline_description', dataOutline.outline_description || '');
-        formData.append('container', dataOutline.container.toString());
-
-        // Only add file data if not a container and file is selected
-        if (!isOutlineContainer && selectedFile) {
-            // Use the original file name
-            formData.append('file_name', selectedFile.name);
-            formData.append('file_path', selectedFile);
-        }
-
-        // Use post with FormData
-        postOutline(route('manage.area.addOutline', [program, area_id]), {
-            data: formData,
-            forceFormData: true,
-            onSuccess: () => {
-                resetOutline();
-                setAddOutlineDialogOpen(false);
-                setIsOutlineContainer(false);
-                setSelectedFile(null);
-                console.log('Benchmark added successfully');
-            },
-        });
-    };
-
-    // Handle file selection (simplified)
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setSelectedFile(file);
-            setOutlineData('file_path', file);
-        }
     };
 
     return (
@@ -301,7 +230,15 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                 )}
 
                                 {/* Add Benchmark Dialog */}
-                                <Dialog open={addOutlineDialogOpen} onOpenChange={setAddOutlineDialogOpen}>
+                                <a
+                                    className="cursor-pointer underline"
+                                    onClick={() => {
+                                        setTimeout(() => resolveDialog({type: 'add-benchmark', parameter: parameter}), 50);
+                                    }}
+                                >
+                                    Add Benchmark
+                                </a>
+                                {/* <Dialog open={addOutlineDialogOpen} onOpenChange={setAddOutlineDialogOpen}>
                                     <DialogTrigger asChild>
                                         <a
                                             className="cursor-pointer underline"
@@ -326,7 +263,6 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                         </DialogHeader>
 
                                         <form onSubmit={(e) => addOutline(e)} className="flex flex-col gap-4">
-                                            {/* Benchmark Number */}
                                             <div>
                                                 <label className="text-muted-foreground mb-1 block text-sm font-medium">Benchmark Number</label>
                                                 <input
@@ -343,8 +279,6 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                 />
                                                 <InputError message={errorsOutline.outline_number} className="mt-2" />
                                             </div>
-
-                                            {/* Benchmark Description */}
                                             <div>
                                                 <label className="text-muted-foreground mb-1 block text-sm font-medium">Benchmark Description</label>
                                                 <textarea
@@ -359,8 +293,6 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                 />
                                                 <InputError message={errorsOutline.outline_description} className="mt-2" />
                                             </div>
-
-                                            {/* Benchmark Category */}
                                             <div>
                                                 <label className="text-muted-foreground mb-1 block text-sm font-medium">Benchmark Category</label>
                                                 <select
@@ -384,8 +316,6 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                 </select>
                                                 <InputError message={errorsOutline.parameter_outline_category_id} className="mt-2" />
                                             </div>
-
-                                            {/* Container Checkbox */}
                                             <div className="flex cursor-pointer items-center">
                                                 <label className="flex gap-2 text-sm">
                                                     <input
@@ -405,57 +335,6 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                     Benchmark Container
                                                 </label>
                                             </div>
-
-                                            {/* Upload Document Section - Only show if NOT container */}
-                                            {!isOutlineContainer && (
-                                                <div className="space-y-4">
-                                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Upload Document</h3>
-
-                                                    {/* File Upload */}
-                                                    <div className="flex w-full items-center justify-center">
-                                                        <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
-                                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                                <svg
-                                                                    className="mb-4 h-8 w-8 text-gray-500"
-                                                                    aria-hidden="true"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    fill="none"
-                                                                    viewBox="0 0 20 16"
-                                                                >
-                                                                    <path
-                                                                        stroke="currentColor"
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                        strokeWidth="2"
-                                                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                                                                    />
-                                                                </svg>
-                                                                {selectedFile ? (
-                                                                    <div className="text-center">
-                                                                        <p className="text-sm font-semibold text-green-600">File Selected:</p>
-                                                                        <p className="text-xs text-gray-500">{selectedFile.name}</p>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="text-center">
-                                                                        <p className="text-sm text-gray-500">
-                                                                            <span className="font-semibold">Click to upload</span> or drag and drop
-                                                                        </p>
-                                                                        <p className="text-xs text-gray-500">PDF, DOC, DOCX</p>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            <input
-                                                                type="file"
-                                                                className="hidden"
-                                                                accept=".pdf,.doc,.docx"
-                                                                onChange={handleFileChange}
-                                                            />
-                                                        </label>
-                                                    </div>
-                                                    <InputError message={errorsOutline.file_path} className="mt-2" />
-                                                </div>
-                                            )}
-
                                             <DialogFooter>
                                                 <DialogClose asChild>
                                                     <Button
@@ -465,7 +344,6 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                                         onClick={() => {
                                                             setAddOutlineDialogOpen(false);
                                                             setIsOutlineContainer(false);
-                                                            setSelectedFile(null);
                                                         }}
                                                     >
                                                         Cancel
@@ -483,7 +361,7 @@ export default function ParameterAccordion({ area_id, program, areaParameters, p
                                             </DialogFooter>
                                         </form>
                                     </DialogContent>
-                                </Dialog>
+                                </Dialog> */}
                             </AccordionContent>
                         </AccordionItem>
                     ))

@@ -20,9 +20,10 @@ import {
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 import AppLayout from '@/layouts/app-layout';
-import { Area, AreaFormCategory, BreadcrumbItem, ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
+import { Area, AreaFormCategory, AreaParameters, BreadcrumbItem, ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import { AddBenchmark } from '@/components/dialogs/benchmarks/add-benchmark';
 
 // charts components
 interface AreaFilesProps {
@@ -33,29 +34,34 @@ interface AreaFilesProps {
 }
 
 interface DialogParams {
-    type: 'view-document' | 'upload-document' | 'delete-document' | 'edit-benchmark' | 'delete-benchmark';
-    benchmark: ParameterOutlines;
+    type: 'view-document' | 'upload-document' | 'delete-document' | 'add-benchmark' | 'edit-benchmark' | 'delete-benchmark';
+    benchmark?: ParameterOutlines;
+    parameter?: AreaParameters;
 }
 
 export default function Areas({ program, area, parameterOutlineCategories, areaFormsCategories }: AreaFilesProps) {
     const [dialogType, setDialogType] = useState<
-        'view-document' | 'upload-document' | 'delete-document' | 'edit-benchmark' | 'delete-benchmark' | null
+        'view-document' | 'upload-document' | 'delete-document' | 'add-benchmark' | 'edit-benchmark' | 'delete-benchmark' | null
     >(null);
     const [selectedOutline, setSelectedOutline] = useState<ParameterOutlines | null>(null);
+    const [selectedParameter, setSelectedParameter] = useState<AreaParameters | null>(null);
 
-    const dialogHandlers = ({type, benchmark, program, area_id}: DialogParams) => openDialog(type, benchmark);
-    const openDialog = (type: 'view-document' | 'upload-document' | 'delete-document' | 'edit-benchmark' | 'delete-benchmark', benchmark: ParameterOutlines) => {
-        setDialogType(type);
-        setSelectedOutline(benchmark);
+    const dialogHandlers = ({type, benchmark, parameter}: DialogParams) => openDialog(type, benchmark, parameter);
+    const openDialog = (type: 'view-document' | 'upload-document' | 'delete-document' |
+        'add-benchmark' |'edit-benchmark' | 'delete-benchmark', benchmark: ParameterOutlines, parameter: AreaParameters) => {
+            setDialogType(type);
+            setSelectedOutline(benchmark);
+            setSelectedParameter(parameter);
     };
 
     const closeDialog = () => {
         setDialogType(null);
         setSelectedOutline(null);
+        setSelectedParameter(null);
     }
 
     const renderDialog=() => {
-        if(!selectedOutline) return null;
+        // if(!selectedOutline) return null;
 
         switch(dialogType) {
             case 'view-document':
@@ -108,12 +114,23 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         onClose={closeDialog}
                     />
                 );
+            case 'add-benchmark':
+                return (
+                    <AddBenchmark
+                        parameter={selectedParameter}
+                        program={program?.program_link}
+                        area_id={area?.area_id}
+                        parameter_outline_categories={parameterOutlineCategories}
+                        onClose={closeDialog}
+                    />
+                );
             case 'edit-benchmark':
                 return (
                     <EditBenchmark
                         outline={selectedOutline}
                         program={program?.program_link}
                         area_id={area?.area_id}
+                        parameter_outline_categories={parameterOutlineCategories}
                         onClose={closeDialog}
                     />
                 );
