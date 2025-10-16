@@ -230,12 +230,12 @@ export default function Programs({ program }: PerProgramProps) {
                                     {program.degree_type}
                                 </span>
                             </div>
-                            <h1 className="mb-6 text-5xl font-bold drop-shadow-lg">{program.program_name}</h1>
+                            <h1 className="mb-4 text-5xl font-bold drop-shadow-lg">{program.program_name}</h1>
 
                             {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
-                                <label className="mb-3 block text-sm font-medium opacity-90">Accreditation Level</label>
-                                <div className="relative">
+                                <label className="mb-3 block text-xl font-medium opacity-90">Accreditation Level {program.accreditation_level}</label>
+                                {/* <div className="relative">
                                     <div
                                         onMouseEnter={() => setDropdownOpen(true)}
                                         className="flex w-48 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
@@ -263,7 +263,7 @@ export default function Programs({ program }: PerProgramProps) {
                                             ))}
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 

@@ -35,9 +35,9 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
     const underSurveyPrograms = (guest as any)?.programs?.length
         ? (guest as any).programs.map((program: any) => ({
-              label: program.program_name,
-              href: `/programs/${program.program_link}`,
-          }))
+            label: program.program_name,
+            href: `/programs/${program.program_link}`,
+        }))
         : [];
 
     const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
@@ -243,13 +243,18 @@ export default function Layout({ children, footerText }: LayoutProps) {
                     ease: 'easeInOut',
                 }}
             >
-                <div>
-                    <Link href="/" className="flex items-center" preserveScroll>
-                        <motion.div className="h-full w-auto overflow-hidden">
-                            <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} />
-                        </motion.div>
-                    </Link>
-                </div>
+                <Link href="/" className="flex items-center" preserveScroll>
+                    {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
+                    <div className='bg-[#d2b539] h-18 w-164 rounded-br-full'>
+                        <div className='ml-3 h-full bg-white rounded-br-full mr-3 flex justify-end gap-4 pr-20 pb-2 items-center'>
+                            <img className="size-11 mt-1" src="/images/pupsj-logo.png" alt="pupsj logo" />
+                            <div>
+                                <h1 className='text-[#7f1414] font-bold text-[25px]'>San Juan Campus</h1>
+                                <p className='text-xs mt-[-7px]'>Polytechnic University of the Philippines</p>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
 
                 <div className="relative max-w-7xl mr-50">
                     {/* Navigation + Search */}

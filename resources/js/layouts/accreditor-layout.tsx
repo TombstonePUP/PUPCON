@@ -59,13 +59,18 @@ export default function AccreditorLayout({ children }: AccreditorLayoutProps) {
                     ease: 'easeInOut',
                 }}
             >
-                <div className="">
-                    <Link href="/" className="flex items-center" preserveScroll>
-                        <motion.div className="h-full w-auto overflow-hidden">
-                            <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} />
-                        </motion.div>
-                    </Link>
-                </div>
+                <Link href="/" className="flex items-center" preserveScroll>
+                    {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
+                    <div className='bg-[#d2b539] h-18 w-164 rounded-br-full'>
+                        <div className='ml-3 h-full bg-white rounded-br-full mr-3 flex justify-end gap-4 pr-20 pb-2 items-center'>
+                            <img className="size-11 mt-1" src="/images/pupsj-logo.png" alt="pupsj logo" />
+                            <div>
+                                <h1 className='text-[#7f1414] font-bold text-[25px]'>San Juan Campus</h1>
+                                <p className='text-xs mt-[-7px]'>Polytechnic University of the Philippines</p>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
 
                 <div className="relative max-w-7xl mr-50">
                     <div className="flex items-center justify-end gap-8 px-8 py-4">
@@ -100,7 +105,7 @@ export default function AccreditorLayout({ children }: AccreditorLayoutProps) {
                                             <LogOut size={16} className="text-white" />
                                             <span className="text-xs text-white/80">Logout</span>
                                         </button>
-                                        
+
                                     </div>
                                 </li>
                             </ul>
