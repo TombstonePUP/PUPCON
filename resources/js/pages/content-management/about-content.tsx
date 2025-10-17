@@ -3,6 +3,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/text-area';
 import { Eye, Pencil, Plus, Save, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import AppLayout from '@/layouts/app-layout';
+
 
 
 
@@ -85,6 +87,9 @@ const AboutContent = () => {
     const [bannerFile, setBannerFile] = useState<File | null>(null);
 
     return (
+        <AppLayout>
+
+      
         <div className="flex h-full flex-1 flex-col gap-4 p-6">
             {/* Header Section - Matching Exhibits page */}
             <div className="flex justify-between">
@@ -395,6 +400,7 @@ const AboutContent = () => {
                 </div>
             </div>
         </div>
+          </AppLayout>
     );
 };
 
