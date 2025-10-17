@@ -4,9 +4,12 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import Layout from '@/layouts/landing-layout';
 import type { Area, ParameterOutlineCategory, PerProgram } from '@/types';
-import { Head } from '@inertiajs/react';
-import { ImageOff, ImagePlay, ImagePlus } from 'lucide-react';
+import { Head, usePage } from '@inertiajs/react';
+import { Download, FileSpreadsheet, FileText, ImageOff, ImagePlay, ImagePlus } from 'lucide-react';
 import { useState } from 'react';
+import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 
 interface AreaProps {
     program: PerProgram;
@@ -19,6 +22,9 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
     const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
     const searchKeyword = searchParams?.get('search') || '';
 
+    const { auth } = usePage<Auth>().props;
+    const user = auth.user;
+    
     const [viewerOpen, setViewerOpen] = useState(false);
     const [viewerFile, setViewerFile] = useState({ url: '', title: '' });
 
@@ -123,7 +129,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                     </div>
                 </div>
 
-                <div className="flex w-full justify-center py-2">
+                <div className="flex flex-col items-center justify-center w-full py-2 gap-4">
                     <Accordion type="single" collapsible className="flex w-[68%] flex-col gap-[1vw]">
                         {area.area_parameters?.length > 0 ? (
                             [...area.area_parameters]
@@ -210,6 +216,31 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                             <p className="text-center text-gray-500">No parameters available for this area.</p>
                         )}
                     </Accordion>
+
+                    {(user?.roles?.role_name === 'Accreditor') && (
+                        <div className='w-[68%] text-end'>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="noborder"
+                                    >
+                                        Area Mean: N/A <Download className="size-6 font-black" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Export All Parameter Means</DropdownMenuLabel>
+                                    <DropdownMenuItem>
+                                        <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                        Excel
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem >
+                                        <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                        PDF
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    )}
                 </div>
                 <DocumentViewer open={viewerOpen} onOpenChange={setViewerOpen} fileUrl={viewerFile.url} title={viewerFile.title} />
             </Layout>

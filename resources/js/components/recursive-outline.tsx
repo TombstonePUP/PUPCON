@@ -92,16 +92,42 @@ export function buildOutlineTree({ outlines }: { outlines: ParameterOutlines[] }
 }
 
 export function RecursiveOutline({ outlines }: OutlineProps) {
+    const { auth } = usePage().props;
+    const role = auth?.user?.roles?.role_name;
+    const isAccreditor = role === "Accreditor";
+
     const [showDocumentViewer, setShowDocumentViewer] = useState(false);
     const [currentDocumentUrl, setCurrentDocumentUrl] = useState('');
     const [currentDocumentTitle, setCurrentDocumentTitle] = useState('');
+    const [ratings, setRatings] = useState<Record<number, number | "N/A">>({});
+    const [mean, setMean] = useState<string>("—");
 
     const handleViewPDF = (outline) => {
         if (outline.area_files?.file_path) {
             setCurrentDocumentUrl(outline.area_files.file_path);
-            setCurrentDocumentTitle(`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`);
+            setCurrentDocumentTitle(
+                `${outline.initial}.${outline.outline_number}. ${outline.outline_description}`
+            );
             setShowDocumentViewer(true);
         }
+    };
+
+    const handleRatingChange = (outlineId: number, value: string) => {
+        setRatings((prev) => {
+            const newRatings = { ...prev, [outlineId]: value === "N/A" ? "N/A" : Number(value) };
+
+            // compute average of numeric ratings
+            const numericValues = Object.values(newRatings)
+                .filter((v): v is number => typeof v === "number" && !isNaN(v));
+
+            const avg =
+                numericValues.length > 0
+                    ? (numericValues.reduce((a, b) => a + b, 0) / numericValues.length).toFixed(2)
+                    : "—";
+
+            setMean(avg);
+            return newRatings;
+        });
     };
 
     return (
@@ -113,25 +139,68 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
                 title={currentDocumentTitle}
             />
 
-            <ul className="pl-[1vw]">
+            <ul className="pl-[1vw] flex flex-col gap-1">
                 {outlines.map((outline) => (
                     <li key={outline.parameter_outline_id}>
-                        {!outline.container ? (
-                            <a className="cursor-pointer underline" onClick={() => handleViewPDF(outline)}>
-                                {outline.initial}.{outline.outline_number}.{outline.outline_description}
-                            </a>
-                        ) : (
-                            <span>
-                                {outline.initial}.{outline.outline_number}.{outline.outline_description}
-                            </span>
-                        )}
-                        {outline.children && outline.children.length > 0 && <RecursiveOutline outlines={outline.children} />}
+                        <div className="flex flex-col gap-1">
+                            <div className='flex items-center'>
+                                {/* Outline label */}
+                                {!outline.container ? (
+                                    <a
+                                        className="cursor-pointer underline text-[#7f1414] hover:text-red-700"
+                                        onClick={() => handleViewPDF(outline)}
+                                    >
+                                        {outline.initial}.{outline.outline_number}.{" "}
+                                        {outline.outline_description}
+                                    </a>
+                                ) : (
+                                    <span className="font-medium">
+                                        {outline.initial}.{outline.outline_number}.{" "}
+                                        {outline.outline_description}
+                                    </span>
+                                )}
+
+                                {/* Accreditor rating (only for non-container outlines) */}
+                                {isAccreditor && !outline.container && (
+                                    <div className="flex items-center gap-2 ml-6 mt-1">
+                                        {/* <label className="text-sm text-gray-600">Rating:</label> */}
+                                        <select
+                                            className="rounded-md border px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-[#7f1414]"
+                                            value={ratings[outline.parameter_outline_id] ?? "N/A"}
+                                            onChange={(e) =>
+                                                handleRatingChange(outline.parameter_outline_id, e.target.value)
+                                            }
+                                        >
+                                            <option value="N/A">N/A</option>
+                                            {[0, 1, 2, 3, 4, 5].map((num) => (
+                                                <option key={num} value={num}>
+                                                    {num}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
+                            {/* Recursive children */}
+                            {outline.children && outline.children.length > 0 && (
+                                <RecursiveOutline outlines={outline.children} />
+                            )}
+                        </div>
                     </li>
                 ))}
             </ul>
+
+            {/* Mean display (Accreditor only) */}
+            {isAccreditor && (
+                <div className="mt-3 text-right text-sm font-semibold text-gray-800">
+                    Mean Rating:{" "}
+                    <span className="text-[#7f1414]">{mean ?? "—"}</span>
+                </div>
+            )}
         </>
     );
 }
+
 
 export function RecursiveOutlineForm({ outlines, resolveDialog }: OutlineProps) {
     const { auth } = usePage().props;

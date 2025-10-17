@@ -4,10 +4,17 @@ import { AreaCard } from '@/components/ui/area-card';
 import Layout from '@/layouts/landing-layout';
 import { PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, useRemember } from '@inertiajs/react';
-import { ChevronRight, GraduationCap, School, Users } from 'lucide-react';
+import { ChevronRight, Download, FileSpreadsheet, FileText, GraduationCap, School, Users } from 'lucide-react';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Label } from 'recharts';
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from '@/components/ui/button';
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
 }
@@ -411,7 +418,7 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Areas Under Survey --- */}
                     <div ref={areasRef} className="w-[85%] max-w-7xl" id="areas">
-                        <div className={`transition-all duration-700 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+                        <div className={`relative transition-all duration-700 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader
                                 title="Areas Under Survey"
                                 subtitle="ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES"
@@ -444,6 +451,31 @@ export default function Programs({ program }: PerProgramProps) {
                                 )}
                             </div>
                         </div>
+                        {(user?.roles?.role_name === 'Accreditor') && (
+                            <div className='w-full text-end'>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="noborder"
+                                        >
+                                            Program Mean: N/A
+                                            <Download className="size-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuLabel>Export All Area Means</DropdownMenuLabel>
+                                        <DropdownMenuItem>
+                                            <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                            Excel
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem >
+                                            <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                            PDF
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        )}
                     </div>
                 </div>
             </Layout>
