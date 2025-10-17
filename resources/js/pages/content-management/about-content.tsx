@@ -3,9 +3,9 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, Di
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/text-area';
 import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem } from '@/types';
 import { Eye, FileText, Pencil, Save } from 'lucide-react';
 import { useRef, useState } from 'react';
-import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -27,10 +27,12 @@ const AboutContent = () => {
 
     // Refs for scrolling
     const missionVisionRef = useRef(null);
-    const udpPlanRef = useRef(null);
+    const adminRef = useRef(null);
     const strategicGoalsRef = useRef(null);
     const campusGoalsRef = useRef(null);
-    const faculties = useRef(null);
+    const facultiesRef = useRef(null);
+    const historyRef = useRef(null);
+    const facilitiesRef = useRef(null);
 
     const handleMissionVisionChange = (field, value) => {
         setMissionVision((prev) => ({ ...prev, [field]: value }));
@@ -43,10 +45,12 @@ const AboutContent = () => {
 
     const sections = [
         { id: 'mission-vision', label: 'Mission & Vision', ref: missionVisionRef },
-        { id: 'udp-plan', label: 'UDP Plan', ref: udpPlanRef },
+        { id: 'history', label: 'History', ref: historyRef },
+        { id: 'administration', label: 'Administration', ref: adminRef },
         { id: 'strategic-goals', label: 'Strategic Goals', ref: strategicGoalsRef },
         { id: 'campus-goals', label: 'Campus Goals', ref: campusGoalsRef },
-        { id: 'faculties', label: 'Faculty & Staffs', ref: faculties },
+        { id: 'faculties', label: 'Faculty & Staffs', ref: facultiesRef },
+        { id: 'facilties', label: 'Facilities', ref: facilitiesRef },
     ];
 
     return (
@@ -60,7 +64,9 @@ const AboutContent = () => {
                         </div>
                         <div className="ml-2">
                             <h1 className="text-2xl font-semibold text-gray-900">Content Management</h1>
-                            <p className="text-sm text-gray-600">Lagyan nito na lang sa iba kung matino tignan, mas balance tigna pag naka padding and border gaya sa per programs</p>
+                            <p className="text-sm text-gray-600">
+                                Lagyan nito na lang sa iba kung matino tignan, mas balance tigna pag naka padding and border gaya sa per programs
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -141,7 +147,7 @@ const AboutContent = () => {
                                         {/* Preview Button with Dialog */}
                                         <Dialog>
                                             <DialogTrigger asChild>
-                                                <button className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 cursor-pointer">
+                                                <button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
                                                     <Eye className="h-4 w-4 text-gray-600" />
                                                     Preview
                                                 </button>
@@ -150,7 +156,7 @@ const AboutContent = () => {
                                             <DialogContent className="sm:max-w-md">
                                                 <DialogHeader>
                                                     <DialogTitle>Preview Content</DialogTitle>
-                                                    <DialogDescription className='leading-relaxed my-2'>
+                                                    <DialogDescription className="my-2 leading-relaxed">
                                                         Clicking <strong>Preview</strong> will open a new tab in guest view so you can see how your
                                                         changes look publicly.
                                                     </DialogDescription>
@@ -159,7 +165,7 @@ const AboutContent = () => {
                                                 <div>
                                                     <div className="flex justify-end gap-3">
                                                         <DialogClose asChild>
-                                                            <button className="rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 cursor-pointer">
+                                                            <button className="cursor-pointer rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
                                                                 Cancel
                                                             </button>
                                                         </DialogClose>
@@ -168,7 +174,7 @@ const AboutContent = () => {
                                                             onClick={() => {
                                                                 window.open('/about/vision-mission-goals', '_blank');
                                                             }}
-                                                            className="rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#6b1010] cursor-pointer"
+                                                            className="cursor-pointer rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#6b1010]"
                                                         >
                                                             Continue to Preview
                                                         </button>
@@ -179,12 +185,12 @@ const AboutContent = () => {
 
                                         {/* Edit + Save Buttons */}
                                         <div className="flex gap-3">
-                                            <button className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 cursor-pointer">
+                                            <button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
                                                 <Pencil className="h-4 w-4 text-gray-600" />
                                                 Edit
                                             </button>
 
-                                            <button className="flex items-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#6b1010] cursor-pointer">
+                                            <button className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#6b1010]">
                                                 <Save className="h-4 w-4" />
                                                 Save
                                             </button>
@@ -193,8 +199,14 @@ const AboutContent = () => {
                                 </div>
                             </div>
 
-                            {/* UDP Plan Section - Placeholder */}
-                            <div ref={udpPlanRef} className="scroll-mt-6 rounded-lg border border-gray-200 bg-white p-8">
+                            {/* History Section - Placeholder */}
+                            <div ref={historyRef} className="scroll-mt-6 rounded-lg border border-gray-200 bg-white p-8">
+                                <h2 className="text-lg font-semibold text-gray-900">History</h2>
+                                <p className="mt-2 text-sm text-gray-600">Content coming soon...</p>
+                            </div>
+
+                            {/* Administration Section - Placeholder */}
+                            <div ref={adminRef} className="scroll-mt-6 rounded-lg border border-gray-200 bg-white p-8">
                                 <h2 className="text-lg font-semibold text-gray-900">UDP Plan</h2>
                                 <p className="mt-2 text-sm text-gray-600">Content coming soon...</p>
                             </div>
@@ -212,7 +224,7 @@ const AboutContent = () => {
                             </div>
 
                             {/* Faculties Section - Placeholder */}
-                            <div ref={faculties} className="scroll-mt-6 rounded-lg border border-gray-200 bg-white p-8">
+                            <div ref={facultiesRef} className="scroll-mt-6 rounded-lg border border-gray-200 bg-white p-8">
                                 <h2 className="text-lg font-semibold text-gray-900">Faculty & Staffs</h2>
                                 <p className="mt-2 text-sm text-gray-600">Content coming soon...</p>
                             </div>
