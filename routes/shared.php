@@ -8,7 +8,7 @@ use App\Http\Controllers\Files\AreaParameterOutlinesController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'verified', 'update.password'])->group(function () {
+Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restriction'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 

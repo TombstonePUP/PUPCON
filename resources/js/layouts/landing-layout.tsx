@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { GuestNavigation } from '@/types';
+import type { Auth, GuestNavigation } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -13,6 +13,7 @@ import {
     History,
     Home,
     Info,
+    LogOut,
     Mail,
     Search,
     ShieldCheck,
@@ -20,6 +21,7 @@ import {
     X,
 } from 'lucide-react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 
 interface LayoutProps {
     children: ReactNode;
@@ -32,6 +34,10 @@ function isActive(path: string) {
 
 export default function Layout({ children, footerText }: LayoutProps) {
     const { guest } = usePage<GuestNavigation>().props;
+    const { auth } = usePage<Auth>().props;
+    const user = auth.user;
+    const cleanup = useMobileNavigation();
+
 
     const underSurveyPrograms = (guest as any)?.programs?.length
         ? (guest as any).programs.map((program: any) => ({
@@ -245,7 +251,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
             >
                 <Link href="/" className="flex items-center" preserveScroll>
                     {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
-                    <div className='bg-[#d2b539] h-18 w-164 rounded-br-full'>
+                    <div className='bg-[#d2b539] h-18 w-[38vw] rounded-br-full'>
                         <div className='ml-3 h-full bg-white rounded-br-full mr-3 flex justify-end gap-4 pr-20 pb-2 items-center'>
                             <img className="size-11 mt-1" src="/images/pupsj-logo.png" alt="pupsj logo" />
                             <div>
@@ -310,6 +316,16 @@ export default function Layout({ children, footerText }: LayoutProps) {
                         >
                             <Search className="h-5 w-5" />
                         </motion.button>
+
+                        {user?.roles?.role_name === 'Accreditor' && (
+                            <Link
+                                className="absolute right-[-150px] flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-white ring-1 ring-white/20 transition-all duration-200 hover:bg-white/20 hover:ring-white/40"
+                                method="post" href={route('logout')} as="button" onClick={cleanup}
+                            >
+                                <LogOut size={16} className="text-white" />
+                                <span className="text-xs text-white/80">Logout</span>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </motion.header>
@@ -526,22 +542,22 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Quick Links</h3>
                             <ul className="space-y-3">
                                 <li>
-                                    <a
+                                    <Link
                                         href="https://pupsinta.freshservice.com/support/home"
                                         className="flex items-center gap-2 transition hover:text-yellow-300"
                                     >
                                         <Mail className="h-4 w-4" /> PUP SINTA
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li>
-                                    <a href="https://outlook.office.com/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                    <Link href="https://outlook.office.com/" className="flex items-center gap-2 transition hover:text-yellow-300">
                                         <ExternalLink className="h-4 w-4" /> PUP WebMail
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li>
-                                    <a href="https://www.pup.edu.ph/iapply/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                    <Link href="https://www.pup.edu.ph/iapply/" className="flex items-center gap-2 transition hover:text-yellow-300">
                                         <BookOpen className="h-4 w-4" /> PUP iApply
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>
@@ -550,24 +566,39 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Portals</h3>
                             <ul className="space-y-3">
                                 <li>
-                                    <a href="https://sis1.pup.edu.ph/student/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                    <Link href="https://sis1.pup.edu.ph/student/" className="flex items-center gap-2 transition hover:text-yellow-300">
                                         <GraduationCap className="h-4 w-4" /> SIS for Students
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="https://sis2.pup.edu.ph/faculty/" className="flex items-center gap-2 transition hover:text-yellow-300">
-                                        <BookOpen className="h-4 w-4" /> SIS for Faculty
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="https://sis8.pup.edu.ph/" className="flex items-center gap-2 transition hover:text-yellow-300">
-                                        <ExternalLink className="h-4 w-4" /> PUPSIS
-                                    </a>
-                                </li>
-                                <li>
-                                    <Link href="/login" className="flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>
-                                        <Home className="h-4 w-4" /> PUPCON Login
                                     </Link>
+                                </li>
+                                <li>
+                                    <Link href="https://sis2.pup.edu.ph/faculty/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                        <BookOpen className="h-4 w-4" /> SIS for Faculty
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="https://sis8.pup.edu.ph/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                        <ExternalLink className="h-4 w-4" /> PUPSIS
+                                    </Link>
+                                </li>
+                                <li>
+                                    {user?.roles?.role_name === 'Accreditor' ? (
+                                        <Link
+                                            href={route('logout')}
+                                            className="flex items-center gap-2 transition hover:text-yellow-300 hover:cursor-pointer"
+                                            method="post" as="button" onClick={cleanup}
+                                        >
+                                            <LogOut className="h-4 w-4" />
+                                            Log out
+                                        </Link>
+                                    ) : (
+                                        <Link
+                                            href="/login"
+                                            className="flex items-center gap-2 transition hover:text-yellow-300"
+                                            preserveScroll
+                                        >
+                                            <Home className="h-4 w-4" /> PUPCON Login
+                                        </Link>
+                                    )}
                                 </li>
                             </ul>
                         </div>
@@ -576,20 +607,20 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Socials</h3>
                             <ul className="space-y-3">
                                 <li>
-                                    <a
+                                    <Link
                                         href="https://www.facebook.com/profile.php?id=100064299686924"
                                         className="flex items-center gap-2 transition hover:text-yellow-300"
                                     >
                                         <Facebook className="h-4 w-4" /> PUPSJ Facebook
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li>
-                                    <a
+                                    <Link
                                         href="https://www.facebook.com/ThePUPOfficial"
                                         className="flex items-center gap-2 transition hover:text-yellow-300"
                                     >
                                         <Facebook className="h-4 w-4" /> PUP Sta. Mesa Facebook
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li>
                                     <Link href="/" className="flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>

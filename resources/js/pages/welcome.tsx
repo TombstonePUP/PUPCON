@@ -1,6 +1,6 @@
 import { CardHeader, HomeCard, HomeCardDescription, HomeCardTitle } from '@/components/ui/card';
 import Layout from '@/layouts/landing-layout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, Calendar, GraduationCap, MapPin, Play } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -113,6 +113,8 @@ export default function Welcome({ carouselImages }: LandingProps) {
     const shouldReduceMotion = useReducedMotion();
 
     const images = carouselImages;
+    const { auth } = usePage<Auth>().props;
+    const user = auth.user;
 
     const newsCards = useMemo(
         () => [
@@ -672,7 +674,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 transition={{ duration: 0.4, delay: 0.1 }}
                                 viewport={{ once: true }}
                             >
-                                <h2 className="text-3xl font-bold text-gray-900">Welcome Accreditors!</h2>
+                                <h2 className="text-3xl font-bold text-gray-900">
+                                    Welcome {user?.roles?.role_name === 'Accreditor' ? user.first_name + " " + user.last_name : 'Accreditors'}!
+                                </h2>
                                 <p className="leading-relaxed text-gray-700">
                                     It is our honor to host you, esteemed accreditors, and we deeply appreciate your role in our continued success.
                                 </p>

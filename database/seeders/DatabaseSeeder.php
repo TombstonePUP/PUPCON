@@ -88,6 +88,14 @@ class DatabaseSeeder extends Seeder
                 'role_id' => 3, // Chairman
                 'password' => bcrypt('shiroe_1101101011'),
             ],
+            [
+                'user_id' => 44444,
+                'first_name' => 'Jane',
+                'last_name' => 'Doe',
+                'email' => 'janedoe@accreditor.com',
+                'role_id' => 4, // Accreditor
+                'password' => bcrypt('accreditor@123'),
+            ],
         ];
         foreach ($users as $attributes) {
             User::factory()->create($attributes);

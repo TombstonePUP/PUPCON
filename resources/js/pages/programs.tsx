@@ -1,13 +1,17 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import type { ProgramsUnderSurvey } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { Badge } from 'lucide-react';
 
 interface ProgramsProps {
     programs: ProgramsUnderSurvey[];
 }
 
 export default function Programs({ programs }: ProgramsProps) {
+    const { auth } = usePage<Auth>().props;
+    const user = auth.user;
+
     return (
         <>
             <Head title="Programs Under Survey">
@@ -43,7 +47,7 @@ export default function Programs({ programs }: ProgramsProps) {
                                                     </div>
 
                                                     {/* Program Content */}
-                                                    <div className="flex flex-col justify-center p-12 md:w-2/3">
+                                                    <div className="relative flex flex-col justify-center p-12 md:w-2/3 overflow-hidden">
                                                         <div className="mb-6">
                                                             <span className="mb-4 inline-block rounded-full bg-[#7f1414]/10 px-4 py-2 text-sm font-semibold text-[#7f1414]">
                                                                 {program.degree_type}
@@ -75,6 +79,11 @@ export default function Programs({ programs }: ProgramsProps) {
                                                                 </svg>
                                                             </span>
                                                         </div>
+                                                         {(user?.roles?.role_name === 'Accreditor') && (
+                                                            <div className='rounded-xl absolute top-[-8px] right-[-8px] size-25 flex items-center justify-center px-3 py-1 text-2xl text-white font-semibold bg-[#7f1414] shadow-md'>
+                                                                N/A
+                                                            </div>
+                                                        )}  
                                                     </div>
                                                 </div>
                                             </div>
