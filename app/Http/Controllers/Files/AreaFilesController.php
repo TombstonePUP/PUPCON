@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+// use Mostafaznv\PdfOptimizer\Laravel\Facade\PdfOptimizer;
+// use Mostafaznv\PdfOptimizer\Enums\ColorConversionStrategy;
+// use Mostafaznv\PdfOptimizer\Enums\PdfSettings;
 
 class AreaFilesController extends Controller
 {
@@ -71,6 +74,38 @@ class AreaFilesController extends Controller
         Storage::disk('public')->putFileAs($filePath, $file, $fileName);
         $filePath = "{$filePath}/{$fileName}";
 
+         // Store original file temporarily
+        // $tempFileName = 'temp_' . Str::uuid() . '.pdf';
+        // $tempFilePath = "temp/{$tempFileName}";
+        // Storage::disk('public')->putFileAs('temp', $file, $tempFileName);
+
+        // Optimize PDF
+        // try {
+        //     $result = PdfOptimizer::fromDisk('public')
+        //         ->open($tempFilePath)
+        //         ->toDisk('public')
+        //         ->settings(PdfSettings::EBOOK) // Better quality than SCREEN
+        //         ->colorConversionStrategy(ColorConversionStrategy::DEVICE_INDEPENDENT_COLOR)
+        //         ->colorImageResolution(150) // Higher resolution for better quality
+        //         ->grayImageResolution(150)
+        //         ->monoImageResolution(300)
+        //         ->optimize("{$filePath}/{$fileName}");
+
+        //     // Delete temporary file
+        //     Storage::disk('public')->delete($tempFilePath);
+
+        //     if (!$result->status) {
+        //         // If optimization fails, use original file
+        //         Storage::disk('public')->putFileAs($filePath, $file, $fileName);
+        //         \Log::warning('PDF optimization failed: ' . $result->message);
+        //     }
+        // } catch (\Exception $e) {
+        //     // If optimization throws exception, use original file
+        //     Storage::disk('public')->delete($tempFilePath);
+        //     Storage::disk('public')->putFileAs($filePath, $file, $fileName);
+        //     \Log::error('PDF optimization error: ' . $e->getMessage());
+        // }
+        //  $fullFilePath = "{$filePath}/{$fileName}";
 
         $areaFile = $parameterOutlines->AreaFiles()->create([
             'file_name' => $fileName,
