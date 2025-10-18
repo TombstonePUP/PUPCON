@@ -1,6 +1,6 @@
 import { CardHeader, HomeCard, HomeCardDescription, HomeCardTitle } from '@/components/ui/card';
 import Layout from '@/layouts/landing-layout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, Calendar, GraduationCap, MapPin, Play } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -52,7 +52,7 @@ const ImageWithPreload = React.memo(({ src, alt, className, priority = false, ..
     );
 });
 
-// Simple Action Button
+// Simple Action Button - Made Responsive
 const ActionButton = ({ href, children, icon: Icon, external = false, ...props }) => {
     const Component = external ? 'a' : Link;
     const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
@@ -60,13 +60,13 @@ const ActionButton = ({ href, children, icon: Icon, external = false, ...props }
     return (
         <Component
             href={href}
-            className="inline-flex transform-none items-center justify-center gap-3 rounded-full border-2 border-[#7f1414] bg-[#7f1414] px-8 py-4 font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111]"
+            className="inline-flex transform-none items-center justify-center gap-2 rounded-full border-2 border-[#7f1414] bg-[#7f1414] px-4 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111] sm:gap-3 sm:px-6 sm:py-4 sm:text-base md:px-8"
             {...externalProps}
             {...props}
         >
-            {Icon && <Icon className="h-5 w-5" />}
-            <span>{children}</span>
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5" />}
+            <span className="whitespace-nowrap">{children}</span>
+            <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
         </Component>
@@ -113,6 +113,8 @@ export default function Welcome({ carouselImages }: LandingProps) {
     const shouldReduceMotion = useReducedMotion();
 
     const images = carouselImages;
+    const { auth } = usePage<Auth>().props;
+    const user = auth.user;
 
     const newsCards = useMemo(
         () => [
@@ -486,15 +488,15 @@ export default function Welcome({ carouselImages }: LandingProps) {
                         },
                     }}
                 >
-                    <motion.div className="flex flex-col items-center text-center" variants={itemVariants}>
-                        <h2 className="text-3xl font-bold text-gray-900">What's New on Campus</h2>
-                        <p className="mt-2 text-lg text-gray-600">Catch up on events, announcements, and campus highlights.</p>
+                    <motion.div className="flex flex-col items-center px-4 text-center" variants={itemVariants}>
+                        <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">What's New on Campus</h2>
+                        <p className="mt-2 text-base text-gray-600 sm:text-lg">Catch up on events, announcements, and campus highlights.</p>
                     </motion.div>
 
-                    {/* News Cards */}
-                    <div className="flex flex-row flex-wrap justify-center gap-8">
+                    {/* News Cards - Responsive Grid */}
+                    <div className="grid w-full max-w-7xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6 md:gap-8 lg:grid-cols-4">
                         {newsCards.map((card, i) => (
-                            <motion.div key={i} className="w-[18vw]" variants={itemVariants}>
+                            <motion.div key={i} variants={itemVariants}>
                                 <Link href="/">
                                     <motion.div
                                         whileHover={{
@@ -504,21 +506,21 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         transition={{ duration: 0.2 }}
                                     >
                                         <HomeCard className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-colors duration-200 hover:border-[#7f1414]">
-                                            <div className="h-48 w-full overflow-hidden">
+                                            <div className="h-40 w-full overflow-hidden sm:h-48">
                                                 <ImageWithPreload
                                                     src={card.img}
                                                     alt={card.title}
                                                     className="h-full w-full transition-transform duration-300 group-hover:scale-105"
                                                 />
                                             </div>
-                                            <CardHeader className="p-4">
-                                                <HomeCardTitle className="font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
+                                            <CardHeader className="p-3 sm:p-4">
+                                                <HomeCardTitle className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
                                                     {card.title}
                                                 </HomeCardTitle>
                                                 <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
                                                     <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 group-hover:scale-x-100"></div>
                                                 </div>
-                                                <HomeCardDescription className="text-sm text-gray-600">{card.desc}</HomeCardDescription>
+                                                <HomeCardDescription className="text-xs text-gray-600 sm:text-sm">{card.desc}</HomeCardDescription>
                                             </CardHeader>
                                         </HomeCard>
                                     </motion.div>
@@ -550,7 +552,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                             viewport={{ once: true }}
                         >
                             <motion.div
-                                className="relative h-[400px] w-full overflow-hidden rounded-2xl"
+                                className="relative h-[250px] w-full overflow-hidden rounded-xl sm:h-[350px] sm:rounded-2xl md:h-[400px]"
                                 whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
                                 transition={{ duration: 0.3 }}
                             >
@@ -566,25 +568,24 @@ export default function Welcome({ carouselImages }: LandingProps) {
                         </motion.div>
 
                         <motion.div
-                            className="flex w-full flex-col justify-center text-center lg:w-[50%] lg:text-left"
+                            className="flex w-full flex-col justify-center px-4 text-center sm:px-0 lg:w-[50%] lg:text-left"
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 0.2 }}
                             viewport={{ once: true }}
                         >
-                            <h2 className="mb-4 text-[2.5vw] font-bold text-[#7f1414] lg:text-[2rem]">Campus Audio-Visual Presentation</h2>
-                            <p className="mb-4 text-[1.15rem] leading-relaxed text-gray-700">
+                            <h2 className="mb-3 text-xl font-bold text-[#7f1414] sm:mb-4 sm:text-2xl lg:text-[2rem]">
+                                Campus Audio-Visual Presentation
+                            </h2>
+                            <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">
                                 A Leading Comprehensive Polytechnic University in Asia
                             </p>
-                            <p className="mb-8 text-[0.95rem] text-gray-600 italic">
+                            <p className="mb-6 text-sm text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">
                                 Discover the roadmap that shapes our future — goals, strategies, and developments leading PUP into a new era of
                                 excellence.
                             </p>
 
-                            <motion.div
-                                whileHover={{}} // empty object disables scale
-                                whileTap={{}} // disable tap scale
-                            >
+                            <motion.div whileHover={{}} whileTap={{}} className="flex justify-center lg:justify-start">
                                 <ActionButton href="..." icon={Play} external>
                                     Watch on YouTube
                                 </ActionButton>
@@ -673,7 +674,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 transition={{ duration: 0.4, delay: 0.1 }}
                                 viewport={{ once: true }}
                             >
-                                <h2 className="text-3xl font-bold text-gray-900">Welcome Accreditors!</h2>
+                                <h2 className="text-3xl font-bold text-gray-900">
+                                    Welcome {user?.roles?.role_name === 'Accreditor' ? user.first_name + " " + user.last_name : 'Accreditors'}!
+                                </h2>
                                 <p className="leading-relaxed text-gray-700">
                                     It is our honor to host you, esteemed accreditors, and we deeply appreciate your role in our continued success.
                                 </p>
@@ -833,7 +836,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                     allowFullScreen
                                     loading="lazy"
                                     referrerPolicy="no-referrer-when-downgrade"
-                                ></iframe>
+                                />
                             </motion.div>
                         </motion.div>
                     </div>

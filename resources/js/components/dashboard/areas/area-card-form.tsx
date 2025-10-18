@@ -102,7 +102,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                         <p className="my-5 text-center text-sm">{`${program.degree_type} in ${program.program_name}`}</p>
 
                         {/* Edit/Remove buttons (appear on hover) */}
-                        <div className="absolute inset-0 flex items-center justify-center gap-2 rounded bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <div className="absolute inset-0 flex items-center justify-center gap-2 rounded bg-[#f4f4f4]/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                             {/* View Button - only sets state, no Dialog here */}
                             <Button
                                 variant="ghost"
@@ -161,7 +161,7 @@ export default function AreaCards({ program, forms, areaId, categories }: AreaCa
                             <DialogTrigger asChild>
                                 <Button
                                     variant="ghost"
-                                    className="flex h-full w-full flex-col items-center gap-1 p-4 hover:bg-gray-50"
+                                    className="flex h-full w-full flex-col items-center gap-1 p-4 hover:bg-[#f4f4f4]/40 transition duration-300"
                                     onClick={() => setDialogOpen(true)}
                                 >
                                     <div className="rounded-full border-2 border-dashed border-[#B4B4B4] p-3">

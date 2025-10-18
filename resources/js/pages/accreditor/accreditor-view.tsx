@@ -14,6 +14,25 @@ import {
     AlertCircle,
 } from "lucide-react";
 import { DocumentViewer } from "@/components/dialogs/documents/view-document";
+import AccreditorLayout from '@/layouts/accreditor-layout';
+import { Head, useForm, usePage } from '@inertiajs/react';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 
 export default function AccreditorDashboard() {
     const [expandedAreas, setExpandedAreas] = useState({});
@@ -24,6 +43,7 @@ export default function AccreditorDashboard() {
     const [exportAreaDropdown, setExportAreaDropdown] = useState({});
     const [ratings, setRatings] = useState({});
     const [means, setMeans] = useState({});
+    const [selectedLevels, setSelectedLevels] = useState({});
 
     const accreditor = {
         name: "Dr. Maria Santos",
@@ -35,7 +55,6 @@ export default function AccreditorDashboard() {
         {
             id: 1,
             program_name: 'Bachelor of Science in Computer Science',
-            degree_type: 'Undergraduate',
             accreditation_level: 3,
             campus: 'Main Campus',
             assigned_areas: [
@@ -144,7 +163,6 @@ export default function AccreditorDashboard() {
         {
             id: 2,
             program_name: 'Bachelor of Science in Information Technology',
-            degree_type: 'Undergraduate',
             accreditation_level: 2,
             campus: 'Main Campus',
             assigned_areas: [
@@ -349,296 +367,442 @@ export default function AccreditorDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="mx-auto w-[85%] max-w-7xl px-6 py-12">
-                <section className="mb-12 rounded-xl border border-[#7f1414]/25 bg-gradient-to-br from-white to-gray-50 p-8">
-                    <h1 className="mb-2 text-3xl font-bold text-[#7f1414]">
-                        Welcome back, {accreditor.name}
-                    </h1>
-                    <p className="text-lg text-gray-700">
-                        {accreditor.role} • {accreditor.specialty}
-                    </p>
-                    <p className="text-gray-600">
-                        You have been assigned to evaluate {programs.length} program
-                        {programs.length > 1 ? "s" : ""}.
-                    </p>
-                </section>
+        <>
+            <Head title="Accreditor Form">
+                <link rel="preconnect" href="https://fonts.bunny.net" />
+                <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+            </Head>
+            <AccreditorLayout>
+                <div className="min-h-screen bg-gray-50">
+                    <div className="mx-auto w-[85%] max-w-7xl px-6 py-12">
+                        <section className="mb-12 rounded-xl border border-[#7f1414]/25 bg-gradient-to-br from-white to-gray-50 p-8">
+                            <h1 className="mb-2 text-3xl font-bold text-[#7f1414]">
+                                Welcome back, {accreditor.name}
+                            </h1>
+                            <p className="text-lg text-gray-700">
+                                {accreditor.role} • {accreditor.specialty}
+                            </p>
+                            <p className="text-gray-600">
+                                You have been assigned to evaluate {programs.length} program
+                                {programs.length > 1 ? "s" : ""}.
+                            </p>
+                        </section>
 
-                {/* Programs */}
-                <section>
-                    {programs.map((program) => (
-                        <div
-                            key={program.id}
-                            className="mb-6 rounded-xl border border-gray-200 bg-white shadow-sm"
-                        >
-                            <div className="border-b border-gray-100 bg-[#7f1414]/5 p-6">
-                                <h3 className="text-xl font-bold text-[#7f1414]">
-                                    {program.program_name}
-                                </h3>
-                                <p className="text-sm text-gray-600">{program.campus}</p>
-                            </div>
+                        {/* Programs */}
+                        <section>
+                            {programs.map((program) => {
+                                // 🔹 Compute Program Mean
+                                const areaIds = program.assigned_areas.map((a) => a.id);
+                                const areaMeans = areaIds
+                                    .map((id) => parseFloat(means[id]))
+                                    .filter((v) => !isNaN(v));
 
+                                const programMean =
+                                    areaMeans.length > 0
+                                        ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2)
+                                        : "—";
 
-
-
-                            {/* Areas */}
-                            <div className="p-6">
-                                {program.assigned_areas.map((area) => (
+                                return (
                                     <div
-                                        key={area.id}
-                                        className="mb-4 rounded-lg border border-gray-200 bg-gray-50"
+                                        key={program.id}
+                                        className="mb-6 rounded-xl border border-gray-200 bg-white"
                                     >
-                                        <button
-                                            onClick={() => toggleArea(area.id)}
-                                            className="flex w-full items-center justify-between p-4 text-left hover:bg-white"
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                {expandedAreas[area.id] ? (
-                                                    <ChevronDown className="h-5 w-5 text-gray-500" />
-                                                ) : (
-                                                    <ChevronRight className="h-5 w-5 text-gray-500" />
-                                                )}
-                                                <h4 className="font-semibold text-gray-900">
-                                                    {area.area_name}
-                                                </h4>
-                                                <span
-                                                    className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getStatusColor(
-                                                        area.status
-                                                    )}`}
+                                        <div className="border-b border-gray-100 bg-[#7f1414]/5 p-6 flex items-center justify-between">
+                                            <h3 className="text-xl font-bold text-[#7f1414]">
+                                                {program.program_name}
+                                            </h3>
+                                            <Select
+                                                onValueChange={(value) =>
+                                                    setSelectedLevels((prev) => ({ ...prev, [program.id]: value }))
+                                                }
+                                            >
+                                                <SelectTrigger className="w-fit gap-2 bg-white">
+                                                    <SelectValue
+                                                        placeholder={`Level ${program.accreditation_level}`}
+                                                    />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Level</SelectLabel>
+                                                        {[1, 2, 3, 4, 5].map((num) => (
+                                                            <SelectItem key={num} value={num.toString()}>
+                                                                {num}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        {/* Areas */}
+                                        <div className="p-6">
+                                            {program.assigned_areas.map((area) => (
+                                                <div
+                                                    key={area.id}
+                                                    className="mb-4 rounded-lg border border-gray-200 bg-gray-50"
                                                 >
-                                                    {getStatusText(area.status)}
-                                                </span>
-                                            </div>
-
-                                            {/* Export Dropdown */}
-                                            <div className="relative export-dropdown inline-block ml-6">
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        toggleAreaExport(area.id);
-                                                    }}
-                                                    className="flex items-center gap-2 rounded-lg bg-[#7f1414] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#6a1111]"
-                                                >
-                                                    <Download className="h-4 w-4" /> Export
-                                                </button>
-
-                                                {exportAreaDropdown[area.id] && (
-                                                    <div className="absolute right-0 top-full z-20 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow-lg">
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleAreaExport(area.id, "excel");
-                                                            }}
-                                                            className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                                                        >
-                                                            <FileSpreadsheet className="h-4 w-4 text-green-600" /> Export as Excel
-                                                        </button>
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleAreaExport(area.id, "pdf");
-                                                            }}
-                                                            className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                                                        >
-                                                            <FileText className="h-4 w-4 text-red-600" /> Export as PDF
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                        </button>
-
-                                        {expandedAreas[area.id] && (
-                                            <div className="border-t border-gray-200 bg-white p-4">
-                                                {area.parameters.map((param) => (
-                                                    <div
-                                                        key={param.id}
-                                                        className="mb-3 rounded-lg border border-gray-200"
+                                                    <button
+                                                        onClick={() => toggleArea(area.id)}
+                                                        className="flex w-full items-center justify-between p-4 text-left hover:bg-white hover:rounded-lg"
                                                     >
-                                                        <button
-                                                            onClick={() =>
-                                                                toggleParameter(`${area.id}-${param.id}`)
-                                                            }
-                                                            className="flex w-full items-center justify-between p-3 hover:bg-gray-50"
-                                                        >
-                                                            <div className="flex items-center gap-3">
-                                                                {expandedParameters[`${area.id}-${param.id}`] ? (
-                                                                    <ChevronDown className="h-4 w-4 text-gray-500" />
-                                                                ) : (
-                                                                    <ChevronRight className="h-4 w-4 text-gray-500" />
-                                                                )}
-                                                                {getParameterStatusIcon(param.status)}
-                                                                <span className="font-medium text-[#7f1414]">
-                                                                    Parameter {param.id}
-                                                                </span>
-                                                                <span className="text-gray-600">{param.label}</span>
-                                                            </div>
+                                                        <div className="flex items-center gap-3">
+                                                            {expandedAreas[area.id] ? (
+                                                                <ChevronDown className="h-5 w-5 text-gray-500" />
+                                                            ) : (
+                                                                <ChevronRight className="h-5 w-5 text-gray-500" />
+                                                            )}
+                                                            <h4 className="font-semibold text-gray-900">
+                                                                {area.area_name}
+                                                            </h4>
                                                             <span
-                                                                className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getParameterStatusBadge(
-                                                                    param.status
+                                                                className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getStatusColor(
+                                                                    area.status
                                                                 )}`}
                                                             >
-                                                                {getParameterStatusText(param.status)}
+                                                                {getStatusText(area.status)}
                                                             </span>
-                                                        </button>
+                                                        </div>
 
-                                                        {expandedParameters[`${area.id}-${param.id}`] && (
-                                                            <div className="space-y-4 p-3">
-                                                                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                                                                    <h4 className="mb-2 font-bold text-[#7f1414]">
-                                                                        Indicators and Ratings
-                                                                    </h4>
+                                                        {/* Export Dropdown */}
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                    variant="noborder"
+                                                                >
+                                                                    <Download className="h-4 w-4" />
+                                                                    Export
+                                                                </Button>
+                                                            </DropdownMenuTrigger>
 
-                                                                    <table className="w-full text-sm text-gray-700 border-t border-gray-200">
-                                                                        <thead>
-                                                                            <tr className="bg-white">
-                                                                                <th className="text-left font-semibold py-3 px-3">
-                                                                                    Indicators
-                                                                                </th>
-                                                                                <th className="text-center font-semibold py-3">
-                                                                                    Item Rating
-                                                                                </th>
-                                                                            </tr>
-                                                                        </thead>
+                                                            <DropdownMenuContent align="end">
+                                                                {/* <DropdownMenuLabel>Export {area.area_name}</DropdownMenuLabel> */}
+                                                                <DropdownMenuItem onClick={() => handleAreaExport(area.id, "excel")}>
+                                                                    <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                                                    Export as Excel
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => handleAreaExport(area.id, "pdf")}>
+                                                                    <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                                                    Export as PDF
+                                                                </DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
+                                                    </button>
 
-                                                                        <tbody>
-                                                                            {param.benchmarks.map((benchmark, idx) => (
-                                                                                <React.Fragment key={benchmark.id}>
-                                                                                    <tr
-                                                                                        className={`
-                  ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} 
-                  hover:bg-gray-100 transition
-                `}
-                                                                                    >
-                                                                                        <td className="px-3 py-2 align-top border-t border-gray-200">
-                                                                                            <button
-                                                                                                onClick={() =>
-                                                                                                    openViewer(benchmark.pdfUrl, benchmark.text)
-                                                                                                }
-                                                                                                className="text-left text-gray-700 hover:text-[#7f1414] hover:underline"
-                                                                                            >
-                                                                                                {benchmark.text}
-                                                                                            </button>
+                                                    {expandedAreas[area.id] && (
+                                                        <div className="border-t border-gray-200 bg-white p-4 rounded-b-lg">
+                                                            {area.parameters.map((param) => (
+                                                                <div
+                                                                    key={param.id}
+                                                                    className="mb-3 rounded-lg border border-gray-200"
+                                                                >
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            toggleParameter(`${area.id}-${param.id}`)
+                                                                        }
+                                                                        className="flex w-full items-center justify-between p-3 hover:bg-gray-50 hover:rounded-lg"
+                                                                    >
+                                                                        <div className="flex items-center gap-3">
+                                                                            {expandedParameters[`${area.id}-${param.id}`] ? (
+                                                                                <ChevronDown className="h-4 w-4 text-gray-500" />
+                                                                            ) : (
+                                                                                <ChevronRight className="h-4 w-4 text-gray-500" />
+                                                                            )}
+                                                                            {getParameterStatusIcon(param.status)}
+                                                                            <span className="font-medium text-[#7f1414]">
+                                                                                Parameter {param.id}
+                                                                            </span>
+                                                                            <span className="text-gray-600">{param.label}</span>
+                                                                        </div>
+                                                                        <span
+                                                                            className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getParameterStatusBadge(
+                                                                                param.status
+                                                                            )}`}
+                                                                        >
+                                                                            {getParameterStatusText(param.status)}
+                                                                        </span>
+                                                                    </button>
 
-                                                                                            {/* Render nested children */}
-                                                                                            {benchmark.children && benchmark.children.length > 0 && (
-                                                                                                <ul className="mt-2 space-y-1 pl-6">
-                                                                                                    {benchmark.children.map((child, cidx) => (
-                                                                                                        <li
-                                                                                                            key={child.id}
-                                                                                                            className={`
-                            flex items-center justify-between text-sm text-gray-700 
-                            ${cidx % 2 === 0 ? "bg-gray-50" : "bg-white"} 
-                            rounded-md px-2 py-1
-                          `}
+                                                                    {expandedParameters[`${area.id}-${param.id}`] && (
+                                                                        <div className="space-y-4 p-3">
+                                                                            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                                                                                <h4 className="mb-2 font-bold text-[#7f1414]">
+                                                                                    Indicators and Ratings
+                                                                                </h4>
+
+                                                                                {/* Table */}
+                                                                                <table className="w-full text-sm text-gray-700 border-t border-gray-200">
+                                                                                    <thead>
+                                                                                        <tr className="bg-white">
+                                                                                            <th className="text-left font-semibold py-3 px-3">
+                                                                                                Indicators
+                                                                                            </th>
+                                                                                            <th className="text-center font-semibold py-3">
+                                                                                                Item Rating
+                                                                                            </th>
+                                                                                        </tr>
+                                                                                    </thead>
+
+                                                                                    <tbody>
+                                                                                        {param.benchmarks.map((benchmark, idx) => (
+                                                                                            <React.Fragment key={benchmark.id}>
+                                                                                                <tr
+                                                                                                    className={`
+                                                                                ${idx % 2 === 0
+                                                                                                            ? "bg-gray-50"
+                                                                                                            : "bg-white"
+                                                                                                        }
+                                                                                hover:bg-gray-100 transition
+                                                                            `}
+                                                                                                >
+                                                                                                    <td className="px-3 py-2 align-top border-t border-gray-200">
+                                                                                                        <button
+                                                                                                            onClick={() =>
+                                                                                                                openViewer(
+                                                                                                                    benchmark.pdfUrl,
+                                                                                                                    benchmark.text
+                                                                                                                )
+                                                                                                            }
+                                                                                                            className="text-left text-gray-700 hover:text-[#7f1414] hover:underline"
                                                                                                         >
-                                                                                                            <button
-                                                                                                                onClick={() =>
-                                                                                                                    openViewer(child.pdfUrl, child.text)
-                                                                                                                }
-                                                                                                                className="text-left hover:text-[#7f1414] hover:underline"
-                                                                                                            >
-                                                                                                                {child.text}
-                                                                                                            </button>
-                                                                                                            <select
-                                                                                                                className="rounded-md border-none bg-transparent text-center focus:outline-none focus:ring-0 ml-4"
-                                                                                                                value={
-                                                                                                                    ratings[`${area.id}-${param.id}-${child.id}`] ||
-                                                                                                                    "N/A"
-                                                                                                                }
-                                                                                                                onChange={(e) =>
-                                                                                                                    handleRatingChange(
-                                                                                                                        `${area.id}-${param.id}-${child.id}`,
-                                                                                                                        e.target.value
-                                                                                                                    )
-                                                                                                                }
-                                                                                                            >
-                                                                                                                <option value="N/A">N/A</option>
-                                                                                                                {[0, 1, 2, 3, 4, 5].map((num) => (
-                                                                                                                    <option key={num} value={num}>
-                                                                                                                        {num}
-                                                                                                                    </option>
-                                                                                                                ))}
-                                                                                                            </select>
-                                                                                                        </li>
-                                                                                                    ))}
-                                                                                                </ul>
-                                                                                            )}
-                                                                                        </td>
+                                                                                                            {benchmark.text}
+                                                                                                        </button>
 
-                                                                                        {/* Rating / Mean Column */}
-                                                                                        <td className="px-3 py-2 text-center border-t border-gray-200 font-semibold">
-                                                                                            {benchmark.children && benchmark.children.length > 0
-                                                                                                ? computeParentMean(area.id, param.id, benchmark.children)
-                                                                                                : (
-                                                                                                    <select
-                                                                                                        className="rounded-md border-none bg-transparent text-center focus:outline-none focus:ring-0"
-                                                                                                        value={
-                                                                                                            ratings[`${area.id}-${param.id}-${benchmark.id}`] ||
-                                                                                                            "N/A"
-                                                                                                        }
-                                                                                                        onChange={(e) =>
-                                                                                                            handleRatingChange(
-                                                                                                                `${area.id}-${param.id}-${benchmark.id}`,
-                                                                                                                e.target.value
+                                                                                                        {/* Nested children */}
+                                                                                                        {benchmark.children &&
+                                                                                                            benchmark.children.length > 0 && (
+                                                                                                                <ul className="mt-2 space-y-1 pl-6">
+                                                                                                                    {benchmark.children.map(
+                                                                                                                        (child, cidx) => (
+                                                                                                                            <li
+                                                                                                                                key={child.id}
+                                                                                                                                className={`
+                                                                                                            flex items-center justify-between text-sm text-gray-700 
+                                                                                                            ${cidx % 2 === 0
+                                                                                                                                        ? "bg-gray-50"
+                                                                                                                                        : "bg-white"
+                                                                                                                                    } 
+                                                                                                            rounded-md px-2 py-1
+                                                                                                        `}
+                                                                                                                            >
+                                                                                                                                <button
+                                                                                                                                    onClick={() =>
+                                                                                                                                        openViewer(
+                                                                                                                                            child.pdfUrl,
+                                                                                                                                            child.text
+                                                                                                                                        )
+                                                                                                                                    }
+                                                                                                                                    className="text-left hover:text-[#7f1414] hover:underline"
+                                                                                                                                >
+                                                                                                                                    {child.text}
+                                                                                                                                </button>
+                                                                                                                                <select
+                                                                                                                                    className="rounded-md border-none bg-transparent text-center focus:outline-none focus:ring-0 ml-4"
+                                                                                                                                    value={
+                                                                                                                                        ratings[
+                                                                                                                                        `${area.id}-${param.id}-${child.id}`
+                                                                                                                                        ] || "N/A"
+                                                                                                                                    }
+                                                                                                                                    onChange={(e) =>
+                                                                                                                                        handleRatingChange(
+                                                                                                                                            `${area.id}-${param.id}-${child.id}`,
+                                                                                                                                            e.target.value
+                                                                                                                                        )
+                                                                                                                                    }
+                                                                                                                                >
+                                                                                                                                    <option value="N/A">N/A</option>
+                                                                                                                                    {[0, 1, 2, 3, 4, 5].map((num) => (
+                                                                                                                                        <option
+                                                                                                                                            key={num}
+                                                                                                                                            value={num}
+                                                                                                                                        >
+                                                                                                                                            {num}
+                                                                                                                                        </option>
+                                                                                                                                    ))}
+                                                                                                                                </select>
+                                                                                                                            </li>
+                                                                                                                        )
+                                                                                                                    )}
+                                                                                                                </ul>
+                                                                                                            )}
+                                                                                                    </td>
+
+                                                                                                    <td className="px-3 py-2 text-center border-t border-gray-200 font-semibold">
+                                                                                                        {benchmark.children &&
+                                                                                                            benchmark.children.length > 0
+                                                                                                            ? computeParentMean(
+                                                                                                                area.id,
+                                                                                                                param.id,
+                                                                                                                benchmark.children
                                                                                                             )
-                                                                                                        }
-                                                                                                    >
-                                                                                                        <option value="N/A">N/A</option>
-                                                                                                        {[0, 1, 2, 3, 4, 5].map((num) => (
-                                                                                                            <option key={num} value={num}>
-                                                                                                                {num}
-                                                                                                            </option>
-                                                                                                        ))}
-                                                                                                    </select>
-                                                                                                )}
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </React.Fragment>
-                                                                            ))}
+                                                                                                            : (
+                                                                                                                <select
+                                                                                                                    className="rounded-md border-none bg-transparent text-center focus:outline-none focus:ring-0"
+                                                                                                                    value={
+                                                                                                                        ratings[
+                                                                                                                        `${area.id}-${param.id}-${benchmark.id}`
+                                                                                                                        ] || "N/A"
+                                                                                                                    }
+                                                                                                                    onChange={(e) =>
+                                                                                                                        handleRatingChange(
+                                                                                                                            `${area.id}-${param.id}-${benchmark.id}`,
+                                                                                                                            e.target.value
+                                                                                                                        )
+                                                                                                                    }
+                                                                                                                >
+                                                                                                                    <option value="N/A">N/A</option>
+                                                                                                                    {[0, 1, 2, 3, 4, 5].map((num) => (
+                                                                                                                        <option key={num} value={num}>
+                                                                                                                            {num}
+                                                                                                                        </option>
+                                                                                                                    ))}
+                                                                                                                </select>
+                                                                                                            )}
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </React.Fragment>
+                                                                                        ))}
 
-                                                                            {/* One unified mean row */}
-                                                                            <tr className="bg-[#f7f7f7] font-semibold">
-                                                                                <td className="px-3 py-2 text-right border-t border-gray-300">
-                                                                                    System – Implementation – Outcome Means
-                                                                                </td>
-                                                                                <td className="px-3 py-2 text-center border-t border-gray-300 text-[#7f1414]">
-                                                                                    {means[`${area.id}-${param.id}`] ?? "—"}
-                                                                                </td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
+                                                                                        {/* Parameter mean */}
+                                                                                        <tr className="bg-[#f7f7f7] font-semibold">
+                                                                                            <td className="px-3 py-2 text-right border-t border-gray-300">
+                                                                                                System – Implementation – Outcome Means
+                                                                                            </td>
+                                                                                            <td className="px-3 py-2 text-center border-t border-gray-300 text-[#7f1414]">
+                                                                                                {means[`${area.id}-${param.id}`] ?? "—"}
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
                                                                 </div>
+                                                            ))}
+
+                                                            {/* Area Mean */}
+                                                            <div className="mt-4 text-right text-sm font-semibold text-gray-800">
+                                                                Parameter Mean:{" "}
+                                                                <span className="text-[#7f1414]">
+                                                                    {means[`${area.id}`] ?? "—"}
+                                                                </span>
                                                             </div>
-                                                        )}
-
-
-                                                    </div>
-                                                ))}
-
-                                                {/* Area Mean */}
-                                                <div className="mt-4 text-right text-sm font-semibold text-gray-800">
-                                                    Parameter Mean:{" "}
-                                                    <span className="text-[#7f1414]">
-                                                        {means[`${area.id}`] ?? "—"}
-                                                    </span>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </section>
-            </div>
+                                            ))}
 
-            <DocumentViewer
-                open={viewerOpen}
-                onOpenChange={setViewerOpen}
-                fileUrl={viewerFile.url}
-                title={viewerFile.title}
-            />
-        </div>
+                                            {/* Program Mean (added below all areas) */}
+                                            <div className="mt-6 text-right border-t border-gray-300 pt-4 text-base font-bold text-gray-900">
+                                                Program Mean:{" "}
+                                                <span className="text-[#7f1414]">{programMean}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </section>
+                        {/* Program Means Summary Section */}
+                        <section className="mt-12 rounded-xl border border-gray-200 bg-white shadow-sm p-8">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-2xl font-bold text-[#7f1414]">Overall Program Means</h2>
+
+                                {/* Export All Dropdown */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="noborder"
+                                        >
+                                            <Download className="h-4 w-4" /> Export Program Means
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem>
+                                            <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                            Excel
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem >
+                                            <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                            PDF
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+
+                            </div>
+
+                            {/* Table of Program Means */}
+                            <table className="w-full text-sm text-gray-700 overflow-hidden">
+                                <thead className="bg-[#7f1414]/10">
+                                    <tr>
+                                        <th className="text-left px-4 py-3 font-semibold">Program Name</th>
+                                        <th className="px-4 py-3 text-center font-semibold">Accreditation Level</th>
+                                        <th className="text-center px-4 py-3 font-semibold">Program Mean</th>
+                                        <th className="text-center px-4 py-3 font-semibold">Export Area Means</th> {/* New Column */}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {programs.map((program, idx) => {
+                                        const areaIds = program.assigned_areas.map((a) => a.id);
+                                        const areaMeans = areaIds
+                                            .map((id) => parseFloat(means[id]))
+                                            .filter((v) => !isNaN(v));
+                                        const programMean =
+                                            areaMeans.length > 0
+                                                ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2)
+                                                : "—";
+
+                                        return (
+                                            <tr
+                                                key={program.id}
+                                                className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                                                    } border-t border-gray-200`}
+                                            >
+                                                <td className="px-4 py-3">{program.program_name}</td>
+                                                <td className="px-4 py-3 text-center font-semibold">
+                                                    {selectedLevels[program.id] || program.accreditation_level}
+                                                </td>
+                                                <td className="px-4 py-3 text-center font-semibold text-[#7f1414]">
+                                                    {programMean}
+                                                </td>
+
+                                                {/* Export Column */}
+                                                <td className="px-4 py-3 text-center flex  justify-center">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="noborder">
+                                                                <Download className="h-4 w-4" />
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            {/* <DropdownMenuLabel>Export {program.program_name}</DropdownMenuLabel> */}
+                                                            <DropdownMenuItem >
+                                                                <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                                                Excel
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem >
+                                                                <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                                                PDF
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+
+                    <DocumentViewer
+                        open={viewerOpen}
+                        onOpenChange={setViewerOpen}
+                        fileUrl={viewerFile.url}
+                        title={viewerFile.title}
+                    />
+                </div>
+            </AccreditorLayout>
+        </>
     );
+
 }

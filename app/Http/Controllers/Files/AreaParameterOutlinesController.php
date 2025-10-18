@@ -3,55 +3,99 @@
 namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Benchmarks\BenchmarkRequest;
 use App\Models\ActivityLog;
 use App\Models\Areas;
-use App\Models\FileStatus;
+use App\Models\AreaFormCategory;
+use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
+use App\Models\Programs;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class AreaParameterOutlinesController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return void
      */
-    public function index(): void
+    public function index(string $program_name, string $area_id)
     {
-        //
-    }
+        $program = Str::of($program_name)->replace('_', ' ')->title();
+        $program = Programs::select('program_id', 'program_name', 'degree_type')
+            ->where('program_name', $program)
+            ->with('Areas')
+            ->firstOrFail();
+        $program->program_link = $program_name;
+        $area = Areas::select('area_id', 'area_name', 'area_number', 'program_id')
+            ->where('area_id', $area_id)
+            ->where('program_id', $program->program_id)
+            ->with([
+                'Programs',
+                'AreaParameters.ParameterOutlines.ParameterOutlineCategory',
+                'AreaParameters.ParameterOutlines.AreaFiles.FileStatus',
+                'AreaForms.AreaFormCategory',
+                'AreaForms.FileStatus'])
+            ->firstOrFail();
+        $parameterOutlineCategories = ParameterOutlineCategory::with([
+            'ParameterOutlines' => function ($query) use ($area) {
+                $query->whereHas('AreaParameter', function ($q) use ($area) {
+                    $q->where('area_id', $area->area_id);
+                });
+            },
+            'ParameterOutlines.AreaFiles.FileStatus',
+            'ParameterOutlines.AreaParameter.Areas'])
+            ->get();
 
-    /**
-     * Show the form for creating a new resource.
-     * @return void
-     */
-    public function create(): void
-    {
-        //
+        $areaFormsCategories = AreaFormCategory::select('*')->get();
+
+        $area->AreaParameters->map(function ($parameter) {
+            $parameter->ParameterOutlines->map(function ($outline) {
+                if ($outline->AreaFiles) {
+                    $outline->AreaFiles->file_path = Storage::url($outline->AreaFiles->file_path);
+                }
+                return $outline;
+            });
+            return $parameter;
+        });
+
+        $area->AreaForms->map(function ($form) {
+            if ($form) {
+                $form->file_path = Storage::url($form->file_path);
+            }
+            return $form;
+        });
+
+        return inertia('document/area', [
+            'program' => $program,
+            'area' => $area,
+            'parameterOutlineCategories' => $parameterOutlineCategories,
+            'areaFormsCategories' => $areaFormsCategories,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(BenchmarkRequest $request)
     {
-        $validated = $request->validate([
-            'area_parameter_id' => 'required|integer',
-            'parameter_outline_category_id' => 'required|integer',
-            'outline_number' => 'required|string|max:10',
-            'outline_description' => 'nullable|string|max:1000',
-            'container' => 'nullable|boolean',
-        ]);
+        $validated = $request->validated();
 
         $parameterOutline = new ParameterOutlines();
-        $parameterOutline->create($validated);
+        $parameterOutline->area_parameter_id = $validated['area_parameter_id'];
+        $parameterOutline->parameter_outline_category_id = $validated['benchmark_category'];
+        $parameterOutline->outline_number = $validated['benchmark_number'];
+        $parameterOutline->outline_description = $validated['benchmark_description'];
+        $parameterOutline->container = $validated['is_container'];
+        $parameterOutline->save();
 
         return redirect()->back()
-            ->with('success', 'Parameter outline created successfully.');
+            ->with('type', 'success')
+            ->with('title', 'Create Successful')
+            ->with('message', 'The benchmark has been added.');
     }
 
     /**
@@ -63,113 +107,86 @@ class AreaParameterOutlinesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     * @return void
-     */
-    public function edit(ParameterOutlines $parameterOutlines): void
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      * @return RedirectResponse
      */
-    public function update(Request $request, ParameterOutlines $parameterOutlines)
+    public function edit(BenchmarkRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'parameter_outline_category_id' => 'nullable|integer',
-            'outline_number' => 'nullable|string|max:10',
-            'outline_description' => 'nullable|string|max:1000',
-            'container' => 'nullable|boolean',
-            'area_file_id' => 'nullable|integer',
-            'outline_file' => 'nullable|file|mimes:pdf',
-        ]);
+        $validated = $request->validated();
 
-        $user = Auth::user();
-
-        $program = $request->program_name;
+        $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::where('program_name', $program)->first();
         $area = Areas::where('area_id', $request->area_id)->first();
+        $parameterOutline = ParameterOutlines::find($request->outline_id);
 
-        $parameterOutline = $parameterOutlines->with(['areaFiles', 'parameterOutlineCategory', 'AreaParameter'])->find($request->outline_id);
-        $parameterOutline->fill(array_filter($validated, fn($value) => $value !== null));
-        $parameterOutline->save();
-
-        $activityLog = new ActivityLog();
-
-        if ($request->hasFile('outline_file')) {
-            if ($file = $parameterOutline->areaFiles) {
-                Storage::disk('public')->delete($file->file_path);
-                $file->delete();
-                $activityLog->activity = "Update Document";
-            } else {
-                $activityLog->activity = "Upload Document";
-            }
-
-            $file = $request->outline_file;
-
+        if($file = $parameterOutline->AreaFiles) {
             $categoryName = $parameterOutline->parameterOutlineCategory->category_name;
             $parameterName = $parameterOutline->AreaParameter->parameter_name;
-
             if ($categoryName === 'No Category') {
-                $initial = substr($parameterName, 0, 1);
+                $initial =substr($parameterName, 0, 1);
             } else {
                 $initial = substr($categoryName, 0, 1);
             }
-
             $categoryName = $categoryName === "Outcome/s" ? substr($categoryName, 0, -2) : $categoryName;
-
-            $fileName = $initial . '.' . $parameterOutline->outline_number . '.' . $parameterOutline->outline_description . '.' . $file->getClientOriginalExtension();
-            $filePath = "{$program}/{$area->area_name}/{$parameterName}/{$categoryName}";
-            $request->file('outline_file')->storeAs($filePath, $fileName, 'public');
-
+            $fileName = $initial . '.' . ($validated['benchmark_number'] ?? $parameterOutline->outline_number) . '.' .
+                ($validated['benchmark_description'] ?? $parameterOutline->outline_description) . '.' .
+                pathinfo($file->file_name, PATHINFO_EXTENSION);
+            $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level ' . $program->accreditation_level;
+            $filePath = "{$program->program_name}/{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
             $filePath = "{$filePath}/{$fileName}";
-
-            $activityLog->user_id = $user->user_id;
-            $activityLog->area = $area->area_name;
-            $activityLog->program = $program;
-            $activityLog->activity_date = now();
-            $activityLog->file_name = $fileName;
-            $activityLog->save();
-
-            $file_status = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
-            $parameterOutline->AreaFiles()->create([
-                'file_name' => $fileName,
-                'file_path' => $filePath,
-                'file_status_id' => $file_status,
-            ]);
+            Storage::disk('public')->move($file->file_path, $filePath);
+            $file->file_name = $fileName;
+            $file->file_path = $filePath;
+            $file->save();
         }
 
+        $cateogry = $validated['benchmark_category'] === 0 ? $parameterOutline->parameter_outline_category_id : $validated['benchmark_category'];
+        $parameterOutline->parameter_outline_category_id = $cateogry;
+        $parameterOutline->outline_number = $validated['benchmark_number'] ?? $parameterOutline->outline_number;
+        $parameterOutline->outline_description = $validated['benchmark_description'] ?? $parameterOutline->outline_description;
+        $parameterOutline->container = $validated['container'] ?? $parameterOutline->container;
+        $parameterOutline->save();
+
         return redirect()->back()
-            ->with('success', 'Parameter outline updated successfully.');
+            ->with('type', 'success')
+            ->with('title', 'Update Successful')
+            ->with('message', 'The benchmark has been updated.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, ParameterOutlines $parameterOutlines): RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
-        $parameterOutline = $parameterOutlines->where('parameter_outline_id', $request->outline_id)->first();
+        $parameterOutlines = ParameterOutlines::where('parameter_outline_id', $request->outline_id)->first();
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        $program = $request->program_name;
+        $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::where('program_name', $program)->first();
 
-        if ($parameterOutline->AreaFiles) {
-            $file = $parameterOutline->AreaFiles;
+        $message = "";
+
+        if ($file = $parameterOutlines->AreaFiles) {
             Storage::disk('public')->delete($file->file_path);
+            $file->delete();
             $activityLog = new ActivityLog();
             $activityLog->user_id = $user->user_id;
             $activityLog->area = $area->area_name;
-            $activityLog->program = $program;
+            $activityLog->program = $program->program_name;
             $activityLog->file_name = $file->file_name;
             $activityLog->activity = "Delete Document";
             $activityLog->activity_date = now();
             $activityLog->save();
+            $message = "The benchmark and its associated document have been deleted.";
+        } else {
+            $message = "The benchmark has been deleted.";
         }
 
-        $parameterOutline->delete();
+        $parameterOutlines->delete();
 
         return redirect()->back()
-            ->with('success', 'Parameter outline deleted successfully.');
+            ->with('type', 'success')
+            ->with('title', 'Delete Successful')
+            ->with('message', $message);
     }
 }

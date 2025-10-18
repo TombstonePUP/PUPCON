@@ -71,6 +71,10 @@ export default function Programs({ program }: ProgramProps) {
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
+            title: 'Programs',
+            href: '/manage-programs',
+        },
+        {
             title: program.program_name,
             href: `/manage-program/${program.program_link}`,
         },

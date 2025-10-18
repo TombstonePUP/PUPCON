@@ -100,16 +100,7 @@ export interface User {
 export interface Roles {
     role_id: number;
     role_name: string;
-    userRoles: UserRoles[];
     [key: string]: unknown; // This allows for additional properties...
-}
-
-export interface UserRoles {
-    user_id: number;
-    role_id: number;
-    user: User;
-    role: Roles;
-    [key: string]: unknown;
 }
 
 export interface ActivityLogs {
@@ -307,6 +298,6 @@ export interface ProgramGallery {
     program_gallery_id: number;
     program_id: number;
     image_name: string;
-    image_path: string; 
+    image_path: string;
 }
 

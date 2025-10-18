@@ -57,7 +57,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
     const columns = getUserColumns({
         programRoles,
         roles,
-        resolveDialog: ({type, user}: DialogProps) => openDialog(type, user),
+        resolveDialog: ({ type, user }: DialogProps) => openDialog(type, user),
     });
     const [selectedUser, setSelectedUser] = useState<UserRecords | null>(null);
     const [dialogType, setDialogType] = useState<'add' | 'assign' | 'disable' | 'enable' | null>(null);
@@ -132,10 +132,10 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
         }
     };
 
-    const renderDialog=() => {
-        if(!selectedUser) return null;
+    const renderDialog = () => {
+        if (!selectedUser) return null;
 
-        switch(dialogType) {
+        switch (dialogType) {
             case 'assign':
                 return (
                     <AssignRoleDialog
@@ -145,13 +145,13 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                         onClose={closeDialog} />
                 );
             case 'disable':
-                return(
+                return (
                     <DisableUserDialog
                         user={selectedUser}
                         onClose={closeDialog} />
                 );
             case 'enable':
-                return(
+                return (
                     <EnableUserDialog
                         user={selectedUser}
                         onClose={closeDialog} />
@@ -160,6 +160,32 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                 return null;
         }
     };
+
+    // Handle Export Actions for all program means
+    const handleAllProgramsExport = (type) => {
+        const summary = programs.map((program) => {
+            const areaIds = program.assigned_areas.map((a) => a.id);
+            const areaMeans = areaIds
+                .map((id) => parseFloat(means[id]))
+                .filter((v) => !isNaN(v));
+
+            const programMean =
+                areaMeans.length > 0
+                    ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2)
+                    : "—";
+
+            return {
+                program_name: program.program_name,
+                degree_type: program.degree_type,
+                campus: program.campus,
+                mean: programMean,
+            };
+        });
+
+        console.table(summary);
+        alert(`Exporting all program means as ${type.toUpperCase()}`);
+    };
+
 
     return (
         <>

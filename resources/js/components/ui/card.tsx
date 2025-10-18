@@ -69,7 +69,7 @@ function HomeCardDescription({ className, ...props }: React.ComponentProps<"div"
         "text-muted-foreground text-sm h-[4.5vw] overflow-hidden text-ellipsis",
         "whitespace-normal overflow-hidden",
         className
-      )}      
+      )}
       {...props}
     />
   )
@@ -83,7 +83,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
         "text-muted-foreground text-sm h-fit overflow-hidden text-ellipsis",
         "whitespace-normal overflow-hidden [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]",
         className
-      )}      
+      )}
       {...props}
     />
   )
