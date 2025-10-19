@@ -8,16 +8,12 @@ import { type FrequencyUploads } from "@/types"
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import {
     ChartConfig,
     ChartContainer,
-    ChartLegend,
-    ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
@@ -43,19 +39,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-const getTimeRangeLabel = (range: string) => {
-    switch (range) {
-        case "7d":
-            return "last 7 days"
-        case "30d":
-            return "last 30 days"
-        case "90d":
-        default:
-            return "last 3 months"
-    }
-}
-
-export function ProgressChart({ data }: ProgressChartProps) {
+export function UploadFrequency({ data }: ProgressChartProps) {
     const [timeRange, setTimeRange] = React.useState("90d")
 
     const filteredData = data.filter((item) => {
@@ -77,9 +61,6 @@ export function ProgressChart({ data }: ProgressChartProps) {
             <CardHeader className="flex items-center gap-2 space-y-0 border-b sm:flex-row">
                 <div className="grid flex-1 gap-1 text-center sm:text-left">
                     <CardTitle>File Activity Frequency</CardTitle>
-                    {/* <CardDescription> */}
-                    {/*     Showing document activity for the {getTimeRangeLabel(timeRange)} */}
-                    {/* </CardDescription> */}
                 </div>
                 <Select value={timeRange} onValueChange={setTimeRange}>
                     <SelectTrigger
