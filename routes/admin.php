@@ -23,7 +23,11 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
 
     Route::get('ratings', function () {
         return Inertia::render('document/ratings');
-    })->name('ratings'); 
+    })->name('ratings');
+
+    Route::get('/about-content', function () {
+        return Inertia::render('content-management/about-content');
+    })->name('about.content');
 
     Route::prefix('manage-programs/{program_name}/{area_id}')->as('manage.')->group(function () {
         Route::controller(AreaParameterController::class)->group(function () {

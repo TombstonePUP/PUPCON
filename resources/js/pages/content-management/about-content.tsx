@@ -1,11 +1,15 @@
 import ImageUploader from '@/components/imageuploader';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'; // update this path to wherever your dialog file is
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/text-area';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import { Eye, FileText, Pencil, Save } from 'lucide-react';
+import { Eye, FileText, Pencil, Plus, Save } from 'lucide-react';
 import { useRef, useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -76,6 +80,195 @@ const AboutContent = () => {
                     {/* Main Content Area */}
                     <div className="flex-1 overflow-y-auto">
                         <div className="space-y-6">
+                            {/* About Section */}
+                            <div ref={missionVisionRef} className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
+                                <div className="p-8">
+                                    <div className="mb-6">
+                                        <h2 className="text-lg font-semibold text-gray-900">About Page</h2>
+                                        <p className="text-sm text-gray-600">Configure about page content</p>
+                                    </div>
+
+                                    {/* Welcome Title & Subtitle */}
+                                    <div className="mb-10 grid gap-6 md:grid-cols-2">
+                                        <div>
+                                            <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
+                                            <Input
+                                                type="text"
+                                                value={missionVision.welcome_title}
+                                                onChange={(e) => handleMissionVisionChange('welcome_title', e.target.value)}
+                                                placeholder="Enter welcome title..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="mb-2 block text-sm font-medium text-gray-700">Subtitle</label>
+                                            <Input
+                                                type="text"
+                                                value={missionVision.welcome_subtitle}
+                                                onChange={(e) => handleMissionVisionChange('welcome_subtitle', e.target.value)}
+                                                placeholder="Enter welcome subtitle..."
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid gap-8 md:grid-cols-2">
+                                        {/* Banner Image Upload */}
+                                        <div className="mb-8 md:col-span-2">
+                                            <h3 className="mb-2 text-sm font-medium text-gray-700">Welcome Banner</h3>
+                                            <ImageUploader
+                                                initialImage="/images/sample-banner.png"
+                                                onImageChange={(file) => setBannerFile(file)}
+                                                uploadText="Upload welcome banner"
+                                                changeText="Change banner"
+                                                sizeText="PNG, JPG up to 5MB"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Organizations */}
+                                    <div className="mb-8 md:col-span-2">
+                                        <div className="overflow-hidden rounded-xl">
+                                            {/* Header */}
+                                            <div className="py-4">
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        {/* <h3 className="mb-2 text-sm font-medium text-gray-700">Welcome Banner</h3> */}
+                                                    </div>
+
+                                                    {/* Add Organization Button + Dialog */}
+                                                    <Dialog>
+                                                        <DialogTrigger asChild>
+                                                            <button className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#6b1010]">
+                                                                <Plus className="h-4 w-4" />
+                                                                Add Organization
+                                                            </button>
+                                                        </DialogTrigger>
+
+                                                        <DialogContent className="sm:max-w-md">
+                                                            <DialogHeader>
+                                                                <DialogTitle>Add Organization</DialogTitle>
+                                                            </DialogHeader>
+
+                                                            <Tabs defaultValue="academic" className="mb-4 w-full">
+                                                                <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1">
+                                                                    <TabsTrigger value="academic" className="data-[state=active]:bg-white">
+                                                                        Academic
+                                                                    </TabsTrigger>
+                                                                    <TabsTrigger value="non-academic" className="data-[state=active]:bg-white">
+                                                                        Non-Academic
+                                                                    </TabsTrigger>
+                                                                </TabsList>
+                                                            </Tabs>
+
+                                                            <div className="space-y-4">
+                                                                <div>
+                                                                    <Label className="text-sm font-medium text-gray-700">Organization Name</Label>
+                                                                    <Input placeholder="Enter organization name" className="mt-1.5" />
+                                                                </div>
+                                                                <div>
+                                                                    <Label className="text-sm font-medium text-gray-700">Program</Label>
+                                                                    <Input placeholder="Enter corresponding program" className="mt-1.5" />
+                                                                </div>
+                                                                <Button className="mt-2 w-full">Add Organization</Button>
+                                                            </div>
+                                                        </DialogContent>
+                                                    </Dialog>
+                                                </div>
+                                            </div>
+
+                                            {/* Content */}
+                                            <div className="space-y-6 p-6 border-2 rounded-xl">
+                                                <div>
+                                                    <div className="mb-3 flex items-center gap-2 ">
+                                                        <h4 className="text-sm font-semibold text-gray-900">Academic Organizations</h4>
+                                                    </div>
+                                                    <ul className="space-y-2 text-sm">
+                                                        <li className="flex items-center justify-between rounded-lg border border-blue-100 bg-gradient-to-r from-blue-50 to-transparent p-3 transition-all hover:border-blue-300">
+                                                            <div>
+                                                                <span className="font-medium text-gray-900">Example Academic Org</span>
+                                                                <span className="mx-2 text-gray-300">—</span>
+                                                                <span className="text-blue-600">BSIT</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                                <div>
+                                                    <div className="mb-3 flex items-center gap-2">
+                                                        <h4 className="text-sm font-semibold text-gray-900">Non-Academic Organizations</h4>
+                                                    </div>
+                                                    <ul className="space-y-2 text-sm">
+                                                        <li className="flex items-center justify-between rounded-lg border border-purple-100 bg-gradient-to-r from-purple-50 to-transparent p-3 transition-all hover:border-purple-300">
+                                                            <div>
+                                                                <span className="font-medium text-gray-900">Example Non-Academic Org</span>
+                                                                <span className="mx-2 text-gray-300">—</span>
+                                                                <span className="text-purple-600">Sports Club</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Footer */}
+                                <div className="rounded-b-lg border-t border-gray-200 bg-gray-50 px-6 py-4">
+                                    <div className="flex items-center justify-between">
+                                        {/* Preview Button with Dialog */}
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+                                                    <Eye className="h-4 w-4 text-gray-600" />
+                                                    Preview
+                                                </button>
+                                            </DialogTrigger>
+
+                                            <DialogContent className="sm:max-w-md">
+                                                <DialogHeader>
+                                                    <DialogTitle>Preview Content</DialogTitle>
+                                                    <DialogDescription className="my-2 leading-relaxed">
+                                                        Clicking <strong>Preview</strong> will open a new tab in guest view so you can see how your
+                                                        changes look publicly.
+                                                    </DialogDescription>
+                                                </DialogHeader>
+
+                                                <div>
+                                                    <div className="flex justify-end gap-3">
+                                                        <DialogClose asChild>
+                                                            <button className="cursor-pointer rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+                                                                Cancel
+                                                            </button>
+                                                        </DialogClose>
+
+                                                        <button
+                                                            onClick={() => {
+                                                                window.open('/about/vision-mission-goals', '_blank');
+                                                            }}
+                                                            className="cursor-pointer rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#6b1010]"
+                                                        >
+                                                            Continue to Preview
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
+
+                                        {/* Edit + Save Buttons */}
+                                        <div className="flex gap-3">
+                                            <button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+                                                <Pencil className="h-4 w-4 text-gray-600" />
+                                                Edit
+                                            </button>
+
+                                            <button className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#6b1010]">
+                                                <Save className="h-4 w-4" />
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Mission & Vision Section */}
                             <div ref={missionVisionRef} className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
                                 <div className="p-8">
@@ -124,18 +317,6 @@ const AboutContent = () => {
                                                 value={missionVision.vision}
                                                 onChange={(e) => handleMissionVisionChange('vision', e.target.value)}
                                                 placeholder="Enter vision content..."
-                                            />
-                                        </div>
-
-                                        {/* Banner Image Upload */}
-                                        <div className="mb-8 md:col-span-2">
-                                            <h3 className="mb-2 text-sm font-medium text-gray-700">Welcome Banner</h3>
-                                            <ImageUploader
-                                                initialImage="/images/sample-banner.png"
-                                                onImageChange={(file) => setBannerFile(file)}
-                                                uploadText="Upload welcome banner"
-                                                changeText="Change banner"
-                                                sizeText="PNG, JPG up to 5MB"
                                             />
                                         </div>
                                     </div>

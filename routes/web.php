@@ -70,9 +70,6 @@ Route::get('accreditor', function () {
 })->name('accreditor');
 
 
-Route::get('/about-content', function () {
-    return Inertia::render('content-management/about-content');
-})->name('about.content');
 
 
 

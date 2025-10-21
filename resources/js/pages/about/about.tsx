@@ -1,7 +1,7 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import { Head, Link } from '@inertiajs/react';
-import { Building2, GraduationCap, Mail, MapPin, Phone, School, Users } from 'lucide-react';
+import { Building2, GraduationCap, Mail, MapPin, Phone, School } from 'lucide-react';
 
 export default function About() {
     const quickLinks = [
@@ -22,7 +22,6 @@ export default function About() {
 
     const campusFacts = [
         { icon: <School className="h-6 w-6 text-[#7f1414]" />, label: 'Established', value: '2008' },
-        { icon: <Users className="h-6 w-6 text-[#7f1414]" />, label: 'Students & Faculty', value: '2,500+' },
         { icon: <GraduationCap className="h-6 w-6 text-[#7f1414]" />, label: 'Programs Offered', value: '7' },
         { icon: <Building2 className="h-6 w-6 text-[#7f1414]" />, label: 'Facilities', value: '12+' },
     ];
@@ -115,7 +114,7 @@ export default function About() {
                         </aside>
 
                         {/* Main Content */}
-                       <main className="lg:w-3/4 flex-1 space-y-20 overflow-auto max-h-[80vh] scroll-smooth hide-scrollbar">
+                        <main className="hide-scrollbar max-h-[80vh] flex-1 space-y-20 overflow-auto scroll-smooth lg:w-3/4">
                             {/* Intro */}
                             <section>
                                 <h1 className="mb-4 text-3xl font-bold text-[#7f1414]">About Our Campus</h1>
@@ -130,11 +129,11 @@ export default function About() {
                                         <img src="/images/homepage-slides/street-sj.png" alt="" className="h-full w-full object-cover" />
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+                                    <div className="flex flex-wrap gap-6">
                                         {campusFacts.map((fact, i) => (
                                             <div
                                                 key={i}
-                                                className="flex flex-col items-center rounded-xl border border-gray-200 bg-white p-4 text-center"
+                                                className="flex min-w-[200px] flex-1 flex-col items-center rounded-xl border border-gray-200 bg-white p-4 text-center"
                                             >
                                                 {fact.icon}
                                                 <p className="mt-2 text-xl font-bold text-gray-900">{fact.value}</p>
