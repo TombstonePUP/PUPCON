@@ -178,35 +178,7 @@ export default function About() {
                                 </div>
                             </section>
 
-                            {/* Accredication Level of Programs */}
-                            <section className="space-y-8" id="accreditations">
-                                <h2 className="text-2xl font-semibold text-[#7f1414]">Program Accreditation Levels</h2>
-
-                                {/* Two-column grid */}
-                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                    {programAccreditations.map((p, i) => {
-                                        const percentage = (p.level / MAX_LEVEL) * 100;
-                                        return (
-                                            <div key={i} className="space-y-2 rounded-xl border border-gray-200 bg-white p-6">
-                                                <div className="flex items-center justify-between">
-                                                    <h3 className="text-l font-medium text-gray-900">{p.program}</h3>
-                                                    <span className="text-sm font-semibold text-[#7f1414]">
-                                                        Level {p.level} / {MAX_LEVEL}
-                                                    </span>
-                                                </div>
-
-                                                {/* Progress Bar */}
-                                                <div className="h-3 w-full rounded-full bg-gray-200">
-                                                    <div
-                                                        className="h-3 rounded-full bg-[#7f1414] transition-all duration-500"
-                                                        style={{ width: `${percentage}%` }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </section>
+                  
 
                             {/*Contact & Office Hours */}
                             <section id="contact">

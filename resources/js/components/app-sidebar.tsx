@@ -1,18 +1,18 @@
 'use client';
 
-import { AudioWaveform, Book, ChartArea, Bot, Boxes, Braces, Notebook, Command, GalleryVerticalEnd, SquareTerminal, SquareUser, Trophy, FileChartColumnIncreasing, Monitor } from 'lucide-react';
+import { Book, Boxes, ChartArea, FileChartColumnIncreasing, GalleryVerticalEnd, Monitor, Notebook, SquareTerminal, SquareUser } from 'lucide-react';
 import * as React from 'react';
 
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarRail } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
 import { usePage } from '@inertiajs/react';
+import { LevelSwitcher } from './level-switcher';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { auth } = usePage().props;
     const privileges = auth.programs || [];
     const role = auth.user.roles.role_name;
-
 
     const programItems = privileges.map((program) => ({
         title: program.program_name,
@@ -24,20 +24,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: '/dashboard',
             icon: ChartArea,
         },
-            ...(role === 'Admin' || role === 'Coordinator'
-        ? [{
-            title: 'User Management',
-            url: '/users',
-            icon: SquareUser,
-        }]
-        : []),
-            ...(role === 'Admin' || role === 'Coordinator'
-        ? [{
-            title: 'Requests',
-            url: '/requests',
-            icon: Boxes,
-        }]
-        : []),
+        ...(role === 'Admin' || role === 'Coordinator'
+            ? [
+                  {
+                      title: 'User Management',
+                      url: '/users',
+                      icon: SquareUser,
+                  },
+              ]
+            : []),
+        ...(role === 'Admin' || role === 'Coordinator'
+            ? [
+                  {
+                      title: 'Requests',
+                      url: '/requests',
+                      icon: Boxes,
+                  },
+              ]
+            : []),
         {
             title: 'Programs',
             url: '/manage-programs',
@@ -46,47 +50,69 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             collapsible: true,
             items: programItems,
         },
-            ...(role === 'Admin' || role === 'Coordinator'
-        ? [{
-            title: 'Exhibits',
-            url: '/manage-exhibits',
-            icon: Book,
-        }]
-        : []),
         ...(role === 'Admin' || role === 'Coordinator'
-        ? [{
-            title: 'Ratings',
-            url: '/ratings',
-            icon: FileChartColumnIncreasing,
-        }]
-        : []),
-         ...(role === 'Admin' || role === 'Coordinator'
-        ? [{
-            title: 'Content Management',
-            url: '/about-content',
-            icon: Monitor,
-        }]
-        : []),
+            ? [
+                  {
+                      title: 'Exhibits',
+                      url: '/manage-exhibits',
+                      icon: Book,
+                  },
+              ]
+            : []),
+        ...(role === 'Admin' || role === 'Coordinator'
+            ? [
+                  {
+                      title: 'Ratings',
+                      url: '/ratings',
+                      icon: FileChartColumnIncreasing,
+                  },
+              ]
+            : []),
+        ...(role === 'Admin' || role === 'Coordinator'
+            ? [
+                  {
+                      title: 'Content Management',
+                      url: '/about-content',
+                      icon: Monitor,
+                  },
+              ]
+            : []),
     ];
     const content = [
-            ...(role === 'Admin' || role === 'Coordinator'
-        ? [
-            {
-                title: 'News',
-                url: '/dashboard',
-                icon: SquareTerminal,
-            },
-        ]
-        : []),
+        ...(role === 'Admin' || role === 'Coordinator'
+            ? [
+                  {
+                      title: 'News',
+                      url: '/dashboard',
+                      icon: SquareTerminal,
+                  },
+              ]
+            : []),
     ];
+
+    const data = {
+        user: {
+            name: 'shadcn',
+            email: 'm@example.com',
+            avatar: '/avatars/shadcn.jpg',
+        },
+        teams: [
+            {
+                name: 'Acme Inc',
+                logo: GalleryVerticalEnd,
+                plan: 'Enterprise',
+            },
+        ],
+    };
+
     return (
         <Sidebar collapsible="icon" {...props}>
-            {/* <SidebarHeader>
-                <LevelSwitcher teams={data.levels} />
-            </SidebarHeader> */}
+            <SidebarHeader>
+                <LevelSwitcher teams={data.teams} />
+            </SidebarHeader>
             <SidebarContent className="mt-3">
                 <NavMain label="Accreditation" items={accre} />
-                {/* <NavMain label="Content" items={content} /> */}
+                {/* <NavMain label="Content" items={content} />  */}
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />

@@ -5,33 +5,54 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer duration-300 transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer select-none transition-colors duration-300 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#7f1414] outline-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
+        // Primary / default button
         default:
-          "border bg-[#7f1414] text-primary-foreground shadow-xs hover:bg-[white] transition hover:text-[#7f1414]",
+          "border border-transparent bg-[#7f1414] text-white hover:bg-[#9b1818]",
+
+        // Same style but no border
         noborder:
-          "bg-[#7f1414] text-primary-foreground shadow-xs hover:bg-[white] transition hover:text-[#7f1414] hover:border duraition-300",
+          "bg-[#7f1414] text-white hover:bg-[#9b1818]",
+
+        // Danger / destructive button
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+          "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600",
+
+        // Minimal outline button
         outline:
-          "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground",
+          "border border-gray-300 bg-white text-gray-800 hover:bg-gray-100 hover:text-black",
+
+        // Subtle gray secondary
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-gray-100 text-gray-900 hover:bg-gray-200 hover:text-black",
+
+        // Transparent button, ideal for toolbars
+        ghost:
+          "bg-transparent text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+
+        // Text link style button
+        link:
+          "text-[#7f1414] underline-offset-4 hover:underline hover:text-[#9b1818]",
+
+        // White button with brand hover
         reverse:
-          "border bg-[white] text-[#7f1414] shadow-xs hover:bg-[#7f1414] hover:text-primary-foreground ",
+          "border border-[#7f1414] bg-white text-[#7f1414] hover:bg-[#7f1414] hover:text-white",
+
+        // Dark theme button
         black:
-          "bg-black text-white shadow-xs hover:bg-white hover:text-black hover:border",
+          "bg-black text-white hover:bg-[#222222]",
+
+        // Neutral background button
         none:
-          "bg-background text-[#171717] shadow-xs hover:bg-accent hover:text-black ",
+          "bg-transparent text-gray-700 hover:bg-gray-100 hover:text-[#7f1414]",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3",
+        lg: "h-10 rounded-md px-6",
         icon: "size-9",
       },
     },
@@ -40,7 +61,9 @@ const buttonVariants = cva(
       size: "default",
     },
   }
-)
+);
+
+
 
 function Button({
   className,
