@@ -236,13 +236,13 @@ export default function Welcome({ carouselImages }: LandingProps) {
                         initial="hidden"
                         animate={isPageReady ? 'visible' : 'hidden'}
                     >
-                        <div className="flex flex-col justify-center space-y-6">
-                            <motion.img src="/images/pupsj_motto.png" alt="Logo" className="h-auto w-120" variants={itemVariants} />
-                            <motion.h2 className="text-2xl italic" variants={itemVariants}>
+                        <div className="flex flex-col justify-center space-y-[1.25vw]">
+                            <motion.img src="/images/pupsj_motto.png" alt="Logo" className="w-[29vw] object-cover" variants={itemVariants} />
+                            <motion.h2 className="text-[1.76vw] italic" variants={itemVariants}>
                                 Years of academic excellence and service
                             </motion.h2>
 
-                            <motion.div className="mt-10 flex flex-wrap gap-4" variants={itemVariants}>
+                            <motion.div className="mt-[2.08vw] flex flex-wrap gap-4" variants={itemVariants}>
                                 {[
                                     { icon: BookOpen, text: 'Programs', primary: true },
                                     { icon: Calendar, text: 'Events' },
@@ -252,8 +252,8 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         key={btn.text}
                                         className={
                                             btn.primary
-                                                ? 'flex items-center space-x-2 rounded-md bg-white px-6 py-2 font-semibold text-black transition-all duration-200 hover:scale-105 hover:bg-gray-100'
-                                                : 'flex items-center space-x-2 rounded-md border border-gray-300/70 bg-white/10 px-6 py-2 font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20'
+                                                ? 'flex items-center space-x-[0.42vw] rounded-[0.31vw] bg-white px-[1.25vw] py-[0.42vw] font-semibold text-black transition-all duration-200 hover:scale-105 hover:bg-gray-100'
+                                                : 'flex items-center space-x-[0.42vw] rounded-[0.31vw] border border-gray-300/70 bg-white/10 px-[1.25vw] py-[0.42vw] font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20'
                                         }
                                     >
                                         <btn.icon className="h-5 w-5" />
@@ -346,34 +346,34 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ duration: 0.2, ease: 'easeOut' }}
                                         >
-                                            <div className="mb-8 text-center">
+                                            {/* <div className="mb-8 text-center">
                                                 <h3 className="text-black-900 mb-2 text-xl font-semibold">Select your role to continue</h3>
                                                 <p className="text-gray-500">Choose the option that best describes you</p>
-                                            </div>
+                                            </div> */}
 
                                             <div className="space-y-4">
                                                 {[
-                                                    {
-                                                        key: 'faculty',
-                                                        title: 'Faculty',
-                                                        desc: 'Administrators & Department Chairs',
-                                                        icon: (
-                                                            <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path
-                                                                    strokeLinecap="round"
-                                                                    strokeLinejoin="round"
-                                                                    strokeWidth={2}
-                                                                    d="M12 14l9-5-9-5-9 5 9 5z"
-                                                                />
-                                                                <path
-                                                                    strokeLinecap="round"
-                                                                    strokeLinejoin="round"
-                                                                    strokeWidth={2}
-                                                                    d="M12 14l6.16-3.422A12.083 12.083 0 0118 12.08v.42a12.08 12.08 0 01-6 10.392A12.08 12.08 0 016 12.5v-.42a12.083 12.083 0 01-.16-.902L12 14z"
-                                                                />
-                                                            </svg>
-                                                        ),
-                                                    },
+                                                    // {
+                                                    //     key: 'faculty',
+                                                    //     title: 'Faculty',
+                                                    //     desc: 'Administrators & Department Chairs',
+                                                    //     icon: (
+                                                    //         <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    //             <path
+                                                    //                 strokeLinecap="round"
+                                                    //                 strokeLinejoin="round"
+                                                    //                 strokeWidth={2}
+                                                    //                 d="M12 14l9-5-9-5-9 5 9 5z"
+                                                    //             />
+                                                    //             <path
+                                                    //                 strokeLinecap="round"
+                                                    //                 strokeLinejoin="round"
+                                                    //                 strokeWidth={2}
+                                                    //                 d="M12 14l6.16-3.422A12.083 12.083 0 0118 12.08v.42a12.08 12.08 0 01-6 10.392A12.08 12.08 0 016 12.5v-.42a12.083 12.083 0 01-.16-.902L12 14z"
+                                                    //             />
+                                                    //         </svg>
+                                                    //     ),
+                                                    // },
                                                     {
                                                         key: 'accreditor',
                                                         title: 'Accreditor',
@@ -675,7 +675,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 viewport={{ once: true }}
                             >
                                 <h2 className="text-3xl font-bold text-gray-900">
-                                    Welcome {user?.roles?.role_name === 'Accreditor' ? user.first_name + " " + user.last_name : 'Accreditors'}!
+                                    Welcome {user?.roles?.role_name === 'Accreditor' ? user.first_name + ' ' + user.last_name : 'Accreditors'}!
                                 </h2>
                                 <p className="leading-relaxed text-gray-700">
                                     It is our honor to host you, esteemed accreditors, and we deeply appreciate your role in our continued success.

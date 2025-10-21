@@ -61,24 +61,6 @@ export default function Programs({ programs }: ProgramsProps) {
                                                             {program.program_description}
                                                         </p>
 
-                                                        <div className="mt-auto">
-                                                            <span className="inline-flex items-center font-semibold text-[#7f1414] transition-colors duration-200 group-hover:text-[#a01818]">
-                                                                Learn More
-                                                                <svg
-                                                                    className="ml-2 h-5 w-5 transition-transform duration-200 group-hover:translate-x-1"
-                                                                    fill="none"
-                                                                    stroke="currentColor"
-                                                                    viewBox="0 0 24 24"
-                                                                >
-                                                                    <path
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                        strokeWidth={2}
-                                                                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                                                                    />
-                                                                </svg>
-                                                            </span>
-                                                        </div>
                                                          {(user?.roles?.role_name === 'Accreditor') && (
                                                             <div className='rounded-xl absolute top-[-8px] right-[-8px] size-25 flex items-center justify-center px-3 py-1 text-2xl text-white font-semibold bg-[#7f1414] shadow-md'>
                                                                 N/A

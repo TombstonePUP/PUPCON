@@ -1,3 +1,4 @@
+import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { cn } from '@/lib/utils';
 import type { Auth, GuestNavigation } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
@@ -21,7 +22,6 @@ import {
     X,
 } from 'lucide-react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 
 interface LayoutProps {
     children: ReactNode;
@@ -38,12 +38,11 @@ export default function Layout({ children, footerText }: LayoutProps) {
     const user = auth.user;
     const cleanup = useMobileNavigation();
 
-
     const underSurveyPrograms = (guest as any)?.programs?.length
         ? (guest as any).programs.map((program: any) => ({
-            label: program.program_name,
-            href: `/programs/${program.program_link}`,
-        }))
+              label: program.program_name,
+              href: `/programs/${program.program_link}`,
+          }))
         : [];
 
     const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
@@ -240,7 +239,9 @@ export default function Layout({ children, footerText }: LayoutProps) {
         <div className="flex min-h-screen flex-col">
             {/* Header */}
             <motion.header
-                className={cn('sticky top-0 z-50 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm flex justify-between items-center')}
+                className={cn(
+                    'sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm',
+                )}
                 animate={{
                     y: scrollDir === 'down' ? '-100%' : '0%',
                 }}
@@ -251,20 +252,20 @@ export default function Layout({ children, footerText }: LayoutProps) {
             >
                 <Link href="/" className="flex items-center" preserveScroll>
                     {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
-                    <div className='bg-[#d2b539] h-18 w-[38vw] rounded-br-full'>
-                        <div className='ml-3 h-full bg-white rounded-br-full mr-3 flex justify-end gap-4 pr-20 pb-2 items-center'>
-                            <img className="size-11 mt-1" src="/images/pupsj-logo.png" alt="pupsj logo" />
+                    <div className="h-[5vw] w-[38vw] rounded-br-full bg-[#d2b539]">
+                        <div className="mr-3 ml-3 flex h-full items-center justify-end gap-4 rounded-br-full bg-white pr-20 pb-2">
+                            <img className="mt-1 size-[3.5vw]" src="/images/pupsj-logo.png" alt="pupsj logo" />
                             <div>
-                                <h1 className='text-[#7f1414] font-bold text-[25px]'>San Juan Campus</h1>
-                                <p className='text-xs mt-[-7px]'>Polytechnic University of the Philippines</p>
+                                <h1 className="text-[1.8vw] font-bold text-[#7f1414]">San Juan Campus</h1>
+                                <p className="mt-[-7px] text-[0.8vw]">Polytechnic University of the Philippines</p>
                             </div>
                         </div>
                     </div>
                 </Link>
 
-                <div className="relative max-w-7xl mr-50">
+                <div className="relative mr-[10vw] max-w-7xl">
                     {/* Navigation + Search */}
-                    <div className="flex items-center justify-end gap-8 px-8 py-4">
+                    <div className="flex items-center justify-end gap-8">
                         <nav>
                             <ul className="flex gap-8 text-sm font-medium tracking-wide text-white/90">
                                 {[...leftNav, ...rightNav].map((item) => (
@@ -319,8 +320,11 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         {user?.roles?.role_name === 'Accreditor' && (
                             <Link
-                                className="absolute right-[-150px] flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-white ring-1 ring-white/20 transition-all duration-200 hover:bg-white/20 hover:ring-white/40"
-                                method="post" href={route('logout')} as="button" onClick={cleanup}
+                                className="absolute right-[-8vw] flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-white ring-1 ring-white/20 transition-all duration-200 hover:bg-white/20 hover:ring-white/40"
+                                method="post"
+                                href={route('logout')}
+                                as="button"
+                                onClick={cleanup}
                             >
                                 <LogOut size={16} className="text-white" />
                                 <span className="text-xs text-white/80">Logout</span>
@@ -566,12 +570,18 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Portals</h3>
                             <ul className="space-y-3">
                                 <li>
-                                    <Link href="https://sis1.pup.edu.ph/student/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                    <Link
+                                        href="https://sis1.pup.edu.ph/student/"
+                                        className="flex items-center gap-2 transition hover:text-yellow-300"
+                                    >
                                         <GraduationCap className="h-4 w-4" /> SIS for Students
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="https://sis2.pup.edu.ph/faculty/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                    <Link
+                                        href="https://sis2.pup.edu.ph/faculty/"
+                                        className="flex items-center gap-2 transition hover:text-yellow-300"
+                                    >
                                         <BookOpen className="h-4 w-4" /> SIS for Faculty
                                     </Link>
                                 </li>
@@ -584,18 +594,15 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                     {user?.roles?.role_name === 'Accreditor' ? (
                                         <Link
                                             href={route('logout')}
-                                            className="flex items-center gap-2 transition hover:text-yellow-300 hover:cursor-pointer"
-                                            method="post" as="button" onClick={cleanup}
+                                            className="hover:cursor flex items-center gap-2 transition hover:text-yellow-300 hover:cursor-pointer"
+                                            method="post"
+                                            onClick={cleanup}
                                         >
                                             <LogOut className="h-4 w-4" />
                                             Log out
                                         </Link>
                                     ) : (
-                                        <Link
-                                            href="/login"
-                                            className="flex items-center gap-2 transition hover:text-yellow-300"
-                                            preserveScroll
-                                        >
+                                        <Link href="/login" className="flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>
                                             <Home className="h-4 w-4" /> PUPCON Login
                                         </Link>
                                     )}

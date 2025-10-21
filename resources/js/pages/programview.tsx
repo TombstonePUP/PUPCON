@@ -1,20 +1,13 @@
 import PageHeader from '@/components/guest-page-header';
 import ImageRow from '@/components/imagerow';
 import { AreaCard } from '@/components/ui/area-card';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Layout from '@/layouts/landing-layout';
 import { PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, useRemember } from '@inertiajs/react';
 import { ChevronRight, Download, FileSpreadsheet, FileText, GraduationCap, School, Users } from 'lucide-react';
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { Label } from 'recharts';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Button } from '@/components/ui/button';
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
 }
@@ -56,9 +49,10 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
         return (
             <div
                 ref={ref}
-                className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:border-[#7f1414] ${inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                    }`}
-            // style={{ transitionDelay: `${index * 50}ms` }}
+                className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:border-[#7f1414] ${
+                    inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                }`}
+                // style={{ transitionDelay: `${index * 50}ms` }}
             >
                 <div className="flex flex-col space-y-3">
                     <div className="relative">
@@ -77,9 +71,10 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
     return (
         <div
             ref={ref}
-            className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                }`}
-        // style={{ transitionDelay: `${index * 50}ms` }}
+            className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
+                inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+            }`}
+            // style={{ transitionDelay: `${index * 50}ms` }}
         >
             <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
 
@@ -90,8 +85,9 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
                         <img
                             src={faculty.photo}
                             alt={faculty.name}
-                            className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${imgLoaded ? 'opacity-100' : 'opacity-0'
-                                }`}
+                            className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${
+                                imgLoaded ? 'opacity-100' : 'opacity-0'
+                            }`}
                             onLoad={() => setImgLoaded(true)}
                             onError={(e) => {
                                 const target = e.target as HTMLImageElement;
@@ -168,7 +164,7 @@ export default function Programs({ program }: PerProgramProps) {
         { icon: <GraduationCap className="h-6 w-6" />, label: 'Years', value: '4' },
     ];
 
-    const SectionHeader = ({ title, subtitle, icon: Icon }: { title: string; subtitle: string; icon?: any }) => (
+    const SectionHeader = ({ title, subtitle, icon: Icon, props }: { title: string; subtitle: string; icon?: any; props: string }) => (
         <div className="relative mb-12">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#7f1414]/5 via-[#7f1414]/10 to-[#7f1414]/5" />
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] px-8 py-10 text-center text-white">
@@ -195,7 +191,7 @@ export default function Programs({ program }: PerProgramProps) {
                     breadcrumbs={[
                         { label: 'Home', href: '/' },
                         { label: 'Programs', href: '/programs' },
-                        { label: `${program.program_name} - Level ${program.accreditation_level}`, href: '#' },
+                        { label: `${program.program_name} • Level ${program.accreditation_level}`, href: '#' },
                     ]}
                 />
 
@@ -230,7 +226,7 @@ export default function Programs({ program }: PerProgramProps) {
                         </div>
                     </div>
 
-                    <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center justify-between gap-10 px-8 py-16 md:flex-row">
+                    <div className="relative z-10 mx-auto flex w-[80%] flex-col items-center justify-between gap-10 px-8 py-16 md:flex-row">
                         <div className="animate-fade-in-up flex flex-col items-center text-white md:items-start">
                             <div className="mb-4">
                                 <span className="inline-block rounded-full border border-white/30 bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
@@ -238,31 +234,33 @@ export default function Programs({ program }: PerProgramProps) {
                                 </span>
                             </div>
                             <h1 className="mb-4 text-5xl font-bold drop-shadow-lg">{program.program_name}</h1>
-
                             {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
-
                                 {user?.roles?.role_name === 'Accreditor' ? (
                                     <div className="relative">
                                         <div
                                             onMouseEnter={() => setDropdownOpen(true)}
-                                            className="flex w-48 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
+                                            className="flex w-60 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
                                         >
-                                            <span className="font-medium">Level {level}</span>
-                                            <ChevronRight className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                                            <span className="font-medium whitespace-nowrap">Accreditation Level {level}</span>
+                                            <ChevronRight
+                                                className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
+                                            />
                                         </div>
 
                                         <div
-                                            className={`absolute top-0 left-48 h-full overflow-hidden rounded-r-xl border-t border-r border-b border-white/30 backdrop-blur-md transition-all duration-300 ${dropdownOpen ? 'w-72 opacity-100' : 'w-0 opacity-0'
-                                                }`}
+                                            className={`absolute top-0 left-48 h-full overflow-hidden rounded-r-xl border-t border-r border-b border-white/30 backdrop-blur-md transition-all duration-300 ${
+                                                dropdownOpen ? 'w-72 opacity-100' : 'w-0 opacity-0'
+                                            }`}
                                         >
                                             <div className="flex h-full bg-white/10">
                                                 {[1, 2, 3, 4, 5, 6].map((lvl) => (
                                                     <button
                                                         key={lvl}
                                                         onClick={() => handleLevelChange(lvl)}
-                                                        className={`flex-1 border-r border-white/20 px-3 py-3 text-sm text-white transition-all duration-200 last:border-r-0 hover:bg-[#7f1414]/30 ${level === lvl ? 'bg-[#7f1414]/20 font-semibold' : ''
-                                                            }`}
+                                                        className={`flex-1 border-r border-white/20 px-3 py-3 text-sm text-white transition-all duration-200 last:border-r-0 hover:bg-[#7f1414]/30 ${
+                                                            level === lvl ? 'bg-[#7f1414]/20 font-semibold' : ''
+                                                        }`}
                                                     >
                                                         {lvl}
                                                     </button>
@@ -271,10 +269,10 @@ export default function Programs({ program }: PerProgramProps) {
                                         </div>
                                     </div>
                                 ) : (
-                                    <label className="mb-3 block text-xl font-medium opacity-90">Accreditation Level {program.accreditation_level}</label>
+                                    <label className="mb-3 block text-xl font-medium opacity-90">
+                                        Accreditation Level {program.accreditation_level}
+                                    </label>
                                 )}
-
-
                             </div>
                         </div>
 
@@ -284,7 +282,7 @@ export default function Programs({ program }: PerProgramProps) {
                                 <div
                                     key={i}
                                     className="flex items-center gap-4 rounded-xl border border-white/20 bg-white/10 px-6 py-4 backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20"
-                                // style={{ animationDelay: `${i * 200}ms` }}
+                                    // style={{ animationDelay: `${i * 200}ms` }}
                                 >
                                     <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/20">
                                         {fact.icon}
@@ -308,8 +306,9 @@ export default function Programs({ program }: PerProgramProps) {
                     <div
                         ref={overviewRef}
                         id="overview"
-                        className={`mt-16 w-full max-w-7xl transition-all duration-700 ${overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                            }`}
+                        className={`mt-16 w-[82%] transition-all duration-700 ${
+                            overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                        }`}
                     >
                         <div className="relative overflow-hidden rounded-xl">
                             <div className="border-black-90 grid grid-cols-1 rounded-xl border-1 transition-all duration-300 hover:border-[#7f1414] lg:grid-cols-5">
@@ -334,8 +333,9 @@ export default function Programs({ program }: PerProgramProps) {
                                     <img
                                         src="/images/campus/comlab.jpg"
                                         alt="Computer Lab"
-                                        className={`h-full w-full object-cover transition-all duration-700 ${!overviewImageLoading ? 'opacity-100' : 'opacity-0'
-                                            }`}
+                                        className={`h-full w-full object-cover transition-all duration-700 ${
+                                            !overviewImageLoading ? 'opacity-100' : 'opacity-0'
+                                        }`}
                                         onLoad={() => setOverviewImageLoading(false)}
                                     />
                                 </div>
@@ -353,8 +353,9 @@ export default function Programs({ program }: PerProgramProps) {
                             {program.objectives?.map((objective, index) => (
                                 <div
                                     key={objective.program_objective_id}
-                                    className={`group border-black-90 relative flex h-[260px] w-full max-w-3xs flex-col justify-start overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] ${objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                                        }`}
+                                    className={`group border-black-90 relative flex h-[260px] w-full max-w-3xs flex-col justify-start overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] ${
+                                        objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                    }`}
                                 >
                                     {/* Objective Header */}
                                     <div className="relative mb-6">
@@ -418,12 +419,36 @@ export default function Programs({ program }: PerProgramProps) {
 
                     {/* --- Areas Under Survey --- */}
                     <div ref={areasRef} className="w-[85%] max-w-7xl" id="areas">
-                        <div className={`relative transition-all duration-700 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+                        <div
+                            className={`relative transition-all duration-700 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}
+                        >
                             <SectionHeader
                                 title="Areas Under Survey"
                                 subtitle="ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES"
                             />
-
+                            {user?.roles?.role_name === 'Accreditor' && (
+                                <div className="w-full text-end">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="noborder">
+                                                Program Mean: N/A
+                                                <Download className="size-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Export All Area Means</DropdownMenuLabel>
+                                            <DropdownMenuItem>
+                                                <FileSpreadsheet className="mr-2 h-4 w-4 text-green-600" />
+                                                Excel
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem>
+                                                <FileText className="mr-2 h-4 w-4 text-red-600" />
+                                                PDF
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                            )}
                             <div className="flex flex-wrap justify-center gap-8 py-6">
                                 {program?.areas?.length ? (
                                     program.areas
@@ -432,11 +457,12 @@ export default function Programs({ program }: PerProgramProps) {
                                         .map((area, index) => (
                                             <div
                                                 key={area.area_id}
-                                                className={`transition-all duration-500 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                                                    }`}
-                                            // style={{
-                                            //     transitionDelay: areasInView ? `${index * 120}ms` : '0ms',
-                                            // }}
+                                                className={`transition-all duration-500 ${
+                                                    areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                                }`}
+                                                // style={{
+                                                //     transitionDelay: areasInView ? `${index * 120}ms` : '0ms',
+                                                // }}
                                             >
                                                 <AreaCard
                                                     imageSrc={area.image_path || '/images/placeholder.png'}
@@ -451,31 +477,6 @@ export default function Programs({ program }: PerProgramProps) {
                                 )}
                             </div>
                         </div>
-                        {(user?.roles?.role_name === 'Accreditor') && (
-                            <div className='w-full text-end'>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant="noborder"
-                                        >
-                                            Program Mean: N/A
-                                            <Download className="size-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel>Export All Area Means</DropdownMenuLabel>
-                                        <DropdownMenuItem>
-                                            <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
-                                            Excel
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem >
-                                            <FileText className="h-4 w-4 text-red-600 mr-2" />
-                                            PDF
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        )}
                     </div>
                 </div>
             </Layout>
