@@ -254,10 +254,10 @@ export default function Layout({ children, footerText }: LayoutProps) {
                     {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
                     <div className="h-[4vw] w-[38vw] rounded-br-full bg-[#d2b539]">
                         <div className="mr-3 ml-3 flex h-full items-center justify-end gap-4 rounded-br-full bg-white pr-20 pb-2">
-                            <img className="mt-1 size-[3vw]" src="/images/pupsj-logo.png" alt="pupsj logo" />
+                            <img className="mt-1 size-[2.9vw]" src="/images/pupsj-logo.png" alt="pupsj logo" />
                             <div>
-                                <h1 className="text-[1.5vw] font-bold text-[#7f1414]">San Juan Campus</h1>
-                                <p className="mt-[-7px] text-[0.8vw]">Polytechnic University of the Philippines</p>
+                                <h1 className="text-[1.4vw] font-bold text-[#7f1414]">San Juan Campus</h1>
+                                <p className="mt-[-6px] text-[0.75vw]">Polytechnic University of the Philippines</p>
                             </div>
                         </div>
                     </div>
