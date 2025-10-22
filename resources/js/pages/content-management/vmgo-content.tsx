@@ -1,7 +1,6 @@
-import { Input } from '@/components/ui/input';
 import SectionFooter from '@/components/ui/section-footer';
-import { Textarea } from '@/components/ui/text-area';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/text-area';
 import React from 'react';
 
 const handleSave = () => {
@@ -23,21 +22,25 @@ const VmgoContentSection: React.FC = () => {
 
                 <div className="grid gap-6 md:grid-cols-2">
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
-                        <Input type="text" placeholder="Enter welcome title..." />
+                        <label className="mb-2 block text-sm font-medium text-gray-700">Introduction</label>
+                        <Textarea placeholder="Enter your page introduction..." autoResize minHeight={100} maxHeight={250} />
                     </div>
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Subtitle</label>
-                        <Input type="text" placeholder="Enter welcome subtitle..." />
+                        <label className="mb-2 block text-sm font-medium text-gray-700">Description</label>
+                        <Textarea placeholder="Enter your page desciption..." autoResize minHeight={100} maxHeight={250} />
                     </div>
-                
-                    <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
-                        <Textarea placeholder="Enter your message..." autoResize minHeight={100} maxHeight={250} />
-                    </div>
- 
                 </div>
-                    <Separator className="bg-gray-200 my-6" />
+                <Separator className="my-10 bg-gray-200" />
+                <div className="grid gap-6 md:grid-cols-2">
+                    <div>
+                        <label className="mb-2 block text-sm font-medium text-gray-700">University Vision</label>
+                        <Textarea placeholder="Enter vision..." autoResize minHeight={100} maxHeight={250} />
+                    </div>
+                    <div>
+                        <label className="mb-2 block text-sm font-medium text-gray-700">University Mission</label>
+                        <Textarea placeholder="Enter mission..." autoResize minHeight={100} maxHeight={250} />
+                    </div>
+                </div>
             </div>
 
             <SectionFooter onSave={handleSave} onPreview={handlePreview} />

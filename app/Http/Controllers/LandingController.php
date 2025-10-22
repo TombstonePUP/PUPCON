@@ -12,10 +12,10 @@ class LandingController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $folder = public_path('images/homepage-slides');
+        $folder = public_path('images/landing');
         $files = File::files($folder);
 
-        $images = array_map(fn($file) => asset('images/homepage-slides/' . $file->getFilename()), $files);
+        $images = array_map(fn($file) => asset('images/landing/' . $file->getFilename()), $files);
 
         return inertia('welcome', [
             'carouselImages' => $images,

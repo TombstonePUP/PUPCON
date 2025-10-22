@@ -213,7 +213,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
             <Head title="PUP San Juan">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-                <link rel="preload" href="/images/homepage-slides/1.png" as="image" />
+                <link rel="preload" href="/images/landing/1.png" as="image" />
             </Head>
 
             <Layout>
