@@ -1,8 +1,8 @@
 'use client';
 
 import { DocumentViewer } from '@/components/dialogs/documents/view-document';
-import { ParameterOutlineCategory, type ParameterOutlines } from '@/types';
-import { Circle, CircleCheckIcon, CircleDashedIcon, CircleDot, CircleDotDashedIcon, CircleXIcon, } from 'lucide-react';
+import { AreaParameters, ParameterOutlineCategory, type ParameterOutlines } from '@/types';
+import { Circle, CircleCheckIcon, CircleDashedIcon, CircleDot, CircleDotDashedIcon, CircleXIcon, Dot, } from 'lucide-react';
 import { useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from '@/components/ui/context-menu';
@@ -13,9 +13,15 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-interface DialogParams {
-    type: 'view-document' | 'upload-document' | 'delete-document' | 'add-benchmark' | 'edit-benchmark' | 'delete-benchmark';
+interface DocDialogParams {
+    type: 'view' | 'upload' | 'delete';
     benchmark: ParameterOutlines;
+}
+
+interface BenchDialogParams {
+    type: 'add' | 'edit' | 'delete';
+    benchmark: ParameterOutlines;
+    parameter?: AreaParameters;
 }
 
 interface OutlineProps {
@@ -23,7 +29,8 @@ interface OutlineProps {
     program?: string;
     area_id?: number;
     outlineCategory?: ParameterOutlineCategory[];
-    resolveDialog: ({ type, benchmark }: DialogParams) => void;
+    resolveDocDialog: ({type, benchmark}: DocDialogParams) => void;
+    resolveBenchDialog: ({type, benchmark, parameter}: BenchDialogParams) => void;
 }
 
 interface OutlineNode extends ParameterOutlines {
@@ -201,8 +208,7 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
     );
 }
 
-
-export function RecursiveOutlineForm({ outlines, resolveDialog }: OutlineProps) {
+export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchDialog }: OutlineProps) {
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
 
@@ -257,7 +263,21 @@ export function RecursiveOutlineForm({ outlines, resolveDialog }: OutlineProps) 
                 {outlines.map((outline) => (
                     <li key={outline.parameter_outline_id}>
                         {outline.container ? (
-                            <span className='font-medium flex gap-2'><p className='font-bold text-center w-4 opacity-50'>-</p> {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}</span>
+                            <div className='flex flex-row gap-2 items-center'>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <span className={`flex flex-row gap-1 italic cursor-default`}>
+                                                <Dot className='size-4 mt-0.5'/>
+                                            </span>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Benchmark Container</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                                <span className='font-medium flex gap-2'> {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}</span>
+                            </div>
                         ) : (
                             <ContextMenu>
                                 <ContextMenuTrigger
@@ -267,7 +287,7 @@ export function RecursiveOutlineForm({ outlines, resolveDialog }: OutlineProps) 
                                         onClick={(e) => {
                                             if (e.button == 0) {
                                                 e.preventDefault();
-                                                setTimeout(() => resolveDialog({ type: 'view-document', benchmark: outline }), 50);
+                                                setTimeout(() => resolveDocDialog({ type: 'view', benchmark: outline }), 50);
                                             }
                                         }}
                                         className={
@@ -281,7 +301,7 @@ export function RecursiveOutlineForm({ outlines, resolveDialog }: OutlineProps) 
                                     <ContextMenuItem
                                         className="cursor-pointer"
                                         onSelect={() => {
-                                            setTimeout(() => resolveDialog({ type: 'upload-document', benchmark: outline }), 50);
+                                            setTimeout(() => resolveDocDialog({ type: 'upload', benchmark: outline }), 50);
                                         }}
                                     >
                                         {outline.area_files ? 'Update Document' : 'Upload Document'}
@@ -290,7 +310,7 @@ export function RecursiveOutlineForm({ outlines, resolveDialog }: OutlineProps) 
                                         <ContextMenuItem
                                             className="cursor-pointer"
                                             onSelect={() => {
-                                                setTimeout(() => resolveDialog({ type: 'edit-benchmark', benchmark: outline }), 50);
+                                                setTimeout(() => resolveBenchDialog({ type: 'edit', benchmark: outline }), 100);
                                             }}
                                         >
                                             Edit Benchmark
@@ -301,7 +321,7 @@ export function RecursiveOutlineForm({ outlines, resolveDialog }: OutlineProps) 
                                         <ContextMenuItem
                                             className="cursor-pointer"
                                             onSelect={() => {
-                                                setTimeout(() => resolveDialog({ type: 'delete-document', benchmark: outline }), 50);
+                                                setTimeout(() => resolveDocDialog({ type: 'delete', benchmark: outline }), 50);
                                             }}
                                         >
                                             Delete Document
@@ -311,7 +331,7 @@ export function RecursiveOutlineForm({ outlines, resolveDialog }: OutlineProps) 
                                         <ContextMenuItem
                                             className="cursor-pointer"
                                             onSelect={() => {
-                                                setTimeout(() => resolveDialog({ type: 'delete-benchmark', benchmark: outline }), 50);
+                                                setTimeout(() => resolveBenchDialog({ type: 'delete', benchmark: outline }), 50);
                                             }}
                                         >
                                             Delete Benchmark

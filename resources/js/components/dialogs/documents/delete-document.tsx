@@ -11,7 +11,7 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { useForm } from "@inertiajs/react"
+import { router, useForm } from "@inertiajs/react"
 import { ParameterOutlines } from "@/types"
 import { toast } from "sonner"
 
@@ -23,19 +23,10 @@ interface DeleteDocumentProps {
 }
 
 export function DeleteDocument({ outline, program, area_id, onClose }: DeleteDocumentProps) {
-    const {
-        data,
-        delete: destroy,
-        reset,
-    } = useForm<{ outline_id: number }>({
-        outline_id: outline.parameter_outline_id,
-    });
-
     const deleteDocument = (e: React.FormEvent) => {
         e.preventDefault();
-        destroy(route("manage.area.delete.file", {program_name: program, area_id: area_id, outline_id: outline.parameter_outline_id}), {
+        router.delete(route("manage.area.delete.file", {program_name: program, area_id: area_id, outline_id: outline.parameter_outline_id}), {
             onSuccess: () => {
-                reset();
                 onClose();
             },
             onError: () => {

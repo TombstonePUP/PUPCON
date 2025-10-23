@@ -11,31 +11,22 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { useForm } from "@inertiajs/react"
+import { router } from "@inertiajs/react"
 import { ParameterOutlines } from "@/types"
 import { toast } from "sonner"
 
 interface DeleteBenchmarkProps {
-    outline: ParameterOutlines
+    outline: ParameterOutlines;
     program: string;
     area_id: number;
     onClose: () => void;
 }
 
 export function DeleteBenchmark({ outline, program, area_id, onClose }: DeleteBenchmarkProps) {
-    const {
-        data,
-        delete: destroy,
-        reset,
-    } = useForm<{ outline_id: number }>({
-        outline_id: outline.parameter_outline_id,
-    });
-
     const deleteBenchmark = (e: React.FormEvent) => {
         e.preventDefault();
-        destroy(route("manage.area.delete.benchmark", {program_name: program, area_id: area_id, outline_id: outline.parameter_outline_id}), {
+        router.delete(route("manage.area.delete.benchmark", {program_name: program, area_id: area_id, outline_id: outline.parameter_outline_id}), {
             onSuccess: () => {
-                reset();
                 onClose();
             },
             onError: () => {

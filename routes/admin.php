@@ -31,9 +31,10 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
 
     Route::prefix('manage-programs/{program_name}/{area_id}')->as('manage.')->group(function () {
         Route::controller(AreaParameterController::class)->group(function () {
-            Route::post('/storeParameter', 'store')->name('area.addParameter');
-            Route::patch('/{parameter_id}/updateParameter', 'update')->name('area.updateParameter');
-            Route::delete('/{parameter_id}/deleteParameter', 'destroy')->name('area.deleteParameter');
+            Route::post('/storeParameter', 'store')->name('area.add.parameter');
+            Route::post('/importParameters', 'import')->name('area.import.parameters');
+            Route::patch('/{parameter_id}/updateParameter', 'update')->name('area.update.parameter');
+            Route::delete('/{parameter_id}/deleteParameter', 'destroy')->name('area.delete.parameter');
         });
 
         Route::controller(AreaParameterOutlinesController::class)->group(function () {

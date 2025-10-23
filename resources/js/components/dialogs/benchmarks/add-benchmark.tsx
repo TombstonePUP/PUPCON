@@ -43,7 +43,6 @@ export function AddBenchmark({parameter, program, area_id, parameter_outline_cat
 
     const addBenchmark = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(data);
         post(route("manage.area.add.benchmark", {program_name: program, area_id: area_id}), {
             onSuccess: () => {
                 reset();

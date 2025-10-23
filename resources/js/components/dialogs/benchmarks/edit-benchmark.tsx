@@ -33,9 +33,9 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
         errors,
         reset
     } = useForm<EditBenchmarkForm>({
-        benchmark_number: outline.benchmark_number || "",
-        benchmark_description: outline.benchmark_description || "",
-        benchmark_category: outline.benchmark_category || 0,
+        benchmark_number: outline.outline_number || "",
+        benchmark_description: outline.outline_description || "",
+        benchmark_category: outline.outline_category || 0,
         is_container: outline.is_container || false,
     });
 
