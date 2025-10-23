@@ -319,7 +319,7 @@ export default function Programs({ program }: PerProgramProps) {
                                     </div>
                                     <h2 className="mb-6 text-lg font-bold text-gray-900 lg:text-4xl">Program Overview</h2>
                                     <p className="text-md leading-relaxed text-gray-700">
-                                        {program.overview_description || 'No program overview available.'}
+                                        {program.program_description || 'No program overview available.'}
                                     </p>
                                 </div>
 

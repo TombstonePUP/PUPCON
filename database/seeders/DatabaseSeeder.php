@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Models\ActivityLog;
 use App\Models\AreaFiles;
 use App\Models\AreaFormCategory;
@@ -106,36 +107,82 @@ class DatabaseSeeder extends Seeder
                 'program_id' => 1,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Information Technology',
+                'program_description' => 'The Bachelor of Science in Information Technology (BSIT) program is a four-year degree program which focuses on the study of computer utilization and computer software to plan, install, customize, operate, manage, administer and maintain information technology infrastructure. It likewise deals with the design and development of computer-based information systems for real-world business solutions.',
                 'under_survey' => true,
                 'color' => 'blue',
+                'accreditation_level' => 3,
             ],
             [
                 'program_id' => 2,
                 'degree_type' => 'Bachelor of Arts',
                 'program_name' => 'Communication',
+                'program_description' => 'The Bachelor of Arts in Communication (ABComm) program is a four-year degree program that aims to develop students\' skills in various forms of communication, including interpersonal, group, and public communication. The program also emphasizes the importance of media literacy and critical thinking in today\'s information-rich society.',
                 'under_survey' => true,
                 'color' => 'red',
+                'accreditation_level' => 3,
             ],
             [
                 'program_id' => 3,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Business Administration',
+                'program_description' => 'The Bachelor of Science in Business Administration (BSBA) program is a four-year degree program that provides students with a comprehensive understanding of business principles and practices. The program covers various aspects of business, including management, marketing, finance, and entrepreneurship.',
                 'under_survey' => true,
                 'color' => 'green',
+                'accreditation_level' => 3,
             ],
             [
                 'program_id' => 4,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Psychology',
+                'program_description' => 'The Bachelor of Science in Psychology (BSP) program is a four-year degree program that focuses on the scientific study of human behavior and mental processes. The program provides students with a strong foundation in psychological theories, research methods, and practical applications.',
                 'under_survey' => true,
                 'color' => 'pink',
+                'accreditation_level' => 3,
             ],
             [
                 'program_id' => 5,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Accountancy',
                 'under_survey' => false,
+                'program_description' => 'A Bachelor of Science in Accounting (BSA) is a 4-year degree that prepares students for entry-level professional positions in public, private, or government accounting. Some schools may also refer to a comparable degree as a Bachelor of Accountancy. Upon graduation, students can qualify for placement in graduate or professional schools to prepare for CPA licensure.',
                 'color' => 'yellow',
+                'accreditation_level' => 3,
+            ],
+            [
+                'program_id' => 6,
+                'degree_type' => 'Bachelor of Science',
+                'program_name' => 'Entrepreneurship',
+                'under_survey' => false,
+                'program_description' => 'The Bachelor of Science in Entrepreneurship (BSENT) is a four-year course offered in the College of Business, designed to provide undergraduate students an in-depth understanding and appreciation of new venture operations in small business enterprises. It aims to equip young students with entrepreneurial spirit to realize a vibrant and developing economy in the hands of the Filipinos and develop desirable qualities of leadership, social concern and moral values among them.',
+                'color' => 'lightgreen',
+                'accreditation_level' => 3,
+            ],
+            [
+                'program_id' => 7,
+                'degree_type' => 'Bachelor of Science',
+                'program_name' => 'Education Major in English',
+                'under_survey' => false,
+                'program_description' => 'The Bachelor of Science in Education program (BSEd) is a four-year course leading to the degree of Bachelor in Secondary Education, major in English. It is an excellent preparation for the teaching career and for advancement in any field in which communication skills are important.',
+                'color' => 'lightblue',
+                'accreditation_level' => 3,
+            ],
+            [
+                'program_id' => 8,
+                'degree_type' => 'Bachelor of Science',
+                'program_name' => 'Hospitality Management',
+                'under_survey' => false,
+                'program_description' => 'The Bachelor of Science in Information Technology (BSIT) program is a four-year course that aims to provide students with the knowledge and skills to apply the principles and methodologies utilized in the field of information technology. The program equips students with the ability to design, implement, and manage information systems.',
+                'color' => 'lightred',
+                'accreditation_level' => 3,
+            ],
+            [
+                'program_id' => 9,
+                'degree_type' => 'Bachelor of Science in Business Administration',
+                'program_name' => 'Financial Management',
+                'under_survey' => false,
+                'program_description' => 'The Bachelor of Science in Business Administration major in Financial Management (BSBA-FM) program is designed to provide students with a strong foundation in financial management, banking, and related financial services. The program is designed to prepare students for careers in banking, corporate finance, investment management, and financial services.',
+                'color' => 'lightpink',
+                'accreditation_level' => 3,
             ],
         ];
         foreach ($programs as $attributes) {
@@ -148,60 +195,70 @@ class DatabaseSeeder extends Seeder
                 'program_id' => 1,
                 'area_number' => 1,
                 'area_name' => 'Mission, Goals, and Objectives',
+                'area_description' => 'The area of Vision, Mission, Goals, and Objectives is the most fundamental of all the (10) areas to be surveyed. Everything in the Institution is justified only to the extent that it realizes its vision and mission. It is essential therefore, for the Institution to formulate the vision and mission which should be the bases of all its operations. The Institution is judged by the degree to which these are attained, not in comparison with others.',
             ],
             [
                 'area_id' => 2,
                 'program_id' => 1,
                 'area_number' => 2,
                 'area_name' => 'Faculty',
+                'area_description' => 'The standard or quality of an institution or program is greatly measured by the qualifications of its faculty. In this light, the faculty should be composed of competent members in terms of academic qualifications, experience and professional expertise. In addition, they should manifest desirable personal qualities and high level of professionalism. To be effective, faculty members should be properly compensated and taken care of. They must be given opportunities for continuous personal and professional development. A policy of fair and equitable distribution of teaching assignments and workload should be practiced. Likewise, objective and clear promotion criteria/ scheme should be adopted by the institution.',
             ],
             [
                 'area_id' => 3,
                 'program_id' => 1,
                 'area_number' => 3,
                 'area_name' => 'Curriculum and Instruction',
+                'area_description' => 'Curriculum and instruction occupy center stage in any educational program. These seek to research, develop, and implement curriculum changes that enhance student achievement within and outside of institutions. How students learn and the best ways to educate deserve much consideration.',
             ],
             [
                 'area_id' => 4,
                 'program_id' => 1,
                 'area_number' => 4,
                 'area_name' => 'Support to Students',
+                'area_description' => "Students are the raison d' etre for the establishment of learning institutions. Thus, the school has the responsibility to support the family and other social institutions in the development of the total personality of the student. Towards this end a program of student services is designed as an integral part of institutional effectiveness. All activities should be well planned and implemented to assist the student to attain his/her maximum potential and become a worthy contributor in his/her social environment. Student support and services complement the Academic Program.",
             ],
             [
                 'area_id' => 5,
                 'program_id' => 1,
                 'area_number' => 5,
                 'area_name' => 'Research',
+                'area_description' => 'Research is an avenue through which new knowledge is discovered, applied or verified and through which appropriate technologies are generated. Thus, it is a basic requirement for an educational institution to have a firmly established research and development program. Its thrusts and priorities should be congruent with those identified in the development plans of regional and national R and D-oriented agencies such as NEDA, DOST, CHED, etc. The institutional leadership in research should be proactive and developmental in orientation. It must provide adequate and sustained budget allocation annually for the academic Unit. Adequate physical facilities, laboratory equipment and supplies for research should be provided. The Academic unit has to maintain strong research linkages with various R and D agencies locally and internationally.',
             ],
             [
                 'area_id' => 6,
                 'program_id' => 1,
                 'area_number' => 6,
                 'area_name' => 'Extension and Community Involvement',
+                'area_description' => "The extension function makes the institution's presence felt in the community. It involves the application of existing and new knowledge and technology and those generated in the Institution to improve the quality of life of the people. Through the extension program, people are empowered with appropriate knowledge, attitudes and skills. Thus, extension services cater to various aspects of the community life, e.g., economic growth, promotion of health, environmental management, and social transformation. The Institution plans and implements an extension program that is need and client-based. This program should have a budgetary support and other resource allocation. The faculty members may serve as experts, consultants, organizers, facilitators, coordinators, service providers, and change agents in the community as forms of extension and community involvement. Careful planning and coordination with other community outreach agencies should be considered to avoid duplication of services offered to the clientele.",
             ],
             [
                 'area_id' => 7,
                 'program_id' => 1,
                 'area_number' => 7,
                 'area_name' => 'Library',
+                'area_description' => 'The library is the heart of any learning institution. It is a synergy of people, hardware and software whose purpose is to assist clients in using knowledge and technology to transform and improve their lives. Information and knowledge are essential to the attainment of institutional goals. The ways in which they are selected, acquired, stored, accessed and distributed within the Institution will, in large measure, determine the success of teaching, research and other academic endeavors. The Institution thrives on clear policies concerning access to, and provision of, information. Thus, the library must take an active role in the development and implementation of these policies. Each institution has a unique vision, mission, goals and objectives. These are influenced by its philosophy, geographical location and social responsibility. Similarly, as a subsystem of the Institution, the library has a unique role to perform.',
             ],
             [
                 'area_id' => 8,
                 'program_id' => 1,
                 'area_number' => 8,
                 'area_name' => 'Physical Plant and Facilities',
+                'area_description' => 'The quality and adequacy of the physical plant and facilities of a learning institution determine to a large measure the successful implementation of its curricular programs. In a broad sense, physical plant and facilities include school campus, buildings and other physical infrastructures, equipment and services that complement institutional and program effectiveness.',
             ],
             [
                 'area_id' => 9,
                 'program_id' => 1,
                 'area_number' => 9,
                 'area_name' => 'Laboratories',
+                'area_description' => 'Laboratories are included in the support systems for any academic program. Broadly defined, they cover science laboratories, speech laboratories, demonstration farms, shops, and other facilities for practicum activities essential to the successful implementation of curricular programs inclusive of their use and functions.',
             ],
             [
                 'area_id' => 10,
                 'program_id' => 1,
                 'area_number' => 10,
                 'area_name' => 'Administration',
+                'area_description' => 'The administration is the engine of the institution in the attainment of its vision, mission, goals and objectives. It is concerned with the general affairs of the institution and its organizational performance. Thus, the administration adopts institutional processes and ensures that said processes are satisfactorily implemented.',
             ],
             [
                 'area_id' => 11,
@@ -374,6 +431,5 @@ class DatabaseSeeder extends Seeder
                 'faculty_image_path' => '/images/adfa-new/Imelda-Milanez.jpg',
             ],
         ]);
-
     }
 }
