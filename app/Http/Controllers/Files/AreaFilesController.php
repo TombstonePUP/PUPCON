@@ -15,6 +15,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Mostafaznv\PdfOptimizer\Laravel\Facade\PdfOptimizer;
+use Mostafaznv\PdfOptimizer\Enums\ColorConversionStrategy;
+use Mostafaznv\PdfOptimizer\Enums\PdfSettings;
 
 class AreaFilesController extends Controller
 {
@@ -69,44 +73,60 @@ class AreaFilesController extends Controller
         $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level ' . $program->accreditation_level;
         $filePath = "{$program->program_name}/{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
         
-        // // Ensure temp directory exists
-        // if (!Storage::disk('public')->exists('temp')) {
-        //     Storage::disk('public')->makeDirectory('temp');
-        // }
+        // Ensure temp directory exists
+        if (!Storage::disk('public')->exists('temp')) {
+            Storage::disk('public')->makeDirectory('temp');
+        }
         
-        // // Store original file temporarily
-        // $tempFileName = 'temp_' . Str::uuid() . '.pdf';
-        // $tempFilePath = "temp/{$tempFileName}";
-        // Storage::disk('public')->putFileAs('temp', $file, $tempFileName);
+        // Store original file temporarily
+        $tempFileName = 'temp_' . Str::uuid() . '.pdf';
+        $tempFilePath = "temp/{$tempFileName}";
+        Storage::disk('public')->putFileAs('temp', $file, $tempFileName);
+        
+        // TEST: Check if temp file exists
+        Log::info('Temp file created: ' . $tempFilePath);
+        Log::info('Temp file exists: ' . (Storage::disk('public')->exists($tempFilePath) ? 'YES' : 'NO'));
+        Log::info('Temp file size: ' . Storage::disk('public')->size($tempFilePath) . ' bytes');
 
-        // // Optimize PDF
-        // try {
-        //     $result = PdfOptimizer::fromDisk('public')
-        //         ->open($tempFilePath)
-        //         ->toDisk('public')
-        //         ->settings(PdfSettings::EBOOK) // Better quality than SCREEN
-        //         ->colorConversionStrategy(ColorConversionStrategy::DEVICE_INDEPENDENT_COLOR)
-        //         ->colorImageResolution(150) // Higher resolution for better quality
-        //         ->grayImageResolution(150)
-        //         ->monoImageResolution(300)
-        //         ->optimize("{$filePath}/{$fileName}");
+        // Optimize PDF
+        try {
+            Log::info('Starting PDF optimization...');
+            
+            $result = PdfOptimizer::fromDisk('public')
+                ->open($tempFilePath)
+                ->toDisk('public')
+                ->settings(PdfSettings::EBOOK)
+                ->colorConversionStrategy(ColorConversionStrategy::DEVICE_INDEPENDENT_COLOR)
+                ->colorImageResolution(150)
+                ->grayImageResolution(150)
+                ->monoImageResolution(300)
+                ->optimize("{$filePath}/{$fileName}");
 
-        //     // Delete temporary file
-        //     Storage::disk('public')->delete($tempFilePath);
+            // TEST: Log optimization result
+            Log::info('Optimization status: ' . ($result->status ? 'SUCCESS' : 'FAILED'));
+            Log::info('Optimization message: ' . $result->message);
+            
+            if (Storage::disk('public')->exists("{$filePath}/{$fileName}")) {
+                Log::info('Optimized file created successfully');
+                Log::info('Optimized file size: ' . Storage::disk('public')->size("{$filePath}/{$fileName}") . ' bytes');
+            } else {
+                Log::error('Optimized file NOT found!');
+            }
 
-        //     if (!$result->status) {
-        //         // If optimization fails, use original file
-        //         Storage::disk('public')->putFileAs($filePath, $file, $fileName);
-        //         \Log::warning('PDF optimization failed: ' . $result->message);
-        //     }
-        // } catch (\Exception $e) {
-        //     // If optimization throws exception, use original file
-        //     Storage::disk('public')->delete($tempFilePath);
-        //     Storage::disk('public')->putFileAs($filePath, $file, $fileName);
-        //     \Log::error('PDF optimization error: ' . $e->getMessage());
-        // }
+            // Delete temporary file
+            Storage::disk('public')->delete($tempFilePath);
+            Log::info('Temp file deleted');
 
-        Storage::disk('public')->putFileAs($filePath, $file, $fileName);
+            if (!$result->status) {
+                Storage::disk('public')->putFileAs($filePath, $file, $fileName);
+                Log::warning('PDF optimization failed, using original file: ' . $result->message);
+            }
+        } catch (\Exception $e) {
+            Storage::disk('public')->delete($tempFilePath);
+            Storage::disk('public')->putFileAs($filePath, $file, $fileName);
+            Log::error('PDF optimization error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+        }
 
         $areaFile = $parameterOutlines->AreaFiles()->create([
             'file_name' => $fileName,
