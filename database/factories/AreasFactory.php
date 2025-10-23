@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\AccreditationLevels;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Programs;
 
@@ -17,10 +18,10 @@ class AreasFactory extends Factory
      */
     public function definition(): array
     {
-        $program = Programs::inRandomOrder()->first();
+        $accreditationLevel = AccreditationLevels::inRandomOrder()->first();
         return [
             'area_id' => fake()->unique()->randomNumber(),
-            'program_id' => $program->program_id,
+            'accreditation_level_id' => $accreditationLevel->accreditation_level_id,
             'area_number' => fake()->numberBetween(1, 15),
             'area_name' => fake()->unique()->word(),
             'area_description' => fake()->paragraphs(4, true),

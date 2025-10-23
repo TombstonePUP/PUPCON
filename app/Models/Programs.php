@@ -24,7 +24,6 @@ class Programs extends Model
         'degree_type',
         'program_name',
         'program_description',
-        'accreditation_level',
         'under_survey',
         'program_image_name',
         'program_image_path',
@@ -63,11 +62,11 @@ class Programs extends Model
     }
 
     /**
-     * @return HasMany<AreaParameters,Programs>
+     * @return HasMany<AccreditationLevels,Programs>
      */
-    public function Areas(): HasMany
+    public function Levels(): HasMany
     {
-        return $this->hasMany(Areas::class, 'program_id', 'program_id');
+        return $this->hasMany(AccreditationLevels::class, 'program_id', 'program_id');
     }
 
     /**
@@ -87,8 +86,7 @@ class Programs extends Model
     }
 
     public function Objectives()
-{
-    return $this->hasMany(ProgramObjectives::class, 'program_id', 'program_id');
-}
-
+    {
+        return $this->hasMany(ProgramObjectives::class, 'program_id', 'program_id');
+    }
 }

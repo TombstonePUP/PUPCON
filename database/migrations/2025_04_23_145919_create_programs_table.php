@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('degree_type');
             $table->string('program_name');
             $table->text('program_description')->nullable();
-            $table->integer('accreditation_level');
             $table->boolean('under_survey')->default(false);
             $table->string('program_image_name')->nullable();
             $table->text('program_image_path')->nullable();
@@ -26,6 +25,14 @@ return new class extends Migration
             $table->text('page_banner_image_name')->nullable();
             $table->text('page_banner_image_path')->nullable();
             $table->string('color')->nullable();
+        });
+
+        Schema::create('accreditation_levels', function (Blueprint $table) {
+            $table->id(column: 'accreditation_level_id')->autoIncrement()->primary();
+            $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('level');
+            $table->string('remarks')->default('Ongoing Survey');
+            $table->boolean('is_active')->default(true);
         });
 
         Schema::create('program_gallery', function (Blueprint $table) {
@@ -47,6 +54,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('accreditation_levels');
         Schema::dropIfExists('programs');
         Schema::dropIfExists('program_gallery');
         Schema::dropIfExists('program_objectives');

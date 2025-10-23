@@ -21,7 +21,6 @@ class ProgramsFactory extends Factory
             'degree_type' => fake()->word(),
             'program_name' => fake()->word(),
             'program_description' => fake()->paragraphs(4, true),
-            'accreditation_level' => fake()->randomNumber(),
             'under_survey' => fake()->boolean(),
             'program_image_name' => fake()->word(),
             'program_image_path' => fake()->imageUrl(),

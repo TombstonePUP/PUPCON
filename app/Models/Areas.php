@@ -22,7 +22,7 @@ class Areas extends Model
     protected $table = 'areas';
     protected $primaryKey = 'area_id';
     protected $fillable = [
-        'program_id',
+        'accreditation_level_id',
         'area_number',
         'area_name',
         'area_description',
@@ -55,11 +55,11 @@ class Areas extends Model
     }
 
     /**
-     * @return BelongsTo<Programs,Areas>
+     * @return BelongsTo<AccreditationLevels,Areas>
      */
-    public function Programs(): BelongsTo
+    public function Levels(): BelongsTo
     {
-        return $this->belongsTo(Programs::class, 'program_id', 'program_id');
+        return $this->belongsTo(AccreditationLevels::class, 'accreditation_level_id', 'accreditation_level_id');
     }
 
     /**

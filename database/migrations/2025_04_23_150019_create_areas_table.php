@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->id(column: 'area_id')->autoIncrement()->primary();
-            $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('accreditation_level_id')->references('accreditation_level_id')->on('accreditation_levels')->onUpdate('cascade')->onDelete('set null')->nullable();
             $table->string('area_number');
             $table->string('area_name');
             $table->text('area_description')->nullable();
