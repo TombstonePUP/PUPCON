@@ -66,31 +66,23 @@ class DatabaseSeeder extends Seeder
         }
         $users = [
             [
-                'user_id' => 22222,
-                'first_name' => 'Keith',
-                'last_name' => 'Lee',
-                'email' => 'keithlee@example.com',
-                'role_id' => 3, // Chairman
-                'password' => bcrypt('password@456'),
-            ],
-            [
                 'user_id' => 11111,
                 'first_name' => 'John',
                 'last_name' => 'Doe',
-                'email' => 'test@example.com',
+                'email' => 'johndoe@admin.com',
                 'role_id' => 1, // Admin
-                'password' => bcrypt('password@123'),
+                'password' => bcrypt('admin@123'),
+            ],
+            [
+                'user_id' => 22222,
+                'first_name' => 'Keith',
+                'last_name' => 'Lee',
+                'email' => 'keithlee@chairman.com',
+                'role_id' => 3, // Chairman
+                'password' => bcrypt('chairman@123'),
             ],
             [
                 'user_id' => 33333,
-                'first_name' => 'Charles',
-                'last_name' => 'Ilarde',
-                'email' => 'ilardecharles@gmail.com',
-                'role_id' => 3, // Chairman
-                'password' => bcrypt('shiroe_1101101011'),
-            ],
-            [
-                'user_id' => 44444,
                 'first_name' => 'Jane',
                 'last_name' => 'Doe',
                 'email' => 'janedoe@accreditor.com',
@@ -117,7 +109,7 @@ class DatabaseSeeder extends Seeder
                 'degree_type' => 'Bachelor of Arts',
                 'program_name' => 'Communication',
                 'program_description' => 'The Bachelor of Arts in Communication (ABComm) program is a four-year degree program that aims to develop students\' skills in various forms of communication, including interpersonal, group, and public communication. The program also emphasizes the importance of media literacy and critical thinking in today\'s information-rich society.',
-                'under_survey' => true,
+                'under_survey' => false,
                 'color' => 'red',
                 'accreditation_level' => 3,
             ],
@@ -126,7 +118,7 @@ class DatabaseSeeder extends Seeder
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Business Administration',
                 'program_description' => 'The Bachelor of Science in Business Administration (BSBA) program is a four-year degree program that provides students with a comprehensive understanding of business principles and practices. The program covers various aspects of business, including management, marketing, finance, and entrepreneurship.',
-                'under_survey' => true,
+                'under_survey' => false,
                 'color' => 'green',
                 'accreditation_level' => 3,
             ],
@@ -188,7 +180,28 @@ class DatabaseSeeder extends Seeder
         foreach ($programs as $attributes) {
             Programs::factory()->create($attributes);
         }
-        ProgramGallery::factory(10)->create();
+
+        $programGallery = [];
+
+        $programsGalleryName = [
+            ['id' => 1, 'folder' => 'it', 'count' => 6],
+            ['id' => 4, 'folder' => 'psych', 'count' => 6],
+        ];
+
+        foreach ($programsGalleryName as $program) {
+            for ($i = 1; $i <= $program['count']; $i++) {
+                $programGallery[] = [
+                    'program_id' => $program['id'],
+                    'image_name' => $i . '.jpg',
+                    'image_path' => "/images/gallery/{$program['folder']}/{$i}.jpg",
+                ];
+            }
+        }
+
+        foreach ($programGallery as $attributes) {
+            ProgramGallery::factory()->create($attributes);
+        }
+
         $areas = [
             [
                 'area_id' => 1,
@@ -304,7 +317,38 @@ class DatabaseSeeder extends Seeder
             UserAreaRoles::factory()->create($attributes);
         }
         Facilities::factory(10)->create();
-        ProgramObjectives::factory(10)->create();
+
+        $objectives = [
+            [
+                'program_objective_id' => 1,
+                'program_id' => 1,
+                'objective_description' => "Conduct a self-assessment to determine the level of entrepreneurial competencies",
+            ],
+            [
+                'program_objective_id' => 2,
+                'program_id' => 1,
+                'objective_description' => "Prepare and comply with requirements for business operation",
+            ],
+            [
+                'program_objective_id' => 3,
+                'program_id' => 1,
+                'objective_description' => "Prepare a business plan",
+            ],
+            [
+                'program_objective_id' => 4,
+                'program_id' => 1,
+                'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
+            ],
+            [
+                'program_objective_id' => 4,
+                'program_id' => 2,
+                'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
+            ],
+        ];
+        foreach ($objectives as $attributes) {
+            ProgramObjectives::factory()->create($attributes);
+        }
+
         AreaParameters::factory(50)->create();
         $parameterCategory = [
             ['category_name' => 'No Category'],

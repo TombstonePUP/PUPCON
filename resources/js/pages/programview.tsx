@@ -233,7 +233,9 @@ export default function Programs({ program }: PerProgramProps) {
                                     {program.degree_type}
                                 </span>
                             </div>
+
                             <h1 className="mb-4 text-5xl font-bold drop-shadow-lg">{program.program_name}</h1>
+                            
                             {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
                                 {user?.roles?.role_name === 'Accreditor' ? (
@@ -353,12 +355,12 @@ export default function Programs({ program }: PerProgramProps) {
                             {program.objectives?.map((objective, index) => (
                                 <div
                                     key={objective.program_objective_id}
-                                    className={`group border-black-90 relative flex h-[260px] w-full max-w-3xs flex-col justify-start overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] ${
+                                    className={`group border-black-90 relative flex w-full max-w-2xs flex-col justify-start overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] gap-4 ${
                                         objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                                     }`}
                                 >
                                     {/* Objective Header */}
-                                    <div className="relative mb-6">
+                                    <div className="relative">
                                         <div className="mb-2 inline-block rounded-full bg-gradient-to-r from-[#7f1414] to-[#a11d1d] px-6 py-2 transition-all duration-300">
                                             <h3 className="text-sm font-bold tracking-wider text-white uppercase">Objective {index + 1}</h3>
                                         </div>
@@ -410,7 +412,7 @@ export default function Programs({ program }: PerProgramProps) {
                                 height="h-96"
                                 images={program.program_gallery.map((item) => ({
                                     id: item.program_gallery_id,
-                                    src: `/images/gallery/it/${item.image_name}`,
+                                    src: item.image_path,
                                     alt: item.image_name,
                                 }))}
                             />
