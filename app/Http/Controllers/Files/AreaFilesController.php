@@ -91,6 +91,7 @@ class AreaFilesController extends Controller
         // Optimize PDF
         try {
             Log::info('Starting PDF optimization...');
+      
             
             $result = PdfOptimizer::fromDisk('public')
                 ->open($tempFilePath)
