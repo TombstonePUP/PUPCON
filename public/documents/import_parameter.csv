@@ -1,0 +1,52 @@
+#Parameters
+parameter_name,parameter_description
+A,This is Parameter A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Benchmarks
+parameter_name,benchmark_category,benchmark_number,bencmark_description,benchmark_container,
+A,Systems - Inputs and Processes,1,This is Benchmark 1 for Parameter A,FALSE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Notes--
+benchmark_category can be one of the following,No Category,Systems - Inputs and Processes,Implementation,Outcome/s
+bencmark_number is a numeric value
+benchmark_container determines wether the benchmark contains sub-benchmarks or not.,True or False

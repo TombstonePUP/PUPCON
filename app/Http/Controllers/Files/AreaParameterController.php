@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AreaParameters;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class AreaParameterController extends Controller
 {
@@ -28,22 +29,30 @@ class AreaParameterController extends Controller
             ->with('success', 'Area parameter created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(AreaParameters $areaParameters): void
+    public function download()
     {
-        //
+        $filePath = public_path('/documents/import_parameter.csv');
+        $headers = ['Content-Type' => 'text/csv'];
+        $fileName = 'parameter_template.csv';
+        return response()->download($filePath, $fileName, $headers);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AreaParameters $areaParameters): void
+    public function import(Request $request): RedirectResponse
     {
-        //
-    }
+        $validated = $request->validate([
+            'document' => 'required|file|mimes:csv',
+        ], [
+            'document.mimes' => 'The document must be a file of type: xlsx, csv.',
+            'document.required' => 'Please upload a document to import.',
+        ]);
 
+        $file = $validated['document'];
+        $record = collect(file($file));
+        dd($record);
+
+        return redirect()->back()
+            ->with('success', 'Area parameters imported successfully.');
+    }
     /**
      * Update the specified resource in storage.
      */
