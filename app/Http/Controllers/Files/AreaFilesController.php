@@ -72,6 +72,11 @@ class AreaFilesController extends Controller
         $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level ' . $program->accreditation_level;
         $filePath = "{$program->program_name}/{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
         
+        // Ensure temp directory exists
+        if (!Storage::disk('public')->exists('temp')) {
+            Storage::disk('public')->makeDirectory('temp');
+        }
+        
         // Store original file temporarily
         $tempFileName = 'temp_' . Str::uuid() . '.pdf';
         $tempFilePath = "temp/{$tempFileName}";
@@ -103,11 +108,10 @@ class AreaFilesController extends Controller
             Storage::disk('public')->putFileAs($filePath, $file, $fileName);
             \Log::error('PDF optimization error: ' . $e->getMessage());
         }
-        $fullFilePath = "{$filePath}/{$fileName}";
 
         $areaFile = $parameterOutlines->AreaFiles()->create([
             'file_name' => $fileName,
-            'file_path' => $filePath,
+            'file_path' => "{$filePath}/{$fileName}", // Store full path with filename
             'file_status_id' => $fileStatus,
         ]);
 
