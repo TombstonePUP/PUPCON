@@ -320,27 +320,22 @@ class DatabaseSeeder extends Seeder
 
         $objectives = [
             [
-                'program_objective_id' => 1,
                 'program_id' => 1,
                 'objective_description' => "Conduct a self-assessment to determine the level of entrepreneurial competencies",
             ],
             [
-                'program_objective_id' => 2,
                 'program_id' => 1,
                 'objective_description' => "Prepare and comply with requirements for business operation",
             ],
             [
-                'program_objective_id' => 3,
                 'program_id' => 1,
                 'objective_description' => "Prepare a business plan",
             ],
             [
-                'program_objective_id' => 4,
                 'program_id' => 1,
                 'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
             ],
             [
-                'program_objective_id' => 4,
                 'program_id' => 2,
                 'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
             ],
