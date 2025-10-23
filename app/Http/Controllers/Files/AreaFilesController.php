@@ -17,8 +17,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Mostafaznv\PdfOptimizer\Laravel\Facade\PdfOptimizer;
-use Mostafaznv\PdfOptimizer\Enums\ColorConversionStrategy;
-use Mostafaznv\PdfOptimizer\Enums\PdfSettings;
 
 class AreaFilesController extends Controller
 {
@@ -83,27 +81,18 @@ class AreaFilesController extends Controller
         $tempFilePath = "temp/{$tempFileName}";
         Storage::disk('public')->putFileAs('temp', $file, $tempFileName);
         
-        // TEST: Check if temp file exists
         Log::info('Temp file created: ' . $tempFilePath);
-        Log::info('Temp file exists: ' . (Storage::disk('public')->exists($tempFilePath) ? 'YES' : 'NO'));
         Log::info('Temp file size: ' . Storage::disk('public')->size($tempFilePath) . ' bytes');
 
         // Optimize PDF
         try {
             Log::info('Starting PDF optimization...');
-      
             
             $result = PdfOptimizer::fromDisk('public')
                 ->open($tempFilePath)
                 ->toDisk('public')
-                ->settings(PdfSettings::EBOOK)
-                ->colorConversionStrategy(ColorConversionStrategy::DEVICE_INDEPENDENT_COLOR)
-                ->colorImageResolution(150)
-                ->grayImageResolution(150)
-                ->monoImageResolution(300)
                 ->optimize("{$filePath}/{$fileName}");
 
-            // TEST: Log optimization result
             Log::info('Optimization status: ' . ($result->status ? 'SUCCESS' : 'FAILED'));
             Log::info('Optimization message: ' . $result->message);
             
@@ -131,7 +120,7 @@ class AreaFilesController extends Controller
 
         $areaFile = $parameterOutlines->AreaFiles()->create([
             'file_name' => $fileName,
-            'file_path' => "{$filePath}/{$fileName}", // Store full path with filename
+            'file_path' => "{$filePath}/{$fileName}",
             'file_status_id' => $fileStatus,
         ]);
 
@@ -141,8 +130,6 @@ class AreaFilesController extends Controller
         $activityLog->activity_date = now();
         $activityLog->file_name = $fileName;
         $activityLog->save();
-
-        // $parameterOutlines->save();
 
         return redirect()->back()
             ->with('type', 'success')
@@ -155,7 +142,6 @@ class AreaFilesController extends Controller
      */
     public function destroy(Request $request)
     {
-
         $parameterOutlines = ParameterOutlines::where('parameter_outline_id', $request->outline_id)->first();
         $areaFile = $parameterOutlines->AreaFiles;
         $user = Auth::user();
