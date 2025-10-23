@@ -87,6 +87,11 @@ class AreaFilesController extends Controller
         // Optimize PDF
         try {
             Log::info('Starting PDF optimization...');
+             $customTempPath = str_replace('/', '\\', storage_path('app/public/temp'));
+putenv('TMP=' . $customTempPath);
+putenv('TEMP=' . $customTempPath);
+
+    Log::info('Using custom TEMP/TMP path: ' . $customTempPath);
             
             $result = PdfOptimizer::fromDisk('public')
                 ->open($tempFilePath)
