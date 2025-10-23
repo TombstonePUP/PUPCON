@@ -21,7 +21,7 @@ class AreasController extends Controller
     {
         $program_name = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::where('program_name',$program_name)->firstOrFail();
-        $area = Areas::select('area_id', 'area_name', 'area_number', 'area_description', 'area_image_name', 'area_image_path', 'program_id')
+        $area = Areas::select('area_id', 'area_name', 'area_number', 'area_description', 'area_image_name', 'area_image_path')
             ->where('area_id', $area_id)
             ->with([
                 'AreaParameters.ParameterOutlines.AreaFiles' => function ($query) {

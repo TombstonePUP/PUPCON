@@ -118,8 +118,7 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
 FacultyCard.displayName = 'FacultyCard';
 
 export default function Programs({ program }: PerProgramProps) {
-    const { props } = usePage<{ program: PerProgramUnderSurvey }>();
-    const [level, setLevel] = useRemember(program.accreditation_level, 'level');
+    const [level, setLevel] = useRemember(program.levels[0]?.level, 'level');
     const [loading, setLoading] = useState(false);
     const [overviewImageLoading, setOverviewImageLoading] = useState(true);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -174,8 +173,6 @@ export default function Programs({ program }: PerProgramProps) {
             </div>
         </div>
     );
-
-    console.log(program.levels.Areas);
 
     return (
         <>
@@ -453,8 +450,8 @@ export default function Programs({ program }: PerProgramProps) {
                                 </div>
                             )}
                             <div className="flex flex-wrap justify-center gap-8 py-6">
-                                {program?.levels?.areas?.length ? (
-                                    program?.levels?.areas
+                                {program?.levels[0]?.areas?.length ? (
+                                    program?.levels[0]?.areas
                                         .slice()
                                         .sort((a, b) => (Number(a.area_number) || 0) - (Number(b.area_number) || 0))
                                         .map((area, index) => (
