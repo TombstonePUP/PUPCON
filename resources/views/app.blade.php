@@ -6,7 +6,7 @@
 
         <title inertia>{{ config('app.name', 'PUP San Juan') }}</title>
         <link rel="icon" href="/images/pupsj-logo.png" type="image/png">
-    
+
         @routes
         @viteReactRefresh
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])

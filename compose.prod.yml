@@ -5,8 +5,8 @@ services:
       dockerfile: ./docker/prod/nginx/Dockerfile
     restart: unless-stopped
     volumes:
-      - storage-production:/var/www/storage:rw
-      # - public-assets:/var/www/public/build:rw
+      - storage-production:/var/www/storage:ro
+      - public-assets:/var/www/public/build:ro
     networks:
       - production
     ports:
@@ -22,7 +22,7 @@ services:
       target: production
     restart: unless-stopped
     volumes:
-      - public-assets:/var/www/public/build  # Mount built public assets to ensure the manifest.json and hashed files match between Nginx and PHP-FPM
+      - public-assets:/var/www/public/build:rw  # Mount the public assets volume
       - storage-production:/var/www/storage  # Mount the storage volume
     env_file:
       - .env.production
