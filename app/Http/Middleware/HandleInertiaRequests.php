@@ -47,7 +47,7 @@ class HandleInertiaRequests extends Middleware
             ->get();
 
         $outlines = ParameterOutlines::select('*')
-            ->with(['AreaParameter', 'AreaParameter.Areas', 'AreaParameter.Areas.Programs', 'ParameterOutlineCategory'])
+            ->with(['AreaParameter', 'AreaParameter.Areas', 'AreaParameter.Areas.Levels.Programs', 'ParameterOutlineCategory'])
             ->get();
 
         $role = $request->user()?->Roles->role_name;

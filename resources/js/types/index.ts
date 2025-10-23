@@ -47,7 +47,6 @@ export interface ProgramsUnderSurvey {
     program_name: string;
     degree_type: string;
     program_description: string;
-    accreditation_level: string;
     program_image_name: string;
     program_image_path: string;
     program_link: string;
@@ -60,7 +59,6 @@ export interface PerProgramUnderSurvey {
     program_name: string;
     program_link: string;
     program_description: string;
-    accreditation_level: number;
     under_survey: boolean;
     program_image_name: string;
     program_image_path: string;
@@ -70,8 +68,7 @@ export interface PerProgramUnderSurvey {
     page_banner_image_name: string;
     page_banner_image_path: string;
     color?: string;
-
-    areas?: ProgramAreas[];
+    levels?: AccreditationLevels[];
     faculties?: Faculty[];
     objectives: Objectives[];
     program_gallery: ProgramGallery[];
@@ -139,7 +136,6 @@ export interface PerProgram {
     program_name: string;
     program_link: string;
     program_description: string;
-    accreditation_level: string;
     under_survey: boolean;
     program_image_name: string;
     program_image_path: string;
@@ -148,8 +144,18 @@ export interface PerProgram {
     overview_description: string;
     page_banner_image_name: string;
     page_banner_image_path: string;
-    areas?: ProgramAreas[];
+    levels?: AccreditationLevels[];
     faculties?: Faculty[];
+    [key: string]: unknown;
+}
+
+export interface AccreditationLevels {
+    program_id: number;
+    level: number;
+    remarks: string;
+    is_active: boolean;
+    programs?: Program;
+    areas?: ProgramAreas[];
     [key: string]: unknown;
 }
 
@@ -162,7 +168,7 @@ export interface ProgramAreas {
     area_image_name: string;
     area_image_path: string;
     area_numeral: string;
-    programs?: PerProgram;
+    levels?: AccreditationLevels[];
     [key: string]: unknown;
 }
 
@@ -171,7 +177,7 @@ export interface Program {
     degree_type: string;
     program_name: string;
     program_link: string;
-    area?: Area;
+    levels?: AccreditationLevels[];
     [key: string]: unknown; // This allows for additional properties...
 }
 

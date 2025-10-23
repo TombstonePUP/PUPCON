@@ -127,7 +127,6 @@ export default function Programs({ program }: PerProgramProps) {
     const { auth } = usePage<Auth>().props;
     const user = auth.user;
 
-    console.log(program.program_gallery);
     // Animation refs
     const [overviewRef, overviewInView] = useInView(0.2);
     const [objectivesRef, objectivesInView] = useInView(0.1);
@@ -176,6 +175,8 @@ export default function Programs({ program }: PerProgramProps) {
         </div>
     );
 
+    console.log(program.levels.Areas);
+
     return (
         <>
             <Head title={`${program.degree_type} in ${program.program_name}`} />
@@ -191,7 +192,7 @@ export default function Programs({ program }: PerProgramProps) {
                     breadcrumbs={[
                         { label: 'Home', href: '/' },
                         { label: 'Programs', href: '/programs' },
-                        { label: `${program.program_name} • Level ${program.accreditation_level}`, href: '#' },
+                        { label: `${program.program_name} • Level ${program.levels?.level}`, href: '#' },
                     ]}
                 />
 
@@ -235,7 +236,7 @@ export default function Programs({ program }: PerProgramProps) {
                             </div>
 
                             <h1 className="mb-4 text-5xl font-bold drop-shadow-lg">{program.program_name}</h1>
-                            
+
                             {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
                                 {user?.roles?.role_name === 'Accreditor' ? (
@@ -452,8 +453,8 @@ export default function Programs({ program }: PerProgramProps) {
                                 </div>
                             )}
                             <div className="flex flex-wrap justify-center gap-8 py-6">
-                                {program?.areas?.length ? (
-                                    program.areas
+                                {program?.levels?.areas?.length ? (
+                                    program?.levels?.areas
                                         .slice()
                                         .sort((a, b) => (Number(a.area_number) || 0) - (Number(b.area_number) || 0))
                                         .map((area, index) => (
