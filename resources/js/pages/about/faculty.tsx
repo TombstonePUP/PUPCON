@@ -16,6 +16,7 @@ export default function Faculty({ faculties }: FacultyPageProps) {
                 title="Faculty and Staffs"
                 breadcrumbs={[
                     { label: 'Home', href: '/' },
+                    { label: 'About', href: '/about' },
                     { label: 'Faculty', href: '/faculty' },
                 ]}
             />

@@ -332,8 +332,7 @@ class DatabaseSeeder extends Seeder
                 'area_number' => 3,
                 'area_name' => 'Curriculum and Instruction',
             ],
-
-              [
+            [
                 'area_id' => 14,
                 'accreditation_level_id' => 6,
                 'area_number' => 1,
@@ -468,7 +467,9 @@ class DatabaseSeeder extends Seeder
             ProgramObjectives::factory()->create($attributes);
         }
 
+        $areaparameter = [];
         AreaParameters::factory(50)->create();
+
         $parameterCategory = [
             ['category_name' => 'No Category'],
             ['category_name' => 'Systems - Inputs and Processes'],
@@ -513,17 +514,16 @@ class DatabaseSeeder extends Seeder
             'Ian Llenares'
         ];
 
-        // $psychFaculties = [
-        //     'Andres Bonifacio',
-        //     'Emilio Aguinaldo',
-        //     'Apolinario Mabini'
-        // ];
-
-        // $bsitFaculties = [
-        //     'Jose Rizal',
-        //     'Marcelo del Pilar',
-        //     'Graciano Lopez Jaena'
-        // ];
+        $fullTime = [
+            'Elias Austria',
+            'Alfred Pagalilawan',
+            'Rogie Delena',
+            'Peter Biason',
+            'Lemuel Damole',
+            'Ronette Espiritu',
+            'Anna Madonna Arellano',
+            'Cecille R. Alagon'
+        ];
 
         $directory = public_path('images/adfa-new/faculty'); // Folder location
         $files = File::files($directory); // Get all files
@@ -556,10 +556,16 @@ class DatabaseSeeder extends Seeder
                 $programId = 9; // Unassigned or Other Program
             }
 
+            if (in_array($fullName, $fullTime)) {
+                $facultyStatus = 'Full Time';
+            } else {
+                $facultyStatus = 'Part Time';
+            }
+
             $faculties[] = [
                 'first_name' => Str::title(str_replace('-', ' ', $firstName)),
                 'last_name' => Str::title(str_replace('-', ' ', $lastName)),
-                'faculty_status' => 'Full-Time',
+                'faculty_status' => $facultyStatus,
                 'program_id' => $programId,
                 'program_coordinator' => false,
                 'faculty_image_name' => $fileName,

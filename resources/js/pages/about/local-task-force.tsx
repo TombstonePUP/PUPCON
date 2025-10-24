@@ -16,6 +16,7 @@ export default function LocalTaskForce() {
                         title="Local Task Force"
                         breadcrumbs={[
                             { label: 'Home', href: '/' },
+                            { label: 'About', href: '/about' },
                             { label: 'Local Task Force', href: '/local-task-force' },
                         ]}
                     />

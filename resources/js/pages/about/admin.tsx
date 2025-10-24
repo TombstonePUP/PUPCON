@@ -80,7 +80,7 @@ export default function Administration() {
             last_name: 'Alagon',
             suffix: '',
             faculty_status: 'Associate Professor IV, Campus Director',
-            faculty_image_path: '/images/adfa-new/Cecilia-R.-Alagon.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Cecilia-R.-Alagon.jpg',
         },
         {
             faculty_id: 102,
@@ -89,7 +89,7 @@ export default function Administration() {
             last_name: 'Pagalilawan',
             suffix: '',
             faculty_status: 'Associate Professor II, Head of Academic Programs',
-            faculty_image_path: '/images/adfa-new/Alfred-Pagalilawan.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Alfred-Pagalilawan.jpg',
         },
         {
             faculty_id: 103,
@@ -98,7 +98,7 @@ export default function Administration() {
             last_name: 'Biason',
             suffix: '',
             faculty_status: 'Assistant Professor I, Head, Office of the Student Affairs and Services',
-            faculty_image_path: '/images/adfa-new/Peter-Biason.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Peter-Biason.jpg',
         },
         {
             faculty_id: 104,
@@ -116,7 +116,7 @@ export default function Administration() {
             last_name: 'Corpuz',
             suffix: '',
             faculty_status: 'Instructor III, Head, Quality Assurance and OJT Coordinator',
-            faculty_image_path: '/images/adfa-new/Maria-Carina-Corpuz.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Maria-Carina-Corpuz.jpg',
         },
         {
             faculty_id: 106,
@@ -125,7 +125,7 @@ export default function Administration() {
             last_name: 'Valdez-De Vera',
             suffix: '',
             faculty_status: 'Assistant Professor II, Collecting and Disbursing Officer',
-            faculty_image_path: '/images/adfa-new/Rizza-Valdez-Devera.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Rizza-Valdez-Devera.jpg',
         },
         {
             faculty_id: 107,
@@ -134,7 +134,7 @@ export default function Administration() {
             last_name: 'Nartea',
             suffix: '',
             faculty_status: 'Associate Professor I, Head, Admissions Office and Scholarship and Financial Assistance',
-            faculty_image_path: '/images/adfa-new/Meckmack-Nartea.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Meckmack-Nartea.jpg',
         },
         {
             faculty_id: 108,
@@ -143,7 +143,7 @@ export default function Administration() {
             last_name: 'Arellano',
             suffix: '',
             faculty_status: 'Assistant Professor II, Guidance Counselor and GAD Focal Person',
-            faculty_image_path: '/images/adfa-new/Anna-Madonna-Arellano.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Anna-Madonna-Arellano.jpg',
         },
         {
             faculty_id: 109,
@@ -152,7 +152,7 @@ export default function Administration() {
             last_name: 'Mendoza',
             suffix: '',
             faculty_status: 'Instructor I, Head, Cultural Affairs Office',
-            faculty_image_path: '/images/adfa-new/Jane-Mendoza.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Jane-Mendoza.jpg',
         },
         {
             faculty_id: 110,
@@ -161,7 +161,7 @@ export default function Administration() {
             last_name: 'Saguindan',
             suffix: '',
             faculty_status: 'Instructor I, Research Focal Person',
-            faculty_image_path: '/images/adfa-new/Ian-Saguindan.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Ian-Saguindan.jpg',
         },
         {
             faculty_id: 111,
@@ -170,7 +170,7 @@ export default function Administration() {
             last_name: 'Espiritu',
             suffix: '',
             faculty_status: 'Instructor II, Extension Coordinator',
-            faculty_image_path: '/images/adfa-new/Ronette-Espiritu.jpg',
+            faculty_image_path: '/images/adfa-new/faculty/Ronette-Espiritu.jpg',
         },
     ];
 

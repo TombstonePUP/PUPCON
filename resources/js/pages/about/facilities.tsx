@@ -104,6 +104,7 @@ export default function Facilities() {
                         title="Facilities"
                         breadcrumbs={[
                             { label: 'Home', href: '/' },
+                            { label: 'About', href: '/about' },
                             { label: 'Facilities', href: '/facilities' },
                         ]}
                     />
