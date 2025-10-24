@@ -518,8 +518,10 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         y: shouldReduceMotion ? 0 : -5,
                                     }}
                                     transition={{ duration: 0.2 }}
+                                    className="h-full cursor-pointer"
+                                    onClick={() => handleOpenNewsDialog(card)}
                                 >
-                                    <HomeCard className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-colors duration-200 hover:border-[#7f1414]">
+                                    <HomeCard className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-200 hover:border-[#7f1414] hover:shadow-lg">
                                         <div className="h-40 w-full overflow-hidden sm:h-48">
                                             <ImageWithPreload
                                                 src={card.img}
@@ -527,30 +529,29 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                 className="h-full w-full transition-transform duration-300 group-hover:scale-105"
                                             />
                                         </div>
-                                        <CardHeader className="flex flex-1 flex-col p-3 sm:p-4">
-                                            <HomeCardTitle className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
+                                        <CardHeader className="flex flex-1 flex-col p-4 sm:p-5">
+                                            <HomeCardTitle className="mb-2 line-clamp-2 min-h-[3rem] text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
                                                 {card.title}
                                             </HomeCardTitle>
                                             <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
                                                 <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 group-hover:scale-x-100"></div>
                                             </div>
-                                            <HomeCardDescription className="flex-1 text-xs text-gray-600 sm:text-sm">{card.desc}</HomeCardDescription>
+                                            <HomeCardDescription className="mb-3 line-clamp-3 min-h-[4.5rem] flex-1 text-xs text-gray-600 sm:text-sm">
+                                                {card.desc}
+                                            </HomeCardDescription>
 
-                                            {/* Learn More Button */}
-                                            <motion.button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleOpenNewsDialog(card);
-                                                }}
-                                                className="mt-4 inline-flex items-center gap-2 self-end rounded-lg bg-[#7f1414] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111] sm:text-sm"
-                                                whileHover={{ scale: 1.05 }}
-                                                whileTap={{ scale: 0.95 }}
-                                            >
-                                                Learn More
-                                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                            {/* Learn More Text */}
+                                            <div className="flex items-center gap-1 text-xs font-medium text-[#7f1414] transition-all duration-200 group-hover:gap-2 sm:text-sm">
+                                                <span>Learn more</span>
+                                                <svg
+                                                    className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1 sm:h-4 sm:w-4"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                 </svg>
-                                            </motion.button>
+                                            </div>
                                         </CardHeader>
                                     </HomeCard>
                                 </motion.div>
@@ -907,7 +908,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 Our strategically located campus is designed to inspire learning and innovation. Tap the map to explore buildings,
                                 facilities, and more.
                             </p>
-                            <p className="mb-8 text-[0.95rem] text-gray-600 italic">PUP San Juan, Pinaglabanan St., San Juan City</p>
+                            <p className="mb-8 text-[0.95rem] text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">
+                                PUP San Juan, Pinaglabanan St., San Juan City
+                            </p>
 
                             <motion.div whileHover={{}} whileTap={{}} transition={{}}>
                                 <ActionButton href="https://maps.app.goo.gl/KLfy768XRV4DXY9t7" icon={MapPin} external>
