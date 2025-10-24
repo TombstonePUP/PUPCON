@@ -110,7 +110,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarHeader>
                 <LevelSwitcher teams={data.teams} />
             </SidebarHeader>
-            <SidebarContent className="mt-3">
+            <SidebarContent>
                 <NavMain label="Accreditation" items={accre} />
                 {/* <NavMain label="Content" items={content} />  */}
             </SidebarContent>
