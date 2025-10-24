@@ -56,14 +56,14 @@ class HandleInertiaRequests extends Middleware
         if ($role === 'Admin' || $role === 'Coordinator') {
             $programs = Programs::select('program_name')->get();
         } elseif ($role === 'Chairman') {
-            $programs = $request->user()->Areas()
-                ->with(['Programs' => function ($query) {
-                    $query->select('programs.program_name', 'programs.program_id');
-                }])
-                ->get()
-                ->pluck('Programs')
-                ->flatten()
-                ->unique('program_id');
+            // $programs = $request->user()->Areas()
+            //     ->with(['Programs' => function ($query) {
+            //         $query->select('programs.program_name', 'programs.program_id');
+            //     }])
+            //     ->get()
+            //     ->pluck('Programs')
+            //     ->flatten()
+            //     ->unique('program_id');
         } else {
             $programs = collect();
         }
