@@ -529,22 +529,22 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                 className="h-full w-full transition-transform duration-300 group-hover:scale-105"
                                             />
                                         </div>
-                                        <CardHeader className="flex flex-1 flex-col p-4 sm:p-5">
-                                            <HomeCardTitle className="mb-2 line-clamp-2 min-h-[3rem] text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
+                                        <CardHeader className="flex flex-1 flex-col p-3 sm:p-4">
+                                            <HomeCardTitle className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
                                                 {card.title}
                                             </HomeCardTitle>
                                             <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
                                                 <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 group-hover:scale-x-100"></div>
                                             </div>
-                                            <HomeCardDescription className="mb-3 line-clamp-3 min-h-[4.5rem] flex-1 text-xs text-gray-600 sm:text-sm">
+                                            <HomeCardDescription className="mb-2 line-clamp-3 min-h-[3.75rem] flex-1 text-xs text-gray-600 sm:text-sm">
                                                 {card.desc}
                                             </HomeCardDescription>
 
                                             {/* Learn More Text */}
-                                            <div className="flex items-center gap-1 text-xs font-medium text-[#7f1414] transition-all duration-200 group-hover:gap-2 sm:text-sm">
+                                            <div className="flex items-center gap-1 text-xs font-medium text-[#7f1414] transition-all duration-200 group-hover:gap-2">
                                                 <span>Learn more</span>
                                                 <svg
-                                                    className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1 sm:h-4 sm:w-4"
+                                                    className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
