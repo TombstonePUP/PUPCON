@@ -150,6 +150,7 @@ export interface PerProgram {
 }
 
 export interface AccreditationLevels {
+    accreditation_level_id: number;
     program_id: number;
     level: number;
     remarks: string;

@@ -1,17 +1,12 @@
 'use client';
 
 import { DocumentViewer } from '@/components/dialogs/documents/view-document';
-import { AreaParameters, ParameterOutlineCategory, type ParameterOutlines } from '@/types';
-import { Circle, CircleCheckIcon, CircleDashedIcon, CircleDot, CircleDotDashedIcon, CircleXIcon, Dot, } from 'lucide-react';
-import { useState } from 'react';
-import { usePage } from '@inertiajs/react';
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from '@/components/ui/context-menu';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { AreaParameters, ParameterOutlineCategory, type ParameterOutlines } from '@/types';
+import { usePage } from '@inertiajs/react';
+import { Circle, CircleCheckIcon, CircleDashedIcon, CircleDotDashedIcon, CircleXIcon } from 'lucide-react';
+import { useState } from 'react';
 
 interface DocDialogParams {
     type: 'view' | 'upload' | 'delete';
@@ -29,8 +24,8 @@ interface OutlineProps {
     program?: string;
     area_id?: number;
     outlineCategory?: ParameterOutlineCategory[];
-    resolveDocDialog: ({type, benchmark}: DocDialogParams) => void;
-    resolveBenchDialog: ({type, benchmark, parameter}: BenchDialogParams) => void;
+    resolveDocDialog: ({ type, benchmark }: DocDialogParams) => void;
+    resolveBenchDialog: ({ type, benchmark, parameter }: BenchDialogParams) => void;
 }
 
 interface OutlineNode extends ParameterOutlines {
@@ -101,36 +96,30 @@ export function buildOutlineTree({ outlines }: { outlines: ParameterOutlines[] }
 export function RecursiveOutline({ outlines }: OutlineProps) {
     const { auth } = usePage().props;
     const role = auth?.user?.roles?.role_name;
-    const isAccreditor = role === "Accreditor";
+    const isAccreditor = role === 'Accreditor';
 
     const [showDocumentViewer, setShowDocumentViewer] = useState(false);
     const [currentDocumentUrl, setCurrentDocumentUrl] = useState('');
     const [currentDocumentTitle, setCurrentDocumentTitle] = useState('');
-    const [ratings, setRatings] = useState<Record<number, number | "N/A">>({});
-    const [mean, setMean] = useState<string>("—");
+    const [ratings, setRatings] = useState<Record<number, number | 'N/A'>>({});
+    const [mean, setMean] = useState<string>('—');
 
     const handleViewPDF = (outline) => {
         if (outline.area_files?.file_path) {
             setCurrentDocumentUrl(outline.area_files.file_path);
-            setCurrentDocumentTitle(
-                `${outline.initial}.${outline.outline_number}. ${outline.outline_description}`
-            );
+            setCurrentDocumentTitle(`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`);
             setShowDocumentViewer(true);
         }
     };
 
     const handleRatingChange = (outlineId: number, value: string) => {
         setRatings((prev) => {
-            const newRatings = { ...prev, [outlineId]: value === "N/A" ? "N/A" : Number(value) };
+            const newRatings = { ...prev, [outlineId]: value === 'N/A' ? 'N/A' : Number(value) };
 
             // compute average of numeric ratings
-            const numericValues = Object.values(newRatings)
-                .filter((v): v is number => typeof v === "number" && !isNaN(v));
+            const numericValues = Object.values(newRatings).filter((v): v is number => typeof v === 'number' && !isNaN(v));
 
-            const avg =
-                numericValues.length > 0
-                    ? (numericValues.reduce((a, b) => a + b, 0) / numericValues.length).toFixed(2)
-                    : "—";
+            const avg = numericValues.length > 0 ? (numericValues.reduce((a, b) => a + b, 0) / numericValues.length).toFixed(2) : '—';
 
             setMean(avg);
             return newRatings;
@@ -146,37 +135,30 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
                 title={currentDocumentTitle}
             />
 
-            <ul className="pl-[1vw] flex flex-col gap-1">
+            <ul className="flex flex-col gap-1 pl-[1vw]">
                 {outlines.map((outline) => (
                     <li key={outline.parameter_outline_id}>
                         <div className="flex flex-col gap-1">
-                            <div className='flex items-center'>
+                            <div className="flex items-center">
                                 {/* Outline label */}
                                 {!outline.container ? (
-                                    <a
-                                        className="cursor-pointer underline text-[#7f1414] hover:text-red-700"
-                                        onClick={() => handleViewPDF(outline)}
-                                    >
-                                        {outline.initial}.{outline.outline_number}.{" "}
-                                        {outline.outline_description}
+                                    <a className="cursor-pointer text-[#7f1414] underline hover:text-red-700" onClick={() => handleViewPDF(outline)}>
+                                        {outline.initial}.{outline.outline_number}. {outline.outline_description}
                                     </a>
                                 ) : (
                                     <span className="font-medium">
-                                        {outline.initial}.{outline.outline_number}.{" "}
-                                        {outline.outline_description}
+                                        {outline.initial}.{outline.outline_number}. {outline.outline_description}
                                     </span>
                                 )}
 
                                 {/* Accreditor rating (only for non-container outlines) */}
                                 {isAccreditor && !outline.container && (
-                                    <div className="flex items-center gap-2 ml-6 mt-1">
+                                    <div className="mt-1 ml-6 flex items-center gap-2">
                                         {/* <label className="text-sm text-gray-600">Rating:</label> */}
                                         <select
-                                            className="rounded-md border px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-[#7f1414]"
-                                            value={ratings[outline.parameter_outline_id] ?? "N/A"}
-                                            onChange={(e) =>
-                                                handleRatingChange(outline.parameter_outline_id, e.target.value)
-                                            }
+                                            className="rounded-md border px-2 py-1 text-xs focus:ring-1 focus:ring-[#7f1414] focus:outline-none"
+                                            value={ratings[outline.parameter_outline_id] ?? 'N/A'}
+                                            onChange={(e) => handleRatingChange(outline.parameter_outline_id, e.target.value)}
                                         >
                                             <option value="N/A">N/A</option>
                                             {[0, 1, 2, 3, 4, 5].map((num) => (
@@ -189,9 +171,7 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
                                 )}
                             </div>
                             {/* Recursive children */}
-                            {outline.children && outline.children.length > 0 && (
-                                <RecursiveOutline outlines={outline.children} />
-                            )}
+                            {outline.children && outline.children.length > 0 && <RecursiveOutline outlines={outline.children} />}
                         </div>
                     </li>
                 ))}
@@ -200,8 +180,7 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
             {/* Mean display (Accreditor only) */}
             {isAccreditor && (
                 <div className="mt-3 text-right text-sm font-semibold text-gray-800">
-                    Mean Rating:{" "}
-                    <span className="text-[#7f1414]">{mean ?? "—"}</span>
+                    Mean Rating: <span className="text-[#7f1414]">{mean ?? '—'}</span>
                 </div>
             )}
         </>
@@ -219,9 +198,7 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <span className={`flex flex-row gap-1 italic ${color} cursor-default`}>
-                            {icon}
-                        </span>
+                        <span className={`flex flex-row gap-1 italic ${color} cursor-default`}>{icon}</span>
                     </TooltipTrigger>
                     <TooltipContent>
                         <p>{tooltip}</p>
@@ -231,73 +208,61 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
         );
 
         if (status === 'Rejected') {
-            return renderStatus(
-                <CircleXIcon className='size-4 mt-0.5' />,
-                'text-red-600',
-                'Rejected',
-            );
+            return renderStatus(<CircleXIcon className="mt-0.5 size-4" />, 'text-red-600', 'Rejected');
         } else if (status === 'Approved') {
-            return renderStatus(
-                <CircleCheckIcon className='size-4 mt-0.5' />,
-                'text-green-600',
-                'Approved',
-            );
+            return renderStatus(<CircleCheckIcon className="mt-0.5 size-4" />, 'text-green-600', 'Approved');
         } else if (status === 'Pending') {
-            return renderStatus(
-                <CircleDotDashedIcon className='size-4 mt-0.5' />,
-                'text-gray-700',
-                'Pending',
-            );
+            return renderStatus(<CircleDotDashedIcon className="mt-0.5 size-4" />, 'text-gray-700', 'Pending');
         } else {
-            return renderStatus(
-                <CircleDashedIcon className='size-4 mt-0.5' />,
-                'text-gray-700',
-                'Empty Benchmark',
-            );
+            return renderStatus(<CircleDashedIcon className="mt-0.5 size-4" />, 'text-gray-700', 'Empty Benchmark');
         }
     };
 
     return (
         <>
-            <ul className="pl-[1vw] flex flex-col gap-2">
+            <ul className="flex flex-col gap-2 pl-[1vw]">
                 {outlines.map((outline) => (
                     <li key={outline.parameter_outline_id}>
-                        {outline.container ? (
-                            <div className='flex flex-row gap-2 items-center'>
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <span className={`flex flex-row gap-1 italic cursor-default`}>
-                                                <Dot className='size-4 mt-0.5'/>
-                                            </span>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Benchmark Container</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                                <span className='font-medium flex gap-2'> {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}</span>
-                            </div>
-                        ) : (
-                            <ContextMenu>
-                                <ContextMenuTrigger
-                                    className="flex flex-row gap-2 items-center">
-                                    <FileStatus outline={outline} />
-                                    <a
-                                        onClick={(e) => {
-                                            if (e.button == 0) {
-                                                e.preventDefault();
-                                                setTimeout(() => resolveDocDialog({ type: 'view', benchmark: outline }), 50);
-                                            }
-                                        }}
-                                        className={
-                                            `cursor-pointer underline`
-                                        }
-                                    >
-                                        {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
-                                    </a>
-                                </ContextMenuTrigger>
-                                <ContextMenuContent>
+                        <ContextMenu>
+                            <ContextMenuTrigger className="flex flex-row items-center gap-2">
+                                {outline.container ? (
+                                    <>
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <span className="flex cursor-default flex-row gap-1 italic">
+                                                        <Circle className="mt-0.5 size-4" />
+                                                    </span>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Benchmark Container</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                        <span className="flex gap-2 font-medium cursor-pointer">
+                                            {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
+                                        </span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <FileStatus outline={outline} />
+                                        <a
+                                            onClick={(e) => {
+                                                if (e.button === 0) {
+                                                    e.preventDefault();
+                                                    setTimeout(() => resolveDocDialog({ type: 'view', benchmark: outline }), 50);
+                                                }
+                                            }}
+                                            className="cursor-pointer underline"
+                                        >
+                                            {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
+                                        </a>
+                                    </>
+                                )}
+                            </ContextMenuTrigger>
+
+                            <ContextMenuContent>
+                                {!outline.container && (
                                     <ContextMenuItem
                                         className="cursor-pointer"
                                         onSelect={() => {
@@ -306,40 +271,44 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
                                     >
                                         {outline.area_files ? 'Update Document' : 'Upload Document'}
                                     </ContextMenuItem>
-                                    {(role !== 'Chairman' && role !== 'Accreditor') && (
+                                )}
+
+                                {role !== 'Chairman' && role !== 'Accreditor' && (
+                                    <>
                                         <ContextMenuItem
                                             className="cursor-pointer"
                                             onSelect={() => {
                                                 setTimeout(() => resolveBenchDialog({ type: 'edit', benchmark: outline }), 100);
                                             }}
                                         >
-                                            Edit Benchmark
+                                            Edit {outline.container ? 'Container' : 'Benchmark'}
                                         </ContextMenuItem>
-                                    )}
-                                    <ContextMenuSeparator />
-                                    {outline.area_files && (
-                                        <ContextMenuItem
-                                            className="cursor-pointer"
-                                            onSelect={() => {
-                                                setTimeout(() => resolveDocDialog({ type: 'delete', benchmark: outline }), 50);
-                                            }}
-                                        >
-                                            Delete Document
-                                        </ContextMenuItem>
-                                    )}
-                                    {(role !== 'Chairman' && role !== 'Accreditor') && (
+
+                                        <ContextMenuSeparator />
+
                                         <ContextMenuItem
                                             className="cursor-pointer"
                                             onSelect={() => {
                                                 setTimeout(() => resolveBenchDialog({ type: 'delete', benchmark: outline }), 50);
                                             }}
                                         >
-                                            Delete Benchmark
+                                            Delete {outline.container ? 'Container' : 'Benchmark'}
                                         </ContextMenuItem>
-                                    )}
-                                </ContextMenuContent>
-                            </ContextMenu>
-                        )}
+                                    </>
+                                )}
+
+                                {!outline.container && outline.area_files && (
+                                    <ContextMenuItem
+                                        className="cursor-pointer"
+                                        onSelect={() => {
+                                            setTimeout(() => resolveDocDialog({ type: 'delete', benchmark: outline }), 50);
+                                        }}
+                                    >
+                                        Delete Document
+                                    </ContextMenuItem>
+                                )}
+                            </ContextMenuContent>
+                        </ContextMenu>
                         {outline.children && outline.children.length > 0 && <RecursiveOutlineForm outlines={outline.children} />}
                     </li>
                 ))}

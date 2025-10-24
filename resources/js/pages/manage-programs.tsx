@@ -180,7 +180,10 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             {filteredPrograms.map((program) => (
                                 <Link
                                     key={program.program_id}
-                                    href={route('manage.program', { program_name: program.program_link })}
+                                    href={route('manage.program', {
+                                            program_name: program.program_link,
+                                            level_id: program.levels[0]?.accreditation_level_id || 0,
+                                    })}
                                     className="group"
                                 >
                                     <div className="rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm">
@@ -212,7 +215,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                         d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                                                     />
                                                 </svg>
-                                                <span>{program.areas?.length} areas</span>
+                                                <span>{program.levels[0]?.areas ? program.levels[0]?.areas?.length : 0} areas</span>
                                             </div>
                                         </div>
                                     </div>

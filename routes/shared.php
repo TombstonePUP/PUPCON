@@ -13,13 +13,13 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
         ->name('dashboard');
 
     Route::controller(ManageProgramController::class)->prefix('manage-programs')->as('manage.')->group(function () {
-        Route::get('/', 'show')->name('manage-programs');
+        Route::get('/', 'index')->name('manage-programs');
 
         Route::middleware(['user.program.role'])->group(function () {
-            Route::get('/{program_name}', 'index')->name('program');
+            Route::get('/{program_name}/{level_id}/', 'show')->name('program');
 
             Route::middleware(['user.program.role'])->group(function () {
-                Route::prefix('{program_name}')->group(function () {
+                Route::prefix('{program_name}/{level_id}')->group(function () {
 
                     Route::middleware(['user.area.role'])->group(function () {
                         Route::get('/{area_id}', [AreaParameterOutlinesController::class, 'index'])->name('area');

@@ -5,12 +5,12 @@ import { UploadDocument } from "./upload-document"
 import { DocumentViewer } from "./view-document"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Area, ParameterOutlines } from "@/types"
+import { Area, ParameterOutlines, Program } from "@/types"
 
 interface DocumentDialogProps {
     type: "view" | "upload" | "delete"
     benchmark?: ParameterOutlines;
-    program: string
+    program: Program;
     area: Area;
     onClose: () => void;
 }

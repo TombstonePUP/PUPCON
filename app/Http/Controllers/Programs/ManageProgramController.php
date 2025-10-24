@@ -16,26 +16,13 @@ class ManageProgramController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, string $program_name)
+    public function index()
     {
-        $program = Str::of($program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)->with('Areas')->firstOrFail();
-
-        $program->program_link = $program_name;
-
-        $program->Areas = $program->Areas->map(function ($area) {
-            $area->area_numeral = $this->toRoman($area->area_number);
-            return $area;
-        });
-        return inertia('document/program', [
-            'program' => $program,
-            // 'areas' => $areas,
-        ]);
-    }
-
-    public function show()
-    {
-        $programs = Programs::select('*')->with('Areas')->get();
+        $programs = Programs::select('*')->with([
+            'Levels' => function ($query) {
+                $query->where('is_active', true)->with('Areas');
+            },
+        ])->get();
         $programs = $programs->map(function ($program) {
             $this->formatPrograms($program);
             return $program;
@@ -46,4 +33,33 @@ class ManageProgramController extends Controller
         ]);
     }
 
+    public function show(string $program_name, string $level_id)
+    {
+        $program = Str::of($program_name)->replace('_', ' ')->title();
+        $program = Programs::where('program_name', $program)
+            ->with([
+                'Levels.Areas',
+            ])->firstOrFail();
+
+        $program->Levels->each(function ($level) use ($level_id) {
+            if ($level->accreditation_level_id != $level_id) {
+                $level->unsetRelation('Areas');
+            }
+            return $level;
+        });
+
+        $program->Levels->each(function ($level) {
+            if ($level->relationLoaded('Areas')) {
+                $level->Areas->each(function ($area) {
+                    $area->area_numeral = $this->toRoman($area->area_number);
+                });
+            }
+        });
+
+        $program->program_link = $program_name;
+
+        return inertia('document/program', [
+            'program' => $program,
+        ]);
+    }
 }

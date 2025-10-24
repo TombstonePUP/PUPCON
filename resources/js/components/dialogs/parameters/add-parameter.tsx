@@ -11,6 +11,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Program } from '@/types';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
 
@@ -22,7 +23,7 @@ interface ParameterForm {
 }
 
 interface AddParameterProps {
-    program: string;
+    program: Program;
     area_id: number;
     onClose?: () => void;
 }
@@ -46,7 +47,11 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
 
     const addParameter = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('manage.area.add.parameter', [program, area_id]), {
+        post(route('manage.area.add.parameter', {
+                program_name: program.program_link,
+                level_id: program.levels[0]?.accreditation_level_id,
+                area_id: area_id,
+            }), {
             onFinish: () => {
                 reset();
             },

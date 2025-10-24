@@ -3,11 +3,12 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Program } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Download } from 'lucide-react';
 
 interface ImportParameterProps {
-    program: string;
+    program: Program
     area_id: number;
     onClose: () => void;
 }
@@ -23,7 +24,8 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
     const importParameter = (e: React.FormEvent) => {
         e.preventDefault();
         post(route('manage.area.import.parameters', {
-                program_name: program,
+                program_name: program.program_link,
+                level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
             }),
             {

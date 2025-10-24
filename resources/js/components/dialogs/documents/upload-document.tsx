@@ -4,14 +4,14 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
-import { ParameterOutlines } from '@/types';
+import { ParameterOutlines, Program } from '@/types';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
 import { toast } from 'sonner';
 
 interface UploadDocumentProps {
     outline: ParameterOutlines;
-    program: string;
+    program: Program;
     area_id: number;
     onClose: () => void;
 }
@@ -43,7 +43,8 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
             setIsUploading(true);
 
             post( route('manage.area.upload.file', {
-                    program_name: program,
+                    program_name: program.program_link,
+                    level_id: program.levels[0]?.accreditation_level_id,
                     area_id: area_id,
                     outline_id: outline.parameter_outline_id,
                 }),

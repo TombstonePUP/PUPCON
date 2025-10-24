@@ -10,7 +10,7 @@ interface BenchmarkDialogProps {
     type: "add" | "edit" | "delete" | "rejected"
     benchmark?: ParameterOutlines;
     benchmark_categories?: ParameterOutlineCategory[];
-    program: string;
+    program: Program;
     area: Area;
     parameter?: AreaParameters;
     onClose: () => void;

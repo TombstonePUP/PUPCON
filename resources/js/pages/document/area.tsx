@@ -45,13 +45,14 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: program.program_name,
-            href: `/manage-programs/${program.program_link}`,
+            href: `/manage-programs/${program.program_link}/${program.levels[0]?.accreditation_level_id}`,
         },
         {
             title: area?.area_name,
             href: `/manage-programs/${program.program_link}/${area?.area_id}`,
         },
     ];
+
 
     return (
         <>
@@ -100,7 +101,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                 <RenderDocumentDialog
                     type={dialog.action}
                     benchmark={dialog.benchmark}
-                    program={program?.program_link}
+                    program={program}
                     area={area}
                     onClose={closeDialog}
                 />
@@ -111,7 +112,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                     benchmark={dialog.benchmark}
                     parameter={dialog.parameter}
                     benchmark_categories={dialog.benchmark_categories}
-                    program={program?.program_link}
+                    program={program}
                     area={area}
                     onClose={closeDialog}
                 />
@@ -120,7 +121,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                 <RenderParameterDialog
                     type={dialog.action}
                     parameter={dialog.parameter}
-                    program={program?.program_link}
+                    program={program}
                     area={area}
                     onClose={closeDialog}
                 />

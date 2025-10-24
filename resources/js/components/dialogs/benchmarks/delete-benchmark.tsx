@@ -12,12 +12,12 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { router } from "@inertiajs/react"
-import { ParameterOutlines } from "@/types"
+import { ParameterOutlines, Program } from "@/types"
 import { toast } from "sonner"
 
 interface DeleteBenchmarkProps {
     outline: ParameterOutlines;
-    program: string;
+    program: Program;
     area_id: number;
     onClose: () => void;
 }
@@ -25,7 +25,12 @@ interface DeleteBenchmarkProps {
 export function DeleteBenchmark({ outline, program, area_id, onClose }: DeleteBenchmarkProps) {
     const deleteBenchmark = (e: React.FormEvent) => {
         e.preventDefault();
-        router.delete(route("manage.area.delete.benchmark", {program_name: program, area_id: area_id, outline_id: outline.parameter_outline_id}), {
+        router.delete(route("manage.area.delete.benchmark", {
+            program_name: program.program_link,
+            level_id: program.levels[0]?.accreditation_level_id,
+            area_id: area_id,
+            outline_id: outline.parameter_outline_id
+        }), {
             onSuccess: () => {
                 onClose();
             },

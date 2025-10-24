@@ -3,7 +3,7 @@
 import InputError from "@/components/input-error";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { AreaParameters, ParameterOutlineCategory, ParameterOutlines } from "@/types"
+import { AreaParameters, ParameterOutlineCategory, ParameterOutlines, Program } from "@/types"
 import { useForm } from "@inertiajs/react";
 import { EditIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 interface BenchmarkProps {
     parameter: AreaParameters;
-    program: string;
+    program: Program;
     area_id: number;
     parameter_outline_categories?: ParameterOutlineCategory[];
     onClose: () => void;
@@ -43,7 +43,11 @@ export function AddBenchmark({parameter, program, area_id, parameter_outline_cat
 
     const addBenchmark = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route("manage.area.add.benchmark", {program_name: program, area_id: area_id}), {
+        post(route("manage.area.add.benchmark", {
+            program_name: program.program_link,
+            level_id: program.levels[0]?.accreditation_level_id,
+            area_id: area_id
+        }), {
             onSuccess: () => {
                 reset();
                 onClose();

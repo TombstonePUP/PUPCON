@@ -2,13 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { AreaParameters } from '@/types';
+import { AreaParameters, Program } from '@/types';
 import { router } from '@inertiajs/react';
 import React from 'react';
 
 interface DeleteParameterProps {
     parameter: AreaParameters;
-    program: string;
+    program: Program;
     area_id: number;
     onClose?: () => void;
 }
@@ -16,7 +16,12 @@ interface DeleteParameterProps {
 export function DeleteParameter({ parameter, program, area_id, onClose }: DeleteParameterProps) {
     const deleteParameter = (e: React.FormEvent) => {
         e.preventDefault();
-        router.delete(route('manage.area.delete.parameter', [program, area_id, parameter.area_parameter_id]), {
+        router.delete(route('manage.area.delete.parameter', {
+            program_name: program,
+            level_id: program.levels[0]?.accreditation_level_id,
+            area_id: area_id,
+            area_parameter_id: parameter.area_parameter_id,
+        }), {
             onSuccess: () => {
                 onClose();
             },

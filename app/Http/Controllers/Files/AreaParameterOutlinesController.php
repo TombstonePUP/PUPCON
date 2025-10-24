@@ -21,19 +21,23 @@ class AreaParameterOutlinesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(string $program_name, string $area_id)
+    public function index(string $program_name,int $level_id, string $area_id)
     {
         $program = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::select('program_id', 'program_name', 'degree_type')
             ->where('program_name', $program)
-            ->with('Areas')
+            ->with([
+                'Levels' => function ($query) use ($level_id) {
+                    $query->where('accreditation_level_id', $level_id);
+                }
+            ])
             ->firstOrFail();
         $program->program_link = $program_name;
-        $area = Areas::select('area_id', 'area_name', 'area_number', 'program_id')
+        $area = Areas::select('area_id', 'area_name', 'area_number', 'accreditation_level_id')
             ->where('area_id', $area_id)
-            ->where('program_id', $program->program_id)
+            ->where('accreditation_level_id', $level_id)
             ->with([
-                'Programs',
+                'Levels',
                 'AreaParameters.ParameterOutlines.ParameterOutlineCategory',
                 'AreaParameters.ParameterOutlines.AreaFiles.FileStatus',
                 'AreaForms.AreaFormCategory',

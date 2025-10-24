@@ -1,6 +1,6 @@
 "use client"
 
-import { Area, AreaParameters } from "@/types";
+import { Area, AreaParameters, Program } from "@/types";
 import { AddParameter } from "./add-parameter";
 import { EditParameter } from "./edit-parameter";
 import { DeleteParameter } from "./delete-parameter";
@@ -10,7 +10,7 @@ import ImportParameter from "./import-parameter";
 interface ParameterDialogProps {
     type: "add" | "edit" | "import" | "delete" | null
     parameter?: AreaParameters;
-    program: string;
+    program: Program;
     area: Area;
     onClose: () => void;
 }

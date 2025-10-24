@@ -69,6 +69,8 @@ export default function Programs({ program }: ProgramProps) {
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
 
+    const selected_level = program.levels?.filter(level => level.areas)[0];
+
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Programs',
@@ -299,7 +301,9 @@ export default function Programs({ program }: ProgramProps) {
                                 <h1 className="text-2xl font-semibold text-gray-900">
                                     {program.degree_type} in {program.program_name}
                                 </h1>
-                                <p className="mt-1 text-sm text-gray-600">Preliminary Survey Visit</p>
+                                <p className="mt-1 text-sm text-gray-600">
+                                    Preliminary Survey Visit
+                                </p>
                             </div>
                             {/* Tabs Section */}
                             {(role === 'Admin' || role === 'Coordinator') && (
@@ -696,8 +700,8 @@ export default function Programs({ program }: ProgramProps) {
                             {/* --- Inline Area Grid (formerly EditableGrid) --- */}
                             <div className="flex flex-col gap-3">
                                 <div className="grid grid-cols-2 gap-3">
-                                    {program.areas && program.areas.length > 0 ? (
-                                        program.areas.map((item: any) => (
+                                    { selected_level?.areas && selected_level?.areas.length > 0 ? (
+                                        selected_level?.areas.map((item: any) => (
                                             <div
                                                 key={item.id}
                                                 className="group relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
@@ -705,6 +709,7 @@ export default function Programs({ program }: ProgramProps) {
                                                 <a
                                                     href={route('manage.area', {
                                                         program_name: program.program_link,
+                                                        level_id: selected_level.accreditation_level_id,
                                                         area_id: item.area_id || item.id,
                                                     })}
                                                 >

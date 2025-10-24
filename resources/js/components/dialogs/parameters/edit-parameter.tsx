@@ -11,13 +11,13 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { AreaParameters } from '@/types';
+import { AreaParameters, Program } from '@/types';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
 
 interface EditParameterProps {
     parameter: AreaParameters;
-    program: string;
+    program: Program;
     area_id: number;
     onClose?: () => void;
 }
@@ -46,7 +46,12 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
 
     const editParameter = (e: React.FormEvent) => {
         e.preventDefault();
-        patch(route('manage.area.update.parameter', [program, area_id, data.area_parameter_id]), {
+        patch(route('manage.area.update.parameter', {
+            program_name: program.program_link,
+            level_id: program.levels[0]?.accreditation_level_id,
+            area_id: area_id,
+            area_parameter_id: parameter.area_parameter_id,
+        }), {
             onSuccess: () => {
                 reset('parameter_name', 'parameter_description', 'area_parameter_id');
             },
