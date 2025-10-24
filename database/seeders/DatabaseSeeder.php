@@ -579,7 +579,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'area_parameter_id' => 3,
-                'parameter_outline_category_id' => 4,
+                'parameter_outline_category_id' => 3,
                 'outline_number' => '1',
                 'outline_description' => 'The VMGO are crafted and duly approved by BOR/BOT.',
                 'container' => false
