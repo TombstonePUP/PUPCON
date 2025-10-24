@@ -189,7 +189,7 @@ export default function Programs({ program }: PerProgramProps) {
                     breadcrumbs={[
                         { label: 'Home', href: '/' },
                         { label: 'Programs', href: '/programs' },
-                        { label: `${program.program_name} • Level ${program.levels?.level}`, href: '#' },
+                        { label: `${program.program_name} • Level ${program.levels[0]?.level}`, href: '#' },
                     ]}
                 />
 
@@ -270,7 +270,7 @@ export default function Programs({ program }: PerProgramProps) {
                                     </div>
                                 ) : (
                                     <label className="mb-3 block text-xl font-medium opacity-90">
-                                        Accreditation Level {program.accreditation_level_id}
+                                        Accreditation Level {program.levels[0]?.level}
                                     </label>
                                 )}
                             </div>
