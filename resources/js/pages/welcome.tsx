@@ -626,7 +626,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                             whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <ImageWithPreload src="/images/adfa-new/Cecilia-R.-Alagon.jpg" alt="Director" className="h-full w-full" />
+                            <ImageWithPreload src="/images/adfa-new/faculty/Cecilia-R.-Alagon.jpg" alt="Director" className="h-full w-full" />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#7f1414]/20 to-transparent" />
                         </motion.div>
 
