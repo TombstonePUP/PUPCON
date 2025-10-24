@@ -642,16 +642,6 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         />
                                     </svg>
                                 </motion.a>
-
-                                <motion.button
-                                    onClick={handleCloseNewsDialog}
-                                    className="w-full rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111] sm:w-auto"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.2, duration: 0.2 }}
-                                >
-                                    Close
-                                </motion.button>
                             </div>
                         </motion.div>
                     </motion.div>
