@@ -24,7 +24,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
 
     const { auth } = usePage<Auth>().props;
     const user = auth.user;
-    
+
     const [viewerOpen, setViewerOpen] = useState(false);
     const [viewerFile, setViewerFile] = useState({ url: '', title: '' });
 
@@ -57,8 +57,8 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                         { label: 'Home', href: '/' },
                         { label: 'Programs', href: '/programs' },
                         {
-                            label: `${program.program_name} - Level ${program.accreditation_level}`,
-                            href: '/programs/' + program.program_name.toLowerCase().replace(/\s+/g, '_'),
+                            label: `${program.program_name} - Level ${program.levels[0]?.level}`,
+                            href: '/programs/' + program.program_link,
                         },
                         { label: area.area_name, href: '#' },
                     ]}

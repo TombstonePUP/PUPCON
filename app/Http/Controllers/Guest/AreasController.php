@@ -8,11 +8,13 @@ use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
 use App\Traits\AreaNumeralFormat;
+use App\Traits\ProgramLinkFormats;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class AreasController extends Controller
 {
+    use ProgramLinkFormats;
     use AreaNumeralFormat;
     /**
      * Handle the incoming request.
@@ -20,7 +22,14 @@ class AreasController extends Controller
     public function __invoke(string $program_name, int $area_id)
     {
         $program_name = Str::of($program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name',$program_name)->firstOrFail();
+        $program = Programs::where('program_name',$program_name)->with([
+            'Levels' => function ($query) {
+                $query->where('is_active', true);
+            },
+        ])->firstOrFail();
+
+        $program->program_link = $program_name;
+
         $area = Areas::select('area_id', 'area_name', 'area_number', 'area_description', 'area_image_name', 'area_image_path')
             ->where('area_id', $area_id)
             ->with([
