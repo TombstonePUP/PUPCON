@@ -2,7 +2,7 @@ import { CardHeader, HomeCard, HomeCardDescription, HomeCardTitle } from '@/comp
 import Layout from '@/layouts/landing-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BookOpen, Calendar, GraduationCap, MapPin, Play } from 'lucide-react';
+import { BookOpen, Calendar, GraduationCap, MapPin, Play, X } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 interface LandingProps {
@@ -112,6 +112,10 @@ export default function Welcome({ carouselImages }: LandingProps) {
     const [isPageReady, setIsPageReady] = useState(false);
     const shouldReduceMotion = useReducedMotion();
 
+    // Add state for news card modal
+    const [selectedNewsItem, setSelectedNewsItem] = useState(null);
+    const [isNewsDialogOpen, setIsNewsDialogOpen] = useState(false);
+
     const images = carouselImages;
     const { auth } = usePage<Auth>().props;
     const user = auth.user;
@@ -207,6 +211,17 @@ export default function Welcome({ carouselImages }: LandingProps) {
             });
         }
     }, []);
+
+    // Add handler functions for news dialog
+    const handleOpenNewsDialog = (card) => {
+        setSelectedNewsItem(card);
+        setIsNewsDialogOpen(true);
+    };
+
+    const handleCloseNewsDialog = () => {
+        setIsNewsDialogOpen(false);
+        setTimeout(() => setSelectedNewsItem(null), 200);
+    };
 
     return (
         <>
@@ -497,38 +512,121 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     <div className="grid w-full max-w-7xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6 md:gap-8 lg:grid-cols-4">
                         {newsCards.map((card, i) => (
                             <motion.div key={i} variants={itemVariants}>
-                                <Link href="/">
-                                    <motion.div
-                                        whileHover={{
-                                            scale: shouldReduceMotion ? 1 : 1.02,
-                                            y: shouldReduceMotion ? 0 : -5,
-                                        }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <HomeCard className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-colors duration-200 hover:border-[#7f1414]">
-                                            <div className="h-40 w-full overflow-hidden sm:h-48">
-                                                <ImageWithPreload
-                                                    src={card.img}
-                                                    alt={card.title}
-                                                    className="h-full w-full transition-transform duration-300 group-hover:scale-105"
-                                                />
+                                <motion.div
+                                    whileHover={{
+                                        scale: shouldReduceMotion ? 1 : 1.02,
+                                        y: shouldReduceMotion ? 0 : -5,
+                                    }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    <HomeCard className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-colors duration-200 hover:border-[#7f1414]">
+                                        <div className="h-40 w-full overflow-hidden sm:h-48">
+                                            <ImageWithPreload
+                                                src={card.img}
+                                                alt={card.title}
+                                                className="h-full w-full transition-transform duration-300 group-hover:scale-105"
+                                            />
+                                        </div>
+                                        <CardHeader className="flex flex-1 flex-col p-3 sm:p-4">
+                                            <HomeCardTitle className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
+                                                {card.title}
+                                            </HomeCardTitle>
+                                            <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
+                                                <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 group-hover:scale-x-100"></div>
                                             </div>
-                                            <CardHeader className="p-3 sm:p-4">
-                                                <HomeCardTitle className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
-                                                    {card.title}
-                                                </HomeCardTitle>
-                                                <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
-                                                    <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 group-hover:scale-x-100"></div>
-                                                </div>
-                                                <HomeCardDescription className="text-xs text-gray-600 sm:text-sm">{card.desc}</HomeCardDescription>
-                                            </CardHeader>
-                                        </HomeCard>
-                                    </motion.div>
-                                </Link>
+                                            <HomeCardDescription className="flex-1 text-xs text-gray-600 sm:text-sm">{card.desc}</HomeCardDescription>
+
+                                            {/* Learn More Button */}
+                                            <motion.button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleOpenNewsDialog(card);
+                                                }}
+                                                className="mt-4 inline-flex items-center gap-2 self-end rounded-lg bg-[#7f1414] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111] sm:text-sm"
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                            >
+                                                Learn More
+                                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                                </svg>
+                                            </motion.button>
+                                        </CardHeader>
+                                    </HomeCard>
+                                </motion.div>
                             </motion.div>
                         ))}
                     </div>
                 </motion.section>
+
+                {/* News Item Dialog */}
+                {isNewsDialogOpen && selectedNewsItem && (
+                    <motion.div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        onClick={handleCloseNewsDialog}
+                    >
+                        <motion.div
+                            className="relative mx-4 w-full max-w-2xl overflow-hidden rounded-3xl bg-white"
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ duration: 0.3 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Close Button */}
+                            <motion.button
+                                onClick={handleCloseNewsDialog}
+                                className="absolute top-6 right-6 z-10 rounded-full bg-white/80 p-2 transition-colors duration-150 hover:bg-white"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.9 }}
+                                aria-label="Close"
+                            >
+                                <X className="h-5 w-5 text-gray-400 hover:text-[#7f1414]" />
+                            </motion.button>
+
+                            {/* Image */}
+                            <div className="relative h-64 w-full overflow-hidden sm:h-80">
+                                <img src={selectedNewsItem.img} alt={selectedNewsItem.title} className="h-full w-full object-cover" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                            </div>
+
+                            {/* Content */}
+                            <div className="p-6 sm:p-8">
+                                <motion.h2
+                                    className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1, duration: 0.2 }}
+                                >
+                                    {selectedNewsItem.title}
+                                </motion.h2>
+
+                                <motion.p
+                                    className="mb-6 leading-relaxed text-gray-700 sm:text-lg"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.15, duration: 0.2 }}
+                                >
+                                    {selectedNewsItem.desc}
+                                </motion.p>
+
+                                <motion.button
+                                    onClick={handleCloseNewsDialog}
+                                    className="w-full rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111] sm:w-auto"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2, duration: 0.2 }}
+                                >
+                                    Close
+                                </motion.button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
 
                 {/* Audio-Video Section */}
                 <motion.section
