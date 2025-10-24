@@ -95,6 +95,7 @@ class DatabaseSeeder extends Seeder
         foreach ($users as $attributes) {
             User::factory()->create($attributes);
         }
+
         // UserRoles::factory(10)->create();
         $programs = [
             [
@@ -218,7 +219,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
         ];
-
         foreach ($levels as $attributes) {
             AccreditationLevels::factory()->create($attributes);
         }
@@ -467,19 +467,133 @@ class DatabaseSeeder extends Seeder
             ProgramObjectives::factory()->create($attributes);
         }
 
-        $areaparameter = [];
-        AreaParameters::factory(50)->create();
+        $areaparameter = [
+            [
+                'area_parameter_id' => 1,
+                'area_id' => 1,
+                'parameter_name' => 'A',
+                'parameter_description' => 'Statement of Vision, Mission, Goals, and Objectives'
+            ],
+            [
+                'area_parameter_id' => 2,
+                'area_id' => 1,
+                'parameter_name' => 'B',
+                'parameter_description' => 'Dissemination and Acceptability'
+            ],
+            [
+                'area_parameter_id' => 3,
+                'area_id' => 4,
+                'parameter_name' => 'A',
+                'parameter_description' => 'Statement of Vision, Mission, Goals, and Objectives'
+            ],
+            [
+                'area_parameter_id' => 4,
+                'area_id' => 4,
+                'parameter_name' => 'B',
+                'parameter_description' => 'Dissemination and Acceptability'
+            ],
+        ];
+        foreach ($areaparameter as $attributes) {
+            AreaParameters::factory()->create($attributes);
+        }
 
         $parameterCategory = [
-            ['category_name' => 'No Category'],
-            ['category_name' => 'Systems - Inputs and Processes'],
-            ['category_name' => 'Implementation'],
-            ['category_name' => 'Outcome/s']
+            [
+                'category_name' => 'No Category',
+                'parameter_outline_category_id' => 1
+            ],
+            [
+                'category_name' => 'Systems - Inputs and Processes',
+                'parameter_outline_category_id' => 2
+            ],
+            [
+                'category_name' => 'Implementation',
+                'parameter_outline_category_id' => 3
+            ],
+            [
+                'category_name' => 'Outcome/s',
+                'parameter_outline_category_id' => 4
+            ],
         ];
         foreach ($parameterCategory as $attributes) {
             ParameterOutlineCategory::factory()->create($attributes);
         }
-        ParameterOutlines::factory(500)->create();
+
+        $parameterOutlines = [
+            [
+                'area_parameter_id' => 1,
+                'parameter_outline_category_id' => 2,
+                'outline_number' => '1.1',
+                'outline_description' => 'The institution has a system of determining the Vision and Mission.',
+                'container' => false
+            ],
+            [
+                'area_parameter_id' => 1,
+                'parameter_outline_category_id' => 2,
+                'outline_number' => '1.2',
+                'outline_description' => 'The Vision clearly reflects what the Institution hopes to become in the future.',
+                'container' => false
+            ],
+            [
+                'area_parameter_id' => 1,
+                'parameter_outline_category_id' => 3,
+                'outline_number' => '1.1',
+                'outline_description' => 'The Institution/College conducts review on the statement of the Vision and Mission as well as its goals and program objectives for the approval of authorities concerned.',
+                'container' => false
+            ],
+            [
+                'area_parameter_id' => 1,
+                'parameter_outline_category_id' => 3,
+                'outline_number' => '1.2',
+                'outline_description' => 'The College/Academic Unit follows a system of formulating its goals and the objectives of the program.',
+                'container' => false
+            ],
+            [
+                'area_parameter_id' => 1,
+                'parameter_outline_category_id' => 4,
+                'outline_number' => '1',
+                'outline_description' => 'The VMGO are crafted and duly approved by BOR/BOT.',
+                'container' => false
+            ], [
+                'area_parameter_id' => 3,
+                'parameter_outline_category_id' => 2,
+                'outline_number' => '1.1',
+                'outline_description' => 'The institution has a system of determining the Vision and Mission.',
+                'container' => false
+            ],
+            [
+                'area_parameter_id' => 3,
+                'parameter_outline_category_id' => 2,
+                'outline_number' => '1.2',
+                'outline_description' => 'The Vision clearly reflects what the Institution hopes to become in the future.',
+                'container' => false
+            ],
+            [
+                'area_parameter_id' => 3,
+                'parameter_outline_category_id' => 3,
+                'outline_number' => '1.1',
+                'outline_description' => 'The Institution/College conducts review on the statement of the Vision and Mission as well as its goals and program objectives for the approval of authorities concerned.',
+                'container' => false
+            ],
+            [
+                'area_parameter_id' => 3,
+                'parameter_outline_category_id' => 3,
+                'outline_number' => '1.2',
+                'outline_description' => 'The College/Academic Unit follows a system of formulating its goals and the objectives of the program.',
+                'container' => false
+            ],
+            [
+                'area_parameter_id' => 3,
+                'parameter_outline_category_id' => 4,
+                'outline_number' => '1',
+                'outline_description' => 'The VMGO are crafted and duly approved by BOR/BOT.',
+                'container' => false
+            ],
+        ];
+        foreach ($parameterOutlines as $attributes) {
+            ParameterOutlines::factory()->create($attributes);
+        }
+
         $file_status = [
             ['status_name' => 'Approved'],
             ['status_name' => 'Pending'],
@@ -522,7 +636,13 @@ class DatabaseSeeder extends Seeder
             'Lemuel Damole',
             'Ronette Espiritu',
             'Anna Madonna Arellano',
-            'Cecille R. Alagon'
+            'Cecilia R. Alagon',
+            'Ian Saguindan',
+            'Erwin Dela Cruz',
+            'Maria Carina Corpuz',
+            'Meckmack Nartea',
+            'Rizza Valdez Devera',
+            'Angeline Pabilona',
         ];
 
         $directory = public_path('images/adfa-new/faculty'); // Folder location

@@ -365,7 +365,7 @@ export default function Programs({ program }: PerProgramProps) {
                                     </div>
 
                                     {/* Objective Content */}
-                                    <p className="relative leading-relaxed text-gray-700 transition-all duration-300 group-hover:text-gray-900">
+                                    <p className="relative leading-relaxed text-gray-700 transition-all duration-300 group-hover:text-gray-900 grid place-items-center">
                                         {objective.objective_description}
                                     </p>
 
