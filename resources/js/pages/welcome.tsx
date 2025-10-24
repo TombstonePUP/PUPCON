@@ -126,21 +126,25 @@ export default function Welcome({ carouselImages }: LandingProps) {
                 title: 'PUPSJ PUPCET',
                 img: '/images/pupcet.jpg',
                 desc: 'The PUPSJ PUPCET Online Application for Academic Year 2025-2026 starts on December 15, 2024 - April 15, 2025.',
+                source: 'https://www.facebook.com/PUPSJStudentAssembly/posts/pfbid02BBc79Sp51g6ntw5cnNxabMqRiBYnTY6hgJbcuMtN5yN7fLg31fMNy7bpkkUk8Rqyl',
             },
             {
                 title: 'CPALE 2024 Passers',
                 img: '/images/cpale.jpg',
                 desc: 'Pagpupugay sa bagong CPA ng ating Sintang Paaralan.',
+                source: 'https://www.facebook.com/photo.php?fbid=1002993848520595&set=pb.100064299686924.-2207520000&type=3',
             },
             {
                 title: 'Mental Health Matters',
                 img: '/images/mental.jpg',
                 desc: 'The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow tips for boosting your well-being.',
+                source: 'https://www.facebook.com/PUPSJStudentAssembly/posts/pfbid0mehRRGVgQvoEgKf9LuTamcF8QcjrU2RjiS5dCCNjAiHmxuf3q6djRMrEJhBYVmoTl',
             },
             {
                 title: 'Ceremonial Signing',
                 img: '/images/ceremony.jpg',
                 desc: 'A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!',
+                source: 'https://www.facebook.com/photo.php?fbid=911510457668935&set=pb.100064299686924.-2207520000&type=3',
             },
         ],
         [],
@@ -614,6 +618,30 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 >
                                     {selectedNewsItem.desc}
                                 </motion.p>
+
+                                {/* Source Link */}
+                                <motion.a
+                                    href={selectedNewsItem.source}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mb-4 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.18, duration: 0.2 }}
+                                >
+                                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                    </svg>
+                                    <span>View on Facebook</span>
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                        />
+                                    </svg>
+                                </motion.a>
 
                                 <motion.button
                                     onClick={handleCloseNewsDialog}
