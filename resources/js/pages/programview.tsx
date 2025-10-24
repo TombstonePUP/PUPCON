@@ -270,7 +270,7 @@ export default function Programs({ program }: PerProgramProps) {
                                     </div>
                                 ) : (
                                     <label className="mb-3 block text-xl font-medium opacity-90">
-                                        Accreditation Level {program.accreditation_level}
+                                        Accreditation Level {program.accreditation_level_id}
                                     </label>
                                 )}
                             </div>

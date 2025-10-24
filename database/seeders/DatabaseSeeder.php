@@ -370,7 +370,19 @@ class DatabaseSeeder extends Seeder
                 'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
             ],
             [
-                'program_id' => 2,
+                'program_id' => 4,
+                'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
+            ],
+             [
+                'program_id' => 4,
+                'objective_description' => "Prepare and comply with requirements for business operation",
+            ],
+            [
+                'program_id' => 4,
+                'objective_description' => "Prepare a business plan",
+            ],
+            [
+                'program_id' => 4,
                 'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
             ],
         ];
@@ -411,38 +423,72 @@ class DatabaseSeeder extends Seeder
         // ExhibitOutlines::factory(10)->create();
         // ExhibitFiles::factory(10)->create();
 
+        $bsitFaculties = [
+            'Elias Austria',
+            'Alfeo Mendoza',
+            'Alfred Pagalilawan',
+        ];
 
-        $directory = public_path('images/adfa-new'); // folder location
-        $files = File::files($directory); // get all files inside
+        $psychFaculties = [
+            'Angeline Pabilona',
+            'Anna Madonna Arellano',
+            'Ian Llenares'
+        ];
+
+        // $psychFaculties = [
+        //     'Andres Bonifacio',
+        //     'Emilio Aguinaldo',
+        //     'Apolinario Mabini'
+        // ];
+
+        // $bsitFaculties = [
+        //     'Jose Rizal',
+        //     'Marcelo del Pilar',
+        //     'Graciano Lopez Jaena'
+        // ];
+
+        $directory = public_path('images/adfa-new/faculty'); // Folder location
+        $files = File::files($directory); // Get all files
 
         $faculties = [];
 
         foreach ($files as $file) {
-            $fileName = $file->getFilename(); // e.g. "Anna-Madonna-Arellano.jpg"
-            $extension = $file->getExtension(); // e.g. "jpg"
+            $fileName = $file->getFilename(); // e.g. "Jose-Rizal.jpg"
+            $extension = $file->getExtension();
 
-            // remove extension and split by hyphen
+            // Remove extension and split by hyphen
             $nameParts = explode('-', pathinfo($fileName, PATHINFO_FILENAME));
 
-            // handle different name lengths safely
             if (count($nameParts) >= 2) {
-                $lastName = array_pop($nameParts); // last element = last name
-                $firstName = implode(' ', $nameParts); // rest = first name
+                $lastName = array_pop($nameParts);
+                $firstName = implode(' ', $nameParts);
             } else {
                 $firstName = $nameParts[0];
                 $lastName = '';
             }
 
+            $fullName = Str::title(trim(str_replace('-', ' ', "{$firstName} {$lastName}")));
+
+            // Determine program based on name
+            if (in_array($fullName, $psychFaculties)) {
+                $programId = 4; // Psychology
+            } elseif (in_array($fullName, $bsitFaculties)) {
+                $programId = 1; // BSIT
+            } else {
+                $programId = 9; // Unassigned or Other Program
+            }
+
             $faculties[] = [
                 'first_name' => Str::title(str_replace('-', ' ', $firstName)),
                 'last_name' => Str::title(str_replace('-', ' ', $lastName)),
-                'faculty_status' => 'Full-Time', // default (can adjust later)
-                'program_id' => 1,
+                'faculty_status' => 'Full-Time',
+                'program_id' => $programId,
                 'program_coordinator' => false,
                 'faculty_image_name' => $fileName,
-                'faculty_image_path' => '/images/adfa-new/' . $fileName,
+                'faculty_image_path' => '/images/adfa-new/faculty/' . $fileName,
             ];
         }
+
 
         // Insert all entries at once
         DB::table('faculties')->insert($faculties);
