@@ -121,7 +121,7 @@ npm run dev         # Terminal 2
 | -------------------- | ---------------------| -------------- |
 | 🛡️ **Admin**   | `johndoe@admin.com`        | `admin@123` |
 | 👨‍💼 **Chairman** | `keithlee@chairman.com`   | `chairman@123` |
-| 👨‍💼 **Accreditor** | `keithlee@example.com`  | `accreditor@123` |
+| 👨‍💼 **Accreditor** | `janedoe@accreditor.com`  | `accreditor@123` |
 
 🎉 **App running at** [http://localhost:8000](http://localhost:8000)
 
