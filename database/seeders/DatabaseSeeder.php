@@ -258,13 +258,13 @@ class DatabaseSeeder extends Seeder
                 'area_name' => 'Faculty',
                 'area_description' => 'The standard or quality of an institution or program is greatly measured by the qualifications of its faculty. In this light, the faculty should be composed of competent members in terms of academic qualifications, experience and professional expertise. In addition, they should manifest desirable personal qualities and high level of professionalism. To be effective, faculty members should be properly compensated and taken care of. They must be given opportunities for continuous personal and professional development. A policy of fair and equitable distribution of teaching assignments and workload should be practiced. Likewise, objective and clear promotion criteria/ scheme should be adopted by the institution.',
             ],
-            [
-                'area_id' => 3,
-                'accreditation_level_id' => 3,
-                'area_number' => 3,
-                'area_name' => 'Curriculum and Instruction',
-                'area_description' => 'Curriculum and instruction occupy center stage in any educational program. These seek to research, develop, and implement curriculum changes that enhance student achievement within and outside of institutions. How students learn and the best ways to educate deserve much consideration.',
-            ],
+            // [
+            //     'area_id' => 3,
+            //     'accreditation_level_id' => 3,
+            //     'area_number' => 3,
+            //     'area_name' => 'Curriculum and Instruction',
+            //     'area_description' => 'Curriculum and instruction occupy center stage in any educational program. These seek to research, develop, and implement curriculum changes that enhance student achievement within and outside of institutions. How students learn and the best ways to educate deserve much consideration.',
+            // ],
             [
                 'area_id' => 4,
                 'accreditation_level_id' => 3,
@@ -279,13 +279,13 @@ class DatabaseSeeder extends Seeder
                 'area_name' => 'Research',
                 'area_description' => 'Research is an avenue through which new knowledge is discovered, applied or verified and through which appropriate technologies are generated. Thus, it is a basic requirement for an educational institution to have a firmly established research and development program. Its thrusts and priorities should be congruent with those identified in the development plans of regional and national R and D-oriented agencies such as NEDA, DOST, CHED, etc. The institutional leadership in research should be proactive and developmental in orientation. It must provide adequate and sustained budget allocation annually for the academic Unit. Adequate physical facilities, laboratory equipment and supplies for research should be provided. The Academic unit has to maintain strong research linkages with various R and D agencies locally and internationally.',
             ],
-            [
-                'area_id' => 6,
-                'accreditation_level_id' => 3,
-                'area_number' => 6,
-                'area_name' => 'Extension and Community Involvement',
-                'area_description' => "The extension function makes the institution's presence felt in the community. It involves the application of existing and new knowledge and technology and those generated in the Institution to improve the quality of life of the people. Through the extension program, people are empowered with appropriate knowledge, attitudes and skills. Thus, extension services cater to various aspects of the community life, e.g., economic growth, promotion of health, environmental management, and social transformation. The Institution plans and implements an extension program that is need and client-based. This program should have a budgetary support and other resource allocation. The faculty members may serve as experts, consultants, organizers, facilitators, coordinators, service providers, and change agents in the community as forms of extension and community involvement. Careful planning and coordination with other community outreach agencies should be considered to avoid duplication of services offered to the clientele.",
-            ],
+            // [
+            //     'area_id' => 6,
+            //     'accreditation_level_id' => 3,
+            //     'area_number' => 6,
+            //     'area_name' => 'Extension and Community Involvement',
+            //     'area_description' => "The extension function makes the institution's presence felt in the community. It involves the application of existing and new knowledge and technology and those generated in the Institution to improve the quality of life of the people. Through the extension program, people are empowered with appropriate knowledge, attitudes and skills. Thus, extension services cater to various aspects of the community life, e.g., economic growth, promotion of health, environmental management, and social transformation. The Institution plans and implements an extension program that is need and client-based. This program should have a budgetary support and other resource allocation. The faculty members may serve as experts, consultants, organizers, facilitators, coordinators, service providers, and change agents in the community as forms of extension and community involvement. Careful planning and coordination with other community outreach agencies should be considered to avoid duplication of services offered to the clientele.",
+            // ],
             [
                 'area_id' => 7,
                 'accreditation_level_id' => 3,
