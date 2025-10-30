@@ -597,7 +597,7 @@ class DatabaseSeeder extends Seeder
             'Lemuel Damole',
             'Ronette Espiritu',
             'Anna Madonna Arellano',
-            'Cecilia R. Alagon',
+            'Cecilia Reyes Alagon',
             'Ian Saguindan',
             'Erwin Dela Cruz',
             'Maria Carina Corpuz',
