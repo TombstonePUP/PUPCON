@@ -604,6 +604,7 @@ class DatabaseSeeder extends Seeder
             'Meckmack Nartea',
             'Rizza Valdez Devera',
             'Angeline Pabilona',
+            'Jane Mendoza',
         ];
 
         $directory = public_path('images/adfa-new/faculty'); // Folder location
