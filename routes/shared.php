@@ -15,13 +15,12 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
     Route::controller(ManageProgramController::class)->prefix('manage-programs')->as('manage.')->group(function () {
         Route::get('/', 'index')->name('manage-programs');
 
-        Route::middleware(['user.program.role'])->group(function () {
+        // Route::middleware(['user.program.role'])->group(function () {
             Route::get('/{program_name}/{level_id}/', 'show')->name('program');
-
-            Route::middleware(['user.program.role'])->group(function () {
+            // Route::middleware(['user.program.role'])->group(function () {
                 Route::prefix('{program_name}/{level_id}')->group(function () {
 
-                    Route::middleware(['user.area.role'])->group(function () {
+                    // Route::middleware(['user.area.role'])->group(function () {
                         Route::get('/{area_id}', [AreaParameterOutlinesController::class, 'index'])->name('area');
 
                         Route::as('area.')->group(function () {
@@ -36,9 +35,9 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
                                 Route::delete('/{area_id}/{form_id}/deleteForm', 'destroy')->name('deleteAreaForm');
                             });
                         });
-                    });
+                    // });
                 });
-            });
-        });
+            // });
+        // });
     });
 });

@@ -51,19 +51,35 @@ class HandleInertiaRequests extends Middleware
             ->get();
 
         $role = $request->user()?->Roles->role_name;
+        $user = $request->user();
         $programs = [];
 
         if ($role === 'Admin' || $role === 'Coordinator') {
-            $programs = Programs::select('program_name')->get();
+            $programs = Programs::select('program_name', 'program_id')
+                ->with([
+                    'Levels' => function ($levelQuery) {
+                        $levelQuery->where('is_active', true);
+                    },
+                ])
+                ->get();
         } elseif ($role === 'Chairman') {
-            // $programs = $request->user()->Areas()
-            //     ->with(['Programs' => function ($query) {
-            //         $query->select('programs.program_name', 'programs.program_id');
-            //     }])
-            //     ->get()
-            //     ->pluck('Programs')
-            //     ->flatten()
-            //     ->unique('program_id');
+            $programs = Programs::select('program_name', 'program_id')
+                ->with([
+                    'Levels' => function ($levelQuery) {
+                        $levelQuery->where('is_active', true);
+                    },
+                ])
+                ->get();
+            /* $programs = Programs::whereHas('Levels.Areas', function ($query) use ($user) {
+                $query->whereIn('areas.area_id', $user->Areas->pluck('area_id'));
+            })
+                ->with([
+                    'Levels' => function ($levelQuery) use ($user) {
+                        $levelQuery->whereIn('accreditation_level_id', $user->Areas->pluck('accreditation_level_id'));
+                    },
+                ])
+                ->get()
+                ->unique('program_id'); */
         } else {
             $programs = collect();
         }
@@ -81,9 +97,9 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'flash' => [
-                'type' => fn () => $request->session()->get('type'),
-                'title' => fn () => $request->session()->get('title'),
-                'message' => fn () => $request->session()->get('message'),
+                'type' => fn() => $request->session()->get('type'),
+                'title' => fn() => $request->session()->get('title'),
+                'message' => fn() => $request->session()->get('message'),
             ],
             'auth' => [
                 'user' => $request->user(),
