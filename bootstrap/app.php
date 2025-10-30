@@ -8,6 +8,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use App\Http\Middleware\Admin as AdminPrivileges;
+use App\Http\Middleware\EnsureAccreditationLevelExists;
 use App\Http\Middleware\EnsureMustUpdatePassword;
 use App\Http\Middleware\MustUpdatePassword;
 use App\Http\Middleware\UserProgramPrivileges;
@@ -29,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => AdminPrivileges::class,
             'user.accreditor.restriction' => AccreditorRestriction::class,
             'user.program.role' => UserProgramPrivileges::class,
+            'program.level.exists' => EnsureAccreditationLevelExists::class,
             'user.area.role' => UserAreaPrivileges::class,
             'accreditor' => AccreditorPrivileges::class,
             'update.password' => MustUpdatePassword::class,

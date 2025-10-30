@@ -78,27 +78,10 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @return BelongsToMany<Programs,User>
-     */
-    /* public function Programs(): BelongsToMany
-    {
-        return $this->belongsToMany(Programs::class, 'user_program_roles', 'user_id', 'program_id')
-            ->withPivot('user_program_role_id');
-    } */
-
-    /**
      * @return HasMany<ActivityLog,User>
      */
     public function ActivityLogs(): HasMany
     {
         return $this->hasMany(ActivityLog::class, 'user_id', 'user_id');
     }
-
-    /**
-     * @return HasMany<LocalTaskForce,User>
-     */
-    /* public function LocalTaskForce(): HasMany
-    {
-        return $this->hasMany(LocalTaskForce::class, 'user_id', 'user_id');
-    } */
 }

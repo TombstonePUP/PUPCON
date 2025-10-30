@@ -69,6 +69,8 @@ return new class extends Migration
             $table->text('form_image_path')->nullable();
             $table->text('file_name')->nullable();
             $table->text('file_path')->nullable();
+            $table->foreignId('uploaded_by')->references('user_id')->on('users')
+                -> onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('file_status_id')->nullable()->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
@@ -80,9 +82,9 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_name');
             $table->text('file_path');
-            /* $table->foreignId('uploaded_by')->references('user_id')->on('users')
+            $table->foreignId('uploaded_by')->references('user_id')->on('users')
                 -> onUpdate('cascade')->onDelete('cascade');
-            $table->timestamp('uploaded_at')->useCurrent(); */
+            // $table->timestamp('uploaded_at')->useCurrent();
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 -> onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
@@ -107,6 +109,8 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_name');
             $table->text('file_path');
+            $table->foreignId('uploaded_by')->references('user_id')->on('users')
+                -> onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();

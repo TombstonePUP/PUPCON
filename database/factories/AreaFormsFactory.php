@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\AreaFormCategory;
 use App\Models\Areas;
 use App\Models\FileStatus;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,6 +23,7 @@ class AreaFormsFactory extends Factory
         $area = Areas::inRandomOrder()->first();
         $areaFormCategory = AreaFormCategory::inRandomOrder()->first();
         $fileStatusId = FileStatus::inRandomOrder()->first();
+        $user = User::inRandomOrder()->first();
         return [
             'area_form_id' => fake()->unique()->randomNumber(),
             'area_id' => $area->area_id,
@@ -30,6 +32,7 @@ class AreaFormsFactory extends Factory
             'form_image_path' => fake()->imageUrl(),
             'file_name' => fake()->word(),
             'file_path' => fake()->imageUrl(),
+            'uploaded_by' => $user->user_id,
             'file_status_id' => $fileStatusId->file_status_id,
             'file_rejection_reason' => fake()->sentence(),
         ];

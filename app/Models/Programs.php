@@ -58,7 +58,7 @@ class Programs extends Model
      */
     public function programObjectives(): HasMany
     {
-        return $this->hasMany(Areas::class, 'program_id', 'program_id');
+        return $this->hasMany(ProgramObjectives::class, 'program_id', 'program_id');
     }
 
     /**

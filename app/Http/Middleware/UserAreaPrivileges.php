@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\Areas;
 
 class UserAreaPrivileges
 {
@@ -22,10 +23,14 @@ class UserAreaPrivileges
             return $next($request);
         } elseif ($userRole === 'Chairman') {
             $userAreaRole = $request->user()->Areas;
-            if ($userAreaRole->firstWhere('area_id', $request->area_id)) {
+            $level = Areas::where('area_id', $request->area_id)->first()->Levels->is_active;
+            if ($userAreaRole->firstWhere('area_id', $request->area_id) || !$level) {
                 return $next($request);
             }
         }
-        return redirect()->back()->with('error', 'You do not have permission to access this page.');
+        return redirect()->back()
+            ->with('type', 'error')
+            ->with('title', 'Access Denied')
+            ->with('message', 'You do not have permission to access this area.');
     }
 }
