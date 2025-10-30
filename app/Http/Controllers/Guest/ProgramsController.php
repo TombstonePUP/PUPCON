@@ -20,6 +20,7 @@ class ProgramsController extends Controller
     public function index()
     {
         $programs = Programs::select('program_id', 'degree_type', 'program_name', 'program_description', 'program_image_name', 'program_image_path')
+            ->with('Levels')
             ->where('under_survey', true)
             ->get();
 
