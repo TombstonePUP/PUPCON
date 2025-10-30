@@ -63,14 +63,7 @@ class HandleInertiaRequests extends Middleware
                 ])
                 ->get();
         } elseif ($role === 'Chairman') {
-            $programs = Programs::select('program_name', 'program_id')
-                ->with([
-                    'Levels' => function ($levelQuery) {
-                        $levelQuery->where('is_active', true);
-                    },
-                ])
-                ->get();
-            /* $programs = Programs::whereHas('Levels.Areas', function ($query) use ($user) {
+            $programs = Programs::whereHas('Levels.Areas', function ($query) use ($user) {
                 $query->whereIn('areas.area_id', $user->Areas->pluck('area_id'));
             })
                 ->with([
@@ -79,7 +72,7 @@ class HandleInertiaRequests extends Middleware
                     },
                 ])
                 ->get()
-                ->unique('program_id'); */
+                ->unique('program_id');
         } else {
             $programs = collect();
         }

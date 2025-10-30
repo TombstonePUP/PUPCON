@@ -78,6 +78,7 @@ export interface PerProgramUnderSurvey {
 export interface ProgramPrivilege {
     program_name: string;
     program_link: string;
+    levels?: AccreditationLevels[];
     [key: string]: unknown;
 }
 

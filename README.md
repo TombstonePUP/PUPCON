@@ -117,11 +117,11 @@ npm run dev         # Terminal 2
 
 ### 🔑 Default Accounts
 
-| 👤 Role              | 📧 Email            | 🔐 Password    |
-| -------------------- | ---------------------| -------------- |
-| 🛡️ **Admin**   | `johndoe@admin.com`        | `admin@123` |
-| 👨‍💼 **Chairman** | `keithlee@chairman.com`   | `chairman@123` |
-| 👨‍💼 **Accreditor** | `janedoe@accreditor.com`  | `accreditor@123` |
+| 👤 Role           | 📧 Email                 | 🔐 Password      |
+| ----------------- | ------------------------ | ---------------- |
+| 🛡️ **Admin**      | `johndoe@admin.com`      | `admin@123`      |
+| 👨‍💼 **Chairman**   | `keithlee@chairman.com`  | `chairman@123`   |
+| 👨‍💼 **Accreditor** | `janedoe@accreditor.com` | `accreditor@123` |
 
 🎉 **App running at** [http://localhost:8000](http://localhost:8000)
 

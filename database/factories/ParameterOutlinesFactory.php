@@ -27,6 +27,7 @@ class ParameterOutlinesFactory extends Factory
             'parameter_outline_category_id' => $outlineCategory->parameter_outline_category_id,
             'outline_number' => fake()->unique()->randomFloat(2, 1, 20),
             'outline_description' => fake()->sentence(),
+            'item_rating' => fake()->randomFloat(1, 5),
             'container' => fake()->boolean(),
         ];
     }

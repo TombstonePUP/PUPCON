@@ -23,7 +23,10 @@ class UserProgramPrivileges
             return $next($request);
         }
 
-        return redirect()->back()->with('error', 'You do not have permission to access this page.');
+        return redirect()->back()
+            ->with('type', 'error')
+            ->with('title', 'Access Denied')
+            ->with('message', 'You do not have permission to access this program.');
     }
 
     private function programAccess($user, $program)
@@ -33,14 +36,16 @@ class UserProgramPrivileges
         return match ($role) {
             'Admin', 'Coordinator' => Programs::where('program_name', $program)->exists(),
             'Chairman' => $user->Areas()
-                ->with(['Programs' => function ($query) {
-                    $query->select('programs.program_name', 'programs.program_id');
-                }])
-                ->get()
-                ->pluck('Programs')
-                ->flatten()
-                ->unique('program_id')
-                ->contains('program_name', $program),
+                ->whereHas(
+                    'Levels', function ($levelQuery) use ($program) {
+                        $levelQuery->whereHas(
+                            'Programs', function ($programQuery) use ($program) {
+                                $programQuery->where('program_name', $program);
+                            },
+                        );
+                    },
+                )
+                ->exists(),
             default => false,
         };
     }
