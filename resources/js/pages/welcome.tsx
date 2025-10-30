@@ -322,7 +322,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 {/* Close Button */}
                                 <motion.button
                                     onClick={handleCloseModal}
-                                    className="absolute top-6 right-6 z-10 rounded-full bg-white/80 p-2 transition-colors duration-150 hover:bg-white"
+                                    className="absolute top-3 right-3 z-10 rounded-full bg-white/80 p-2 transition-colors duration-150 hover:bg-white"
                                     whileHover={{ scale: shouldReduceMotion ? 1 : 1.05 }}
                                     whileTap={{ scale: shouldReduceMotion ? 1 : 0.9 }}
                                     aria-label="Close"

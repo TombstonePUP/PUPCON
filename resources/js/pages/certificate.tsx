@@ -22,7 +22,7 @@ export default function Certificate() {
                     />
 
                     {/* Certificate Page Content */}
-                    <article className="certificate-page mt-8 w-[75%]">
+                    <article className="certificate-page py-12 w-[75%]">
                         {/* Main Content Section */}
                         <section className="main-content mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-12 text-center">
                             <motion.div

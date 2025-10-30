@@ -222,6 +222,8 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                 </Link>
                             ))}
                         </div>
+
+
                     ) : (
                         <div className="py-12 text-center">
                             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">

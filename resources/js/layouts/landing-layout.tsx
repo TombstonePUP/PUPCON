@@ -524,7 +524,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
             </AnimatePresence>
 
             {/* Main */}
-            <main className="flex-1 pb-15">{children}</main>
+            <main className="flex-1">{children}</main>
 
             {/* Footer */}
             <footer className="relative min-h-[500px] bg-[#7f1414] text-white">
@@ -546,22 +546,22 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Quick Links</h3>
                             <ul className="space-y-3">
                                 <li>
-                                    <Link
+                                    <a
                                         href="https://pupsinta.freshservice.com/support/home"
                                         className="flex items-center gap-2 transition hover:text-yellow-300"
                                     >
                                         <Mail className="h-4 w-4" /> PUP SINTA
-                                    </Link>
+                                    </a>
                                 </li>
                                 <li>
-                                    <Link href="https://outlook.office.com/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                    <a href="https://outlook.office.com/" className="flex items-center gap-2 transition hover:text-yellow-300">
                                         <ExternalLink className="h-4 w-4" /> PUP WebMail
-                                    </Link>
+                                    </a>
                                 </li>
                                 <li>
-                                    <Link href="https://www.pup.edu.ph/iapply/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                    <a href="https://www.pup.edu.ph/iapply/" className="flex items-center gap-2 transition hover:text-yellow-300">
                                         <BookOpen className="h-4 w-4" /> PUP iApply
-                                    </Link>
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -570,25 +570,25 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Portals</h3>
                             <ul className="space-y-3">
                                 <li>
-                                    <Link
+                                    <a
                                         href="https://sis1.pup.edu.ph/student/"
                                         className="flex items-center gap-2 transition hover:text-yellow-300"
                                     >
                                         <GraduationCap className="h-4 w-4" /> SIS for Students
-                                    </Link>
+                                    </a>
                                 </li>
                                 <li>
-                                    <Link
+                                    <a
                                         href="https://sis2.pup.edu.ph/faculty/"
                                         className="flex items-center gap-2 transition hover:text-yellow-300"
                                     >
                                         <BookOpen className="h-4 w-4" /> SIS for Faculty
-                                    </Link>
+                                    </a>
                                 </li>
                                 <li>
-                                    <Link href="https://sis8.pup.edu.ph/" className="flex items-center gap-2 transition hover:text-yellow-300">
+                                    <a href="https://sis8.pup.edu.ph/" className="flex items-center gap-2 transition hover:text-yellow-300">
                                         <ExternalLink className="h-4 w-4" /> PUPSIS
-                                    </Link>
+                                    </a>
                                 </li>
                                 <li>
                                     {user?.roles?.role_name === 'Accreditor' ? (
@@ -614,25 +614,25 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Socials</h3>
                             <ul className="space-y-3">
                                 <li>
-                                    <Link
+                                    <a
                                         href="https://www.facebook.com/profile.php?id=100064299686924"
                                         className="flex items-center gap-2 transition hover:text-yellow-300"
                                     >
                                         <Facebook className="h-4 w-4" /> PUPSJ Facebook
-                                    </Link>
+                                    </a>
                                 </li>
                                 <li>
-                                    <Link
+                                    <a
                                         href="https://www.facebook.com/ThePUPOfficial"
                                         className="flex items-center gap-2 transition hover:text-yellow-300"
                                     >
                                         <Facebook className="h-4 w-4" /> PUP Sta. Mesa Facebook
-                                    </Link>
+                                    </a>
                                 </li>
                                 <li>
-                                    <Link href="/" className="flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>
+                                    <a href="/" className="flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>
                                         <Home className="h-4 w-4" /> Go to Home Page
-                                    </Link>
+                                    </a>
                                 </li>
                             </ul>
                         </div>

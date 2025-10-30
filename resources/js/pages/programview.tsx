@@ -49,10 +49,9 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
         return (
             <div
                 ref={ref}
-                className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:border-[#7f1414] ${
-                    inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                }`}
-                // style={{ transitionDelay: `${index * 50}ms` }}
+                className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:border-[#7f1414] ${inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                    }`}
+            // style={{ transitionDelay: `${index * 50}ms` }}
             >
                 <div className="flex flex-col space-y-3">
                     <div className="relative">
@@ -71,10 +70,9 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
     return (
         <div
             ref={ref}
-            className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
-                inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
-            // style={{ transitionDelay: `${index * 50}ms` }}
+            className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                }`}
+        // style={{ transitionDelay: `${index * 50}ms` }}
         >
             <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
 
@@ -85,9 +83,8 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
                         <img
                             src={faculty.photo}
                             alt={faculty.name}
-                            className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${
-                                imgLoaded ? 'opacity-100' : 'opacity-0'
-                            }`}
+                            className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${imgLoaded ? 'opacity-100' : 'opacity-0'
+                                }`}
                             onLoad={() => setImgLoaded(true)}
                             onError={(e) => {
                                 const target = e.target as HTMLImageElement;
@@ -237,37 +234,41 @@ export default function Programs({ program }: PerProgramProps) {
                             {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
                                 {user?.roles?.role_name === 'Accreditor' ? (
-                                    <div className="relative">
-                                        <div
-                                            onMouseEnter={() => setDropdownOpen(true)}
-                                            className="flex w-60 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
-                                        >
-                                            <span className="font-medium whitespace-nowrap">Accreditation Level {level}</span>
-                                            <ChevronRight
-                                                className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
-                                            />
-                                        </div>
+                                    program.levels.length > 1 ? (
+                                        <div className="relative">
+                                            <div
+                                                onMouseEnter={() => setDropdownOpen(true)}
+                                                className="flex w-60 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
+                                            >
+                                                <span className="font-medium whitespace-nowrap">Accreditation Level {level}</span>
+                                                <ChevronRight
+                                                    className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
+                                                />
+                                            </div>
 
-                                        <div
-                                            className={`absolute top-0 left-48 h-full overflow-hidden rounded-r-xl border-t border-r border-b border-white/30 backdrop-blur-md transition-all duration-300 ${
-                                                dropdownOpen ? 'w-72 opacity-100' : 'w-0 opacity-0'
-                                            }`}
-                                        >
-                                            <div className="flex h-full bg-white/10">
-                                                {[1, 2, 3, 4, 5, 6].map((lvl) => (
-                                                    <button
-                                                        key={lvl}
-                                                        onClick={() => handleLevelChange(lvl)}
-                                                        className={`flex-1 border-r border-white/20 px-3 py-3 text-sm text-white transition-all duration-200 last:border-r-0 hover:bg-[#7f1414]/30 ${
-                                                            level === lvl ? 'bg-[#7f1414]/20 font-semibold' : ''
-                                                        }`}
-                                                    >
-                                                        {lvl}
-                                                    </button>
-                                                ))}
+                                            <div
+                                                className={`absolute top-0 left-48 h-full overflow-hidden rounded-r-xl border-t border-r border-b border-white/30 backdrop-blur-md transition-all duration-300 ${dropdownOpen ? 'w-72 opacity-100' : 'w-0 opacity-0'
+                                                    }`}
+                                            >
+                                                <div className="flex h-full bg-white/10">
+                                                    {program.levels.map((lvlObj) => (
+                                                        <button
+                                                            key={lvlObj.level}
+                                                            onClick={() => handleLevelChange(lvlObj.level)}
+                                                            className={`flex-1 border-r border-white/20 px-3 py-3 text-sm text-white transition-all duration-200 last:border-r-0 hover:bg-[#7f1414]/30 ${level === lvlObj.level ? 'bg-[#7f1414]/20 font-semibold' : ''
+                                                                }`}
+                                                        >
+                                                            {lvlObj.level}
+                                                        </button>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    ) : (
+                                        <label className="w-60 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20">
+                                            Accreditation Level {program.levels[0]?.level}
+                                        </label>
+                                    )
                                 ) : (
                                     <label className="mb-3 block text-xl font-medium opacity-90">
                                         Accreditation Level {program.levels[0]?.level}
@@ -282,7 +283,7 @@ export default function Programs({ program }: PerProgramProps) {
                                 <div
                                     key={i}
                                     className="flex items-center gap-4 rounded-xl border border-white/20 bg-white/10 px-6 py-4 backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20"
-                                    // style={{ animationDelay: `${i * 200}ms` }}
+                                // style={{ animationDelay: `${i * 200}ms` }}
                                 >
                                     <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/20">
                                         {fact.icon}
@@ -301,14 +302,13 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
                 </section>
 
-                <div className="flex flex-col items-center gap-40">
+                <div className="flex flex-col items-center gap-20 mb-10">
                     {/* --- Overview --- */}
                     <div
                         ref={overviewRef}
                         id="overview"
-                        className={`mt-16 w-[82%] transition-all duration-700 ${
-                            overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                        }`}
+                        className={`mt-16 w-[82%] transition-all duration-700 ${overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                            }`}
                     >
                         <div className="relative overflow-hidden rounded-xl">
                             <div className="border-black-90 grid grid-cols-1 rounded-xl border-1 transition-all duration-300 hover:border-[#7f1414] lg:grid-cols-5">
@@ -333,9 +333,8 @@ export default function Programs({ program }: PerProgramProps) {
                                     <img
                                         src="/images/campus/comlab.jpg"
                                         alt="Computer Lab"
-                                        className={`h-full w-full object-cover transition-all duration-700 ${
-                                            !overviewImageLoading ? 'opacity-100' : 'opacity-0'
-                                        }`}
+                                        className={`h-full w-full object-cover transition-all duration-700 ${!overviewImageLoading ? 'opacity-100' : 'opacity-0'
+                                            }`}
                                         onLoad={() => setOverviewImageLoading(false)}
                                     />
                                 </div>
@@ -353,9 +352,8 @@ export default function Programs({ program }: PerProgramProps) {
                             {program.objectives?.map((objective, index) => (
                                 <div
                                     key={objective.program_objective_id}
-                                    className={`group border-black-90 relative flex w-full max-w-2xs flex-col justify-start overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] gap-4 ${
-                                        objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                                    }`}
+                                    className={`group border-black-90 relative flex w-full max-w-2xs flex-col justify-start overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] gap-4 ${objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                        }`}
                                 >
                                     {/* Objective Header */}
                                     <div className="relative">
@@ -457,12 +455,11 @@ export default function Programs({ program }: PerProgramProps) {
                                         .map((area, index) => (
                                             <div
                                                 key={area.area_id}
-                                                className={`transition-all duration-500 ${
-                                                    areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                                                }`}
-                                                // style={{
-                                                //     transitionDelay: areasInView ? `${index * 120}ms` : '0ms',
-                                                // }}
+                                                className={`transition-all duration-500 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                                    }`}
+                                            // style={{
+                                            //     transitionDelay: areasInView ? `${index * 120}ms` : '0ms',
+                                            // }}
                                             >
                                                 <AreaCard
                                                     imageSrc={area.image_path || '/images/placeholder.png'}

@@ -28,7 +28,7 @@ export default function Programs({ programs }: ProgramsProps) {
                         ]}
                     />
 
-                    <div className="mx-auto mt-10 w-[75%]">
+                    <div className="mx-auto my-10 w-[75%]">
                         {programs?.length > 0 ? (
                             <div className="grid gap-10">
                                 {programs.map((program) => (
@@ -61,11 +61,17 @@ export default function Programs({ programs }: ProgramsProps) {
                                                             {program.program_description}
                                                         </p>
 
-                                                         {(user?.roles?.role_name === 'Accreditor') && (
+                                                        {(user?.roles?.role_name === 'Accreditor') && (
                                                             <div className='rounded-xl absolute top-[-8px] right-[-8px] size-25 flex items-center justify-center px-3 py-1 text-2xl text-white font-semibold bg-[#7f1414] shadow-md'>
                                                                 N/A
                                                             </div>
-                                                        )}  
+                                                        )}
+
+                                                        <div className="items-end flex justify-end">
+                                                            <p className="w-fit rounded-full bg-[#7f1414]/20 text-[#7f1414] px-4 py-1 text-sm font-semibold border border-[#7f1414]/40 text-right w-3/4">
+                                                                Accreditation Level {program.levels[0]?.level}
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

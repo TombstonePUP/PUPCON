@@ -28,7 +28,7 @@ export default function Programs() {
                         ]}
                     />
 
-                    <div className="grid w-[75%] grid-cols-4 gap-2">
+                    <div className="grid w-[75%] grid-cols-4 gap-2 py-12">
                         <div className="group overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white duration-300 hover:border-[#7f1414]">
                             <div className="grid place-items-center bg-[linear-gradient(120deg,#7f1414_0%,#c12c2c_100%)]">
                                 <img

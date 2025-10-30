@@ -8,6 +8,7 @@ import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { FileText, Pencil, Plus, Save, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { Head } from '@inertiajs/react';
 
 // Section Imports //
 import { Button } from '@/components/ui/button';
@@ -70,6 +71,7 @@ const AboutContent = () => {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Content Management" />
             <div className="flex h-full flex-1 flex-col gap-4 p-6">
                 {/* Header Section */}
                 <div className="mb-2 rounded-lg border border-gray-200 bg-white p-8">
@@ -328,9 +330,8 @@ const AboutContent = () => {
                                         <button
                                             key={section.id}
                                             onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
-                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
+                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                                }`}
                                         >
                                             {section.label}
                                         </button>
