@@ -8,46 +8,7 @@ import { Award, BookOpen, Building, Calendar, School, Star, Trophy } from 'lucid
 // import 'swiper/css/pagination';
 
 export default function History() {
-    const milestones = [
-        {
-            year: '2008',
-            event: 'Establishment of PUP San Juan Campus',
-            description: 'Founded with the mission to democratize quality education in the National Capital Region',
-            icon: <Building className="h-6 w-6" />,
-            highlight: true,
-        },
-        {
-            year: '2012',
-            event: 'First Accreditation Visit by AACCUP',
-            description: 'Achieved initial accreditation marking our commitment to educational excellence',
-            icon: <Award className="h-6 w-6" />,
-        },
-        {
-            year: '2016',
-            event: 'Launch of the IT Research Laboratory',
-            description: 'Established state-of-the-art facilities to support technological advancement',
-            icon: <School className="h-6 w-6" />,
-        },
-        {
-            year: '2020',
-            event: 'Shift to Hybrid Learning Model',
-            description: 'Successfully adapted to new educational paradigms during the global pandemic',
-            icon: <BookOpen className="h-6 w-6" />,
-        },
-        {
-            year: '2024',
-            event: 'PUPSJ Ranked Top 10 in NCR for Education Programs',
-            description: 'Recognition for outstanding academic programs and student achievements',
-            icon: <Trophy className="h-6 w-6" />,
-            highlight: true,
-        },
-        {
-            year: '2025',
-            event: 'Current AACCUP Survey Visit',
-            description: 'Ongoing evaluation for continued accreditation and program enhancement',
-            icon: <Calendar className="h-6 w-6" />,
-        },
-    ];
+   
 
     const presidents = [
         {
@@ -188,70 +149,8 @@ export default function History() {
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                                    <div className="rounded-xl bg-gradient-to-br from-[#800020] to-[#9b0026] p-4 text-center text-white">
-                                        <div className="text-2xl font-bold">17</div>
-                                        <div className="text-sm opacity-90">Years of Excellence</div>
-                                    </div>
-                                    <div className="rounded-xl bg-gradient-to-br from-[#800020] to-[#9b0026] p-4 text-center text-white">
-                                        <div className="text-2xl font-bold">5,000+</div>
-                                        <div className="text-sm opacity-90">Alumni</div>
-                                    </div>
-                                    <div className="rounded-xl bg-gradient-to-br from-[#800020] to-[#9b0026] p-4 text-center text-white">
-                                        <div className="text-2xl font-bold">7</div>
-                                        <div className="text-sm opacity-90">Degree Programs</div>
-                                    </div>
-                                    <div className="rounded-xl bg-gradient-to-br from-[#800020] to-[#9b0026] p-4 text-center text-white">
-                                        <div className="text-2xl font-bold">Top 10</div>
-                                        <div className="text-sm opacity-90">NCR Ranking</div>
-                                    </div>
-                                </div>
                             </section>
 
-                            {/* Timeline */}
-                            <section id="timeline">
-                                <h2 className="mb-8 text-2xl font-semibold text-[#7f1414]">Campus Timeline</h2>
-                                <div className="relative">
-                                    {/* Timeline line */}
-                                    <div className="absolute top-0 bottom-0 left-8 w-0.5 bg-gradient-to-b from-[#800020] to-[#80002050]"></div>
-
-                                    <div className="space-y-8">
-                                        {milestones.map((m, i) => (
-                                            <motion.div
-                                                key={i}
-                                                className={`relative pl-20 ${m.highlight ? '-ml-4 rounded-xl bg-gradient-to-r from-[#7f14141a] to-transparent p-6' : ''}`}
-                                                initial={{ opacity: 0, x: -20 }}
-                                                whileInView={{ opacity: 1, x: 0 }}
-                                                viewport={{ once: true }}
-                                                transition={{ delay: i * 0.1 }}
-                                            >
-                                                {/* Timeline dot */}
-                                                <div
-                                                    className={`absolute top-3 left-6 h-4 w-4 rounded-full border-4 ${m.highlight ? 'border-white bg-[#7f1414] shadow-lg' : 'border-[#7f1414] bg-white'}`}
-                                                ></div>
-
-                                                {/* Content */}
-                                                <div className="flex items-start gap-4">
-                                                    <div
-                                                        className={`rounded-xl p-3 ${m.highlight ? 'bg-[#7f1414] text-white' : 'bg-gray-100 text-[#7f1414]'}`}
-                                                    >
-                                                        {m.icon}
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <div className="mb-2 flex items-center gap-2">
-                                                            <span className="text-2xl font-bold text-[#7f1414]">{m.year}</span>
-                                                            {m.highlight && <Star className="h-5 w-5 text-yellow-500" />}
-                                                        </div>
-                                                        <h3 className="mb-2 text-lg font-semibold text-gray-900">{m.event}</h3>
-                                                        <p className="text-gray-600">{m.description}</p>
-                                                    </div>
-                                                </div>
-                                            </motion.div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </section>
 
                             {/* Past Presidents */}
                             <section id="presidents">
