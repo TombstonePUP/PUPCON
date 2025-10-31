@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Files;
+namespace App\Http\Controllers\Parameters;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Benchmarks\BenchmarkRequest;

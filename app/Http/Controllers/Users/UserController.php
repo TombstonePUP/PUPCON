@@ -23,11 +23,19 @@ class UserController extends Controller
         $programs = Programs::select('program_id', 'program_name')
             ->where('under_survey', true)
             ->with([
-                'Areas' => function ($query) {
-                    $query->select('area_id', 'area_number', 'area_name', 'program_id');
+                'Levels' => function ($query) {
+                    $query->select('accreditation_level_id', 'program_id', 'level')
+                        ->where('is_active', true);
+                },
+                'Levels.Areas' => function ($query) {
+                    $query->select('area_id', 'area_number', 'area_name', 'accreditation_level_id');
                 },
             ])
             ->get();
+        $programs->map(function ($program) {
+            $program->levels = $program->Levels->first();
+            unset($program->Levels);
+            return $program; });
         $roles = [];
         if($user->Roles->role_name == 'Coordinator'){
             $roles = Roles::select('role_id', 'role_name')
@@ -45,9 +53,12 @@ class UserController extends Controller
                     $query->select('roles.role_id', 'roles.role_name');
                 },
                 'Areas' => function ($query) {
-                    $query->select('areas.area_id', 'areas.area_number', 'areas.area_name', 'areas.program_id');
+                    $query->select('areas.area_id', 'areas.area_number', 'areas.area_name', 'areas.accreditation_level_id');
                 },
-                'Areas.Programs' => function ($query) {
+                'Areas.Levels' => function ($query) {
+                    $query->select('accreditation_level_id', 'program_id', 'level');
+                },
+                'Areas.Levels.Programs' => function ($query) {
                     $query->select('programs.program_id', 'programs.degree_type', 'programs.program_name', 'programs.color');
                 },
             ])->get();
@@ -94,16 +105,6 @@ class UserController extends Controller
             ->with('type', 'success')
             ->with('title', "User Created Successfully")
             ->with('message', "A new user has been created and notified via email.");
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function updateUserCredentials(UserRequest $request)
-    {
-        dd("hello");
-        $validated = $request->validated();
-        dd($validated);
     }
 
     /**

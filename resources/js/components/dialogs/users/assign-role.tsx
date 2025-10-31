@@ -1,13 +1,12 @@
-"use client"
+'use client';
 
-import { AssignableAreas, AssignablePrograms, AssignableRoles, UserRecords } from "@/types/user-management"
-import { Button } from "@/components/ui/button"
-import { useForm } from "@inertiajs/react";
-import { User2 } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import InputError from "@/components/input-error";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog"
-
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { AssignableAreas, AssignablePrograms, AssignableRoles, UserRecords } from '@/types/user-management';
+import { useForm } from '@inertiajs/react';
+import { User2 } from 'lucide-react';
 
 interface AssignRoleDialogProps {
     user: UserRecords;
@@ -23,24 +22,18 @@ interface AssignUserRoleForm {
     assigned_role: number;
 }
 
-export function AssignRoleDialog({ user, programRoles, roles, onClose }: AssignRoleDialogProps) {
-    const {
-        data,
-        setData,
-        patch,
-        processing,
-        errors,
-        reset,
-    } = useForm<AssignUserRoleForm>({
+export function AssignRole({ user, programRoles, roles, onClose }: AssignRoleDialogProps) {
+    const { data, setData, patch, processing, errors, reset } = useForm<AssignUserRoleForm>({
         user_id: user.user_id,
-        assigned_programs: user.areas?.map(p => p.program_id) || [],
-        assigned_areas: user.areas?.map(a => a.area_id) || [],
+        assigned_programs: user.areas?.map((area) => area.levels?.programs?.program_id) || [],
+        assigned_areas: user.areas?.map((a) => a.area_id) || [],
         assigned_role: user.roles?.role_id || null,
     });
 
     const assignUserRole = (e: React.FormEvent) => {
+        console.log(data);
         e.preventDefault();
-        patch(route("users.update.roles"), {
+        patch(route('users.update.roles'), {
             onSuccess: () => {
                 reset();
                 onClose();
@@ -62,8 +55,7 @@ export function AssignRoleDialog({ user, programRoles, roles, onClose }: AssignR
             // Remove areas under this program
             setData(
                 'assigned_areas',
-                data.assigned_areas.filter(
-                    areaId => !program.areas.some((a) => a.area_id === areaId)),
+                data.assigned_areas.filter((areaId) => !program.levels.areas.some((a) => a.area_id === areaId)),
             );
         }
     };
@@ -85,51 +77,51 @@ export function AssignRoleDialog({ user, programRoles, roles, onClose }: AssignR
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
-                <form>
+                <form onSubmit={assignUserRole} className="space-y-2">
                     <DialogHeader>
-                        <DialogTitle className='flex items-center gap-2'>
+                        <DialogTitle className="flex items-center gap-2">
                             <User2 className="h-5 w-5 text-[#7f1414]" />
                             Assign Roles
                         </DialogTitle>
-                        <DialogDescription>
-                            Assign a role to the user
-                        </DialogDescription>
+                        <DialogDescription>Assign a role to the user</DialogDescription>
                     </DialogHeader>
                     <div>
                         <Label className="mb-1 block text-sm font-medium">
                             Assign Role
-                            <Label className='text-[#7f1414]' >*</Label>
+                            <Label className="text-[#7f1414]">*</Label>
                         </Label>
                         <div className="grid grid-cols-3 gap-2">
-                            {roles.map(role => (
+                            {roles.map((role) => (
                                 <label
                                     key={role.role_id}
-                                    className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground whitespace-nowrap">
+                                    className="text-foreground mb-0 flex items-center gap-2 text-sm font-normal whitespace-nowrap"
+                                >
                                     <input
                                         type="radio"
                                         name="assigned_role"
                                         value={role.role_id}
                                         checked={data.assigned_role === role.role_id}
                                         onChange={() => {
-                                            setData("assigned_role", role.role_id);
+                                            setData('assigned_role', role.role_id);
                                         }}
                                         disabled={processing}
-                                        className="accent-ring " />
-                                        {role.role_name}
+                                        className="accent-ring"
+                                    />
+                                    {role.role_name}
                                 </label>
                             ))}
                         </div>
-                        <InputError message={errors.assigned_role} className="mt-1"/>
+                        <InputError message={errors.assigned_role} className="mt-1" />
                     </div>
                     {(data.assigned_role === 3 || data.assigned_role === 4) && (
                         <div>
-                            <Label className="mb-1 block text-sm font-medium mb-2">Programs & Areas</Label>
+                            <Label className="mb-1 mb-2 block text-sm font-medium">Programs & Areas</Label>
                             <div className="flex flex-col gap-3">
-                                {programRoles.map(program => {
+                                {programRoles.map((program) => {
                                     const isProgramChecked = data.assigned_programs.includes(program.program_id);
                                     return (
                                         <div key={program.program_id}>
-                                            <label className="flex items-center gap-3 text-sm mb-0 font-normal text-foreground">
+                                            <label className="text-foreground mb-0 flex items-center gap-3 text-sm font-normal">
                                                 <input
                                                     type="checkbox"
                                                     className="accent-ring"
@@ -142,15 +134,15 @@ export function AssignRoleDialog({ user, programRoles, roles, onClose }: AssignR
                                             </label>
 
                                             {isProgramChecked && (
-                                                <div className="ml-6 mt-2">
-                                                    <div className="grid grid-cols-5 gap-2 flex-wrap">
-                                                        {program.areas?.length > 0 ? (
-                                                            program.areas.map((area) => {
+                                                <div className="mt-2 ml-6">
+                                                    <div className="grid grid-cols-5 flex-wrap gap-2">
+                                                        {program.levels?.areas?.length > 0 ? (
+                                                            program.levels?.areas.map((area) => {
                                                                 const isAreaChecked = data.assigned_areas.includes(area.area_id);
                                                                 return (
                                                                     <label
                                                                         key={area.area_id}
-                                                                        className="flex items-center gap-2 text-sm mb-0 font-normal text-foreground"
+                                                                        className="text-foreground mb-0 flex items-center gap-2 text-sm font-normal"
                                                                     >
                                                                         <input
                                                                             type="checkbox"
@@ -165,9 +157,7 @@ export function AssignRoleDialog({ user, programRoles, roles, onClose }: AssignR
                                                                 );
                                                             })
                                                         ) : (
-                                                            <div className="col-span-5 text-sm text-gray-500 italic">
-                                                                No areas available
-                                                            </div>
+                                                            <div className="col-span-5 text-sm text-gray-500 italic">No areas available</div>
                                                         )}
                                                     </div>
                                                 </div>
@@ -182,17 +172,13 @@ export function AssignRoleDialog({ user, programRoles, roles, onClose }: AssignR
                     )}
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button
-                                variant="outline"
-                                onClick={() => onClose()}
-                            >
+                            <Button variant="outline" onClick={() => onClose()}>
                                 Cancel
                             </Button>
                         </DialogClose>
                         <Button
                             variant="noborder"
                             type="submit"
-                            onClick={assignUserRole}
                         >
                             Submit
                         </Button>
@@ -200,6 +186,5 @@ export function AssignRoleDialog({ user, programRoles, roles, onClose }: AssignR
                 </form>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
-

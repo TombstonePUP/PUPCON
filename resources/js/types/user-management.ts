@@ -22,23 +22,40 @@ export interface AssignedAreas {
     area_number: string;
     program_id: number;
     user: UserRecords[];
-    programs?: AssignedPrograms[];
+    levels: AssignedLevels;
     [key: string]: unknown;
 }
+
+export interface AssignedLevels {
+    level_id: number;
+    level_name: string;
+    programs: AssignedPrograms;
+    areas?: AssignedAreas[];
+    [key: string]: unknown;
+}
+
 
 export interface AssignedPrograms {
     program_id: number;
     program_name: string;
     degree_type: string;
     color: string;
-    areas?: AssignedAreas[];
+    levels?: AssignedLevels[];
     [key: string]: unknown;
 }
 
 export interface AssignablePrograms {
     program_id: number;
     program_name: string;
-    areas: AssignableAreas[];
+    levels: Levels[];
+    [key: string]: unknown;
+}
+
+export interface Levels {
+    level_id: number;
+    level_name: string;
+    programs: AssignablePrograms;
+    areas?: AssignableAreas[];
     [key: string]: unknown;
 }
 
@@ -47,7 +64,7 @@ export interface AssignableAreas {
     area_name: string;
     area_number: string;
     program_id: number;
-    programs?: AssignablePrograms;
+    levels: Levels;
     [key: string]: unknown;
 }
 

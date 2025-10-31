@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Files\DocumentRequestController;
-use App\Http\Controllers\Files\AreaParameterController;
-use App\Http\Controllers\Files\AreaParameterOutlinesController;
+use App\Http\Controllers\Parameters\AreaParameterController;
+use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
+use App\Http\Controllers\Parameters\ImportParametersController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,10 +31,12 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     })->name('about.content');
 
     Route::prefix('manage-programs/{program_name}/{level_id}/{area_id}')->as('manage.')->group(function () {
-        Route::controller(AreaParameterController::class)->group(function () {
-            Route::post('/storeParameter', 'store')->name('area.add.parameter');
+        Route::controller(ImportParametersController::class)->group(function () {
             Route::get('/downloadParameterTemplate', 'download')->name('area.download.template');
             Route::post('/importParameters', 'import')->name('area.import.parameters');
+        });
+        Route::controller(AreaParameterController::class)->group(function () {
+            Route::post('/storeParameter', 'store')->name('area.add.parameter');
             Route::patch('/{parameter_id}/updateParameter', 'update')->name('area.update.parameter');
             Route::delete('/{parameter_id}/deleteParameter', 'destroy')->name('area.delete.parameter');
         });

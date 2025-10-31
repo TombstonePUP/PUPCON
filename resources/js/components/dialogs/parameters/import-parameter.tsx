@@ -53,7 +53,8 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
                                 <Button>
                                     <a
                                         href={route('manage.area.download.template', {
-                                            program_name: program,
+                                            program_name: program.program_link,
+                                            level_id: program.levels[0]?.accreditation_level_id,
                                             area_id: area_id,
                                         })}
                                         className="flex flex-row items-center gap-2"
@@ -87,7 +88,7 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
                                         <p className="text-sm text-gray-500">
                                             <span className="font-semibold">Click to upload</span> or drag and drop
                                         </p>
-                                        <p className="text-xs text-gray-500">PDF</p>
+                                        <p className="text-xs text-gray-500">CSV</p>
                                     </div>
                                     <input
                                         type="file"

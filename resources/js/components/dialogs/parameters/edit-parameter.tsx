@@ -50,7 +50,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
             program_name: program.program_link,
             level_id: program.levels[0]?.accreditation_level_id,
             area_id: area_id,
-            area_parameter_id: parameter.area_parameter_id,
+            parameter_id: parameter.area_parameter_id,
         }), {
             onSuccess: () => {
                 reset('parameter_name', 'parameter_description', 'area_parameter_id');

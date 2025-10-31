@@ -3,8 +3,7 @@
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Files\AreaFilesController;
 use App\Http\Controllers\Files\AreaFormsController;
-use App\Http\Controllers\Files\AreaParameterController;
-use App\Http\Controllers\Files\AreaParameterOutlinesController;
+use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use Illuminate\Support\Facades\Route;
 

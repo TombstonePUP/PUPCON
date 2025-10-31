@@ -19,7 +19,7 @@ interface DisableUserDialogProps {
   onClose: () => void;
 }
 
-export function DisableUserDialog({ user, onClose }: DisableUserDialogProps) {
+export function DisableUser({ user, onClose }: DisableUserDialogProps) {
     const {
         data,
         patch,

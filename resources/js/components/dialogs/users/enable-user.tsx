@@ -19,7 +19,7 @@ interface EnableUserDialogProps {
     onClose: () => void;
 }
 
-export function EnableUserDialog({ user, onClose }: EnableUserDialogProps) {
+export function EnableUser({ user, onClose }: EnableUserDialogProps) {
     const {
         data,
         patch,

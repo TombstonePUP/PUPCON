@@ -74,11 +74,11 @@ export function getUserColumns({programRoles, roles, resolveDialog}: UserRecordP
                 const role = row.original.roles?.role_name || '';
                 let programs = row.original.areas?.map(p => {
                     const regex = /\b[A-Z]/g;
-                    const program = p.programs?.program_name.match(regex).join('');
-                    const degree_type = p.programs?.degree_type.match(regex).join('');
+                    const program = p.levels.programs?.program_name.match(regex).join('');
+                    const degree_type = p.levels.programs?.degree_type.match(regex).join('');
                     return {
                         program_name: degree_type + program,
-                        color: p.programs?.color || "gray",
+                        color: p.levels.programs?.color || "gray",
                     };
                 }) || [];
 
@@ -123,7 +123,7 @@ export function getUserColumns({programRoles, roles, resolveDialog}: UserRecordP
                             <Badge
                                 key={idx}
                                 variant="outline"
-                                className={`1px-1.5 text-muted-foreground border-${area?.programs.color}-500`}
+                                className={`1px-1.5 text-muted-foreground border-${area?.levels.programs.color}-500`}
                             >
                                 Area {area.area_number}
                             </Badge>
