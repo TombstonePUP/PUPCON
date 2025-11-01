@@ -31,14 +31,7 @@ export default function History() {
         },
     ];
 
-    const achievements = [
-        { year: '2008', title: 'Campus Established', count: '1' },
-        { year: '2012', title: 'First Graduates', count: '150+' },
-        { year: '2016', title: 'Research Projects', count: '25+' },
-        { year: '2020', title: 'Online Courses', count: '100%' },
-        { year: '2024', title: 'Alumni Network', count: '5,000+' },
-    ];
-
+  
     const galleryImages = Array.from({ length: 12 }, (_, i) => ({
         src: `/images/events/${i + 1}.jpg`,
         caption: `Campus Event ${i + 1}`,
@@ -177,26 +170,6 @@ export default function History() {
                                                 <p className="mb-3 font-semibold text-[#800020]">{p.tenure}</p>
                                                 <p className="text-sm text-gray-600">{p.achievements}</p>
                                             </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            </section>
-
-                            {/* Key Achievements */}
-                            <section id="achievements">
-                                <h2 className="mb-8 text-2xl font-semibold text-[#7f1414]">Key Achievements</h2>
-                                <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-5">
-                                    {achievements.map((achievement, i) => (
-                                        <motion.div
-                                            key={i}
-                                            className="rounded-xl border border-gray-200 bg-white p-6 text-center transition-all duration-300 hover:border-[#800020]"
-                                            initial={{ opacity: 0, y: 20 }}
-                                            whileInView={{ opacity: 1, y: 0 }}
-                                            viewport={{ once: true }}
-                                        >
-                                            <div className="mb-2 text-3xl font-bold text-[#800020]">{achievement.count}</div>
-                                            <div className="mb-1 text-sm font-medium text-gray-900">{achievement.title}</div>
-                                            <div className="text-xs text-gray-500">{achievement.year}</div>
                                         </motion.div>
                                     ))}
                                 </div>

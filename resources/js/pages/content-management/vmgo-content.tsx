@@ -794,7 +794,7 @@ const VmgoContentSection: React.FC = () => {
             {/* --- ADD/EDIT CAMPUS GOAL MODAL --- */}
             {isGoalModalOpen && (
                 <div className="animate-in fade-in-0 fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="animate-in fade-in-0 zoom-in-95 w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl">
+                    <div className="animate-in fade-in-0 zoom-in-95 w-full max-w-2xl rounded-lg bg-white p-6">
                         <div className="flex items-center justify-between">
                             <h3 className="text-lg font-semibold text-gray-900">{editingGoal ? 'Edit Campus Goal' : 'Add New Campus Goal'}</h3>
                             <button onClick={resetGoalForm} className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">

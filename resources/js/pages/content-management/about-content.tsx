@@ -12,6 +12,10 @@ import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import HistoryContentSection from './history-content';
 import VmgoContentSection from './vmgo-content';
+import AdminContentSection from './admin-content'
+import FacultyContentSection from './faculty-content';
+import FacilitiesContentSection from './facilities-content';
+import LocalTaskForceContentSection from './localtaskforce-content';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -472,7 +476,8 @@ const AboutContent = () => {
     // --- Refs for scrolling ---
     const missionVisionRef = useRef(null);
     const historyRef = useRef(null);
-    const goalsRef = useRef(null); // This wraps VmgoContentSection
+    const administrationRef = useRef(null);
+    const goalsRef = useRef(null); 
     const facultiesRef = useRef(null);
     const facilitiesRef = useRef(null);
     const localTaskForceRef = useRef(null);
@@ -486,6 +491,7 @@ const AboutContent = () => {
         { id: 'about', label: 'About Page', ref: missionVisionRef },
         { id: 'vmgo', label: 'Vision, Mission & Goals', ref: goalsRef },
         { id: 'history', label: 'History', ref: historyRef },
+        { id: 'administration', label: 'Administration', ref: administrationRef },
         { id: 'faculties', label: 'Faculty & Staff', ref: facultiesRef },
         { id: 'facilities', label: 'Facilities', ref: facilitiesRef },
         { id: 'task-force', label: 'Local Task Force', ref: localTaskForceRef },
@@ -524,16 +530,20 @@ const AboutContent = () => {
                                 <HistoryContentSection />
                             </div>
 
+                             <div ref={administrationRef} className="scroll-mt-6">
+                                <AdminContentSection />
+                            </div>
+
                             <div ref={facultiesRef} className="scroll-mt-6">
-                                <PlaceholderSection title="Faculty & Staff" />
+                                <FacultyContentSection />
                             </div>
 
                             <div ref={facilitiesRef} className="scroll-mt-6">
-                                <PlaceholderSection title="Facilities" />
+                                <FacilitiesContentSection />
                             </div>
 
                             <div ref={localTaskForceRef} className="scroll-mt-6">
-                                <PlaceholderSection title="Local Task Force" />
+                               <LocalTaskForceContentSection />
                             </div>
                         </div>
                     </div>
