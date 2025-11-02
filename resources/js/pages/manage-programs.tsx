@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { NotebookIcon } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -45,14 +46,21 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
             <Head title="Manage Programs" />
             <div className="flex h-full flex-1 flex-col gap-6 p-6">
                 {/* Header Section */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-semibold text-gray-900">Program Management</h1>
-                        <p className="mt-1 text-sm text-gray-600">Manage academic programs for PUP San Juan</p>
+                <div className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
+                    <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
+                            <NotebookIcon className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="ml-2">
+                            <h1 className="text-xl font-semibold text-gray-900">PROGRAM MANAGEMENT</h1>
+                            <p className="text-sm text-gray-500">Manage academic programs for PUP San Juan.</p>
+                        </div>
                     </div>
+                </div>
+                <div className="flex items-center justify-between">
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button variant="noborder" className="w-50">
+                            <Button variant="noborder" className="w-50 ">
                                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         strokeLinecap="round"
@@ -181,8 +189,8 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                 <Link
                                     key={program.program_id}
                                     href={route('manage.program', {
-                                            program_name: program.program_link,
-                                            level_id: program.levels[0]?.accreditation_level_id || 0,
+                                        program_name: program.program_link,
+                                        level_id: program.levels[0]?.accreditation_level_id || 0,
                                     })}
                                     className="group"
                                 >
@@ -222,8 +230,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                 </Link>
                             ))}
                         </div>
-
-
                     ) : (
                         <div className="py-12 text-center">
                             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">

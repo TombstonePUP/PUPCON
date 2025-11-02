@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/text-area';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import { EditIcon, FileText, Link, Plus, Trash2, X } from 'lucide-react';
+import { EditIcon, FileText, LibrarySquare, Link, Plus, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -16,19 +16,17 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
     <button className={`p-1 text-gray-400 transition-colors hover:text-red-600 ${className}`} type="button" {...props}>
         {children}
     </button>
 );
 
-
 type DocumentForm = {
     id: number;
     title: string;
     desc: string;
-    file_path: string | null; 
+    file_path: string | null;
 };
 
 type ServiceLink = {
@@ -36,7 +34,7 @@ type ServiceLink = {
     title: string;
     desc: string;
     href: string;
-    icon_name: string; 
+    icon_name: string;
 };
 
 // --- Static Data ---
@@ -72,11 +70,9 @@ const initialServiceLinks: ServiceLink[] = [
     },
 ];
 
-
 const getNewId = (arr: { id: number }[]) => (arr.length > 0 ? Math.max(...arr.map((item) => item.id)) + 1 : 1);
 
 const OthersContentSection: React.FC = () => {
-
     const [pageData, setPageData] = useState({
         title: 'Other Services & Portals',
         subtitle:
@@ -233,15 +229,15 @@ const OthersContentSection: React.FC = () => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="flex h-full flex-1 flex-col gap-4 p-6">
-                 {/* Header Section */}
+                {/* Header Section */}
                 <div className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
                     <div className="flex items-center gap-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
-                            <FileText className="h-6 w-6 text-white" />
+                            <LibrarySquare className="h-6 w-6 text-white" />
                         </div>
                         <div className="ml-2">
                             <h1 className="text-xl font-semibold text-gray-900">OTHER SERVICES</h1>
-                            <p className="text-sm text-gray-500 ">Manage all content related to the "Other services" page and its sub-sections.</p>
+                            <p className="text-sm text-gray-500">Manage all content related to the "Other services" page and its sub-sections.</p>
                         </div>
                     </div>
                 </div>
@@ -283,9 +279,9 @@ const OthersContentSection: React.FC = () => {
                             <div className="flex min-h-[300px] rounded-lg border border-gray-200">
                                 {/* Left Pane: Form List */}
                                 <div className="flex w-2/3 flex-col justify-between border-r border-gray-200 bg-gray-50/50 p-6">
-                                    <div className="max-h-[300px] overflow-y-auto pr-2 ">
+                                    <div className="max-h-[300px] overflow-y-auto pr-2">
                                         <h4 className="mb-3 text-xs text-gray-500">Select a Form</h4>
-                                        <div className="space-y-1 grid grid-cols-2 gap-3">
+                                        <div className="grid grid-cols-2 gap-3 space-y-1">
                                             {documentForms.map((form) => (
                                                 <div
                                                     key={form.id}
@@ -376,7 +372,7 @@ const OthersContentSection: React.FC = () => {
                                 <div className="flex w-2/3 flex-col justify-between border-r border-gray-200 bg-gray-50/50 p-6">
                                     <div className="max-h-[300px] overflow-y-auto pr-2">
                                         <h4 className="mb-3 text-xs text-gray-500">Select a Service</h4>
-                                        <div className="space-y-1 grid grid-cols-2 gap-3">
+                                        <div className="grid grid-cols-2 gap-3 space-y-1">
                                             {serviceLinks.map((service) => (
                                                 <div
                                                     key={service.id}
@@ -420,7 +416,7 @@ const OthersContentSection: React.FC = () => {
                                     <div className="mt-4 border-t border-gray-200 pt-4">
                                         <Button
                                             onClick={handleShowAddServiceModal}
-                                            className="flex  cursor-pointer items-center justify-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
+                                            className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
                                         >
                                             <Plus className="mr-2 h-4 w-4" /> Add New Service
                                         </Button>

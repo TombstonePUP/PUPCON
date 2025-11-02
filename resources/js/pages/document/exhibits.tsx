@@ -1,5 +1,6 @@
 import type React from 'react';
 
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -11,11 +12,10 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { Edit, Eye, Plus, Trash2 } from 'lucide-react';
+import { BookAIcon, Edit, Eye, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -82,16 +82,22 @@ export default function ExhibitAdmin() {
             <Head title="Exhibits" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
                 {/* Header Section */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-semibold text-gray-900">Exhibits Management</h1>
-                        <p className="mt-1 text-sm text-gray-600">Manage program exhibits and documentation</p>
+                <div className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
+                    <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
+                            <BookAIcon className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="ml-2">
+                            <h1 className="text-xl font-semibold text-gray-900">Exhibits</h1>
+                            <p className="text-sm text-gray-500">Manage all content related to the "Exhibits" page and its sub-sections.</p>
+                        </div>
                     </div>
-
+                </div>
+                <div className="flex items-center justify-between">
                     {/* Add Exhibit Dialog */}
                     <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button variant="noborder" className='w-50'>
+                            <Button variant="noborder" className="w-50">
                                 <Plus className="h-4 w-4" />
                                 Add Exhibit
                             </Button>
@@ -143,7 +149,7 @@ export default function ExhibitAdmin() {
                 </div>
 
                 {/* Exhibits Grid */}
-                <div className="rounded-lg border border-gray-200 bg-white p-6 ">
+                <div className="rounded-lg border border-gray-200 bg-white p-6">
                     <div className="mb-4">
                         <h2 className="text-lg font-semibold text-gray-900">Available Exhibits</h2>
                         <p className="text-sm text-gray-600">Manage your program exhibits and documentation</p>
@@ -155,7 +161,7 @@ export default function ExhibitAdmin() {
                                 key={exhibit.id}
                                 className="overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
                             >
-                                <div className="flex aspect-video items-center justify-center ">
+                                <div className="flex aspect-video items-center justify-center">
                                     <img
                                         src={exhibit.image || '/placeholder.svg?height=200&width=300'}
                                         alt={exhibit.title}
@@ -168,14 +174,10 @@ export default function ExhibitAdmin() {
 
                                     <div className="flex items-center gap-2">
                                         <Button variant="outline" size="sm" onClick={() => handleViewExhibit(exhibit)} className="flex-1">
-                                            <Eye className="  h-4 w-4" />
+                                            <Eye className="h-4 w-4" />
                                             View
                                         </Button>
-                                        <Button
-                                            variant="noborder"
-                                            size="sm"
-                                            onClick={() => handleEditClick(exhibit)}
-                                        >
+                                        <Button variant="noborder" size="sm" onClick={() => handleEditClick(exhibit)}>
                                             <Edit className="h-4 w-4" />
                                         </Button>
                                         {/* <Button

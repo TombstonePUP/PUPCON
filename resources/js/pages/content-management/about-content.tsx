@@ -5,16 +5,16 @@ import SectionFooter from '@/components/ui/section-footer';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import { EditIcon, FileText, Plus, Trash2, X } from 'lucide-react';
+import { EditIcon, InfoIcon, Plus, Trash2, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import HistoryContentSection from './history-content';
-import VmgoContentSection from './vmgo-content';
-import AdminContentSection from './admin-content'
-import FacultyContentSection from './faculty-content';
+import AdminContentSection from './admin-content';
 import FacilitiesContentSection from './facilities-content';
+import FacultyContentSection from './faculty-content';
+import HistoryContentSection from './history-content';
 import LocalTaskForceContentSection from './localtaskforce-content';
+import VmgoContentSection from './vmgo-content';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,7 +31,7 @@ const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, clas
 
 type Organization = {
     id: number;
-    type_id: number; 
+    type_id: number;
     name: string;
     affiliation: string;
 };
@@ -146,7 +146,6 @@ const OrganizationsSection = () => {
         }
     };
 
-
     return (
         <>
             <div className="mb-6">
@@ -258,8 +257,8 @@ const OrganizationsSection = () => {
 
             {/* --- MODAL FOR ORGANIZATIONS --- */}
             {isOrgTypeModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 animate-in fade-in-0 ">
-                    <div className="w-full max-w-md rounded-lg bg-white p-6 animate-in fade-in-0 zoom-in-95">
+                <div className="animate-in fade-in-0 fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+                    <div className="animate-in fade-in-0 zoom-in-95 w-full max-w-md rounded-lg bg-white p-6">
                         <div className="flex items-center justify-between">
                             <h3 className="text-lg font-semibold text-gray-900">{editingOrgType ? 'Edit Type' : 'Add New Type'}</h3>
                             <button onClick={resetOrgTypeForm} className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -279,7 +278,7 @@ const OrganizationsSection = () => {
                             <button
                                 type="button"
                                 onClick={resetOrgTypeForm}
-                                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
+                                className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                             >
                                 Cancel
                             </button>
@@ -298,7 +297,7 @@ const OrganizationsSection = () => {
             {/*  Add/Edit Organization Modal --- */}
             {isOrgModalOpen && (
                 <div data-state="open" className="animate-in fade-in-0 fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-                    <div data-state="open" className="animate-in fade-in-0 zoom-in-95 w-full max-w-md rounded-lg bg-white p-6 y transform">
+                    <div data-state="open" className="animate-in fade-in-0 zoom-in-95 y w-full max-w-md transform rounded-lg bg-white p-6">
                         <div className="flex items-center justify-between">
                             <h3 className="text-lg font-semibold text-gray-900">{editingOrg ? 'Edit Organization' : 'Add New Organization'}</h3>
                             <button onClick={resetOrgForm} className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -333,7 +332,7 @@ const OrganizationsSection = () => {
                             <button
                                 type="button"
                                 onClick={resetOrgForm}
-                                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
+                                className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                             >
                                 Cancel
                             </button>
@@ -351,7 +350,6 @@ const OrganizationsSection = () => {
         </>
     );
 };
-
 
 const AboutPageSection = () => {
     const [aboutData, setAboutData] = useState({
@@ -371,7 +369,7 @@ const AboutPageSection = () => {
     };
 
     const handlePreview = () => {
-        window.open('/about', '_blank'); 
+        window.open('/about', '_blank');
     };
 
     return (
@@ -458,7 +456,6 @@ const AboutPageSection = () => {
     );
 };
 
-
 const PlaceholderSection: React.FC<{ title: string }> = ({ title }) => (
     <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
         <div className="p-8">
@@ -468,7 +465,6 @@ const PlaceholderSection: React.FC<{ title: string }> = ({ title }) => (
     </div>
 );
 
-
 const AboutContent = () => {
     const [activeSection, setActiveSection] = useState('about');
 
@@ -476,7 +472,7 @@ const AboutContent = () => {
     const missionVisionRef = useRef(null);
     const historyRef = useRef(null);
     const administrationRef = useRef(null);
-    const goalsRef = useRef(null); 
+    const goalsRef = useRef(null);
     const facultiesRef = useRef(null);
     const facilitiesRef = useRef(null);
     const localTaskForceRef = useRef(null);
@@ -503,11 +499,11 @@ const AboutContent = () => {
                 <div className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
                     <div className="flex items-center gap-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
-                            <FileText className="h-6 w-6 text-white" />
+                            <InfoIcon className="h-6 w-6 text-white" />
                         </div>
                         <div className="ml-2">
                             <h1 className="text-xl font-semibold text-gray-900">CAMPUS INFORMATION</h1>
-                            <p className="text-sm text-gray-500 ">Manage all content related to the "About" page and its sub-sections.</p>
+                            <p className="text-sm text-gray-500">Manage all content related to the "About" page and its sub-sections.</p>
                         </div>
                     </div>
                 </div>
@@ -529,7 +525,7 @@ const AboutContent = () => {
                                 <HistoryContentSection />
                             </div>
 
-                             <div ref={administrationRef} className="scroll-mt-6">
+                            <div ref={administrationRef} className="scroll-mt-6">
                                 <AdminContentSection />
                             </div>
 
@@ -542,7 +538,7 @@ const AboutContent = () => {
                             </div>
 
                             <div ref={localTaskForceRef} className="scroll-mt-6">
-                               <LocalTaskForceContentSection />
+                                <LocalTaskForceContentSection />
                             </div>
                         </div>
                     </div>
