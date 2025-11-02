@@ -24,8 +24,8 @@ interface OutlineProps {
     program?: string;
     area_id?: number;
     outlineCategory?: ParameterOutlineCategory[];
-    resolveDocDialog: ({ type, benchmark }: DocDialogParams) => void;
-    resolveBenchDialog: ({ type, benchmark, parameter }: BenchDialogParams) => void;
+    resolveDocDialog: (params: DocDialogParams) => void;
+    resolveBenchDialog: (params: BenchDialogParams) => void;
 }
 
 interface OutlineNode extends ParameterOutlines {

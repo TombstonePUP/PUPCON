@@ -19,24 +19,6 @@ use function Symfony\Component\Clock\now;
 class AreaFormsController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * @return void
-     */
-    public function index(): void
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return void
-     */
-    public function create(): void
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request): RedirectResponse
@@ -45,7 +27,7 @@ class AreaFormsController extends Controller
             'area_id' => 'required|integer|exists:areas,area_id',
             'area_form_category_id' => 'required|integer|exists:area_form_categories,area_form_category_id',
             'form_image' => 'nullable|file|mimes:jpg,jpeg,png',
-            'form_file' => 'nullable|file|mimes:pdf',
+            'document' => 'nullable|file|mimes:pdf',
         ]);
 
         $user = Auth::user();
@@ -60,14 +42,16 @@ class AreaFormsController extends Controller
 
         $areaForm = new AreaForms();
 
-        if ($request->hasFile('form_file')) {
-            $formFileName = "{$category}.{$validated['form_file']->getClientOriginalExtension()}";
+        if ($request->hasFile('document')) {
+            $formFileName = "{$category}.{$validated['document']->getClientOriginalExtension()}";
             $formFilePath = "{$program}/{$area->area_name}/area-forms/files";
-            $request->file('form_file')->storeAs($formFilePath, $formFileName, 'public');
+            $request->file('document')->storeAs($formFilePath, $formFileName, 'public');
             $formFilePath = "{$formFilePath}/{$formFileName}";
             //Populate the areaForm model
             $areaForm->file_name = $formFileName;
             $areaForm->file_path = $formFilePath;
+            $areaForm->uploaded_by = $user->user_id;
+            $areaForm->uploaded_at = now();
             $areaForm->file_status_id = $pending;
             //Log the activity
             $activityLog = new ActivityLog();
@@ -187,7 +171,6 @@ class AreaFormsController extends Controller
      */
     public function destroy(Request $request, AreaForms $areaForms): RedirectResponse
     {
-        dd($request->all());
         $areaForm = $areaForms->find($request->form_id);
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();

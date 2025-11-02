@@ -26,9 +26,9 @@ interface ParameterAccordionProps {
     program: string;
     areaParameters?: AreaParameters[];
     parameterOutlineCategories?: ParameterOutlineCategory[];
-    resolveDocDialog: ({type, benchmark}: DocDialogParams) => void;
-    resolveBenchDialog: ({type, benchmark, parameter}: BenchDialogParams) => void;
-    resolveParamDialog: ({type, parameter}: ParamDialogParams) => void;
+    resolveDocDialog: (params: DocDialogParams) => void;
+    resolveBenchDialog: (params: BenchDialogParams) => void;
+    resolveParamDialog: (params: ParamDialogParams) => void;
 }
 
 export default function ParameterAccordion({

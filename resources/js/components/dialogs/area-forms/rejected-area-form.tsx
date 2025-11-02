@@ -1,16 +1,17 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { ParameterOutlines, Program } from '@/types';
+import { AreaForms} from '@/types';
 import { InfoIcon } from 'lucide-react';
 
-interface RejectedDocumentProps {
-    outline: ParameterOutlines;
+interface RejectedAreaFormProps {
+    form: AreaForms
     onClose: () => void;
 }
 
-export function RejectedDocument({ outline, onClose }: RejectedDocumentProps) {
+export function RejectedAreaForm({ form, onClose }: RejectedAreaFormProps) {
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
@@ -22,7 +23,7 @@ export function RejectedDocument({ outline, onClose }: RejectedDocumentProps) {
                     <DialogDescription>Comments for rejected document</DialogDescription>
                 </DialogHeader>
                 <Label className="text-muted-foreground text-sm">
-                    {outline.area_files?.file_rejection_reason}
+                    {form.file_rejection_reason}
                 </Label>
                 <DialogFooter className="space-x-2">
                     <DialogClose asChild>
