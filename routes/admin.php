@@ -30,6 +30,10 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         return Inertia::render('content-management/about-content');
     })->name('about.content');
 
+     Route::get('/other-services', function () {
+        return Inertia::render('content-management/other-services');
+    })->name('other.services');
+
     Route::prefix('manage-programs/{program_name}/{level_id}/{area_id}')->as('manage.')->group(function () {
         Route::controller(ImportParametersController::class)->group(function () {
             Route::get('/downloadParameterTemplate', 'download')->name('area.download.template');

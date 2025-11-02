@@ -19,7 +19,6 @@ type Facility = {
     name: string;
     description: string;
     image_url: string | null;
-    sort_order: number;
 };
 
 const initialFacilities: Facility[] = [
@@ -28,21 +27,18 @@ const initialFacilities: Facility[] = [
         name: 'Library',
         description: 'PUP San Juan now uses a computerized library system to improve service efficiency. It allows users to locate resources, borrow books and...',
         image_url: '/images/facilities/library.png',
-        sort_order: 1,
     },
     {
         id: 2,
         name: 'Conference Room',
         description: 'The Conference Room is a space accessible to faculty members and students— designed for meetings, presentations, and collaborative...',
         image_url: '/images/facilities/conference-room.png', 
-        sort_order: 2,
     },
     {
         id: 3,
         name: 'Computer Laboratories',
         description: 'The Computer Laboratory provides students with access to computers for quizzes, defenses, and other activities requiring multiple workstations. It...',
         image_url: '/images/facilities/comlab.png',
-        sort_order: 3,
     },
 ];
 
@@ -81,11 +77,9 @@ const FacilitiesContentSection: React.FC = () => {
         subtitle: 'PUP San Juan Campus is equipped with modern facilities designed to support academic excellence and student development. Our state-of-the-art infrastructure provides an optimal learning environment for all students, faculty, and staff. Explore our comprehensive range of facilities that make learning engaging, collaborative, and effective.',
     });
 
-    // --- State for Facilities ---
     const [facilities, setFacilities] = useState<Facility[]>(initialFacilities);
     const [selectedFacilityId, setSelectedFacilityId] = useState<number | null>(initialFacilities[0]?.id || null);
     
-    // --- Facility Modal State ---
     const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
     const [editingFacility, setEditingFacility] = useState<Facility | null>(null);
     const [facilityFormData, setFacilityFormData] = useState({
@@ -118,7 +112,6 @@ const FacilitiesContentSection: React.FC = () => {
         window.open('/about/facilities', '_blank'); 
     };
 
-    // --- Facility CRUD Actions ---
     const resetFacilityForm = () => {
         setEditingFacility(null);
         setFacilityFormData({ name: '', description: '' });
@@ -172,11 +165,9 @@ const FacilitiesContentSection: React.FC = () => {
             };
             setFacilities(facilities.map(p => p.id === editingFacility.id ? updatedFacility : p));
         } else {
-            const newSortOrder = facilities.length > 0 ? Math.max(...facilities.map(p => p.sort_order)) + 1 : 1;
             const newId = getNewId(facilities);
             const newFacility: Facility = {
                 id: newId,
-                sort_order: newSortOrder,
                 ...facilityFormData,
                 image_url: newImageUrl,
             };
@@ -211,6 +202,7 @@ const FacilitiesContentSection: React.FC = () => {
                             placeholder="Enter page subtitle..."
                             value={pageData.subtitle}
                             onChange={(e) => handleChange('subtitle', e.target.value)}
+                            // @ts-ignore
                             autoResize
                             minHeight={100}
                         />
@@ -375,3 +367,4 @@ const FacilitiesContentSection: React.FC = () => {
 };
 
 export default FacilitiesContentSection;
+

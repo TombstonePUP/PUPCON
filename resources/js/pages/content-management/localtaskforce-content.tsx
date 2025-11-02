@@ -20,7 +20,6 @@ type Official = {
     position: string; 
     sub_position?: string | null; 
     image_url: string | null;
-    sort_order: number;
 };
 
 type AreaMember = {
@@ -40,7 +39,6 @@ type TaskForceArea = {
     chairman_image_url: string | null;
     co_chairmen: CoChair[];
     members: AreaMember[];
-    sort_order: number;
     co_chairman_image_url: string | null;
 };
 
@@ -51,7 +49,6 @@ const initialHeadOfficials: Official[] = [
         position: 'Overall Chairman',
         sub_position: 'Campus Director',
         image_url: '/images/taskforce/alagon.png',
-        sort_order: 1,
     },
     {
         id: 2,
@@ -59,7 +56,6 @@ const initialHeadOfficials: Official[] = [
         position: 'Accreditation Coordinator',
         sub_position: 'Quality Assurance Coordinator',
         image_url: '/images/taskforce/corpuz.png',
-        sort_order: 2,
     },
 ];
 
@@ -74,7 +70,6 @@ const initialAreas: TaskForceArea[] = [
             { id: 101, name: 'Assoc. Prof. Rizza Validez-De-Vera' },
             { id: 102, name: 'Inst. Raymond Ruiz' },
         ],
-        sort_order: 1,
         co_chairman_image_url: null,
     },
     {
@@ -84,7 +79,6 @@ const initialAreas: TaskForceArea[] = [
         chairman_image_url: '/images/taskforce/ysulat.png',
         co_chairmen: [],
         members: [],
-        sort_order: 2,
         co_chairman_image_url: null,
     },
 ];
@@ -218,11 +212,9 @@ const LocalTaskForceContentSection: React.FC = () => {
             };
             setHeadOfficials(headOfficials.map(o => o.id === editingOfficial.id ? updatedOfficial : o));
         } else {
-            const newSortOrder = headOfficials.length > 0 ? Math.max(...headOfficials.map(o => o.sort_order)) + 1 : 1;
             const newId = getNewId(headOfficials);
             const newOfficial: Official = {
                 id: newId,
-                sort_order: newSortOrder,
                 ...officialFormData,
                 image_url: newImageUrl,
             };
@@ -307,11 +299,9 @@ const LocalTaskForceContentSection: React.FC = () => {
             };
             setAreas(areas.map(a => a.id === editingArea.id ? updatedArea : a));
         } else {
-            const newSortOrder = areas.length > 0 ? Math.max(...areas.map(a => a.sort_order)) + 1 : 1;
             const newId = getNewId(areas);
             const newArea: TaskForceArea = {
                 id: newId,
-                sort_order: newSortOrder,
                 name: areaFormData.name,
                 chairman_name: areaFormData.chairman_name,
                 chairman_image_url: newChairImageUrl,
@@ -488,8 +478,8 @@ const LocalTaskForceContentSection: React.FC = () => {
                             {selectedArea && (
                                 <div className="space-y-6">
                                     <div>
-                                        <p className="text-xs font-normal text-gray-600">Chairman</p>
-                                        <div className="flex items-center gap-4 mt-2">
+                                        <h5 className="mb-2 text-sm font-semibold text-gray-700">Chairman</h5>
+                                        <div className="flex items-center gap-6 mt-2">
                                             <img
                                                 src={selectedArea.chairman_image_url || 'https://placehold.co/100x100/eeeeee/7f1414?text=No+Photo'}
                                                 alt={selectedArea.chairman_name}
@@ -498,7 +488,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                                             />
                                             <div>
                                                 <h4 className="text-lg font-medium text-gray-900 break-words">{selectedArea.chairman_name}</h4>
-                                                <p className="text-sm font-normal text-red-700">{selectedArea.name}</p>
+                                                <p className="text-xs font-normal text-gray-700">{selectedArea.name}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -506,7 +496,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                                     {/* --- Co-Chairmen List --- */}
                                     {selectedArea.co_chairmen.length > 0 && (
                                         <div>
-                                            <p className="text-xs font-normal text-gray-600">Co-Chairman</p>
+                                           <h5 className="mb-2 text-sm font-semibold text-gray-700">Co-chairman</h5>
                                             <div className="space-y-3 mt-2">
                                                 {selectedArea.co_chairmen.map(coChair => (
                                                     <div key={coChair.id} className="flex items-center gap-4">

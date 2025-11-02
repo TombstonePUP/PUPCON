@@ -1,26 +1,23 @@
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import SectionFooter from '@/components/ui/section-footer';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/text-area';
-import { EditIcon, Plus, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react'; 
+import { Textarea } from '@/components/ui/text-area';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { EditIcon, Plus, Trash2, X } from 'lucide-react';
 
 type Item = {
     id: number;
     description: string;
-    sort_order: number; 
 };
 type Pillar = {
     id: number;
     title: string;
-    sort_order: number; 
     items: Item[];
 };
 
 type CampusGoal = {
     id: number;
-    sort_order: number;
     title: string;
     description: string;
     title_filipino: string;
@@ -39,22 +36,19 @@ const initialPillars: Pillar[] = [
     {
         id: 1,
         title: 'Teaching and Learning',
-        sort_order: 1,
         items: [
-            { id: 101, description: 'World-class faculty members', sort_order: 1 },
-            { id: 102, description: 'Cutting-edge research facilities', sort_order: 2 },
+            { id: 101, description: 'World-class faculty members' }, 
+            { id: 102, description: 'Cutting-edge research facilities' }, 
         ],
     },
     {
         id: 2,
         title: 'Research and Extension',
-        sort_order: 2,
-        items: [{ id: 201, description: 'Leadership training programs', sort_order: 1 }],
+        items: [{ id: 201, description: 'Leadership training programs' }], 
     },
     {
         id: 3,
         title: 'Internal Governance',
-        sort_order: 3,
         items: [],
     },
 ];
@@ -62,7 +56,6 @@ const initialPillars: Pillar[] = [
 const initialCampusGoals: CampusGoal[] = [
     {
         id: 1,
-        sort_order: 1,
         title: 'Academic Excellence',
         description:
             'To promote and strengthen academic excellence to be able to produce globally competitive, socioeconomically responsible, and culturally and gender-inclusive graduates.',
@@ -72,7 +65,6 @@ const initialCampusGoals: CampusGoal[] = [
     },
     {
         id: 2,
-        sort_order: 2,
         title: 'Empowered Faculty Members and Employees',
         description:
             'To uplift the knowledge, skills, values and wellness of faculty members and employees through relevant capacity building by intensifying partnership with government agencies, private institutions, and individuals.',
@@ -85,7 +77,6 @@ const initialCampusGoals: CampusGoal[] = [
 const getNewId = (arr: { id: number }[]) => (arr.length > 0 ? Math.max(...arr.map((item) => item.id)) + 1 : 1);
 
 const VmgoContentSection: React.FC = () => {
-    // --- Pillar State ---
     const [pillars, setPillars] = useState<Pillar[]>(initialPillars);
     const [selectedPillarId, setSelectedPillarId] = useState<number | null>(initialPillars[0]?.id || null);
     const [loading, setLoading] = useState(false);
@@ -108,7 +99,7 @@ const VmgoContentSection: React.FC = () => {
     const [editingGoal, setEditingGoal] = useState<CampusGoal | null>(null);
     const [selectedGoalId, setSelectedGoalId] = useState<number | null>(initialCampusGoals[0]?.id || null);
 
-    const [goalFormData, setGoalFormData] = useState<Omit<CampusGoal, 'id' | 'sort_order'>>({
+    const [goalFormData, setGoalFormData] = useState<Omit<CampusGoal, 'id'>>({ 
         title: '',
         description: '',
         title_filipino: '',
@@ -125,13 +116,11 @@ const VmgoContentSection: React.FC = () => {
             return;
         }
 
-        const newSortOrder = pillars.length > 0 ? Math.max(...pillars.map((p) => p.sort_order)) + 1 : 1;
         const newId = getNewId(pillars);
 
         const newPillar: Pillar = {
             id: newId,
             title: newPillarTitle,
-            sort_order: newSortOrder,
             items: [],
         };
 
@@ -195,14 +184,12 @@ const VmgoContentSection: React.FC = () => {
         const pillar = pillars.find((p) => p.id === addingItemToPillarId);
         if (!pillar) return;
 
-        const newSortOrder = pillar.items.length > 0 ? Math.max(...pillar.items.map((item) => item.sort_order)) + 1 : 1;
         const allItems = pillars.flatMap((p) => p.items);
         const newId = getNewId(allItems);
 
         const newItem: Item = {
             id: newId,
             description: newItemDescription,
-            sort_order: newSortOrder,
         };
 
         setPillars(
@@ -311,11 +298,9 @@ const VmgoContentSection: React.FC = () => {
             const updatedGoal = { ...editingGoal, ...goalFormData };
             setCampusGoals(campusGoals.map((goal) => (goal.id === editingGoal.id ? updatedGoal : goal)));
         } else {
-            const newSortOrder = campusGoals.length > 0 ? Math.max(...campusGoals.map((g) => g.sort_order)) + 1 : 1;
             const newId = getNewId(campusGoals);
             const newGoal: CampusGoal = {
                 id: newId,
-                sort_order: newSortOrder,
                 ...goalFormData,
             };
             setCampusGoals([...campusGoals, newGoal]);
@@ -506,7 +491,6 @@ const VmgoContentSection: React.FC = () => {
 
                                         {selectedPillar.items.map((item) => (
                                             <div key={item.id}>
-                                                {/* --- EXISTING ITEM DISPLAY --- */}
                                                 <div
                                                     className={`group cursor-pointer items-center justify-between rounded-md border border-gray-100 bg-white p-2 transition-all hover:border-red-200 ${editingItemId === item.id ? 'hidden' : 'flex'}`}
                                                 >
@@ -524,7 +508,6 @@ const VmgoContentSection: React.FC = () => {
                                                     </div>
                                                 </div>
 
-                                                {/* --- INLINE EDIT FORM --- */}
                                                 <div
                                                     className={`overflow-hidden transition-all duration-300 ease-in-out ${editingItemId === item.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} `}
                                                 >
@@ -878,3 +861,4 @@ const VmgoContentSection: React.FC = () => {
 };
 
 export default VmgoContentSection;
+

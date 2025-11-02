@@ -1,6 +1,6 @@
 'use client';
 
-import { Book, Boxes, ChartArea, FileChartColumnIncreasing, GalleryVerticalEnd, Monitor, Notebook, SquareTerminal, SquareUser } from 'lucide-react';
+import { Book, Boxes, ChartArea, FileChartColumnIncreasing, GalleryVerticalEnd, InfoIcon, Library, Monitor, Notebook, SquareTerminal, SquareUser } from 'lucide-react';
 import * as React from 'react';
 
 import { NavMain } from '@/components/nav-main';
@@ -68,23 +68,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   },
               ]
             : []),
-        ...(role === 'Admin' || role === 'Coordinator'
-            ? [
-                  {
-                      title: 'Content Management',
-                      url: '/about-content',
-                      icon: Monitor,
-                  },
-              ]
-            : []),
+        // ...(role === 'Admin' || role === 'Coordinator'
+        //     ? [
+        //           {
+        //               title: 'Content Management',
+        //               url: '/about-content',
+        //               icon: Monitor,
+        //           },
+        //       ]
+        //     : []),
     ];
     const content = [
         ...(role === 'Admin' || role === 'Coordinator'
             ? [
                   {
-                      title: 'News',
-                      url: '/dashboard',
-                      icon: SquareTerminal,
+                      title: 'Campus Information',
+                      url: '/about-content',
+                      icon: InfoIcon,
+                  },
+              ]
+            : []),
+               ...(role === 'Admin' || role === 'Coordinator'
+            ? [
+                  {
+                      title: 'Other Services',
+                      url: '/other-services',
+                      icon: Library,
                   },
               ]
             : []),
@@ -112,7 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavMain label="Accreditation" items={accre} />
-                {/* <NavMain label="Content" items={content} />  */}
+                <NavMain label="Content Management" items={content} /> 
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />

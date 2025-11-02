@@ -4,10 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import SectionFooter from '@/components/ui/section-footer';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/text-area';
 import { EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
     <button className={`p-1 text-gray-400 transition-colors hover:text-red-600 ${className}`} type="button" {...props}>
@@ -21,14 +21,12 @@ type President = {
     years_served: string;
     description: string;
     image_url: string | null;
-    sort_order: number;
 };
 
 type GalleryImage = {
     id: number;
     image_url: string;
     caption: string;
-    sort_order: number;
 };
 
 const initialPresidents: President[] = [
@@ -38,7 +36,6 @@ const initialPresidents: President[] = [
         years_served: '1988-1992',
         description: 'Led the first accreditation process and expanded the campus facilities.',
         image_url: '/images/presidents/prudente.png',
-        sort_order: 1,
     },
     {
         id: 2,
@@ -46,14 +43,13 @@ const initialPresidents: President[] = [
         years_served: '1992-1998',
         description: 'Focused on curriculum development and community extension programs.',
         image_url: '/images/presidents/olonan.png',
-        sort_order: 2,
     },
 ];
 
 const initialGalleryImages: GalleryImage[] = [
-    { id: 1, image_url: '/images/gallery/sample1.jpg', caption: 'Freshmen Orientation 2023', sort_order: 1 },
-    { id: 2, image_url: '/images/gallery/sample2.jpg', caption: 'Campus Intramurals', sort_order: 2 },
-    { id: 3, image_url: '/images/gallery/sample3.jpg', caption: '', sort_order: 3 }, // Example with no caption
+    { id: 1, image_url: '/images/gallery/sample1.jpg', caption: 'Freshmen Orientation 2023' },
+    { id: 2, image_url: '/images/gallery/sample2.jpg', caption: 'Campus Intramurals' },
+    { id: 3, image_url: '/images/gallery/sample3.jpg', caption: '' },
 ];
 
 const getNewId = (arr: { id: number }[]) => (arr.length > 0 ? Math.max(...arr.map((item) => item.id)) + 1 : 1);
@@ -62,7 +58,7 @@ const SharedPhotoPreview: React.FC<{ url: string | null; alt: string; heightClas
     const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
-        setHasError(false); 
+        setHasError(false);
     }, [url]);
 
     if (!url || hasError) {
@@ -99,7 +95,7 @@ const HistoryContentSection: React.FC = () => {
 
     const [isPresidentModalOpen, setIsPresidentModalOpen] = useState(false);
     const [editingPresident, setEditingPresident] = useState<President | null>(null);
-    const [presidentFormData, setPresidentFormData] = useState<Omit<President, 'id' | 'sort_order' | 'image_url'>>({
+    const [presidentFormData, setPresidentFormData] = useState<Omit<President, 'id' | 'image_url'>>({
         name: '',
         years_served: '',
         description: '',
@@ -225,18 +221,16 @@ Seeking wisdom, your gift...
         }
 
         if (editingPresident) {
-            const updatedPresident = {
+            const updatedPresident: President = {
                 ...editingPresident,
                 ...presidentFormData,
                 image_url: newImageUrl,
             };
             setPresidents(presidents.map((p) => (p.id === editingPresident.id ? updatedPresident : p)));
         } else {
-            const newSortOrder = presidents.length > 0 ? Math.max(...presidents.map((p) => p.sort_order)) + 1 : 1;
             const newId = getNewId(presidents);
             const newPresident: President = {
                 id: newId,
-                sort_order: newSortOrder,
                 ...presidentFormData,
                 image_url: newImageUrl,
             };
@@ -290,20 +284,18 @@ Seeking wisdom, your gift...
         }
 
         if (editingGalleryImage) {
-            const updatedImage = {
+            const updatedImage: GalleryImage = {
                 ...editingGalleryImage,
                 image_url: newImageUrl!,
                 caption: caption,
             };
             setGalleryImages(galleryImages.map((g) => (g.id === editingGalleryImage.id ? updatedImage : g)));
         } else {
-            const newSortOrder = galleryImages.length > 0 ? Math.max(...galleryImages.map((g) => g.sort_order)) + 1 : 1;
             const newId = getNewId(galleryImages);
             const newImage: GalleryImage = {
                 id: newId,
                 image_url: newImageUrl!,
                 caption: caption,
-                sort_order: newSortOrder,
             };
             setGalleryImages([...galleryImages, newImage]);
             setSelectedGalleryImageId(newId);
@@ -335,6 +327,7 @@ Seeking wisdom, your gift...
                             placeholder="Enter history page subtitle or description..."
                             value={historyData.subtitle}
                             onChange={(e) => handleChange('subtitle', e.target.value)}
+                            // @ts-ignore
                             autoResize
                             minHeight={100}
                         />
@@ -545,19 +538,28 @@ Seeking wisdom, your gift...
                 {/* --- PUP Hymn Section --- */}
                 <Separator className="my-10 bg-gray-200" />
                 <div className="mb-6">
-                    <h3 className="mb-4 text-base font-semibold text-gray-900">PUP Hymn</h3>
+                    <div className="mb-4 flex items-center justify-between">
+                        <h3 className="text-base font-semibold text-gray-900">PUP Hymn</h3>
+                        <Tabs defaultValue="filipino" className="w-auto">
+                            <TabsList className="grid grid-cols-2">
+                                <TabsTrigger value="filipino" className="data-[state=active]:bg-[#7f1414] data-[state=active]:text-white">
+                                    Filipino
+                                </TabsTrigger>
+                                <TabsTrigger value="english" className="data-[state=active]:bg-[#7f1414] data-[state=active]:text-white">
+                                    English
+                                </TabsTrigger>
+                            </TabsList>
+                        </Tabs>
+                    </div>
 
                     <Tabs defaultValue="filipino" className="w-full">
-                        <TabsList className="grid w-full max-w-sm grid-cols-2">
-                            <TabsTrigger value="filipino" className="data-[state=active]:bg-[#7f1414] data-[state=active]:text-white 
-                            ">
-                                Filipino
-                            </TabsTrigger>
-                            <TabsTrigger value="english" className="data-[state=active]:bg-[#7f1414] data-[state=active]:text-white">
-                                English
-                            </TabsTrigger>
+                        {/* This TabsList is hidden, but it controls the content */}
+                        <TabsList className="hidden">
+                            <TabsTrigger value="filipino">Filipino</TabsTrigger>
+                            <TabsTrigger value="english">English</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="filipino" className="mt-4">
+
+                        <TabsContent value="filipino" className="data-[state=active]:animate-in data-[state=active]:fade-in-0 mt-4">
                             <div className="grid grid-cols-1 gap-6">
                                 <div>
                                     <Label className="mb-2 block text-sm font-medium text-gray-700">Title (Filipino)</Label>
@@ -573,6 +575,7 @@ Seeking wisdom, your gift...
                                         placeholder="Enter Filipino lyrics..."
                                         value={hymnData.lyrics_filipino}
                                         onChange={(e) => handleHymnChange('lyrics_filipino', e.target.value)}
+                                        // @ts-ignore
                                         autoResize
                                         minHeight={200}
                                         className="font-mono"
@@ -580,7 +583,7 @@ Seeking wisdom, your gift...
                                 </div>
                             </div>
                         </TabsContent>
-                        <TabsContent value="english" className="mt-4">
+                        <TabsContent value="english" className="data-[state=active]:animate-in data-[state=active]:fade-in-0 mt-4">
                             <div className="grid grid-cols-1 gap-6">
                                 <div>
                                     <Label className="mb-2 block text-sm font-medium text-gray-700">Title (English)</Label>
@@ -596,6 +599,7 @@ Seeking wisdom, your gift...
                                         placeholder="Enter English lyrics..."
                                         value={hymnData.lyrics_english}
                                         onChange={(e) => handleHymnChange('lyrics_english', e.target.value)}
+                                        // @ts-ignore
                                         autoResize
                                         minHeight={200}
                                         className="font-mono"

@@ -18,7 +18,6 @@ type Official = {
     name: string;
     position: string;
     image_url: string | null;
-    sort_order: number;
 };
 
 const initialOfficials: Official[] = [
@@ -27,21 +26,18 @@ const initialOfficials: Official[] = [
         name: 'Manuel M. Muhi D.Tech., ASEAN Engr.',
         position: 'University President',
         image_url: '/images/officials/muhi.png',
-        sort_order: 1,
     },
     {
         id: 2,
         name: 'Alberto C. Guillo MS (Stat) MA (Econ)',
         position: 'Executive Vice President, Vice President for Planning and Finance (Concurrent)',
         image_url: '/images/officials/guillo.png',
-        sort_order: 2,
     },
     {
         id: 3,
         name: 'Emanuel C. De Guzman Ph.D',
         position: 'Vice President for Academic Affairs',
         image_url: '/images/officials/deguzman.png',
-        sort_order: 3,
     },
 ];
 
@@ -74,17 +70,14 @@ const OfficialPhoto: React.FC<{ url: string | null; alt: string }> = ({ url, alt
 };
 
 const AdminContentSection: React.FC = () => {
-    // --- State for main page ---
     const [pageData, setPageData] = useState({
         title: 'University Officials',
         subtitle: 'Meet the top officials managing PUP and driving university-wide initiatives.',
     });
 
-    // --- State for Officials ---
     const [officials, setOfficials] = useState<Official[]>(initialOfficials);
     const [selectedOfficialId, setSelectedOfficialId] = useState<number | null>(initialOfficials[0]?.id || null);
 
-    // --- Official Modal State ---
     const [isOfficialModalOpen, setIsOfficialModalOpen] = useState(false);
     const [editingOfficial, setEditingOfficial] = useState<Official | null>(null);
     const [officialFormData, setOfficialFormData] = useState({
@@ -112,10 +105,9 @@ const AdminContentSection: React.FC = () => {
     };
 
     const handlePreview = () => {
-        window.open('/about/administration', '_blank'); // Example preview link
+        window.open('/about/administration', '_blank');
     };
 
-    // --- Official CRUD Actions ---
     const resetOfficialForm = () => {
         setEditingOfficial(null);
         setOfficialFormData({ name: '', position: '' });
@@ -169,11 +161,9 @@ const AdminContentSection: React.FC = () => {
             };
             setOfficials(officials.map((p) => (p.id === editingOfficial.id ? updatedOfficial : p)));
         } else {
-            const newSortOrder = officials.length > 0 ? Math.max(...officials.map((p) => p.sort_order)) + 1 : 1;
             const newId = getNewId(officials);
             const newOfficial: Official = {
                 id: newId,
-                sort_order: newSortOrder,
                 ...officialFormData,
                 image_url: newImageUrl,
             };
