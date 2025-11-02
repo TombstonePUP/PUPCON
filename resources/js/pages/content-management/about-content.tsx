@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { EditIcon, InfoIcon, Plus, Trash2, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import AdminContentSection from './admin-content';
@@ -466,7 +466,6 @@ const PlaceholderSection: React.FC<{ title: string }> = ({ title }) => (
 );
 
 const AboutContent = () => {
-    const [activeSection, setActiveSection] = useState('about');
 
     // --- Refs for scrolling ---
     const missionVisionRef = useRef(null);
@@ -492,11 +491,25 @@ const AboutContent = () => {
         { id: 'task-force', label: 'Local Task Force', ref: localTaskForceRef },
     ];
 
+    const [activeSection, setActiveSection] = useState<string | null>(null);
+    const headerRef = useRef<HTMLDivElement | null>(null);
+
+    
+    useEffect(() => {
+        if (!headerRef.current) return;
+        // Wait a tick to ensure layout is stable
+        const timeout = setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            setActiveSection('about');
+        }, 100);
+
+        return () => clearTimeout(timeout);
+    }, [headerRef.current]);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="flex h-full flex-1 flex-col gap-4 p-6">
                 {/* Header Section */}
-                <div className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
+                <div ref={headerRef} className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
                     <div className="flex items-center gap-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
                             <InfoIcon className="h-6 w-6 text-white" />
