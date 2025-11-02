@@ -218,7 +218,7 @@ export interface ParameterOutlines {
     initial?: string;
     areaParameters?: AreaParameters;
     parameterOutlineCategory?: ParameterOutlineCategory;
-    areaFiles?: AreaFiles;
+    area_files?: AreaFiles;
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -245,7 +245,7 @@ export interface AreaFiles {
 export interface FileStatus {
     file_status_id: number;
     status_name: string;
-    areaFiles?: AreaFiles[];
+    area_files?: AreaFiles[];
     areaForms?: AreaForms[];
     [key: string]: unknown; // This allows for additional properties...
 }
@@ -279,6 +279,8 @@ export interface FilesOverview {
     file_id: string;
     file_name: string;
     file_path: string;
+    uploaded_by: string;
+    upload_date: string;
     file_status: string;
     rejection_reason: string;
 }

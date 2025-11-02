@@ -60,4 +60,12 @@ class AreaForms extends Model
     {
         return $this->belongsTo(FileStatus::class, 'file_status_id', 'file_status_id');
     }
+
+    /**
+     * @return BelongsTo<User,AreaForms>
+     */
+    public function User(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'uploaded_by', 'user_id');
+    }
 }

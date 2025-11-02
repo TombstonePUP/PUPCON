@@ -35,7 +35,7 @@ class DocumentRequestController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Approve the specified resource in storage.
      */
     public function approve(Request $request)
     {
@@ -63,11 +63,10 @@ class DocumentRequestController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Reject the specified resource in storage.
      */
     public function reject(Request $request)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'file_id' => 'required|integer',
             'file_type' => 'required|string',
@@ -92,11 +91,10 @@ class DocumentRequestController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Revert the specified resource in storage.
      */
     public function revert(Request $request)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'file_id' => 'required|integer',
             'file_type' => 'required|string'

@@ -3,11 +3,10 @@
 import { AddBenchmark } from "./add-benchmark"
 import { EditBenchmark } from "./edit-benchmark"
 import { DeleteBenchmark } from "./delete-benchmark"
-import { RejectedBenchmark } from "./rejected-benchmark"
 import { Area, AreaParameters, ParameterOutlineCategory, ParameterOutlines, Program } from "@/types"
 
 interface BenchmarkDialogProps {
-    type: "add" | "edit" | "delete" | "rejected"
+    type: "add" | "edit" | "delete";
     benchmark?: ParameterOutlines;
     benchmark_categories?: ParameterOutlineCategory[];
     program: Program;
@@ -38,13 +37,6 @@ export function RenderBenchmarkDialog({ type, benchmark, program, area, paramete
                     onClose={onClose}
                 />
             );
-        case 'rejected':
-            return (
-                <RejectedBenchmark
-                    outline={benchmark}
-                    onClose={onClose}
-                />
-        );
         case 'delete':
             return (
                 <DeleteBenchmark

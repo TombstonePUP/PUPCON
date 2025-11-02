@@ -71,6 +71,7 @@ return new class extends Migration
             $table->text('file_path')->nullable();
             $table->foreignId('uploaded_by')->references('user_id')->on('users')
                 -> onUpdate('cascade')->onDelete('cascade');
+            $table->timestamp('uploaded_at');
             $table->foreignId('file_status_id')->nullable()->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
@@ -84,7 +85,7 @@ return new class extends Migration
             $table->text('file_path');
             $table->foreignId('uploaded_by')->references('user_id')->on('users')
                 -> onUpdate('cascade')->onDelete('cascade');
-            // $table->timestamp('uploaded_at')->useCurrent();
+            $table->timestamp('uploaded_at');
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 -> onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
@@ -111,6 +112,7 @@ return new class extends Migration
             $table->text('file_path');
             $table->foreignId('uploaded_by')->references('user_id')->on('users')
                 -> onUpdate('cascade')->onDelete('cascade');
+            $table->timestamp('uploaded_at');
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
@@ -124,12 +126,15 @@ return new class extends Migration
                 af.area_file_id file_id,
                 af.file_name file_name,
                 af.file_path file_path,
+                CONCAT(u.first_name,' ', u.last_name) uploaded_by,
+                af.uploaded_at,
                 fs.status_name file_status,
                 af.file_rejection_reason rejection_reason
             FROM area_files af
                 LEFT JOIN parameter_outlines po ON po.parameter_outline_id = af.parameter_outline_id
                 LEFT JOIN area_parameters ap ON ap.area_parameter_id = po.area_parameter_id
                 LEFT JOIN areas a ON a.area_id = ap.area_id
+                LEFT JOIN users u ON u.user_id = af.uploaded_by
                 LEFT JOIN file_status fs ON fs.file_status_id = af.file_status_id
             UNION ALL
             SELECT
@@ -138,11 +143,14 @@ return new class extends Migration
                 afo.area_form_id file_id,
                 afo.file_name file_name,
                 afo.file_path file_path,
+                CONCAT(u.first_name,' ', u.last_name) uploaded_by,
+                afo.uploaded_at,
                 fs.status_name file_status,
                 afo.file_rejection_reason rejection_reason
             FROM area_forms afo
                 LEFT JOIN area_form_categories afc on afc.area_form_category_id = afo.area_form_category_id
                 LEFT JOIN areas a ON a.area_id = afo.area_id
+                LEFT JOIN users u ON u.user_id = afo.uploaded_by
                 LEFT JOIN file_status fs ON fs.file_status_id = afo.file_status_id
             UNION ALL
             SELECT
@@ -151,10 +159,13 @@ return new class extends Migration
                 ef.exhibit_file_id file_id,
                 ef.file_name file_name,
                 ef.file_path file_path,
+                CONCAT(u.first_name,' ', u.last_name) uploaded_by,
+                ef.uploaded_at,
                 fs.status_name file_status,
                 ef.file_rejection_reason rejection_reason
             FROM exhibit_files ef
                 LEFT JOIN exhibit_outlines eo ON eo.exhibit_outline_id = ef.exhibit_outline_id
+                LEFT JOIN users u ON u.user_id = ef.uploaded_by
                 LEFT JOIN file_status fs ON fs.file_status_id = ef.file_status_id
         SQL);
 

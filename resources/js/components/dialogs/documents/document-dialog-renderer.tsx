@@ -6,9 +6,10 @@ import { DocumentViewer } from "./view-document"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Area, ParameterOutlines, Program } from "@/types"
+import { RejectedDocument } from "./rejected-document"
 
 interface DocumentDialogProps {
-    type: "view" | "upload" | "delete"
+    type: "view" | "upload" | "delete" | "rejected";
     benchmark?: ParameterOutlines;
     program: Program;
     area: Area;
@@ -66,6 +67,13 @@ export function RenderDocumentDialog({ type, benchmark, program, area, onClose }
                     outline={benchmark}
                     program={program}
                     area_id={area?.area_id}
+                    onClose={onClose}
+                />
+            );
+        case 'rejected':
+            return (
+                <RejectedDocument
+                    outline={benchmark}
                     onClose={onClose}
                 />
             );

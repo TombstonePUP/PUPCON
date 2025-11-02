@@ -25,16 +25,18 @@ class AreaFilesController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'outline_id' => 'nullable|exists:parameter_outlines,parameter_outline_id',
-            'document' => 'required|file|mimes:pdf'
-        ],
-        [
-            'outline_id.exists' => 'The selected outline does not exist.',
-            'document.required' => 'Please upload a PDF document.',
-            'document.file' => 'The uploaded file must be a valid file.',
-            'document.pdf' => 'The uploaded file must be a PDF document.'
-        ]);
+        $validated = $request->validate(
+            [
+                'outline_id' => 'nullable|exists:parameter_outlines,parameter_outline_id',
+                'document' => 'required|file|mimes:pdf'
+            ],
+            [
+                'outline_id.exists' => 'The selected outline does not exist.',
+                'document.required' => 'Please upload a PDF document.',
+                'document.file' => 'The uploaded file must be a valid file.',
+                'document.pdf' => 'The uploaded file must be a PDF document.'
+            ]
+        );
 
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
         $program = Programs::where('program_name', $program)->first();
@@ -60,7 +62,7 @@ class AreaFilesController extends Controller
         $categoryName = $parameterOutlines->parameterOutlineCategory->category_name;
         $parameterName = $parameterOutlines->AreaParameter->parameter_name;
         if ($categoryName === 'No Category') {
-            $initial =substr($parameterName, 0, 1);
+            $initial = substr($parameterName, 0, 1);
         } else {
             $initial = substr($categoryName, 0, 1);
         }
@@ -70,29 +72,29 @@ class AreaFilesController extends Controller
         $fileName = $initial . '.' . $parameterOutlines->outline_number . '.' . $parameterOutlines->outline_description . '.' . $file->getClientOriginalExtension();
         $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level ' . $program->accreditation_level;
         $filePath = "{$program->program_name}/{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
-        
+
         // Ensure temp directory exists
         if (!Storage::disk('public')->exists('temp')) {
             Storage::disk('public')->makeDirectory('temp');
         }
-        
+
         // Store original file temporarily
         $tempFileName = 'temp_' . Str::uuid() . '.pdf';
         $tempFilePath = "temp/{$tempFileName}";
         Storage::disk('public')->putFileAs('temp', $file, $tempFileName);
-        
+
         Log::info('Temp file created: ' . $tempFilePath);
         Log::info('Temp file size: ' . Storage::disk('public')->size($tempFilePath) . ' bytes');
 
         // Optimize PDF
         try {
             Log::info('Starting PDF optimization...');
-             $customTempPath = str_replace('/', '\\', storage_path('app/public/temp'));
-putenv('TMP=' . $customTempPath);
-putenv('TEMP=' . $customTempPath);
+            $customTempPath = str_replace('/', '\\', storage_path('app/public/temp'));
+            putenv('TMP=' . $customTempPath);
+            putenv('TEMP=' . $customTempPath);
 
-    Log::info('Using custom TEMP/TMP path: ' . $customTempPath);
-            
+            Log::info('Using custom TEMP/TMP path: ' . $customTempPath);
+
             $result = PdfOptimizer::fromDisk('public')
                 ->open($tempFilePath)
                 ->toDisk('public')
@@ -100,7 +102,7 @@ putenv('TEMP=' . $customTempPath);
 
             Log::info('Optimization status: ' . ($result->status ? 'SUCCESS' : 'FAILED'));
             Log::info('Optimization message: ' . $result->message);
-            
+
             if (Storage::disk('public')->exists("{$filePath}/{$fileName}")) {
                 Log::info('Optimized file created successfully');
                 Log::info('Optimized file size: ' . Storage::disk('public')->size("{$filePath}/{$fileName}") . ' bytes');
@@ -127,6 +129,8 @@ putenv('TEMP=' . $customTempPath);
             'file_name' => $fileName,
             'file_path' => "{$filePath}/{$fileName}",
             'file_status_id' => $fileStatus,
+            'uploaded_by' => $user->user_id,
+            'uploaded_at' => now(),
         ]);
 
         $activityLog->user_id = $user->user_id;

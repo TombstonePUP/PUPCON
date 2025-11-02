@@ -6,7 +6,7 @@ import { type AreaParameters, type ParameterOutlineCategory, ParameterOutlines} 
 import { buildOutlineTree, RecursiveOutlineForm } from '@/components/recursive-outline';
 
 interface DocDialogParams {
-    type: 'view' | 'upload' | 'delete';
+    type: 'view' | 'upload' | 'delete' | 'rejected';
     benchmark: ParameterOutlines;
 }
 

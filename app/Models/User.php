@@ -84,4 +84,28 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(ActivityLog::class, 'user_id', 'user_id');
     }
+
+    /**
+     * @return HasMany<AreaFiles,User>
+     */
+    public function AreaFiles(): HasMany
+    {
+        return $this->hasMany(AreaFiles::class, 'uploaded_by', 'user_id');
+    }
+
+    /**
+     * @return HasMany<AreaForms,User>
+     */
+    public function AreaForms(): HasMany
+    {
+        return $this->hasMany(AreaForms::class, 'uploaded_by', 'user_id');
+    }
+
+    /**
+     * @return HasMany<ExhibitFiles,User>
+     */
+    public function ExhibitFiles(): HasMany
+    {
+        return $this->hasMany(ExhibitFiles::class, 'uploaded_by', 'user_id');
+    }
 }

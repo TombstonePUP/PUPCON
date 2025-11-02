@@ -23,6 +23,8 @@ class ExhibitFiles extends Model
         'exhibit_outline_id',
         'file_name',
         'file_path',
+        'uploaded_by',
+        'uploaded_at',
         'file_status_id',
         'file_reject_reason',
     ];
@@ -46,5 +48,13 @@ class ExhibitFiles extends Model
     public function FileStatus(): BelongsTo
     {
         return $this->belongsTo(FileStatus::class, 'file_status_id', 'file_status_id');
+    }
+
+    /**
+     * @return BelongsTo<User,ExhibitFiles>
+     */
+    public function User(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'uploaded_by', 'user_id');
     }
 }

@@ -17,7 +17,6 @@ interface DocumentRequests {
 }
 
 export default function Requests({ files }: DocumentRequests) {
-    console.log(files);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Requests" />

@@ -1,7 +1,7 @@
 'use client';
 
 import { DocumentViewer } from '@/components/dialogs/documents/view-document';
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from '@/components/ui/context-menu';
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger } from '@/components/ui/context-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AreaParameters, ParameterOutlineCategory, type ParameterOutlines } from '@/types';
 import { usePage } from '@inertiajs/react';
@@ -9,7 +9,7 @@ import { Circle, CircleCheckIcon, CircleDashedIcon, CircleDotDashedIcon, CircleX
 import { useState } from 'react';
 
 interface DocDialogParams {
-    type: 'view' | 'upload' | 'delete';
+    type: 'view' | 'upload' | 'delete' | 'rejected';
     benchmark: ParameterOutlines;
 }
 
@@ -273,6 +273,17 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
                                     </ContextMenuItem>
                                 )}
 
+                                {outline.area_files?.file_rejection_reason && (
+                                    <ContextMenuItem
+                                        className="cursor-pointer"
+                                        onSelect={() => {
+                                            setTimeout(() => resolveDocDialog({ type: 'rejected', benchmark: outline }), 50);
+                                        }}
+                                    >
+                                        View Rejection Comments
+                                    </ContextMenuItem>
+                                )}
+
                                 {role !== 'Chairman' && role !== 'Accreditor' && (
                                     <>
                                         <ContextMenuItem
@@ -288,6 +299,7 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
 
                                         <ContextMenuItem
                                             className="cursor-pointer"
+                                            variant="destructive"
                                             onSelect={() => {
                                                 setTimeout(() => resolveBenchDialog({ type: 'delete', benchmark: outline }), 50);
                                             }}
@@ -299,6 +311,7 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
 
                                 {!outline.container && outline.area_files && (
                                     <ContextMenuItem
+                                        variant="destructive"
                                         className="cursor-pointer"
                                         onSelect={() => {
                                             setTimeout(() => resolveDocDialog({ type: 'delete', benchmark: outline }), 50);

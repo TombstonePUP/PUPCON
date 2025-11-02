@@ -81,6 +81,33 @@ export const columns: ColumnDef<FilesOverview>[] = [
         enableGlobalFilter: true,
     },
     {
+        accessorKey: 'uploaded_by',
+        header: () => <div className="text-left">Uploaded By</div>,
+        cell: ({ row }) => <div className="text-left">{row.getValue('uploaded_by')}</div>,
+        enableGlobalFilter: true,
+    },
+    {
+        accessorKey: 'uploaded_at',
+        header: ({ column }) => (
+            <Button className="text-left" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                Uploaded At
+                <ArrowUpDown className="ml-2 h-4" />
+            </Button>
+        ),
+        cell: ({ row }) => {
+            const uploadedAt = new Date(row.getValue('uploaded_at') as string);
+            const formattedDate = uploadedAt.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+            });
+            return <div className="text-left">{formattedDate}</div>;
+        },
+        enableGlobalFilter: false,
+    },
+    {
         id: 'actions',
         cell: ({ row }) => {
             const [rejectDialogOpen, setRejectDialogOpen] = useState(false);

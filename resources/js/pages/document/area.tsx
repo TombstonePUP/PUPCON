@@ -22,7 +22,7 @@ interface AreaFilesProps {
 export default function Areas({ program, area, parameterOutlineCategories, areaFormsCategories }: AreaFilesProps) {
     const [dialog, setDialog] = useState<{
         kind: 'document' | 'benchmark' | 'parameter' | null;
-        action: 'view' | 'upload' | 'delete' | 'add' | 'edit' | 'import';
+        action: 'view' | 'upload' | 'delete' | 'add' | 'edit' | 'import' | 'rejected';
         benchmark?: ParameterOutlines;
         benchmark_categories?: ParameterOutlineCategory[];
         parameter?: AreaParameters;
@@ -30,7 +30,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
 
     const openDialog = (
         kind: 'document' | 'benchmark' | 'parameter',
-        action: 'view' | 'upload' | 'delete' | 'add' | 'edit' | 'import',
+        action: 'view' | 'upload' | 'delete' | 'add' | 'edit' | 'import' | 'rejected',
         benchmark?: ParameterOutlines,
         benchmark_categories?: ParameterOutlineCategory,
         parameter?: AreaParameters

@@ -33,6 +33,7 @@ class AreaFormsFactory extends Factory
             'file_name' => fake()->word(),
             'file_path' => fake()->imageUrl(),
             'uploaded_by' => $user->user_id,
+            'uploaded_at' => fake()->dateTimeThisMonth(),
             'file_status_id' => $fileStatusId->file_status_id,
             'file_rejection_reason' => fake()->sentence(),
         ];
