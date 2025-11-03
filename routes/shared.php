@@ -23,14 +23,14 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
 
                     Route::as('area.')->group(function () {
                         Route::controller(AreaFilesController::class)->group(function () {
-                            Route::post('/{area_id}/uploadFile', 'store')->name('upload.file');
-                            Route::delete('/{area_id}/{outline_id}/deleteFile', 'destroy')->name('delete.file');
+                            Route::post('/{area_id}/upload_file', 'store')->name('upload.file');
+                            Route::delete('/{area_id}/{outline_id}/delete_file', 'destroy')->name('delete.file');
                         });
 
                         Route::controller(AreaFormsController::class)->group(function () {
-                            Route::post('/{area_id}/storeForm', 'store')->name('addAreaForm');
-                            Route::post('/{area_id}/{form_id}/updateForm', 'update')->name('updateAreaForm');
-                            Route::delete('/{area_id}/{form_id}/deleteForm', 'destroy')->name('deleteAreaForm');
+                            Route::post('/{area_id}/add_form', 'store')->name('add.area.form');
+                            Route::post('/{area_id}/{form_id}/upload_form', 'upload')->name('upload.area.form');
+                            Route::delete('/{area_id}/{form_id}/delete_form', 'destroy')->name('delete.area.form');
                         });
                     });
                 });

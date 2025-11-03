@@ -1,16 +1,8 @@
-'use client'
+'use client';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { AreaForms, Program } from '@/types';
 import { useForm } from '@inertiajs/react';
@@ -22,99 +14,75 @@ interface UploadAreaFormProps {
     area_id: number;
     form: AreaForms;
     onClose: () => void;
-};
+}
 
 interface UploadAreaFormForm {
-    area_form_id: number | null;
-    area_id: number;
     document: File | null;
 }
 
-export function UploadAreaForm({ program, form,  area_id, onClose }: UploadAreaFormProps) {
-    const {
-        data,
-        setData,
-        post,
-        processing,
-        errors,
-        reset
-    } = useForm<UploadAreaFormForm>({
-        area_form_id: form.area_form_id,
-        area_id: area_id,
+export function UploadAreaForm({ program, form, area_id, onClose }: UploadAreaFormProps) {
+    const { data, setData, post, processing, errors, reset } = useForm<UploadAreaFormForm>({
         document: null,
     });
+
+    console.log(form);
 
     const [isUploading, setIsUploading] = React.useState(false);
 
     const uploadAreaForm = (e: React.FormEvent) => {
+        console.log(data);
         e.preventDefault();
-
-        if (!data.document) {
-            toast.error('No file selected', {
-                description: 'Please select a PDF file before uploading.',
-            });
-            return;
-        }
-
-        try {
-            setIsUploading(true);
-            post(
-                route('manage.area.addAreaForm', {
-                    program_name: program.program_name,
-                    level_id: program.levels[0]?.accreditation_level_id,
-                    area_id: area_id,
-                }),
-                {
-                    onProgress: (progress) => {
-                        if (progress?.percentage) {
-                            toast.info('Uploading...', {
-                                description: (
-                                    <div className="flex w-full items-center gap-1">
-                                        <Progress value={progress.percentage} className="h-2 w-68" />
-                                        <p className="text-right text-xs text-gray-500">{progress.percentage}%</p>
-                                    </div>
-                                ),
-                                id: 'uploading',
-                            });
-                        }
-                    },
-                    onSuccess: () => {
-                        toast.dismiss('uploading');
-                        reset();
-                        setIsUploading(false);
-                        onClose();
-                    },
-                    onError: (errors) => {
-                        toast.dismiss('uploading');
-                        toast.error('Failed to upload document', {
-                            description: errors.document ?? 'There was an error uploading the document.',
+        setIsUploading(true);
+        post(
+            route('manage.area.upload.area.form', {
+                program_name: program.program_name,
+                level_id: program.levels[0]?.accreditation_level_id,
+                area_id: area_id,
+                form_id: form.area_form_id,
+            }),
+            {
+                onProgress: (progress) => {
+                    if (progress?.percentage) {
+                        toast.info('Uploading...', {
+                            description: (
+                                <div className="flex w-full items-center gap-1">
+                                    <Progress value={progress.percentage} className="h-2 w-68" />
+                                    <p className="text-right text-xs text-gray-500">{progress.percentage}%</p>
+                                </div>
+                            ),
+                            id: 'uploading',
                         });
-                        setIsUploading(false);
-                    },
-                }
-            );
-        } catch (error) {
-            console.error('Unexpected upload error:', error);
-            toast.dismiss('uploading');
-            toast.error('Unexpected error occurred', {
-                description: 'Please check your connection or try again later.',
-            });
-            setIsUploading(false);
-        }
+                    }
+                },
+                onSuccess: () => {
+                    toast.dismiss('uploading');
+                    reset();
+                    setIsUploading(false);
+                    onClose();
+                },
+                onError: (errors) => {
+                    toast.dismiss('uploading');
+                    toast.error('Failed to upload document', {
+                        description: errors.document ?? 'There was an error uploading the document.',
+                    });
+                    setIsUploading(false);
+                },
+            },
+        );
     };
 
     return (
-        <Dialog open={true} onOpenChange={() => !isUploading && onClose()}>
+        <Dialog open={true} onOpenChange={() => onClose()}>
             <DialogContent className="max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold">Add Card</DialogTitle>
-                    <DialogDescription>Make a new card for Program Performance Profile, Self-Survey, or Compliance Report</DialogDescription>
+                    <DialogTitle className="text-2xl font-bold">{form.file_name ? 'Update' : 'Upload'} Document</DialogTitle>
+                    <DialogDescription>Upload a Document for this card</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={uploadAreaForm}>
                     <div className="flex flex-col gap-4">
                         <div>
                             <label className="text-muted-foreground mb-1 block text-sm font-medium">Upload Document</label>
-                            <div className="flex w-full items-center justify-center">
+                            <div className="flex flex-col w-full items-center justify-center">
                                 {!data.document ? (
                                     <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">

@@ -69,9 +69,9 @@ return new class extends Migration
             $table->text('form_image_path')->nullable();
             $table->text('file_name')->nullable();
             $table->text('file_path')->nullable();
-            $table->foreignId('uploaded_by')->references('user_id')->on('users')
+            $table->foreignId('uploaded_by')->nullable()->references('user_id')->on('users')
                 -> onUpdate('cascade')->onDelete('cascade');
-            $table->timestamp('uploaded_at');
+            $table->timestamp('uploaded_at')->nullable();
             $table->foreignId('file_status_id')->nullable()->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
@@ -83,9 +83,9 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_name');
             $table->text('file_path');
-            $table->foreignId('uploaded_by')->references('user_id')->on('users')
+            $table->foreignId('uploaded_by')->nullable()->references('user_id')->on('users')
                 -> onUpdate('cascade')->onDelete('cascade');
-            $table->timestamp('uploaded_at');
+            $table->timestamp('uploaded_at')->nullable();
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 -> onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
@@ -110,9 +110,9 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_name');
             $table->text('file_path');
-            $table->foreignId('uploaded_by')->references('user_id')->on('users')
+            $table->foreignId('uploaded_by')->nullable()->references('user_id')->on('users')
                 -> onUpdate('cascade')->onDelete('cascade');
-            $table->timestamp('uploaded_at');
+            $table->timestamp('uploaded_at')->nullable();
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
@@ -152,6 +152,7 @@ return new class extends Migration
                 LEFT JOIN areas a ON a.area_id = afo.area_id
                 LEFT JOIN users u ON u.user_id = afo.uploaded_by
                 LEFT JOIN file_status fs ON fs.file_status_id = afo.file_status_id
+            WHERE afo.file_name IS NOT NULL
             UNION ALL
             SELECT
                 'exhibits' file_type,

@@ -71,7 +71,7 @@ class AreaFilesController extends Controller
         $file = $validated['document'];
         $fileName = $initial . '.' . $parameterOutlines->outline_number . '.' . $parameterOutlines->outline_description . '.' . $file->getClientOriginalExtension();
         $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level ' . $program->accreditation_level;
-        $filePath = "{$program->program_name}/{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
+        $filePath = "{$program->program_name}/Level-{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
 
         // Ensure temp directory exists
         if (!Storage::disk('public')->exists('temp')) {

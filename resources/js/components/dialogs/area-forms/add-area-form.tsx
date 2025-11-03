@@ -1,16 +1,8 @@
-'use client'
+'use client';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AreaFormCategory, AreaForms, Program } from '@/types';
@@ -24,7 +16,7 @@ interface AddAreaFormProps {
     categories?: AreaFormCategory[];
     forms?: AreaForms[];
     onClose: () => void;
-};
+}
 
 interface AddAreaFormForm {
     area_id: number;
@@ -33,15 +25,7 @@ interface AddAreaFormForm {
 }
 
 export function AddAreaForm({ program, area_id, categories, forms, onClose }: AddAreaFormProps) {
-    const {
-        data,
-        setData,
-        post,
-        processing,
-        errors,
-        reset
-    } = useForm<AddAreaFormForm>({
-        area_id: area_id,
+    const { data, setData, post, processing, errors, reset } = useForm<AddAreaFormForm>({
         area_form_category_id: null,
         document: null,
     });
@@ -50,59 +34,42 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
 
     const addAreaForm = (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!data.document) {
-            toast.error('No file selected', {
-                description: 'Please select a PDF file before uploading.',
-            });
-            return;
-        }
-
-        try {
-            setIsUploading(true);
-            post(
-                route('manage.area.addAreaForm', {
-                    program_name: program.program_name,
-                    level_id: program.levels[0]?.accreditation_level_id,
-                    area_id: area_id,
-                }),
-                {
-                    onProgress: (progress) => {
-                        if (progress?.percentage) {
-                            toast.info('Uploading...', {
-                                description: (
-                                    <div className="flex w-full items-center gap-1">
-                                        <Progress value={progress.percentage} className="h-2 w-68" />
-                                        <p className="text-right text-xs text-gray-500">{progress.percentage}%</p>
-                                    </div>
-                                ),
-                                id: 'uploading',
-                            });
-                        }
-                    },
-                    onSuccess: () => {
-                        toast.dismiss('uploading');
-                        reset();
-                        setIsUploading(false);
-                        onClose();
-                    },
-                    onError: (errors) => {
-                        toast.dismiss('uploading');
-                        toast.error('Failed to upload document', {
-                            description: errors.document ?? 'There was an error uploading the document.',
+        setIsUploading(true);
+        post(
+            route('manage.area.add.area.form', {
+                program_name: program.program_name,
+                level_id: program.levels[0]?.accreditation_level_id,
+                area_id: area_id,
+            }),
+            {
+                onProgress: (progress) => {
+                    if (progress?.percentage) {
+                        toast.info('Uploading...', {
+                            description: (
+                                <div className="flex w-full items-center gap-1">
+                                    <Progress value={progress.percentage} className="h-2 w-68" />
+                                    <p className="text-right text-xs text-gray-500">{progress.percentage}%</p>
+                                </div>
+                            ),
+                            id: 'uploading',
                         });
-                        setIsUploading(false);
-                    },
-                }
-            );
-        } catch (error) {
-            console.error('Unexpected upload error:', error);
-            toast.dismiss('uploading');
-            toast.error('Unexpected error occurred', {
-                description: 'Please check your connection or try again later.',
-            });
-            setIsUploading(false);
-        }
+                    }
+                },
+                onSuccess: () => {
+                    toast.dismiss('uploading');
+                    reset();
+                    setIsUploading(false);
+                    onClose();
+                },
+                onError: (errors) => {
+                    toast.dismiss('uploading');
+                    toast.error('Failed to upload document', {
+                        description: errors.document ?? 'There was an error uploading the document.',
+                    });
+                    setIsUploading(false);
+                },
+            },
+        );
     };
 
     return (
@@ -125,7 +92,8 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                                     <SelectValue placeholder="Select Category" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {categories?.filter((category) => !forms?.some((form) => form.area_form_category_id === category.area_form_category_id))
+                                    {categories
+                                        ?.filter((category) => !forms?.some((form) => form.area_form_category_id === category.area_form_category_id))
                                         .map((category) => (
                                             <SelectItem key={category.area_form_category_id} value={category.area_form_category_id.toString()}>
                                                 {category.category_name}
@@ -207,4 +175,3 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
         </Dialog>
     );
 }
-

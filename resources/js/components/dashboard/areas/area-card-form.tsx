@@ -43,7 +43,6 @@ export default function AreaCards({program, forms, resolveFormDialog }: AreaCard
     return (
         <div className="flex flex-col gap-2">
             <div className="flex w-full justify-center gap-2">
-                {/* Render existing forms */}
                 {forms.map((card) => (
                     <div key={card.area_form_id} className="group relative grid w-full place-items-center gap-1 rounded border p-2">
                         <img className="h-40 w-full rounded object-cover" src="/images/placeholder.png" alt="" />
