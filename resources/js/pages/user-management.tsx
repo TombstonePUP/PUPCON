@@ -1,28 +1,12 @@
 import { UsersDataTable } from '@/components/charts/data-table';
 import { getUserColumns } from '@/components/charts/data-table-columns/users';
-import { AssignRoleDialog } from '@/components/dialogs/users/assign-role';
-import { DisableUserDialog } from '@/components/dialogs/users/disable-user';
-import { EnableUserDialog } from '@/components/dialogs/users/enable-user';
 import { RenderUserDialog } from '@/components/dialogs/users/user-dialog-renderer';
-import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { AssignablePrograms, AssignableRoles, type UserRecords } from '@/types/user-management';
 import { Head } from '@inertiajs/react';
-import { User2 } from 'lucide-react';
+import { User2, User2Icon } from 'lucide-react';
 import { useState } from 'react';
 
 interface UsersProps {
@@ -47,7 +31,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
     const [dialog, setDialog] = useState<{
         type: 'add' | 'assign' | 'disable' | 'enable' | null;
         user?: UserRecords;
-    }>({ kind: null });
+    }>({ type: null }); 
 
     const columns = getUserColumns({
         programRoles,
@@ -55,16 +39,13 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
         resolveDialog: ({ type, user }: DialogProps) => openDialog(type, user),
     });
 
-    const openDialog = (
-        type: 'add' | 'assign' | 'disable' | 'enable',
-        user?: UserRecords,
-    ) => {
+    const openDialog = (type: 'add' | 'assign' | 'disable' | 'enable', user?: UserRecords) => {
         setDialog({ type, user });
-    }
+    };
 
     const closeDialog = () => {
         setDialog({ type: null });
-    }
+    };
 
     /* const renderDialog = () => {
         if (!selectedUser) return null;
@@ -100,35 +81,38 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
             <AppLayout breadcrumbs={breadcrumbs}>
                 <Head title="User Management" />
                 <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-2xl font-semibold text-gray-900">User Management</h1>
-                            <p className="mt-1 text-sm text-gray-600">Manage user accounts and permissions</p>
+                    {/* Header Section */}
+                    <div id="header" className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
+                        <div className="flex items-center justify-between gap-4">
+                            {/* Left Side */}
+                            <div className="flex items-center gap-4">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
+                                    <User2Icon className="h-6 w-6 text-white stroke-[2.5]" />
+                                </div>
+                                <div className="ml-2">
+                                    <h1 className="text-xl font-semibold text-gray-900">User Management</h1>
+                                    <p className="text-sm text-gray-500">Manage all user related information and access rights.</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <Button 
+                                    onClick={() => openDialog('add')}
+                                    className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-8 py-2 text-sm font-medium text-white transition hover:bg-[#7f1414]/90"
+                                >
+                                    <User2 className="h-4 w-4" />
+                                    Add User
+                                </Button>
+                            </div>
                         </div>
-                        {/* Add New User Dialog */}
-                        <Button
-                            variant="noborder"
-                            className="w-50"
-                            onClick={() => openDialog('add')}
-                        >
-                            <User2 className="h-4 w-4" />
-                            Add User
-                        </Button>
                     </div>
-                    {/* Data Table */}
-                    <div className="rounded-lg border bg-white p-4">
+
+                    <div className="rounded-lg border bg-white p-4 animate-in fade-in-0 duration-500">
                         <UsersDataTable columns={columns} data={userRecords} />
                     </div>
                 </div>
             </AppLayout>
-            {<RenderUserDialog
-                type={dialog.type}
-                user={dialog.user}
-                program={programRoles}
-                roles={roles}
-                onClose={closeDialog}
-            />
-            }
+            {<RenderUserDialog type={dialog.type} user={dialog.user} program={programRoles} roles={roles} onClose={closeDialog} />}
         </>
     );
 }

@@ -1,27 +1,13 @@
 import ImageUploader from '@/components/imageuploader';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import SectionFooter from '@/components/ui/section-footer';
 import { Separator } from '@/components/ui/separator';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import { EditIcon, InfoIcon, Plus, Trash2, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { EditIcon, Plus, Trash2, X } from 'lucide-react';
+import React, { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import AdminContentSection from './admin-content';
-import FacilitiesContentSection from './facilities-content';
-import FacultyContentSection from './faculty-content';
-import HistoryContentSection from './history-content';
-import LocalTaskForceContentSection from './localtaskforce-content';
-import VmgoContentSection from './vmgo-content';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Content Management',
-        href: `/about-content`,
-    },
-];
+// --- All this logic was extracted from AboutContent.tsx ---
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
     <button className={`p-1 text-gray-400 transition-colors hover:text-red-600 ${className}`} type="button" {...props}>
@@ -294,7 +280,7 @@ const OrganizationsSection = () => {
                 </div>
             )}
 
-            {/*  Add/Edit Organization Modal --- */}
+            {/* Add/Edit Organization Modal --- */}
             {isOrgModalOpen && (
                 <div data-state="open" className="animate-in fade-in-0 fixed inset-0 z-50 flex items-center justify-center bg-black/80">
                     <div data-state="open" className="animate-in fade-in-0 zoom-in-95 y w-full max-w-md transform rounded-lg bg-white p-6">
@@ -456,131 +442,4 @@ const AboutPageSection = () => {
     );
 };
 
-const PlaceholderSection: React.FC<{ title: string }> = ({ title }) => (
-    <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
-        <div className="p-8">
-            <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-            <p className="text-sm text-gray-600">This section is not yet implemented.</p>
-        </div>
-    </div>
-);
-
-const AboutContent = () => {
-
-    // --- Refs for scrolling ---
-    const missionVisionRef = useRef(null);
-    const historyRef = useRef(null);
-    const administrationRef = useRef(null);
-    const goalsRef = useRef(null);
-    const facultiesRef = useRef(null);
-    const facilitiesRef = useRef(null);
-    const localTaskForceRef = useRef(null);
-
-    const scrollToSection = (ref, sectionId) => {
-        setActiveSection(sectionId);
-        ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-
-    const sections = [
-        { id: 'about', label: 'About Page', ref: missionVisionRef },
-        { id: 'vmgo', label: 'Vision, Mission & Goals', ref: goalsRef },
-        { id: 'history', label: 'History', ref: historyRef },
-        { id: 'administration', label: 'Administration', ref: administrationRef },
-        { id: 'faculties', label: 'Faculty & Staff', ref: facultiesRef },
-        { id: 'facilities', label: 'Facilities', ref: facilitiesRef },
-        { id: 'task-force', label: 'Local Task Force', ref: localTaskForceRef },
-    ];
-
-    const [activeSection, setActiveSection] = useState<string | null>(null);
-    const headerRef = useRef<HTMLDivElement | null>(null);
-
-    
-    useEffect(() => {
-        if (!headerRef.current) return;
-        // Wait a tick to ensure layout is stable
-        const timeout = setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            setActiveSection('about');
-        }, 100);
-
-        return () => clearTimeout(timeout);
-    }, [headerRef.current]);
-    return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <div className="flex h-full flex-1 flex-col gap-4 p-6">
-                {/* Header Section */}
-                <div ref={headerRef} className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
-                    <div className="flex items-center gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
-                            <InfoIcon className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="ml-2">
-                            <h1 className="text-xl font-semibold text-gray-900">CAMPUS INFORMATION</h1>
-                            <p className="text-sm text-gray-500">Manage all content related to the "About" page and its sub-sections.</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Main Content with Sidebar */}
-                <div className="flex gap-6">
-                    {/* Main Content Area */}
-                    <div className="flex-1 overflow-y-auto">
-                        <div className="space-y-6">
-                            <div ref={missionVisionRef} className="scroll-mt-6">
-                                <AboutPageSection />
-                            </div>
-
-                            <div ref={goalsRef} className="scroll-mt-6">
-                                <VmgoContentSection />
-                            </div>
-
-                            <div ref={historyRef} className="scroll-mt-6">
-                                <HistoryContentSection />
-                            </div>
-
-                            <div ref={administrationRef} className="scroll-mt-6">
-                                <AdminContentSection />
-                            </div>
-
-                            <div ref={facultiesRef} className="scroll-mt-6">
-                                <FacultyContentSection />
-                            </div>
-
-                            <div ref={facilitiesRef} className="scroll-mt-6">
-                                <FacilitiesContentSection />
-                            </div>
-
-                            <div ref={localTaskForceRef} className="scroll-mt-6">
-                                <LocalTaskForceContentSection />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Right Sidebar - Quick Links */}
-                    <div className="w-64 shrink-0">
-                        <div className="sticky top-6">
-                            <div className="rounded-lg border border-gray-200 bg-white p-4">
-                                <h3 className="mb-4 text-sm font-semibold text-gray-900">Quick Links</h3>
-                                <nav className="space-y-1">
-                                    {sections.map((section) => (
-                                        <button
-                                            key={section.id}
-                                            onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
-                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
-                                        >
-                                            {section.label}
-                                        </button>
-                                    ))}
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </AppLayout>
-    );
-};
-
-export default AboutContent;
+export default AboutPageSection;

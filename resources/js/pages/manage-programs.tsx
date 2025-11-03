@@ -52,7 +52,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             <NotebookIcon className="h-6 w-6 text-white" />
                         </div>
                         <div className="ml-2">
-                            <h1 className="text-xl font-semibold text-gray-900">PROGRAM MANAGEMENT</h1>
+                            <h1 className="text-xl font-semibold text-gray-900">Program Management</h1>
                             <p className="text-sm text-gray-500">Manage academic programs for PUP San Juan.</p>
                         </div>
                     </div>

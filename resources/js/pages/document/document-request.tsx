@@ -4,6 +4,7 @@ import { FilesOverview, type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 
 import { columns } from '@/components/charts/data-table-columns/requests';
+import { Boxes } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -21,9 +22,17 @@ export default function Requests({ files }: DocumentRequests) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Requests" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
-                <div>
-                    <h1 className="text-2xl font-semibold text-gray-900">Document Requests</h1>
-                    <p className="mt-1 text-sm text-gray-600">Manage document requests and approvals</p>
+                {/* Header Section */}
+                <div id="header" className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
+                    <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
+                            <Boxes className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="ml-2">
+                            <h1 className="text-xl font-semibold text-gray-900">Document Request</h1>
+                            <p className="text-sm text-gray-500">Manage all document request submissions.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="rounded-lg border bg-white p-4">

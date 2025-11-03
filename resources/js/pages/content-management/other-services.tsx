@@ -236,7 +236,7 @@ const OthersContentSection: React.FC = () => {
                             <LibrarySquare className="h-6 w-6 text-white" />
                         </div>
                         <div className="ml-2">
-                            <h1 className="text-xl font-semibold text-gray-900">OTHER SERVICES</h1>
+                            <h1 className="text-xl font-semibold text-gray-900">Other Services</h1>
                             <p className="text-sm text-gray-500">Manage all content related to the "Other services" page and its sub-sections.</p>
                         </div>
                     </div>

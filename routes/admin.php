@@ -26,9 +26,9 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         return Inertia::render('document/ratings');
     })->name('ratings');
 
-    Route::get('/about-content', function () {
-        return Inertia::render('content-management/about-content');
-    })->name('about.content');
+    Route::get('main-content', function () {
+        return Inertia::render('content-management/main-content');
+    })->name('content-management');
 
      Route::get('/other-services', function () {
         return Inertia::render('content-management/other-services');

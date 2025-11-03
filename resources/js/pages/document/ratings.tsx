@@ -339,7 +339,7 @@ export default function Ratings() {
                             <FileChartColumnIncreasing className="h-6 w-6 text-white" />
                         </div>
                         <div className="ml-2">
-                            <h1 className="text-xl font-semibold text-gray-900">RESULTS & RATINGS</h1>
+                            <h1 className="text-xl font-semibold text-gray-900">Results & Ratings</h1>
                             <p className="text-sm text-gray-500">View all program results and ratings</p>
                         </div>
                     </div>

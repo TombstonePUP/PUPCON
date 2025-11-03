@@ -83,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             ? [
                   {
                       title: 'Campus Information',
-                      url: '/about-content',
+                      url: '/main-content',
                       icon: InfoIcon,
                   },
               ]
