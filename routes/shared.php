@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Files\AreaFilesController;
+use App\Http\Controllers\Files\AreaFormFilesController;
 use App\Http\Controllers\Files\AreaFormsController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
 use App\Http\Controllers\Programs\ManageProgramController;
@@ -29,8 +30,12 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
 
                         Route::controller(AreaFormsController::class)->group(function () {
                             Route::post('/{area_id}/add_form', 'store')->name('add.area.form');
-                            Route::post('/{area_id}/{form_id}/upload_form', 'upload')->name('upload.area.form');
                             Route::delete('/{area_id}/{form_id}/delete_form', 'destroy')->name('delete.area.form');
+                        });
+
+                        Route::controller(AreaFormFilesController::class)->group(function () {
+                            Route::post('/{area_id}/{form_id}/upload_file_form', 'upload')->name('upload.area.form.file');
+                            Route::delete('/{area_id}/{form_id}/delete_area_form_file', 'destroy')->name('delete.area.form.file');
                         });
                     });
                 });

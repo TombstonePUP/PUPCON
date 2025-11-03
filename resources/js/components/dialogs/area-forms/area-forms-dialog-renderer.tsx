@@ -1,6 +1,7 @@
 "use client"
 
 import { DeleteAreaForm } from "./delete-area-form"
+import { DeleteAreaFormFile } from "./delete-area-form-file"
 import { UploadAreaForm } from "./upload-area-form"
 import { AddAreaForm } from "./add-area-form"
 import { DocumentViewer } from "@/components/dialogs/documents/view-document"
@@ -8,7 +9,7 @@ import { RejectedAreaForm } from "./rejected-area-form"
 import { Area, AreaFormCategory, AreaForms, Program } from "@/types"
 
 interface AreaFormDialogProps {
-    type: "view" | "upload" | "add" | "delete" | "rejected";
+    type: "view" | "upload" | "add" | "delete" | "delete-form" | "rejected";
     forms?: AreaForms[];
     form?: AreaForms;
     categories?: AreaFormCategory[];
@@ -31,8 +32,6 @@ export function RenderAreaFormDialog({ type, forms, form, categories, program, a
                 />
             );
         case 'add':
-            console.log('Rendering AddAreaForm with props:');
-            console.log({forms, program, area, categories});
             return (
                 <AddAreaForm
                     forms={forms}
@@ -51,9 +50,18 @@ export function RenderAreaFormDialog({ type, forms, form, categories, program, a
                     onClose={onClose}
                 />
             );
-        case 'delete':
+        case 'delete-form':
             return (
                 <DeleteAreaForm
+                    form={form}
+                    program={program}
+                    area_id={area?.area_id}
+                    onClose={onClose}
+                />
+            );
+        case 'delete':
+            return (
+                <DeleteAreaFormFile
                     form={form}
                     program={program}
                     area_id={area?.area_id}

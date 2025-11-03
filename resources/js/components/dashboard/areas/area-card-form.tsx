@@ -1,26 +1,11 @@
 'use client';
 
-import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import { DocumentViewer } from '@/components/dialogs/documents/view-document';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AreaFormCategory, AreaForms, Program } from '@/types';
-import { useForm } from '@inertiajs/react';
-import { Edit, Eye, Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { Edit, Eye, FileUp, FileX, Info, Plus, Trash2 } from 'lucide-react';
 
 interface AreaFormDialogParams {
-    type: 'view' | 'upload' | 'add' | 'delete' | 'rejected';
+    type: 'view' | 'upload' | 'add' | 'delete-form' | 'delete' | 'rejected';
     form?: AreaForms;
     forms?: AreaForms[];
 }
@@ -28,16 +13,8 @@ interface AreaFormDialogParams {
 type AreaCardsProps = {
     program: Program;
     forms: AreaForms[];
-    // areaId: number;
     resolveFormDialog: (params: AreaFormDialogParams) => void;
 };
-
-interface AreaFormsForm {
-    area_form_id?: number | null;
-    area_id?: number | null;
-    area_form_category_id?: number | null;
-    form_file?: File | null;
-}
 
 export default function AreaCards({program, forms, resolveFormDialog }: AreaCardsProps) {
     return (
@@ -53,30 +30,56 @@ export default function AreaCards({program, forms, resolveFormDialog }: AreaCard
                         {/* Edit/Remove buttons (appear on hover) */}
                         <div className="absolute inset-0 flex items-center justify-center gap-2 rounded bg-[#f4f4f4]/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                             {/* View Button - only sets state, no Dialog here */}
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-                                onClick={() => {resolveFormDialog({ type: 'view', form: card });}}
-                            >
-                                <Eye className="h-4 w-4" />
-                            </Button>
+                            {card.file_name && (
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                                    onClick={() => {resolveFormDialog({ type: 'view', form: card });}}
+                                >
+                                    <Eye className="h-4 w-4" />
+                                </Button>
+                            )}
                             <Button
                                 variant="ghost"
                                 size="icon"
                                 className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
                                 onClick={() => {resolveFormDialog({ type: 'upload', form: card});}}
                             >
-                                <Edit className="h-4 w-4" />
+                                {card.file_name ? (
+                                    <Edit className="h-4 w-4" />
+                                ) : (
+                                    <FileUp className="h-4 w-4" />
+                                )}
                             </Button>
+                            {card.file_name && (
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                                    onClick={() => {resolveFormDialog({ type: 'delete', form: card });}}
+                                >
+                                    <FileX className="h-4 w-4 text-red-500" />
+                                </Button>
+                            )}
                             <Button
                                 variant="ghost"
                                 size="icon"
                                 className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-                                onClick={() => {resolveFormDialog({ type: 'delete', form: card });}}
+                                onClick={() => {resolveFormDialog({ type: 'delete-form', form: card });}}
                             >
                                 <Trash2 className="h-4 w-4 text-red-500" />
                             </Button>
+                            {card.file_status?.status_name === 'Rejected' && (
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                                    onClick={() => {resolveFormDialog({ type: 'rejected', form: card });}}
+                                >
+                                    <Info className="h-4 w-4 text-red-500" />
+                                </Button>
+                            )}
                         </div>
                     </div>
                 ))}

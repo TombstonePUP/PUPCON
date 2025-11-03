@@ -8,17 +8,17 @@ import { router } from '@inertiajs/react';
 import { TrashIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface DeleteAreaFormProps {
+interface DeleteAreaFormFileProps {
     form: AreaForms
     program: Program;
     area_id: number;
     onClose: () => void;
 }
 
-export function DeleteAreaForm({ form, program, area_id, onClose }: DeleteAreaFormProps) {
+export function DeleteAreaFormFile({ form, program, area_id, onClose }: DeleteAreaFormFileProps) {
     const deleteAreaForm = (e: React.FormEvent) => {
         e.preventDefault();
-        router.delete(route('manage.area.delete.area.form', {
+        router.delete(route('manage.area.delete.area.form.file', {
             program_name: program.program_link,
             level_id: program.levels[0]?.accreditation_level_id,
             area_id: area_id,
@@ -41,12 +41,12 @@ export function DeleteAreaForm({ form, program, area_id, onClose }: DeleteAreaFo
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <TrashIcon className="h-5 w-5 text-[#7f1414]" />
-                        Delete
+                        Delete Document
                     </DialogTitle>
-                    <DialogDescription>Are you sure you want to delete this card?</DialogDescription>
+                    <DialogDescription>Are you sure you want to delete this document?</DialogDescription>
                 </DialogHeader>
                 <Label className="text-muted-foreground text-sm">
-                    This action will permanently delete the card with its coressponding document. This action cannot be undone.
+                    This action will permanently delete the document. This action cannot be undone.
                 </Label>
                 <DialogFooter className="space-x-2">
                     <DialogClose asChild>
@@ -62,3 +62,4 @@ export function DeleteAreaForm({ form, program, area_id, onClose }: DeleteAreaFo
         </Dialog>
     );
 }
+

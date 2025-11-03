@@ -238,7 +238,7 @@ export interface AreaFiles {
     file_status_id: number;
     file_rejection_reason: string | null;
     parameterOutlines?: ParameterOutlines;
-    fileStatus?: FileStatus;
+    file_status?: FileStatus;
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -262,7 +262,7 @@ export interface AreaForms {
     file_rejection_reason: string | null;
     areaFormCategory?: AreaFormCategory;
     area?: Area;
-    fileStatus?: FileStatus;
+    file_status?: FileStatus;
     [key: string]: unknown; // This allows for additional properties...
 }
 

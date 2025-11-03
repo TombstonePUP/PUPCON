@@ -273,7 +273,7 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
                                     </ContextMenuItem>
                                 )}
 
-                                {outline.area_files?.file_rejection_reason && (
+                                {outline.area_files?.file_status?.status_name && (
                                     <ContextMenuItem
                                         className="cursor-pointer"
                                         onSelect={() => {
