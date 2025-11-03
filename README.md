@@ -104,15 +104,14 @@ npm install
 # 3️⃣ Environment setup
 cp .env.example .env
 php artisan key:generate
+php artisan storage:link
 
 # 4️⃣ Database setup
-createdb pupcon_db
 php artisan migrate
 php artisan db:seed
 
 # 5️⃣ Start servers
-php artisan serve    # Terminal 1
-npm run dev         # Terminal 2
+composer run dev
 ```
 
 ### 🔑 Default Accounts
