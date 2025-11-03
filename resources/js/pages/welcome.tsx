@@ -2,7 +2,7 @@ import { CardHeader, HomeCard, HomeCardDescription, HomeCardTitle } from '@/comp
 import Layout from '@/layouts/landing-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BookOpen, Calendar, GraduationCap, MapPin, Play, X } from 'lucide-react';
+import { BookOpen, Calendar, ChevronLeft, ChevronRight, GraduationCap, MapPin, Play, X } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 interface LandingProps {
@@ -116,6 +116,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
     const [selectedNewsItem, setSelectedNewsItem] = useState(null);
     const [isNewsDialogOpen, setIsNewsDialogOpen] = useState(false);
 
+    // Add state for news pagination
+    const [newsPage, setNewsPage] = useState(0);
+
     const images = carouselImages;
     const { auth } = usePage<Auth>().props;
     const user = auth.user;
@@ -146,9 +149,39 @@ export default function Welcome({ carouselImages }: LandingProps) {
                 desc: 'A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!',
                 source: 'https://www.facebook.com/photo.php?fbid=911510457668935&set=pb.100064299686924.-2207520000&type=3',
             },
+            // Add more posts here as they come from the API
+            {
+                title: 'Sample Post 5',
+                img: '/images/pupcet.jpg',
+                desc: 'This is a sample 5th post to demonstrate pagination.',
+                source: 'https://www.facebook.com/',
+            },
+            {
+                title: 'Sample Post 6',
+                img: '/images/cpale.jpg',
+                desc: 'This is a sample 6th post to demonstrate pagination.',
+                source: 'https://www.facebook.com/',
+            },
         ],
         [],
     );
+
+    // Calculate pagination
+    const POSTS_PER_PAGE = 4;
+    const totalPages = Math.ceil(newsCards.length / POSTS_PER_PAGE);
+    const currentPosts = newsCards.slice(newsPage * POSTS_PER_PAGE, (newsPage + 1) * POSTS_PER_PAGE);
+
+    const handleNextPage = () => {
+        if (newsPage < totalPages - 1) {
+            setNewsPage(newsPage + 1);
+        }
+    };
+
+    const handlePrevPage = () => {
+        if (newsPage > 0) {
+            setNewsPage(newsPage - 1);
+        }
+    };
 
     // Snappy animation variants
     const containerVariants = useMemo(
@@ -513,54 +546,127 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     </motion.div>
 
                     {/* News Cards - Responsive Grid */}
-                    <div className="grid w-full max-w-7xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6 md:gap-8 lg:grid-cols-4">
-                        {newsCards.map((card, i) => (
-                            <motion.div key={i} variants={itemVariants}>
-                                <motion.div
-                                    whileHover={{
-                                        scale: shouldReduceMotion ? 1 : 1.02,
-                                        y: shouldReduceMotion ? 0 : -5,
-                                    }}
-                                    transition={{ duration: 0.2 }}
-                                    className="h-full cursor-pointer"
-                                    onClick={() => handleOpenNewsDialog(card)}
-                                >
-                                    <HomeCard className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-200 hover:border-[#7f1414] hover:shadow-lg">
-                                        <div className="h-40 w-full overflow-hidden sm:h-48">
-                                            <ImageWithPreload
-                                                src={card.img}
-                                                alt={card.title}
-                                                className="h-full w-full transition-transform duration-300 group-hover:scale-105"
-                                            />
-                                        </div>
-                                        <CardHeader className="flex flex-1 flex-col p-3 sm:p-4">
-                                            <HomeCardTitle className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
-                                                {card.title}
-                                            </HomeCardTitle>
-                                            <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
-                                                <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 group-hover:scale-x-100"></div>
+                    <div className="w-full max-w-7xl px-4">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 md:gap-8 lg:grid-cols-4">
+                            {currentPosts.map((card, i) => (
+                                <motion.div key={`${newsPage}-${i}`} variants={itemVariants} initial="hidden" animate="visible" exit="hidden">
+                                    <motion.div
+                                        whileHover={{
+                                            scale: shouldReduceMotion ? 1 : 1.02,
+                                            y: shouldReduceMotion ? 0 : -5,
+                                        }}
+                                        transition={{ duration: 0.2 }}
+                                        className="h-full cursor-pointer"
+                                        onClick={() => handleOpenNewsDialog(card)}
+                                    >
+                                        <HomeCard className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-200 hover:border-[#7f1414] hover:shadow-lg">
+                                            <div className="h-40 w-full overflow-hidden sm:h-48">
+                                                <ImageWithPreload
+                                                    src={card.img}
+                                                    alt={card.title}
+                                                    className="h-full w-full transition-transform duration-300 group-hover:scale-105"
+                                                />
                                             </div>
-                                            <HomeCardDescription className="mb-2 line-clamp-3 min-h-[3.75rem] flex-1 text-xs text-gray-600 sm:text-sm">
-                                                {card.desc}
-                                            </HomeCardDescription>
+                                            <CardHeader className="flex flex-1 flex-col p-3 sm:p-4">
+                                                <HomeCardTitle className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
+                                                    {card.title}
+                                                </HomeCardTitle>
+                                                <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
+                                                    <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 group-hover:scale-x-100"></div>
+                                                </div>
+                                                <HomeCardDescription className="mb-2 line-clamp-3 min-h-[3.75rem] flex-1 text-xs text-gray-600 sm:text-sm">
+                                                    {card.desc}
+                                                </HomeCardDescription>
 
-                                            {/* Learn More Text */}
-                                            <div className="flex items-center gap-1 text-xs font-medium text-[#7f1414] transition-all duration-200 group-hover:gap-2">
-                                                <span>Learn more</span>
-                                                <svg
-                                                    className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </div>
-                                        </CardHeader>
-                                    </HomeCard>
+                                                {/* Learn More Text */}
+                                                <div className="flex items-center gap-1 text-xs font-medium text-[#7f1414] transition-all duration-200 group-hover:gap-2">
+                                                    <span>Learn more</span>
+                                                    <svg
+                                                        className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </div>
+                                            </CardHeader>
+                                        </HomeCard>
+                                    </motion.div>
                                 </motion.div>
+                            ))}
+                        </div>
+
+                        {/* Pagination Controls */}
+                        {totalPages > 1 && (
+                            <motion.div
+                                className="mt-8 flex items-center justify-center gap-4"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                            >
+                                {/* Previous Button */}
+                                <motion.button
+                                    onClick={handlePrevPage}
+                                    disabled={newsPage === 0}
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                                        newsPage === 0
+                                            ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
+                                            : 'border-gray-300 bg-white text-gray-700 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
+                                    }`}
+                                    whileHover={newsPage !== 0 ? { scale: 1.02 } : {}}
+                                    whileTap={newsPage !== 0 ? { scale: 0.98 } : {}}
+                                >
+                                    <ChevronLeft className="h-4 w-4" />
+                                    <span>Previous</span>
+                                </motion.button>
+
+                                {/* Page Indicators */}
+                                <div className="flex items-center gap-2">
+                                    {Array.from({ length: totalPages }).map((_, index) => (
+                                        <motion.button
+                                            key={index}
+                                            onClick={() => setNewsPage(index)}
+                                            className={`h-2 rounded-full transition-all duration-200 ${
+                                                index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                                            }`}
+                                            whileHover={{ scale: 1.2 }}
+                                            whileTap={{ scale: 0.9 }}
+                                            aria-label={`Go to page ${index + 1}`}
+                                        />
+                                    ))}
+                                </div>
+
+                                {/* Next Button */}
+                                <motion.button
+                                    onClick={handleNextPage}
+                                    disabled={newsPage === totalPages - 1}
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                                        newsPage === totalPages - 1
+                                            ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
+                                            : 'border-gray-300 bg-white text-gray-700 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
+                                    }`}
+                                    whileHover={newsPage !== totalPages - 1 ? { scale: 1.02 } : {}}
+                                    whileTap={newsPage !== totalPages - 1 ? { scale: 0.98 } : {}}
+                                >
+                                    <span>Next</span>
+                                    <ChevronRight className="h-4 w-4" />
+                                </motion.button>
                             </motion.div>
-                        ))}
+                        )}
+
+                        {/* Page Counter */}
+                        {totalPages > 1 && (
+                            <motion.p
+                                className="mt-4 text-center text-sm text-gray-500"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.4 }}
+                            >
+                                Showing {newsPage * POSTS_PER_PAGE + 1} - {Math.min((newsPage + 1) * POSTS_PER_PAGE, newsCards.length)} of{' '}
+                                {newsCards.length} posts
+                            </motion.p>
+                        )}
                     </div>
                 </motion.section>
 
