@@ -64,7 +64,7 @@ class AreaFormsController extends Controller
             $activityLog = new ActivityLog();
             $activityLog->user_id = $user->user_id;
             $activityLog->area = $area->area_name;
-            $activityLog->program = $program;
+            $activityLog->program = $program->program_name;
             $activityLog->file_name = $formFileName;
             $activityLog->activity = "Upload Document";
             $activityLog->activity_date = now();

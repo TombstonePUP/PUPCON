@@ -40,6 +40,8 @@ class AreaFilesController extends Controller
 
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
         $program = Programs::where('program_name', $program)->first();
+        $level = $program->Levels->where('accreditation_level_id', $request->level_id)->first();
+        $level = $level->level === 0 ? 'Preliminiary Survey Visit' : $level->level;
         $area = Areas::where('area_id', $request->area_id)->first();
         $parameterOutlines = ParameterOutlines::find($validated['outline_id']);
 
@@ -70,7 +72,6 @@ class AreaFilesController extends Controller
 
         $file = $validated['document'];
         $fileName = $initial . '.' . $parameterOutlines->outline_number . '.' . $parameterOutlines->outline_description . '.' . $file->getClientOriginalExtension();
-        $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level ' . $program->accreditation_level;
         $filePath = "{$program->program_name}/Level-{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
 
         // Ensure temp directory exists
