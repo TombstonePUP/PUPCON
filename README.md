@@ -21,6 +21,7 @@
 - [✨ Features](#-features)
 - [🛠️ Tech Stack](#️-tech-stack)
 - [🚀 Installation](#-installation)
+- [📄 Ghostscript PDF Optimizer Setup](#-ghostscript-pdf-optimizer-setup)
 - [👥 Team](#-team)
 
 ---
@@ -77,7 +78,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org)
 
 **Tools** 🔧  
-[![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev) [![Composer](https://img.shields.io/badge/Composer-885630?style=flat-square&logo=composer&logoColor=white)](https://getcomposer.org) [![npm](https://img.shields.io/badge/npm-CB3837?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev) [![Composer](https://img.shields.io/badge/Composer-885630?style=flat-square&logo=composer&logoColor=white)](https://getcomposer.org) [![npm](https://img.shields.io/badge/npm-CB3837?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com) [![Ghostscript](https://img.shields.io/badge/Ghostscript-000000?style=flat-square&logo=ghostscript&logoColor=white)](https://www.ghostscript.com)
 
 ---
 
@@ -89,6 +90,7 @@
 - 🟢 Node.js 18+
 - 🐘 PostgreSQL 13+
 - 📦 Composer 2.x
+- 👻 Ghostscript (for PDF optimization)
 
 ### 📥 Setup
 
@@ -126,6 +128,118 @@ composer run dev
 
 ---
 
+## 📄 Ghostscript PDF Optimizer Setup
+
+Ghostscript is used to optimize and compress PDF files in the application for better performance and reduced storage.
+
+### 📦 Installation
+
+#### 🪟 Windows
+
+1. **Download Ghostscript:**
+
+    - Visit: [https://www.ghostscript.com/download/gsdnld.html](https://www.ghostscript.com/download/gsdnld.html)
+    - Download the latest Windows installer (e.g., `gs10.02.1w64.exe` for 64-bit)
+
+2. **Run the installer:**
+
+    - Follow the installation wizard
+    - Default installation path: `C:\Program Files\gs\gs10.02.1\bin`
+
+3. **Add Ghostscript to System PATH:**
+
+    - Right-click on "This PC" → **Properties**
+    - Click **"Advanced system settings"**
+    - Click **"Environment Variables"**
+    - Under "System variables", find and select **"Path"**
+    - Click **"Edit"** → **"New"**
+    - Add: `C:\Program Files\gs\gs10.02.1\bin` (adjust version number if different)
+    - Click **"OK"** on all dialogs
+
+4. **Verify installation:**
+    ```bash
+    gswin64c --version
+    ```
+
+#### 🍎 macOS
+
+1. **Install using Homebrew:**
+
+    ```bash
+    brew install ghostscript
+    ```
+
+2. **Verify installation:**
+    ```bash
+    gs --version
+    ```
+
+#### 🐧 Linux (Ubuntu/Debian)
+
+1. **Install via apt:**
+
+    ```bash
+    sudo apt-get update
+    sudo apt-get install ghostscript
+    ```
+
+2. **Verify installation:**
+    ```bash
+    gs --version
+    ```
+
+### ⚙️ Configuration
+
+Add Ghostscript path to your `.env` file:
+
+```env
+# Windows
+GHOSTSCRIPT_PATH="C:\Program Files\gs\gs10.02.1\bin\gswin64c.exe"
+
+# Linux/macOS
+GHOSTSCRIPT_PATH="/usr/bin/gs"
+```
+
+> 💡 **Note:** If not set, the application will attempt to auto-detect the Ghostscript installation.
+
+### 🎯 Usage
+
+The PDF optimizer is automatically used when:
+
+- 📤 Uploading supporting documents
+- 📊 Generating reports
+- 📁 Processing accreditation files
+
+PDF files are compressed to reduce file size while maintaining quality (150 DPI for screen viewing).
+
+### 🔧 Troubleshooting
+
+<details>
+<summary><b>❌ Error: "Ghostscript not found"</b></summary>
+
+- Verify installation: Run `gs --version` or `gswin64c --version`
+- Check PATH environment variable includes Ghostscript bin directory
+- Restart your terminal/command prompt after modifying PATH
+- On Windows, you may need to restart your computer
+  </details>
+
+<details>
+<summary><b>🚫 Error: "Permission denied"</b></summary>
+
+- On Linux/macOS: Check file permissions
+- Run: `sudo chmod +x /usr/bin/gs`
+  </details>
+
+<details>
+<summary><b>⚠️ Compression not working</b></summary>
+
+- Check storage permissions in `storage/app/temp`
+- Ensure sufficient disk space
+- Review Laravel logs in `storage/logs/laravel.log`
+  </details>
+
+---
+
 ## 👥 Team
 
 <table>
@@ -141,7 +255,7 @@ composer run dev
       <a href="https://github.com/regiesanjuan">
         <img src="https://github.com/regiesanjuan.png" width="80" alt="Regie"/><br>
         <sub><b>📄 Regie San Juan</b></sub><br>
-        <sub>💻 Document Analyst</sub>
+        <sub>💻 Data Integrator </sub>
       </a>
     </td>
     <td align="center">
