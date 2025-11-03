@@ -21,10 +21,11 @@ import {
 } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgram } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { Edit, Trash2, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from "@/components/ui/badge"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export interface ProgramProps {
     program: PerProgram;
@@ -292,7 +293,7 @@ export default function Programs({ program }: ProgramProps) {
                 {/* Header Section */}
 
                 <Tabs
-                    defaultValue={(role === "Admin" || role === "Coordinator") ? "content" : "documents"}
+                    defaultValue={(role === "Admin" || role === "Coordinator") ? "overview" : "areas"}
                     className="w-full flex-col gap-6"
                 >
                     <div className="rounded-lg border border-gray-200 bg-white p-6">
@@ -301,15 +302,43 @@ export default function Programs({ program }: ProgramProps) {
                                 <h1 className="text-2xl font-semibold text-gray-900">
                                     {program.degree_type} in {program.program_name}
                                 </h1>
-                                <p className="mt-1 text-sm text-gray-600">
-                                    Preliminary Survey Visit
-                                </p>
+                                <div className="flex flex-row">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Badge
+                                                variant="outline"
+                                                className="mt-2 cursor-pointer border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                                            >
+                                                {selected_level?.level === 1 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + selected_level?.level}
+                                            </Badge>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuLabel>Select Level</DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuRadioGroup value={selected_level?.accreditation_level_id?.toString()}>
+                                                {program.levels?.map((level) => (
+                                                    <DropdownMenuRadioItem
+                                                        value={level.accreditation_level_id.toString()}
+                                                        onClick={() =>
+                                                            router.visit(route('manage.program', {
+                                                                program_name: program.program_link,
+                                                                level_id: level.accreditation_level_id,
+                                                            }))
+                                                        }
+                                                    >
+                                                        {level.level === 1 ? 'Preliminary Survey Visit' : 'Level ' + level.level}
+                                                    </DropdownMenuRadioItem>
+                                                ))}
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
                             </div>
                             {/* Tabs Section */}
                             {(role === 'Admin' || role === 'Coordinator') && (
-                                <TabsList className="mb-4">
-                                    <TabsTrigger value="content">Content</TabsTrigger>
-                                    <TabsTrigger value="documents">Documents</TabsTrigger>
+                                <TabsList>
+                                    <TabsTrigger value="overview">Overview</TabsTrigger>
+                                    <TabsTrigger value="areas">Areas</TabsTrigger>
                                 </TabsList>
                             )}
                         </div>
@@ -317,7 +346,7 @@ export default function Programs({ program }: ProgramProps) {
 
 
                     {/* -------------------- Content Tab -------------------- */}
-                    <TabsContent value="content" className="space-y-6">
+                    <TabsContent value="overview" className="space-y-6">
                         <>
                             <div className="rounded-lg border border-gray-200 bg-white p-6">
                                 <div className="mb-6">
@@ -689,7 +718,7 @@ export default function Programs({ program }: ProgramProps) {
                         </>
                     </TabsContent>
                     {/* -------------------- Documents Tab -------------------- */}
-                    <TabsContent value="documents" className="space-y-6">
+                    <TabsContent value="areas" className="space-y-6">
                         {/* Areas Section moved here */}
                         <div className="rounded-lg border border-gray-200 bg-white p-6">
                             <div className="mb-4">

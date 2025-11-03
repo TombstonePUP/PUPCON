@@ -23,7 +23,7 @@ class AreaFormFilesController extends Controller
      * Update/Upload the specified resource in storage.
      * @return void
      */
-    public function upload(Request $request, AreaForms $areaForms): RedirectResponse
+    public function store(Request $request, AreaForms $areaForms): RedirectResponse
     {
         $validated = $request->validate([
             'document' => 'required|file|mimes:pdf',
