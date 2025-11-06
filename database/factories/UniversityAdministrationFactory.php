@@ -17,7 +17,14 @@ class UniversityAdministrationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'administration_id' => fake()->unique()->randomNumber(),
+            'first_name' => fake()->name(),
+            'middle_name' => fake()->name(),
+            'last_name' => fake()->name(),
+            'suffix' => fake()->suffix(),
+            'position' => fake()->jobTitle(),
+            'profile_image_name' => fake()->imageUrl(),
+            'profile_image_path' => fake()->imageUrl(),
         ];
     }
 }

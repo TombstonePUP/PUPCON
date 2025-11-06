@@ -20,17 +20,26 @@ return new class extends Migration
             $table->text('image_path')->nullable();
         });
 
-        Schema::create('about', function (Blueprint $table) {
-            $table->id(column: 'about_id')->autoIncrement()->primary();
-            $table->text('content');
-        });
-
         Schema::create('facilities', function (Blueprint $table) {
             $table->id(column: 'facility_id')->autoIncrement()->primary();
             $table->string('facility_name');
             $table->text('description');
-            $table->text('facility_image_name')->nullable();
-            $table->text('facility_image_path')->nullable();
+            $table->text('image_name')->nullable();
+            $table->text('image_path')->nullable();
+        });
+
+        Schema::create('content_pages', function (Blueprint $table) {
+            $table->id(column: 'content_page_id')->autoIncrement()->primary();
+            // $table->string('page');
+            $table->text('title');
+            $table->text('subtitle')->nullable();
+            $table->text('description')->nullable();
+            $table->text('image_name')->nullable();
+            $table->text('image_path')->nullable();
+            $table->text('quote')->nullable();
+            $table->text('author')->nullable();
+            $table->integer('phone_number')->nullable();
+            $table->text('address')->nullable();
         });
     }
 
@@ -40,7 +49,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('news');
-        Schema::dropIfExists('about');
         Schema::dropIfExists('facilities');
+        Schema::dropIfExists('content_pages');
     }
 };

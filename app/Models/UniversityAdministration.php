@@ -17,14 +17,19 @@ class UniversityAdministration extends Model
      */
     public $timestamps = false;
     protected $table = 'university_administration';
-    protected $primaryKey = 'admin_id';
+    protected $primaryKey = 'administration_id';
     protected $fillable = [
         'first_name',
         'middle_name',
         'last_name',
         'suffix',
-        'additional_info',
+        'position',
         'profile_picture_name',
         'profile_picture_path',
+    ];
+
+    protected $casts = [
+        'profile_picture_name' => 'encrypted',
+        'profile_picture_path' => 'encrypted',
     ];
 }

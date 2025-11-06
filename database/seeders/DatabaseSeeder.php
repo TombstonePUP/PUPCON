@@ -647,16 +647,17 @@ class DatabaseSeeder extends Seeder
             $faculties[] = [
                 'first_name' => Str::title(str_replace('-', ' ', $firstName)),
                 'last_name' => Str::title(str_replace('-', ' ', $lastName)),
-                'faculty_status' => $facultyStatus,
+                'personnel_type' => 'Faculty',
+                'status' => $facultyStatus,
                 'program_id' => $programId,
                 'program_coordinator' => false,
-                'faculty_image_name' => $fileName,
-                'faculty_image_path' => '/images/adfa-new/faculty/' . $fileName,
+                'image_name' => $fileName,
+                'image_path' => '/images/adfa-new/faculty/' . $fileName,
             ];
         }
 
 
         // Insert all entries at once
-        DB::table('faculties')->insert($faculties);
+        DB::table('faculty_staff')->insert($faculties);
     }
 }

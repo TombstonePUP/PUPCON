@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class LocalTaskForce extends Model
+class CampusDirectors extends Model
 {
-    /** @use HasFactory<\Database\Factories\LocalTaskForceFactory> */
+    /** @use HasFactory<\Database\Factories\CampusDirectorsFactory> */
     use HasFactory;
 
     /**
@@ -17,12 +16,13 @@ class LocalTaskForce extends Model
      * @var list<string>
      */
     public $timestamps = false;
-    protected $table = 'local_task_force';
-    protected $primaryKey = 'local_task_force_id';
+    protected $table = 'campus_directors';
+    protected $primaryKey = 'director_id';
     protected $fillable = [
-        'area_name',
-        'first_name',
-        'last_name',
+        'name',
+        'term_start_date',
+        'term_end_date',
+        'description',
         'profile_image_name',
         'profile_image_path',
     ];
@@ -31,5 +31,4 @@ class LocalTaskForce extends Model
         'profile_image_name' => 'encrypted',
         'profile_image_path' => 'encrypted',
     ];
-
 }

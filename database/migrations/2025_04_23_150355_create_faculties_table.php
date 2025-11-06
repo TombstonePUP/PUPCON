@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('faculties', function (Blueprint $table) {
-            $table->id(column: 'faculty_id')->autoIncrement()->primary();
+        Schema::create('faculty_staff', function (Blueprint $table) {
+            $table->id(column: 'faculty_staff_id')->autoIncrement()->primary();
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
-            $table->string('suffix')->nullable();
-            $table->string('faculty_status');
-            $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('personnel_type');
+            $table->string('status')->nullable();
+            $table->foreignId('program_id')->references('program_id')->nullable()->on('programs')->onUpdate('cascade')->onDelete('cascade');
             $table->boolean('program_coordinator')->default('false');
-            $table->string('faculty_image_name')->nullable();
-            $table->text('faculty_image_path')->nullable();
+            $table->string('image_name')->nullable();
+            $table->text('image_path')->nullable();
         });
     }
 

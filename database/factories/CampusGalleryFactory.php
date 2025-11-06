@@ -1,13 +1,12 @@
 <?php
-
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Facilities>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CampusGallery>
  */
-class FacilitiesFactory extends Factory
+class CampusGalleryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,11 +16,10 @@ class FacilitiesFactory extends Factory
     public function definition(): array
     {
         return [
-            'facility_id' => fake()->unique()->randomNumber(),
-            'facility_name' => fake()->word(),
-            'description' => fake()->sentence(),
+            'gallery_id' => fake()->unique()->randomNumber(),
             'image_name' => fake()->word(),
             'image_path' => fake()->imageUrl(),
+            'description' => fake()->paragraphs(2, true),
         ];
     }
 }

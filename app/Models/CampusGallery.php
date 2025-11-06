@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Facilities extends Model
+class CampusGallery extends Model
 {
-    /** @use HasFactory<\Database\Factories\FacilitiesFactory> */
+    /** @use HasFactory<\Database\Factories\CampusGallery> */
     use HasFactory;
 
     /**
@@ -16,13 +16,12 @@ class Facilities extends Model
      * @var list<string>
      */
     public $timestamps = false;
-    protected $table = 'facilities';
-    protected $primaryKey = 'facility_id';
+    protected $table = 'campus_gallery';
+    protected $primaryKey = 'gallery_id';
     protected $fillable = [
-        'facility_name',
-        'description',
         'image_name',
         'image_path',
+        'description',
     ];
 
     protected $casts = [

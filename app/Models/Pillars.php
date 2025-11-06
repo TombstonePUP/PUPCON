@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class About extends Model
+class Pillars extends Model
 {
-    /** @use HasFactory<\Database\Factories\AboutFactory> */
+    /** @use HasFactory<\Database\Factories\PillarsFactory> */
     use HasFactory;
 
     /**
@@ -16,9 +16,9 @@ class About extends Model
      * @var list<string>
      */
     public $timestamps = false;
-    protected $table = 'about';
-    protected $primaryKey = 'about_id';
+    protected $table = 'pillars';
+    protected $primaryKey = 'pillar_id';
     protected $fillable = [
-        'content',
+        'pillar_title',
     ];
 }

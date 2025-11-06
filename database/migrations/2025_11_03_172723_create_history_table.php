@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('campus_directors', function (Blueprint $table) {
+            $table->id(column: 'director_id')->autoIncrement()->primary();
+            $table->string('name');
+            $table->date('term_start_date');
+            $table->date('term_end_date')->nullable();
+            $table->text('description')->nullable();
+            $table->string('profile_image_name')->nullable();
+            $table->text('profile_image_path')->nullable();
+        });
+
+        Schema::create('campus_gallery', function (Blueprint $table) {
+            $table->id(column: 'gallery_id')->autoIncrement()->primary();
+            $table->string('image_name');
+            $table->text('image_path');
+            $table->text('description')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('campus_directors');
+        Schema::dropIfExists('campus_gallery');
+    }
+};
