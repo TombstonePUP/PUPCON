@@ -36,19 +36,19 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
 
     Route::prefix('manage-programs/{program_name}/{level_id}/{area_id}')->as('manage.')->group(function () {
         Route::controller(ImportParametersController::class)->group(function () {
-            Route::get('/downloadParameterTemplate', 'download')->name('area.download.template');
-            Route::post('/importParameters', 'import')->name('area.import.parameters');
+            Route::get('/download_parameter_template', 'download')->name('area.download.template');
+            Route::post('/import_parameters', 'import')->name('area.import.parameters');
         });
         Route::controller(AreaParameterController::class)->group(function () {
-            Route::post('/storeParameter', 'store')->name('area.add.parameter');
-            Route::patch('/{parameter_id}/updateParameter', 'update')->name('area.update.parameter');
-            Route::delete('/{parameter_id}/deleteParameter', 'destroy')->name('area.delete.parameter');
+            Route::post('/store_parameter', 'store')->name('area.add.parameter');
+            Route::patch('/{parameter_id}/update_parameter', 'update')->name('area.update.parameter');
+            Route::delete('/{parameter_id}/delete_parameter', 'destroy')->name('area.delete.parameter');
         });
 
         Route::controller(AreaParameterOutlinesController::class)->group(function () {
-            Route::post('/storeBenchmark', 'store')->name('area.add.benchmark');
-            Route::patch('/{outline_id}/editBenchmark', 'edit')->name('area.edit.benchmark');
-            Route::delete('/{outline_id}/deleteBenchmark', 'destroy')->name('area.delete.benchmark');
+            Route::post('/store_benchmark', 'store')->name('area.add.benchmark');
+            Route::patch('/{outline_id}/edit_benchmark', 'edit')->name('area.edit.benchmark');
+            Route::delete('/{outline_id}/delete_benchmark', 'destroy')->name('area.delete.benchmark');
         });
     });
 

@@ -1,11 +1,29 @@
 'use client';
 
 import { DocumentViewer } from '@/components/dialogs/documents/view-document';
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger } from '@/components/ui/context-menu';
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuLabel,
+    ContextMenuSeparator,
+    ContextMenuTrigger,
+} from '@/components/ui/context-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { AreaParameters, ParameterOutlineCategory, type ParameterOutlines } from '@/types';
+import { AreaParameters, Program, type ParameterOutlines } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { Circle, CircleCheckIcon, CircleDashedIcon, CircleDotDashedIcon, CircleXIcon } from 'lucide-react';
+import {
+    Circle,
+    CircleCheckIcon,
+    CircleDashedIcon,
+    CircleDotDashedIcon,
+    CircleXIcon,
+    DownloadIcon,
+    Edit,
+    FileUp,
+    MessageSquareText,
+    Trash2Icon,
+} from 'lucide-react';
 import { useState } from 'react';
 
 interface DocDialogParams {
@@ -21,9 +39,8 @@ interface BenchDialogParams {
 
 interface OutlineProps {
     outlines: ParameterOutlines[];
-    program?: string;
-    area_id?: number;
-    outlineCategory?: ParameterOutlineCategory[];
+    program: Program;
+    area_id: number;
     resolveDocDialog: (params: DocDialogParams) => void;
     resolveBenchDialog: (params: BenchDialogParams) => void;
 }
@@ -187,7 +204,7 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
     );
 }
 
-export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchDialog }: OutlineProps) {
+export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDialog, resolveBenchDialog }: OutlineProps) {
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
 
@@ -218,6 +235,21 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
         }
     };
 
+    const download = (outline: ParameterOutlines) => {
+        const url = route('manage.area.download.file', {
+            program_name: program.program_link,
+            level_id: program.levels[0]?.accreditation_level_id,
+            area_id: area_id,
+            outline_id: outline.parameter_outline_id,
+        });
+        const link = document.createElement('a');
+        link.href = url
+        link.setAttribute('download', '');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <>
             <ul className="flex flex-col gap-2 pl-[1vw]">
@@ -239,7 +271,7 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
                                                 </TooltipContent>
                                             </Tooltip>
                                         </TooltipProvider>
-                                        <span className="flex gap-2 font-medium cursor-pointer">
+                                        <span className="flex cursor-pointer gap-2 font-medium">
                                             {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                                         </span>
                                     </>
@@ -261,64 +293,78 @@ export function RecursiveOutlineForm({ outlines, resolveDocDialog, resolveBenchD
                                 )}
                             </ContextMenuTrigger>
 
-                            <ContextMenuContent>
+                            <ContextMenuContent className="w-45">
                                 {!outline.container && (
-                                    <ContextMenuItem
-                                        className="cursor-pointer"
-                                        onSelect={() => {
-                                            setTimeout(() => resolveDocDialog({ type: 'upload', benchmark: outline }), 50);
-                                        }}
-                                    >
-                                        {outline.area_files ? 'Update Document' : 'Upload Document'}
-                                    </ContextMenuItem>
-                                )}
-
-                                {outline.area_files?.file_status?.status_name && (
-                                    <ContextMenuItem
-                                        className="cursor-pointer"
-                                        onSelect={() => {
-                                            setTimeout(() => resolveDocDialog({ type: 'rejected', benchmark: outline }), 50);
-                                        }}
-                                    >
-                                        View Rejection Comments
-                                    </ContextMenuItem>
+                                    <>
+                                        <ContextMenuLabel>Document</ContextMenuLabel>
+                                        <ContextMenuItem
+                                            className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                            onSelect={() => {
+                                                setTimeout(() => resolveDocDialog({ type: 'upload', benchmark: outline }), 50);
+                                            }}
+                                        >
+                                            <FileUp className="inline-block h-4 w-4" />
+                                            {outline.area_files ? 'Update' : 'Upload'}
+                                        </ContextMenuItem>
+                                        {outline.area_files?.file_status?.status_name === 'Rejected' && (
+                                            <ContextMenuItem
+                                                className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                                onSelect={() => {
+                                                    setTimeout(() => resolveDocDialog({ type: 'rejected', benchmark: outline }), 50);
+                                                }}
+                                            >
+                                                <MessageSquareText className="inline-block h-4 w-4" />
+                                                View Comments
+                                            </ContextMenuItem>
+                                        )}
+                                        {outline.area_files && (
+                                            <>
+                                                <ContextMenuItem
+                                                    className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                                    onSelect={() => {download(outline)}}
+                                                >
+                                                    <DownloadIcon className="inline-block h-4 w-4" />
+                                                    Download
+                                                </ContextMenuItem>
+                                                <ContextMenuItem
+                                                    variant="destructive"
+                                                    className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                                    onSelect={() => {
+                                                        setTimeout(() => resolveDocDialog({ type: 'delete', benchmark: outline }), 50);
+                                                    }}
+                                                >
+                                                    <Trash2Icon className="inline-block h-4 w-4" />
+                                                    Delete
+                                                </ContextMenuItem>
+                                            </>
+                                        )}
+                                    </>
                                 )}
 
                                 {role !== 'Chairman' && role !== 'Accreditor' && (
                                     <>
+                                        <ContextMenuSeparator />
+                                        <ContextMenuLabel>Benchmark</ContextMenuLabel>
                                         <ContextMenuItem
-                                            className="cursor-pointer"
+                                            className="justify-left flex cursor-pointer flex-row items-center gap-2"
                                             onSelect={() => {
                                                 setTimeout(() => resolveBenchDialog({ type: 'edit', benchmark: outline }), 100);
                                             }}
                                         >
-                                            Edit {outline.container ? 'Container' : 'Benchmark'}
+                                            <Edit className="inline-block h-4 w-4" />
+                                            Edit
                                         </ContextMenuItem>
-
-                                        <ContextMenuSeparator />
-
                                         <ContextMenuItem
-                                            className="cursor-pointer"
+                                            className="justify-left flex cursor-pointer flex-row items-center gap-2"
                                             variant="destructive"
                                             onSelect={() => {
                                                 setTimeout(() => resolveBenchDialog({ type: 'delete', benchmark: outline }), 50);
                                             }}
                                         >
-                                            Delete {outline.container ? 'Container' : 'Benchmark'}
+                                            <Trash2Icon className="inline-block h-4 w-4" />
+                                            Delete
                                         </ContextMenuItem>
                                     </>
-                                )}
-
-                                {!outline.container && outline.area_files && (
-                                    <ContextMenuItem
-                                        variant="destructive"
-                                        className="cursor-pointer"
-                                        onSelect={() => {
-                                            setTimeout(() => resolveDocDialog({ type: 'delete', benchmark: outline }), 50);
-                                        }}
-                                    >
-                                        Delete Document
-                                    </ContextMenuItem>
                                 )}
                             </ContextMenuContent>
                         </ContextMenu>

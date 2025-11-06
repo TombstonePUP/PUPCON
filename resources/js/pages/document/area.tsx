@@ -88,7 +88,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         <div>
                             <ParameterAccordion
                                 area_id={area?.area_id}
-                                program={program.program_name}
+                                program={program}
                                 areaParameters={[...(area?.area_parameters ?? [])].sort((a, b) => a.parameter_name.localeCompare(b.parameter_name))}
                                 parameterOutlineCategories={parameterOutlineCategories}
                                 resolveDocDialog={(d) => openDialog('document', d.type, undefined, d.benchmark, undefined, undefined)}

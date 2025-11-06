@@ -1,7 +1,7 @@
 'use client';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { type AreaParameters, type ParameterOutlineCategory, ParameterOutlines} from '@/types';
+import { type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program} from '@/types';
 
 import { buildOutlineTree, RecursiveOutlineForm } from '@/components/recursive-outline';
 
@@ -23,7 +23,7 @@ interface ParamDialogParams {
 
 interface ParameterAccordionProps {
     area_id?: number;
-    program: string;
+    program: Program;
     areaParameters?: AreaParameters[];
     parameterOutlineCategories?: ParameterOutlineCategory[];
     resolveDocDialog: (params: DocDialogParams) => void;

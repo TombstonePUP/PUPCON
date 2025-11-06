@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
                         Route::controller(AreaFilesController::class)->group(function () {
                             Route::post('/{area_id}/upload_file', 'store')->name('upload.file');
                             Route::delete('/{area_id}/{outline_id}/delete_file', 'destroy')->name('delete.file');
+                            Route::get('/{area_id}/{outline_id}/download_file', 'download')->name('download.file');
                         });
 
                         Route::controller(AreaFormsController::class)->group(function () {

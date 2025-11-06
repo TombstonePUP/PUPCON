@@ -28,7 +28,7 @@ class ImportParametersController extends Controller
         $validated = $request->validate([
             'document' => 'required|file|mimes:csv',
         ], [
-            'document.mimes' => 'The document must be a file of type: xlsx, csv.',
+            'document.mimes' => 'The document must be a file of type: csv.',
             'document.required' => 'Please upload a document to import.',
         ]);
 

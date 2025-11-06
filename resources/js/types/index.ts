@@ -91,7 +91,7 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
-    userRoles: UserRoles;
+    roles?: Roles;
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -204,7 +204,7 @@ export interface AreaParameters {
     parameter_name: string;
     parameter_description: string;
     area?: Area;
-    parameterOutlines?: ParameterOutlines[];
+    parameter_outlines?: ParameterOutlines[];
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -216,8 +216,8 @@ export interface ParameterOutlines {
     outline_description: string;
     container: boolean;
     initial?: string;
-    areaParameters?: AreaParameters;
-    parameterOutlineCategory?: ParameterOutlineCategory;
+    area_parameters?: AreaParameters;
+    paramter_outline_category?: ParameterOutlineCategory;
     area_files?: AreaFiles;
     [key: string]: unknown; // This allows for additional properties...
 }
@@ -226,7 +226,7 @@ export interface ParameterOutlineCategory {
     parameter_outline_category_id: number;
     category_name: string;
     category_description: string;
-    parameterOutlines?: ParameterOutlines[];
+    parameter_outlines?: ParameterOutlines[];
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -237,7 +237,7 @@ export interface AreaFiles {
     file_path: string;
     file_status_id: number;
     file_rejection_reason: string | null;
-    parameterOutlines?: ParameterOutlines;
+    parameter_outlines?: ParameterOutlines;
     file_status?: FileStatus;
     [key: string]: unknown; // This allows for additional properties...
 }
