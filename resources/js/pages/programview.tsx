@@ -377,7 +377,7 @@ export default function Programs({ program }: PerProgramProps) {
                     <div className="mx-auto w-[85%] max-w-7xl" id="faculty">
                         <SectionHeader title="Our Faculty" subtitle="Meet our dedicated educators who shape the future of technology" />
                         <div className="flex flex-wrap justify-center gap-6">
-                            {program.faculties?.map((f, i) => {
+                            {program.faculty_staff?.map((f, i) => {
                                 const [cardRef, cardInView] = useInView(0.2);
                                 return (
                                     <FacultyCard

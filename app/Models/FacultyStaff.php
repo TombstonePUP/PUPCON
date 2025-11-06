@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FacultyStaff extends Model
 {
@@ -29,5 +30,13 @@ class FacultyStaff extends Model
         'faculty_image_name' => 'encrypted',
         'faculty_image_path' => 'encrypted',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Programs,FacultyStaff>
+     */
+    public function Programs(): BelongsTo
+    {
+        return $this->belongsTo(Programs::class, 'program_id', 'program_id');
+    }
 
 }

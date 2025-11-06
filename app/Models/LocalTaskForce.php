@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LocalTaskForce extends Model
 {
@@ -31,5 +31,13 @@ class LocalTaskForce extends Model
         'profile_image_name' => 'encrypted',
         'profile_image_path' => 'encrypted',
     ];
+
+    /**
+     * @return HasMany<LocalTaskForceMembers, LocalTaskForce>
+     */
+    public function Members(): HasMany
+    {
+        return $this->hasMany(LocalTaskForceMembers::class, 'local_task_force_id', 'local_task_force_id');
+    }
 
 }

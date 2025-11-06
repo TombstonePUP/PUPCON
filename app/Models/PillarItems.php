@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PillarItems extends Model
 {
@@ -22,4 +23,12 @@ class PillarItems extends Model
         'pillar_id',
         'item_description',
     ];
+
+    /**
+     * @return BelongsTo<PillarItems, Pillars>
+     */
+    public function Pillar(): BelongsTo
+    {
+        return $this->belongsTo(Pillars::class, 'pillar_id', 'pillar_id');
+    }
 }

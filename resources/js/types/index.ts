@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { FacultyStaff, Objectives, ProgramGallery } from './content';
 
 export interface Auth {
     user: User;
@@ -69,7 +70,7 @@ export interface PerProgramUnderSurvey {
     page_banner_image_path: string;
     color?: string;
     levels?: AccreditationLevels[];
-    faculties?: Faculty[];
+    faculty_staff?: FacultyStaff[];
     objectives: Objectives[];
     program_gallery: ProgramGallery[];
     [key: string]: unknown;
@@ -146,7 +147,7 @@ export interface PerProgram {
     page_banner_image_name: string;
     page_banner_image_path: string;
     levels?: AccreditationLevels[];
-    faculties?: Faculty[];
+    faculty_staff?: FacultyStaff[];
     [key: string]: unknown;
 }
 
@@ -284,30 +285,3 @@ export interface FilesOverview {
     file_status: string;
     rejection_reason: string;
 }
-
-export interface Faculty {
-    faculty_id: number;
-    first_name: string;
-    middle_name?: string | null;
-    last_name: string;
-    suffix?: string | null;
-    faculty_status: string;
-    program_id: number;
-    program_coordinator: boolean;
-    faculty_image_name?: string | null;
-    faculty_image_path?: string | null;
-}
-
-export interface Objectives {
-    program_id: number;
-    objective_description?: string | null;
-    program_objective_id: number;
-}
-
-export interface ProgramGallery {
-    program_gallery_id: number;
-    program_id: number;
-    image_name: string;
-    image_path: string;
-}
-

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pillars extends Model
 {
@@ -21,4 +22,12 @@ class Pillars extends Model
     protected $fillable = [
         'pillar_title',
     ];
+
+    /**
+     * @return HasMany<PillarItems,Pillars>
+     */
+    public function PillarItems(): HasMany
+    {
+        return $this->hasMany(PillarItems::class, 'pillar_id', 'pillar_id');
+    }
 }

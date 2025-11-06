@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Organizations extends Model
 {
@@ -23,4 +24,13 @@ class Organizations extends Model
         'organization_name',
         'affiliation',
     ];
+
+    /**
+     * @return BelongsTo<Organizations, OrganizationTypes>
+     */
+    public function Type(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationTypes::class, 'type_id', 'type_id');
+    }
+
 }

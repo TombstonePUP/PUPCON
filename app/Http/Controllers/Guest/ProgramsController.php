@@ -59,7 +59,7 @@ class ProgramsController extends Controller
                     $query->where('is_active', true);
                 },
                  'Levels.Areas',
-                 'Faculties',
+                 'FacultyStaff',
                  'Objectives',
                  'ProgramGallery'
             ])

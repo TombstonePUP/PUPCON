@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LocalTaskForceMembers extends Model
 {
@@ -23,4 +24,12 @@ class LocalTaskForceMembers extends Model
         'first_name',
         'last_name',
     ];
+
+    /**
+     * @return BelongsTo<LocalTaskForceMembers, LocalTaskForce>
+     */
+    public function Chairman(): BelongsTo
+    {
+        return $this->belongsTo(LocalTaskForce::class, 'local_task_force_id', 'local_task_force_id');
+    }
 }
