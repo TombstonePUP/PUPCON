@@ -68,8 +68,8 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         <div>
                             <AreaCards
                                 program={program}
+                                area_id={area?.area_id}
                                 forms={area?.area_forms}
-                                // areaId={area?.area_id}
                                 resolveFormDialog={(d) => openDialog('area-form', d.type, d.form, undefined, undefined, undefined)}
                             />
                         </div>
