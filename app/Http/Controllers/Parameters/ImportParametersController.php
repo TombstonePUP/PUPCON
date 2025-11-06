@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Parameters;
 
 use App\Http\Controllers\Controller;
 use App\Models\AreaParameters;
+use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
 use Illuminate\Http\Request;
@@ -31,7 +32,8 @@ class ImportParametersController extends Controller
             'document.required' => 'Please upload a document to import.',
         ]);
 
-        $area_id = $request->area_id;
+        $area = $request->area_id;
+        $area = Areas::findOrFail($area);
         $file = $validated['document'];
         $path = $file->getRealPath();
         $csv = Reader::from($file->getRealPath(), 'r');
@@ -39,7 +41,7 @@ class ImportParametersController extends Controller
 
         $records = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-        DB::transaction(function () use ($records, $area_id) {
+        DB::transaction(function () use ($records, $area) {
             $section = null;
             $headers = [];
             $parameters = [];
@@ -70,7 +72,7 @@ class ImportParametersController extends Controller
                     continue;
                 }
 
-                if (empty($headers) && in_array('id', $columns) || in_array('parameter_id', $columns)) {
+                if (empty($headers) && in_array('parameter', $columns)) {
                     $headers = $columns;
                     continue;
                 }
@@ -78,29 +80,28 @@ class ImportParametersController extends Controller
                 if ($section === 'parameters') {
                     $row = array_combine($headers, $columns);
 
-                    $parameter = AreaParameters::create(
+                    $parameter = $area->AreaParameters()->create(
                         [
-                            'area_id' => $area_id,
-                            'parameter_name' => $row['parameter_name'],
+                            // 'area_id' => $area_id,
+                            'parameter_name' => $row['parameter'],
                             'parameter_description' => $row['parameter_description'],
                         ]
                     );
-                    $parameters[$row['id']] = $parameter->area_parameter_id;
+                    $parameters[$row['parameter']] = $parameter->area_parameter_id;
                 }
 
                 if ($section === 'benchmarks') {
                     $row = array_combine($headers, $columns);
 
-                    $parameter_id = $parameters[$row['parameter_id']];
-                    $category = preg_replace('/[\x00-\x1F\x7F\xA0]/u', '', $row['benchmark_category']);
-                    $category = trim($category);
+                    $parameter = $parameters[$row['parameter']];
+                    $category = $row['benchmark_category'];
                     $benchmark_category = ParameterOutlineCategory::where('category_name', $category)->first();
                     $category_id = $benchmark_category?->parameter_outline_category_id;
 
-                    if ($parameter_id) {
+                    if ($parameter) {
                         ParameterOutlines::create(
                             [
-                                'area_parameter_id' => $parameter_id,
+                                'area_parameter_id' => $parameter,
                                 'parameter_outline_category_id' => $category_id,
                                 'outline_number' => $row['benchmark_number'],
                                 'outline_description' => $row['benchmark_description'],

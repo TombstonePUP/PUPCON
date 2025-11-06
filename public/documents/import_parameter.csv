@@ -1,12 +1,11 @@
 #Parameters,,,,
-id,parameter_name,parameter_description,,
-1,A,This is Parameter A,,
+parameter,parameter_description,,
+A,This is Parameter A,,
 ,,,,
-parameter_id,benchmark_category,benchmark_number,benchmark_description,benchmark_container
-1,Systems - Inputs and Processes,1,This is Benchmark 1 for Parameter A,FALSE
+parameter,benchmark_category,benchmark_number,benchmark_description,benchmark_container
+A,Systems - Inputs and Processes,1,This is Benchmark 1 for Parameter A,FALSE
 ,,,,
 --Notes--,,,,
-parameter_id is based on the id of the parameter that you want to associate the benchmark with,,,,
 benchmark_category can be one of the following,No Category,Systems - Inputs and Processes,Implementation,Outcome/s
 bencmark_number is a numeric value,,,,
 benchmark_container determines wether the benchmark contains sub-benchmarks or not.,True or False,,,
