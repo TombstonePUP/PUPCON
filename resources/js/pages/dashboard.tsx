@@ -13,7 +13,7 @@ import {
     type FrequencyUploads,
     type DocumentStatistics,
     type OverallUploads
-} from "@/types"
+} from "@/types/dashboard";
 
 import { columns } from "@/components/charts/data-table-columns/logs"
 

@@ -43,6 +43,7 @@ export interface NavPrograms {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+//Redundant
 export interface ProgramsUnderSurvey {
     program_id: number;
     program_name: string;
@@ -54,6 +55,7 @@ export interface ProgramsUnderSurvey {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+//Redundant
 export interface PerProgramUnderSurvey {
     program_id: number;
     degree_type: string;
@@ -102,36 +104,7 @@ export interface Roles {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-export interface ActivityLogs {
-    activity_log_id: number;
-    full_name: string;
-    area: string;
-    program: string;
-    file_name: string;
-    activity: string;
-    activity_date: string;
-    [key: string]: unknown;
-}
-
-export interface FrequencyUploads {
-    activity_date: string;
-    activity: number;
-    [key: string]: unknown;
-}
-
-export interface DocumentStatistics {
-    file_status: string;
-    documents: number;
-    [key: string]: unknown;
-}
-
-export interface OverallUploads {
-    document_type: string;
-    outlines: number;
-    documents: number;
-    [key: string]: unknown;
-}
-
+//Redundant
 export interface PerProgram {
     program_id: number;
     degree_type: string;
@@ -162,6 +135,7 @@ export interface AccreditationLevels {
     [key: string]: unknown;
 }
 
+//Redundand
 export interface ProgramAreas {
     area_id: number;
     program_id: number;
@@ -175,6 +149,7 @@ export interface ProgramAreas {
     [key: string]: unknown;
 }
 
+//Redundant
 export interface Program {
     program_id: number;
     degree_type: string;
@@ -184,6 +159,7 @@ export interface Program {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+//Redundant
 export interface Area {
     area_id: number;
     program_id: number;
