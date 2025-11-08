@@ -320,7 +320,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                         <TableBody>
                             {table.getRowModel().rows?.length ? (
                                 table.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="border-b transition-colors hover:bg-muted/50">
+                                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="border-b transition-colors hover:bg-muted/50 ">
                                         {row.getVisibleCells().map((cell, index) => (
                                             <TableCell 
                                                 key={cell.id} 
