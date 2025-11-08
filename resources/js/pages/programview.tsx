@@ -233,8 +233,8 @@ export default function Programs({ program }: PerProgramProps) {
 
                             {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
-                                {user?.roles?.role_name === 'Accreditor' ? (
-                                    program.levels.length > 1 ? (
+                                {/* {user?.roles?.role_name === 'Accreditor' ? ( */}
+                                    {program.levels.length > 1 ? (
                                         <div className="relative">
                                             <div
                                                 onMouseEnter={() => setDropdownOpen(true)}
@@ -268,12 +268,12 @@ export default function Programs({ program }: PerProgramProps) {
                                         <label className="w-60 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20">
                                             Accreditation Level {program.levels[0]?.level}
                                         </label>
-                                    )
-                                ) : (
+                                    )}
+                                {/* ) : (
                                     <label className="mb-3 block text-xl font-medium opacity-90">
                                         Accreditation Level {program.levels[0]?.level}
                                     </label>
-                                )}
+                                )} */}
                             </div>
                         </div>
 
