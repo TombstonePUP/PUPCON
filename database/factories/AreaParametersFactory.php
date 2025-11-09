@@ -25,6 +25,7 @@ class AreaParametersFactory extends Factory
             'area_id' => $area->area_id,
             'parameter_name' => fake()->word(),
             'parameter_description' => fake()->sentence(),
+            'mean' => fake()->randomFloat(2, 0, 5),
         ];
     }
 }

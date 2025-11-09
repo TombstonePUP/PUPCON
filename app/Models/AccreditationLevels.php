@@ -24,6 +24,8 @@ class AccreditationLevels extends Model
         'program_id',
         'level',
         'remarks',
+        'survey_date',
+        'mean',
         'is_active',
     ];
 

@@ -6,11 +6,17 @@ import React, { useRef, useState } from 'react';
 // Section Imports
 import AboutPageSection from './about-content';
 import AdminContentSection from './admin-content';
-import FacilitiesContentSection from './facilities-content';
 import FacultyContentSection from './faculty-content';
 import HistoryContentSection from './history-content';
 import LocalTaskForceContentSection from './localtaskforce-content';
 import VmgoContentSection from './vmgo-content';
+import FacilitiesSection from '@/components/content/facilities-content';
+import { ContentPages, Facilities } from '@/types/content';
+
+interface MainContentProps {
+    facilities: Facilities[];
+    facility_page: ContentPages;
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,8 +34,9 @@ const PlaceholderSection: React.FC<{ title: string }> = ({ title }) => (
     </div>
 );
 
-const MainContent = () => {
+const MainContent = ({...props}: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('about');
+    const {facilities, facility_page} = props;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
@@ -101,7 +108,10 @@ const MainContent = () => {
                             </div>
 
                             <div ref={facilitiesRef} className="scroll-mt-6">
-                                <FacilitiesContentSection />
+                                <FacilitiesSection
+                                    facilities={facilities}
+                                    facility_page={facility_page}
+                                />
                             </div>
 
                             <div ref={localTaskForceRef} className="scroll-mt-6">
@@ -120,9 +130,8 @@ const MainContent = () => {
                                         <button
                                             key={section.id}
                                             onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
-                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
+                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                                }`}
                                         >
                                             {section.label}
                                         </button>

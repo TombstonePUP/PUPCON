@@ -32,6 +32,8 @@ return new class extends Migration
             $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('level');
             $table->string('remarks')->default('Ongoing Survey');
+            $table->date('survey_date')->nullable();
+            $table->float('mean')->default(0);
             $table->boolean('is_active')->default(true);
         });
 

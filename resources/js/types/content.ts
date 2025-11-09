@@ -1,3 +1,16 @@
+export interface ContentPages {
+    content_page_id: number;
+    title: string;
+    subtitle?: string | null;
+    description?: string | null;
+    image_name?: string | null;
+    image_path?: string | null;
+    quote?: string | null;
+    author?: string | null;
+    phone_number?: number | null;
+    address?: string | null;
+}
+
 export interface FacultyStaff {
     faculty_id: number;
     first_name: string;
@@ -24,4 +37,11 @@ export interface ProgramGallery {
     image_path: string;
 }
 
+export interface Facilities {
+    facility_id: number;
+    facility_name: string;
+    description?: string | null;
+    image_name?: string | null;
+    image_path?: string | null;
+}
 

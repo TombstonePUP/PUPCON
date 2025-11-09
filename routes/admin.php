@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Content\ContentController;
+use App\Http\Controllers\Content\FacilitiesController;
 use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Parameters\AreaParameterController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
@@ -25,10 +27,6 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     Route::get('ratings', function () {
         return Inertia::render('document/ratings');
     })->name('ratings');
-
-    Route::get('main-content', function () {
-        return Inertia::render('content-management/main-content');
-    })->name('content-management');
 
      Route::get('/other-services', function () {
         return Inertia::render('content-management/other-services');
@@ -58,4 +56,7 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         Route::post('/{file_id}/rejectDocument', 'reject')->name('rejectDocument');
         Route::post('/{file_id}/revertDocument', 'revert')->name('revertDocument');
     });
+
+    Route::get('main-content/', ContentController::class)->name('content.main');
+    Route::post('main-content/facilities/update', FacilitiesController::class)->name('content.facilities.update');
 });

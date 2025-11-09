@@ -23,7 +23,8 @@ class AreaParameters extends Model
     protected $fillable = [
         'area_id',
         'parameter_name',
-        'parameter_description'
+        'parameter_description',
+        'mean',
     ];
 
     /**
