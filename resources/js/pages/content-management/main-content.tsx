@@ -11,9 +11,12 @@ import HistoryContentSection from './history-content';
 import LocalTaskForceContentSection from './localtaskforce-content';
 import VmgoContentSection from './vmgo-content';
 import FacilitiesSection from '@/components/content/facilities-content';
-import { ContentPages, Facilities } from '@/types/content';
+import { Administration, ContentPages, Facilities } from '@/types/content';
+import AdministrationSection from '@/components/content/admin-content';
 
 interface MainContentProps {
+    admin_page: ContentPages;
+    officials: Administration[];
     facilities: Facilities[];
     facility_page: ContentPages;
 }
@@ -36,7 +39,7 @@ const PlaceholderSection: React.FC<{ title: string }> = ({ title }) => (
 
 const MainContent = ({...props}: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('about');
-    const {facilities, facility_page} = props;
+    const {admin_page, officials, facilities, facility_page} = props;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
@@ -100,7 +103,11 @@ const MainContent = ({...props}: MainContentProps) => {
                             </div>
 
                             <div ref={administrationRef} className="scroll-mt-6">
-                                <AdminContentSection />
+                                {/*<AdminContentSection />*/}
+                                <AdministrationSection
+                                    admin_page={admin_page}
+                                    officials={officials}
+                                />
                             </div>
 
                             <div ref={facultiesRef} className="scroll-mt-6">

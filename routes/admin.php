@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\Content\AboutController;
+use App\Http\Controllers\Content\AdministrationController;
 use App\Http\Controllers\Content\ContentController;
 use App\Http\Controllers\Content\FacilitiesController;
+use App\Http\Controllers\Content\HistoryController;
+use App\Http\Controllers\Content\LocalTaskForceController;
+use App\Http\Controllers\Content\VmgoController;
 use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Parameters\AreaParameterController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
@@ -58,5 +63,10 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     });
 
     Route::get('main-content/', ContentController::class)->name('content.main');
+    Route::post('main-content/about/update', AboutController::class)->name('content.about.update');
+    Route::post('main-content/vmgo/update', VmgoController::class)->name('content.vmgo.update');
+    Route::post('main-content/history/update', HistoryController::class)->name('content.history.update');
+    Route::post('main-content/administration/update', AdministrationController::class)->name('content.administration.update');
     Route::post('main-content/facilities/update', FacilitiesController::class)->name('content.facilities.update');
+    Route::post('main-content/local_task_force/update', LocalTaskForceController::class)->name('content.local_task_force.update');
 });

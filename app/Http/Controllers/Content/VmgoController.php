@@ -7,5 +7,8 @@ use Illuminate\Http\Request;
 
 class VmgoController extends Controller
 {
-    //
+    public function __invoke(Request $request)
+    {
+
+    }
 }

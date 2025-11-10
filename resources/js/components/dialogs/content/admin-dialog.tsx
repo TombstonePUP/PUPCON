@@ -1,49 +1,46 @@
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/text-area';
-import { Facilities } from '@/types/content';
-import { useState, useEffect } from 'react';
+import { Label } from '@/components/ui/label';
+import { Administration } from '@/types/content';
 import { Edit2, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-interface FacilitiesDialogProps {
-    facility?: Facilities;
+interface AdministrationDialogProps {
+    official?: Administration;
     type: 'edit' | 'add';
-    onSave: (facility: FacilityForm) => void;
+    onSave: (official: OfficialForm) => void;
     onClose: () => void;
 }
 
-interface FacilityForm {
-    facility_id?: number;
-    facility_name: string;
-    description: string;
-    facility_image?: File | null;
+interface OfficialForm {
+    administration_id?: number;
+    first_name: string;
+    middle_name?: string;
+    last_name: string;
+    suffix?: string;
+    position: string;
+    profile?: File | null;
     previewUrl?: string | null;
 }
 
-export function FacilitiesDialog({ facility, type, onSave, onClose }: FacilitiesDialogProps) {
-    const [data, setData] = useState<FacilityForm>({
-        facility_id: facility?.facility_id || 0,
-        facility_name: facility?.facility_name || '',
-        description: facility?.description || '',
-        facility_image: null,
-        previewUrl: facility?.image_path || null,
+export function AdministrationDialog({ official, type, onSave, onClose }: AdministrationDialogProps) {
+    const [data, setData] = useState<OfficialForm>({
+        administration_id: official?.administration_id || 0,
+        first_name: official?.first_name || '',
+        middle_name: official?.middle_name || '',
+        last_name: official?.last_name || '',
+        suffix: official?.suffix || '',
+        position: official?.position || '',
+        profile: null,
+        previewUrl: official?.profile_picture_path || null,
     });
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const previewUrl = URL.createObjectURL(file);
-            setData({ ...data, facility_image: file, previewUrl });
+            setData({ ...data, profile: file, previewUrl });
         }
     };
 
@@ -64,13 +61,11 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="w-full max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">
-                        {type === 'edit' ? 'Edit Facility' : 'Add Facility'}
-                    </DialogTitle>
+                    <DialogTitle className="text-lg font-medium text-gray-900">{type === 'edit' ? 'Edit Official' : 'Add Official'}</DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">
                         {type === 'edit'
-                            ? `Modify the details of "${facility?.facility_name}".`
-                            : 'Fill in the details to add a new facility.'}
+                            ? `Modify the details of "${official?.first_name}${official?.last_name}".`
+                            : 'Fill in the details to add a new official.'}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -79,12 +74,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                         {!data.previewUrl ? (
                             <label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <svg
-                                        className="mb-4 h-8 w-8 text-gray-500"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 20 16"
-                                    >
+                                    <svg className="mb-4 h-8 w-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                         <path
                                             stroke="currentColor"
                                             strokeLinecap="round"
@@ -98,21 +88,12 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                                     </p>
                                     <p className="text-xs text-gray-500">JPG, PNG, JPEG</p>
                                 </div>
-                                <input
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/*"
-                                    onChange={handleImageChange}
-                                />
+                                <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                             </label>
                         ) : (
-                            <div className="relative group">
-                                <img
-                                    src={data.previewUrl}
-                                    alt="Preview"
-                                    className="h-48 w-full rounded-lg object-cover border border-gray-200"
-                                />
-                                <div className="rounded-lg absolute inset-0 flex gap-3 items-center justify-center bg-black/40 opacity-0 transition group-hover:opacity-100">
+                            <div className="group relative">
+                                <img src={data.previewUrl} alt="Preview" className="h-48 w-full rounded-lg border border-gray-200 object-cover" />
+                                <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-lg bg-black/40 opacity-0 transition group-hover:opacity-100">
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -139,7 +120,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                                         onClick={() =>
                                             setData({
                                                 ...data,
-                                                facility_image: null,
+                                                profile: null,
                                                 previewUrl: null,
                                             })
                                         }
@@ -152,27 +133,36 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                     </div>
 
                     <div>
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Facility Name</Label>
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">First Name</Label>
+                        <Input placeholder="e.g., Juan" value={data.first_name} onChange={(e) => setData({ ...data, first_name: e.target.value })} />
+                    </div>
+
+                    <div>
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">Middle Name</Label>
                         <Input
-                            placeholder="e.g., Library"
-                            value={data.facility_name}
-                            onChange={(e) =>
-                                setData({ ...data, facility_name: e.target.value })
-                            }
+                            placeholder="e.g., Santos"
+                            value={data.middle_name}
+                            onChange={(e) => setData({ ...data, middle_name: e.target.value })}
                         />
                     </div>
 
                     <div>
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
-                        <Textarea
-                            placeholder="Enter a description for the facility..."
-                            value={data.description}
-                            onChange={(e) =>
-                                setData({ ...data, description: e.target.value })
-                            }
-                            autoResize
-                            minHeight={100}
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">Last Name</Label>
+                        <Input
+                            placeholder="e.g., Dela Cruz"
+                            value={data.last_name}
+                            onChange={(e) => setData({ ...data, last_name: e.target.value })}
                         />
+                    </div>
+
+                    <div>
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">Suffix</Label>
+                        <Input placeholder="e.g., Sr., Jr., III" value={data.suffix} onChange={(e) => setData({ ...data, suffix: e.target.value })} />
+                    </div>
+
+                    <div>
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">Position</Label>
+                        <Input placeholder="e.g., President" value={data.position} onChange={(e) => setData({ ...data, position: e.target.value })} />
                     </div>
                 </div>
 
@@ -183,7 +173,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                         </Button>
                     </DialogClose>
                     <Button variant="noborder" onClick={handleSubmit}>
-                        {type === 'edit' ? 'Save Changes' : 'Add Facility'}
+                        {type === 'edit' ? 'Save Changes' : 'Add Official'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

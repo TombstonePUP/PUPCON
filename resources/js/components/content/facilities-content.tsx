@@ -63,7 +63,7 @@ const FacilityPhoto: React.FC<{ url: string | null; alt: string }> = ({ url, alt
     );
 };
 
-export default function FacilitiesSection({ ...props }: FacilitiesProps) {
+const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
     const { facilities, facility_page } = props;
     const [facilityList, setFacilityList] = useState<Facilities[]>(facilities ?? []);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -176,7 +176,6 @@ export default function FacilitiesSection({ ...props }: FacilitiesProps) {
             return updatedList;
         });
     };
-    console.log('data facilities form:', facilities, facility_page);
     return (
         <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
             <div className="p-8">
@@ -321,3 +320,5 @@ export default function FacilitiesSection({ ...props }: FacilitiesProps) {
         </div>
     );
 }
+
+export default FacilitiesSection;

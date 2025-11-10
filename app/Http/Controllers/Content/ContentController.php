@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Organizations;
 use App\Models\OrganizationTypes;
+use App\Models\UniversityAdministration;
 use Illuminate\Support\Facades\Storage;
 
 class ContentController extends Controller
@@ -29,6 +30,14 @@ class ContentController extends Controller
             'phone_number' => '+63 2 8123 4567',
         ];
 
+        $officials = UniversityAdministration::all();
+
+        $officials = $officials->map(function ($official) {
+            $official->profile_picture_path = Storage::url($official->profile_picture_path);
+            return $official;
+        });
+        $admin_page = ContentPages::where('title', 'Administration')->first();
+
         $facilities = Facilities::all();
         $facilities = $facilities->map(function ($facility) {
             $facility->image_path = Storage::url($facility->image_path);
@@ -40,6 +49,8 @@ class ContentController extends Controller
             'orgTypes' => $orgTypes,
             'organizations' => $organizations,
             'aboutData' => $aboutData,
+            'officials' => $officials,
+            'admin_page' => $admin_page,
             'facilities' => $facilities,
             'facility_page' => $facility_page,
         ]);

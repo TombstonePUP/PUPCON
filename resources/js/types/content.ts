@@ -45,3 +45,13 @@ export interface Facilities {
     image_path?: string | null;
 }
 
+export interface Administration {
+    administration_id: number;
+    first_name: string;
+    middle_name?: string | null;
+    last_name: string;
+    suffix?: string | null;
+    position: string;
+    profile_picture_name?: string | null;
+    profile_picture_path?: string | null;
+}

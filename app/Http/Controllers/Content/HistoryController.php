@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Content;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class AboutController extends Controller
+class HistoryController extends Controller
 {
     public function __invoke(Request $request)
     {
