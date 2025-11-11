@@ -1,93 +1,193 @@
-import { CardHeader, HomeCard, HomeCardDescription, HomeCardTitle } from '@/components/ui/card';
 import Layout from '@/layouts/landing-layout';
-import { Head, Link, router, usePage } from '@inertiajs/react';
-import { motion, useReducedMotion } from 'framer-motion';
-import { BookOpen, Calendar, ChevronLeft, ChevronRight, GraduationCap, MapPin, Play, X } from 'lucide-react';
+import { BookOpen, Calendar, ChevronLeft, ChevronRight, GraduationCap, ImageIcon, MapPin, Play, X } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
+const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: any }) => (
+    <a href={href} {...props}>
+        {children}
+    </a>
+);
+
+const router = {
+    visit: (url: string, options: any) => {
+        console.log(`Mock Router: visit "${url}" with options:`, options);
+    },
+};
+
+const usePage = () => ({
+    props: {
+        auth: {
+            user: {
+                first_name: 'Esteemed',
+                last_name: 'Accreditor',
+                roles: {
+                    role_name: 'Accreditor',
+                },
+            },
+        },
+    },
+});
+
+const HomeCard = ({ className, children, ...props }: { className?: string; children: React.ReactNode }) => (
+    <div className={`rounded-lg border ${className}`} {...props}>
+        {children}
+    </div>
+);
+const CardHeader = ({ className, children, ...props }: { className?: string; children: React.ReactNode }) => (
+    <div className={`p-4 ${className}`} {...props}>
+        {children}
+    </div>
+);
+const HomeCardTitle = ({ className, children, ...props }: { className?: string; children: React.ReactNode }) => (
+    <h3 className={`font-semibold ${className}`} {...props}>
+        {children}
+    </h3>
+);
+const HomeCardDescription = ({ className, children, ...props }: { className?: string; children: React.ReactNode }) => (
+    <p className={`text-sm text-gray-600 ${className}`} {...props}>
+        {children}
+    </p>
+);
 
 interface LandingProps {
     carouselImages: string[];
 }
 
-// Simple Image Component with prefetching
-const ImageWithPreload = React.memo(({ src, alt, className, priority = false, ...props }) => {
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [shouldLoad, setShouldLoad] = useState(priority);
-    const imgRef = useRef();
+interface Auth {
+    user: {
+        first_name?: string;
+        last_name?: string;
+        roles?: {
+            role_name: string;
+        };
+    };
+}
+
+interface NewsCard {
+    title: string;
+    img: string;
+    desc: string;
+    source: string;
+}
+
+const useInView = (options: IntersectionObserverInit = { threshold: 0.1 }, triggerOnce: boolean = true) => {
+    const [isInView, setIsInView] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!shouldLoad) {
-            const observer = new IntersectionObserver(
-                ([entry]) => {
-                    if (entry.isIntersecting) {
-                        setShouldLoad(true);
-                        observer.disconnect();
-                    }
-                },
-                { rootMargin: '100px' },
-            );
-            if (imgRef.current) observer.observe(imgRef.current);
-            return () => observer.disconnect();
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                setIsInView(true);
+                if (triggerOnce && ref.current) {
+                    observer.unobserve(ref.current);
+                }
+            } else if (!triggerOnce) {
+                setIsInView(false);
+            }
+        }, options);
+
+        const currentRef = ref.current;
+        if (currentRef) {
+            observer.observe(currentRef);
         }
-    }, [shouldLoad]);
 
-    return (
-        <div ref={imgRef} className={`relative overflow-hidden ${className}`}>
-            {shouldLoad ? (
-                <>
-                    {!isLoaded && <div className="absolute inset-0 animate-pulse bg-gray-200" />}
-                    <img
-                        src={src}
-                        alt={alt}
-                        className={`h-full w-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-                        onLoad={() => setIsLoaded(true)}
-                        loading={priority ? 'eager' : 'lazy'}
-                        {...props}
-                    />
-                </>
-            ) : (
-                <div className="h-full w-full animate-pulse bg-gray-200" />
-            )}
-        </div>
-    );
-});
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, [options, triggerOnce]);
 
-// Simple Action Button - Made Responsive
-const ActionButton = ({ href, children, icon: Icon, external = false, ...props }) => {
-    const Component = external ? 'a' : Link;
-    const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
-
-    return (
-        <Component
-            href={href}
-            className="inline-flex transform-none items-center justify-center gap-2 rounded-full border-2 border-[#7f1414] bg-[#7f1414] px-4 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#6b1111] sm:gap-3 sm:px-6 sm:py-4 sm:text-base md:px-8"
-            {...externalProps}
-            {...props}
-        >
-            {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5" />}
-            <span className="whitespace-nowrap">{children}</span>
-            <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-        </Component>
-    );
+    return [ref, isInView] as const;
 };
 
-// Simple Carousel Component
-const SimpleCarousel = ({ images }) => {
+const SafeImage = React.memo(
+    ({
+        src,
+        alt,
+        className,
+        priority = false,
+        placeholderType = 'image',
+    }: {
+        src: string;
+        alt: string;
+        className: string;
+        priority?: boolean;
+        placeholderType?: 'image' | 'logo';
+    }) => {
+        const [isLoaded, setIsLoaded] = useState(false);
+        const [hasError, setHasError] = useState(false);
+        const [shouldLoad, setShouldLoad] = useState(priority);
+        const imgRef = useRef<HTMLDivElement>(null);
+
+        useEffect(() => {
+            if (!shouldLoad) {
+                const observer = new IntersectionObserver(
+                    ([entry]) => {
+                        if (entry.isIntersecting) {
+                            setShouldLoad(true);
+                            observer.disconnect();
+                        }
+                    },
+                    { rootMargin: '100px' },
+                );
+                if (imgRef.current) observer.observe(imgRef.current);
+                return () => observer.disconnect();
+            }
+        }, [shouldLoad]);
+
+        const handleInternalError = () => {
+            setHasError(true);
+        };
+
+        const placeholderBaseClass = 'h-full w-full flex items-center justify-center bg-gray-100 rounded-inherit';
+
+        const outerClassName = `relative overflow-hidden ${className || ''}`;
+
+        return (
+            <div ref={imgRef} className={outerClassName}>
+                {hasError ? (
+                    <div className={placeholderBaseClass}>
+                        {placeholderType === 'logo' ? (
+                            <span className="text-lg font-semibold text-[#7f1414]">PUP</span>
+                        ) : (
+                            <ImageIcon className="h-15 w-15 text-gray-300" />
+                        )}
+                    </div>
+                ) : shouldLoad ? (
+                    <>
+                        {!isLoaded && <div className="absolute inset-0 animate-pulse bg-gray-200" />}
+                        <img
+                            src={src}
+                            alt={alt}
+                            className={`h-full w-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                            onLoad={() => setIsLoaded(true)}
+                            onError={handleInternalError}
+                            loading={priority ? 'eager' : 'lazy'}
+                        />
+                    </>
+                ) : (
+                    <div className="h-full w-full animate-pulse bg-gray-200" />
+                )}
+            </div>
+        );
+    },
+);
+
+const SimpleCarousel = React.memo(({ images }: { images: string[] }) => {
     const [current, setCurrent] = useState(0);
 
     useEffect(() => {
-        // Preload all images
+        if (!images || images.length === 0) return;
+
         images.forEach((src, index) => {
             if (index > 0) {
-                // First image already preloaded in Head
                 const img = new Image();
                 img.src = src;
             }
         });
 
-        // Auto-advance carousel
         const interval = setInterval(() => {
             setCurrent((prev) => (prev + 1) % images.length);
         }, 4000);
@@ -95,33 +195,129 @@ const SimpleCarousel = ({ images }) => {
         return () => clearInterval(interval);
     }, [images]);
 
+    if (!images || images.length === 0) {
+        return (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                <p>No images for carousel</p>
+            </div>
+        );
+    }
+
     return (
         <div className="absolute inset-0">
             {images.map((src, index) => (
-                <div key={src} className={`absolute inset-0 transition-opacity duration-1000 ${index === current ? 'opacity-100' : 'opacity-0'}`}>
-                    <img src={src} alt={`Slide ${index + 1}`} className="h-full w-full object-cover" loading={index === 0 ? 'eager' : 'lazy'} />
+                <div
+                    key={src || index}
+                    className={`absolute inset-0 transition-opacity duration-1000 ${index === current ? 'opacity-100' : 'opacity-0'}`}
+                >
+                    <SafeImage src={src} alt={`Slide ${index + 1}`} className="h-full w-full" priority={index === 0} />
                 </div>
             ))}
         </div>
     );
-};
+});
 
-export default function Welcome({ carouselImages }: LandingProps) {
+const ActionButton = React.memo(
+    ({
+        href,
+        children,
+        icon: Icon,
+        external = false,
+        ...props
+    }: {
+        href: string;
+        children: React.ReactNode;
+        icon?: React.ElementType;
+        external?: boolean;
+        [key: string]: any;
+    }) => {
+        const Component = external ? 'a' : Link;
+        const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+
+        return (
+            <Component
+                href={href}
+                className="inline-flex transform-none items-center justify-center gap-2 rounded-full border-2 border-[#7f1414] bg-[#7f1414] px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-[#6b1111] active:scale-95 sm:gap-3 sm:px-6 sm:py-4 sm:text-base md:px-8"
+                {...externalProps}
+                {...props}
+            >
+                {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5" />}
+                <span className="whitespace-nowrap">{children}</span>
+                <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </Component>
+        );
+    },
+);
+
+export default function Welcome({ carouselImages = [] }: LandingProps) {
     const [showModal, setShowModal] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isPageReady, setIsPageReady] = useState(false);
-    const shouldReduceMotion = useReducedMotion();
 
-    // Add state for news card modal
-    const [selectedNewsItem, setSelectedNewsItem] = useState(null);
+    const [selectedNewsItem, setSelectedNewsItem] = useState<NewsCard | null>(null);
     const [isNewsDialogOpen, setIsNewsDialogOpen] = useState(false);
+    const [isNewsDialogVisible, setIsNewsDialogVisible] = useState(false);
 
-    // Add state for news pagination
     const [newsPage, setNewsPage] = useState(0);
 
     const images = carouselImages;
-    const { auth } = usePage<Auth>().props;
-    const user = auth.user;
+    const {
+        props: { auth },
+    } = usePage() as { props: { auth: Auth } };
+    const user = auth?.user;
+
+    const [heroRef, isHeroInView] = useInView({ threshold: 0.1 }, true);
+    const [heroContentRef, isHeroContentInView] = useInView({ threshold: 0.1 }, true);
+    const [newsSectionRef, isNewsSectionInView] = useInView({ threshold: 0.1 }, true);
+    const [newsCardsRef, isNewsCardsInView] = useInView({ threshold: 0.1 }, true);
+    const [newsPaginationRef, isNewsPaginationInView] = useInView({ threshold: 0.1 }, true);
+    const [avpSectionRef, isAvpSectionInView] = useInView({ threshold: 0.1 }, true);
+    const [avpVideoRef, isAvpVideoInView] = useInView({ threshold: 0.1 }, true);
+    const [avpContentRef, isAvpContentInView] = useInView({ threshold: 0.1 }, true);
+    const [directorSectionRef, isDirectorSectionInView] = useInView({ threshold: 0.1 }, true);
+    const [directorImageRef, isDirectorImageInView] = useInView({ threshold: 0.1 }, true);
+    const [directorMsgRef, isDirectorMsgInView] = useInView({ threshold: 0.1 }, true);
+    const [accreditorSectionRef, isAccreditorSectionInView] = useInView({ threshold: 0.1 }, true);
+    const [accreditorContentRef, isAccreditorContentInView] = useInView({ threshold: 0.1 }, true);
+    const [accreditorCardsRef, isAccreditorCardsInView] = useInView({ threshold: 0.1 }, true);
+    const [mapSectionRef, isMapSectionInView] = useInView({ threshold: 0.1 }, true);
+    const [mapContentRef, isMapContentInView] = useInView({ threshold: 0.1 }, true);
+    const [mapEmbedRef, isMapEmbedInView] = useInView({ threshold: 0.1 }, true);
+
+    const animationStyles = `
+        @keyframes pulse-bg-1 {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        @keyframes pulse-bg-2 {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.03); }
+        }
+        .animate-pulse-bg-1 {
+            animation: pulse-bg-1 3s ease-in-out infinite;
+        }
+        .animate-pulse-bg-2 {
+            animation: pulse-bg-2 2.5s ease-in-out 0.5s infinite;
+        }
+        /* Simple scrollbar for director's message */
+        .scrollbar-thin {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+        .scrollbar-thumb-white\\/20::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 5px;
+        }
+        /* Inherit border radius for SafeImage placeholder */
+        .rounded-inherit {
+            border-radius: inherit;
+        }
+    `;
 
     const newsCards = useMemo(
         () => [
@@ -149,7 +345,6 @@ export default function Welcome({ carouselImages }: LandingProps) {
                 desc: 'A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!',
                 source: 'https://www.facebook.com/photo.php?fbid=911510457668935&set=pb.100064299686924.-2207520000&type=3',
             },
-            // Add more posts here as they come from the API
             {
                 title: 'Sample Post 5',
                 img: '/images/pupcet.jpg',
@@ -166,7 +361,6 @@ export default function Welcome({ carouselImages }: LandingProps) {
         [],
     );
 
-    // Calculate pagination
     const POSTS_PER_PAGE = 4;
     const totalPages = Math.ceil(newsCards.length / POSTS_PER_PAGE);
     const currentPosts = newsCards.slice(newsPage * POSTS_PER_PAGE, (newsPage + 1) * POSTS_PER_PAGE);
@@ -183,51 +377,23 @@ export default function Welcome({ carouselImages }: LandingProps) {
         }
     };
 
-    // Snappy animation variants
-    const containerVariants = useMemo(
-        () => ({
-            hidden: { opacity: 0 },
-            visible: {
-                opacity: 1,
-                transition: {
-                    staggerChildren: shouldReduceMotion ? 0 : 0.1,
-                    delayChildren: 0.2,
-                },
-            },
-        }),
-        [shouldReduceMotion],
-    );
-
-    const itemVariants = useMemo(
-        () => ({
-            hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 20 },
-            visible: {
-                opacity: 1,
-                y: 0,
-                transition: {
-                    duration: shouldReduceMotion ? 0.1 : 0.3,
-                    ease: 'easeOut',
-                },
-            },
-        }),
-        [shouldReduceMotion],
-    );
-
-    // Initialize page
     useEffect(() => {
         setIsPageReady(true);
     }, []);
 
-    // Show welcome modal once per session
     useEffect(() => {
         if (isPageReady) {
-            const visited = sessionStorage.getItem('welcomeModalShown');
-            if (!visited) {
-                setTimeout(() => {
-                    setShowModal(true);
-                    setIsModalVisible(true);
-                    sessionStorage.setItem('welcomeModalShown', 'true');
-                }, 1000);
+            try {
+                const visited = sessionStorage.getItem('welcomeModalShown');
+                if (!visited) {
+                    setTimeout(() => {
+                        setShowModal(true);
+                        setTimeout(() => setIsModalVisible(true), 20);
+                        sessionStorage.setItem('welcomeModalShown', 'true');
+                    }, 1000);
+                }
+            } catch (error) {
+                console.warn('Could not access sessionStorage:', error);
             }
         }
     }, [isPageReady]);
@@ -237,7 +403,7 @@ export default function Welcome({ carouselImages }: LandingProps) {
         setTimeout(() => setShowModal(false), 200);
     }, []);
 
-    const handleSelectType = useCallback((type) => {
+    const handleSelectType = useCallback((type: string) => {
         setIsModalVisible(false);
         setTimeout(() => setShowModal(false), 200);
 
@@ -249,32 +415,34 @@ export default function Welcome({ carouselImages }: LandingProps) {
         }
     }, []);
 
-    // Add handler functions for news dialog
-    const handleOpenNewsDialog = (card) => {
+    const handleOpenNewsDialog = (card: NewsCard) => {
         setSelectedNewsItem(card);
         setIsNewsDialogOpen(true);
+        setTimeout(() => setIsNewsDialogVisible(true), 20);
     };
 
-    const handleCloseNewsDialog = () => {
-        setIsNewsDialogOpen(false);
-        setTimeout(() => setSelectedNewsItem(null), 200);
-    };
+    const handleCloseNewsDialog = useCallback(() => {
+        setIsNewsDialogVisible(false);
+        setTimeout(() => {
+            setIsNewsDialogOpen(false);
+            setSelectedNewsItem(null);
+        }, 200);
+    }, []);
 
     return (
         <>
             <Head title="PUP San Juan">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-                <link rel="preload" href="/images/landing/1.png" as="image" />
+                <link rel="preload" href={carouselImages[0] || '/images/landing/1.png'} as="image" />
             </Head>
 
+            <style>{animationStyles}</style>
+
             <Layout>
-                {/* Hero Section with Animated Carousel */}
-                <motion.div
-                    className="relative h-[60vh] w-full overflow-hidden"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: isPageReady ? 1 : 0 }}
-                    transition={{ duration: 0.5 }}
+                <div
+                    ref={heroRef}
+                    className={`relative h-[60vh] w-full overflow-hidden transition-opacity duration-500 ${isHeroInView ? 'opacity-100' : 'opacity-0'}`}
                 >
                     <SimpleCarousel images={images} />
 
@@ -282,150 +450,85 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>
 
                     {/* Content Overlay with Animations */}
-                    <motion.div
-                        className="absolute inset-0 z-20 grid w-full grid-cols-1 px-12 pr-10 pl-70 text-white md:grid-cols-2"
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate={isPageReady ? 'visible' : 'hidden'}
-                    >
-                        <div className="flex flex-col justify-center space-y-[1.25vw]">
-                            <motion.img src="/images/pupsj_motto.png" alt="Logo" className="w-[29vw] object-cover" variants={itemVariants} />
-                            <motion.h2 className="text-[1.76vw] italic" variants={itemVariants}>
-                                Years of academic excellence and service
-                            </motion.h2>
+                    <div ref={heroContentRef} className="absolute inset-0 z-20 grid w-full grid-cols-1 px-12 pr-10 pl-70 text-white md:grid-cols-2">
+                        <div
+                            className={`flex flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${
+                                isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
+                            }`}
+                        >
+                            <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[29vw] object-cover" priority />
+                            <h2 className="text-[1.76vw] italic">Years of academic excellence and service</h2>
 
-                            <motion.div className="mt-[2.08vw] flex flex-wrap gap-4" variants={itemVariants}>
+                            <div className="mt-[2.08vw] flex flex-wrap gap-4">
                                 {[
                                     { icon: BookOpen, text: 'Programs', primary: true },
                                     { icon: Calendar, text: 'Events' },
                                     { icon: GraduationCap, text: 'Academe' },
                                 ].map((btn) => (
-                                    <motion.button
+                                    <button
                                         key={btn.text}
                                         className={
                                             btn.primary
-                                                ? 'flex items-center space-x-[0.42vw] rounded-[0.31vw] bg-white px-[1.25vw] py-[0.42vw] font-semibold text-black transition-all duration-200 hover:scale-105 hover:bg-gray-100'
-                                                : 'flex items-center space-x-[0.42vw] rounded-[0.31vw] border border-gray-300/70 bg-white/10 px-[1.25vw] py-[0.42vw] font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20'
+                                                ? 'flex items-center space-x-[0.42vw] rounded-[0.31vw] bg-white px-[1.25vw] py-[0.42vw] font-semibold text-black transition-all duration-200 hover:scale-105 hover:bg-gray-100 active:scale-95'
+                                                : 'flex items-center space-x-[0.42vw] rounded-[0.31vw] border border-gray-300/70 bg-white/10 px-[1.25vw] py-[0.42vw] font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20 active:scale-95'
                                         }
                                     >
                                         <btn.icon className="h-5 w-5" />
                                         <span>{btn.text}</span>
-                                    </motion.button>
+                                    </button>
                                 ))}
-                            </motion.div>
+                            </div>
                         </div>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
 
-                {/* Welcome Modal */}
+                {/* Welcome Modal (CSS Transitions) */}
                 {showModal && (
-                    <motion.div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: isModalVisible ? 1 : 0 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.12, ease: 'easeInOut' }} // faster smooth fade
+                    <div
+                        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-200 ease-in-out ${isModalVisible ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
                         onClick={handleCloseModal}
                     >
-                        <motion.div
-                            className="relative mx-4 w-full max-w-4xl"
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: isModalVisible ? 1 : 0, scale: isModalVisible ? 1 : 0.95 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.12, ease: 'easeInOut' }} // fast open/close
+                        <div
+                            className={`relative mx-4 w-full max-w-4xl transition-all duration-200 ease-in-out ${isModalVisible ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'}`}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white">
                                 {/* Optional animated background elements */}
-                                {!shouldReduceMotion && (
-                                    <>
-                                        <motion.div
-                                            className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#7f1414]/5 blur-3xl"
-                                            animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.6, 0.3] }}
-                                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                                        />
-                                        <motion.div
-                                            className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-red-500/5 blur-2xl"
-                                            animate={{ scale: [1, 1.03, 1], opacity: [0.2, 0.5, 0.2] }}
-                                            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                                        />
-                                    </>
-                                )}
+                                <>
+                                    <div className="animate-pulse-bg-1 absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#7f1414]/5 blur-3xl" />
+                                    <div className="animate-pulse-bg-2 absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-red-500/5 blur-2xl" />
+                                </>
 
                                 {/* Close Button */}
-                                <motion.button
+                                <button
                                     onClick={handleCloseModal}
-                                    className="absolute top-3 right-3 z-10 rounded-full bg-white/80 p-2 transition-colors duration-150 hover:bg-white"
-                                    whileHover={{ scale: shouldReduceMotion ? 1 : 1.05 }}
-                                    whileTap={{ scale: shouldReduceMotion ? 1 : 0.9 }}
+                                    className="absolute top-3 right-3 z-10 rounded-full bg-white/80 p-2 transition-all duration-150 hover:scale-105 hover:bg-white active:scale-90"
                                     aria-label="Close"
                                 >
-                                    <svg
-                                        className="h-5 w-5 text-gray-400 transition-colors duration-150 hover:text-[#7f1414]"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </motion.button>
+                                    <X className="h-5 w-5 text-gray-400 transition-colors duration-150 hover:text-[#7f1414]" />
+                                </button>
 
                                 <div className="relative p-12">
                                     <div className="grid items-center gap-12 md:grid-cols-2">
                                         {/* Left: Logo + Welcome */}
-                                        <motion.div
-                                            className="flex flex-col items-center justify-center space-y-6 text-center"
-                                            initial={{ opacity: 0, x: -30 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.1, duration: 0.2, ease: 'easeOut' }}
+                                        <div
+                                            className={`flex flex-col items-center justify-center space-y-6 text-center transition-all delay-100 duration-300 ease-out ${isModalVisible ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
                                         >
-                                            <img src="/images/pupcon-logo.png" alt="PUP Logo" className="h-24 w-auto" />
-                                            <motion.div
-                                                className="space-y-3"
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.2, duration: 0.15 }}
+                                            <SafeImage src="/images/pupcon-logo.png" alt="PUP Logo" className="h-24 w-auto" placeholderType="logo" />
+                                            <div
+                                                className={`space-y-3 transition-all delay-200 duration-300 ease-out ${isModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                                             >
                                                 <h2 className="bg-[#7f1414] bg-clip-text text-4xl font-bold text-transparent">Mabuhay!</h2>
                                                 <p className="text-lg text-gray-600">Welcome to PUP San Juan</p>
-                                            </motion.div>
-                                        </motion.div>
+                                            </div>
+                                        </div>
 
                                         {/* Right: Role Selection */}
-                                        <motion.div
-                                            className="space-y-6"
-                                            initial={{ opacity: 0, x: 30 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ duration: 0.2, ease: 'easeOut' }}
+                                        <div
+                                            className={`space-y-6 transition-all delay-150 duration-300 ease-out ${isModalVisible ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
                                         >
-                                            {/* <div className="mb-8 text-center">
-                                                <h3 className="text-black-900 mb-2 text-xl font-semibold">Select your role to continue</h3>
-                                                <p className="text-gray-500">Choose the option that best describes you</p>
-                                            </div> */}
-
                                             <div className="space-y-4">
                                                 {[
-                                                    // {
-                                                    //     key: 'faculty',
-                                                    //     title: 'Faculty',
-                                                    //     desc: 'Administrators & Department Chairs',
-                                                    //     icon: (
-                                                    //         <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    //             <path
-                                                    //                 strokeLinecap="round"
-                                                    //                 strokeLinejoin="round"
-                                                    //                 strokeWidth={2}
-                                                    //                 d="M12 14l9-5-9-5-9 5 9 5z"
-                                                    //             />
-                                                    //             <path
-                                                    //                 strokeLinecap="round"
-                                                    //                 strokeLinejoin="round"
-                                                    //                 strokeWidth={2}
-                                                    //                 d="M12 14l6.16-3.422A12.083 12.083 0 0118 12.08v.42a12.08 12.08 0 01-6 10.392A12.08 12.08 0 016 12.5v-.42a12.083 12.083 0 01-.16-.902L12 14z"
-                                                    //             />
-                                                    //         </svg>
-                                                    //     ),
-                                                    // },
                                                     {
                                                         key: 'accreditor',
                                                         title: 'Accreditor',
@@ -441,13 +544,10 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                             </svg>
                                                         ),
                                                     },
-                                                ].map((role, index) => (
-                                                    <motion.button
+                                                ].map((role) => (
+                                                    <button
                                                         key={role.key}
                                                         onClick={() => handleSelectType(role.key)}
-                                                        initial={{ opacity: 0, y: 20 }}
-                                                        animate={{ opacity: 1, y: 0 }}
-                                                        transition={{ delay: 0.15 + index * 0.05, duration: 0.12, ease: 'easeOut' }}
                                                         className="group flex w-full items-center rounded-2xl border border-gray-200 bg-white/80 p-6 transition-all duration-150 ease-out hover:border-[#7f1414] hover:bg-white"
                                                     >
                                                         <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-[#7f1414] transition-transform duration-150 ease-out group-hover:scale-105">
@@ -467,15 +567,12 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                         >
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                         </svg>
-                                                    </motion.button>
+                                                    </button>
                                                 ))}
 
                                                 {/* Guest/Student Role */}
-                                                <motion.button
+                                                <button
                                                     onClick={() => handleSelectType('guest')}
-                                                    initial={{ opacity: 0, y: 20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: 0.25, duration: 0.12, ease: 'easeOut' }}
                                                     className="group w-full rounded-2xl bg-[#7f1414] p-6 text-white transition-colors duration-150 ease-out hover:bg-[#6b1111]"
                                                 >
                                                     <div className="flex items-center justify-center space-x-3">
@@ -507,61 +604,47 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                             />
                                                         </svg>
                                                     </div>
-                                                </motion.button>
+                                                </button>
                                             </div>
 
-                                            <motion.div
-                                                className="pt-4 text-center"
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                transition={{ duration: 0.12 }}
+                                            <div
+                                                className={`pt-4 text-center transition-opacity delay-300 duration-300 ${isModalVisible ? 'opacity-100' : 'opacity-0'}`}
                                             >
                                                 <p className="text-xs text-gray-400">By continuing, you agree to our terms and conditions</p>
-                                            </motion.div>
-                                        </motion.div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 )}
 
                 {/* News Section */}
-                <motion.section
-                    className="flex min-h-[80vh] w-full flex-col items-center justify-center gap-20 bg-gray-50 px-6 py-16"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={{
-                        visible: {
-                            transition: {
-                                staggerChildren: 0.1,
-                            },
-                        },
-                    }}
-                >
-                    <motion.div className="flex flex-col items-center px-4 text-center" variants={itemVariants}>
+                <section ref={newsSectionRef} className="flex min-h-[80vh] w-full flex-col items-center justify-center gap-20 bg-gray-50 px-6 py-16">
+                    <div
+                        className={`flex flex-col items-center px-4 text-center transition-all duration-500 ease-out ${isNewsSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                    >
                         <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">What's New on Campus</h2>
                         <p className="mt-2 text-base text-gray-600 sm:text-lg">Catch up on events, announcements, and campus highlights.</p>
-                    </motion.div>
+                    </div>
 
                     {/* News Cards - Responsive Grid */}
-                    <div className="w-full max-w-7xl px-4">
+                    <div ref={newsCardsRef} className="w-full max-w-7xl px-4">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 md:gap-8 lg:grid-cols-4">
                             {currentPosts.map((card, i) => (
-                                <motion.div key={`${newsPage}-${i}`} variants={itemVariants} initial="hidden" animate="visible" exit="hidden">
-                                    <motion.div
-                                        whileHover={{
-                                            scale: shouldReduceMotion ? 1 : 1.02,
-                                            y: shouldReduceMotion ? 0 : -5,
-                                        }}
-                                        transition={{ duration: 0.2 }}
-                                        className="h-full cursor-pointer"
+                                <div
+                                    key={`${newsPage}-${i}`}
+                                    className={`transition-all duration-500 ease-out ${isNewsCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                                    style={{ transitionDelay: `${i * 100}ms` }}
+                                >
+                                    <div
+                                        className="h-full cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:!scale-102"
                                         onClick={() => handleOpenNewsDialog(card)}
                                     >
                                         <HomeCard className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-200 hover:border-[#7f1414] hover:shadow-lg">
                                             <div className="h-40 w-full overflow-hidden sm:h-48">
-                                                <ImageWithPreload
+                                                <SafeImage
                                                     src={card.img}
                                                     alt={card.title}
                                                     className="h-full w-full transition-transform duration-300 group-hover:scale-105"
@@ -592,148 +675,114 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                                 </div>
                                             </CardHeader>
                                         </HomeCard>
-                                    </motion.div>
-                                </motion.div>
+                                    </div>
+                                </div>
                             ))}
                         </div>
 
                         {/* Pagination Controls */}
                         {totalPages > 1 && (
-                            <motion.div
-                                className="mt-8 flex items-center justify-center gap-4"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 }}
+                            <div
+                                ref={newsPaginationRef}
+                                className={`mt-8 flex items-center justify-center gap-4 transition-all delay-300 duration-500 ease-out ${isNewsPaginationInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                             >
                                 {/* Previous Button */}
-                                <motion.button
+                                <button
                                     onClick={handlePrevPage}
                                     disabled={newsPage === 0}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
                                         newsPage === 0
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
-                                            : 'border-gray-300 bg-white text-gray-700 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
+                                            : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
                                     }`}
-                                    whileHover={newsPage !== 0 ? { scale: 1.02 } : {}}
-                                    whileTap={newsPage !== 0 ? { scale: 0.98 } : {}}
                                 >
                                     <ChevronLeft className="h-4 w-4" />
                                     <span>Previous</span>
-                                </motion.button>
+                                </button>
 
                                 {/* Page Indicators */}
                                 <div className="flex items-center gap-2">
                                     {Array.from({ length: totalPages }).map((_, index) => (
-                                        <motion.button
+                                        <button
                                             key={index}
                                             onClick={() => setNewsPage(index)}
-                                            className={`h-2 rounded-full transition-all duration-200 ${
+                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${
                                                 index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
                                             }`}
-                                            whileHover={{ scale: 1.2 }}
-                                            whileTap={{ scale: 0.9 }}
                                             aria-label={`Go to page ${index + 1}`}
                                         />
                                     ))}
                                 </div>
 
                                 {/* Next Button */}
-                                <motion.button
+                                <button
                                     onClick={handleNextPage}
                                     disabled={newsPage === totalPages - 1}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
                                         newsPage === totalPages - 1
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
-                                            : 'border-gray-300 bg-white text-gray-700 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
+                                            : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
                                     }`}
-                                    whileHover={newsPage !== totalPages - 1 ? { scale: 1.02 } : {}}
-                                    whileTap={newsPage !== totalPages - 1 ? { scale: 0.98 } : {}}
                                 >
                                     <span>Next</span>
                                     <ChevronRight className="h-4 w-4" />
-                                </motion.button>
-                            </motion.div>
+                                </button>
+                            </div>
                         )}
 
                         {/* Page Counter */}
                         {totalPages > 1 && (
-                            <motion.p
-                                className="mt-4 text-center text-sm text-gray-500"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.4 }}
+                            <p
+                                className={`mt-4 text-center text-sm text-gray-500 transition-opacity delay-500 duration-500 ${isNewsPaginationInView ? 'opacity-100' : 'opacity-0'}`}
                             >
                                 Showing {newsPage * POSTS_PER_PAGE + 1} - {Math.min((newsPage + 1) * POSTS_PER_PAGE, newsCards.length)} of{' '}
                                 {newsCards.length} posts
-                            </motion.p>
+                            </p>
                         )}
                     </div>
-                </motion.section>
+                </section>
 
-                {/* News Item Dialog */}
+                {/* News Item Dialog (CSS Transitions) */}
                 {isNewsDialogOpen && selectedNewsItem && (
-                    <motion.div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                    <div
+                        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-200 ease-out ${isNewsDialogVisible ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
                         onClick={handleCloseNewsDialog}
                     >
-                        <motion.div
-                            className="relative mx-4 w-full max-w-2xl overflow-hidden rounded-3xl bg-white"
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            transition={{ duration: 0.3 }}
+                        <div
+                            className={`relative mx-4 w-full max-w-2xl overflow-hidden rounded-3xl bg-white transition-all duration-200 ease-out ${isNewsDialogVisible ? 'translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-5 scale-95 opacity-0'}`}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Close Button */}
-                            <motion.button
+                            <button
                                 onClick={handleCloseNewsDialog}
-                                className="absolute top-6 right-6 z-10 rounded-full bg-white/80 p-2 transition-colors duration-150 hover:bg-white"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.9 }}
+                                className="absolute top-6 right-6 z-10 rounded-full bg-white/80 p-2 transition-all duration-150 hover:scale-105 hover:bg-white active:scale-90"
                                 aria-label="Close"
                             >
                                 <X className="h-5 w-5 text-gray-400 hover:text-[#7f1414]" />
-                            </motion.button>
+                            </button>
 
                             {/* Image */}
                             <div className="relative h-64 w-full overflow-hidden sm:h-80">
-                                <img src={selectedNewsItem.img} alt={selectedNewsItem.title} className="h-full w-full object-cover" />
+                                <SafeImage
+                                    src={selectedNewsItem.img}
+                                    alt={selectedNewsItem.title}
+                                    className="h-full w-full" // Converted
+                                />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                             </div>
 
                             {/* Content */}
                             <div className="p-6 sm:p-8">
-                                <motion.h2
-                                    className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1, duration: 0.2 }}
-                                >
-                                    {selectedNewsItem.title}
-                                </motion.h2>
+                                <h2 className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl">{selectedNewsItem.title}</h2>
 
-                                <motion.p
-                                    className="mb-6 leading-relaxed text-gray-700 sm:text-lg"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.15, duration: 0.2 }}
-                                >
-                                    {selectedNewsItem.desc}
-                                </motion.p>
+                                <p className="mb-6 leading-relaxed text-gray-700 sm:text-lg">{selectedNewsItem.desc}</p>
 
                                 {/* Source Link */}
-                                <motion.a
+                                <a
                                     href={selectedNewsItem.source}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="mb-4 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.18, duration: 0.2 }}
+                                    className="mb-4 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414] active:scale-95"
                                 >
                                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -747,19 +796,16 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                             d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                         />
                                     </svg>
-                                </motion.a>
+                                </a>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 )}
 
                 {/* Audio-Video Section */}
-                <motion.section
-                    className="relative flex min-h-[80vh] w-full items-center justify-center py-16"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    viewport={{ once: true, margin: '100px' }}
+                <section
+                    ref={avpSectionRef}
+                    className={`relative flex min-h-[80vh] w-full items-center justify-center py-16 transition-all duration-500 ease-out ${isAvpSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                 >
                     <div
                         className="absolute inset-0 bg-cover bg-center opacity-30 grayscale"
@@ -767,18 +813,11 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     ></div>
                     <div className="absolute inset-0 bg-gradient-to-l from-white/95 via-white/80 to-transparent"></div>
                     <div className="relative z-10 flex w-[85%] max-w-[1400px] flex-col items-center justify-center gap-16 lg:flex-row">
-                        <motion.div
-                            className="flex w-full justify-center lg:w-[50%]"
-                            initial={{ opacity: 0, x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: 0.1 }}
-                            viewport={{ once: true }}
+                        <div
+                            ref={avpVideoRef}
+                            className={`flex w-full justify-center transition-all duration-500 ease-out lg:w-[50%] ${isAvpVideoInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
                         >
-                            <motion.div
-                                className="relative h-[250px] w-full overflow-hidden rounded-xl sm:h-[350px] sm:rounded-2xl md:h-[400px]"
-                                whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
-                                transition={{ duration: 0.3 }}
-                            >
+                            <div className="relative h-[250px] w-full overflow-hidden rounded-xl transition-transform duration-300 hover:scale-102 sm:h-[350px] sm:rounded-2xl md:h-[400px]">
                                 <iframe
                                     className="h-full w-full"
                                     src="https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=0"
@@ -787,15 +826,12 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                     allowFullScreen
                                     loading="lazy"
                                 ></iframe>
-                            </motion.div>
-                        </motion.div>
+                            </div>
+                        </div>
 
-                        <motion.div
-                            className="flex w-full flex-col justify-center px-4 text-center sm:px-0 lg:w-[50%] lg:text-left"
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: 0.2 }}
-                            viewport={{ once: true }}
+                        <div
+                            ref={avpContentRef}
+                            className={`flex w-full flex-col justify-center px-4 text-center transition-all delay-100 duration-500 ease-out sm:px-0 lg:w-[50%] lg:text-left ${isAvpContentInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
                         >
                             <h2 className="mb-3 text-xl font-bold text-[#7f1414] sm:mb-4 sm:text-2xl lg:text-[2rem]">
                                 Campus Audio-Visual Presentation
@@ -808,59 +844,50 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 excellence.
                             </p>
 
-                            <motion.div whileHover={{}} whileTap={{}} className="flex justify-center lg:justify-start">
-                                <ActionButton href="..." icon={Play} external>
+                            <div className="flex justify-center lg:justify-start">
+                                <ActionButton href="https://www.youtube.com/watch?v=9ypv1kOj7CU" icon={Play} external>
                                     Watch on YouTube
                                 </ActionButton>
-                            </motion.div>
-                        </motion.div>
+                            </div>
+                        </div>
                     </div>
-                </motion.section>
+                </section>
 
                 {/* Director's Message Section with Animations */}
-                <motion.section
-                    className="bg-white py-20"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    viewport={{ once: true, margin: '100px' }}
+                <section
+                    ref={directorSectionRef}
+                    className={`bg-white py-20 transition-all duration-500 ease-out ${isDirectorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                 >
-                    <motion.div
-                        className="mx-auto mb-12 max-w-4xl text-center"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        viewport={{ once: true }}
-                    >
+                    <div className="mx-auto mb-12 max-w-4xl text-center">
                         <h2 className="mb-2 text-3xl font-bold text-gray-900">Message from the Campus Director</h2>
                         <p className="text-gray-600">A word of inspiration from our campus leadership.</p>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        className="mx-auto flex w-[80%] max-w-[1000px] flex-col gap-2 lg:flex-row lg:items-stretch"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.1 }}
-                        viewport={{ once: true }}
-                    >
+                    <div className="mx-auto flex w-[80%] max-w-[1000px] flex-col gap-2 lg:flex-row lg:items-stretch">
                         {/* Director's Image */}
-                        <motion.div
-                            className="relative mx-auto h-[350px] w-[280px] shrink-0 overflow-hidden rounded-xl lg:mx-0"
-                            whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
-                            transition={{ duration: 0.3 }}
+                        <div
+                            ref={directorImageRef}
+                            className={`relative mx-auto h-[350px] w-[280px] shrink-0 overflow-hidden rounded-xl transition-all duration-500 ease-out lg:mx-0 ${isDirectorImageInView ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
                         >
-                            <ImageWithPreload src="/images/adfa-new/faculty/Cecilia-R.-Alagon.jpg" alt="Director" className="h-full w-full" />
+                            <SafeImage
+                                src="/images/adfa-new/faculty/Cecilia-R.-Alagon.jpg"
+                                alt="Director"
+                                className="h-full w-full rounded-xl" // Converted
+                            />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#7f1414]/20 to-transparent" />
-                        </motion.div>
+                        </div>
 
                         {/* Director's Message */}
-                        <motion.div
-                            className="flex flex-1 flex-col gap-4 rounded-xl border-2 border-[#7f1414] bg-[#7f1414] p-12 text-white transition-colors duration-200 hover:border-[#a71d1d]"
-                            whileHover={{ scale: shouldReduceMotion ? 1 : 1.01 }}
-                            transition={{ duration: 0.2 }}
+                        <div
+                            ref={directorMsgRef}
+                            className={`flex flex-1 flex-col gap-4 rounded-xl border-2 border-[#7f1414] bg-[#7f1414] p-12 text-white transition-all delay-100 duration-500 ease-out hover:scale-101 hover:border-[#a71d1d] ${isDirectorMsgInView ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#a83232]/80">
-                                <ImageWithPreload src="/images/quote.png" alt="Quote Icon" className="h-4 w-4 object-contain" />
+                                <SafeImage
+                                    src="/images/quote.png"
+                                    alt="Quote Icon"
+                                    className="h-4 w-4 object-contain" // Converted
+                                />
                             </div>
 
                             <div className="scrollbar-thin scrollbar-thumb-white/20 max-h-[120px] overflow-y-auto pr-2">
@@ -875,30 +902,28 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 <p className="font-semibold">Dr. Cecilia R. Alagon</p>
                                 <p className="text-sm opacity-90">Campus Director</p>
                             </div>
-                        </motion.div>
-                    </motion.div>
-                </motion.section>
+                        </div>
+                    </div>
+                </section>
 
                 {/* Accreditors Section with Card Animations */}
-                <motion.section
-                    className="w-full items-center justify-center"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    viewport={{ once: true, margin: '100px' }}
+                <section
+                    ref={accreditorSectionRef}
+                    className={`w-full items-center justify-center transition-all duration-500 ease-out ${isAccreditorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                 >
                     <section className="flex h-[50vh] items-center justify-center">
                         <div className="flex w-[80%] max-w-[1200px] flex-col gap-12 rounded-xl border border-[#201e1e31] bg-white p-15 lg:flex-row">
                             {/* Left Column (Text) */}
-                            <motion.div
-                                className="flex flex-1 flex-col justify-center gap-6"
-                                initial={{ opacity: 0, x: -30 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.4, delay: 0.1 }}
-                                viewport={{ once: true }}
+                            <div
+                                ref={accreditorContentRef}
+                                className={`flex flex-1 flex-col justify-center gap-6 transition-all duration-500 ease-out ${isAccreditorContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
                             >
                                 <h2 className="text-3xl font-bold text-gray-900">
-                                    Welcome {user?.roles?.role_name === 'Accreditor' ? user.first_name + ' ' + user.last_name : 'Accreditors'}!
+                                    Welcome{' '}
+                                    {user?.roles?.role_name === 'Accreditor' && user.first_name && user.last_name
+                                        ? user.first_name + ' ' + user.last_name
+                                        : 'Accreditors'}
+                                    !
                                 </h2>
                                 <p className="leading-relaxed text-gray-700">
                                     It is our honor to host you, esteemed accreditors, and we deeply appreciate your role in our continued success.
@@ -906,28 +931,21 @@ export default function Welcome({ carouselImages }: LandingProps) {
 
                                 <div className="flex flex-wrap gap-3">
                                     {['March 2025', 'Level II AACCUP Survey Visit'].map((tag, index) => (
-                                        <motion.span
+                                        <span
                                             key={tag}
-                                            className="rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-[#7f1414]"
-                                            initial={{ opacity: 0, scale: 0.8 }}
-                                            whileInView={{ opacity: 1, scale: 1 }}
-                                            transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
-                                            viewport={{ once: true }}
-                                            whileHover={{ scale: shouldReduceMotion ? 1 : 1.05 }}
+                                            className={`rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-[#7f1414] transition-all duration-300 hover:scale-105 ${isAccreditorContentInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+                                            style={{ transitionDelay: `${200 + index * 100}ms` }}
                                         >
                                             {tag}
-                                        </motion.span>
+                                        </span>
                                     ))}
                                 </div>
-                            </motion.div>
+                            </div>
 
                             {/* Right Column (Cards) */}
-                            <motion.div
-                                className="flex flex-1 flex-col gap-4 md:flex-row"
-                                initial={{ opacity: 0, x: 30 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.4, delay: 0.2 }}
-                                viewport={{ once: true }}
+                            <div
+                                ref={accreditorCardsRef}
+                                className={`flex flex-1 flex-col gap-4 transition-all duration-500 ease-out md:flex-row ${isAccreditorCardsInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
                             >
                                 {[
                                     {
@@ -971,48 +989,30 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                         ),
                                     },
                                 ].map((card, index) => (
-                                    <motion.a
+                                    <a
                                         key={card.title}
                                         href="#"
-                                        className="flex flex-1 flex-col items-start gap-10 rounded-xl bg-[#7f1414] p-6 text-white transition-colors duration-200 hover:bg-[#a83232]"
-                                        whileHover={{
-                                            scale: shouldReduceMotion ? 1 : 1.02,
-                                            y: shouldReduceMotion ? 0 : -3,
-                                        }}
-                                        whileTap={{ scale: shouldReduceMotion ? 1 : 0.98 }}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-                                        viewport={{ once: true }}
+                                        className={`flex flex-1 flex-col items-start gap-10 rounded-xl bg-[#7f1414] p-6 text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-102 hover:bg-[#a83232] active:scale-98 ${isAccreditorCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                                        style={{ transitionDelay: `${200 + index * 100}ms` }}
                                     >
-                                        <motion.div
-                                            className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20"
-                                            whileHover={{
-                                                scale: shouldReduceMotion ? 1 : 1.1,
-                                                rotate: shouldReduceMotion ? 0 : 5,
-                                            }}
-                                            transition={{ duration: 0.2 }}
-                                        >
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 transition-all duration-200 group-hover:scale-110 group-hover:rotate-6">
                                             {card.icon}
-                                        </motion.div>
+                                        </div>
                                         <div>
                                             <h3 className="mb-3 text-lg font-semibold">{card.title}</h3>
                                             <p className="text-sm opacity-90">{card.desc}</p>
                                         </div>
-                                    </motion.a>
+                                    </a>
                                 ))}
-                            </motion.div>
+                            </div>
                         </div>
                     </section>
-                </motion.section>
+                </section>
 
                 {/* Campus Map Section with Animations */}
-                <motion.section
-                    className="relative flex min-h-[80vh] w-full items-center justify-center py-16"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    viewport={{ once: true, margin: '100px' }}
+                <section
+                    ref={mapSectionRef}
+                    className={`relative flex min-h-[80vh] w-full items-center justify-center py-16 transition-all duration-500 ease-out ${isMapSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                 >
                     <div
                         className="absolute inset-0 bg-cover bg-center opacity-30 grayscale"
@@ -1020,12 +1020,9 @@ export default function Welcome({ carouselImages }: LandingProps) {
                     ></div>
                     <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
                     <div className="relative z-10 flex w-[85%] max-w-[1400px] flex-col items-center justify-center gap-16 lg:flex-row">
-                        <motion.div
-                            className="order-2 flex w-full flex-col justify-center text-center lg:order-1 lg:w-[50%] lg:text-left"
-                            initial={{ opacity: 0, x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: 0.1 }}
-                            viewport={{ once: true }}
+                        <div
+                            ref={mapContentRef}
+                            className={`order-2 flex w-full flex-col justify-center text-center transition-all duration-500 ease-out lg:order-1 lg:w-[50%] lg:text-left ${isMapContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
                         >
                             <h2 className="mb-4 text-[2.5vw] font-bold text-[#7f1414] lg:text-[2rem]">Explore Our Campus</h2>
                             <p className="mb-4 text-[1.15rem] leading-relaxed text-gray-700">
@@ -1036,25 +1033,18 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                 PUP San Juan, Pinaglabanan St., San Juan City
                             </p>
 
-                            <motion.div whileHover={{}} whileTap={{}} transition={{}}>
+                            <div>
                                 <ActionButton href="https://maps.app.goo.gl/KLfy768XRV4DXY9t7" icon={MapPin} external>
                                     View Full Map
                                 </ActionButton>
-                            </motion.div>
-                        </motion.div>
+                            </div>
+                        </div>
 
-                        <motion.div
-                            className="order-1 flex w-full justify-center lg:order-2 lg:w-[50%]"
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: 0.2 }}
-                            viewport={{ once: true }}
+                        <div
+                            ref={mapEmbedRef}
+                            className={`order-1 flex w-full justify-center transition-all delay-100 duration-500 ease-out lg:order-2 lg:w-[50%] ${isMapEmbedInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
                         >
-                            <motion.div
-                                className="relative h-[400px] w-full overflow-hidden rounded-2xl"
-                                whileHover={{ scale: shouldReduceMotion ? 1 : 1.02 }}
-                                transition={{ duration: 0.3 }}
-                            >
+                            <div className="relative h-[400px] w-full overflow-hidden rounded-2xl transition-transform duration-300 hover:scale-102">
                                 <iframe
                                     className="h-full w-full border-0"
                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d482.6352821614245!2d121.03989456028415!3d14.594374852740119!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c82e63228c75%3A0xf48b60882ff9710a!2sPolytechnic%20University%20of%20the%20Philippines%20-%20San%20Juan!5e0!3m2!1sen!2sph!4v1749228865968!5m2!1sen!2sph"
@@ -1062,10 +1052,10 @@ export default function Welcome({ carouselImages }: LandingProps) {
                                     loading="lazy"
                                     referrerPolicy="no-referrer-when-downgrade"
                                 />
-                            </motion.div>
-                        </motion.div>
+                            </div>
+                        </div>
                     </div>
-                </motion.section>
+                </section>
             </Layout>
         </>
     );

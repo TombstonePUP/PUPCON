@@ -1,9 +1,16 @@
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog'; // Added Dialog imports
 import { Edit2, Image as ImageIcon, Trash2, Upload } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 
 interface ImageUploaderProps {
-    initialImage?: string;
     onImageChange: (file: File | null) => void;
     accept?: string;
     maxSizeMB?: number;
@@ -13,17 +20,18 @@ interface ImageUploaderProps {
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
-    initialImage = '/images/placeholder.png',
     onImageChange,
     accept = 'image/png, image/jpeg',
     maxSizeMB = 5,
     uploadText = 'Upload program banner',
-    changeText = 'Change program banner',
+    changeText = 'Change program banner', // This prop wasn't used, but left it
     sizeText = 'PNG, JPG up to 5MB',
 }) => {
-    const [image, setImage] = useState<string | null>(null);
+    // Use initialImage to set the starting state
+    const [image, setImage] = useState<string | null>( null);
     const [isHovering, setIsHovering] = useState(false);
-    const [showDialog, setShowDialog] = useState(false);
+    // Renamed state for clarity and to control the Dialog
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [dragActive, setDragActive] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -37,7 +45,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         reader.onload = (event) => {
             setImage(event.target?.result as string);
             onImageChange(file);
-            setShowDialog(false);
+            setIsDialogOpen(false); // Close the dialog on success
         };
         reader.readAsDataURL(file);
     };
@@ -74,7 +82,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     };
 
     const handleRemoveImage = () => {
-        setImage(null);
+        setImage(null); // Setting to null will show the upload box
         onImageChange(null);
     };
 
@@ -83,9 +91,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             <input type="file" ref={fileInputRef} className="hidden" accept={accept} onChange={handleFileSelect} />
 
             {!image ? (
+                // "Upload" box state
                 <div
                     className="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70"
-                    onClick={() => setShowDialog(true)}
+                    onClick={() => setIsDialogOpen(true)} // Open dialog
                 >
                     <div className="flex flex-col items-center justify-center gap-4">
                         <div className="relative">
@@ -106,6 +115,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                     </div>
                 </div>
             ) : (
+                // "Image Preview" state
                 <div className="relative overflow-hidden rounded-xl border-2 border-gray-200 bg-white transition-all duration-300">
                     <div
                         className="group relative flex h-64 w-full items-center justify-center rounded-lg bg-cover bg-center"
@@ -119,7 +129,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                                     variant="secondary"
                                     size="lg"
                                     className="h-12 w-12 rounded-full bg-white p-0 transition-transform duration-200 hover:scale-110 hover:bg-white"
-                                    onClick={() => setShowDialog(true)}
+                                    onClick={() => setIsDialogOpen(true)} // Open dialog
                                 >
                                     <Edit2 className="h-5 w-5 text-gray-700" />
                                 </Button>
@@ -137,69 +147,63 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                 </div>
             )}
 
-            {/* Custom Upload Dialog */}
-            {showDialog && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="animate-in fade-in zoom-in relative w-full max-w-lg duration-200">
-                        <div className="rounded-2xl bg-white">
-                            {/* Header */}
-                            <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="grid h-10 w-10 place-items-center rounded-full bg-red-100">
-                                        <ImageIcon className="h-5 w-5 text-red-600" />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-gray-900">Upload Image</h2>
-                                        <p className="text-sm text-gray-500">Choose an image file to upload</p>
-                                    </div>
-                                </div>
-                            </div>
+            {/* Refactored to use Dialog component */}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="sm:max-w-lg">
+                    {/* Header */}
+                    <DialogHeader>
+                        <div className="flex items-center gap-3">
+                            {/* <div className="grid h-10 w-10 place-items-center rounded-full bg-red-100">
+                                <ImageIcon className="h-5 w-5 text-red-600" />
+                            </div> */}
+                            {/* <div>
+                                <DialogTitle>Upload Image</DialogTitle>
+                                <DialogDescription className='mt-1 '>Choose an image file to upload</DialogDescription>
+                            </div> */}
+                        </div>
+                    </DialogHeader>
 
-                            {/* Content */}
-                            <div className="p-6">
-                                <div
-                                    className={`relative overflow-hidden rounded-xl border-2 border-dashed p-12 text-center transition-all duration-200 ${
-                                        dragActive ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-gray-50 hover:border-red-400'
-                                    }`}
-                                    onDragEnter={handleDrag}
-                                    onDragLeave={handleDrag}
-                                    onDragOver={handleDrag}
-                                    onDrop={handleDrop}
-                                >
-                                    <div className="flex flex-col items-center gap-4">
-                                        <div className="grid h-16 w-16 place-items-center rounded-full bg-[#7f1414]">
-                                            <Upload className="h-8 w-8 text-white" />
-                                        </div>
-                                        <div>
-                                            <p className="mb-2 text-base font-medium text-gray-700">Drag and drop your image here</p>
-                                            <p className="text-sm text-gray-500">or</p>
-                                        </div>
-                                        <Button onClick={triggerFileInput} className="bg-[#7f1414] px-6 py-2 font-medium transition-all duration-200">
-                                            Browse Files
-                                        </Button>
-                                        <div className="mt-2 flex flex-wrap justify-center gap-2">
-                                            <span className="rounded-full border-1 bg-white px-3 py-1 text-xs font-medium text-gray-600">PNG</span>
-                                            <span className="rounded-full border-1 bg-white px-3 py-1 text-xs font-medium text-gray-600">JPG</span>
-                                            <span className="rounded-full border-1 bg-white px-3 py-1 text-xs font-medium text-gray-600">
-                                                Max {maxSizeMB}MB
-                                            </span>
-                                        </div>
-                                    </div>
+                    {/* Content (Drag and Drop Area) */}
+                    <div className="py-2">
+                        <div
+                            className={`relative overflow-hidden rounded-xl border-2 border-dashed p-12 text-center transition-all duration-200 ${
+                                dragActive ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-gray-50 hover:border-red-400'
+                            }`}
+                            onDragEnter={handleDrag}
+                            onDragLeave={handleDrag}
+                            onDragOver={handleDrag}
+                            onDrop={handleDrop}
+                        >
+                            <div className="flex flex-col items-center gap-4">
+                                <div className="grid h-16 w-16 place-items-center rounded-full bg-[#7f1414]">
+                                    <Upload className="h-8 w-8 text-white" />
                                 </div>
-                            </div>
-
-                            {/* Footer */}
-                            <div className="rounded-b-2xl border-t border-gray-200 bg-gray-50 px-6 py-4">
-                                <div className="flex justify-end">
-                                    <Button variant="ghost" onClick={() => setShowDialog(false)} className="hover:bg-gray-200">
-                                        Cancel
-                                    </Button>
+                                <div>
+                                    <p className="mb-2 text-base font-medium text-gray-700">Drag and drop your image here</p>
+                                    <p className="text-sm text-gray-500">or</p>
+                                </div>
+                                <Button onClick={triggerFileInput} className="bg-[#7f1414] px-6 py-2 font-medium transition-all duration-200">
+                                    Browse Files
+                                </Button>
+                                <div className="mt-2 flex flex-wrap justify-center gap-2">
+                                    <span className="rounded-full border-1 bg-white px-3 py-1 text-xs font-medium text-gray-600">PNG</span>
+                                    <span className="rounded-full border-1 bg-white px-3 py-1 text-xs font-medium text-gray-600">JPG</span>
+                                    <span className="rounded-full border-1 bg-white px-3 py-1 text-xs font-medium text-gray-600">
+                                        Max {maxSizeMB}MB
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+
+                    {/* Footer */}
+                    <DialogFooter>
+                        <Button variant="default" onClick={() => setIsDialogOpen(false)} className=" w-full">
+                            Cancel
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
