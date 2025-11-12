@@ -1,9 +1,10 @@
 import Layout from '@/layouts/landing-layout';
 import { BookOpen, Calendar, ChevronLeft, ChevronRight, GraduationCap, ImageIcon, MapPin, Play, X } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Head } from '@inertiajs/react';
 
-const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
-const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: any }) => (
+// const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
+const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode;[key: string]: any }) => (
     <a href={href} {...props}>
         {children}
     </a>
@@ -442,7 +443,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
             <Layout>
                 <div
                     ref={heroRef}
-                    className={`relative h-[60vh] w-full overflow-hidden transition-opacity duration-500 ${isHeroInView ? 'opacity-100' : 'opacity-0'}`}
+                    className={`relative h-[70vw] lg:h-[60vh] w-full overflow-hidden transition-opacity duration-500 ${isHeroInView ? 'opacity-100' : 'opacity-0'}`}
                 >
                     <SimpleCarousel images={images} />
 
@@ -450,14 +451,13 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                     <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>
 
                     {/* Content Overlay with Animations */}
-                    <div ref={heroContentRef} className="absolute inset-0 z-20 grid w-full grid-cols-1 px-12 pr-10 pl-70 text-white md:grid-cols-2">
+                    <div ref={heroContentRef} className="absolute inset-0 z-20 grid w-full grid-cols-1 px-12 pr-10 lg:pl-70 text-white md:grid-cols-2">
                         <div
-                            className={`flex flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${
-                                isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
-                            }`}
+                            className={`flex flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
+                                }`}
                         >
-                            <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[29vw] object-cover" priority />
-                            <h2 className="text-[1.76vw] italic">Years of academic excellence and service</h2>
+                            <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[80vw] lg:w-[29vw] object-cover" priority />
+                            <h2 className="lg:text-[1.76vw] italic text-[2.5vw]">Years of academic excellence and service</h2>
 
                             <div className="mt-[2.08vw] flex flex-wrap gap-4">
                                 {[
@@ -469,12 +469,12 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                         key={btn.text}
                                         className={
                                             btn.primary
-                                                ? 'flex items-center space-x-[0.42vw] rounded-[0.31vw] bg-white px-[1.25vw] py-[0.42vw] font-semibold text-black transition-all duration-200 hover:scale-105 hover:bg-gray-100 active:scale-95'
-                                                : 'flex items-center space-x-[0.42vw] rounded-[0.31vw] border border-gray-300/70 bg-white/10 px-[1.25vw] py-[0.42vw] font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20 active:scale-95'
+                                                ? 'flex items-center space-x-[0.8vw] rounded-md bg-white px-3 py-2 font-semibold text-black transition-all duration-200 hover:scale-105 hover:bg-gray-100 active:scale-95'
+                                                : 'flex items-center space-x-[0.8vw] rounded-md border border-gray-300/70 bg-white/10 px-3 py-2 font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20 active:scale-95'
                                         }
                                     >
-                                        <btn.icon className="h-5 w-5" />
-                                        <span>{btn.text}</span>
+                                        <btn.icon className="lg:size-[1vw] size-[3vw]" />
+                                        <span className="lg:text-[1vw] text-[2.5vw]">{btn.text}</span>
                                     </button>
                                 ))}
                             </div>
@@ -690,11 +690,10 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handlePrevPage}
                                     disabled={newsPage === 0}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
-                                        newsPage === 0
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === 0
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
                                             : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                    }`}
+                                        }`}
                                 >
                                     <ChevronLeft className="h-4 w-4" />
                                     <span>Previous</span>
@@ -706,9 +705,8 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                         <button
                                             key={index}
                                             onClick={() => setNewsPage(index)}
-                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${
-                                                index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
-                                            }`}
+                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                                                }`}
                                             aria-label={`Go to page ${index + 1}`}
                                         />
                                     ))}
@@ -718,11 +716,10 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handleNextPage}
                                     disabled={newsPage === totalPages - 1}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
-                                        newsPage === totalPages - 1
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === totalPages - 1
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
                                             : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                    }`}
+                                        }`}
                                 >
                                     <span>Next</span>
                                     <ChevronRight className="h-4 w-4" />

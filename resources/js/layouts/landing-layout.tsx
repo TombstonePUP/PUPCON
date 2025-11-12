@@ -16,6 +16,7 @@ import {
     Info,
     LogOut,
     Mail,
+    Menu,
     Search,
     ShieldCheck,
     Users,
@@ -40,18 +41,20 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
     const underSurveyPrograms = (guest as any)?.programs?.length
         ? (guest as any).programs.map((program: any) => ({
-              label: program.program_name,
-              href: `/programs/${program.program_link}`,
-          }))
+            label: program.program_name,
+            href: `/programs/${program.program_link}`,
+        }))
         : [];
 
     const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
     const [searchOpen, setSearchOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const searchRef = useRef<HTMLDivElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
 
     // ---- Header show/hide: reveal only when scrolled up AND near top (~90% up) ----
     useEffect(() => {
@@ -188,6 +191,31 @@ export default function Layout({ children, footerText }: LayoutProps) {
         };
     }, [searchOpen]);
 
+    // Enhanced click outside and escape key handling
+    useEffect(() => {
+        if (!menuOpen) return;
+
+        function handleClick(e: MouseEvent) {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setMenuOpen(false);
+            }
+        }
+
+        function handleEsc(e: KeyboardEvent) {
+            if (e.key === 'Escape') {
+                setMenuOpen(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClick);
+        document.addEventListener('keydown', handleEsc);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClick);
+            document.removeEventListener('keydown', handleEsc);
+        };
+    }, [menuOpen]);
+
     // Framer Motion variants
     const backdropVariants = {
         hidden: { opacity: 0 },
@@ -252,12 +280,12 @@ export default function Layout({ children, footerText }: LayoutProps) {
             >
                 <Link href="/" className="flex items-center" preserveScroll>
                     {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
-                    <div className="h-[4vw] w-[38vw] rounded-br-full bg-[#d2b539]">
-                        <div className="mr-3 ml-3 flex h-full items-center justify-end gap-4 rounded-br-full bg-white pr-20 pb-2">
-                            <img className="mt-1 size-[2.9vw]" src="/images/pupsj-logo.png" alt="pupsj logo" />
+                    <div className="h-[14vw] w-[85vw] lg:h-[4vw] lg:w-[38vw] rounded-br-full bg-[#d2b539]">
+                        <div className="mr-3 ml-3 flex h-full items-center pl-5 lg:justify-end gap-4 rounded-br-full bg-white lg:pr-20 pb-2">
+                            <img className="size-[10vw] mt-1 lg:size-[2.9vw]" src="/images/pupsj-logo.png" alt="pupsj logo" />
                             <div>
-                                <h1 className="text-[1.4vw] font-bold text-[#7f1414]">San Juan Campus</h1>
-                                <p className="mt-[-6px] text-[0.75vw]">Polytechnic University of the Philippines</p>
+                                <h1 className="text-[4vw] lg:text-[1.4vw] font-bold text-[#7f1414]">San Juan Campus</h1>
+                                <p className="text-[2.5vw] mt-[-6px] lg:text-[0.75vw]">Polytechnic University of the Philippines</p>
                             </div>
                         </div>
                     </div>
@@ -265,7 +293,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                 <div className="relative mr-[10vw] max-w-7xl">
                     {/* Navigation + Search */}
-                    <div className="flex items-center justify-end gap-8">
+                    <div className="hidden lg:flex items-center justify-end gap-8">
                         <nav>
                             <ul className="flex gap-8 text-sm font-medium tracking-wide text-white/90">
                                 {[...leftNav, ...rightNav].map((item) => (
@@ -331,6 +359,17 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             </Link>
                         )}
                     </div>
+
+                    <motion.button
+                        onClick={() => setMenuOpen(true)}
+                        className="relative flex items-center justify-center rounded-full bg-white/10 p-2 text-white hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none ml-[3vw] lg:hidden"
+                        title="Menu"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <Menu className="size-[5vw]" />
+                    </motion.button>
                 </div>
             </motion.header>
 
@@ -523,11 +562,115 @@ export default function Layout({ children, footerText }: LayoutProps) {
                 )}
             </AnimatePresence>
 
+            {/* Menu Modal */}
+            <AnimatePresence>
+                {menuOpen && (
+                    <>
+                        {/* Enhanced Backdrop */}
+                        <motion.div
+                            className="fixed inset-0 z-40"
+                            variants={backdropVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="hidden"
+                            onClick={() => setMenuOpen(false)}
+                        />
+
+                        {/* Simplified Slide-in Search Panel */}
+                        <motion.aside
+                            ref={menuRef}
+                            className="fixed top-0 right-0 z-50 h-full w-full max-w-lg border-l border-white/20 bg-white shadow-2xl"
+                            variants={sidebarVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="hidden"
+                        >
+                            {/* Enhanced Header */}
+                            <div className="flex items-center justify-between border-b border-gray-200/50 bg-white/80 px-6 py-5 backdrop-blur-sm">
+                                <div className="flex items-center gap-3">
+                                    <motion.div
+                                        className="rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 shadow-sm"
+                                        whileHover={{ rotate: 15 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <Search className="h-5 w-5 text-white" />
+                                    </motion.div>
+                                    <h2 className="ml-3 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] bg-clip-text text-xl font-bold text-transparent">
+                                        Mabuhay!
+                                    </h2>
+                                </div>
+                                <motion.button
+                                    onClick={() => setMenuOpen(false)}
+                                    className="rounded-lg p-2 text-gray-500 transition-all duration-200 hover:bg-gray-100/80 hover:text-[#7f1414]"
+                                    aria-label="Close"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <X className="h-5 w-5" />
+                                </motion.button>
+                            </div>
+
+                            <nav className="w-full bg-[#7f1414] text-white rounded-lg shadow-lg overflow-hidden">
+                                <ul className="flex flex-col divide-y divide-white/10">
+                                    {[...leftNav, ...rightNav].map((item) => (
+                                        <li key={item.label} className="group relative">
+                                            {/* Main link */}
+                                            <Link
+                                                href={item.href}
+                                                className={cn(
+                                                    'flex items-center justify-between px-5 py-3 transition-all duration-200',
+                                                    isActive(item.href)
+                                                        ? 'bg-white/20 text-white'
+                                                        : 'text-white/90 hover:bg-white/10 hover:text-white'
+                                                )}
+                                                preserveScroll
+                                            >
+                                                <span>{item.label}</span>
+                                                {item.dropdown?.length > 0 && (
+                                                    <span className="ml-2 text-white/70 group-hover:text-white transition-transform duration-300">
+                                                        ▼
+                                                    </span>
+                                                )}
+                                            </Link>
+
+                                            {/* Dropdown (if any) */}
+                                            {item.dropdown?.length > 0 && (
+                                                <div className="bg-white text-[#7f1414] max-h-0 overflow-hidden transition-all duration-300 ease-in-out group-hover:max-h-96">
+                                                    <ul className="flex flex-col">
+                                                        {item.dropdown.map((drop) => (
+                                                            <li
+                                                                key={drop.label}
+                                                                className="border-t border-gray-100 last:border-none"
+                                                            >
+                                                                <Link
+                                                                    href={drop.href}
+                                                                    className="flex items-center gap-2 px-6 py-3 text-sm transition-colors hover:bg-[#7f1414] hover:text-white"
+                                                                    preserveScroll
+                                                                >
+                                                                    {drop.icon && (
+                                                                        <span className="flex-shrink-0 text-lg">{drop.icon}</span>
+                                                                    )}
+                                                                    <span>{drop.label}</span>
+                                                                </Link>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </nav>
+                        </motion.aside>
+                    </>
+                )}
+            </AnimatePresence>
+
             {/* Main */}
             <main className="flex-1">{children}</main>
 
             {/* Footer */}
-            <footer className="relative min-h-[500px] bg-[#7f1414] text-white">
+            <footer className="relative min-h-[500px] bg-[#7f1414] text-white py-10 pt-20 lg:pt-0">
                 <div
                     className="absolute inset-0 bg-cover bg-center opacity-25"
                     style={{ backgroundImage: "url('/images/homepage-slides/3.jpg')" }}
@@ -544,7 +687,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         <div>
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Quick Links</h3>
-                            <ul className="space-y-3">
+                            <ul className="space-y-3 lg:block grid place-items-center">
                                 <li>
                                     <a
                                         href="https://pupsinta.freshservice.com/support/home"
@@ -568,7 +711,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         <div>
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Portals</h3>
-                            <ul className="space-y-3">
+                            <ul className="space-y-3 lg:block grid place-items-center">
                                 <li>
                                     <a
                                         href="https://sis1.pup.edu.ph/student/"
@@ -612,7 +755,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         <div>
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Socials</h3>
-                            <ul className="space-y-3">
+                            <ul className="space-y-3 lg:block grid place-items-center">
                                 <li>
                                     <a
                                         href="https://www.facebook.com/profile.php?id=100064299686924"
