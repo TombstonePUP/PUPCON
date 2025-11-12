@@ -11,14 +11,15 @@ import HistoryContentSection from './history-content';
 import LocalTaskForceContentSection from './localtaskforce-content';
 import VmgoContentSection from './vmgo-content';
 import FacilitiesSection from '@/components/content/facilities-content';
-import { Administration, ContentPages, Facilities } from '@/types/content';
+import { Administration, ContentPages, Facilities, OrganizationTypes } from '@/types/content';
 import AdministrationSection from '@/components/content/admin-content';
+import AboutSection from '@/components/content/about-content';
 
 interface MainContentProps {
-    admin_page: ContentPages;
+    pages: ContentPages;
+    org_types: OrganizationTypes[];
     officials: Administration[];
     facilities: Facilities[];
-    facility_page: ContentPages;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -39,7 +40,13 @@ const PlaceholderSection: React.FC<{ title: string }> = ({ title }) => (
 
 const MainContent = ({...props}: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('about');
-    const {admin_page, officials, facilities, facility_page} = props;
+    const {pages, officials, facilities, org_types} = props;
+
+    console.log('Pages data in MainContent:', pages);
+
+    const admin_page = pages.find((page: ContentPages) => page.page === "Administration") ?? null;
+    const facility_page = pages.find((page: ContentPages) => page.page === "Facilities")?? null;
+    const about_page = pages.find((page: ContentPages) => page.page === "About")?? null;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
@@ -91,7 +98,10 @@ const MainContent = ({...props}: MainContentProps) => {
                     <div className="flex-1">
                         <div className="space-y-6">
                             <div ref={aboutRef} className="scroll-mt-6">
-                                <AboutPageSection />
+                                <AboutSection
+                                    about_page={about_page}
+                                    org_types={org_types}
+                                />
                             </div>
 
                             <div ref={vmgoRef} className="scroll-mt-6">
@@ -116,8 +126,8 @@ const MainContent = ({...props}: MainContentProps) => {
 
                             <div ref={facilitiesRef} className="scroll-mt-6">
                                 <FacilitiesSection
-                                    facilities={facilities}
                                     facility_page={facility_page}
+                                    facilities={facilities}
                                 />
                             </div>
 

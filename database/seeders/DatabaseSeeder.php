@@ -22,6 +22,7 @@ use App\Models\ProgramObjectives;
 use App\Models\Programs;
 use App\Models\Roles;
 use App\Models\User;
+use App\Models\ContentPages;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\UserAreaRoles;
 use App\Models\UserProgramRoles;
@@ -659,5 +660,32 @@ class DatabaseSeeder extends Seeder
 
         // Insert all entries at once
         DB::table('faculty_staff')->insert($faculties);
+        $content = [
+            [
+                'page' => 'Facilities',
+            ],
+            [
+                'page' => 'Administration',
+            ],
+            [
+                'page' => 'About',
+            ],
+            [
+                'page' => 'Local Task Force',
+            ],
+            [
+                'page' => 'Faculty & Staff',
+            ],
+            [
+                'page' => 'History',
+            ],
+            [
+                'page' => 'Mission Vision & Goals',
+            ],
+        ];
+        foreach ($content as $attributes) {
+            ContentPages::factory()->create($attributes);
+        }
     }
+
 }

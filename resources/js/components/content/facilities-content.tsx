@@ -7,7 +7,7 @@ import { ContentPages, Facilities } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import { EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { FacilitiesDialog } from '../dialogs/content/facilities-dialog';
+import { FacilitiesDialog } from '@/components/dialogs/content/facilities-dialog';
 import InputError from '../input-error';
 
 interface FacilitiesProps {
@@ -15,7 +15,8 @@ interface FacilitiesProps {
     facilities: Facilities[];
 }
 interface PageForm {
-    page_id?: number;
+    content_page_id?: number;
+    page: string;
     title: string;
     description: string;
 }
@@ -73,8 +74,10 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
 
     const { data, setData, post, processing, errors, reset } = useForm<FacilitiesForm>({
         page: {
-            title: facility_page?.title || '',
-            description: facility_page?.description || '',
+            content_page_id: facility_page?.content_page_id,
+            title: facility_page?.title,
+            description: facility_page?.description,
+            page: facility_page?.page || 'Facilities',
         },
         facilities: facilityList?.map((facility) => ({
             facility_id: facility.facility_id,
@@ -116,10 +119,12 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
     };
 
     const handleSubmit = () => {
+        console.log('page:', facility_page);
+        console.log('Facilities being submitted:', data.page);
         post(route('content.facilities.update'), {
             onSuccess: () => {
-                reset();
-            },
+                // reset();
+            }
         });
     };
 
@@ -319,6 +324,6 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
             )}
         </div>
     );
-}
+};
 
 export default FacilitiesSection;

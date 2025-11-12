@@ -14,9 +14,10 @@ interface AdministrationProps {
     officials: Administration[];
 }
 interface PageForm {
-    page_id?: number;
+    content_page_id?: number;
     title: string;
     subtitle: string;
+    page: string;
 }
 interface OfficialsForm {
     administration_id?: number;
@@ -70,14 +71,15 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
     const [officialsList, setOfficialsList] = useState<Administration[]>(officials ?? []);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogType, setDialogType] = useState<'add' | 'edit'>('add');
-    console.log(officialsList,officials);
 
     const [selectedOfficialId, setSelectedOfficialId] = useState<number | null>(null);
 
     const { data, setData, post, processing, errors, reset } = useForm<AdministrationForm>({
         page: {
-            title: admin_page?.title || '',
-            subtitle: admin_page?.subtitle || '',
+            content_page_id: admin_page?.content_page_id,
+            title: admin_page?.title,
+            subtitle: admin_page?.subtitle,
+            page: admin_page?.page || 'Administration',
         },
         officials: officialsList?.map((official) => ({
             administration_id: official.administration_id,
@@ -122,9 +124,17 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
     };
 
     const handleSubmit = () => {
+        const finalData = {
+            ...data,
+            page: {
+                ...data.page,
+                content_page_id: admin_page?.content_page_id,
+            },
+        };
         post(route('content.administration.update'), {
+            data: finalData,
             onSuccess: () => {
-                reset();
+                // reset();
             },
         });
     };

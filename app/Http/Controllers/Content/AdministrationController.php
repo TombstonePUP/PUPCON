@@ -13,11 +13,12 @@ class AdministrationController extends Controller
     public function __invoke(Request $request)
     {
         $validated = $request->validate([
-            'page' => ['required', 'array'],
+            'page' => ['nullable', 'array'],
             'officials' => ['nullable', 'array'],
-            'page.page_id' => ['nullable', 'integer'],
+            'page.content_page_id' => ['required', 'integer'],
             'page.title' => ['required', 'string'],
             'page.subtitle' => ['required', 'string'],
+            'page.page' => ['required', 'string'],
             'officials.*.administration_id' => ['required', 'integer'],
             'officials.*.first_name' => ['required', 'string'],
             'officials.*.middle_name' => ['nullable', 'string'],
@@ -26,8 +27,10 @@ class AdministrationController extends Controller
             'officials.*.position' => ['required', 'string'],
             'officials.*.profile' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
         ], [
+            'page.content_page_id.required' => 'The page content ID is required.',
             'page.title.required' => 'The page title is required.',
             'page.subtitle.required' => 'The page subtitle is required.',
+            'page.page.required' => 'The page identifier is required.',
             'officials.*.first_name.required' => 'The official\'s first name is required.',
             'officials.*.last_name.required' => 'The official\'s last name is required.',
             'officials.*.position.required' => 'The official\'s position is required.',
@@ -36,9 +39,8 @@ class AdministrationController extends Controller
             'officials.*.profile.max' => 'The profile picture may not be greater than 5MB.',
         ]);
 
-        $page_id = $validated['page']['page_id'] ?? null;
-        if ($page_id) {
-            $page = ContentPages::find($page_id);
+        $page = ContentPages::find($validated['page']['content_page_id']);
+        if($page) {
             $page->title = $validated['page']['title'];
             $page->subtitle = $validated['page']['subtitle'];
             $page->save();
@@ -46,6 +48,7 @@ class AdministrationController extends Controller
             $page = ContentPages::create([
                 'title' => $validated['page']['title'],
                 'subtitle' => $validated['page']['subtitle'],
+                'page' => $validated['page']['page'],
             ]);
         }
 

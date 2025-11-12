@@ -20,39 +20,35 @@ class ContentController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $orgTypes = OrganizationTypes::orderBy('type_name')->get();
-        $organizations = Organizations::with('OrganizationTypes')->orderBy('organization_name')->get();
+        $orgTypes = OrganizationTypes::orderBy('type_name')
+            ->with(['organizations' => function ($query) {
+                $query->orderBy('organization_name');
+            }])
+            ->get();
 
-        $aboutData = [
-            'welcome_title' => 'Welcome (from DB)',
-            'welcome_subtitle' => 'This is the subtitle from the database.',
-            'address' => '123 Main St, Manila',
-            'phone_number' => '+63 2 8123 4567',
-        ];
+        $pages = ContentPages::all();
+        $pages = $pages->map(function ($page) {
+            $page->image_path = Storage::url($page->image_path);
+            return $page;
+        });
 
         $officials = UniversityAdministration::all();
-
         $officials = $officials->map(function ($official) {
             $official->profile_picture_path = Storage::url($official->profile_picture_path);
             return $official;
         });
-        $admin_page = ContentPages::where('title', 'Administration')->first();
 
         $facilities = Facilities::all();
         $facilities = $facilities->map(function ($facility) {
             $facility->image_path = Storage::url($facility->image_path);
             return $facility;
         });
-        $facility_page = ContentPages::where('title', 'Facilities')->first();
 
         return Inertia::render('content-management/main-content', [
-            'orgTypes' => $orgTypes,
-            'organizations' => $organizations,
-            'aboutData' => $aboutData,
+            'pages' => $pages,
+            'org_types' => $orgTypes,
             'officials' => $officials,
-            'admin_page' => $admin_page,
             'facilities' => $facilities,
-            'facility_page' => $facility_page,
         ]);
     }
 }

@@ -14,7 +14,8 @@ class FacilitiesController extends Controller
         $validated = $request->validate([
             'page' => ['required', 'array'],
             'facilities' => ['nullable', 'array'],
-            'page.page_id' => ['nullable', 'integer'],
+            'page.page' => ['required', 'string'],
+            'page.content_page_id' => ['required', 'integer'],
             'page.title' => ['required', 'string'],
             'page.description' => ['required', 'string'],
             'facilities.*.facility_id' => ['required', 'integer'],
@@ -22,8 +23,10 @@ class FacilitiesController extends Controller
             'facilities.*.description' => ['required', 'string'],
             'facilities.*.facility_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
         ], [
+            'page.content_page_id.required' => 'The page content ID is required.',
             'page.title.required' => 'The page title is required.',
             'page.description.required' => 'The page description is required.',
+            'page.page.required' => 'The page identifier is required.',
             'facilities.*.facility_name.required' => 'The facility name is required.',
             'facilities.*.description.required' => 'The facility description is required.',
             'facilities.*.facility_image.image' => 'The facility image must be an image file.',
@@ -31,9 +34,8 @@ class FacilitiesController extends Controller
             'facilities.*.facility_image.max' => 'The facility image may not be greater than 5MB.',
         ]);
 
-        $page_id = $validated['page']['page_id'] ?? null;
-        if ($page_id) {
-            $page = ContentPages::find($page_id);
+        $page = ContentPages::find($validated['page']['content_page_id']);
+        if($page) {
             $page->title = $validated['page']['title'];
             $page->description = $validated['page']['description'];
             $page->save();
@@ -41,6 +43,7 @@ class FacilitiesController extends Controller
             $page = ContentPages::create([
                 'title' => $validated['page']['title'],
                 'description' => $validated['page']['description'],
+                'page' => $validated['page']['page'],
             ]);
         }
 
@@ -78,7 +81,7 @@ class FacilitiesController extends Controller
 
         return redirect()->back()
             ->with('type', 'success')
-            ->with('title', 'Update Sucessful')
+            ->with('title', 'Update Successful')
             ->with('message', 'Facilities content has been updated.');
     }
 }

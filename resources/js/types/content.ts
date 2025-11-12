@@ -1,5 +1,6 @@
 export interface ContentPages {
     content_page_id: number;
+    page: string;
     title: string;
     subtitle?: string | null;
     description?: string | null;
@@ -7,7 +8,7 @@ export interface ContentPages {
     image_path?: string | null;
     quote?: string | null;
     author?: string | null;
-    phone_number?: number | null;
+    phone_number?: string | null;
     address?: string | null;
 }
 
@@ -54,4 +55,18 @@ export interface Administration {
     position: string;
     profile_picture_name?: string | null;
     profile_picture_path?: string | null;
+}
+
+export interface OrganizationTypes {
+    type_id: number;
+    type_name: string;
+    organizations?: Organizations[];
+}
+
+export interface Organizations {
+    organization_id: number;
+    organization_name: string;
+    affiliation: string;
+    type_id: number;
+    type?: OrganizationTypes;
 }

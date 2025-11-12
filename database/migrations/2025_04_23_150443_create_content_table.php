@@ -30,15 +30,15 @@ return new class extends Migration
 
         Schema::create('content_pages', function (Blueprint $table) {
             $table->id(column: 'content_page_id')->autoIncrement()->primary();
-            // $table->string('page');
-            $table->text('title');
+            $table->string('page');
+            $table->text('title')->nullable();
             $table->text('subtitle')->nullable();
             $table->text('description')->nullable();
             $table->text('image_name')->nullable();
             $table->text('image_path')->nullable();
             $table->text('quote')->nullable();
             $table->text('author')->nullable();
-            $table->integer('phone_number')->nullable();
+            $table->string('phone_number')->nullable();
             $table->text('address')->nullable();
         });
     }

@@ -19,6 +19,7 @@ class ContentPages extends Model
     protected $table = 'content_pages';
     protected $primaryKey = 'content_page_id';
     protected $fillable = [
+        'page',
         'title',
         'subtitle',
         'description',

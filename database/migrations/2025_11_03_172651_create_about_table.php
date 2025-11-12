@@ -20,7 +20,7 @@ return new class extends Migration
             $table->id(column: 'organization_id')->autoIncrement()->primary();
             $table->foreignId('type_id')
                 ->references('type_id')
-                ->on('organization_types')->onUpdate('cascade')->onDelete('restrict');
+                ->on('organization_types')->onUpdate('cascade')->onDelete('cascade');
             $table->string('organization_name');
             $table->text('affiliation')->nullable();
         });
