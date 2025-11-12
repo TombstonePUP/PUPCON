@@ -11,9 +11,9 @@ class FacultyStaff extends Model
     /** @use HasFactory<\Database\Factories\FacultyStaffFactory> */
     use HasFactory;
 
+    public $timestamps = false;
     protected $table = 'faculty_staff';        // explicitly set because plural is irregular
     protected $primaryKey = 'faculty_staff_id';  // your primary key column
-
     protected $fillable = [
         'first_name',
         'middle_name',
@@ -22,13 +22,13 @@ class FacultyStaff extends Model
         'status',
         'program_id',
         'program_coordinator',
-        'faculty_image_name',
-        'faculty_image_path',
+        'image_name',
+        'image_path',
     ];
 
     protected $casts = [
-        'faculty_image_name' => 'encrypted',
-        'faculty_image_path' => 'encrypted',
+        'image_name' => 'encrypted',
+        'image_path' => 'encrypted',
     ];
 
     /**

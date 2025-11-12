@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Content;
 use App\Http\Controllers\Controller;
 use App\Models\ContentPages;
 use App\Models\Facilities;
+use App\Models\FacultyStaff;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Organizations;
@@ -38,6 +39,12 @@ class ContentController extends Controller
             return $official;
         });
 
+        $faculties = FacultyStaff::all();
+        $faculties = $faculties->map(function ($faculty) {
+            $faculty->image_path = Storage::url($faculty->image_path);
+            return $faculty;
+        });
+
         $facilities = Facilities::all();
         $facilities = $facilities->map(function ($facility) {
             $facility->image_path = Storage::url($facility->image_path);
@@ -48,6 +55,7 @@ class ContentController extends Controller
             'pages' => $pages,
             'org_types' => $orgTypes,
             'officials' => $officials,
+            'faculties' => $faculties,
             'facilities' => $facilities,
         ]);
     }

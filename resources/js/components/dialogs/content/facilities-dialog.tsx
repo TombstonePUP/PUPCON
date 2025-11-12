@@ -117,7 +117,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                                         type="file"
                                         accept="image/*"
                                         className="hidden"
-                                        id="replace-image"
+                                        id="replace-facilities-image"
                                         onChange={handleImageChange} // reuse your same handler
                                     />
 
@@ -127,7 +127,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                                         variant="outline"
                                         className="h-12 w-12 rounded-full bg-white p-0 transition-transform duration-200 hover:scale-110 hover:bg-red-50"
                                         size="lg"
-                                        onClick={() => document.getElementById('replace-image')?.click()}
+                                        onClick={() => document.getElementById('replace-facilities-image')?.click()}
                                     >
                                         <Edit2 className="h-5 w-5 text-red-600" />
                                     </Button>

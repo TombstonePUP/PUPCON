@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('personnel_type');
             $table->string('status')->nullable();
-            $table->foreignId('program_id')->references('program_id')->nullable()->on('programs')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('program_id')->nullable()->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
             $table->boolean('program_coordinator')->default('false');
             $table->string('image_name')->nullable();
             $table->text('image_path')->nullable();

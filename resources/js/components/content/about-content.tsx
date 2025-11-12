@@ -30,7 +30,7 @@ interface AboutForm {
 }
 
 const AboutSection = ({ about_page, org_types }: AboutProps) => {
-    const { data, setData, post, processing, errors } = useForm<AboutForm>({
+    const { data, setData, post, errors } = useForm<AboutForm>({
         page: {
             content_page_id: about_page?.content_page_id,
             page: about_page?.page || 'About',
@@ -43,8 +43,6 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
         },
         org_types: org_types || [],
     });
-
-    console.log(data.org_types);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

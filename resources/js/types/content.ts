@@ -1,3 +1,5 @@
+import { Program } from ".";
+
 export interface ContentPages {
     content_page_id: number;
     page: string;
@@ -13,16 +15,18 @@ export interface ContentPages {
 }
 
 export interface FacultyStaff {
-    faculty_id: number;
+    faculty_staff_id: number;
     first_name: string;
     middle_name?: string | null;
     last_name: string;
-    suffix?: string | null;
-    faculty_status: string;
-    program_id: number;
+    // suffix?: string | null;
+    personnel_type: string;
+    status: string;
+    program_id?: number;
     program_coordinator: boolean;
-    faculty_image_name?: string | null;
-    faculty_image_path?: string | null;
+    image_name?: string | null;
+    image_path?: string | null;
+    programs?: Program;
 }
 
 export interface Objectives {

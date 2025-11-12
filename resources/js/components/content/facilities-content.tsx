@@ -135,8 +135,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
             let updatedList;
             let facilityForLocalState: Facilities; // Object for display (facilityList)
 
-            // 1. Create the object for the local 'facilityList' state
-            // This uses the 'previewUrl' for immediate display.
+            // Local State Update
             facilityForLocalState = {
                 facility_id: formData.facility_id ?? 0,
                 facility_name: formData.facility_name,
@@ -152,7 +151,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                 updatedList = [...current, facilityForLocalState];
             }
 
-            // 2. Sync with 'useForm' data for final submission
+            // Data Syncing
             setData((prevData) => {
                 const facilityForForm: FacilityForm = {
                     facility_id: facilityForLocalState.facility_id, // Use the assigned ID

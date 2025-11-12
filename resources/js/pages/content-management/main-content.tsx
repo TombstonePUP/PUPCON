@@ -11,14 +11,16 @@ import HistoryContentSection from './history-content';
 import LocalTaskForceContentSection from './localtaskforce-content';
 import VmgoContentSection from './vmgo-content';
 import FacilitiesSection from '@/components/content/facilities-content';
-import { Administration, ContentPages, Facilities, OrganizationTypes } from '@/types/content';
+import { Administration, ContentPages, Facilities, FacultyStaff, OrganizationTypes } from '@/types/content';
 import AdministrationSection from '@/components/content/admin-content';
 import AboutSection from '@/components/content/about-content';
+import FacultySection from '@/components/content/faculty-content';
 
 interface MainContentProps {
     pages: ContentPages;
     org_types: OrganizationTypes[];
     officials: Administration[];
+    faculties: FacultyStaff[];
     facilities: Facilities[];
 }
 
@@ -40,13 +42,14 @@ const PlaceholderSection: React.FC<{ title: string }> = ({ title }) => (
 
 const MainContent = ({...props}: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('about');
-    const {pages, officials, facilities, org_types} = props;
+    const {pages, officials, facilities, org_types, faculties} = props;
 
     console.log('Pages data in MainContent:', pages);
 
     const admin_page = pages.find((page: ContentPages) => page.page === "Administration") ?? null;
     const facility_page = pages.find((page: ContentPages) => page.page === "Facilities")?? null;
     const about_page = pages.find((page: ContentPages) => page.page === "About")?? null;
+    const faculty_page = pages.find((page: ContentPages) => page.page === "Faculty & Staff") ?? null;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
@@ -121,7 +124,11 @@ const MainContent = ({...props}: MainContentProps) => {
                             </div>
 
                             <div ref={facultiesRef} className="scroll-mt-6">
-                                <FacultyContentSection />
+                            {/*<FacultyContentSection />*/}
+                                <FacultySection
+                                    faculty_page={faculty_page}
+                                    faculty_members={faculties}
+                                />
                             </div>
 
                             <div ref={facilitiesRef} className="scroll-mt-6">

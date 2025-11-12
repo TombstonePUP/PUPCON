@@ -652,8 +652,8 @@ class DatabaseSeeder extends Seeder
                 'status' => $facultyStatus,
                 'program_id' => $programId,
                 'program_coordinator' => false,
-                'image_name' => $fileName,
-                'image_path' => '/images/adfa-new/faculty/' . $fileName,
+                /* 'image_name' => $fileName,
+                'image_path' => '/images/adfa-new/faculty/' . $fileName, */
             ];
         }
 

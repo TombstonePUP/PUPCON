@@ -27,8 +27,8 @@ class FacultyStaffFactory extends Factory
             'status' => fake()->randomElement(['Regular', 'Part-Time']),
             'program_id' => $program ? $program->program_id : null,
             'program_coordinator' => fake()->boolean(),
-            'faculty_image_name' => fake()->word(),
-            'faculty_image_path' => fake()->imageUrl(),
+            'image_name' => fake()->word(),
+            'image_path' => fake()->imageUrl(),
         ];
     }
 }
