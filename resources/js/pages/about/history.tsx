@@ -71,7 +71,7 @@ export default function History() {
                     <div className="mx-auto w-[75%] px-6 py-12 lg:flex lg:gap-8">
                         {/* Sidebar */}
                         <aside className="mb-6 flex flex-col gap-4 lg:sticky lg:top-24 lg:mb-0 lg:w-1/4 lg:flex-shrink-0">
-                            <div className="rounded-xl border border-gray-200 bg-white p-6">
+                            <div className="hidden lg:block rounded-xl border border-gray-200 bg-white p-6">
                                 <h2 className="mb-8 text-sm font-semibold text-[#7f1414ab]">QUICK LINKS</h2>
                                 <nav className="space-y-2">
                                     {quickLinks.map((item, i) => (

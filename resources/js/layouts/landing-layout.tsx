@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
     BookOpen,
     Building,
+    ChevronDown,
     ChevronRight,
     ExternalLink,
     Facebook,
@@ -262,6 +263,13 @@ export default function Layout({ children, footerText }: LayoutProps) {
             },
         },
     };
+
+    const [openDropdown, setOpenDropdown] = useState(null);
+
+    const toggleDropdown = (label) => {
+        setOpenDropdown(openDropdown === label ? null : label);
+    };
+
 
     return (
         <div className="flex min-h-screen flex-col">
@@ -593,10 +601,10 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                         whileHover={{ rotate: 15 }}
                                         transition={{ duration: 0.2 }}
                                     >
-                                        <Search className="h-5 w-5 text-white" />
+                                        <Menu className="h-5 w-5 text-white" />
                                     </motion.div>
                                     <h2 className="ml-3 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] bg-clip-text text-xl font-bold text-transparent">
-                                        Mabuhay!
+                                        Menu
                                     </h2>
                                 </div>
                                 <motion.button
@@ -610,55 +618,74 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                 </motion.button>
                             </div>
 
-                            <nav className="w-full bg-[#7f1414] text-white rounded-lg shadow-lg overflow-hidden">
+                            <nav className="w-full rounded-lg overflow-hidden">
                                 <ul className="flex flex-col divide-y divide-white/10">
-                                    {[...leftNav, ...rightNav].map((item) => (
-                                        <li key={item.label} className="group relative">
-                                            {/* Main link */}
-                                            <Link
-                                                href={item.href}
-                                                className={cn(
-                                                    'flex items-center justify-between px-5 py-3 transition-all duration-200',
-                                                    isActive(item.href)
-                                                        ? 'bg-white/20 text-white'
-                                                        : 'text-white/90 hover:bg-white/10 hover:text-white'
-                                                )}
-                                                preserveScroll
-                                            >
-                                                <span>{item.label}</span>
-                                                {item.dropdown?.length > 0 && (
-                                                    <span className="ml-2 text-white/70 group-hover:text-white transition-transform duration-300">
-                                                        ▼
-                                                    </span>
-                                                )}
-                                            </Link>
+                                    {[...leftNav, ...rightNav].map((item) => {
+                                        const isOpen = openDropdown === item.label;
 
-                                            {/* Dropdown (if any) */}
-                                            {item.dropdown?.length > 0 && (
-                                                <div className="bg-white text-[#7f1414] max-h-0 overflow-hidden transition-all duration-300 ease-in-out group-hover:max-h-96">
-                                                    <ul className="flex flex-col">
-                                                        {item.dropdown.map((drop) => (
-                                                            <li
-                                                                key={drop.label}
-                                                                className="border-t border-gray-100 last:border-none"
-                                                            >
-                                                                <Link
-                                                                    href={drop.href}
-                                                                    className="flex items-center gap-2 px-6 py-3 text-sm transition-colors hover:bg-[#7f1414] hover:text-white"
-                                                                    preserveScroll
-                                                                >
-                                                                    {drop.icon && (
-                                                                        <span className="flex-shrink-0 text-lg">{drop.icon}</span>
-                                                                    )}
-                                                                    <span>{drop.label}</span>
-                                                                </Link>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
+                                        return (
+                                            <li key={item.label} className="relative">
+                                                {/* Main Link + Toggle Button */}
+                                                <div className="flex items-center justify-between px-5 py-3">
+                                                    <Link
+                                                        href={item.href}
+                                                        className={cn(
+                                                            'flex-1 transition-all duration-200 text-[#7f1414]'
+                                                        )}
+                                                        preserveScroll
+                                                    >
+                                                        {item.label}
+                                                    </Link>
+
+                                                    {item.dropdown?.length > 0 && (
+                                                        <button
+                                                            onClick={() => toggleDropdown(item.label)}
+                                                            className="p-2"
+                                                        >
+                                                            <ChevronDown
+                                                                className={cn(
+                                                                    "ml-2 text-[#7f1414] transition-transform duration-300",
+                                                                    isOpen && "rotate-180"
+                                                                )}
+                                                            />
+                                                        </button>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </li>
-                                    ))}
+
+                                                {/* Dropdown */}
+                                                {item.dropdown?.length > 0 && (
+                                                    <div
+                                                        className={cn(
+                                                            "bg-white text-[#7f1414] overflow-hidden transition-all duration-300",
+                                                            isOpen ? "max-h-96" : "max-h-0"
+                                                        )}
+                                                    >
+                                                        <ul className="flex flex-col">
+                                                            {item.dropdown.map((drop) => (
+                                                                <li
+                                                                    key={drop.label}
+                                                                    className="border-t border-gray-100 last:border-none"
+                                                                >
+                                                                    <Link
+                                                                        href={drop.href}
+                                                                        className="flex items-center gap-2 px-6 py-3 text-sm transition-colors hover:bg-[#7f1414] hover:text-white"
+                                                                        preserveScroll
+                                                                    >
+                                                                        {drop.icon && (
+                                                                            <span className="flex-shrink-0 text-lg">
+                                                                                {drop.icon}
+                                                                            </span>
+                                                                        )}
+                                                                        <span>{drop.label}</span>
+                                                                    </Link>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
                             </nav>
                         </motion.aside>
