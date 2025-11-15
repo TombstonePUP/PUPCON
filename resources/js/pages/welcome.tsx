@@ -1,10 +1,10 @@
 import Layout from '@/layouts/landing-layout';
+import { Head } from '@inertiajs/react';
 import { BookOpen, Calendar, ChevronLeft, ChevronRight, GraduationCap, ImageIcon, MapPin, Play, X } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Head } from '@inertiajs/react';
 
 // const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
-const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode;[key: string]: any }) => (
+const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: any }) => (
     <a href={href} {...props}>
         {children}
     </a>
@@ -362,7 +362,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
         [],
     );
 
-    const POSTS_PER_PAGE = 4;
+    const POSTS_PER_PAGE = window.innerWidth <= 768 ? 2 : 4;
     const totalPages = Math.ceil(newsCards.length / POSTS_PER_PAGE);
     const currentPosts = newsCards.slice(newsPage * POSTS_PER_PAGE, (newsPage + 1) * POSTS_PER_PAGE);
 
@@ -443,7 +443,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
             <Layout>
                 <div
                     ref={heroRef}
-                    className={`relative h-[70vw] lg:h-[60vh] w-full overflow-hidden transition-opacity duration-500 ${isHeroInView ? 'opacity-100' : 'opacity-0'}`}
+                    className={`relative h-[70vw] w-full overflow-hidden transition-opacity duration-500 lg:h-[60vh] ${isHeroInView ? 'opacity-100' : 'opacity-0'}`}
                 >
                     <SimpleCarousel images={images} />
 
@@ -451,15 +451,18 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                     <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>
 
                     {/* Content Overlay with Animations */}
-                    <div ref={heroContentRef} className="absolute inset-0 z-20 grid w-full grid-cols-1 px-12 pr-10 lg:pl-70 text-white md:grid-cols-2">
+                    <div
+                        ref={heroContentRef}
+                        className="absolute inset-0 z-20 grid w-full grid-cols-1 px-[8vw] pr-10 text-white lg:pl-70"
+                    >
                         <div
-                            className={`flex flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
-                                }`}
+                            className={`flex flex-col w-full justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${
+                                isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
+                            }`}
                         >
-                            <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[80vw] lg:w-[29vw] object-cover" priority />
-                            <h2 className="lg:text-[1.76vw] italic text-[2.5vw]">Years of academic excellence and service</h2>
-
-                            <div className="mt-[2.08vw] flex flex-wrap gap-4">
+                            <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[70vw] object-cover lg:w-[29vw]" priority />
+                            <h2 className="mb-3 text-[2.8vw] italic lg:mb-0 lg:text-[1.76vw]">Years of academic excellence and service</h2>
+                            <div className="mt-[2.08vw] flex flex-wrap w-full justify-center gap-2 lg:justify-start">
                                 {[
                                     { icon: BookOpen, text: 'Programs', primary: true },
                                     { icon: Calendar, text: 'Events' },
@@ -473,152 +476,14 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                                 : 'flex items-center space-x-[0.8vw] rounded-md border border-gray-300/70 bg-white/10 px-3 py-2 font-semibold text-white backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:border-gray-200 hover:bg-white/20 active:scale-95'
                                         }
                                     >
-                                        <btn.icon className="lg:size-[1vw] size-[3vw]" />
-                                        <span className="lg:text-[1vw] text-[2.5vw]">{btn.text}</span>
+                                        <btn.icon className="size-[3vw] lg:size-[1vw]" />
+                                        <span className="text-[2.5vw] lg:text-[1vw]">{btn.text}</span>
                                     </button>
                                 ))}
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {/* Welcome Modal (CSS Transitions) */}
-                {showModal && (
-                    <div
-                        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-200 ease-in-out ${isModalVisible ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-                        onClick={handleCloseModal}
-                    >
-                        <div
-                            className={`relative mx-4 w-full max-w-4xl transition-all duration-200 ease-in-out ${isModalVisible ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'}`}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <div className="relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white">
-                                {/* Optional animated background elements */}
-                                <>
-                                    <div className="animate-pulse-bg-1 absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#7f1414]/5 blur-3xl" />
-                                    <div className="animate-pulse-bg-2 absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-red-500/5 blur-2xl" />
-                                </>
-
-                                {/* Close Button */}
-                                <button
-                                    onClick={handleCloseModal}
-                                    className="absolute top-3 right-3 z-10 rounded-full bg-white/80 p-2 transition-all duration-150 hover:scale-105 hover:bg-white active:scale-90"
-                                    aria-label="Close"
-                                >
-                                    <X className="h-5 w-5 text-gray-400 transition-colors duration-150 hover:text-[#7f1414]" />
-                                </button>
-
-                                <div className="relative p-12">
-                                    <div className="grid items-center gap-12 md:grid-cols-2">
-                                        {/* Left: Logo + Welcome */}
-                                        <div
-                                            className={`flex flex-col items-center justify-center space-y-6 text-center transition-all delay-100 duration-300 ease-out ${isModalVisible ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
-                                        >
-                                            <SafeImage src="/images/pupcon-logo.png" alt="PUP Logo" className="h-24 w-auto" placeholderType="logo" />
-                                            <div
-                                                className={`space-y-3 transition-all delay-200 duration-300 ease-out ${isModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
-                                            >
-                                                <h2 className="bg-[#7f1414] bg-clip-text text-4xl font-bold text-transparent">Mabuhay!</h2>
-                                                <p className="text-lg text-gray-600">Welcome to PUP San Juan</p>
-                                            </div>
-                                        </div>
-
-                                        {/* Right: Role Selection */}
-                                        <div
-                                            className={`space-y-6 transition-all delay-150 duration-300 ease-out ${isModalVisible ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
-                                        >
-                                            <div className="space-y-4">
-                                                {[
-                                                    {
-                                                        key: 'accreditor',
-                                                        title: 'Accreditor',
-                                                        desc: 'Evaluation Team Members',
-                                                        icon: (
-                                                            <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path
-                                                                    strokeLinecap="round"
-                                                                    strokeLinejoin="round"
-                                                                    strokeWidth={2}
-                                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                                />
-                                                            </svg>
-                                                        ),
-                                                    },
-                                                ].map((role) => (
-                                                    <button
-                                                        key={role.key}
-                                                        onClick={() => handleSelectType(role.key)}
-                                                        className="group flex w-full items-center rounded-2xl border border-gray-200 bg-white/80 p-6 transition-all duration-150 ease-out hover:border-[#7f1414] hover:bg-white"
-                                                    >
-                                                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-[#7f1414] transition-transform duration-150 ease-out group-hover:scale-105">
-                                                            {role.icon}
-                                                        </div>
-                                                        <div className="ml-6 text-left">
-                                                            <h4 className="text-lg font-semibold text-gray-800 transition-colors duration-150 ease-out group-hover:text-[#7f1414]">
-                                                                {role.title}
-                                                            </h4>
-                                                            <p className="text-sm text-gray-500">{role.desc}</p>
-                                                        </div>
-                                                        <svg
-                                                            className="ml-auto h-5 w-5 text-gray-400 transition-all duration-150 ease-out group-hover:translate-x-1 group-hover:text-[#7f1414]"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                        </svg>
-                                                    </button>
-                                                ))}
-
-                                                {/* Guest/Student Role */}
-                                                <button
-                                                    onClick={() => handleSelectType('guest')}
-                                                    className="group w-full rounded-2xl bg-[#7f1414] p-6 text-white transition-colors duration-150 ease-out hover:bg-[#6b1111]"
-                                                >
-                                                    <div className="flex items-center justify-center space-x-3">
-                                                        <svg
-                                                            className="h-6 w-6 transition-transform duration-150 ease-out group-hover:scale-105"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                                            />
-                                                        </svg>
-                                                        <span className="text-lg font-semibold">Continue as Guest / Student</span>
-                                                        <svg
-                                                            className="h-5 w-5 transition-transform duration-150 ease-out group-hover:translate-x-1"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M13 7l5 5m0 0l-5 5m5-5H6"
-                                                            />
-                                                        </svg>
-                                                    </div>
-                                                </button>
-                                            </div>
-
-                                            <div
-                                                className={`pt-4 text-center transition-opacity delay-300 duration-300 ${isModalVisible ? 'opacity-100' : 'opacity-0'}`}
-                                            >
-                                                <p className="text-xs text-gray-400">By continuing, you agree to our terms and conditions</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
 
                 {/* News Section */}
                 <section ref={newsSectionRef} className="flex min-h-[80vh] w-full flex-col items-center justify-center gap-20 bg-gray-50 px-6 py-16">
@@ -690,10 +555,11 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handlePrevPage}
                                     disabled={newsPage === 0}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === 0
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
+                                        newsPage === 0
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
                                             : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                        }`}
+                                    }`}
                                 >
                                     <ChevronLeft className="h-4 w-4" />
                                     <span>Previous</span>
@@ -705,8 +571,9 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                         <button
                                             key={index}
                                             onClick={() => setNewsPage(index)}
-                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
-                                                }`}
+                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${
+                                                index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                                            }`}
                                             aria-label={`Go to page ${index + 1}`}
                                         />
                                     ))}
@@ -716,10 +583,11 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handleNextPage}
                                     disabled={newsPage === totalPages - 1}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === totalPages - 1
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
+                                        newsPage === totalPages - 1
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
                                             : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                        }`}
+                                    }`}
                                 >
                                     <span>Next</span>
                                     <ChevronRight className="h-4 w-4" />

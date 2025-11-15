@@ -714,7 +714,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         <div>
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Quick Links</h3>
-                            <ul className="space-y-3 lg:block grid place-items-center">
+                            <ul className="space-y-3 flex flex-col lg:items-start items-center">
                                 <li>
                                     <a
                                         href="https://pupsinta.freshservice.com/support/home"
@@ -738,7 +738,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         <div>
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Portals</h3>
-                            <ul className="space-y-3 lg:block grid place-items-center">
+                            <ul className="space-y-3 flex flex-col lg:items-start items-center">
                                 <li>
                                     <a
                                         href="https://sis1.pup.edu.ph/student/"
@@ -772,7 +772,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                             Log out
                                         </Link>
                                     ) : (
-                                        <Link href="/login" className="flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>
+                                        <Link href="/login" className="hidden lg:flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>
                                             <Home className="h-4 w-4" /> PUPCON Login
                                         </Link>
                                     )}
@@ -782,7 +782,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         <div>
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Socials</h3>
-                            <ul className="space-y-3 lg:block grid place-items-center">
+                            <ul className="space-y-3 flex flex-col lg:items-start items-center">
                                 <li>
                                     <a
                                         href="https://www.facebook.com/profile.php?id=100064299686924"
