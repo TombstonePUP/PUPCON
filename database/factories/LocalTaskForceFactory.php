@@ -20,14 +20,9 @@ class LocalTaskForceFactory extends Factory
      */
     public function definition(): array
     {
-        // $user = User::inRandomOrder()->first();
-        $program = Programs::inRandomOrder()->first();
-        $area = Areas::inRandomOrder()->first();
         return [
             'local_task_force_id' => fake()->unique()->randomNumber(),
-            // 'user_id' => $user->user_id,
-            'area_id' => $area->area_id,
-            'program_id' => $program->program_id,
+            'area_name' => Areas::inRandomOrder()->first()->area_name,
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'profile_image_name' => fake()->word(),

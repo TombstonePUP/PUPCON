@@ -52,8 +52,9 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
             }), {
-            onFinish: () => {
+            onSuccess: () => {
                 reset();
+                onClose();
             },
         });
     };

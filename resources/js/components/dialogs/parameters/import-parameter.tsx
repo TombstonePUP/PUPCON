@@ -66,7 +66,7 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
                                 </Button>
                             </div>
                         </div>
-                        <div className="flex w-full items-center justify-center">
+                        <div className="flex flex-col w-full items-center justify-center">
                             {!data.document ? (
                                 <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">

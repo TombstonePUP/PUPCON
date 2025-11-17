@@ -27,7 +27,8 @@ class Areas extends Model
         'area_name',
         'area_description',
         'area_image_name',
-        'area_image_path'
+        'area_image_path',
+        'mean',
     ];
 
     /**

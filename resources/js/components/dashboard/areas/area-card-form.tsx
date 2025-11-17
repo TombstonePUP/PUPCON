@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { AreaFormCategory, AreaForms, Program } from '@/types';
-import { Edit, Eye, FileUp, FileX, Info, Plus, Trash2 } from 'lucide-react';
+import { DownloadIcon, Edit, Eye, FileUp, FileX, Info, Plus, Trash2 } from 'lucide-react';
 
 interface AreaFormDialogParams {
     type: 'view' | 'upload' | 'add' | 'delete-form' | 'delete' | 'rejected';
@@ -12,11 +12,26 @@ interface AreaFormDialogParams {
 
 type AreaCardsProps = {
     program: Program;
+    area_id: number;
     forms: AreaForms[];
     resolveFormDialog: (params: AreaFormDialogParams) => void;
 };
 
-export default function AreaCards({program, forms, resolveFormDialog }: AreaCardsProps) {
+export default function AreaCards({program, area_id, forms, resolveFormDialog }: AreaCardsProps) {
+    const download = (form: AreaForms) => {
+        const url = route('manage.area.download.area.form.file', {
+            program_name: program.program_link,
+            level_id: program.levels[0]?.accreditation_level_id,
+            area_id: area_id,
+            form_id: form.area_form_id,
+        });
+        const link = document.createElement('a');
+        link.href = url
+        link.setAttribute('download', '');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
     return (
         <div className="flex flex-col gap-2">
             <div className="flex w-full justify-center gap-2">
@@ -31,14 +46,24 @@ export default function AreaCards({program, forms, resolveFormDialog }: AreaCard
                         <div className="absolute inset-0 flex items-center justify-center gap-2 rounded bg-[#f4f4f4]/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                             {/* View Button - only sets state, no Dialog here */}
                             {card.file_name && (
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-                                    onClick={() => {resolveFormDialog({ type: 'view', form: card });}}
-                                >
-                                    <Eye className="h-4 w-4" />
-                                </Button>
+                                <>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                                        onClick={() => {resolveFormDialog({ type: 'view', form: card });}}
+                                    >
+                                        <Eye className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                                        onClick={() => {download(card);}}
+                                    >
+                                        <DownloadIcon className="h-4 w-4" />
+                                    </Button>
+                                </>
                             )}
                             <Button
                                 variant="ghost"

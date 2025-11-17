@@ -64,7 +64,7 @@ export default function PageHeader({ title, breadcrumbs, quickLinks }: PageHeade
                 {title && <h1 className="text-lg font-semibold tracking-tight">{title}</h1>}
 
                 {/* Breadcrumbs */}
-                <nav className="flex items-center text-sm">
+                <nav className="hidden lg:flex items-center text-sm">
                     {breadcrumbs.map((crumb, idx) => {
                         const isLast = idx === breadcrumbs.length - 1;
                         return (

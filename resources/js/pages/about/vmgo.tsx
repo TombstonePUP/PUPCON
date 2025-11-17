@@ -110,7 +110,7 @@ export default function VMGO() {
                         {/* Sidebar */}
                         <aside className="mb-6 flex flex-col gap-4 lg:sticky lg:top-24 lg:mb-0 lg:w-1/4 lg:flex-shrink-0">
                             {/* Quick Links */}
-                            <div className="rounded-xl border border-gray-200 bg-white p-6">
+                            <div className="hidden lg:block rounded-xl border border-gray-200 bg-white p-6">
                                 <h2 className="mb-8 text-sm font-semibold text-[#7f1414ab]">QUICK LINKS</h2>
                                 <nav className="space-y-2">
                                     {quickLinks.map((item, i) => (

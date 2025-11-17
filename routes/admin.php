@@ -1,5 +1,13 @@
 <?php
 
+use App\Http\Controllers\Content\AboutController;
+use App\Http\Controllers\Content\AdministrationController;
+use App\Http\Controllers\Content\ContentController;
+use App\Http\Controllers\Content\FacilitiesController;
+use App\Http\Controllers\Content\FacultyStaffController;
+use App\Http\Controllers\Content\HistoryController;
+use App\Http\Controllers\Content\LocalTaskForceController;
+use App\Http\Controllers\Content\VmgoController;
 use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Parameters\AreaParameterController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
@@ -26,29 +34,25 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         return Inertia::render('document/ratings');
     })->name('ratings');
 
-    Route::get('main-content', function () {
-        return Inertia::render('content-management/main-content');
-    })->name('content-management');
-
      Route::get('/other-services', function () {
         return Inertia::render('content-management/other-services');
     })->name('other.services');
 
     Route::prefix('manage-programs/{program_name}/{level_id}/{area_id}')->as('manage.')->group(function () {
         Route::controller(ImportParametersController::class)->group(function () {
-            Route::get('/downloadParameterTemplate', 'download')->name('area.download.template');
-            Route::post('/importParameters', 'import')->name('area.import.parameters');
+            Route::get('/download_parameter_template', 'download')->name('area.download.template');
+            Route::post('/import_parameters', 'import')->name('area.import.parameters');
         });
         Route::controller(AreaParameterController::class)->group(function () {
-            Route::post('/storeParameter', 'store')->name('area.add.parameter');
-            Route::patch('/{parameter_id}/updateParameter', 'update')->name('area.update.parameter');
-            Route::delete('/{parameter_id}/deleteParameter', 'destroy')->name('area.delete.parameter');
+            Route::post('/store_parameter', 'store')->name('area.add.parameter');
+            Route::patch('/{parameter_id}/update_parameter', 'update')->name('area.update.parameter');
+            Route::delete('/{parameter_id}/delete_parameter', 'destroy')->name('area.delete.parameter');
         });
 
         Route::controller(AreaParameterOutlinesController::class)->group(function () {
-            Route::post('/storeBenchmark', 'store')->name('area.add.benchmark');
-            Route::patch('/{outline_id}/editBenchmark', 'edit')->name('area.edit.benchmark');
-            Route::delete('/{outline_id}/deleteBenchmark', 'destroy')->name('area.delete.benchmark');
+            Route::post('/store_benchmark', 'store')->name('area.add.benchmark');
+            Route::patch('/{outline_id}/edit_benchmark', 'edit')->name('area.edit.benchmark');
+            Route::delete('/{outline_id}/delete_benchmark', 'destroy')->name('area.delete.benchmark');
         });
     });
 
@@ -58,4 +62,13 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         Route::post('/{file_id}/rejectDocument', 'reject')->name('rejectDocument');
         Route::post('/{file_id}/revertDocument', 'revert')->name('revertDocument');
     });
+
+    Route::get('main-content/', ContentController::class)->name('content.main');
+    Route::post('main-content/about/update', AboutController::class)->name('content.about.update');
+    Route::post('main-content/vmgo/update', VmgoController::class)->name('content.vmgo.update');
+    Route::post('main-content/history/update', HistoryController::class)->name('content.history.update');
+    Route::post('main-content/administration/update', AdministrationController::class)->name('content.administration.update');
+    Route::post('main-content/facilities/update', FacilitiesController::class)->name('content.facilities.update');
+    Route::post('main-content/faculty_staff/update', FacultyStaffController::class)->name('content.faculty_staff.update');
+    Route::post('main-content/local_task_force/update', LocalTaskForceController::class)->name('content.local_task_force.update');
 });

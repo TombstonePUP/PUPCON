@@ -242,6 +242,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                         </div>
                     )}
                 </div>
+                <div className='h-10'></div>
                 <DocumentViewer open={viewerOpen} onOpenChange={setViewerOpen} fileUrl={viewerFile.url} title={viewerFile.title} />
             </Layout>
         </>

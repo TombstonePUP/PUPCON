@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { FacultyStaff, Objectives, ProgramGallery } from './content';
 
 export interface Auth {
     user: User;
@@ -42,6 +43,7 @@ export interface NavPrograms {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+//Redundant
 export interface ProgramsUnderSurvey {
     program_id: number;
     program_name: string;
@@ -53,6 +55,7 @@ export interface ProgramsUnderSurvey {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+//Redundant
 export interface PerProgramUnderSurvey {
     program_id: number;
     degree_type: string;
@@ -69,7 +72,7 @@ export interface PerProgramUnderSurvey {
     page_banner_image_path: string;
     color?: string;
     levels?: AccreditationLevels[];
-    faculties?: Faculty[];
+    faculty_staff?: FacultyStaff[];
     objectives: Objectives[];
     program_gallery: ProgramGallery[];
     [key: string]: unknown;
@@ -91,7 +94,7 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
-    userRoles: UserRoles;
+    roles?: Roles;
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -101,36 +104,7 @@ export interface Roles {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-export interface ActivityLogs {
-    activity_log_id: number;
-    full_name: string;
-    area: string;
-    program: string;
-    file_name: string;
-    activity: string;
-    activity_date: string;
-    [key: string]: unknown;
-}
-
-export interface FrequencyUploads {
-    activity_date: string;
-    activity: number;
-    [key: string]: unknown;
-}
-
-export interface DocumentStatistics {
-    file_status: string;
-    documents: number;
-    [key: string]: unknown;
-}
-
-export interface OverallUploads {
-    document_type: string;
-    outlines: number;
-    documents: number;
-    [key: string]: unknown;
-}
-
+//Redundant
 export interface PerProgram {
     program_id: number;
     degree_type: string;
@@ -146,7 +120,7 @@ export interface PerProgram {
     page_banner_image_name: string;
     page_banner_image_path: string;
     levels?: AccreditationLevels[];
-    faculties?: Faculty[];
+    faculty_staff?: FacultyStaff[];
     [key: string]: unknown;
 }
 
@@ -161,6 +135,7 @@ export interface AccreditationLevels {
     [key: string]: unknown;
 }
 
+//Redundand
 export interface ProgramAreas {
     area_id: number;
     program_id: number;
@@ -174,6 +149,7 @@ export interface ProgramAreas {
     [key: string]: unknown;
 }
 
+//Redundant
 export interface Program {
     program_id: number;
     degree_type: string;
@@ -183,6 +159,7 @@ export interface Program {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+//Redundant
 export interface Area {
     area_id: number;
     program_id: number;
@@ -204,7 +181,7 @@ export interface AreaParameters {
     parameter_name: string;
     parameter_description: string;
     area?: Area;
-    parameterOutlines?: ParameterOutlines[];
+    parameter_outlines?: ParameterOutlines[];
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -216,8 +193,8 @@ export interface ParameterOutlines {
     outline_description: string;
     container: boolean;
     initial?: string;
-    areaParameters?: AreaParameters;
-    parameterOutlineCategory?: ParameterOutlineCategory;
+    area_parameters?: AreaParameters;
+    paramter_outline_category?: ParameterOutlineCategory;
     area_files?: AreaFiles;
     [key: string]: unknown; // This allows for additional properties...
 }
@@ -226,7 +203,7 @@ export interface ParameterOutlineCategory {
     parameter_outline_category_id: number;
     category_name: string;
     category_description: string;
-    parameterOutlines?: ParameterOutlines[];
+    parameter_outlines?: ParameterOutlines[];
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -237,7 +214,7 @@ export interface AreaFiles {
     file_path: string;
     file_status_id: number;
     file_rejection_reason: string | null;
-    parameterOutlines?: ParameterOutlines;
+    parameter_outlines?: ParameterOutlines;
     file_status?: FileStatus;
     [key: string]: unknown; // This allows for additional properties...
 }
@@ -284,30 +261,3 @@ export interface FilesOverview {
     file_status: string;
     rejection_reason: string;
 }
-
-export interface Faculty {
-    faculty_id: number;
-    first_name: string;
-    middle_name?: string | null;
-    last_name: string;
-    suffix?: string | null;
-    faculty_status: string;
-    program_id: number;
-    program_coordinator: boolean;
-    faculty_image_name?: string | null;
-    faculty_image_path?: string | null;
-}
-
-export interface Objectives {
-    program_id: number;
-    objective_description?: string | null;
-    program_objective_id: number;
-}
-
-export interface ProgramGallery {
-    program_gallery_id: number;
-    program_id: number;
-    image_name: string;
-    image_path: string;
-}
-

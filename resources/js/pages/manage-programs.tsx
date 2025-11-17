@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -11,11 +11,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { NotebookIcon } from 'lucide-react';
+import { Head, router, usePage } from '@inertiajs/react';
+import { Edit, NotebookIcon, PlusCircleIcon } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -30,9 +32,22 @@ interface ProgramsProps {
 
 export default function ManagePrograms({ programs }: ProgramsProps) {
     const { auth } = usePage().props;
-    // const userPrograms = auth.programs;
     const [searchTerm, setSearchTerm] = useState('');
     const [filterDegree, setFilterDegree] = useState<string>('all');
+
+    const [addLevelDialogOpen, setAddLevelDialogOpen] = useState(false);
+    const [startLevelConfirmOpen, setStartLevelConfirmOpen] = useState(false);
+    const [editProgramDialogOpen, setEditProgramDialogOpen] = useState(false);
+
+    const [programToStart, setProgramToStart] = useState<PerProgramUnderSurvey | null>(null);
+    const [programToEdit, setProgramToEdit] = useState<PerProgramUnderSurvey | null>(null);
+    const [selectedProgramId, setSelectedProgramId] = useState<string>('');
+
+    useEffect(() => {
+        if (programToStart) {
+            setSelectedProgramId(String(programToStart.program_id));
+        }
+    }, [programToStart]);
 
     const filteredPrograms =
         programs?.filter((program) => {
@@ -40,6 +55,27 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
             const matchesDegree = filterDegree === 'all' || program.degree_type === filterDegree;
             return matchesSearch && matchesDegree;
         }) || [];
+
+    const handleProgramClick = (program: PerProgramUnderSurvey) => {
+        if (program.levels.length > 0) {
+            router.visit(
+                route('manage.program', {
+                    program_name: program.program_link,
+                    level_id: program.levels[0]?.accreditation_level_id || 0,
+                }),
+            );
+        } else {
+            setProgramToStart(program);
+            setStartLevelConfirmOpen(true);
+        }
+    };
+
+    const selectedProgram = programs.find((p) => String(p.program_id) === selectedProgramId);
+    const hasLevels = selectedProgram && selectedProgram.levels.length > 0;
+    const currentLevelName = hasLevels ? 'Level II' : 'Not Accredited';
+    const currentProgramStatus = selectedProgram ? currentLevelName : 'Select a program';
+
+    const currentProgramStatusClass = selectedProgram ? (hasLevels ? 'text-gray-700 font-medium' : 'text-gray-500') : 'text-gray-500';
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -57,63 +93,10 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center justify-between">
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button variant="noborder" className="w-50 ">
-                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                    />
-                                </svg>
-                                Add Program
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                                <DialogTitle className="text-lg font-semibold">Add Program</DialogTitle>
-                                <DialogDescription>Create a new academic program for PUP San Juan</DialogDescription>
-                            </DialogHeader>
-                            <div className="flex flex-col gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">Degree Type</label>
-                                    <Select defaultValue="">
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Select degree type" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Bachelor Science">Bachelor of Science</SelectItem>
-                                            <SelectItem value="Bachelor Arts">Bachelor of Arts</SelectItem>
-                                            <SelectItem value="Diploma">Diploma</SelectItem>
-                                            <SelectItem value="Certificate">Certificate</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">Program Name</label>
-                                    <input
-                                        type="text"
-                                        className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
-                                        placeholder="e.g., Computer Science, Business Administration"
-                                    />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="outline">Cancel</Button>
-                                </DialogClose>
-                                <Button variant="noborder">Submit</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-                </div>
 
                 {/* Stats Overview */}
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <div className="rounded-lg border border-gray-200 bg-white p-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                    <div className="rounded-lg border border-gray-200 bg-white p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Total Programs</p>
@@ -131,8 +114,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             </div>
                         </div>
                     </div>
-
-                    <div className="rounded-lg border border-gray-200 bg-white p-4">
+                    <div className="rounded-lg border border-gray-200 bg-white p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Bachelor Programs</p>
@@ -153,8 +135,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             </div>
                         </div>
                     </div>
-
-                    <div className="rounded-lg border border-gray-200 bg-white p-4">
+                    <div className="rounded-lg border border-gray-200 bg-white p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Diploma Programs</p>
@@ -174,44 +155,174 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             </div>
                         </div>
                     </div>
+
+                    {/* Program Actions Card */}
+                    <div className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-6">
+                        <div>
+                            <p className="text-sm font-medium text-gray-600">Program Actions</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button variant="noborder" className="flex-1">
+                                        <NotebookIcon className="h-6 w-6 text-white" />
+                                        Add Program
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-md">
+                                    <DialogHeader>
+                                        <DialogTitle className="text-lg font-medium text-gray-900">Add Program</DialogTitle>
+                                        <DialogDescription className="text-sm text-gray-500">
+                                            Create a new academic program for PUP San Juan
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="space-y-2">
+                                            <Label className="mb-2 block text-sm font-medium text-gray-700">Degree Type</Label>
+                                            <Select defaultValue="">
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Select degree type" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Bachelor Science">Bachelor of Science</SelectItem>
+                                                    <SelectItem value="Bachelor Arts">Bachelor of Arts</SelectItem>
+                                                    <SelectItem value="Diploma">Diploma</SelectItem>
+                                                    <SelectItem value="Certificate">Certificate</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label className="mb-2 block text-sm font-medium text-gray-700">Program Name</Label>
+                                            <Input
+                                                type="text"
+                                                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
+                                                placeholder="e.g., Computer Science, Business Administration"
+                                            />
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <DialogClose asChild>
+                                            <Button variant="outline">Cancel</Button>
+                                        </DialogClose>
+                                        <Button variant="noborder">Submit</Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+
+                            <Dialog
+                                open={addLevelDialogOpen}
+                                onOpenChange={(open) => {
+                                    setAddLevelDialogOpen(open);
+                                    if (!open) {
+                                        setProgramToStart(null);
+                                        setSelectedProgramId('');
+                                    }
+                                }}
+                            >
+                                <DialogTrigger asChild>
+                                    <Button variant="noborder" className="flex-1">
+                                        <PlusCircleIcon className="h-6 w-6 text-white" />
+                                        Add Level
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-md">
+                                    <DialogHeader>
+                                        <DialogTitle className="text-lg font-medium text-gray-900">Add Program Level</DialogTitle>
+                                        <DialogDescription className="text-sm text-gray-500">
+                                            Start a new accreditation level for an existing program.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="space-y-2">
+                                            <Label className="mb-2 block text-sm font-medium text-gray-700">Program</Label>
+                                            <Select value={selectedProgramId} onValueChange={setSelectedProgramId}>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Select a program" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {programs.map((program) => (
+                                                        <SelectItem key={program.program_id} value={String(program.program_id)}>
+                                                            {program.program_name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label className="mb-2 block text-sm font-medium text-gray-700">Current Status</Label>
+                                                <div className="flex h-10 w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3">
+                                                    <span className={`text-sm ${currentProgramStatusClass}`}>{currentProgramStatus}</span>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label className="mb-2 block text-sm font-medium text-gray-700">New Level</Label>
+                                                <Select defaultValue="">
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Select level" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="Candidate">Candidate</SelectItem>
+                                                        <SelectItem value="Level I">Level I</SelectItem>
+                                                        <SelectItem value="Level II">Level II</SelectItem>
+                                                        <SelectItem value="Level III">Level III</SelectItem>
+                                                        <SelectItem value="Level IV">Level IV</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <DialogClose asChild>
+                                            <Button variant="outline">Cancel</Button>
+                                        </DialogClose>
+                                        <Button variant="noborder">Submit</Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Programs Grid */}
-                <div className="rounded-lg border border-gray-200 bg-white p-6">
-                    <div className="mb-4">
-                        <h2 className="text-lg font-semibold text-gray-900">Academic Programs</h2>
-                        <p className="text-sm text-gray-600">Manage your institution's programs</p>
-                    </div>
-
+                <div className="mt-10">
                     {filteredPrograms.length > 0 ? (
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {filteredPrograms.map((program) => (
-                                <Link
+                                <div
                                     key={program.program_id}
-                                    href={route('manage.program', {
-                                        program_name: program.program_link,
-                                        level_id: program.levels[0]?.accreditation_level_id || 0,
-                                    })}
-                                    className="group"
+                                    onClick={() => handleProgramClick(program)}
+                                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleProgramClick(program)}
+                                    role="button"
+                                    tabIndex={0}
+                                    className="group cursor-pointer"
                                 >
-                                    <div className="rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm">
+                                    <div className="relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="absolute top-4 right-4 h-8 w-8 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setProgramToEdit(program);
+                                                setEditProgramDialogOpen(true);
+                                            }}
+                                        >
+                                            <Edit className="h-4 w-4 text-gray-500" />
+                                        </Button>
+
                                         <div className="mb-3 flex items-center justify-between">
                                             <div
-                                                className={`inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium ${
-                                                    program.degree_type.toLowerCase().includes('bachelor')
-                                                        ? 'bg-red-100 text-[#7f1414]'
-                                                        : 'bg-green-100 text-green-700'
-                                                }`}
+                                                className={`inline-flex items-center gap-1 rounded bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]`}
                                             >
-                                                {/* {getDegreeIcon(program.degree_type)} */}
-                                                {program.degree_type}
+                                                Accreditation Level 2
                                             </div>
                                         </div>
 
                                         <h3 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
                                             {program.program_name}
                                         </h3>
-                                        <p className="mb-3 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name}`}</p>
+                                        <p className="mb-3 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name} `}</p>
 
                                         <div className="flex items-center gap-4 text-xs text-gray-500">
                                             <div className="flex items-center gap-1">
@@ -227,78 +338,86 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                             </div>
                                         </div>
                                     </div>
-                                </Link>
+                                </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="py-12 text-center">
-                            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                                <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                    />
-                                </svg>
-                            </div>
-                            <h3 className="mb-2 text-lg font-semibold text-gray-900">No programs found</h3>
-                            <p className="mb-6 text-gray-600">
-                                {searchTerm || filterDegree !== 'all'
-                                    ? 'Try adjusting your search or filter criteria'
-                                    : 'Get started by creating your first academic program'}
-                            </p>
-                            {!searchTerm && filterDegree === 'all' && (
-                                <Dialog>
-                                    <DialogTrigger asChild>
-                                        <Button className="bg-[#7f1414] hover:bg-[#8b1515]">
-                                            <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                            </svg>
-                                            No Program Available
-                                        </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-md">
-                                        <DialogHeader>
-                                            <DialogTitle className="text-lg font-semibold">Add Program</DialogTitle>
-                                            <DialogDescription>Create a new academic program for PUP San Juan</DialogDescription>
-                                        </DialogHeader>
-                                        <div className="flex flex-col gap-4">
-                                            <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-700">Degree Type</label>
-                                                <Select defaultValue="">
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select degree type" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="Bachelor Science">Bachelor of Science</SelectItem>
-                                                        <SelectItem value="Bachelor Arts">Bachelor of Arts</SelectItem>
-                                                        <SelectItem value="Diploma">Diploma</SelectItem>
-                                                        <SelectItem value="Certificate">Certificate</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-700">Program Name</label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
-                                                    placeholder="e.g., Computer Science, Business Administration"
-                                                />
-                                            </div>
-                                        </div>
-                                        <DialogFooter>
-                                            <DialogClose asChild>
-                                                <Button variant="outline">Cancel</Button>
-                                            </DialogClose>
-                                            <Button variant="noborder">Submit</Button>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </Dialog>
-                            )}
-                        </div>
+                        <div className="py-12 text-center"></div>
                     )}
                 </div>
+
+                <Dialog open={startLevelConfirmOpen} onOpenChange={setStartLevelConfirmOpen}>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle className="mb-4 text-lg font-medium text-gray-900">No Levels Found</DialogTitle>
+                            <DialogDescription className="text-sm text-gray-500">
+                                The program "{programToStart?.program_name}" has no accreditation levels yet. Do you want to start one now?
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button
+                                variant="noborder"
+                                onClick={() => {
+                                    setStartLevelConfirmOpen(false);
+                                    setAddLevelDialogOpen(true);
+                                }}
+                            >
+                                Start First Level
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                <Dialog
+                    open={editProgramDialogOpen}
+                    onOpenChange={(open) => {
+                        setEditProgramDialogOpen(open);
+                        if (!open) {
+                            setProgramToEdit(null);
+                        }
+                    }}
+                >
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle className="text-lg font-medium text-gray-900">Edit Program</DialogTitle>
+                            <DialogDescription className="text-sm text-gray-500">Update the details for this academic program.</DialogDescription>
+                        </DialogHeader>
+                        <div className="flex flex-col gap-4">
+                            <div className="space-y-2">
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Degree Type</Label>
+                                <Select defaultValue={programToEdit?.degree_type || ''}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select degree type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Bachelor Science">Bachelor of Science</SelectItem>
+                                        <SelectItem value="Bachelor Arts">Bachelor of Arts</SelectItem>
+                                        <SelectItem value="Diploma">Diploma</SelectItem>
+                                        <SelectItem value_program="Certificate">Certificate</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Program Name</Label>
+                                <Input
+                                    type="text"
+                                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
+                                    placeholder="e.g., Computer Science"
+                                    defaultValue={programToEdit?.program_name || ''}
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button variant="noborder">Save Changes</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         </AppLayout>
     );

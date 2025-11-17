@@ -21,7 +21,12 @@ class Facilities extends Model
     protected $fillable = [
         'facility_name',
         'description',
-        'facility_image_name',
-        'facility_link_path',
+        'image_name',
+        'image_path',
+    ];
+
+    protected $casts = [
+        'image_name' => 'encrypted',
+        'image_path' => 'encrypted',
     ];
 }

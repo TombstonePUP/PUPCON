@@ -23,6 +23,8 @@ class AccreditationLevelsFactory extends Factory
             'program_id' => $program->program_id,
             'level' => fake()->numberBetween(0, 6),
             'remarks' => fake()->word(),
+            'survey_date' => fake()->date(),
+            'mean' => fake()->randomFloat(2, 0, 5),
             'is_active' => fake()->boolean(),
         ];
     }

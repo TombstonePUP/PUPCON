@@ -22,19 +22,22 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
                 Route::middleware(['user.area.role'])->group(function () {
                     Route::get('/{area_id}', [AreaParameterOutlinesController::class, 'index'])->name('area');
 
-                    Route::as('area.')->group(function () {
+                    Route::as('area.')->prefix('/{area_id}')->group(function () {
                         Route::controller(AreaFilesController::class)->group(function () {
-                            Route::post('/{area_id}/upload_file', 'store')->name('upload.file');
-                            Route::delete('/{area_id}/{outline_id}/delete_file', 'destroy')->name('delete.file');
+                            Route::get('/{outline_id}/download_file', 'download')->name('download.file');
+                            Route::post('/upload_file', 'store')->name('upload.file');
+                            Route::delete('/{outline_id}/delete_file', 'destroy')->name('delete.file');
                         });
 
                         Route::controller(AreaFormsController::class)->group(function () {
-                            Route::post('/{area_id}/add_form', 'store')->name('add.area.form');
-                            Route::delete('/{area_id}/{form_id}/delete_form', 'destroy')->name('delete.area.form');
+                            Route::post('/add_form', 'store')->name('add.area.form');
+                            Route::delete('/{form_id}/delete_form', 'destroy')->name('delete.area.form');
                         });
+
                         Route::controller(AreaFormFilesController::class)->group(function () {
-                            Route::post('/{area_id}/{form_id}/upload_file_form', 'store')->name('upload.area.form.file');
-                            Route::delete('/{area_id}/{form_id}/delete_area_form_file', 'destroy')->name('delete.area.form.file');
+                            Route::get('/{form_id}/download_file_form', 'download')->name('download.area.form.file');
+                            Route::post('/{form_id}/upload_file_form', 'store')->name('upload.area.form.file');
+                            Route::delete('/{form_id}/delete_area_form_file', 'destroy')->name('delete.area.form.file');
                         });
                     });
                 });

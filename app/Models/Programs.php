@@ -72,9 +72,9 @@ class Programs extends Model
     /**
      * @return HasMany<Faculty,Programs>
      */
-    public function Faculties(): HasMany
+    public function FacultyStaff(): HasMany
     {
-        return $this->hasMany(Faculty::class, 'program_id', 'program_id');
+        return $this->hasMany(FacultyStaff::class, 'program_id', 'program_id');
     }
 
     /**

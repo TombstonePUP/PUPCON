@@ -74,7 +74,7 @@ export function AddBenchmark({parameter, program, area_id, parameter_outline_cat
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col gap-4">
-                    <form onSubmit={addBenchmark}>
+                    <form className="flex flex-col gap-3" onSubmit={addBenchmark}>
                         <div>
                             <label className="text-muted-foreground mb-1 text-sm block font-medium">
                                 Benchmark Number

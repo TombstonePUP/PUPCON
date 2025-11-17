@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LocalTaskForce extends Model
 {
@@ -20,19 +20,24 @@ class LocalTaskForce extends Model
     protected $table = 'local_task_force';
     protected $primaryKey = 'local_task_force_id';
     protected $fillable = [
-        // 'user_id',
-        'area',
+        'area_name',
         'first_name',
-        'last_nae',
+        'last_name',
         'profile_image_name',
         'profile_image_path',
     ];
 
+    protected $casts = [
+        'profile_image_name' => 'encrypted',
+        'profile_image_path' => 'encrypted',
+    ];
+
     /**
-     * @return BelongsTo<User,LocalTaskForce>
+     * @return HasMany<LocalTaskForceMembers, LocalTaskForce>
      */
-    public function Users(): BelongsTo
+    public function Members(): HasMany
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        return $this->hasMany(LocalTaskForceMembers::class, 'local_task_force_id', 'local_task_force_id');
     }
+
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('area_description')->nullable();
             $table->string('area_image_name')->nullable();
             $table->text('area_image_path')->nullable();
+            $table->float('mean')->default(false);
         });
 
         Schema::create('area_form_categories', function (Blueprint $table) {
@@ -32,6 +33,7 @@ return new class extends Migration
             $table->foreignId('area_id')->references('area_id')->on('areas')->onUpdate('cascade')->onDelete('cascade');
             $table->string('parameter_name')->nullable();
             $table->string('parameter_description')->nullable();
+            $table->float('mean')->default(false);
         });
 
         Schema::create('parameter_outline_category', function (Blueprint $table) {

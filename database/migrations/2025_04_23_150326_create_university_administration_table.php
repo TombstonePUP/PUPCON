@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('university_administration', function (Blueprint $table) {
-            $table->id(column: 'admin_id')->autoIncrement()->primary();
+            $table->id(column: 'administration_id')->autoIncrement()->primary();
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('suffix')->nullable();
-            $table->string('additional_info');
+            $table->string('position');
             $table->string('profile_picture_name')->nullable();
             $table->text('profile_picture_path')->nullable();
         });

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Mostafaznv\PdfOptimizer\Laravel\Facade\PdfOptimizer;
 
+
 class AreaFilesController extends Controller
 {
     /**
@@ -145,6 +146,24 @@ class AreaFilesController extends Controller
             ->with('type', 'success')
             ->with('title', 'Upload Successful')
             ->with('message', 'The Document has been uploaded.');
+    }
+
+    /**
+     * Download the specified resource from storage.
+     */
+    public function download(Request $request)
+    {
+        $parameterOutlines = ParameterOutlines::where('parameter_outline_id', $request->outline_id)->first();
+        $areaFile = $parameterOutlines->AreaFiles;
+
+        if ($areaFile && Storage::disk('public')->exists($areaFile->file_path)) {
+            return Storage::disk('public')->download($areaFile->file_path, $areaFile->file_name);
+        } else {
+            return redirect()->back()
+                ->with('type', 'error')
+                ->with('title', 'Download Failed')
+                ->with('message', 'There is an error in downloading the document.');
+        }
     }
 
     /**

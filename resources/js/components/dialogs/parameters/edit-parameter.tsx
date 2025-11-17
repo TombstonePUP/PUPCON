@@ -84,7 +84,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                                     setData('area_parameter_id', parameter.area_parameter_id);
                                 }}
                                 disabled={processing}
-                                placeholder="A"
+                                placeholder={parameter.parameter_name.toUpperCase()[0]}
                                 className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                             />
                         </div>
@@ -100,7 +100,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                                     setData('parameter_description', e.target.value);
                                     setData('area_parameter_id', parameter.area_parameter_id);
                                 }}
-                                placeholder="Enter description"
+                                placeholder={parameter.parameter_description}
                                 className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                             />
                         </div>

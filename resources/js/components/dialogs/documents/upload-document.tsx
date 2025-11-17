@@ -100,7 +100,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                     <div className="space-y-2">
                         <h3 className="text-muted-foreground mb-1 text-sm font-medium">Upload Document</h3>
 
-                        <div className="flex w-full items-center justify-center">
+                        <div className="flex flex-col w-full items-center justify-center">
                             {!data.document ? (
                                 <label
                                     className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'

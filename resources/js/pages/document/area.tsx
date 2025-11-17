@@ -19,7 +19,6 @@ interface AreaFilesProps {
     areaFormsCategories?: AreaFormCategory[];
 }
 
-
 export default function Areas({ program, area, parameterOutlineCategories, areaFormsCategories }: AreaFilesProps) {
     const [dialog, setDialog] = useState<{
         kind: 'document' | 'benchmark' | 'parameter' | 'area-form' | null;
@@ -36,9 +35,9 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
         form?: AreaForms,
         benchmark?: ParameterOutlines,
         benchmark_categories?: ParameterOutlineCategory,
-        parameter?: AreaParameters
+        parameter?: AreaParameters,
     ) => {
-        setDialog({ kind, action, form,  benchmark, benchmark_categories, parameter });
+        setDialog({ kind, action, form, benchmark, benchmark_categories, parameter });
     };
 
     const closeDialog = () => {
@@ -68,14 +67,14 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         <div>
                             <AreaCards
                                 program={program}
+                                area_id={area?.area_id}
                                 forms={area?.area_forms}
-                                // areaId={area?.area_id}
                                 resolveFormDialog={(d) => openDialog('area-form', d.type, d.form, undefined, undefined, undefined)}
                             />
                         </div>
                     </div>
                     <div className="border-sidebar-border/70 relative space-y-5 overflow-y-auto rounded-xl border p-4">
-                        <div className="flex flex-row gap-2">
+                        <div className={`flex flex-row gap-2 ${area?.area_parameters?.length <= 0 ? 'hidden' : ''}`}>
                             <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
                                 Add
                                 <PlusIcon className="ml-1 h-4 w-4" />
@@ -88,11 +87,13 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         <div>
                             <ParameterAccordion
                                 area_id={area?.area_id}
-                                program={program.program_name}
+                                program={program}
                                 areaParameters={[...(area?.area_parameters ?? [])].sort((a, b) => a.parameter_name.localeCompare(b.parameter_name))}
                                 parameterOutlineCategories={parameterOutlineCategories}
                                 resolveDocDialog={(d) => openDialog('document', d.type, undefined, d.benchmark, undefined, undefined)}
-                                resolveBenchDialog={(d) => openDialog('benchmark', d.type, undefined, d.benchmark, parameterOutlineCategories, d.parameter)}
+                                resolveBenchDialog={(d) =>
+                                    openDialog('benchmark', d.type, undefined, d.benchmark, parameterOutlineCategories, d.parameter)
+                                }
                                 resolveParamDialog={(d) => openDialog('parameter', d.type, undefined, undefined, undefined, d.parameter)}
                             />
                         </div>
@@ -111,13 +112,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                 />
             )}
             {dialog.kind === 'document' && (
-                <RenderDocumentDialog
-                    type={dialog.action}
-                    benchmark={dialog.benchmark}
-                    program={program}
-                    area={area}
-                    onClose={closeDialog}
-                />
+                <RenderDocumentDialog type={dialog.action} benchmark={dialog.benchmark} program={program} area={area} onClose={closeDialog} />
             )}
             {dialog.kind === 'benchmark' && (
                 <RenderBenchmarkDialog
@@ -131,15 +126,8 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                 />
             )}
             {dialog.kind === 'parameter' && (
-                <RenderParameterDialog
-                    type={dialog.action}
-                    parameter={dialog.parameter}
-                    program={program}
-                    area={area}
-                    onClose={closeDialog}
-                />
+                <RenderParameterDialog type={dialog.action} parameter={dialog.parameter} program={program} area={area} onClose={closeDialog} />
             )}
         </>
     );
 }
-

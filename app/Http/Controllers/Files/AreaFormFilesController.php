@@ -88,6 +88,23 @@ class AreaFormFilesController extends Controller
     }
 
     /**
+     * Download the specified resource from storage.
+     */
+    public function download(Request $request)
+    {
+        $form = AreaForms::where('area_form_id', $request->form_id)->first();
+
+        if ($form && Storage::disk('public')->exists($form->file_path)) {
+            return Storage::disk('public')->download($form->file_path, $form->file_name);
+        } else {
+            return redirect()->back()
+                ->with('type', 'error')
+                ->with('title', 'Download Failed')
+                ->with('message', 'There is an error in downloading the document.');
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request, AreaForms $areaForms)

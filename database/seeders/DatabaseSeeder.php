@@ -22,6 +22,7 @@ use App\Models\ProgramObjectives;
 use App\Models\Programs;
 use App\Models\Roles;
 use App\Models\User;
+use App\Models\ContentPages;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\UserAreaRoles;
 use App\Models\UserProgramRoles;
@@ -647,16 +648,44 @@ class DatabaseSeeder extends Seeder
             $faculties[] = [
                 'first_name' => Str::title(str_replace('-', ' ', $firstName)),
                 'last_name' => Str::title(str_replace('-', ' ', $lastName)),
-                'faculty_status' => $facultyStatus,
+                'personnel_type' => 'Faculty',
+                'status' => $facultyStatus,
                 'program_id' => $programId,
                 'program_coordinator' => false,
-                'faculty_image_name' => $fileName,
-                'faculty_image_path' => '/images/adfa-new/faculty/' . $fileName,
+                /* 'image_name' => $fileName,
+                'image_path' => '/images/adfa-new/faculty/' . $fileName, */
             ];
         }
 
 
         // Insert all entries at once
-        DB::table('faculties')->insert($faculties);
+        DB::table('faculty_staff')->insert($faculties);
+        $content = [
+            [
+                'page' => 'Facilities',
+            ],
+            [
+                'page' => 'Administration',
+            ],
+            [
+                'page' => 'About',
+            ],
+            [
+                'page' => 'Local Task Force',
+            ],
+            [
+                'page' => 'Faculty & Staff',
+            ],
+            [
+                'page' => 'History',
+            ],
+            [
+                'page' => 'Mission Vision & Goals',
+            ],
+        ];
+        foreach ($content as $attributes) {
+            ContentPages::factory()->create($attributes);
+        }
     }
+
 }
