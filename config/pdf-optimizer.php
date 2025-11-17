@@ -11,5 +11,6 @@ return [
         '-sDEVICE=pdfwrite',
         '-dPDFSETTINGS=/screen',
         '-sTEMP=C:\\Users\\LENOVO\\Desktop\\Capstone\\PUPCON\\storage\\app\\public\\temp',
+        //'-sTEMP=C:\\Users\\LENOVO\\Desktop\\Capstone\\PUPCON\\storage\\app\\public\\temp',
     ],
 ];
