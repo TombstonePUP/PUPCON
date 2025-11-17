@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('campus_directors', function (Blueprint $table) {
             $table->id(column: 'director_id')->autoIncrement()->primary();
             $table->string('name');
-            $table->date('term_start_date');
-            $table->date('term_end_date')->nullable();
+            $table->integer('term_start_date');
+            $table->integer('term_end_date')->nullable();
             $table->text('description')->nullable();
             $table->string('profile_image_name')->nullable();
             $table->text('profile_image_path')->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration
 
         Schema::create('campus_gallery', function (Blueprint $table) {
             $table->id(column: 'gallery_id')->autoIncrement()->primary();
-            $table->string('image_name');
+            $table->text('image_name');
             $table->text('image_path');
             $table->text('description')->nullable();
         });

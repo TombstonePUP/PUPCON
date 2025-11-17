@@ -119,8 +119,6 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
     };
 
     const handleSubmit = () => {
-        console.log('page:', facility_page);
-        console.log('Facilities being submitted:', data.page);
         post(route('content.facilities.update'), {
             onSuccess: () => {
                 // reset();
@@ -238,6 +236,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                             <h4 className="mb-3 text-xs text-gray-500">Select a Facility</h4>
                             <div className="space-y-1">
                                 {facilityList?.map((facility) => (
+                                    // console.log('Rendering facility:', facility),
                                     <div
                                         key={facility.facility_id}
                                         onClick={() => {

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
+use App\Models\CampusDirectors;
+use App\Models\CampusGallery;
 use App\Models\ContentPages;
 use App\Models\Facilities;
 use App\Models\FacultyStaff;
@@ -51,12 +53,30 @@ class ContentController extends Controller
             return $facility;
         });
 
+        $directors = CampusDirectors::all();
+        $directors = $directors->map(function ($director) {
+            $director->profile_image_path = Storage::url($director->profile_image_path);
+            return $director;
+        });
+
+        $gallery = CampusGallery::all();
+        $gallery = $gallery->map(function ($image) {
+            $image->image_path = Storage::url($image->image_path);
+            return $image;
+        });
+
+        $history = [
+            'directors' => $directors,
+            'gallery' => $gallery,
+        ];
+
         return Inertia::render('content-management/main-content', [
             'pages' => $pages,
             'org_types' => $orgTypes,
             'officials' => $officials,
             'faculties' => $faculties,
             'facilities' => $facilities,
+            'history' => $history,
         ]);
     }
 }

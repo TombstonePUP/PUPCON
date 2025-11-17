@@ -455,9 +455,9 @@ class DatabaseSeeder extends Seeder
                 'parameter_description' => 'Dissemination and Acceptability'
             ],
         ];
-        foreach ($areaparameter as $attributes) {
+        /* foreach ($areaparameter as $attributes) {
             AreaParameters::factory()->create($attributes);
-        }
+        } */
 
         $parameterCategory = [
             [
@@ -552,9 +552,9 @@ class DatabaseSeeder extends Seeder
                 'container' => false
             ],
         ];
-        foreach ($parameterOutlines as $attributes) {
+        /* foreach ($parameterOutlines as $attributes) {
             ParameterOutlines::factory()->create($attributes);
-        }
+        } */
 
         $file_status = [
             ['status_name' => 'Approved'],

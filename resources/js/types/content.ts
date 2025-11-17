@@ -74,3 +74,20 @@ export interface Organizations {
     type_id: number;
     type?: OrganizationTypes;
 }
+
+export interface CampusDirectors {
+    director_id: number;
+    name: string;
+    term_start_date: string;
+    term_end_date: string;
+    description: string;
+    profile_image_name: string;
+    profile_image_path: string;
+}
+
+export interface CampusGallery {
+    gallery_id: number;
+    image_name: string;
+    image_path: string;
+    description: string;
+}

@@ -180,6 +180,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                                 </div>
                             </div>
                         )}
+                        <InputError message={errors['page.banner']} className="mt-2" />
                     </div>
                 </div>
 
@@ -207,6 +208,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                             }
                             placeholder="Enter campus address..."
                         />
+                        <InputError message={errors['page.address']} className="mt-2" />
                     </div>
                     <div>
                         <label className="mb-2 block text-sm font-medium text-gray-700">Phone number</label>
@@ -221,6 +223,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                             }
                             placeholder="Enter phone number..."
                         />
+                        <InputError message={errors['page.phone_number']} className="mt-2" />
                     </div>
                 </div>
             </div>

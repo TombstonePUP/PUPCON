@@ -4,17 +4,20 @@ import { InfoIcon } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 
 // Section Imports
-import AboutPageSection from './about-content';
-import AdminContentSection from './admin-content';
-import FacultyContentSection from './faculty-content';
 import HistoryContentSection from './history-content';
 import LocalTaskForceContentSection from './localtaskforce-content';
 import VmgoContentSection from './vmgo-content';
 import FacilitiesSection from '@/components/content/facilities-content';
-import { Administration, ContentPages, Facilities, FacultyStaff, OrganizationTypes } from '@/types/content';
+import { Administration, CampusDirectors, CampusGallery, ContentPages, Facilities, FacultyStaff, OrganizationTypes } from '@/types/content';
 import AdministrationSection from '@/components/content/admin-content';
 import AboutSection from '@/components/content/about-content';
 import FacultySection from '@/components/content/faculty-content';
+import HistorySection from '@/components/content/history-content';
+
+interface History {
+    directors: CampusDirectors[];
+    gallery: CampusGallery[];
+}
 
 interface MainContentProps {
     pages: ContentPages;
@@ -22,6 +25,7 @@ interface MainContentProps {
     officials: Administration[];
     faculties: FacultyStaff[];
     facilities: Facilities[];
+    history: History;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -31,25 +35,17 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const PlaceholderSection: React.FC<{ title: string }> = ({ title }) => (
-    <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
-        <div className="p-8">
-            <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-            <p className="text-sm text-gray-600">This section is not yet implemented.</p>
-        </div>
-    </div>
-);
-
 const MainContent = ({...props}: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('about');
-    const {pages, officials, facilities, org_types, faculties} = props;
+    const {pages, officials, facilities, org_types, faculties, history} = props;
 
     console.log('Pages data in MainContent:', pages);
 
-    const admin_page = pages.find((page: ContentPages) => page.page === "Administration") ?? null;
-    const facility_page = pages.find((page: ContentPages) => page.page === "Facilities")?? null;
     const about_page = pages.find((page: ContentPages) => page.page === "About")?? null;
+    const history_page = pages.find((page: ContentPages) => page.page === "History") ?? null;
+    const admin_page = pages.find((page: ContentPages) => page.page === "Administration") ?? null;
     const faculty_page = pages.find((page: ContentPages) => page.page === "Faculty & Staff") ?? null;
+    const facility_page = pages.find((page: ContentPages) => page.page === "Facilities")?? null;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
@@ -112,7 +108,10 @@ const MainContent = ({...props}: MainContentProps) => {
                             </div>
 
                             <div ref={historyRef} className="scroll-mt-6">
-                                <HistoryContentSection />
+                                <HistorySection
+                                    history_page={history_page}
+                                    history={history}
+                                />
                             </div>
 
                             <div ref={administrationRef} className="scroll-mt-6">
