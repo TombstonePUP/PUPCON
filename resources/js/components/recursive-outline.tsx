@@ -368,7 +368,15 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
                                 )}
                             </ContextMenuContent>
                         </ContextMenu>
-                        {outline.children && outline.children.length > 0 && <RecursiveOutlineForm outlines={outline.children} />}
+                        {outline.children && outline.children.length > 0 && (
+                            <RecursiveOutlineForm
+                                outlines={outline.children}
+                                program={program}
+                                area_id={area_id}
+                                resolveDocDialog={resolveDocDialog}
+                                resolveBenchDialog={resolveBenchDialog}
+                            />
+                        )}
                     </li>
                 ))}
             </ul>
