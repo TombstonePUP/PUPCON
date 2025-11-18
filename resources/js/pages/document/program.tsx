@@ -286,7 +286,7 @@ export default function Programs({ program }: ProgramProps) {
                             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
                                 <BookOpen className="h-6 w-6 text-white" />
                             </div>
-                            <div className="flex-1">
+                            <div className="flex-1 ml-2">
                                 <h1 className="text-xl font-semibold text-gray-900">
                                     {program.degree_type} in {program.program_name}
                                 </h1>
@@ -579,7 +579,7 @@ export default function Programs({ program }: ProgramProps) {
 
                     {/* --- Right Sidebar  --- */}
                     <div className="w-64 shrink-0">
-                        <div className="sticky top-24 space-y-4">
+                        <div className="sticky top-6 space-y-4">
                             {/* --- Level Selector --- */}
                             <div className="rounded-lg border border-gray-200 bg-white p-4">
                                 <h3 className="mb-3 text-sm font-semibold text-gray-900">Accreditation Level</h3>

@@ -11,6 +11,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Program } from '@/types';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
@@ -62,14 +64,14 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Add Parameter</DialogTitle>
-                    <DialogDescription>Create a New Parameter</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-gray-900">Add Parameter</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500">Create a New Parameter</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={addParameter} className="flex flex-col gap-4">
                     <div className="flex gap-4">
                         <div className="w-1/4">
-                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Parameter</label>
-                            <input
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Parameter</Label>
+                            <Input
                                 id="parameter_name"
                                 type="text"
                                 autoFocus
@@ -79,12 +81,12 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                                 onChange={(e) => setData('parameter_name', e.target.value)}
                                 disabled={processing}
                                 placeholder="A"
-                                className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                              
                             />
                         </div>
                         <div className="flex-1">
-                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Description</label>
-                            <input
+                           <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
+                            <Input
                                 id="parameter_description"
                                 type="text"
                                 required
@@ -94,7 +96,7 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                                 onChange={(e) => setData('parameter_description', e.target.value)}
                                 disabled={processing}
                                 placeholder="Enter description"
-                                className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                              
                             />
                         </div>
                     </div>

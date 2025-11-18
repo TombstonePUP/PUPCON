@@ -8,10 +8,9 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { Area, AreaFormCategory, AreaForms, AreaParameters, BreadcrumbItem, ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
 import { Head } from '@inertiajs/react';
-import { LucideImport, PlusIcon } from 'lucide-react';
+import { LucideImport, PlusCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 
-// charts components
 interface AreaFilesProps {
     program: Program;
     area: Area;
@@ -59,43 +58,69 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
         <>
             <AppLayout breadcrumbs={breadcrumbs}>
                 <Head title={`${area.area_name} - ${program.program_name}`} />
-                <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                    <div className="rounded border-2">
-                        <h1 className="mt-3 mb-3 text-center text-[1.8vw] font-bold">{area.area_name.toUpperCase()}</h1>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <div>
-                            <AreaCards
-                                program={program}
-                                area_id={area?.area_id}
-                                forms={area?.area_forms}
-                                resolveFormDialog={(d) => openDialog('area-form', d.type, d.form, undefined, undefined, undefined)}
-                            />
+                <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
+                    {/* Header Section */}
+                    <div id="top" className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
+                         
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#7f1414] text-white shadow-sm">
+                                    <span className="text-2xl font-bold">{area.area_number}</span>
+                                </div>
+                                <div className="ml-2">
+                                    <h1 className="text-xl font-semibold text-gray-900">{area.area_name}</h1>
+                                    <p className="text-sm text-gray-500">{program.program_name}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div className="border-sidebar-border/70 relative space-y-5 overflow-y-auto rounded-xl border p-4">
-                        <div className={`flex flex-row gap-2 ${area?.area_parameters?.length <= 0 ? 'hidden' : ''}`}>
-                            <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
-                                Add
-                                <PlusIcon className="ml-1 h-4 w-4" />
-                            </Button>
-                            <Button className="border-none" onClick={() => openDialog('parameter', 'import')}>
-                                Import
-                                <LucideImport className="ml-1 h-4 w-4" />
-                            </Button>
+
+                    <div className="flex gap-6">
+                        <div className="flex w-full flex-col gap-6">
+                            <div>
+                                <AreaCards
+                                    program={program}
+                                    area_id={area?.area_id}
+                                    forms={area?.area_forms}
+                                    resolveFormDialog={(d) => openDialog('area-form', d.type, d.form, undefined, undefined, undefined)}
+                                />
+                            </div>
+
+                            <div className="flex w-full gap-6">
+                                <ParameterAccordion
+                                    area_id={area?.area_id}
+                                    program={program}
+                                    areaParameters={[...(area?.area_parameters ?? [])].sort((a, b) =>
+                                        a.parameter_name.localeCompare(b.parameter_name),
+                                    )}
+                                    parameterOutlineCategories={parameterOutlineCategories}
+                                    resolveDocDialog={(d) => openDialog('document', d.type, undefined, d.benchmark, undefined, undefined)}
+                                    resolveBenchDialog={(d) =>
+                                        openDialog('benchmark', d.type, undefined, d.benchmark, parameterOutlineCategories, d.parameter)
+                                    }
+                                    resolveParamDialog={(d) => openDialog('parameter', d.type, undefined, undefined, undefined, d.parameter)}
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <ParameterAccordion
-                                area_id={area?.area_id}
-                                program={program}
-                                areaParameters={[...(area?.area_parameters ?? [])].sort((a, b) => a.parameter_name.localeCompare(b.parameter_name))}
-                                parameterOutlineCategories={parameterOutlineCategories}
-                                resolveDocDialog={(d) => openDialog('document', d.type, undefined, d.benchmark, undefined, undefined)}
-                                resolveBenchDialog={(d) =>
-                                    openDialog('benchmark', d.type, undefined, d.benchmark, parameterOutlineCategories, d.parameter)
-                                }
-                                resolveParamDialog={(d) => openDialog('parameter', d.type, undefined, undefined, undefined, d.parameter)}
-                            />
+
+                        {/* Right Sidebar - Actions */}
+                        <div className="w-64 shrink-0">
+                            <div className="sticky top-6 space-y-4">
+                                <div className="w-full rounded-lg border border-gray-200 bg-white p-4">
+                                    <h3 className="mb-4 text-sm font-semibold text-gray-900">Area Actions</h3>
+                                    <div className={`flex flex-col gap-2 ${area?.area_parameters?.length <= 0 ? 'hidden' : ''}`}>
+                                        <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
+                                            <PlusCircleIcon className="ml-1 h-4 w-4" />
+                                            Add Parameter
+                                        </Button>
+                                        <Button className="border-none" onClick={() => openDialog('parameter', 'import')}>
+                                            <LucideImport className="ml-1 h-4 w-4" />
+                                            Import template
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                           
                         </div>
                     </div>
                 </div>

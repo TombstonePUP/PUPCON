@@ -3,6 +3,7 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { AreaForms, Program } from '@/types';
 import { useForm } from '@inertiajs/react';
@@ -75,16 +76,15 @@ export function UploadAreaForm({ program, form, area_id, onClose }: UploadAreaFo
         <Dialog open={true} onOpenChange={() => onClose()}>
             <DialogContent className="max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold">{form.file_name ? 'Update' : 'Upload'} Document</DialogTitle>
-                    <DialogDescription>Upload a Document for this card</DialogDescription>
+                      <DialogTitle className="text-lg font-medium text-gray-900">{form.file_name ? 'Update' : 'Upload'} Document</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500">Upload a Document for this card</DialogDescription>
                 </DialogHeader>
-                <form onSubmit={uploadAreaForm}>
+                <form  className="flex flex-col gap-4" onSubmit={uploadAreaForm}>
                     <div className="flex flex-col gap-4">
                         <div>
-                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Upload Document</label>
                             <div className="flex flex-col w-full items-center justify-center">
                                 {!data.document ? (
-                                    <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                    <Label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
                                                 className="mb-4 h-8 w-8 text-gray-500"
@@ -116,7 +116,7 @@ export function UploadAreaForm({ program, form, area_id, onClose }: UploadAreaFo
                                                 setData('document', file);
                                             }}
                                         />
-                                    </label>
+                                    </Label>
                                 ) : (
                                     <div className="flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-50 p-5 text-center">
                                         <span className="text-sm font-semibold text-gray-700">{data.document.name}</span>

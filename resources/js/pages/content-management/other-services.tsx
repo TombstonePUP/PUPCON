@@ -27,7 +27,6 @@ type ServiceLink = {
     title: string;
     desc: string;
     href: string;
-    icon_name: string;
 };
 
 const initialServiceLinks: ServiceLink[] = [
@@ -36,14 +35,12 @@ const initialServiceLinks: ServiceLink[] = [
         title: 'University Student Portal',
         desc: 'Access your student account, grades, and course info online.',
         href: 'https://studentportal.example.com',
-        icon_name: 'User',
     },
     {
         id: 2,
         title: 'Online Guidance Appointment',
         desc: 'Schedule guidance counseling sessions easily through this portal.',
         href: 'https://guidance.example.com',
-        icon_name: 'Calendar',
     },
 ];
 
@@ -96,7 +93,6 @@ const OthersContentSection: React.FC = () => {
             title: service.title,
             desc: service.desc,
             href: service.href,
-            icon_name: service.icon_name,
         });
         setIsServiceModalOpen(true);
     };
@@ -266,10 +262,10 @@ const OthersContentSection: React.FC = () => {
                                                     {selectedService.href}
                                                 </a>
                                             </div>
-                                            <div>
+                                            {/* <div>
                                                 <h5 className="mb-1 text-sm font-semibold text-gray-700">Icon Name</h5>
                                                 <p className="font-mono text-sm text-gray-500">{selectedService.icon_name || 'Not set'}</p>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     )}
                                 </div>
@@ -321,7 +317,7 @@ const OthersContentSection: React.FC = () => {
                                             onChange={(e) => setServiceFormData({ ...serviceFormData, href: e.target.value })}
                                         />
                                     </div>
-                                    <div>
+                                    {/* <div>
                                         <Label className="mb-2 block text-sm font-medium text-gray-700">Icon Name (from lucide-react)</Label>
                                         <Input
                                             placeholder="e.g., User, Calendar, Database"
@@ -329,7 +325,7 @@ const OthersContentSection: React.FC = () => {
                                             onChange={(e) => setServiceFormData({ ...serviceFormData, icon_name: e.target.value })}
                                         />
                                         <p className="mt-1 text-xs text-gray-500">Find icon names at lucide.dev</p>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <div className="mt-8 flex justify-end space-x-3">

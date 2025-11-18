@@ -11,6 +11,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { AreaParameters, Program } from '@/types';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
@@ -61,8 +63,8 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Edit Parameter</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-gray-900">Edit Parameter</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500">
                         {parameter.parameter_name != ' '
                             ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
                             : parameter.parameter_name}
@@ -71,8 +73,8 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                 <form onSubmit={editParameter} className="flex flex-col gap-4">
                     <div className="flex gap-4">
                         <div className="w-1/4">
-                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Parameter</label>
-                            <input
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Parameter</Label>
+                            <Input
                                 id="parameter_name"
                                 type="text"
                                 autoFocus
@@ -85,12 +87,11 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                                 }}
                                 disabled={processing}
                                 placeholder={parameter.parameter_name.toUpperCase()[0]}
-                                className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                             />
                         </div>
                         <div className="flex-1">
-                            <label className="text-muted-foreground mb-1 block text-sm font-medium">Description</label>
-                            <input
+                             <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
+                            <Input
                                 id="parameter_description"
                                 type="text"
                                 autoFocus
@@ -101,7 +102,6 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                                     setData('area_parameter_id', parameter.area_parameter_id);
                                 }}
                                 placeholder={parameter.parameter_description}
-                                className="focus:border-ring focus:ring-ring w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                             />
                         </div>
                     </div>

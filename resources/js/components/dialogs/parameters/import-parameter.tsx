@@ -2,13 +2,13 @@
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Program } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Download } from 'lucide-react';
 
 interface ImportParameterProps {
-    program: Program
+    program: Program;
     area_id: number;
     onClose: () => void;
 }
@@ -23,7 +23,8 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
     });
     const importParameter = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('manage.area.import.parameters', {
+        post(
+            route('manage.area.import.parameters', {
                 program_name: program.program_link,
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
@@ -41,32 +42,27 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Import Parameter</DialogTitle>
+                    <DialogTitle className="text-lg font-medium text-gray-900">Import Parameters</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500">Manage parameters and benchmarks on spreadsheet</DialogDescription>
                 </DialogHeader>
-                <form onSubmit={importParameter} className="flex flex-col gap-4">
+                <form onSubmit={importParameter} className="flex flex-col gap-10">
                     <div className="space-y-2">
-                        <h3 className="text-muted-foreground mb-1 text-sm font-medium">Import CSV</h3>
-                        <div className="flex items-center justify-center rounded-2xl border bg-white p-6 shadow-sm">
-                            <div className="text-center">
-                                <h2 className="mb-2 text-xl font-semibold">CSV Template</h2>
-                                <p className="text-muted-foreground mb-4 text-sm">Download the CSV template to import Parameters.</p>
-                                <Button>
-                                    <a
-                                        href={route('manage.area.download.template', {
-                                            program_name: program.program_link,
-                                            level_id: program.levels[0]?.accreditation_level_id,
-                                            area_id: area_id,
-                                        })}
-                                        className="flex flex-row items-center gap-2"
-                                        download
-                                    >
-                                        <Download className="h-4 w-4" />
-                                        Download Template
-                                    </a>
-                                </Button>
-                            </div>
+                        <div className="w-full rounded-lg border p-6 text-left">
+                            <h3 className="mb-2 text-xs font-semibold tracking-wide text-gray-600 uppercase">How to use</h3>
+                            <ol className="list-inside list-decimal space-y-1 text-sm text-slate-600">
+                                <li>
+                                    <span className="font-medium text-slate-900">Download</span> the CSV template.
+                                </li>
+                                <li>
+                                    Open in <span className="font-medium text-slate-900">Excel</span> or Google Sheets.
+                                </li>
+                                <li>Fill in your data (keep headers intact).</li>
+                                <li>
+                                    <span className="font-medium text-slate-900">Save</span> and upload the file.
+                                </li>
+                            </ol>
                         </div>
-                        <div className="flex flex-col w-full items-center justify-center">
+                        <div className="mt-4 flex w-full flex-col items-center justify-center">
                             {!data.document ? (
                                 <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -112,6 +108,20 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
                         </div>
                     </div>
                     <DialogFooter>
+                        <Button className="sm:mr-auto" variant="outline">
+                            <a
+                                href={route('manage.area.download.template', {
+                                    program_name: program.program_link,
+                                    level_id: program.levels[0]?.accreditation_level_id,
+                                    area_id: area_id,
+                                })}
+                                className="flex flex-row items-center gap-2"
+                                download
+                            >
+                                <Download className="h-4 w-4" />
+                                Download Template
+                            </a>
+                        </Button>
                         <DialogClose asChild>
                             <Button tabIndex={3} variant="outline" onClick={onClose}>
                                 Cancel

@@ -1,13 +1,16 @@
-"use state"
+'use state';
 
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ParameterOutlineCategory, ParameterOutlines, Program } from "@/types"
-import { useForm } from "@inertiajs/react";
-import { EditIcon } from "lucide-react";
-import { toast } from "sonner";
-
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/text-area';
+import { ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
+import { useForm } from '@inertiajs/react';
+import { toast } from 'sonner';
 
 interface BenchmarkProps {
     outline: ParameterOutlines;
@@ -25,146 +28,123 @@ interface EditBenchmarkForm {
 }
 
 export function EditBenchmark({ outline, program, area_id, parameter_outline_categories, onClose }: BenchmarkProps) {
-    const {
-        data,
-        setData,
-        patch,
-        processing,
-        errors,
-        reset
-    } = useForm<EditBenchmarkForm>({
-        benchmark_number: outline.outline_number || "",
-        benchmark_description: outline.outline_description || "",
+    const { data, setData, patch, processing, errors, reset } = useForm<EditBenchmarkForm>({
+        benchmark_number: outline.outline_number || '',
+        benchmark_description: outline.outline_description || '',
         benchmark_category: outline.outline_category || 0,
         is_container: outline.is_container || false,
     });
 
     const editBenchmark = (e: React.FormEvent) => {
         e.preventDefault();
-        patch(route("manage.area.edit.benchmark", {
-            program_name: program.program_link,
-            level_id: program.levels[0]?.accreditation_level_id,
-            area_id: area_id,
-            outline_id: outline.parameter_outline_id}), {
-            onSuccess: () => {
-                reset();
-                onClose();
+        patch(
+            route('manage.area.edit.benchmark', {
+                program_name: program.program_link,
+                level_id: program.levels[0]?.accreditation_level_id,
+                area_id: area_id,
+                outline_id: outline.parameter_outline_id,
+            }),
+            {
+                onSuccess: () => {
+                    reset();
+                    onClose();
+                },
+                onError: () => {
+                    toast.error('Failed to edit benchmark', {
+                        description: 'Please try again.',
+                        id: 'edit-benchmark-error',
+                    });
+                },
             },
-            onError: () => {
-                toast.error("Failed to edit benchmark", {
-                    description: "Please try again.",
-                    id: "edit-benchmark-error",
-                });
-            }
-        });
+        );
     };
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                        <EditIcon className="h-5 w-5 text-[#7f1414]" />
-                        Edit Benchmark
-                    </DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-gray-900">Edit Benchmark</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500">
                         {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                     </DialogDescription>
                 </DialogHeader>
-                <div className="flex flex-col gap-3">
-                    <form onSubmit={editBenchmark}>
+
+                <div className="flex flex-col gap-4">
+                    <form className="flex flex-col gap-6" onSubmit={editBenchmark}>
                         <div>
-                            <label className="text-muted-foreground mb-1 text-sm block font-medium">
-                                Benchmark Number
-                            </label>
-                            <input
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Number</Label>
+                            <Input
                                 id="benchmark_number"
                                 type="text"
                                 autoFocus
                                 tabIndex={1}
                                 value={data.benchmark_number}
-                                onChange={(e) => setData("benchmark_number", e.target.value)}
+                                onChange={(e) => setData('benchmark_number', e.target.value)}
                                 disabled={processing}
                                 placeholder="e.g., 1.1, 2.3, etc."
-                                className="w-full rounded-md border
-                                    border-input bg-background px-3
-                                    py-2 placeholder:text-muted-foreground
-                                    focus:outline-none focus:ring-2
-                                    focus:ring-ring focus:ring-offset-2
-                                    disabled:cursor-not-allowed disabled:opacity-50"
                             />
                             <InputError message={errors.benchmark_number} className="mt-2" />
                         </div>
                         <div>
-                            <label className="text-muted-foreground mb-1 text-sm block font-medium">
-                                Benchmark Description
-                            </label>
-                            <textarea
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Description</Label>
+                            <Textarea
                                 id="benchmark_description"
-                                rows={4}
-                                tabIndex={2}
                                 value={data.benchmark_description}
-                                onChange={(e) => setData("benchmark_description", e.target.value)}
+                                onChange={(e) => setData('benchmark_description', e.target.value)}
                                 disabled={processing}
                                 placeholder="Enter benchmark description"
-                                className="w-full rounded-md border
-                                    border-input bg-background px-3
-                                    py-2 placeholder:text-muted-foreground
-                                    focus:outline-none focus:ring-2
-                                    focus:ring-ring focus:ring-offset-2
-                                    disabled:cursor-not-allowed disabled:opacity-50"
+                                autoResize
+                                minHeight={100}
                             />
                             <InputError message={errors.benchmark_description} className="mt-2" />
                         </div>
                         <div>
-                            <label className="text-muted-foreground mb-1 text-sm block font-medium">
-                                Benchmark Category
-                            </label>
-                            <select
-                                id="benchmark_category"
-                                tabIndex={3}
-                                autoFocus
-                                value={data.benchmark_category}
-                                onChange={(e) => setData("benchmark_category", e.target.value)}
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Category</Label>
+                            <Select
+                                value={data.benchmark_category ? String(data.benchmark_category) : ''}
+                                onValueChange={(value) => setData('benchmark_category', value)}
                                 disabled={processing}
-                                className="bg-background focus:border-ring focus:ring-ring w-full
-                                    rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
                             >
-                                <option value="" disabled selected>Select a category</option>
-                                {parameter_outline_categories?.map((category) => (
-                                    <option key={category.parameter_outline_category_id} value={category.parameter_outline_category_id}>
-                                        {category.category_name}
-                                    </option>
-                                ))}
-                            </select>
+                                <SelectTrigger className="w-full" tabIndex={3}>
+                                    <SelectValue placeholder="Select a category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        {/* <SelectLabel>Categories</SelectLabel> */}
+                                        {parameter_outline_categories?.map((category) => (
+                                            <SelectItem
+                                                key={category.parameter_outline_category_id}
+                                                // Radix UI requires values to be strings
+                                                value={String(category.parameter_outline_category_id)}
+                                            >
+                                                {category.category_name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             <InputError message={errors.benchmark_category} className="mt-2" />
                         </div>
-                        <div>
-                            <label className="text-muted-foreground mb-1 text-sm block font-medium">
-                                <input
-                                    type="checkbox"
-                                    className="mr-2"
-                                    checked={data.is_container}
-                                    onChange={(e) => setData("is_container", e.target.checked)}
-                                />
+                        <div className="flex items-center gap-3">
+                            <Switch
+                                id="is-container-mode"
+                                checked={data.is_container}
+                                onCheckedChange={(checked) => setData('is_container', checked)}
+                            />
+                            <Label
+                                htmlFor="is-container-mode"
+                                className="block text-sm leading-none font-medium text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
                                 Benchmark Container
-                            </label>
+                            </Label>
                         </div>
                         <DialogFooter className="mt-4">
                             <DialogClose asChild>
-                                <Button
-                                    tabIndex={1}
-                                    variant="outline"
-                                    onClick={onClose}
-                                >
+                                <Button tabIndex={1} variant="outline" onClick={onClose}>
                                     Cancel
                                 </Button>
                             </DialogClose>
-                            <Button
-                                tabIndex={2}
-                                variant="noborder"
-                                type="submit"
-                            >
+                            <Button tabIndex={2} variant="noborder" type="submit">
                                 Save
                             </Button>
                         </DialogFooter>
@@ -172,5 +152,5 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                 </div>
             </DialogContent>
         </Dialog>
-    )
+    );
 }

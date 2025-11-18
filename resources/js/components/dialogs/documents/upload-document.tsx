@@ -91,14 +91,13 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
         <Dialog open={true} onOpenChange={() => !isUploading && onClose()}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold">Upload Document</DialogTitle>
-                    <DialogDescription>{`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-gray-900">Upload Document</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500">{`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}</DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={uploadDocument} className="flex flex-col gap-3">
+                <form onSubmit={uploadDocument} className="flex flex-col gap-4">
                     {/* Upload File Section */}
                     <div className="space-y-2">
-                        <h3 className="text-muted-foreground mb-1 text-sm font-medium">Upload Document</h3>
 
                         <div className="flex flex-col w-full items-center justify-center">
                             {!data.document ? (
