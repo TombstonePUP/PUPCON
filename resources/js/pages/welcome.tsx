@@ -1,3 +1,4 @@
+import useFacebookFeed from '@/hooks/useFacebookFeed';
 import Layout from '@/layouts/landing-layout';
 import { Head } from '@inertiajs/react';
 import { BookOpen, Calendar, ChevronLeft, ChevronRight, GraduationCap, ImageIcon, MapPin, Play, X } from 'lucide-react';
@@ -320,47 +321,59 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
         }
     `;
 
-    const newsCards = useMemo(
-        () => [
-            {
-                title: 'PUPSJ PUPCET',
-                img: '/images/pupcet.jpg',
-                desc: 'The PUPSJ PUPCET Online Application for Academic Year 2025-2026 starts on December 15, 2024 - April 15, 2025.',
-                source: 'https://www.facebook.com/PUPSJStudentAssembly/posts/pfbid02BBc79Sp51g6ntw5cnNxabMqRiBYnTY6hgJbcuMtN5yN7fLg31fMNy7bpkkUk8Rqyl',
-            },
-            {
-                title: 'CPALE 2024 Passers',
-                img: '/images/cpale.jpg',
-                desc: 'Pagpupugay sa bagong CPA ng ating Sintang Paaralan.',
-                source: 'https://www.facebook.com/photo.php?fbid=1002993848520595&set=pb.100064299686924.-2207520000&type=3',
-            },
-            {
-                title: 'Mental Health Matters',
-                img: '/images/mental.jpg',
-                desc: 'The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow tips for boosting your well-being.',
-                source: 'https://www.facebook.com/PUPSJStudentAssembly/posts/pfbid0mehRRGVgQvoEgKf9LuTamcF8QcjrU2RjiS5dCCNjAiHmxuf3q6djRMrEJhBYVmoTl',
-            },
-            {
-                title: 'Ceremonial Signing',
-                img: '/images/ceremony.jpg',
-                desc: 'A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!',
-                source: 'https://www.facebook.com/photo.php?fbid=911510457668935&set=pb.100064299686924.-2207520000&type=3',
-            },
-            {
-                title: 'Sample Post 5',
-                img: '/images/pupcet.jpg',
-                desc: 'This is a sample 5th post to demonstrate pagination.',
-                source: 'https://www.facebook.com/',
-            },
-            {
-                title: 'Sample Post 6',
-                img: '/images/cpale.jpg',
-                desc: 'This is a sample 6th post to demonstrate pagination.',
-                source: 'https://www.facebook.com/',
-            },
-        ],
-        [],
-    );
+    const { posts: fbPosts, loading: fbLoading, error: fbError } = useFacebookFeed(6);
+
+    const newsCards = useMemo(() => {
+        if (fbLoading || fbError || !fbPosts.length) {
+            // Fallback to hardcoded posts if API fails
+            return [
+                {
+                    title: 'PUPSJ PUPCET',
+                    img: '/images/pupcet.jpg',
+                    desc: 'The PUPSJ PUPCET Online Application for Academic Year 2025-2026 starts on December 15, 2024 - April 15, 2025.',
+                    source: 'https://www.facebook.com/PUPSJStudentAssembly/posts/pfbid02BBc79Sp51g6ntw5cnNxabMqRiBYnTY6hgJbcuMtN5yN7fLg31fMNy7bpkkUk8Rqyl',
+                },
+                {
+                    title: 'CPALE 2024 Passers',
+                    img: '/images/cpale.jpg',
+                    desc: 'Pagpupugay sa bagong CPA ng ating Sintang Paaralan.',
+                    source: 'https://www.facebook.com/photo.php?fbid=1002993848520595&set=pb.100064299686924.-2207520000&type=3',
+                },
+                {
+                    title: 'Mental Health Matters',
+                    img: '/images/mental.jpg',
+                    desc: 'The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow tips for boosting your well-being.',
+                    source: 'https://www.facebook.com/PUPSJStudentAssembly/posts/pfbid0mehRRGVgQvoEgKf9LuTamcF8QcjrU2RjiS5dCCNjAiHmxuf3q6djRMrEJhBYVmoTl',
+                },
+                {
+                    title: 'Ceremonial Signing',
+                    img: '/images/ceremony.jpg',
+                    desc: 'A groundbreaking partnership between PUP San Juan City and the Research Synergy Foundation!',
+                    source: 'https://www.facebook.com/photo.php?fbid=911510457668935&set=pb.100064299686924.-2207520000&type=3',
+                },
+                {
+                    title: 'Sample Post 5',
+                    img: '/images/pupcet.jpg',
+                    desc: 'This is a sample 5th post to demonstrate pagination.',
+                    source: 'https://www.facebook.com/',
+                },
+                {
+                    title: 'Sample Post 6',
+                    img: '/images/cpale.jpg',
+                    desc: 'This is a sample 6th post to demonstrate pagination.',
+                    source: 'https://www.facebook.com/',
+                },
+            ];
+        }
+
+        // Map Facebook posts to your card format
+        return fbPosts.map((post) => ({
+            title: post.message?.split('\n')[0]?.substring(0, 50) + '...' || 'PUP San Juan Update',
+            img: post.image || '/images/placeholder.jpg',
+            desc: post.message?.substring(0, 150) + '...' || 'Check out our latest update!',
+            source: post.permalink || 'https://www.facebook.com/PUPSJStudentAssembly',
+        }));
+    }, [fbPosts, fbLoading, fbError]);
 
     const POSTS_PER_PAGE = window.innerWidth <= 768 ? 2 : 4;
     const totalPages = Math.ceil(newsCards.length / POSTS_PER_PAGE);
@@ -451,18 +464,15 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                     <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>
 
                     {/* Content Overlay with Animations */}
-                    <div
-                        ref={heroContentRef}
-                        className="absolute inset-0 z-20 grid w-full grid-cols-1 px-[8vw] pr-10 text-white lg:pl-70"
-                    >
+                    <div ref={heroContentRef} className="absolute inset-0 z-20 grid w-full grid-cols-1 px-[8vw] pr-10 text-white lg:pl-70">
                         <div
-                            className={`flex flex-col w-full justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${
+                            className={`flex w-full flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${
                                 isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
                             }`}
                         >
                             <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[70vw] object-cover lg:w-[29vw]" priority />
                             <h2 className="mb-3 text-[2.8vw] italic lg:mb-0 lg:text-[1.76vw]">Years of academic excellence and service</h2>
-                            <div className="mt-[2.08vw] flex flex-wrap w-full justify-center gap-2 lg:justify-start">
+                            <div className="mt-[2.08vw] flex w-full flex-wrap justify-center gap-2 lg:justify-start">
                                 {[
                                     { icon: BookOpen, text: 'Programs', primary: true },
                                     { icon: Calendar, text: 'Events' },
@@ -921,6 +931,17 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                         </div>
                     </div>
                 </section>
+
+                {/* Show loading state */}
+                {fbLoading && (
+                    <div className="py-8 text-center">
+                        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#7f1414] border-r-transparent"></div>
+                        <p className="mt-2 text-gray-600">Loading latest updates...</p>
+                    </div>
+                )}
+
+                {/* Show error if API fails */}
+                {fbError && <div className="py-4 text-center text-sm text-red-600">Using cached content. {fbError}</div>}
             </Layout>
         </>
     );
