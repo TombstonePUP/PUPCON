@@ -286,7 +286,7 @@ export default function Programs({ program }: ProgramProps) {
                             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
                                 <BookOpen className="h-6 w-6 text-white" />
                             </div>
-                            <div className="flex-1 ml-2">
+                            <div className="ml-2 flex-1">
                                 <h1 className="text-xl font-semibold text-gray-900">
                                     {program.degree_type} in {program.program_name}
                                 </h1>
@@ -514,7 +514,7 @@ export default function Programs({ program }: ProgramProps) {
                                         selected_level?.areas.map((item: any) => (
                                             <div
                                                 key={item.id}
-                                                className="group relative rounded-xl border border-gray-200 bg-white p-5 transition-all duration-150 hover:border-gray-300 hover:shadow-sm"
+                                                className="group relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:border-gray-400"
                                             >
                                                 <a
                                                     href={route('manage.area', {
@@ -632,28 +632,30 @@ export default function Programs({ program }: ProgramProps) {
             <Dialog open={areaDialogOpen} onOpenChange={setAreaDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>{areaData.area_id ? 'Edit Area' : 'Add New Area'}</DialogTitle>
-                        <DialogDescription>
-                            Adding to:{' '}
-                            <span className="font-medium text-[#7f1414]">
-                                {selected_level?.level === 1 ? 'Preliminary Survey Visit' : 'Level ' + selected_level?.level}
+                        <DialogTitle className="mb-4 text-lg font-medium text-gray-900">
+                            {areaData.area_id ? 'Edit Area' : 'Add New Area'}
+                        </DialogTitle>
+                        <DialogDescription className="flex flex-col text-sm text-gray-500">
+                            {areaData.area_id ? 'Editing in ' : 'Adding in '} {program.program_name}
+                            <span className="font-medium">
+                                {selected_level?.level === 1 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + selected_level?.level}
                             </span>
                         </DialogDescription>
                     </DialogHeader>
-                    <form onSubmit={areaData.area_id ? updateArea : addArea} className="space-y-4">
+                    <form onSubmit={areaData.area_id ? updateArea : addArea} className="flex flex-col gap-2 space-y-4">
                         <div>
-                            <Label>Area Number (e.g., "I", "V")</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Area Number (numeric numbers only)</Label>
                             <Input
                                 type="text"
                                 required
                                 value={areaData.area_number}
                                 onChange={(e) => setAreaData('area_number', e.target.value)}
-                                placeholder="e.g., V"
+                                placeholder="e.g., 1, 2 ,3"
                             />
                             <InputError message={errorsArea.area_number} className="mt-1" />
                         </div>
                         <div>
-                            <Label>Area Name</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name</Label>
                             <Input
                                 type="text"
                                 required
@@ -662,6 +664,13 @@ export default function Programs({ program }: ProgramProps) {
                                 placeholder="Enter area name"
                             />
                             <InputError message={errorsArea.area_name} className="mt-1" />
+                        </div>
+
+                        <div className="my-0 mb-4 rounded-md border border-blue-100 bg-blue-50 p-4">
+                            <p className="text-sm text-blue-800">
+                                <span className="mb-1 block font-semibold text-blue-900">Note</span>
+                                In the <span>area number</span> field, make sure to use numeric numbers to avoid issues.
+                            </p>
                         </div>
                         <DialogFooter className="mt-2 gap-2">
                             <DialogClose asChild>
@@ -680,14 +689,23 @@ export default function Programs({ program }: ProgramProps) {
             <Dialog open={areaDeleteOpen} onOpenChange={setAreaDeleteOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete Area?</DialogTitle>
-                        <DialogDescription>This will permanently remove this area. This action cannot be undone.</DialogDescription>
+                        <DialogTitle className="text-lg font-medium text-gray-900">Delete Area?</DialogTitle>
+                        <DialogDescription className="text-sm text-gray-500">
+                            This will permanently remove this area. This action cannot be undone.
+                        </DialogDescription>
                     </DialogHeader>
+
+                    <div className="my-0 rounded-md border border-red-100 bg-red-50 p-4">
+                        <p className="text-sm text-red-800">
+                            <span className="mb-1 block font-semibold text-red-900">Warning: Irreversible Action!</span>
+                            This action will permanently delete the area and all associated document (if any). This action cannot be undone.
+                        </p>
+                    </div>
                     <DialogFooter className="gap-2">
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button variant="destructive" onClick={handleDeleteArea} disabled={processingArea}>
+                        <Button variant="noborder" onClick={handleDeleteArea} disabled={processingArea}>
                             Remove
                         </Button>
                     </DialogFooter>
@@ -760,11 +778,17 @@ function ObjectiveDialog({ isOpen, onClose, onSave, isEdit, objective }: Objecti
                 >
                     <div>
                         <Label>Objective Title</Label>
-                        <Input className='mt-2' type="text" required defaultValue={data.title} placeholder="e.g., Academic Excellence" />
+                        <Input className="mt-2" type="text" required defaultValue={data.title} placeholder="e.g., Academic Excellence" />
                     </div>
                     <div>
                         <Label>Description</Label>
-                        <Textarea className='mt-2' required defaultValue={data.description} placeholder="Describe the learning objective..." minHeight={80} />
+                        <Textarea
+                            className="mt-2"
+                            required
+                            defaultValue={data.description}
+                            placeholder="Describe the learning objective..."
+                            minHeight={80}
+                        />
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
@@ -811,7 +835,7 @@ function GalleryDialog({ isOpen, onClose, onSave, isEdit, galleryItem }: Gallery
                     </div>
                     <div>
                         <Label>Caption</Label>
-                        <Input className='mt-2' type="text" required defaultValue={data.caption} placeholder="Image caption" />
+                        <Input className="mt-2" type="text" required defaultValue={data.caption} placeholder="Image caption" />
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>

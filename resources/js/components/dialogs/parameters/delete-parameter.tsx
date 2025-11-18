@@ -33,8 +33,15 @@ export function DeleteParameter({ parameter, program, area_id, onClose }: Delete
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-lg font-medium text-gray-900 mb-5">Are you sure?</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">This action cannot be undone. This will permanently delete the Parameter A</DialogDescription>
+                    <DialogDescription className="text-sm text-gray-500">This action cannot be undone. This will permanently delete the Parameter</DialogDescription>
                 </DialogHeader>
+
+                <div className="my-0 rounded-md border border-red-100 bg-red-50 p-4">
+                    <p className="text-sm text-red-800">
+                        <span className="mb-1 block font-semibold text-red-900">Warning: Irreversible Action!</span>
+                        This action will permanently delete the benchmark and associated document (if any). This action cannot be undone.
+                    </p>
+                </div>
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button variant="outline">Cancel</Button>
