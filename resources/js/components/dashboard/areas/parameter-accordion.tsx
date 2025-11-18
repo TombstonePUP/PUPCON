@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Area, AreaFormCategory, type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
-import { FolderPlus } from 'lucide-react';
+import { FolderPlus, PlusCircle } from 'lucide-react';
 interface DocDialogParams {
     type: 'view' | 'upload' | 'delete' | 'rejected';
     benchmark: ParameterOutlines;
@@ -116,14 +116,15 @@ export default function ParameterAccordion({
                                 )}
 
                                 {/* Add Benchmark Dialog */}
-                                <a
-                                    className="cursor-pointer underline"
+                                <Button
+                                    className="cursor-pointer w-fit"
+                                    variant={'outline'}
                                     onClick={() => {
                                         setTimeout(() => resolveBenchDialog({ type: 'add', parameter: parameter }), 50);
                                     }}
-                                >
+                                >   <PlusCircle />
                                     Add Benchmark
-                                </a>
+                                </Button>
                             </AccordionContent>
                         </AccordionItem>
                     ))
