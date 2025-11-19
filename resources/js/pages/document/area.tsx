@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { Area, AreaFormCategory, AreaForms, AreaParameters, BreadcrumbItem, ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
 import { Head } from '@inertiajs/react';
-import { LucideImport, PlusCircleIcon } from 'lucide-react';
+import { Edit, LucideImport, PlusCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 
 interface AreaFilesProps {
@@ -61,7 +61,6 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                 <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
                     {/* Header Section */}
                     <div id="top" className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
-                         
                         <div className="flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                                 <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#7f1414] text-white shadow-sm">
@@ -117,10 +116,14 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                                             <LucideImport className="ml-1 h-4 w-4" />
                                             Import template
                                         </Button>
+
+                                        <Button type="button" variant="outline">
+                                            <Edit className="ml-1 h-4 w-4" />
+                                            Edit Area Content
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
-                           
                         </div>
                     </div>
                 </div>
