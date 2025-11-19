@@ -23,6 +23,8 @@ class LocalTaskForce extends Model
         'area_name',
         'first_name',
         'last_name',
+        'official',
+        'official_position',
         'profile_image_name',
         'profile_image_path',
     ];

@@ -4,15 +4,14 @@ import { InfoIcon } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 
 // Section Imports
-import HistoryContentSection from './history-content';
-import LocalTaskForceContentSection from './localtaskforce-content';
 import VmgoContentSection from './vmgo-content';
 import FacilitiesSection from '@/components/content/facilities-content';
-import { Administration, CampusDirectors, CampusGallery, ContentPages, Facilities, FacultyStaff, OrganizationTypes } from '@/types/content';
+import { Administration, CampusDirectors, CampusGallery, ContentPages, Facilities, FacultyStaff, LocalTaskForce, OrganizationTypes } from '@/types/content';
 import AdministrationSection from '@/components/content/admin-content';
 import AboutSection from '@/components/content/about-content';
 import FacultySection from '@/components/content/faculty-content';
 import HistorySection from '@/components/content/history-content';
+import LocalTaskForceSection from '@/components/content/local-task-force-content';
 
 interface History {
     directors: CampusDirectors[];
@@ -26,6 +25,7 @@ interface MainContentProps {
     faculties: FacultyStaff[];
     facilities: Facilities[];
     history: History;
+    local_task_force: LocalTaskForce[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -37,15 +37,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const MainContent = ({...props}: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('about');
-    const {pages, officials, facilities, org_types, faculties, history} = props;
-
-    console.log('Pages data in MainContent:', pages);
+    const {pages, officials, facilities, org_types, faculties, history, local_task_force} = props;
 
     const about_page = pages.find((page: ContentPages) => page.page === "About")?? null;
     const history_page = pages.find((page: ContentPages) => page.page === "History") ?? null;
     const admin_page = pages.find((page: ContentPages) => page.page === "Administration") ?? null;
     const faculty_page = pages.find((page: ContentPages) => page.page === "Faculty & Staff") ?? null;
     const facility_page = pages.find((page: ContentPages) => page.page === "Facilities")?? null;
+    const ltf_page = pages.find((page: ContentPages) => page.page === "Local Task Force") ?? null;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
@@ -138,7 +137,10 @@ const MainContent = ({...props}: MainContentProps) => {
                             </div>
 
                             <div ref={localTaskForceRef} className="scroll-mt-6">
-                                <LocalTaskForceContentSection />
+                                <LocalTaskForceSection
+                                    ltf_page={ltf_page}
+                                    local_task_force={local_task_force}
+                                />
                             </div>
                         </div>
                     </div>

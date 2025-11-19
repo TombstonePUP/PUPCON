@@ -8,6 +8,7 @@ use App\Models\CampusGallery;
 use App\Models\ContentPages;
 use App\Models\Facilities;
 use App\Models\FacultyStaff;
+use App\Models\LocalTaskForce;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Organizations;
@@ -70,6 +71,12 @@ class ContentController extends Controller
             'gallery' => $gallery,
         ];
 
+        $local_task_force = LocalTaskForce::with('Members')->get();
+        $local_task_force = $local_task_force->map(function ($ltf) {
+            $ltf->profile_image_path = Storage::url($ltf->profile_image_path);
+            return $ltf;
+        });
+
         return Inertia::render('content-management/main-content', [
             'pages' => $pages,
             'org_types' => $orgTypes,
@@ -77,6 +84,7 @@ class ContentController extends Controller
             'faculties' => $faculties,
             'facilities' => $facilities,
             'history' => $history,
+            'local_task_force' => $local_task_force,
         ]);
     }
 }

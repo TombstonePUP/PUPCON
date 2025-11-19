@@ -91,3 +91,25 @@ export interface CampusGallery {
     image_path: string;
     description: string;
 }
+
+export interface LocalTaskForce {
+    local_task_force_id: number;
+    area_name: string;
+    first_name: string;
+    last_name: string;
+    official: boolean;
+    official_position?: string | null;
+    profile_image_name?: string | null;
+    profile_image_path?: string | null;
+    members?: Members[];
+}
+
+export interface Members {
+    member_id: number;
+    local_task_force_id: number;
+    full_name: string;
+    role?: string | null;
+    local_task_force?: LocalTaskForce;
+}
+
+

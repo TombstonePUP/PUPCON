@@ -21,8 +21,8 @@ class LocalTaskForceMembers extends Model
     protected $primaryKey = 'member_id';
     protected $fillable = [
         'local_task_force_id',
-        'first_name',
-        'last_name',
+        'full_name',
+        'role',
     ];
 
     /**

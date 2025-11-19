@@ -17,8 +17,8 @@ const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, clas
 type Official = {
     id: number;
     name: string;
-    position: string; 
-    sub_position?: string | null; 
+    position: string;
+    sub_position?: string | null;
     image_url: string | null;
 };
 
@@ -34,7 +34,7 @@ type CoChair = {
 
 type TaskForceArea = {
     id: number;
-    name: string; 
+    name: string;
     chairman_name: string;
     chairman_image_url: string | null;
     co_chairmen: CoChair[];
@@ -98,8 +98,8 @@ const OfficialPhoto: React.FC<{ url: string | null; alt: string; heightClass?: s
         );
     }
     return (
-        <img 
-            src={url} 
+        <img
+            src={url}
             alt={alt}
             className={`w-full ${heightClass} rounded-md object-cover bg-gray-100 border border-gray-200`}
             onError={() => setHasError(true)}
@@ -123,14 +123,14 @@ const LocalTaskForceContentSection: React.FC = () => {
 
     // --- State for Areas ---
     const [areas, setAreas] = useState<TaskForceArea[]>(initialAreas);
-    
+
     // --- Area Modal State ---
     const [isAreaModalOpen, setIsAreaModalOpen] = useState(false);
     const [editingArea, setEditingArea] = useState<TaskForceArea | null>(null);
     const [areaFormData, setAreaFormData] = useState({ name: '', chairman_name: '', co_chairmen: '', members: '' });
     const [areaChairPhoto, setAreaChairPhoto] = useState<File | null>(null);
 
-    const [selectedItem, setSelectedItem] = useState<{ type: 'official' | 'area', id: number | string }>({ type: 'official', id: 1 }); 
+    const [selectedItem, setSelectedItem] = useState<{ type: 'official' | 'area', id: number | string }>({ type: 'official', id: 1 });
 
     const selectedOfficial = selectedItem.type === 'official' ? headOfficials.find(o => o.id === selectedItem.id) : null;
     const selectedArea = selectedItem.type === 'area' ? areas.find(a => a.id === selectedItem.id) : null;
@@ -141,7 +141,7 @@ const LocalTaskForceContentSection: React.FC = () => {
         const areaChairUrls = areas.map(a => a.chairman_image_url);
         const blobUrls = [...officialUrls, ...areaChairUrls]
             .filter(url => url && url.startsWith('blob:')) as string[];
-        
+
         return () => {
             blobUrls.forEach(url => URL.revokeObjectURL(url));
         };
@@ -157,7 +157,7 @@ const LocalTaskForceContentSection: React.FC = () => {
     };
 
     const handlePreview = () => {
-        window.open('/about/local-task-force', '_blank'); 
+        window.open('/about/local-task-force', '_blank');
     };
 
     // --- Head Official CRUD Actions ---
@@ -178,7 +178,7 @@ const LocalTaskForceContentSection: React.FC = () => {
         setOfficialFormData({
             name: official.name,
             position: official.position,
-            sub_position: official.sub_position || '', 
+            sub_position: official.sub_position || '',
         });
         setOfficialPhoto(null);
         setIsHeadOfficialModalOpen(true);
@@ -189,7 +189,7 @@ const LocalTaskForceContentSection: React.FC = () => {
             const updatedOfficials = headOfficials.filter(o => o.id !== id);
             setHeadOfficials(updatedOfficials);
             if (selectedItem.type === 'official' && selectedItem.id === id) {
-                setSelectedItem({ type: 'official', id: headOfficials[0]?.id || 0 }); 
+                setSelectedItem({ type: 'official', id: headOfficials[0]?.id || 0 });
             }
         }
     };
@@ -254,7 +254,7 @@ const LocalTaskForceContentSection: React.FC = () => {
             const updatedAreas = areas.filter(a => a.id !== id);
             setAreas(updatedAreas);
             if (selectedItem.type === 'area' && selectedItem.id === id) {
-                setSelectedItem({ type: 'official', id: headOfficials[0]?.id || 0 }); 
+                setSelectedItem({ type: 'official', id: headOfficials[0]?.id || 0 });
             }
         }
     };
@@ -264,7 +264,7 @@ const LocalTaskForceContentSection: React.FC = () => {
             alert('Area Name and Chairman Name cannot be empty.');
             return;
         }
-        
+
         let newChairImageUrl: string | null = null;
         if (areaChairPhoto) {
             newChairImageUrl = URL.createObjectURL(areaChairPhoto);
@@ -279,7 +279,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                 id: getNewId(editingArea?.co_chairmen || []) + index,
                 name: name.trim(),
             }));
-        
+
         const newMembers: AreaMember[] = areaFormData.members
             .split('\n')
             .filter(name => name.trim() !== '')
@@ -307,7 +307,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                 chairman_image_url: newChairImageUrl,
                 co_chairmen: newCoChairmen,
                 members: newMembers,
-                co_chairman_image_url: null, 
+                co_chairman_image_url: null,
             };
             setAreas([...areas, newArea]);
             setSelectedItem({ type: 'area', id: newId });
@@ -326,8 +326,8 @@ const LocalTaskForceContentSection: React.FC = () => {
                 <div className="mb-10 grid grid-cols-1 gap-6">
                     <div>
                         <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
-                        <Input 
-                            type="text" 
+                        <Input
+                            type="text"
                             placeholder="Enter page title..."
                             value={pageData.title}
                             onChange={(e) => handleChange('title', e.target.value)}
@@ -389,7 +389,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                                         </div>
                                     ))}
                                 </div>
-                                
+
                                 <Separator />
 
                                 <h4 className="my-3 text-xs text-gray-500">Task Force Areas</h4>
@@ -434,7 +434,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                             <div className="mt-4 border-t border-gray-200 pt-4 space-y-2 flex gap-3">
                                 <Button
                                     onClick={handleShowAddHeadOfficialModal}
-                                    variant="outline" 
+                                    variant="outline"
                                     className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md"
                                 >
                                     <Plus className="mr-2 h-4 w-4" /> Add Head Official
@@ -492,7 +492,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     {/* --- Co-Chairmen List --- */}
                                     {selectedArea.co_chairmen.length > 0 && (
                                         <div>
@@ -511,9 +511,9 @@ const LocalTaskForceContentSection: React.FC = () => {
                                             </div>
                                         </div>
                                     )}
-                                    
+
                                     <Separator className="bg-gray-200" />
-                                    
+
                                     <div>
                                         <h5 className="mb-2 text-sm font-semibold text-gray-700">Members</h5>
                                         {selectedArea.members.length === 0 ? (
@@ -547,7 +547,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
-                        
+
                         <div className="mt-6 space-y-4 max-h-[70vh] overflow-y-auto pr-2">
                             <div>
                                 <Label className="mb-2 block text-sm font-medium text-gray-700">Photo</Label>
@@ -580,7 +580,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                                 <Label className="mb-2 block text-sm font-medium text-gray-700">Sub-Position (Optional)</Label>
                                 <Input
                                     placeholder="e.g., Campus Director"
-                                    value={officialFormData.sub_position || ''} 
+                                    value={officialFormData.sub_position || ''}
                                     onChange={(e) => setOfficialFormData(prev => ({ ...prev, sub_position: e.target.value }))}
                                 />
                             </div>
@@ -610,7 +610,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
-                        
+
                         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Left Column */}
                             <div className="space-y-4">
@@ -652,10 +652,10 @@ const LocalTaskForceContentSection: React.FC = () => {
                                         value={areaFormData.co_chairmen}
                                         onChange={(e) => setAreaFormData(prev => ({ ...prev, co_chairmen: e.target.value }))}
                                         autoResize
-                                        minHeight={100} 
+                                        minHeight={100}
                                     />
                                 </div>
-                                
+
                                 <div className="flex-1">
                                     <Label className="mb-2 block text-sm font-medium text-gray-700">Members</Label>
                                     <Textarea
@@ -663,7 +663,7 @@ const LocalTaskForceContentSection: React.FC = () => {
                                         value={areaFormData.members}
                                         onChange={(e) => setAreaFormData(prev => ({ ...prev, members: e.target.value }))}
                                         autoResize
-                                        minHeight={150} 
+                                        minHeight={150}
                                     />
                                 </div>
                             </div>

@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('local_task_force', function (Blueprint $table) {
             $table->id(column: 'local_task_force_id')->autoIncrement()->primary();
-            $table->string('area_name');
+            $table->string('area_name')->nullable();
             $table->string('first_name');
             $table->string('last_name');
+            $table->boolean('official')->default(false);
+            $table->string('official_position')->nullable();
             $table->string('profile_image_name')->nullable();
             $table->text('profile_image_path')->nullable();
         });
@@ -23,8 +25,7 @@ return new class extends Migration
         Schema::create('local_task_force_members', function (Blueprint $table) {
             $table->id(column: 'member_id')->autoIncrement()->primary();
             $table->foreignId('local_task_force_id')->references('local_task_force_id')->on('local_task_force')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('full_name');
             $table->string('role');
         });
     }

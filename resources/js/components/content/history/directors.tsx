@@ -21,7 +21,7 @@ interface DirectorsForm {
 
 interface DirectorsProps {
    directors: CampusDirectors[];
-   onUpdateDirectors: (director: CampusDirectors, form: DirectorsForm) => void;
+   onUpdateDirectors: (directorLocal: CampusDirectors, director: DirectorsForm) => void;
    onDeleteDirector: (id: number) => void;
 }
 

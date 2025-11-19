@@ -8,49 +8,58 @@ use App\Models\CampusGallery;
 use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class HistoryController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $validated = $request->validate([
-            'page' => ['required', 'array'],
-            'directors' => ['nullable', 'array'],
-            'gallery' => ['nullable', 'array'],
-            'page.page' => ['required', 'string'],
-            'page.content_page_id' => ['required', 'integer'],
-            'page.title' => ['required', 'string'],
-            'page.description' => ['required', 'string'],
-            'page.banner' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
-            'directors.*.director_id' => ['required', 'integer'],
-            'directors.*.name' => ['required', 'string'],
-            'directors.*.description' => ['required', 'string'],
-            'directors.*.term_start_date' => ['required', 'integer'],
-            'directors.*.term_end_date' => ['nullable', 'integer'],
-            'directors.*.profile_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
-            'gallery.*.gallery_id' => ['required', 'integer'],
-            'gallery.*.image' => ['required', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
-            'gallery.*.description' => ['nullable', 'string'],
-        ],
-        [
-            'page.content_page_id.required' => 'The page content ID is required.',
-            'page.title.required' => 'The page title is required.',
-            'page.description.required' => 'The page description is required.',
-            'page.page.required' => 'The page identifier is required.',
-            'page.banner.image' => 'The banner must be an image file.',
-            'page.banner.mimes' => 'The banner must be a file of type: jpeg, png, jpg.',
-            'page.banner.max' => 'The banner may not be greater than 5MB.',
-            'directors.*.name.required' => 'The director name is required.',
-            'directors.*.description.required' => 'The director description is required.',
-            'directors.*.term_start_date.required' => 'The director term start date is required.',
-            'directors.*.profile_image.image' => 'The director profile image must be an image file.',
-            'directors.*.profile_image.mimes' => 'The director profile image must be a file of type: jpeg, png, jpg.',
-            'directors.*.profile_image.max' => 'The director profile image may not be greater than 5MB.',
-            'gallery.*.image.required' => 'The gallery image is required.',
-            'gallery.*.image.image' => 'The gallery image must be an image file.',
-            'gallery.*.image.mimes' => 'The gallery image must be a file of type: jpeg, png, jpg.',
-            'gallery.*.image.max' => 'The gallery image may not be greater than 5MB.',
-        ]);
+        $validated = $request->validate(
+            [
+                'page' => ['required', 'array'],
+                'directors' => ['nullable', 'array'],
+                'gallery' => ['nullable', 'array'],
+                'page.page' => ['required', 'string'],
+                'page.content_page_id' => ['required', 'integer'],
+                'page.title' => ['required', 'string'],
+                'page.description' => ['required', 'string'],
+                'page.banner' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+                'directors.*.director_id' => ['required', 'integer'],
+                'directors.*.name' => ['required', 'string'],
+                'directors.*.description' => ['required', 'string'],
+                'directors.*.term_start_date' => ['required', 'integer'],
+                'directors.*.term_end_date' => ['nullable', 'integer'],
+                'directors.*.profile_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+                'gallery.*.gallery_id' => ['required', 'integer'],
+                'gallery.*.image' => [
+                    // Rule::requiredIf(fn () => !CampusGallery::find(request()->input('gallery.*.gallery_id'))),
+                    'file',
+                    'image',
+                    'mimes:jpeg,png,jpg',
+                    'max:5120'
+                ],
+                'gallery.*.description' => ['nullable', 'string'],
+            ],
+            [
+                'page.content_page_id.required' => 'The page content ID is required.',
+                'page.title.required' => 'The page title is required.',
+                'page.description.required' => 'The page description is required.',
+                'page.page.required' => 'The page identifier is required.',
+                'page.banner.image' => 'The banner must be an image file.',
+                'page.banner.mimes' => 'The banner must be a file of type: jpeg, png, jpg.',
+                'page.banner.max' => 'The banner may not be greater than 5MB.',
+                'directors.*.name.required' => 'The director name is required.',
+                'directors.*.description.required' => 'The director description is required.',
+                'directors.*.term_start_date.required' => 'The director term start date is required.',
+                'directors.*.profile_image.image' => 'The director profile image must be an image file.',
+                'directors.*.profile_image.mimes' => 'The director profile image must be a file of type: jpeg, png, jpg.',
+                'directors.*.profile_image.max' => 'The director profile image may not be greater than 5MB.',
+                'gallery.*.image.required' => 'The gallery image is required.',
+                'gallery.*.image.image' => 'The gallery image must be an image file.',
+                'gallery.*.image.mimes' => 'The gallery image must be a file of type: jpeg, png, jpg.',
+                'gallery.*.image.max' => 'The gallery image may not be greater than 5MB.',
+            ]
+        );
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if (isset($validated['page']['banner'])) {
@@ -114,7 +123,7 @@ class HistoryController extends Controller
             }
         };
 
-        foreach($validated['gallery'] ?? [] as $galleryData) {
+        foreach ($validated['gallery'] ?? [] as $galleryData) {
             $galleryImagePath = null;
             $galleryImageName = null;
             if (isset($galleryData['image'])) {
