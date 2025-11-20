@@ -56,18 +56,15 @@ Route::controller(ProgramsController::class)->prefix('programs')->group(function
 Route::get('/programs/{program_name}/{area_id}', AreasController::class)
     ->name('programs.areas.show');
 
-Route::get('test/ui-testing', function () {
+/* Route::get('test/ui-testing', function () {
     return Inertia::render('test/ui-testing');
-})->name('ui-testing');
-
-
-
+})->name('ui-testing'); */
 
 // Dummy routes to be added later
 
-Route::get('accreditor', function () {
+/* Route::get('accreditor', function () {
     return Inertia::render('accreditor/accreditor-view');
-})->name('accreditor');
+})->name('accreditor'); */
 
 
 

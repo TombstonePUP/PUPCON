@@ -7,6 +7,7 @@ use App\Http\Controllers\Content\FacilitiesController;
 use App\Http\Controllers\Content\FacultyStaffController;
 use App\Http\Controllers\Content\HistoryController;
 use App\Http\Controllers\Content\LocalTaskForceController;
+use App\Http\Controllers\Content\OtherServicesController;
 use App\Http\Controllers\Content\VmgoController;
 use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Parameters\AreaParameterController;
@@ -34,9 +35,8 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         return Inertia::render('document/ratings');
     })->name('ratings');
 
-     Route::get('/other-services', function () {
-        return Inertia::render('content-management/other-services');
-    })->name('other.services');
+    Route::get('other-services', [OtherServicesController::class, 'index'])->name('other-services');
+    Route::post('other-services/update', [OtherServicesController::class, 'update'])->name('other.services.update');
 
     Route::prefix('manage-programs/{program_name}/{level_id}/{area_id}')->as('manage.')->group(function () {
         Route::controller(ImportParametersController::class)->group(function () {

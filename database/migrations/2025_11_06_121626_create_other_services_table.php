@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('other_services', function (Blueprint $table) {
             $table->id(column: 'service_id')->autoIncrement()->primary();
+            $table->string('service_name', 255);
+            $table->text('description');
             $table->text('service_link');
         });
     }

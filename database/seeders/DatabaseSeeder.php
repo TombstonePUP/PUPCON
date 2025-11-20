@@ -682,6 +682,9 @@ class DatabaseSeeder extends Seeder
             [
                 'page' => 'Mission Vision & Goals',
             ],
+            [
+                'page' => 'Other Services',
+            ],
         ];
         foreach ($content as $attributes) {
             ContentPages::factory()->create($attributes);

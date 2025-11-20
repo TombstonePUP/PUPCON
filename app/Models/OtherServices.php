@@ -19,6 +19,8 @@ class OtherServices extends Model
     protected $table = 'other_services';
     protected $primaryKey = 'service_id';
     protected $fillable = [
+        'service_name',
+        'description',
         'service_link',
     ];
 }

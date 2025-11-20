@@ -141,3 +141,10 @@ export interface Vmgo {
     avp_title?: string | null;
     avp_description?: string | null;
 }
+
+export interface OtherServices {
+    service_id: number;
+    service_name: string;
+    description: string | null;
+    service_link: string | null;
+}
