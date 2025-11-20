@@ -6,16 +6,23 @@ import React, { useRef, useState } from 'react';
 // Section Imports
 import VmgoContentSection from './vmgo-content';
 import FacilitiesSection from '@/components/content/facilities-content';
-import { Administration, CampusDirectors, CampusGallery, ContentPages, Facilities, FacultyStaff, LocalTaskForce, OrganizationTypes } from '@/types/content';
+import { Administration, CampusDirectors, CampusGallery, CampusGoals, ContentPages, Facilities, FacultyStaff, LocalTaskForce, OrganizationTypes, Pillars, Vmgo } from '@/types/content';
 import AdministrationSection from '@/components/content/admin-content';
 import AboutSection from '@/components/content/about-content';
 import FacultySection from '@/components/content/faculty-content';
 import HistorySection from '@/components/content/history-content';
 import LocalTaskForceSection from '@/components/content/local-task-force-content';
+import VmgoSection from '@/components/content/vmgo-content';
 
 interface History {
     directors: CampusDirectors[];
     gallery: CampusGallery[];
+}
+
+interface VisionMissionGoals {
+    campus_goals: CampusGoals;
+    pillars: Pillars[];
+    vmgo: Vmgo;
 }
 
 interface MainContentProps {
@@ -26,6 +33,7 @@ interface MainContentProps {
     facilities: Facilities[];
     history: History;
     local_task_force: LocalTaskForce[];
+    vmgo_data: VisionMissionGoals;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -37,7 +45,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const MainContent = ({...props}: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('about');
-    const {pages, officials, facilities, org_types, faculties, history, local_task_force} = props;
+    const {pages, officials, facilities, org_types, faculties, history, local_task_force, vmgo_data} = props;
 
     const about_page = pages.find((page: ContentPages) => page.page === "About")?? null;
     const history_page = pages.find((page: ContentPages) => page.page === "History") ?? null;
@@ -45,6 +53,7 @@ const MainContent = ({...props}: MainContentProps) => {
     const faculty_page = pages.find((page: ContentPages) => page.page === "Faculty & Staff") ?? null;
     const facility_page = pages.find((page: ContentPages) => page.page === "Facilities")?? null;
     const ltf_page = pages.find((page: ContentPages) => page.page === "Local Task Force") ?? null;
+    const vmgo_page = pages.find((page: ContentPages) => page.page === "Mission Vision & Goals") ?? null;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
@@ -103,7 +112,10 @@ const MainContent = ({...props}: MainContentProps) => {
                             </div>
 
                             <div ref={vmgoRef} className="scroll-mt-6">
-                                <VmgoContentSection />
+                                <VmgoSection
+                                    vmgo_page={vmgo_page}
+                                    vmgo_data={vmgo_data}
+                                />
                             </div>
 
                             <div ref={historyRef} className="scroll-mt-6">
@@ -114,7 +126,6 @@ const MainContent = ({...props}: MainContentProps) => {
                             </div>
 
                             <div ref={administrationRef} className="scroll-mt-6">
-                                {/*<AdminContentSection />*/}
                                 <AdministrationSection
                                     admin_page={admin_page}
                                     officials={officials}
@@ -122,7 +133,6 @@ const MainContent = ({...props}: MainContentProps) => {
                             </div>
 
                             <div ref={facultiesRef} className="scroll-mt-6">
-                            {/*<FacultyContentSection />*/}
                                 <FacultySection
                                     faculty_page={faculty_page}
                                     faculty_members={faculties}

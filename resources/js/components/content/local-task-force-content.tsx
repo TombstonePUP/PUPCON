@@ -71,7 +71,6 @@ const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) 
     });
 
     const handleUpdateLocalTaskForce = (chairmanLocal: LocalTaskForce, chairman: LtfChairmanForm) => {
-        console.log('Updating chairman:', chairman);
         setData((prevData) => {
             const chairmanForForm: LtfChairmanForm = {
                 local_task_force_id: chairmanLocal.local_task_force_id,
@@ -111,7 +110,6 @@ const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) 
     };
 
     const handleSubmit = () => {
-        console.log('Submitting form data:', data);
         post(route('content.local_task_force.update'), {
         });
     };

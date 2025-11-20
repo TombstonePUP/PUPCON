@@ -112,4 +112,32 @@ export interface Members {
     local_task_force?: LocalTaskForce;
 }
 
+export interface CampusGoals {
+    goal_id: number;
+    goal_title_eng: string;
+    goal_desc_eng: string;
+    goal_title_fil: string;
+    goal_desc_fil: string;
+}
 
+export interface Pillars {
+    pillar_id: number;
+    pillar_title: string;
+    pillar_items?: PillarItems[];
+}
+
+export interface PillarItems {
+    item_id: number;
+    pillar_id: number;
+    item_description: string;
+    pillar?: Pillars;
+}
+
+export interface Vmgo {
+    vmgo_id: number;
+    vision: string;
+    mission: string;
+    avp_link?: string | null;
+    avp_title?: string | null;
+    avp_description?: string | null;
+}

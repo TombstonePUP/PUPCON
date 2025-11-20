@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Content;
 use App\Http\Controllers\Controller;
 use App\Models\CampusDirectors;
 use App\Models\CampusGallery;
+use App\Models\CampusGoals;
 use App\Models\ContentPages;
 use App\Models\Facilities;
 use App\Models\FacultyStaff;
@@ -13,7 +14,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Organizations;
 use App\Models\OrganizationTypes;
+use App\Models\Pillars;
 use App\Models\UniversityAdministration;
+use App\Models\Vmgo;
 use Illuminate\Support\Facades\Storage;
 
 class ContentController extends Controller
@@ -77,6 +80,16 @@ class ContentController extends Controller
             return $ltf;
         });
 
+        $campus_goals = CampusGoals::all();
+        $pillars = Pillars::with('PillarItems')->get();
+        $vmgo = Vmgo::first();
+
+        $vmgo_data = [
+            'campus_goals' => $campus_goals,
+            'pillars' => $pillars,
+            'vmgo' => $vmgo,
+        ];
+
         return Inertia::render('content-management/main-content', [
             'pages' => $pages,
             'org_types' => $orgTypes,
@@ -85,6 +98,7 @@ class ContentController extends Controller
             'facilities' => $facilities,
             'history' => $history,
             'local_task_force' => $local_task_force,
+            'vmgo_data' => $vmgo_data,
         ]);
     }
 }

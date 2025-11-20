@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import SectionFooter from '@/components/ui/section-footer';
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/text-area';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
@@ -37,14 +37,14 @@ const initialPillars: Pillar[] = [
         id: 1,
         title: 'Teaching and Learning',
         items: [
-            { id: 101, description: 'World-class faculty members' }, 
-            { id: 102, description: 'Cutting-edge research facilities' }, 
+            { id: 101, description: 'World-class faculty members' },
+            { id: 102, description: 'Cutting-edge research facilities' },
         ],
     },
     {
         id: 2,
         title: 'Research and Extension',
-        items: [{ id: 201, description: 'Leadership training programs' }], 
+        items: [{ id: 201, description: 'Leadership training programs' }],
     },
     {
         id: 3,
@@ -99,7 +99,7 @@ const VmgoContentSection: React.FC = () => {
     const [editingGoal, setEditingGoal] = useState<CampusGoal | null>(null);
     const [selectedGoalId, setSelectedGoalId] = useState<number | null>(initialCampusGoals[0]?.id || null);
 
-    const [goalFormData, setGoalFormData] = useState<Omit<CampusGoal, 'id'>>({ 
+    const [goalFormData, setGoalFormData] = useState<Omit<CampusGoal, 'id'>>({
         title: '',
         description: '',
         title_filipino: '',
@@ -304,7 +304,7 @@ const VmgoContentSection: React.FC = () => {
                 ...goalFormData,
             };
             setCampusGoals([...campusGoals, newGoal]);
-            setSelectedGoalId(newId); 
+            setSelectedGoalId(newId);
         }
         resetGoalForm();
     };
@@ -412,8 +412,8 @@ const VmgoContentSection: React.FC = () => {
                                         key={pillar.id}
                                         onClick={() => {
                                             setSelectedPillarId(pillar.id);
-                                            handleCancelAddItem();
-                                            handleCancelEditItem();
+                                            // handleCancelAddItem();
+                                            // handleCancelEditItem();
                                         }}
                                         className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${
                                             pillar.id === selectedPillarId ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'

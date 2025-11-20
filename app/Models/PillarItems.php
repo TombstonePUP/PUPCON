@@ -18,7 +18,7 @@ class PillarItems extends Model
      */
     public $timestamps = false;
     protected $table = 'pillar_items';
-    protected $primaryKey = 'pillar_item_id';
+    protected $primaryKey = 'item_id';
     protected $fillable = [
         'pillar_id',
         'item_description',
