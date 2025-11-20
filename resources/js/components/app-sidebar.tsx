@@ -59,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   },
               ]
             : []),
-        ...(role === 'Admin' || role === 'Coordinator'
+        /* ...(role === 'Admin' || role === 'Coordinator'
             ? [
                   {
                       title: 'Ratings',
@@ -67,16 +67,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       icon: FileChartColumnIncreasing,
                   },
               ]
-            : []),
-        // ...(role === 'Admin' || role === 'Coordinator'
-        //     ? [
-        //           {
-        //               title: 'Content Management',
-        //               url: '/about-content',
-        //               icon: Monitor,
-        //           },
-        //       ]
-        //     : []),
+            : []), */
+        /* ...(role === 'Admin' || role === 'Coordinator'
+            ? [
+                  {
+                      title: 'Content Management',
+                      url: '/about-content',
+                      icon: Monitor,
+                  },
+              ]
+            : []), */
     ];
     const content = [
         ...(role === 'Admin' || role === 'Coordinator'
@@ -121,7 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavMain label="Accreditation" items={accre} />
-                <NavMain label="Content Management" items={content} /> 
+                <NavMain label="Content Management" items={content} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />
