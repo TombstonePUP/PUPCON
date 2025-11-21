@@ -3,30 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\AccreditationLevels;
-use App\Models\ActivityLog;
-use App\Models\AreaFiles;
 use App\Models\AreaFormCategory;
-use App\Models\AreaForms;
-use App\Models\AreaParameters;
 use App\Models\Areas;
-use App\Models\ExhibitFiles;
-use App\Models\ExhibitOutlines;
+use App\Models\AreaParameters;
 use App\Models\Exhibits;
 use App\Models\Facilities;
 use App\Models\FileStatus;
-use App\Models\LocalTaskForce;
 use App\Models\ParameterOutlineCategory;
-use App\Models\ParameterOutlines;
 use App\Models\ProgramGallery;
 use App\Models\ProgramObjectives;
 use App\Models\Programs;
+use App\Models\ParameterOutlines;
 use App\Models\Roles;
 use App\Models\User;
 use App\Models\ContentPages;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\UserAreaRoles;
-use App\Models\UserProgramRoles;
-use App\Models\UserRoles;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
@@ -44,19 +35,15 @@ class DatabaseSeeder extends Seeder
 
         $roles = [
             [
-                'role_id' => 1,
                 'role_name' => 'Admin'
             ],
             [
-                'role_id' => 2,
                 'role_name' => 'Coordinator'
             ],
             [
-                'role_id' => 3,
                 'role_name' => 'Chairman'
             ],
             [
-                'role_id' => 4,
                 'role_name' => 'Accreditor'
             ],
             /* [
@@ -67,13 +54,17 @@ class DatabaseSeeder extends Seeder
         foreach ($roles as $attributes) {
             Roles::factory()->create($attributes);
         }
+        $role1 = Roles::where('role_name', 'Admin')->first();
+        $role2 = Roles::where('role_name', 'Coordinator')->first();
+        $role3 = Roles::where('role_name', 'Chairman')->first();
+        $role4 = Roles::where('role_name', 'Accreditor')->first();
         $users = [
             [
                 'user_id' => 11111,
                 'first_name' => 'John',
                 'last_name' => 'Doe',
                 'email' => 'johndoe@admin.com',
-                'role_id' => 1, // Admin
+                'role_id' => $role1->role_id, // Admin
                 'password' => bcrypt('admin@123'),
             ],
             [
@@ -81,7 +72,7 @@ class DatabaseSeeder extends Seeder
                 'first_name' => 'Keith',
                 'last_name' => 'Lee',
                 'email' => 'keithlee@chairman.com',
-                'role_id' => 3, // Chairman
+                'role_id' => $role3->role_id, // Chairman
                 'password' => bcrypt('chairman@123'),
             ],
             [
@@ -89,7 +80,7 @@ class DatabaseSeeder extends Seeder
                 'first_name' => 'Jane',
                 'last_name' => 'Doe',
                 'email' => 'janedoe@accreditor.com',
-                'role_id' => 4, // Accreditor
+                'role_id' => $role4->role_id, // Accreditor
                 'password' => bcrypt('accreditor@123'),
             ],
         ];
@@ -100,7 +91,6 @@ class DatabaseSeeder extends Seeder
         // UserRoles::factory(10)->create();
         $programs = [
             [
-                'program_id' => 1,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Information Technology',
                 'program_description' => 'The Bachelor of Science in Information Technology (BSIT) program is a four-year degree program which focuses on the study of computer utilization and computer software to plan, install, customize, operate, manage, administer and maintain information technology infrastructure. It likewise deals with the design and development of computer-based information systems for real-world business solutions.',
@@ -108,7 +98,6 @@ class DatabaseSeeder extends Seeder
                 'color' => 'blue',
             ],
             [
-                'program_id' => 2,
                 'degree_type' => 'Bachelor of Arts',
                 'program_name' => 'Communication',
                 'program_description' => 'The Bachelor of Arts in Communication (ABComm) program is a four-year degree program that aims to develop students\' skills in various forms of communication, including interpersonal, group, and public communication. The program also emphasizes the importance of media literacy and critical thinking in today\'s information-rich society.',
@@ -116,7 +105,6 @@ class DatabaseSeeder extends Seeder
                 'color' => 'red',
             ],
             [
-                'program_id' => 3,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Business Administration',
                 'program_description' => 'The Bachelor of Science in Business Administration (BSBA) program is a four-year degree program that provides students with a comprehensive understanding of business principles and practices. The program covers various aspects of business, including management, marketing, finance, and entrepreneurship.',
@@ -124,7 +112,6 @@ class DatabaseSeeder extends Seeder
                 'color' => 'green',
             ],
             [
-                'program_id' => 4,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Psychology',
                 'program_description' => 'The Bachelor of Science in Psychology (BSP) program is a four-year degree program that focuses on the scientific study of human behavior and mental processes. The program provides students with a strong foundation in psychological theories, research methods, and practical applications.',
@@ -132,7 +119,6 @@ class DatabaseSeeder extends Seeder
                 'color' => 'pink',
             ],
             [
-                'program_id' => 5,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Accountancy',
                 'under_survey' => false,
@@ -140,7 +126,6 @@ class DatabaseSeeder extends Seeder
                 'color' => 'yellow',
             ],
             [
-                'program_id' => 6,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Entrepreneurship',
                 'under_survey' => false,
@@ -148,7 +133,6 @@ class DatabaseSeeder extends Seeder
                 'color' => 'lightgreen',
             ],
             [
-                'program_id' => 7,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Education Major in English',
                 'under_survey' => false,
@@ -156,7 +140,6 @@ class DatabaseSeeder extends Seeder
                 'color' => 'lightblue',
             ],
             [
-                'program_id' => 8,
                 'degree_type' => 'Bachelor of Science',
                 'program_name' => 'Hospitality Management',
                 'under_survey' => false,
@@ -164,7 +147,6 @@ class DatabaseSeeder extends Seeder
                 'color' => 'lightred',
             ],
             [
-                'program_id' => 9,
                 'degree_type' => 'Bachelor of Science in Business Administration',
                 'program_name' => 'Financial Management',
                 'under_survey' => false,
@@ -176,24 +158,34 @@ class DatabaseSeeder extends Seeder
             Programs::factory()->create($attributes);
         }
 
+        $program1 = Programs::where('program_name', 'Information Technology')->first();
+        $program2 = Programs::where('program_name', 'Communication')->first();
+        $program3 = Programs::where('program_name', 'Business Administration')->first();
+        $program4 = Programs::where('program_name', 'Psychology')->first();
+        $program5 = Programs::where('program_name', 'Accountancy')->first();
+        $program6 = Programs::where('program_name', 'Entrepreneurship')->first();
+        $program7 = Programs::where('program_name', 'Education Major in English')->first();
+        $program8 = Programs::where('program_name', 'Hospitality Management')->first();
+        $program9 = Programs::where('program_name', 'Financial Management')->first();
+
         $levels = [
             [
-                'accreditation_level_id' => 1,
-                'program_id' => 1,
+                // 'accreditation_level_id' => 1,
+                'program_id' => $program1->program_id,
                 'level' => 2,
                 'remarks' => 'Passed',
                 'is_active' => true,
             ],
             [
-                'accreditation_level_id' => 2,
-                'program_id' => 1,
+                // 'accreditation_level_id' => 2,
+                'program_id' => $program1->program_id,
                 'level' => 3,
                 'remarks' => 'Passed',
                 'is_active' => true,
             ],
             [
-                'accreditation_level_id' => 3,
-                'program_id' => 4,
+                // 'accreditation_level_id' => 3,
+                'program_id' => $program4->program_id,
                 'level' => 3,
                 'remarks' => 'Ongoing Survey',
                 'is_active' => true,
@@ -205,8 +197,8 @@ class DatabaseSeeder extends Seeder
 
         $programGallery = [];
         $programsGalleryName = [
-            ['id' => 1, 'folder' => 'it', 'count' => 6],
-            ['id' => 4, 'folder' => 'psych', 'count' => 6],
+            ['id' => $program1->program_id, 'folder' => 'it', 'count' => 6],
+            ['id' => $program4->program_id, 'folder' => 'psych', 'count' => 6],
         ];
 
         foreach ($programsGalleryName as $program) {
@@ -223,143 +215,150 @@ class DatabaseSeeder extends Seeder
             ProgramGallery::factory()->create($attributes);
         }
 
+        $level1 = AccreditationLevels::where('program_id', $program1->program_id)
+            ->where('level', 2)->first();
+        $level2 = AccreditationLevels::where('program_id', $program1->program_id)
+            ->where('level', 3)->first();
+        $level3 = AccreditationLevels::where('program_id', $program4->program_id)
+            ->where('level', 3)->first();
+
         $areas = [
             [
-                'area_id' => 1,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 1,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 1,
                 'area_name' => 'Mission, Goals, and Objectives',
                 'area_description' => 'The area of Vision, Mission, Goals, and Objectives is the most fundamental of all the (10) areas to be surveyed. Everything in the Institution is justified only to the extent that it realizes its vision and mission. It is essential therefore, for the Institution to formulate the vision and mission which should be the bases of all its operations. The Institution is judged by the degree to which these are attained, not in comparison with others.',
             ],
             [
-                'area_id' => 2,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 2,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 2,
                 'area_name' => 'Faculty',
                 'area_description' => 'The standard or quality of an institution or program is greatly measured by the qualifications of its faculty. In this light, the faculty should be composed of competent members in terms of academic qualifications, experience and professional expertise. In addition, they should manifest desirable personal qualities and high level of professionalism. To be effective, faculty members should be properly compensated and taken care of. They must be given opportunities for continuous personal and professional development. A policy of fair and equitable distribution of teaching assignments and workload should be practiced. Likewise, objective and clear promotion criteria/ scheme should be adopted by the institution.',
             ],
             [
-                'area_id' => 3,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 3,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 3,
                 'area_name' => 'Curriculum and Instruction',
                 'area_description' => 'Curriculum and instruction occupy center stage in any educational program. These seek to research, develop, and implement curriculum changes that enhance student achievement within and outside of institutions. How students learn and the best ways to educate deserve much consideration.',
             ],
             [
-                'area_id' => 4,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 4,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 4,
                 'area_name' => 'Support to Students',
                 'area_description' => "Students are the raison d' etre for the establishment of learning institutions. Thus, the school has the responsibility to support the family and other social institutions in the development of the total personality of the student. Towards this end a program of student services is designed as an integral part of institutional effectiveness. All activities should be well planned and implemented to assist the student to attain his/her maximum potential and become a worthy contributor in his/her social environment. Student support and services complement the Academic Program.",
             ],
             [
-                'area_id' => 5,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 5,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 5,
                 'area_name' => 'Research',
                 'area_description' => 'Research is an avenue through which new knowledge is discovered, applied or verified and through which appropriate technologies are generated. Thus, it is a basic requirement for an educational institution to have a firmly established research and development program. Its thrusts and priorities should be congruent with those identified in the development plans of regional and national R and D-oriented agencies such as NEDA, DOST, CHED, etc. The institutional leadership in research should be proactive and developmental in orientation. It must provide adequate and sustained budget allocation annually for the academic Unit. Adequate physical facilities, laboratory equipment and supplies for research should be provided. The Academic unit has to maintain strong research linkages with various R and D agencies locally and internationally.',
             ],
             [
-                'area_id' => 6,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 6,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 6,
                 'area_name' => 'Extension and Community Involvement',
                 'area_description' => "The extension function makes the institution's presence felt in the community. It involves the application of existing and new knowledge and technology and those generated in the Institution to improve the quality of life of the people. Through the extension program, people are empowered with appropriate knowledge, attitudes and skills. Thus, extension services cater to various aspects of the community life, e.g., economic growth, promotion of health, environmental management, and social transformation. The Institution plans and implements an extension program that is need and client-based. This program should have a budgetary support and other resource allocation. The faculty members may serve as experts, consultants, organizers, facilitators, coordinators, service providers, and change agents in the community as forms of extension and community involvement. Careful planning and coordination with other community outreach agencies should be considered to avoid duplication of services offered to the clientele.",
             ],
             [
-                'area_id' => 7,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 7,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 7,
                 'area_name' => 'Library',
                 'area_description' => 'The library is the heart of any learning institution. It is a synergy of people, hardware and software whose purpose is to assist clients in using knowledge and technology to transform and improve their lives. Information and knowledge are essential to the attainment of institutional goals. The ways in which they are selected, acquired, stored, accessed and distributed within the Institution will, in large measure, determine the success of teaching, research and other academic endeavors. The Institution thrives on clear policies concerning access to, and provision of, information. Thus, the library must take an active role in the development and implementation of these policies. Each institution has a unique vision, mission, goals and objectives. These are influenced by its philosophy, geographical location and social responsibility. Similarly, as a subsystem of the Institution, the library has a unique role to perform.',
             ],
             [
-                'area_id' => 8,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 8,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 8,
                 'area_name' => 'Library',
                 'area_description' => 'The library is the heart of any learning institution. It is a synergy of people, hardware and software whose purpose is to assist clients in using knowledge and technology to transform and improve their lives. Information and knowledge are essential to the attainment of institutional goals. The ways in which they are selected, acquired, stored, accessed and distributed within the Institution will, in large measure, determine the success of teaching, research and other academic endeavors. The Institution thrives on clear policies concerning access to, and provision of, information. Thus, the library must take an active role in the development and implementation of these policies. Each institution has a unique vision, mission, goals and objectives. These are influenced by its philosophy, geographical location and social responsibility. Similarly, as a subsystem of the Institution, the library has a unique role to perform.',
             ],
             [
-                'area_id' => 9,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 9,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 9,
                 'area_name' => 'Laboratories',
                 'area_description' => 'Laboratories are included in the support systems for any academic program. Broadly defined, they cover science laboratories, speech laboratories, demonstration farms, shops, and other facilities for practicum activities essential to the successful implementation of curricular programs inclusive of their use and functions.',
             ],
             [
-                'area_id' => 10,
-                'accreditation_level_id' => 1,
+                // 'area_id' => 10,
+                'accreditation_level_id' => $level1->accreditation_level_id,
                 'area_number' => 10,
                 'area_name' => 'Administration',
                 'area_description' => 'The administration is the engine of the institution in the attainment of its vision, mission, goals and objectives. It is concerned with the general affairs of the institution and its organizational performance. Thus, the administration adopts institutional processes and ensures that said processes are satisfactorily implemented.',
             ],
             [
-                'area_id' => 11,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 11,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 1,
                 'area_name' => 'Mission, Goals, and Objectives',
                 'area_description' => 'The area of Vision, Mission, Goals, and Objectives is the most fundamental of all the (10) areas to be surveyed. Everything in the Institution is justified only to the extent that it realizes its vision and mission. It is essential therefore, for the Institution to formulate the vision and mission which should be the bases of all its operations. The Institution is judged by the degree to which these are attained, not in comparison with others.',
             ],
             [
-                'area_id' => 12,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 12,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 2,
                 'area_name' => 'Faculty',
                 'area_description' => 'The standard or quality of an institution or program is greatly measured by the qualifications of its faculty. In this light, the faculty should be composed of competent members in terms of academic qualifications, experience and professional expertise. In addition, they should manifest desirable personal qualities and high level of professionalism. To be effective, faculty members should be properly compensated and taken care of. They must be given opportunities for continuous personal and professional development. A policy of fair and equitable distribution of teaching assignments and workload should be practiced. Likewise, objective and clear promotion criteria/ scheme should be adopted by the institution.',
             ],
             [
-                'area_id' => 13,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 13,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 3,
                 'area_name' => 'Curriculum and Instruction',
                 'area_description' => 'Curriculum and instruction occupy center stage in any educational program. These seek to research, develop, and implement curriculum changes that enhance student achievement within and outside of institutions. How students learn and the best ways to educate deserve much consideration.',
             ],
             [
-                'area_id' => 14,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 14,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 4,
                 'area_name' => 'Support to Students',
                 'area_description' => "Students are the raison d' etre for the establishment of learning institutions. Thus, the school has the responsibility to support the family and other social institutions in the development of the total personality of the student. Towards this end a program of student services is designed as an integral part of institutional effectiveness. All activities should be well planned and implemented to assist the student to attain his/her maximum potential and become a worthy contributor in his/her social environment. Student support and services complement the Academic Program.",
             ],
             [
-                'area_id' => 15,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 15,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 5,
                 'area_name' => 'Research',
                 'area_description' => 'Research is an avenue through which new knowledge is discovered, applied or verified and through which appropriate technologies are generated. Thus, it is a basic requirement for an educational institution to have a firmly established research and development program. Its thrusts and priorities should be congruent with those identified in the development plans of regional and national R and D-oriented agencies such as NEDA, DOST, CHED, etc. The institutional leadership in research should be proactive and developmental in orientation. It must provide adequate and sustained budget allocation annually for the academic Unit. Adequate physical facilities, laboratory equipment and supplies for research should be provided. The Academic unit has to maintain strong research linkages with various R and D agencies locally and internationally.',
             ],
             [
-                'area_id' => 16,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 16,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 6,
                 'area_name' => 'Extension and Community Involvement',
                 'area_description' => "The extension function makes the institution's presence felt in the community. It involves the application of existing and new knowledge and technology and those generated in the Institution to improve the quality of life of the people. Through the extension program, people are empowered with appropriate knowledge, attitudes and skills. Thus, extension services cater to various aspects of the community life, e.g., economic growth, promotion of health, environmental management, and social transformation. The Institution plans and implements an extension program that is need and client-based. This program should have a budgetary support and other resource allocation. The faculty members may serve as experts, consultants, organizers, facilitators, coordinators, service providers, and change agents in the community as forms of extension and community involvement. Careful planning and coordination with other community outreach agencies should be considered to avoid duplication of services offered to the clientele.",
             ],
             [
-                'area_id' => 17,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 17,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 7,
                 'area_name' => 'Library',
                 'area_description' => 'The library is the heart of any learning institution. It is a synergy of people, hardware and software whose purpose is to assist clients in using knowledge and technology to transform and improve their lives. Information and knowledge are essential to the attainment of institutional goals. The ways in which they are selected, acquired, stored, accessed and distributed within the Institution will, in large measure, determine the success of teaching, research and other academic endeavors. The Institution thrives on clear policies concerning access to, and provision of, information. Thus, the library must take an active role in the development and implementation of these policies. Each institution has a unique vision, mission, goals and objectives. These are influenced by its philosophy, geographical location and social responsibility. Similarly, as a subsystem of the Institution, the library has a unique role to perform.',
             ],
             [
-                'area_id' => 18,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 18,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 8,
                 'area_name' => 'Library',
                 'area_description' => 'The library is the heart of any learning institution. It is a synergy of people, hardware and software whose purpose is to assist clients in using knowledge and technology to transform and improve their lives. Information and knowledge are essential to the attainment of institutional goals. The ways in which they are selected, acquired, stored, accessed and distributed within the Institution will, in large measure, determine the success of teaching, research and other academic endeavors. The Institution thrives on clear policies concerning access to, and provision of, information. Thus, the library must take an active role in the development and implementation of these policies. Each institution has a unique vision, mission, goals and objectives. These are influenced by its philosophy, geographical location and social responsibility. Similarly, as a subsystem of the Institution, the library has a unique role to perform.',
             ],
             [
-                'area_id' => 19,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 19,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 9,
                 'area_name' => 'Laboratories',
                 'area_description' => 'Laboratories are included in the support systems for any academic program. Broadly defined, they cover science laboratories, speech laboratories, demonstration farms, shops, and other facilities for practicum activities essential to the successful implementation of curricular programs inclusive of their use and functions.',
             ],
             [
-                'area_id' => 20,
-                'accreditation_level_id' => 3,
+                // 'area_id' => 20,
+                'accreditation_level_id' => $level3->accreditation_level_id,
                 'area_number' => 10,
                 'area_name' => 'Administration',
                 'area_description' => 'The administration is the engine of the institution in the attainment of its vision, mission, goals and objectives. It is concerned with the general affairs of the institution and its organizational performance. Thus, the administration adopts institutional processes and ensures that said processes are satisfactorily implemented.',
@@ -368,14 +367,18 @@ class DatabaseSeeder extends Seeder
         foreach ($areas as $attributes) {
             Areas::factory()->create($attributes);
         }
+        $user1 = User::where('user_id', 22222)->first();
+        $areaRole1 = Areas::where('area_name', 'Administration')->first();
+        $areaRole2 = Areas::where('area_name', 'Laboratories')->first();
+        // dd($areaRole1->get());
         $userAreaRoles = [
             [
-                'user_id' => 22222,
-                'area_id' => 10,
+                'user_id' => $user1->user_id,
+                'area_id' => $areaRole1->area_id,
             ],
             [
-                'user_id' => 22222,
-                'area_id' => 9,
+                'user_id' => $user1->user_id,
+                'area_id' => $areaRole2->area_id,
             ],
             /* [
                 'user_id' => 33333,
@@ -393,35 +396,35 @@ class DatabaseSeeder extends Seeder
 
         $objectives = [
             [
-                'program_id' => 1,
+                'program_id' => $program1->program_id,
                 'objective_description' => "Conduct a self-assessment to determine the level of entrepreneurial competencies",
             ],
             [
-                'program_id' => 1,
+                'program_id' => $program1->program_id,
                 'objective_description' => "Prepare and comply with requirements for business operation",
             ],
             [
-                'program_id' => 1,
+                'program_id' => $program1->program_id,
                 'objective_description' => "Prepare a business plan",
             ],
             [
-                'program_id' => 1,
+                'program_id' => $program1->program_id,
                 'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
             ],
             [
-                'program_id' => 4,
+                'program_id' => $program4->program_id,
                 'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
             ],
             [
-                'program_id' => 4,
+                'program_id' => $program4->program_id,
                 'objective_description' => "Prepare and comply with requirements for business operation",
             ],
             [
-                'program_id' => 4,
+                'program_id' => $program4->program_id,
                 'objective_description' => "Prepare a business plan",
             ],
             [
-                'program_id' => 4,
+                'program_id' => $program4->program_id,
                 'objective_description' => "Mobilize the necessary human, financial, logistical and technical resources to implement the business plan",
             ],
         ];
@@ -429,35 +432,39 @@ class DatabaseSeeder extends Seeder
             ProgramObjectives::factory()->create($attributes);
         }
 
+        $area1 = Areas::where('area_name', 'Mission, Goals, and Objectives')
+            ->where('accreditation_level_id', $level1->accreditation_level_id)->first();
+        $area4 = Areas::where('area_name', 'Support to Students')
+            ->where('accreditation_level_id', $level1->accreditation_level_id)->first();
         $areaparameter = [
             [
-                'area_parameter_id' => 1,
-                'area_id' => 1,
+                // 'area_parameter_id' => 1,
+                'area_id' => $area1->area_id,
                 'parameter_name' => 'A',
                 'parameter_description' => 'Statement of Vision, Mission, Goals, and Objectives'
             ],
             [
-                'area_parameter_id' => 2,
-                'area_id' => 1,
+                // 'area_parameter_id' => 2,
+                'area_id' => $area1->area_id,
                 'parameter_name' => 'B',
                 'parameter_description' => 'Dissemination and Acceptability'
             ],
             [
-                'area_parameter_id' => 3,
-                'area_id' => 4,
+                // 'area_parameter_id' => 3,
+                'area_id' => $area4->area_id,
                 'parameter_name' => 'A',
                 'parameter_description' => 'Statement of Vision, Mission, Goals, and Objectives'
             ],
             [
-                'area_parameter_id' => 4,
-                'area_id' => 4,
+                // 'area_parameter_id' => 4,
+                'area_id' => $area4->area_id,
                 'parameter_name' => 'B',
                 'parameter_description' => 'Dissemination and Acceptability'
             ],
         ];
-        /* foreach ($areaparameter as $attributes) {
+        foreach ($areaparameter as $attributes) {
             AreaParameters::factory()->create($attributes);
-        } */
+        }
 
         $parameterCategory = [
             [
@@ -481,80 +488,126 @@ class DatabaseSeeder extends Seeder
             ParameterOutlineCategory::factory()->create($attributes);
         }
 
+        $parameter1 = AreaParameters::where('area_id', $area1->area_id)
+            ->where('parameter_name', 'A')->first();
+        $parameter3 = AreaParameters::where('area_id', $area4->area_id)
+            ->where('parameter_name', 'A')->first();
         $parameterOutlines = [
             [
-                'area_parameter_id' => 1,
+                'area_parameter_id' => $parameter1->area_parameter_id,
                 'parameter_outline_category_id' => 2,
                 'outline_number' => '1.1',
                 'outline_description' => 'The institution has a system of determining the Vision and Mission.',
                 'container' => false
             ],
             [
-                'area_parameter_id' => 1,
+                'area_parameter_id' => $parameter1->area_parameter_id,
                 'parameter_outline_category_id' => 2,
                 'outline_number' => '1.2',
                 'outline_description' => 'The Vision clearly reflects what the Institution hopes to become in the future.',
-                'container' => false
+                // 'container' => false
             ],
             [
-                'area_parameter_id' => 1,
+                'area_parameter_id' => $parameter1->area_parameter_id,
                 'parameter_outline_category_id' => 3,
                 'outline_number' => '1.1',
                 'outline_description' => 'The Institution/College conducts review on the statement of the Vision and Mission as well as its goals and program objectives for the approval of authorities concerned.',
                 'container' => false
             ],
             [
-                'area_parameter_id' => 1,
+                'area_parameter_id' => $parameter1->area_parameter_id,
                 'parameter_outline_category_id' => 3,
                 'outline_number' => '1.2',
                 'outline_description' => 'The College/Academic Unit follows a system of formulating its goals and the objectives of the program.',
                 'container' => false
             ],
             [
-                'area_parameter_id' => 1,
+                'area_parameter_id' => $parameter1->area_parameter_id,
                 'parameter_outline_category_id' => 4,
                 'outline_number' => '1',
                 'outline_description' => 'The VMGO are crafted and duly approved by BOR/BOT.',
                 'container' => false
             ], [
-                'area_parameter_id' => 3,
+                'area_parameter_id' => $parameter3->area_parameter_id,
                 'parameter_outline_category_id' => 2,
                 'outline_number' => '1.1',
                 'outline_description' => 'The institution has a system of determining the Vision and Mission.',
                 'container' => false
             ],
             [
-                'area_parameter_id' => 3,
+                'area_parameter_id' => $parameter3->area_parameter_id,
                 'parameter_outline_category_id' => 2,
                 'outline_number' => '1.2',
                 'outline_description' => 'The Vision clearly reflects what the Institution hopes to become in the future.',
                 'container' => false
             ],
             [
-                'area_parameter_id' => 3,
+                'area_parameter_id' => $parameter3->area_parameter_id,
                 'parameter_outline_category_id' => 3,
                 'outline_number' => '1.1',
                 'outline_description' => 'The Institution/College conducts review on the statement of the Vision and Mission as well as its goals and program objectives for the approval of authorities concerned.',
                 'container' => false
             ],
             [
-                'area_parameter_id' => 3,
+                'area_parameter_id' => $parameter3->area_parameter_id,
+                'parameter_outline_category_id' => 3,
+                'outline_number' => '1.1',
+                'outline_description' => 'The Institution/College conducts review on the statement of the Vision and Mission as well as its goals and program objectives for the approval of authorities concerned.',
+                'container' => false
+            ],
+            [
+                'area_parameter_id' => $parameter3->area_parameter_id,
                 'parameter_outline_category_id' => 3,
                 'outline_number' => '1.2',
                 'outline_description' => 'The College/Academic Unit follows a system of formulating its goals and the objectives of the program.',
                 'container' => false
             ],
             [
-                'area_parameter_id' => 3,
+                'area_parameter_id' => $parameter3->area_parameter_id,
                 'parameter_outline_category_id' => 3,
                 'outline_number' => '1',
                 'outline_description' => 'The VMGO are crafted and duly approved by BOR/BOT.',
                 'container' => false
             ],
         ];
-        /* foreach ($parameterOutlines as $attributes) {
+        foreach ($parameterOutlines as $attributes) {
             ParameterOutlines::factory()->create($attributes);
-        } */
+        }
+        // AreaForms::factory(20)->create();
+        // AreaFiles::factory(200)->create();
+        Exhibits::factory(10)->create();
+        // ExhibitOutlines::factory(10)->create();
+        // ExhibitFiles::factory(10)->create();
+
+        $bsitFaculties = [
+            'Elias Austria',
+            'Alfeo Mendoza',
+            'Alfred Pagalilawan',
+        ];
+
+        $psychFaculties = [
+            'Angeline Pabilona',
+            'Anna Madonna Arellano',
+            'Ian Llenares'
+        ];
+
+        $fullTime = [
+            'Elias Austria',
+            'Alfred Pagalilawan',
+            'Rogie Delena',
+            'Peter Biason',
+            'Lemuel Damole',
+            'Ronette Espiritu',
+            'Anna Madonna Arellano',
+            'Cecilia Reyes Alagon',
+            'Ian Saguindan',
+            'Erwin Dela Cruz',
+            'Maria Carina Corpuz',
+            'Meckmack Nartea',
+            'Rizza Valdez Devera',
+            'Angeline Pabilona',
+            'Jane Mendoza',
+        ];
 
         $file_status = [
             ['status_name' => 'Approved'],
@@ -632,11 +685,11 @@ class DatabaseSeeder extends Seeder
 
             // Determine program based on name
             if (in_array($fullName, $psychFaculties)) {
-                $programId = 4; // Psychology
+                $programId = $program4->program_id; // Psychology
             } elseif (in_array($fullName, $bsitFaculties)) {
-                $programId = 1; // BSIT
+                $programId = $program1->program_id; // BSIT
             } else {
-                $programId = 9; // Unassigned or Other Program
+                $programId = null;
             }
 
             if (in_array($fullName, $fullTime)) {

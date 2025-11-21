@@ -1,23 +1,12 @@
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { Edit, NotebookIcon, PlusCircleIcon } from 'lucide-react';
+import ProgramDialog from '@/components/dialogs/content/programs/program-dialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -35,17 +24,26 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterDegree, setFilterDegree] = useState<string>('all');
 
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogType, setDialogType] = useState<'program' | 'level' | null>(null);
+    const [dialogAction, setDialogAction] = useState<'add' | 'edit' | null>(null);
+
     const [addLevelDialogOpen, setAddLevelDialogOpen] = useState(false);
     const [startLevelConfirmOpen, setStartLevelConfirmOpen] = useState(false);
-    const [editProgramDialogOpen, setEditProgramDialogOpen] = useState(false);
 
     const [programToStart, setProgramToStart] = useState<PerProgramUnderSurvey | null>(null);
-    const [programToEdit, setProgramToEdit] = useState<PerProgramUnderSurvey | null>(null);
-    const [selectedProgramId, setSelectedProgramId] = useState<string>('');
+    const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
+    const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
+
+    /* const hasLevels = selectedProgram && selectedProgram.levels.length > 0;
+    const currentLevelName = hasLevels ? 'Level II' : 'Not Accredited';
+    const currentProgramStatus = selectedProgram ? currentLevelName : 'Select a program';
+
+    const currentProgramStatusClass = selectedProgram ? (hasLevels ? 'text-gray-700 font-medium' : 'text-gray-500') : 'text-gray-500'; */
 
     useEffect(() => {
         if (programToStart) {
-            setSelectedProgramId(String(programToStart.program_id));
+            setSelectedProgramId(programToStart.program_id);
         }
     }, [programToStart]);
 
@@ -70,12 +68,19 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         }
     };
 
-    const selectedProgram = programs.find((p) => String(p.program_id) === selectedProgramId);
-    const hasLevels = selectedProgram && selectedProgram.levels.length > 0;
-    const currentLevelName = hasLevels ? 'Level II' : 'Not Accredited';
-    const currentProgramStatus = selectedProgram ? currentLevelName : 'Select a program';
+    const handleAddProgram = () => {
+        setDialogType('program');
+        setDialogAction('add');
+        setDialogOpen(true);
+        setSelectedProgramId(null);
+    }
 
-    const currentProgramStatusClass = selectedProgram ? (hasLevels ? 'text-gray-700 font-medium' : 'text-gray-500') : 'text-gray-500';
+    const handleEditProgram = (program: PerProgramUnderSurvey) => {
+        setDialogType('program');
+        setDialogAction('edit');
+        setDialogOpen(true);
+        setSelectedProgramId(program.program_id);
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -162,124 +167,18 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             <p className="text-sm font-medium text-gray-600">Program Actions</p>
                         </div>
                         <div className="flex gap-2">
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button variant="noborder" className="flex-1">
-                                        <NotebookIcon className="h-6 w-6 text-white" />
-                                        Add Program
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-md">
-                                    <DialogHeader>
-                                        <DialogTitle className="text-lg font-medium text-gray-900">Add Program</DialogTitle>
-                                        <DialogDescription className="text-sm text-gray-500">
-                                            Create a new academic program for PUP San Juan
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <div className="flex flex-col gap-4">
-                                        <div className="space-y-2">
-                                            <Label className="mb-2 block text-sm font-medium text-gray-700">Degree Type</Label>
-                                            <Select defaultValue="">
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Select degree type" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="Bachelor Science">Bachelor of Science</SelectItem>
-                                                    <SelectItem value="Bachelor Arts">Bachelor of Arts</SelectItem>
-                                                    <SelectItem value="Diploma">Diploma</SelectItem>
-                                                    <SelectItem value="Certificate">Certificate</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label className="mb-2 block text-sm font-medium text-gray-700">Program Name</Label>
-                                            <Input
-                                                type="text"
-                                                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
-                                                placeholder="e.g., Computer Science, Business Administration"
-                                            />
-                                        </div>
-                                    </div>
-                                    <DialogFooter>
-                                        <DialogClose asChild>
-                                            <Button variant="outline">Cancel</Button>
-                                        </DialogClose>
-                                        <Button variant="noborder">Submit</Button>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-
-                            <Dialog
-                                open={addLevelDialogOpen}
-                                onOpenChange={(open) => {
-                                    setAddLevelDialogOpen(open);
-                                    if (!open) {
-                                        setProgramToStart(null);
-                                        setSelectedProgramId('');
-                                    }
-                                }}
+                            <Button
+                                variant="noborder"
+                                className="flex-1"
+                                onClick={handleAddProgram}
                             >
-                                <DialogTrigger asChild>
-                                    <Button variant="noborder" className="flex-1">
-                                        <PlusCircleIcon className="h-6 w-6 text-white" />
-                                        Add Level
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-md">
-                                    <DialogHeader>
-                                        <DialogTitle className="text-lg font-medium text-gray-900">Add Program Level</DialogTitle>
-                                        <DialogDescription className="text-sm text-gray-500">
-                                            Start a new accreditation level for an existing program.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <div className="flex flex-col gap-4">
-                                        <div className="space-y-2">
-                                            <Label className="mb-2 block text-sm font-medium text-gray-700">Program</Label>
-                                            <Select value={selectedProgramId} onValueChange={setSelectedProgramId}>
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Select a program" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {programs.map((program) => (
-                                                        <SelectItem key={program.program_id} value={String(program.program_id)}>
-                                                            {program.program_name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-2">
-                                                <Label className="mb-2 block text-sm font-medium text-gray-700">Current Status</Label>
-                                                <div className="flex h-10 w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3">
-                                                    <span className={`text-sm ${currentProgramStatusClass}`}>{currentProgramStatus}</span>
-                                                </div>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label className="mb-2 block text-sm font-medium text-gray-700">New Level</Label>
-                                                <Select defaultValue="">
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select level" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="Candidate">Candidate</SelectItem>
-                                                        <SelectItem value="Level I">Level I</SelectItem>
-                                                        <SelectItem value="Level II">Level II</SelectItem>
-                                                        <SelectItem value="Level III">Level III</SelectItem>
-                                                        <SelectItem value="Level IV">Level IV</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <DialogFooter>
-                                        <DialogClose asChild>
-                                            <Button variant="outline">Cancel</Button>
-                                        </DialogClose>
-                                        <Button variant="noborder">Submit</Button>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
+                                <NotebookIcon className="h-6 w-6 text-white" />
+                                Add Program
+                            </Button>
+                            <Button variant="noborder" className="flex-1">
+                                <PlusCircleIcon className="h-6 w-6 text-white" />
+                                Add Level
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -304,8 +203,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                             className="absolute top-4 right-4 h-8 w-8 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                setProgramToEdit(program);
-                                                setEditProgramDialogOpen(true);
+                                                handleEditProgram(program);
                                             }}
                                         >
                                             <Edit className="h-4 w-4 text-gray-500" />
@@ -371,7 +269,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     </DialogContent>
                 </Dialog>
 
-                <Dialog
+                {/* <Dialog
                     open={editProgramDialogOpen}
                     onOpenChange={(open) => {
                         setEditProgramDialogOpen(open);
@@ -417,7 +315,14 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             <Button variant="noborder">Save Changes</Button>
                         </DialogFooter>
                     </DialogContent>
-                </Dialog>
+                </Dialog> */}
+                {dialogOpen && dialogType === 'program' && dialogAction && (
+                    <ProgramDialog
+                        type={dialogAction}
+                        program={dialogAction === 'edit' ? selectedProgram : null}
+                        onClose={() => setDialogOpen(false)}
+                    />
+                )}
             </div>
         </AppLayout>
     );

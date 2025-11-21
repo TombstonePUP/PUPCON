@@ -13,6 +13,7 @@ use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Parameters\AreaParameterController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
 use App\Http\Controllers\Parameters\ImportParametersController;
+use App\Http\Controllers\Programs\ManageProgramController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -37,6 +38,11 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
 
     Route::get('other-services', [OtherServicesController::class, 'index'])->name('other-services');
     Route::post('other-services/update', [OtherServicesController::class, 'update'])->name('other.services.update');
+
+    Route::controller(ManageProgramController::class)->group(function () {
+        Route::post('manage-programs/store', 'store')->name('manage.program.store');
+        Route::patch('manage-programs/{program_id}/update', 'update')->name('manage.program.update');
+    });
 
     Route::prefix('manage-programs/{program_name}/{level_id}/{area_id}')->as('manage.')->group(function () {
         Route::controller(ImportParametersController::class)->group(function () {
