@@ -32,6 +32,7 @@ class Programs extends Model
         'overview_description',
         'page_banner_image_name',
         'page_banner_image_path',
+        'is_active',
         'color'
     ];
 
@@ -88,5 +89,13 @@ class Programs extends Model
     public function Objectives()
     {
         return $this->hasMany(ProgramObjectives::class, 'program_id', 'program_id');
+    }
+
+
+    public function latestLevel()
+    {
+        return $this->hasOne(AccreditationLevels::class, 'program_id', 'program_id')
+            ->with('Areas')
+            ->orderBy('survey_date', 'desc');
     }
 }

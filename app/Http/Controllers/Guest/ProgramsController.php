@@ -22,6 +22,7 @@ class ProgramsController extends Controller
         $programs = Programs::select('program_id', 'degree_type', 'program_name', 'program_description', 'program_image_name', 'program_image_path')
             ->with('Levels')
             ->where('under_survey', true)
+            ->where('is_active', true)
             ->get();
 
         $programs = $programs->map(function ($program) {
@@ -38,6 +39,7 @@ class ProgramsController extends Controller
     {
         $programs = Programs::select('program_id', 'degree_type', 'program_name', 'program_description', 'accreditation_level', 'program_image_name', 'program_image_path')
             ->where('under_survey', true)
+            ->where('is_active', true)
             ->get();
 
         $programs = $programs->map(function ($program) {

@@ -24,7 +24,7 @@ class UserController extends Controller
             ->where('under_survey', true)
             ->with([
                 'Levels' => function ($query) {
-                    $query->select('accreditation_level_id', 'program_id', 'level')
+                    $query->select('accreditation_level_id', 'program_id', 'level', 'is_active')
                         ->where('is_active', true);
                 },
                 'Levels.Areas' => function ($query) {

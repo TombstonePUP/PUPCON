@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 
+import DeleteProgram from '@/components/dialogs/content/programs/delete-program';
+import EndSurveyDialog from '@/components/dialogs/content/programs/end-survey-dialog';
+import ProgramDialog from '@/components/dialogs/content/programs/program-dialog';
+import ProgramLevelDialog from '@/components/dialogs/content/programs/program-level-dialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
-import { Edit, NotebookIcon, PlusCircleIcon } from 'lucide-react';
-import ProgramDialog from '@/components/dialogs/content/programs/program-dialog';
+import { BookCheck, Edit, NotebookIcon, PlusCircleIcon, Trash2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -21,25 +25,22 @@ interface ProgramsProps {
 
 export default function ManagePrograms({ programs }: ProgramsProps) {
     const { auth } = usePage().props;
+    const user = auth.user;
+    const role = user.roles.role_name;
+    const assignedPrograms = auth.programs;
+
     const [searchTerm, setSearchTerm] = useState('');
     const [filterDegree, setFilterDegree] = useState<string>('all');
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogType, setDialogType] = useState<'program' | 'level' | null>(null);
-    const [dialogAction, setDialogAction] = useState<'add' | 'edit' | null>(null);
+    const [dialogAction, setDialogAction] = useState<'add' | 'edit' | 'delete' | 'end' | null>(null);
 
-    const [addLevelDialogOpen, setAddLevelDialogOpen] = useState(false);
     const [startLevelConfirmOpen, setStartLevelConfirmOpen] = useState(false);
 
     const [programToStart, setProgramToStart] = useState<PerProgramUnderSurvey | null>(null);
     const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
     const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
-
-    /* const hasLevels = selectedProgram && selectedProgram.levels.length > 0;
-    const currentLevelName = hasLevels ? 'Level II' : 'Not Accredited';
-    const currentProgramStatus = selectedProgram ? currentLevelName : 'Select a program';
-
-    const currentProgramStatusClass = selectedProgram ? (hasLevels ? 'text-gray-700 font-medium' : 'text-gray-500') : 'text-gray-500'; */
 
     useEffect(() => {
         if (programToStart) {
@@ -55,11 +56,11 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         }) || [];
 
     const handleProgramClick = (program: PerProgramUnderSurvey) => {
-        if (program.levels.length > 0) {
+        if (program.latest_level) {
             router.visit(
                 route('manage.program', {
                     program_name: program.program_link,
-                    level_id: program.levels[0]?.accreditation_level_id || 0,
+                    level_id: program.latest_level?.accreditation_level_id || 0,
                 }),
             );
         } else {
@@ -68,19 +69,40 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         }
     };
 
+    const underSurvey = filteredPrograms.filter((p) => p.under_survey === true);
+
     const handleAddProgram = () => {
+        setSelectedProgramId(null);
         setDialogType('program');
         setDialogAction('add');
         setDialogOpen(true);
-        setSelectedProgramId(null);
-    }
+    };
 
     const handleEditProgram = (program: PerProgramUnderSurvey) => {
+        setSelectedProgramId(program.program_id);
         setDialogType('program');
         setDialogAction('edit');
         setDialogOpen(true);
+    };
+
+    const handleDeleteProgram = (program: PerProgramUnderSurvey) => {
         setSelectedProgramId(program.program_id);
-    }
+        setDialogType('program');
+        setDialogAction('delete');
+        setDialogOpen(true);
+    };
+
+    const handleAddLevel = () => {
+        setDialogType('level');
+        setDialogAction('add');
+        setDialogOpen(true);
+    };
+
+    const handleEndLevel = () => {
+        setDialogType('level');
+        setDialogAction('end');
+        setDialogOpen(true);
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -100,8 +122,8 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                 </div>
 
                 {/* Stats Overview */}
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                    <div className="rounded-lg border border-gray-200 bg-white p-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
+                    <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Total Programs</p>
@@ -119,7 +141,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             </div>
                         </div>
                     </div>
-                    <div className="rounded-lg border border-gray-200 bg-white p-6">
+                    <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Bachelor Programs</p>
@@ -140,7 +162,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             </div>
                         </div>
                     </div>
-                    <div className="rounded-lg border border-gray-200 bg-white p-6">
+                    <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Diploma Programs</p>
@@ -162,82 +184,112 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     </div>
 
                     {/* Program Actions Card */}
-                    <div className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-6">
-                        <div>
-                            <p className="text-sm font-medium text-gray-600">Program Actions</p>
+                    {(role === 'Admin' || role === 'Coordinator') && (
+                        <div className="flex w-full flex-col gap-3 rounded-lg border border-gray-200 bg-white p-6">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600">Program Actions</p>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button variant="noborder" className="flex-1" onClick={handleAddProgram}>
+                                    <NotebookIcon className="h-6 w-6 text-white" />
+                                    Add Program
+                                </Button>
+                                <Button variant="noborder" className="flex-1" onClick={handleAddLevel}>
+                                    <PlusCircleIcon className="h-6 w-6 text-white" />
+                                    Start a Survey
+                                </Button>
+                                <Button variant="noborder" className="flex-1" onClick={handleEndLevel}>
+                                    <BookCheck className="h-6 w-6 text-white" />
+                                    End a Survey
+                                </Button>
+                            </div>
                         </div>
-                        <div className="flex gap-2">
-                            <Button
-                                variant="noborder"
-                                className="flex-1"
-                                onClick={handleAddProgram}
-                            >
-                                <NotebookIcon className="h-6 w-6 text-white" />
-                                Add Program
-                            </Button>
-                            <Button variant="noborder" className="flex-1">
-                                <PlusCircleIcon className="h-6 w-6 text-white" />
-                                Add Level
-                            </Button>
-                        </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Programs Grid */}
                 <div className="mt-10">
                     {filteredPrograms.length > 0 ? (
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                            {filteredPrograms.map((program) => (
-                                <div
-                                    key={program.program_id}
-                                    onClick={() => handleProgramClick(program)}
-                                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleProgramClick(program)}
-                                    role="button"
-                                    tabIndex={0}
-                                    className="group cursor-pointer"
-                                >
-                                    <div className="relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="absolute top-4 right-4 h-8 w-8 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleEditProgram(program);
-                                            }}
-                                        >
-                                            <Edit className="h-4 w-4 text-gray-500" />
-                                        </Button>
-
-                                        <div className="mb-3 flex items-center justify-between">
-                                            <div
-                                                className={`inline-flex items-center gap-1 rounded bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]`}
-                                            >
-                                                Accreditation Level 2
+                            {filteredPrograms.map((program) => {
+                                const isAssigned = assignedPrograms.find((ap: PerProgramUnderSurvey) => ap.program_id === program.program_id);
+                                return (
+                                    <div
+                                        key={program.program_id}
+                                        tabIndex={0}
+                                        role={isAssigned ? 'button' : undefined}
+                                        onClick={isAssigned ? () => handleProgramClick(program) : undefined}
+                                        onKeyDown={
+                                            isAssigned ? (e) => (e.key === 'Enter' || e.key === ' ') && handleProgramClick(program) : undefined
+                                        }
+                                        className="group cursor-pointer"
+                                    >
+                                        <div className="relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400">
+                                            {(role === 'Admin' || role === 'Coordinator') && (
+                                                <div className="absolute top-4 right-4 flex h-18 w-18 gap-2">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleEditProgram(program);
+                                                        }}
+                                                    >
+                                                        <Edit className="h-4 w-4 text-gray-500" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteProgram(program);
+                                                        }}
+                                                    >
+                                                        <Trash2 className="h-4 w-4 text-gray-500" />
+                                                    </Button>
+                                                </div>
+                                            )}
+                                            <div className="mb-3 flex items-center justify-between">
+                                                <div
+                                                    className={`inline-flex items-center gap-1 rounded bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]`}
+                                                >
+                                                    {program.latest_level ? `Accreditation Level ${program.latest_level?.level}` : `No Current Level`}
+                                                </div>
+                                                {role === 'Admin' || role === 'Coordinator' ? null : isAssigned ? (
+                                                    <Badge variant="outline" className="mt-3 border-0 bg-green-100 text-green-800">
+                                                        Assigned
+                                                    </Badge>
+                                                ) : (
+                                                    <Badge variant="outline" className="mt-3 border-0 bg-gray-100 text-gray-800">
+                                                        Not Assigned
+                                                    </Badge>
+                                                )}
                                             </div>
-                                        </div>
 
-                                        <h3 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
-                                            {program.program_name}
-                                        </h3>
-                                        <p className="mb-3 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name} `}</p>
+                                            <h3 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
+                                                {program.program_name}
+                                            </h3>
+                                            <p className="mb-3 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name} `}</p>
 
-                                        <div className="flex items-center gap-4 text-xs text-gray-500">
-                                            <div className="flex items-center gap-1">
-                                                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                                    />
-                                                </svg>
-                                                <span>{program.levels[0]?.areas ? program.levels[0]?.areas?.length : 0} areas</span>
+                                            <div className="flex items-center gap-4 text-xs text-gray-500">
+                                                <div className="flex items-center gap-1">
+                                                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                                        />
+                                                    </svg>
+                                                    <span>{program.latest_level?.areas ? program.latest_level?.areas?.length : 0} areas</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     ) : (
                         <div className="py-12 text-center"></div>
@@ -249,7 +301,8 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                         <DialogHeader>
                             <DialogTitle className="mb-4 text-lg font-medium text-gray-900">No Levels Found</DialogTitle>
                             <DialogDescription className="text-sm text-gray-500">
-                                The program "{programToStart?.program_name}" has no accreditation levels yet. Do you want to start one now?
+                                The program "{programToStart?.degree_type} in {programToStart?.program_name}" has no accreditation levels yet. Do you
+                                want to start one now?
                             </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>
@@ -260,7 +313,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                 variant="noborder"
                                 onClick={() => {
                                     setStartLevelConfirmOpen(false);
-                                    setAddLevelDialogOpen(true);
+                                    handleAddLevel();
                                 }}
                             >
                                 Start First Level
@@ -268,60 +321,21 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-
-                {/* <Dialog
-                    open={editProgramDialogOpen}
-                    onOpenChange={(open) => {
-                        setEditProgramDialogOpen(open);
-                        if (!open) {
-                            setProgramToEdit(null);
-                        }
-                    }}
-                >
-                    <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                            <DialogTitle className="text-lg font-medium text-gray-900">Edit Program</DialogTitle>
-                            <DialogDescription className="text-sm text-gray-500">Update the details for this academic program.</DialogDescription>
-                        </DialogHeader>
-                        <div className="flex flex-col gap-4">
-                            <div className="space-y-2">
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Degree Type</Label>
-                                <Select defaultValue={programToEdit?.degree_type || ''}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select degree type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Bachelor Science">Bachelor of Science</SelectItem>
-                                        <SelectItem value="Bachelor Arts">Bachelor of Arts</SelectItem>
-                                        <SelectItem value="Diploma">Diploma</SelectItem>
-                                        <SelectItem value_program="Certificate">Certificate</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Program Name</Label>
-                                <Input
-                                    type="text"
-                                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
-                                    placeholder="e.g., Computer Science"
-                                    defaultValue={programToEdit?.program_name || ''}
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
-                            </DialogClose>
-                            <Button variant="noborder">Save Changes</Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog> */}
-                {dialogOpen && dialogType === 'program' && dialogAction && (
+                {dialogOpen && dialogType === 'program' && dialogAction !== 'delete' && (
                     <ProgramDialog
                         type={dialogAction}
                         program={dialogAction === 'edit' ? selectedProgram : null}
                         onClose={() => setDialogOpen(false)}
                     />
+                )}
+                {dialogOpen && dialogType === 'program' && dialogAction === 'delete' && selectedProgram && (
+                    <DeleteProgram program={selectedProgram} onClose={() => setDialogOpen(false)} />
+                )}
+                {dialogOpen && dialogType === 'level' && dialogAction === 'add' && (
+                    <ProgramLevelDialog programs={programs} onClose={() => setDialogOpen(false)} />
+                )}
+                {dialogOpen && dialogType === 'level' && dialogAction === 'end' && (
+                    <EndSurveyDialog programs={underSurvey} onClose={() => setDialogOpen(false)} />
                 )}
             </div>
         </AppLayout>

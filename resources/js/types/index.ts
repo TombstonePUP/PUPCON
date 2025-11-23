@@ -72,6 +72,7 @@ export interface PerProgramUnderSurvey {
     page_banner_image_path: string;
     color?: string;
     levels?: AccreditationLevels[];
+    latest_level?: AccreditationLevels;
     faculty_staff?: FacultyStaff[];
     objectives: Objectives[];
     program_gallery: ProgramGallery[];

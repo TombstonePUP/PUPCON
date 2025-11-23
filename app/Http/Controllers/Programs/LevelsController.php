@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Http\Controllers\Programs;
+
+use App\Http\Controllers\Controller;
+use App\Models\Programs;
+use Illuminate\Http\Request;
+
+class LevelsController extends Controller
+{
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'program_name' => ['required', 'string'],
+            'new_level' => ['required', 'integer'],
+        ],
+        [
+            'program_name.required' => 'Program is required.',
+            'program_name.string' => 'Program must be a string.',
+            'program_name.max' => 'Program must not exceed 255 characters.',
+            'new_level.required' => 'Level is required.',
+            'new_level.string' => 'Level must be a string.',
+            'new_level.max' => 'Level must not exceed 255 characters.',
+        ]);
+
+        $program = Programs::find($request->program_id);
+        $program->update([
+            'under_survey' => true,
+        ]);
+        $program = $program->Levels()->create([
+            'program_id' => $program->program_id,
+            'level' => $validated['new_level'],
+            'survey_date' => now(),
+            'remarks' => 'Ongoing Survey',
+            'is_active' => true,
+        ]);
+
+        $level = $program->level === 0 ? 'Preliminary Survey' : 'Level ' . $program->level;
+
+        return redirect()->back()
+            ->with('type', 'success')
+            ->with('title', 'Level Added')
+            ->with('message', 'Level "' . $level . '" has been added successfully to program.');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Programs $programs)
+    {
+        $validated = $request->validate([
+            'program_name' => ['required', 'string'],
+            'accreditation_level_id' => ['required', 'integer'],
+            'remarks' => ['required', 'string'],
+            'is_active' => ['required', 'boolean'],
+        ],
+        [
+            'program_name.required' => 'Program is required.',
+            'program_name.string' => 'Program must be a string.',
+            'program_name.max' => 'Program must not exceed 255 characters.',
+            'accreditation_level_id.required' => 'Level is required.',
+            'accreditation_level_id.integer' => 'Level must be an integer.',
+            'remarks.required' => 'Remarks is required.',
+            'remarks.string' => 'Remarks must be a string.',
+            'remarks.max' => 'Remarks must not exceed 255 characters.',
+        ]);
+
+        $program = $programs->find($request->program_id);
+        $level = $program->levels()->where('accreditation_level_id', $validated['accreditation_level_id'])->first();
+
+        $program->update([
+            'under_survey' => false,
+        ]);
+
+        $level->update([
+            'remarks' => $validated['remarks'],
+            'is_active' => $validated['is_active'],
+        ]);
+
+        return redirect()->back()
+            ->with('type', 'success')
+            ->with('title', 'Level Updated')
+            ->with('message', 'Level has been updated successfully for program.');
+    }
+
+}

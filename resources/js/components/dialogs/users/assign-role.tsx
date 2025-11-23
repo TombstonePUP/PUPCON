@@ -113,73 +113,71 @@ export function AssignRole({ user, programRoles, roles, onClose }: AssignRoleDia
                         </div>
                         <InputError message={errors.assigned_role} className="mt-1" />
                     </div>
-                    {(data.assigned_role === 3 || data.assigned_role === 4) && (
-                        <div>
-                            <Label className="mb-1 mb-2 block text-sm font-medium">Programs & Areas</Label>
-                            <div className="flex flex-col gap-3">
-                                {programRoles.map((program) => {
-                                    const isProgramChecked = data.assigned_programs.includes(program.program_id);
-                                    return (
-                                        <div key={program.program_id}>
-                                            <label className="text-foreground mb-0 flex items-center gap-3 text-sm font-normal">
-                                                <input
-                                                    type="checkbox"
-                                                    className="accent-ring"
-                                                    value={program.program_id}
-                                                    checked={isProgramChecked}
-                                                    disabled={processing}
-                                                    onChange={(e) => onChangeProgram(program, e)}
-                                                />
-                                                {program.program_name}
-                                            </label>
+                    {(data.assigned_role === roles.find((r) => r.role_name === 'Chairman')?.role_id ||
+                        data.assigned_role === roles.find((r) => r.role_name === 'Accreditor')?.role_id) && (
+                            <div>
+                                <Label className="mb-1 mb-2 block text-sm font-medium">Programs & Areas</Label>
+                                <div className="flex flex-col gap-3">
+                                    {programRoles.map((program) => {
+                                        const isProgramChecked = data.assigned_programs.includes(program.program_id);
+                                        return (
+                                            <div key={program.program_id}>
+                                                <label className="text-foreground mb-0 flex items-center gap-3 text-sm font-normal">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="accent-ring"
+                                                        value={program.program_id}
+                                                        checked={isProgramChecked}
+                                                        disabled={processing}
+                                                        onChange={(e) => onChangeProgram(program, e)}
+                                                    />
+                                                    {program.program_name}
+                                                </label>
 
-                                            {isProgramChecked && (
-                                                <div className="mt-2 ml-6">
-                                                    <div className="grid grid-cols-5 flex-wrap gap-2">
-                                                        {program.levels?.areas?.length > 0 ? (
-                                                            program.levels?.areas.map((area) => {
-                                                                const isAreaChecked = data.assigned_areas.includes(area.area_id);
-                                                                return (
-                                                                    <label
-                                                                        key={area.area_id}
-                                                                        className="text-foreground mb-0 flex items-center gap-2 text-sm font-normal"
-                                                                    >
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            className="accent-ring ml-2"
-                                                                            value={area.area_id}
-                                                                            checked={isAreaChecked}
-                                                                            disabled={processing}
-                                                                            onChange={(e) => onChangeArea(area, e)}
-                                                                        />
-                                                                        Area {area.area_number}
-                                                                    </label>
-                                                                );
-                                                            })
-                                                        ) : (
-                                                            <div className="col-span-5 text-sm text-gray-500 italic">No areas available</div>
-                                                        )}
+                                                {isProgramChecked && (
+                                                    <div className="mt-2 ml-6">
+                                                        <div className="grid grid-cols-5 flex-wrap gap-2">
+                                                            {program.levels?.areas?.length > 0 ? (
+                                                                program.levels?.areas.map((area) => {
+                                                                    const isAreaChecked = data.assigned_areas.includes(area.area_id);
+                                                                    return (
+                                                                        <label
+                                                                            key={area.area_id}
+                                                                            className="text-foreground mb-0 flex items-center gap-2 text-sm font-normal"
+                                                                        >
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                className="accent-ring ml-2"
+                                                                                value={area.area_id}
+                                                                                checked={isAreaChecked}
+                                                                                disabled={processing}
+                                                                                onChange={(e) => onChangeArea(area, e)}
+                                                                            />
+                                                                            Area {area.area_number}
+                                                                        </label>
+                                                                    );
+                                                                })
+                                                            ) : (
+                                                                <div className="col-span-5 text-sm text-gray-500 italic">No areas available</div>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <InputError message={errors.assigned_areas} className="mt-1" />
+                                <InputError message={errors.assigned_programs} className="mt-1" />
                             </div>
-                            <InputError message={errors.assigned_areas} className="mt-1" />
-                            <InputError message={errors.assigned_programs} className="mt-1" />
-                        </div>
-                    )}
+                        )}
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button variant="outline" onClick={() => onClose()}>
                                 Cancel
                             </Button>
                         </DialogClose>
-                        <Button
-                            variant="noborder"
-                            type="submit"
-                        >
+                        <Button variant="noborder" type="submit">
                             Submit
                         </Button>
                     </DialogFooter>

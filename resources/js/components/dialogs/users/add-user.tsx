@@ -1,22 +1,14 @@
-"use client";
+'use client';
 
 import { User2 } from 'lucide-react';
 
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-    DialogClose,
-} from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
-import { useForm } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AssignableAreas, AssignablePrograms, AssignableRoles } from '@/types/user-management';
+import { useForm } from '@inertiajs/react';
 
 interface AddUserProps {
     programRoles: AssignablePrograms[];
@@ -33,14 +25,7 @@ interface NewUserForm {
 }
 
 export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
-    const {
-        data,
-        setData,
-        post,
-        processing,
-        errors,
-        reset,
-    } = useForm<NewUserForm>({
+    const { data, setData, post, processing, errors, reset } = useForm<NewUserForm>({
         first_name: '',
         last_name: '',
         email: '',
@@ -73,8 +58,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
             // Remove areas under this program
             setData(
                 'assigned_areas',
-                data.assigned_areas.filter(
-                    areaId => !program.levels.areas.some((a) => a.area_id === areaId)),
+                data.assigned_areas.filter((areaId) => !program.levels.areas.some((a) => a.area_id === areaId)),
             );
         }
     };
@@ -185,7 +169,9 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                                 type="radio"
                                                 name="assigned_role"
                                                 value={role.role_id}
-                                                onChange={() => setData('assigned_role', role.role_id)}
+                                                onChange={() => {
+                                                    setData('assigned_role', role.role_id);
+                                                }}
                                                 className="accent-ring"
                                             />
                                             {role.role_name}
@@ -194,67 +180,68 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                 </div>
                                 <InputError message={errors.assigned_role} className="mt-1" />
                             </div>
-                            {(data.assigned_role === 3 || data.assigned_role === 4) && (
-                                <div>
-                                    <Label className="mb-1 mb-2 block text-sm font-medium">
-                                        Programs & Areas
-                                        <Label className="text-[#7f1414]">*</Label>
-                                    </Label>
-                                    <div className="flex flex-col gap-3">
-                                        {programRoles.map((program) => {
-                                            const isProgramChecked = data.assigned_programs.includes(program.program_id);
-                                            return (
-                                                <div key={program.program_id}>
-                                                    <label className="text-foreground mb-0 flex items-center gap-3 text-sm font-normal">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="accent-ring"
-                                                            value={program.program_id}
-                                                            checked={isProgramChecked}
-                                                            disabled={processing}
-                                                            onChange={(e) => onChangeProgram(program, e)}
-                                                        />
-                                                        {program.program_name}
-                                                    </label>
+                            {(data.assigned_role === roles.find((r) => r.role_name === 'Chairman')?.role_id ||
+                                data.assigned_role === roles.find((r) => r.role_name === 'Accreditor')?.role_id) && (
+                                    <div>
+                                        <Label className="mb-1 mb-2 block text-sm font-medium">
+                                            Programs & Areas
+                                            <Label className="text-[#7f1414]">*</Label>
+                                        </Label>
+                                        <div className="flex flex-col gap-3">
+                                            {programRoles.map((program) => {
+                                                const isProgramChecked = data.assigned_programs.includes(program.program_id);
+                                                return (
+                                                    <div key={program.program_id}>
+                                                        <label className="text-foreground mb-0 flex items-center gap-3 text-sm font-normal">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="accent-ring"
+                                                                value={program.program_id}
+                                                                checked={isProgramChecked}
+                                                                disabled={processing}
+                                                                onChange={(e) => onChangeProgram(program, e)}
+                                                            />
+                                                            {program.program_name}
+                                                        </label>
 
-                                                    {/* Show areas only if program is checked */}
-                                                    {isProgramChecked && (
-                                                        <div className="mt-2 ml-6">
-                                                            <div className="grid grid-cols-5 flex-wrap gap-2">
-                                                                {program.levels.areas?.length > 0 ? (
-                                                                    program.levels.areas.map((area) => {
-                                                                        const isAreaChecked = data.assigned_areas.includes(area.area_id);
-                                                                        return (
-                                                                            <label
-                                                                                key={area.area_id}
-                                                                                className="text-foreground mb-0 flex items-center gap-2 text-sm font-normal"
-                                                                            >
-                                                                                <input
-                                                                                    type="checkbox"
-                                                                                    className="accent-ring ml-2"
-                                                                                    value={area.area_id}
-                                                                                    checked={isAreaChecked}
-                                                                                    disabled={processing}
-                                                                                    onChange={(e) => onChangeArea(area, e)}
-                                                                                />
-                                                                                Area {area.area_number}
-                                                                            </label>
-                                                                        );
-                                                                    })
-                                                                ) : (
-                                                                    <div className="col-span-5 text-sm text-gray-500 italic">No areas available</div>
-                                                                )}
+                                                        {/* Show areas only if program is checked */}
+                                                        {isProgramChecked && (
+                                                            <div className="mt-2 ml-6">
+                                                                <div className="grid grid-cols-5 flex-wrap gap-2">
+                                                                    {program.levels.areas?.length > 0 ? (
+                                                                        program.levels.areas?.map((area) => {
+                                                                            const isAreaChecked = data.assigned_areas.includes(area.area_id);
+                                                                            return (
+                                                                                <label
+                                                                                    key={area.area_id}
+                                                                                    className="text-foreground mb-0 flex items-center gap-2 text-sm font-normal"
+                                                                                >
+                                                                                    <input
+                                                                                        type="checkbox"
+                                                                                        className="accent-ring ml-2"
+                                                                                        value={area.area_id}
+                                                                                        checked={isAreaChecked}
+                                                                                        disabled={processing}
+                                                                                        onChange={(e) => onChangeArea(area, e)}
+                                                                                    />
+                                                                                    Area {area.area_number}
+                                                                                </label>
+                                                                            );
+                                                                        })
+                                                                    ) : (
+                                                                        <div className="col-span-5 text-sm text-gray-500 italic">No areas available</div>
+                                                                    )}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        <InputError message={errors.assigned_areas} className="mt-1" />
+                                        <InputError message={errors.assigned_programs} className="mt-1" />
                                     </div>
-                                    <InputError message={errors.assigned_areas} className="mt-1" />
-                                    <InputError message={errors.assigned_programs} className="mt-1" />
-                                </div>
-                            )}
+                                )}
                         </TabsContent>
                         <label className="mt-2 text-sm text-gray-500">A temporary password will be emailed to the user.</label>
                     </Tabs>

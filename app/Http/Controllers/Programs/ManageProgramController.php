@@ -9,6 +9,7 @@ use App\Traits\ProgramLinkFormats;
 use App\Traits\AreaNumeralFormat;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ManageProgramController extends Controller
 {
@@ -18,11 +19,16 @@ class ManageProgramController extends Controller
      */
     public function index()
     {
-        $programs = Programs::select('*')->with([
-            'Levels' => function ($query) {
-                $query->where('is_active', true)->with('Areas');
-            },
-        ])->get();
+        $user = Auth::user();
+        if ($user->Roles->role_name === 'Admin' || $user->Roles->role_name === 'Coordinator') {
+            $programs = Programs::with('latestLevel')
+                ->orderBy('program_name', 'asc')->get();
+        } else {
+            $programs = Programs::with('latestLevel')
+                ->where('is_active', true)
+                ->orderBy('program_name', 'asc')->get();
+        }
+
         $programs = $programs->map(function ($program) {
             $this->formatPrograms($program);
             return $program;
@@ -66,7 +72,7 @@ class ManageProgramController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'program_name' => ['required', 'string', 'max:255', 'unique:programs,program_name' ],
+            'program_name' => ['required', 'string', 'max:255', 'unique:programs,program_name'],
             'degree_type' => ['required', 'string', 'max:100'],
         ]);
 
@@ -99,5 +105,17 @@ class ManageProgramController extends Controller
             ->with('type', 'success')
             ->with('title', 'Program Updated')
             ->with('message', 'Program "' . $program->program_name . '" has been updated successfully.');
+    }
+
+    public function destroy(Request $request)
+    {
+        $program = Programs::findOrFail($request->program_id);
+        $programName = $program->program_name;
+        $program->update(['is_active' => false]);
+
+        return redirect()->back()
+            ->with('type', 'success')
+            ->with('title', 'Program Deleted')
+            ->with('message', $programName . ' has been deleted successfully.');
     }
 }

@@ -23,7 +23,7 @@ import InputError from "@/components/input-error";
 
 interface ProgramDialogProps {
     program?: PerProgramUnderSurvey;
-    type?: "add" | "edit";
+    type?: "add" | "edit" | "delete";
     onClose: () => void;
 }
 

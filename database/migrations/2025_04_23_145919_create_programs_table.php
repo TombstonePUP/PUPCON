@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('overview_description')->nullable();
             $table->text('page_banner_image_name')->nullable();
             $table->text('page_banner_image_path')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->string('color')->nullable();
         });
 

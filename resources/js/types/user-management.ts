@@ -47,7 +47,7 @@ export interface AssignedPrograms {
 export interface AssignablePrograms {
     program_id: number;
     program_name: string;
-    levels: Levels[];
+    levels: Levels;
     [key: string]: unknown;
 }
 

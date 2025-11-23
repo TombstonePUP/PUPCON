@@ -13,6 +13,7 @@ use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Parameters\AreaParameterController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
 use App\Http\Controllers\Parameters\ImportParametersController;
+use App\Http\Controllers\Programs\LevelsController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,12 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     Route::controller(ManageProgramController::class)->group(function () {
         Route::post('manage-programs/store', 'store')->name('manage.program.store');
         Route::patch('manage-programs/{program_id}/update', 'update')->name('manage.program.update');
+        Route::delete('manage-programs/{program_id}/delete', 'destroy')->name('manage.program.delete');
+    });
+
+    Route::controller(LevelsController::class)->group(function () {
+        Route::post('manage-programs/{program_id}/levels/store', 'store')->name('manage.level.store');
+        Route::patch('manage-programs/{program_id/levels/update', 'update')->name('manage.level.update');
     });
 
     Route::prefix('manage-programs/{program_name}/{level_id}/{area_id}')->as('manage.')->group(function () {

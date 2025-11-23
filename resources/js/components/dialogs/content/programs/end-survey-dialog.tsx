@@ -8,29 +8,32 @@ import { PerProgramUnderSurvey } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
-interface ProgramLevelDialogProps {
+interface EndSurveyDialogProps {
     programs: PerProgramUnderSurvey[];
     onClose: () => void;
 }
 
-interface ProgramLevelForm {
-    program_id: number;
-    program_name?: string;
-    new_level: string;
+interface EndSurveyForm {
+    program_name: string;
+    accreditation_level_id: number;
+    remarks: string;
+    is_active: boolean;
 }
 
-export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDialogProps) {
+export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogProps) {
     const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
     const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
-    const level = selectedProgram?.latest_level?.level;
-    const { data, setData, post, processing, errors } = useForm<ProgramLevelForm>({
+    const level = selectedProgram?.levels[0]?.level;
+    const { data, setData, patch, processing, errors } = useForm<EndSurveyForm>({
         program_name: '',
-        new_level: '',
+        accreditation_level_id: 0,
+        remarks: '',
+        is_active: false,
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('manage.level.store', { program_id: selectedProgram?.program_id }), {
+        patch(route('manage.level.update', { program_id: selectedProgram?.program_id}), {
             onSuccess: () => onClose(),
         });
     };
@@ -39,19 +42,27 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Add Program Level</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">Start a new accreditation level for an existing program.</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-gray-900">End a Program Survey</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500">Select a program to end its current survey.</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div className="space-y-2">
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Program</Label>
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">Programs Under Survey</Label>
                         <Select
                             value={selectedProgramId ? String(selectedProgramId) : ''}
                             onValueChange={(value) => {
                                 const programId = Number(value);
                                 setSelectedProgramId(programId);
-                                const program = programs.find(p => p.program_id === programId);
-                                setData('program_name', program?.program_name);
+
+                                // Get the program immediately
+                                const program = programs.find((p) => p.program_id === programId);
+                                console.log(program);
+
+                                setData({
+                                    ...data,
+                                    program_name: program?.program_name ?? '',
+                                    accreditation_level_id: program?.levels[0]?.accreditation_level_id ?? 0,
+                                });
                             }}
                             disabled={processing}
                         >
@@ -60,13 +71,11 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
                             </SelectTrigger>
                             <SelectContent>
                                 {programs.map((program) => (
-                                    <SelectItem value={String(program.program_id)}>
-                                        {program.program_name}
-                                    </SelectItem>
+                                    <SelectItem value={String(program.program_id)}>{program.program_name}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
-                        <InputError message={errors.program_name}/>
+                        <InputError message={errors.program_name} />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
@@ -81,40 +90,25 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
                         </div>
                         <div className="space-y-2">
                             <Label className="mb-2 block text-sm font-medium text-gray-700">New Level</Label>
-                            <Select
-                                value={data.new_level}
-                                onValueChange={(value) => setData('new_level', value)}
-                                disabled={processing}
-                            >
+                            <Select value={data.remarks} onValueChange={(value) => setData('remarks', value)} disabled={processing}>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select level" />
+                                    <SelectValue placeholder="Select Remarks" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="0">Preliminary</SelectItem>
-                                    <SelectItem value="1">Level 1</SelectItem>
-                                    <SelectItem value="2">Level 2</SelectItem>
-                                    <SelectItem value="3">Level 3</SelectItem>
-                                    <SelectItem value="4">Level 4</SelectItem>
+                                    <SelectItem value="Pass">Pass</SelectItem>
+                                    <SelectItem value="Fail">Fail</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
-                        <InputError message={errors.new_level}/>
+                        <InputError message={errors.remarks} />
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button
-                                variant="outline"
-                                onClick={onClose}
-                                disabled={processing}
-                            >
+                            <Button variant="outline" onClick={onClose} disabled={processing}>
                                 Cancel
                             </Button>
                         </DialogClose>
-                        <Button
-                            variant="noborder"
-                            type="submit"
-                            disabled={processing}
-                        >
+                        <Button variant="noborder" type="submit" disabled={processing}>
                             Submit
                         </Button>
                     </DialogFooter>

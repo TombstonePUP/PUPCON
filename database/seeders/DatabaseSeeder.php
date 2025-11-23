@@ -174,7 +174,7 @@ class DatabaseSeeder extends Seeder
                 'program_id' => $program1->program_id,
                 'level' => 2,
                 'remarks' => 'Passed',
-                'is_active' => true,
+                'is_active' => false,
             ],
             [
                 // 'accreditation_level_id' => 2,
