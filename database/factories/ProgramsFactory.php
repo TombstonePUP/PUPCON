@@ -24,11 +24,6 @@ class ProgramsFactory extends Factory
             'under_survey' => fake()->boolean(),
             'program_image_name' => fake()->word(),
             'program_image_path' => fake()->imageUrl(),
-            'overview_image_name' => fake()->word(),
-            'overview_image_path' => fake()->imageUrl(),
-            'overview_description' => fake()->paragraphs(4, true),
-            'page_banner_image_name' => fake()->word(),
-            'page_banner_image_path' => fake()->imageUrl(),
             'color' => fake()->colorName(),
         ];
     }

@@ -400,20 +400,20 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
 
                     {/* --- Gallery --- */}
-                    <div ref={galleryRef} className="w-[85%] max-w-7xl" id="gallery">
+                    {/* <div ref={galleryRef} className="w-[85%] max-w-7xl" id="gallery">
                         <div className={`transition-all duration-700 ${galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader title="Gallery of Excellence" subtitle="Showcasing the moments that define our passion and commitment" />
 
                             <ImageRow
                                 height="h-96"
-                                images={program.program_gallery.map((item) => ({
+                                images={program.program_gallery?.map((item) => ({
                                     id: item.program_gallery_id,
                                     src: item.image_path,
                                     alt: item.image_name,
                                 }))}
                             />
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* --- Areas Under Survey --- */}
                     <div ref={areasRef} className="w-[85%] max-w-7xl" id="areas">

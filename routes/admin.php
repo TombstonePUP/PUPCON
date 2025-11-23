@@ -8,6 +8,7 @@ use App\Http\Controllers\Content\FacultyStaffController;
 use App\Http\Controllers\Content\HistoryController;
 use App\Http\Controllers\Content\LocalTaskForceController;
 use App\Http\Controllers\Content\OtherServicesController;
+use App\Http\Controllers\Content\ProgramContentController;
 use App\Http\Controllers\Content\VmgoController;
 use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Parameters\AreaParameterController;
@@ -45,6 +46,9 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         Route::patch('manage-programs/{program_id}/update', 'update')->name('manage.program.update');
         Route::delete('manage-programs/{program_id}/delete', 'destroy')->name('manage.program.delete');
     });
+
+    Route::post('manage-programs/{program_id}/update_content', ProgramContentController::class)
+        ->name('manage.program.update.content');
 
     Route::controller(LevelsController::class)->group(function () {
         Route::post('manage-programs/{program_id}/levels/store', 'store')->name('manage.level.store');

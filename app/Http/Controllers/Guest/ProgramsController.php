@@ -63,7 +63,7 @@ class ProgramsController extends Controller
                  'Levels.Areas',
                  'FacultyStaff',
                  'Objectives',
-                 'ProgramGallery'
+                 'Gallery',
             ])
             ->firstOrFail();
 

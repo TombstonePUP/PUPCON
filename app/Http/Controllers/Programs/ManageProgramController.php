@@ -45,7 +45,11 @@ class ManageProgramController extends Controller
         $program = Programs::where('program_name', $program)
             ->with([
                 'Levels.Areas',
+                'Objectives',
+                'Gallery',
             ])->firstOrFail();
+
+        $program->program_image_path = $program->program_image_path ? asset('storage/' . $program->program_image_path) : null;
 
         $program->Levels->each(function ($level) use ($level_id) {
             if ($level->accreditation_level_id != $level_id) {

@@ -87,6 +87,8 @@ class HandleInertiaRequests extends Middleware
             return $program;
         });
 
+        $user = $request->user() ? $request->user()->load('Areas') : null;
+
         return [
             ...parent::share($request),
             'flash' => [
@@ -95,7 +97,7 @@ class HandleInertiaRequests extends Middleware
                 'message' => fn() => $request->session()->get('message'),
             ],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
                 'programs' => $programs,
             ],
             'guest' => [

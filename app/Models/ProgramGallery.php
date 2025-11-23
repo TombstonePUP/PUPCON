@@ -21,6 +21,7 @@ class ProgramGallery extends Model
     protected $primaryKey = 'program_gallery_id';
     protected $fillable = [
         'program_id',
+        'caption',
         'image_name',
         'image_path',
     ];

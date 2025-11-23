@@ -17,13 +17,8 @@ return new class extends Migration
             $table->string('program_name');
             $table->text('program_description')->nullable();
             $table->boolean('under_survey')->default(false);
-            $table->string('program_image_name')->nullable();
+            $table->text('program_image_name')->nullable();
             $table->text('program_image_path')->nullable();
-            $table->text('overview_image_name')->nullable();
-            $table->text('overview_image_path')->nullable();
-            $table->text('overview_description')->nullable();
-            $table->text('page_banner_image_name')->nullable();
-            $table->text('page_banner_image_path')->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('color')->nullable();
         });
@@ -41,13 +36,15 @@ return new class extends Migration
         Schema::create('program_gallery', function (Blueprint $table) {
             $table->id(column: 'program_gallery_id')->autoIncrement()->primary();
             $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('image_name');
+            $table->text('caption')->nullable();
+            $table->text('image_name');
             $table->text('image_path');
         });
 
         Schema::create('program_objectives', function (Blueprint $table) {
             $table->id(column: 'program_objective_id')->autoIncrement()->primary();
             $table->foreignId('program_id')->references('program_id')->on('programs')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('objective_title');
             $table->text('objective_description')->nullable();
         });
     }

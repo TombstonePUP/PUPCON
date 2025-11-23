@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Organizations, OrganizationTypes } from "@/types/content";
 import { useState } from "react";
 
-
 interface OrganizationDialogProps {
     type?: 'edit' | 'add';
     org?: Organizations | null;

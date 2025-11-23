@@ -1,5 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-import { FacultyStaff, Objectives, ProgramGallery } from './content';
+import { FacultyStaff } from './content';
 
 export interface Auth {
     user: User;
@@ -65,17 +65,12 @@ export interface PerProgramUnderSurvey {
     under_survey: boolean;
     program_image_name: string;
     program_image_path: string;
-    overview_image_name: string;
-    overview_image_path: string;
-    overview_description: string;
-    page_banner_image_name: string;
-    page_banner_image_path: string;
     color?: string;
     levels?: AccreditationLevels[];
     latest_level?: AccreditationLevels;
     faculty_staff?: FacultyStaff[];
-    objectives: Objectives[];
-    program_gallery: ProgramGallery[];
+    objectives: ProgramObjectives[];
+    program_gallery: ProgramGalleryImages[];
     [key: string]: unknown;
 }
 
@@ -115,13 +110,29 @@ export interface PerProgram {
     under_survey: boolean;
     program_image_name: string;
     program_image_path: string;
-    overview_image_name: string;
-    overview_image_path: string;
-    overview_description: string;
-    page_banner_image_name: string;
-    page_banner_image_path: string;
     levels?: AccreditationLevels[];
     faculty_staff?: FacultyStaff[];
+    objectives?: ProgramObjectives[];
+    gallery?: ProgramGalleryImages[];
+    [key: string]: unknown;
+}
+
+export interface ProgramObjectives {
+    program_objective_id: number;
+    program_id: number;
+    objective_title: string;
+    objective_description: string;
+    programs?: Program;
+    [key: string]: unknown;
+}
+
+export interface ProgramGalleryImages {
+    program_gallery_id: number;
+    program_id: number;
+    image_name: string;
+    image_path: string;
+    caption: string;
+    programs?: Program;
     [key: string]: unknown;
 }
 

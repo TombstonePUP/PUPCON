@@ -21,6 +21,7 @@ class ProgramObjectives extends Model
     protected $primaryKey = 'program_objective_id';
     protected $fillable = [
         'program_id',
+        'objective_title',
         'objective_description'
     ];
 

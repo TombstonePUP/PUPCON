@@ -27,11 +27,6 @@ class Programs extends Model
         'under_survey',
         'program_image_name',
         'program_image_path',
-        'overview_image_name',
-        'overview_image_path',
-        'overview_description',
-        'page_banner_image_name',
-        'page_banner_image_path',
         'is_active',
         'color'
     ];
@@ -39,10 +34,6 @@ class Programs extends Model
     protected $casts = [
         'program_image_name' => 'encrypted',
         'program_image_path' => 'encrypted',
-        'overview_image_name' => 'encrypted',
-        'overview_image_path' => 'encrypted',
-        'page_banner_image_name' => 'encrypted',
-        'page_banner_image_path' => 'encrypted'
     ];
 
     /**
@@ -52,14 +43,6 @@ class Programs extends Model
     {
         return $this->belongsToMany(User::class, 'user_program_roles', 'program_id', 'user_id')
             ->withPivot('role_id');
-    }
-
-    /**
-     * @return HasMany<ProgramObjectives,Programs>
-     */
-    public function programObjectives(): HasMany
-    {
-        return $this->hasMany(ProgramObjectives::class, 'program_id', 'program_id');
     }
 
     /**
@@ -81,11 +64,14 @@ class Programs extends Model
     /**
      * @return HasMany<ProgramGallery,Programs>
      */
-    public function ProgramGallery(): HasMany
+    public function Gallery(): HasMany
     {
         return $this->hasMany(ProgramGallery::class, 'program_id', 'program_id');
     }
 
+    /**
+     * @return HasMany<ProgramObjectives,Programs>
+     */
     public function Objectives()
     {
         return $this->hasMany(ProgramObjectives::class, 'program_id', 'program_id');

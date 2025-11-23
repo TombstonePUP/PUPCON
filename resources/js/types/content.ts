@@ -29,19 +29,6 @@ export interface FacultyStaff {
     programs?: Program;
 }
 
-export interface Objectives {
-    program_id: number;
-    objective_description?: string | null;
-    program_objective_id: number;
-}
-
-export interface ProgramGallery {
-    program_gallery_id: number;
-    program_id: number;
-    image_name: string;
-    image_path: string;
-}
-
 export interface Facilities {
     facility_id: number;
     facility_name: string;
