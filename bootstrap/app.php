@@ -26,9 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
-        $middleware->api(prepend: [
+        /* $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        ]);
+        ]); */
 
         $middleware->alias( [
             'admin' => AdminPrivileges::class,
@@ -39,7 +39,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'accreditor' => AccreditorPrivileges::class,
             'update.password' => MustUpdatePassword::class,
             'ensure.update.password' => EnsureMustUpdatePassword::class,
-            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
