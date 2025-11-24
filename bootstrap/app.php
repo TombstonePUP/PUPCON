@@ -17,15 +17,19 @@ use App\Http\Middleware\UserAreaPrivileges;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',  // ← Add this line
         commands: __DIR__.'/../routes/console.php',
-        channels: __DIR__.'/../routes/channels.php',
-        health: '/status',
+        health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+
         $middleware->alias( [
             'admin' => AdminPrivileges::class,
             'user.accreditor.restriction' => AccreditorRestriction::class,
@@ -35,6 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'accreditor' => AccreditorPrivileges::class,
             'update.password' => MustUpdatePassword::class,
             'ensure.update.password' => EnsureMustUpdatePassword::class,
+            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

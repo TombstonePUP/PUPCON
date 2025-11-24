@@ -27,13 +27,6 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
-    'slack' => [
-        'notifications' => [
-            'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
-        ],
-    ],
-
     'facebook' => [
         'page_id' => env('FB_PAGE_ID'),
         'page_access_token' => env('FB_PAGE_ACCESS_TOKEN'),
