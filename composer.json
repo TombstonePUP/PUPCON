@@ -61,7 +61,7 @@
         ],
         "lan": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently \"php artisan optimize:clear\" \"php artisan serve --host=0.0.0.0\" \"npm run dev\""
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185\" \"php artisan optimize:clear\" \"php artisan serve --host=0.0.0.0\" \"npm run dev\" --names=clear,server,vite"
         ]
     },
     "extra": {
