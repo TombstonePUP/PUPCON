@@ -21,6 +21,7 @@
 - [✨ Features](#-features)
 - [🛠️ Tech Stack](#️-tech-stack)
 - [🚀 Installation](#-installation)
+- [🔐 cURL & OpenSSL Configuration](#-curl--openssl-configuration)
 - [📄 Ghostscript PDF Optimizer Setup](#-ghostscript-pdf-optimizer-setup)
 - [👥 Team](#-team)
 
@@ -72,7 +73,7 @@
 [![React](https://img.shields.io/badge/React_18-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://reactjs.org) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org) [![Tailwind](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com) [![Inertia](https://img.shields.io/badge/Inertia.js-9553E9?style=flat-square&logo=inertiajs&logoColor=white)](https://inertiajs.com)
 
 **Backend** ⚙️  
-[![Laravel](https://img.shields.io/badge/Laravel_10-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com) [![PHP](https://img.shields.io/badge/PHP_8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://www.php.net) [![Sanctum](https://img.shields.io/badge/Sanctum-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com/docs/sanctum)
+[![Laravel](https://img.shields.io/badge/Laravel_11-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com) [![PHP](https://img.shields.io/badge/PHP_8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://www.php.net) [![Sanctum](https://img.shields.io/badge/Sanctum-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com/docs/sanctum)
 
 **Database** 🗄️  
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org)
@@ -91,6 +92,7 @@
 - 🐘 PostgreSQL 13+
 - 📦 Composer 2.x
 - 👻 Ghostscript (for PDF optimization)
+- 🔐 cURL & OpenSSL enabled
 
 ### 📥 Setup
 
@@ -125,6 +127,191 @@ composer run dev
 | 👨‍💼 **Accreditor** | `janedoe@accreditor.com` | `accreditor@123` |
 
 🎉 **App running at** [http://localhost:8000](http://localhost:8000)
+
+---
+
+## 🔐 cURL & OpenSSL Configuration
+
+This application requires cURL and OpenSSL for secure API connections (Facebook API, external services, etc.). Follow these steps to enable and configure them properly.
+
+### 📦 Step 1: Enable cURL and OpenSSL Extensions
+
+#### 🪟 Windows (XAMPP/WAMP)
+
+1. **Locate your `php.ini` file:**
+
+    - XAMPP: `C:\xampp\php\php.ini`
+    - WAMP: `C:\wamp64\bin\php\php8.x.x\php.ini`
+
+2. **Open `php.ini` in a text editor (as Administrator)**
+
+3. **Enable extensions by removing the semicolon (`;`):**
+    ```ini
+    ; Find these lines and uncomment them:
+    extension=curl
+    extension=openssl
+    ```
+
+#### 🍎 macOS
+
+```bash
+# Check if extensions are enabled
+php -m | grep -E 'curl|openssl'
+
+# If not installed, use Homebrew
+brew install curl openssl
+```
+
+#### 🐧 Linux (Ubuntu/Debian)
+
+```bash
+# Install cURL and OpenSSL
+sudo apt-get update
+sudo apt-get install php-curl php-openssl
+
+# Restart Apache/PHP-FPM
+sudo systemctl restart apache2
+# OR
+sudo systemctl restart php8.2-fpm
+```
+
+### 🔒 Step 2: Download and Configure CA Certificate Bundle
+
+To fix SSL certificate errors (especially for Facebook API), you need to configure the CA certificate bundle:
+
+#### 1️⃣ **Download cacert.pem**
+
+```bash
+# Download the latest CA certificate bundle
+curl -o cacert.pem https://curl.se/ca/cacert.pem
+```
+
+Or download manually from: [https://curl.se/ca/cacert.pem](https://curl.se/ca/cacert.pem)
+
+#### 2️⃣ **Save the certificate file**
+
+- **Windows XAMPP:** `C:\xampp\php\extras\ssl\cacert.pem`
+- **Windows WAMP:** `C:\wamp64\bin\php\php8.x.x\extras\ssl\cacert.pem`
+- **macOS/Linux:** `/usr/local/etc/openssl/cacert.pem`
+
+#### 3️⃣ **Update `php.ini` configuration**
+
+Open your `php.ini` file and add/update these lines:
+
+```ini
+[curl]
+; A default value for the CURLOPT_CAINFO option.
+curl.cainfo = "C:\xampp\php\extras\ssl\cacert.pem"
+
+[openssl]
+; The location of a Certificate Authority (CA) file on the local filesystem
+openssl.cafile = "C:\xampp\php\extras\ssl\cacert.pem"
+```
+
+**For Linux/macOS:**
+
+```ini
+curl.cainfo = "/usr/local/etc/openssl/cacert.pem"
+openssl.cafile = "/usr/local/etc/openssl/cacert.pem"
+```
+
+#### 4️⃣ **Restart your web server**
+
+```bash
+# XAMPP - Restart Apache from Control Panel
+
+# Linux
+sudo systemctl restart apache2
+# OR
+sudo systemctl restart nginx
+sudo systemctl restart php8.2-fpm
+
+# macOS (Homebrew)
+brew services restart php
+```
+
+### ✅ Step 3: Verify Configuration
+
+Run these commands to verify cURL and OpenSSL are properly configured:
+
+```bash
+# Check if extensions are loaded
+php -m | grep -E 'curl|openssl'
+
+# Test cURL
+php -r "echo (function_exists('curl_version') ? 'cURL is enabled' : 'cURL is disabled');"
+
+# Test OpenSSL
+php -r "echo (extension_loaded('openssl') ? 'OpenSSL is enabled' : 'OpenSSL is disabled');"
+
+# Check CA certificate path
+php -r "echo ini_get('curl.cainfo');"
+php -r "echo ini_get('openssl.cafile');"
+```
+
+### 🔧 Troubleshooting
+
+<details>
+<summary><b>❌ Error: "cURL error 60: SSL certificate problem"</b></summary>
+
+**Solution:**
+
+1. Ensure you've downloaded the latest `cacert.pem` file
+2. Verify the path in `php.ini` is correct and points to the `cacert.pem` file
+3. Restart your web server after making changes
+4. Check file permissions (the PHP process must be able to read the file)
+
+**Temporary workaround for development only:**
+
+```php
+// In your .env file (NOT for production!)
+CURL_VERIFY_SSL=false
+```
+
+</details>
+
+<details>
+<summary><b>🚫 Error: "Call to undefined function curl_init()"</b></summary>
+
+**Solution:**
+
+1. Verify cURL extension is enabled in `php.ini`
+2. Restart web server
+3. Check `php -m | grep curl` to confirm it's loaded
+4. On Linux: `sudo apt-get install php-curl`
+ </details>
+
+<details>
+<summary><b>⚠️ Error: "SSL operation failed with code 1"</b></summary>
+
+**Solution:**
+
+1. Update OpenSSL to the latest version
+2. Ensure both `curl.cainfo` and `openssl.cafile` are set in `php.ini`
+3. Verify the `cacert.pem` file is not corrupted (re-download if necessary)
+ </details>
+
+<details>
+<summary><b>🔍 How to find the correct `php.ini` file</b></summary>
+
+```bash
+# Command line
+php --ini
+
+# Or create a test file
+echo "<?php phpinfo(); ?>" > info.php
+# Then visit: http://localhost/info.php
+# Look for "Loaded Configuration File"
+```
+
+</details>
+
+### 📝 Additional Notes
+
+- ⚠️ **Never disable SSL verification in production** - Only use `verify => false` for local development
+- 🔄 **Update cacert.pem regularly** - CA certificates are updated periodically
+- 🔐 **Keep your PHP version updated** - Newer versions have better SSL/TLS support
+- 📊 **Monitor your logs** - Check `storage/logs/laravel.log` for SSL-related errors
 
 ---
 
@@ -255,7 +442,7 @@ PDF files are compressed to reduce file size while maintaining quality (150 DPI 
       <a href="https://github.com/regiesanjuan">
         <img src="https://github.com/regiesanjuan.png" width="80" alt="Regie"/><br>
         <sub><b>📄 Regie San Juan</b></sub><br>
-        <sub>💻 Data Integrator </sub>
+        <sub>💻 Data Integrator</sub>
       </a>
     </td>
     <td align="center">
