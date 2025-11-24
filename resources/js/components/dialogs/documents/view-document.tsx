@@ -68,6 +68,8 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
 
   const dialogSize = isFullscreen ? "!w-screen !h-screen" : "!w-[90vw] !h-[95vh]"
 
+  console.log("Rendering DocumentViewer with fileUrl:", fileUrl)
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`!max-w-none ${dialogSize} p-0 flex flex-col bg-slate-50`}>

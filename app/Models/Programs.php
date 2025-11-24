@@ -82,6 +82,7 @@ class Programs extends Model
     {
         return $this->hasOne(AccreditationLevels::class, 'program_id', 'program_id')
             ->with('Areas')
+            ->where('is_active', true)
             ->orderBy('survey_date', 'desc');
     }
 }

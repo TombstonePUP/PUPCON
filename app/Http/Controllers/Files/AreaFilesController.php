@@ -72,8 +72,13 @@ class AreaFilesController extends Controller
         $categoryName = $categoryName === "Outcome/s" ? substr($categoryName, 0, -2) : $categoryName;
 
         $file = $validated['document'];
-        $fileName = $initial . '.' . $parameterOutlines->outline_number . '.' . $parameterOutlines->outline_description . '.' . $file->getClientOriginalExtension();
-        $filePath = "{$program->program_name}/Level-{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
+        $parameter_outline = Str::slug($parameterOutlines->outline_description, '_');
+        $fileName = $initial . '.' . $parameterOutlines->outline_number . '.' . $parameter_outline . '.' . $file->getClientOriginalExtension();
+        $program_name = Str::slug($program->program_name, '_');
+        $area_name = Str::slug($area->area_name, '_');
+        $parameter_name = Str::slug($parameterName, '_');
+        $category_name = Str::slug($categoryName, '_');
+        $filePath = "{$program_name}/level_{$level}/{$area_name}/{$parameter_name}/{$category_name}";
 
         // Ensure temp directory exists
         if (!Storage::disk('public')->exists('temp')) {

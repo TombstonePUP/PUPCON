@@ -7,6 +7,7 @@ use App\Http\Controllers\Content\FacilitiesController;
 use App\Http\Controllers\Content\FacultyStaffController;
 use App\Http\Controllers\Content\HistoryController;
 use App\Http\Controllers\Content\LocalTaskForceController;
+use App\Http\Controllers\Content\ManageAreasController;
 use App\Http\Controllers\Content\OtherServicesController;
 use App\Http\Controllers\Content\ProgramContentController;
 use App\Http\Controllers\Content\VmgoController;
@@ -53,6 +54,12 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     Route::controller(LevelsController::class)->group(function () {
         Route::post('manage-programs/{program_id}/levels/store', 'store')->name('manage.level.store');
         Route::patch('manage-programs/{program_id/levels/update', 'update')->name('manage.level.update');
+    });
+
+    Route::controller(ManageAreasController::class)->group(function () {
+        Route::post('manage-programs/{program_name}/{level_id}/area/store', 'store')->name('manage.area.store');
+        Route::post('manage-programs/{program_name}/{level_id}/area/{area_id}/update', 'update')->name('manage.area.update');
+        Route::delete('manage-programs/{program_name}/{level_id}/area/{area_id}/delete', 'destroy')->name('manage.area.delete');
     });
 
     Route::prefix('manage-programs/{program_name}/{level_id}/{area_id}')->as('manage.')->group(function () {

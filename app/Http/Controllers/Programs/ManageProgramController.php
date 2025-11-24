@@ -62,6 +62,8 @@ class ManageProgramController extends Controller
             if ($level->relationLoaded('Areas')) {
                 $level->Areas->each(function ($area) {
                     $area->area_numeral = $this->toRoman($area->area_number);
+                    $area->area_image_path = $area->area_image_path ? asset('storage/' . $area->area_image_path) : null;
+                    return $area;
                 });
             }
         });

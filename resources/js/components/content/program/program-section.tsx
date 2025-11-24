@@ -80,11 +80,6 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
     const selectedObjective = objectives.find((obj) => obj.program_objective_id === selectedObjectiveId);
     const selectedGalleryItem = galleryItems.find((item) => item.program_gallery_id === selectedGalleryId);
 
-    /* useEffect(() => {
-        setObjectives(program.objectives || []);
-        setGalleryItems(program.gallery || []);
-    }, [program]); */
-
     const { data, setData, post, errors, processing } = useForm<ProgramForm>({
         banner: null,
         description: program.program_description || '',
@@ -301,11 +296,11 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                         </div>
                         <div className="space-y-6">
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Program Banner</Label>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Program Image</Label>
                                 <div className="mt-5 flex flex-col gap-3">
                                     {!data.previewUrl ? (
                                         <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70">
-                                            <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+                                            <input type="file" className="hidden" accept="image/*" disabled={processing} onChange={handleImageChange} />
                                             <div className="flex flex-col items-center justify-center gap-4 pt-5 pb-6">
                                                 <div className="relative">
                                                     <div className="rounded-fullopacity-20 absolute inset-0 animate-pulse"></div>
@@ -339,6 +334,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                                     type="file"
                                                     accept="image/*"
                                                     className="hidden"
+                                                    disabled={processing}
                                                     onChange={handleImageChange}
                                                 />
                                                 <Button
@@ -377,9 +373,10 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                     id="program_description"
                                     required
                                     defaultValue={program.program_description}
-                                    onChange={() => { }}
+                                    onChange={(e) => {setData('description', e.target.value);}}
                                     placeholder="Provide a detailed description of the program..."
                                     autoResize
+                                    disabled={processing}
                                     minHeight={120}
                                 />
                                 <InputError message={errors.description} />

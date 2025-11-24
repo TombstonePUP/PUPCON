@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Area, AreaFormCategory, type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
 import { FolderPlus, PlusCircle } from 'lucide-react';
+import { usePage } from '@inertiajs/react';
 interface DocDialogParams {
     type: 'view' | 'upload' | 'delete' | 'rejected';
     benchmark: ParameterOutlines;
@@ -47,6 +48,8 @@ export default function ParameterAccordion({
     resolveBenchDialog,
     resolveParamDialog,
 }: ParameterAccordionProps) {
+    const { auth } = usePage().props;
+    const role = auth.user.roles.role_name;
     return (
         <>
             <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
@@ -82,12 +85,12 @@ export default function ParameterAccordion({
                                         {
                                             outlines.map(
                                                 (outline) =>
-                                                    (outline.initial =
-                                                        category.category_name == 'No Category'
-                                                            ? parameter.parameter_name == ''
-                                                                ? ''
-                                                                : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
-                                                            : category.category_name.match(/^[A-Za-z]/)),
+                                                (outline.initial =
+                                                    category.category_name == 'No Category'
+                                                        ? parameter.parameter_name == ''
+                                                            ? ''
+                                                            : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
+                                                        : category.category_name.match(/^[A-Za-z]/)),
                                             );
                                         }
 
@@ -117,31 +120,20 @@ export default function ParameterAccordion({
 
                                 {/* Add Benchmark Dialog */}
                                 <Button
-                                    className="cursor-pointer w-fit"
+                                    className="w-fit cursor-pointer"
                                     variant={'outline'}
                                     onClick={() => {
                                         setTimeout(() => resolveBenchDialog({ type: 'add', parameter: parameter }), 50);
                                     }}
-                                >   <PlusCircle />
+                                >
+                                    {' '}
+                                    <PlusCircle />
                                     Add Benchmark
                                 </Button>
                             </AccordionContent>
                         </AccordionItem>
                     ))
                 ) : (
-                    // <div className="flex h-full w-full flex-col items-center justify-center">
-                    //     <Button className="border-none" onClick={() => resolveParamDialog({type:'add'})}>
-                    //         Add
-                    //         <PlusIcon className="ml-1 h-4 w-4" />
-                    //     </Button>
-                    //     <Button className="border-none" onClick={() => resolveParamDialog({type: 'import'})}>
-                    //         Import
-                    //         <LucideImport className="ml-1 h-4 w-4" />
-                    //     </Button>
-                    //     <h1 className="text-[1.5vw] font-bold">Content Not Available</h1>
-                    //     <p className="text-[1.2vw] text-[#858585]">No Available Parameters in This Area.</p>
-                    // </div>
-
                     <Empty>
                         <EmptyHeader>
                             <EmptyMedia variant="icon">
@@ -150,12 +142,16 @@ export default function ParameterAccordion({
                             <EmptyTitle>Content Not Available</EmptyTitle>
                             <EmptyDescription>No available parameters in this area.</EmptyDescription>
                         </EmptyHeader>
-                        <EmptyContent>
-                            <div className="flex gap-2">
-                                <Button variant="outline" onClick={() => resolveParamDialog({ type: 'import' })}>Import</Button>
-                                <Button onClick={() => resolveParamDialog({ type: 'add' })}>Add Parameter</Button>
-                            </div>
-                        </EmptyContent>
+                        {(role === 'Admin' || role === 'Coordinator') && (
+                            <EmptyContent>
+                                <div className="flex gap-2">
+                                    <Button variant="outline" onClick={() => resolveParamDialog({ type: 'import' })}>
+                                        Import
+                                    </Button>
+                                    <Button onClick={() => resolveParamDialog({ type: 'add' })}>Add Parameter</Button>
+                                </div>
+                            </EmptyContent>
+                        )}
                     </Empty>
                 )}
             </Accordion>

@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { AreaFormCategory, AreaForms, Program } from '@/types';
+import { usePage } from '@inertiajs/react';
 import { CheckCircle2, CircleDashed, DownloadIcon, Edit, Eye, FileUp, FileX, Info, Plus, Trash2, XCircle } from 'lucide-react';
 
 interface AreaFormDialogParams {
@@ -31,6 +32,8 @@ function StatusIcon({ form }: { form: AreaForms }) {
 }
 
 export default function AreaCards({ program, area_id, forms, resolveFormDialog }: AreaCardsProps) {
+    const { auth } = usePage().props;
+    const role = auth.user.roles.role_name;
     const download = (form: AreaForms) => {
         const url = route('manage.area.download.area.form.file', {
             program_name: program.program_link,
@@ -101,14 +104,16 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
                                 <FileX className="text-destructive h-4 w-4" />
                             </Button>
                         )}
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="bg-background/90 h-9 w-9 rounded-full"
-                            onClick={() => resolveFormDialog({ type: 'delete-form', form: card })}
-                        >
-                            <Trash2 className="text-destructive h-4 w-4" />
-                        </Button>
+                        {(role === 'Admin' || role === 'Coordinator') && (
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="bg-background/90 h-9 w-9 rounded-full"
+                                onClick={() => resolveFormDialog({ type: 'delete-form', form: card })}
+                            >
+                                <Trash2 className="text-destructive h-4 w-4" />
+                            </Button>
+                        )}
                         {card.file_status?.status_name === 'Rejected' && (
                             <Button
                                 variant="outline"
@@ -123,7 +128,7 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
                 </div>
             ))}
 
-            {forms.length < 3 ? (
+            {forms.length < 3 && (role === 'Admin' || role === 'Coordinator') && (
                 <Button
                     variant="outline"
                     className="border-muted-foreground/40 bg-card text-muted-foreground/80 hover:border-muted-foreground/80 hover:bg-muted/50 hover:text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-colors"
@@ -132,7 +137,7 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
                     <Plus className="h-8 w-8" />
                     <p className="text-sm font-medium">Add Form</p>
                 </Button>
-            ) : null}
+            )}
         </div>
     );
 }

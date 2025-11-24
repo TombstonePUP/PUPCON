@@ -42,15 +42,24 @@ class AreaFormsController extends Controller
         $program = Programs::where('program_name', $program)->with('Levels')->first();
         $level = $program->Levels->where('accreditation_level_id', $request->level_id)->first();
         $level = $level->level === 0 ? 'Preliminiary Survey Visit' : $level->level;
-        $pending = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
+
+        if($user->Roles->role_name === 'Coordinator' || $user->Roles->role_name === 'Admin') {
+            $status = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
+        } else {
+            $status = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
+        }
+
         $category = AreaFormCategory::where('area_form_category_id', $validated['area_form_category_id'])
             ->first()->category_name;
 
         $areaForm = new AreaForms();
 
         if ($request->hasFile('document')) {
+            $category = Str::slug($category, '_');
+            $program_name = Str::slug($program->program_name, '_');
+            $area_name = Str::slug($area->area_name, '_');
             $formFileName = "{$category}.{$validated['document']->getClientOriginalExtension()}";
-            $formFilePath = "{$program->program_name}/Level-{$level}/{$area->area_name}/area-forms/files";
+            $formFilePath = "{$program_name}/level_{$level}/{$area_name}/area_forms/files";
             $request->file('document')->storeAs($formFilePath, $formFileName, 'public');
 
             $formFilePath = "{$formFilePath}/{$formFileName}";
@@ -59,7 +68,7 @@ class AreaFormsController extends Controller
             $areaForm->file_path = $formFilePath;
             $areaForm->uploaded_by = $user->user_id;
             $areaForm->uploaded_at = now();
-            $areaForm->file_status_id = $pending;
+            $areaForm->file_status_id = $status;
             //Log the activity
             $activityLog = new ActivityLog();
             $activityLog->user_id = $user->user_id;

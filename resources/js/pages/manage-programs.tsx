@@ -252,17 +252,25 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                 </div>
                                             )}
                                             <div className="mb-3 flex items-center justify-between">
-                                                <div
-                                                    className={`inline-flex items-center gap-1 rounded bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]`}
-                                                >
-                                                    {program.latest_level ? `Accreditation Level ${program.latest_level?.level}` : `No Current Level`}
+                                                <div>
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="border-0 bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]"
+                                                    >
+                                                        {program.latest_level ? `Accreditation Level ${program.latest_level?.level}` : `No Current Level`}
+                                                    </Badge>
+                                                    {program.under_survey && (
+                                                        <Badge variant="outline" className="ml-2 border-0 bg-yellow-100 text-yellow-800">
+                                                            Under Survey
+                                                        </Badge>
+                                                    )}
                                                 </div>
                                                 {role === 'Admin' || role === 'Coordinator' ? null : isAssigned ? (
-                                                    <Badge variant="outline" className="mt-3 border-0 bg-green-100 text-green-800">
+                                                    <Badge variant="outline" className="border-0 bg-green-100 text-green-800">
                                                         Assigned
                                                     </Badge>
                                                 ) : (
-                                                    <Badge variant="outline" className="mt-3 border-0 bg-gray-100 text-gray-800">
+                                                    <Badge variant="outline" className="border-0 bg-gray-100 text-gray-800">
                                                         Not Assigned
                                                     </Badge>
                                                 )}

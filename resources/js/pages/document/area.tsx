@@ -20,7 +20,6 @@ interface AreaFilesProps {
 
 export default function Areas({ program, area, parameterOutlineCategories, areaFormsCategories }: AreaFilesProps) {
     const { auth } = usePage().props;
-    const privileges = auth.programs || [];
     const role = auth.user.roles.role_name;
     const [dialog, setDialog] = useState<{
         kind: 'document' | 'benchmark' | 'parameter' | 'area-form' | null;
@@ -106,13 +105,12 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         </div>
 
                         {/* Right Sidebar - Actions */}
-                        {(role === 'Admin' || role === 'Coordinator') && (
+                        {(area.area_parameters.length > 0) && (role === 'Admin' || role === 'Coordinator') && (
                             <div className="w-64 shrink-0">
                                 <div className="sticky top-6 space-y-4">
-
                                     <div className="w-full rounded-lg border border-gray-200 bg-white p-4">
                                         <h3 className="mb-4 text-sm font-semibold text-gray-900">Area Actions</h3>
-                                        <div className={`flex flex-col gap-2 ${area?.area_parameters?.length <= 0 ? 'hidden' : ''}`}>
+                                        <div className="flex flex-col gap-2">
                                             <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
                                                 <PlusCircleIcon className="ml-1 h-4 w-4" />
                                                 Add Parameter
@@ -120,11 +118,6 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                                             <Button className="border-none" onClick={() => openDialog('parameter', 'import')}>
                                                 <LucideImport className="ml-1 h-4 w-4" />
                                                 Import template
-                                            </Button>
-
-                                            <Button type="button" variant="outline">
-                                                <Edit className="ml-1 h-4 w-4" />
-                                                Edit Area Content
                                             </Button>
                                         </div>
                                     </div>

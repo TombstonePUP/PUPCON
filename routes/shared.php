@@ -4,6 +4,8 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Files\AreaFilesController;
 use App\Http\Controllers\Files\AreaFormFilesController;
 use App\Http\Controllers\Files\AreaFormsController;
+use App\Http\Controllers\Files\DownloadPerAreaFilesController;
+use App\Http\Controllers\Files\DownloadPerProgramFilesController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use Illuminate\Support\Facades\Route;
@@ -17,7 +19,9 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
 
         Route::middleware(['user.program.role'])->group(function () {
             Route::get('/{program_name}/{level_id}/', 'show')->name('program')->middleware('program.level.exists');
+            Route::get('/{program_name}/{level_id}/download', DownloadPerProgramFilesController::class)->name('program.download');
             Route::prefix('{program_name}/{level_id}')->group(function () {
+                Route::get('/{area_id}/download', DownloadPerAreaFilesController::class)->name('area.download');
 
                 Route::middleware(['user.area.role'])->group(function () {
                     Route::get('/{area_id}', [AreaParameterOutlinesController::class, 'index'])->name('area');

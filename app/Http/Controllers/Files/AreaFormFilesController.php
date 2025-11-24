@@ -25,14 +25,16 @@ class AreaFormFilesController extends Controller
      */
     public function store(Request $request, AreaForms $areaForms): RedirectResponse
     {
-        $validated = $request->validate([
-            'document' => 'required|file|mimes:pdf',
-        ],
-        [
-            'document.required' => 'Please upload a PDF document.',
-            'document.file' => 'The uploaded file must be a valid file.',
-            'document.pdf' => 'The uploaded file must be a PDF document.'
-        ]);
+        $validated = $request->validate(
+            [
+                'document' => 'required|file|mimes:pdf',
+            ],
+            [
+                'document.required' => 'Please upload a PDF document.',
+                'document.file' => 'The uploaded file must be a valid file.',
+                'document.pdf' => 'The uploaded file must be a PDF document.'
+            ]
+        );
 
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
@@ -40,21 +42,28 @@ class AreaFormFilesController extends Controller
         $program = Programs::where('program_name', $program)->with('Levels')->first();
         $level = $program->Levels->where('accreditation_level_id', $request->level_id)->first();
         $level = $level->level === 0 ? 'Preliminiary Survey Visit' : $level->level;
-        $pending = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
+        if ($user->Roles->role_name === 'Coordinator' || $user->Roles->role_name === 'Admin') {
+            $status = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
+        } else {
+            $status = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
+        }
 
         $areaForm = $areaForms->find($request->form_id);
         $category = $areaForm->AreaFormCategory->category_name;
 
         $activityLog = new ActivityLog();
-        if($file = $areaForm->file_path) {
+        if ($file = $areaForm->file_path) {
             Storage::disk('public')->delete($file);
             $activityLog->activity = "Update Document";
         } else {
             $activityLog->activity = "Upload Document";
         }
 
+        $category = Str::slug($category, '_');
+        $program_name = Str::slug($program->program_name, '_');
+        $area_name = Str::slug($area->area_name, '_');
         $formFileName = "{$category}.{$validated['document']->getClientOriginalExtension()}";
-        $formFilePath = "{$program->program_name}/Level-{$level}/{$area->area_name}/area-forms/files";
+        $formFilePath = "{$program_name}/level_{$level}/{$area_name}/area_forms/files";
         $request->file('document')->storeAs($formFilePath, $formFileName, 'public');
 
         $formFilePath = "{$formFilePath}/{$formFileName}";
@@ -62,7 +71,7 @@ class AreaFormFilesController extends Controller
         $areaForm->file_path = $formFilePath;
         $areaForm->uploaded_by = $user->user_id;
         $areaForm->uploaded_at = now();
-        $areaForm->file_status_id = $pending;
+        $areaForm->file_status_id = $status;
 
         $activityLog->user_id = $user->user_id;
         $activityLog->area = $area->area_name;

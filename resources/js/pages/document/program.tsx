@@ -1,11 +1,15 @@
 import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
+import ProgramSection from '@/components/content/program/program-section';
+import AreaDialog from '@/components/dialogs/content/programs/areas/area-dialog';
+import DeleteAreaDialog from '@/components/dialogs/content/programs/areas/delete-area-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
@@ -14,18 +18,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgram, ProgramAreas } from '@/types';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { BookOpen, EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
-import ProgramSection from '@/components/content/program/program-section';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { BookOpen, Download, EditIcon, MoreVertical, Plus, Trash2 } from 'lucide-react';
 
 export interface ProgramProps {
     program: PerProgram;
-}
-
-interface AreaForm {
-    area_id?: number;
-    area_number: string;
-    area_name: string;
 }
 
 // --- Main Component ---
@@ -62,68 +59,26 @@ export default function Programs({ program }: ProgramProps) {
         }
     };
 
-    // --- Form for Program Areas ---
-    const {
-        data: areaData,
-        setData: setAreaData,
-        post: postArea,
-        put: putArea,
-        delete: deleteArea,
-        processing: processingArea,
-        errors: errorsArea,
-        reset: resetArea,
-    } = useForm<AreaForm>({
-        area_id: undefined,
-        area_number: '',
-        area_name: '',
-    });
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogAction, setDialogAction] = useState<'add' | 'edit' | 'delete' | null>(null);
+    const [selectedArea, setSelectedArea] = useState<ProgramAreas | null>(null);
 
-    const [areaDialogOpen, setAreaDialogOpen] = useState(false);
-    const [areaDeleteOpen, setAreaDeleteOpen] = useState(false);
-    const [areaToDelete, setAreaToDelete] = useState<number | null>(null);
+    const addArea = () => {
+        setDialogAction('add');
+        setSelectedArea(null);
+        setDialogOpen(true);
+    };
 
-    const addArea = (e: React.FormEvent) => {
-        e.preventDefault();
-        postArea(route('manage.program.areas.store', program.program_id), {
-            preserveState: true,
-            onSuccess: () => {
-                resetArea();
-                setAreaDialogOpen(false);
-            },
-        });
+    const editArea = (area: ProgramAreas) => {
+        setDialogAction('edit');
+        setSelectedArea(area);
+        setDialogOpen(true);
     };
-    const updateArea = (e: React.FormEvent) => {
-        e.preventDefault();
-        putArea(route('manage.program.areas.update', { program_id: program.program_id, area_id: areaData.area_id }), {
-            preserveState: true,
-            onSuccess: () => {
-                resetArea();
-                setAreaDialogOpen(false);
-            },
-        });
-    };
-    const openEditAreaDialog = (area: any) => {
-        setAreaData({ area_id: area.area_id || area.id, area_number: area.area_numeral || area.area_number, area_name: area.area_name });
-        setAreaDialogOpen(true);
-    };
-    const openAddAreaDialog = () => {
-        resetArea();
-        setAreaDialogOpen(true);
-    };
-    const openDeleteAreaDialog = (id: number) => {
-        setAreaToDelete(id);
-        setAreaDeleteOpen(true);
-    };
-    const handleDeleteArea = () => {
-        if (areaToDelete) {
-            deleteArea(route('manage.program.areas.destroy', { program_id: program.program_id, area_id: areaToDelete }), {
-                preserveState: true,
-                onSuccess: () => {
-                    setAreaDeleteOpen(false);
-                    setAreaToDelete(null);
-                },
-            });
-        }
+
+    const deleteArea = (area: ProgramAreas) => {
+        setDialogAction('delete');
+        setSelectedArea(area);
+        setDialogOpen(true);
     };
 
     // ---  Level Selector ---
@@ -152,7 +107,8 @@ export default function Programs({ program }: ProgramProps) {
                                     )
                                 }
                             >
-                                {level.level === 1 ? 'Preliminary Survey Visit' : 'Level ' + level.level}
+                                {level.level === 1 ? 'Preliminary Survey Visit' : 'Level ' + level.level}{' '}
+                                {level.survey_date && `- (${new Date(level.survey_date).getFullYear()})`}
                             </DropdownMenuRadioItem>
                         ))}
                     </DropdownMenuRadioGroup>
@@ -190,24 +146,35 @@ export default function Programs({ program }: ProgramProps) {
                         <div className="space-y-6">
                             {/* --- Program Info, Objectives, and Gallery Section--- */}
                             {(role === 'Admin' || role === 'Coordinator') && (
-                                <ProgramSection
-                                    program={program}
-                                    overviewRef={overviewRef}
-                                    objectivesRef={objectivesRef}
-                                    galleryRef={galleryRef}
-                                />
+                                <ProgramSection program={program} overviewRef={overviewRef} objectivesRef={objectivesRef} galleryRef={galleryRef} />
                             )}
 
                             {/* --- Program Areas Section --- */}
                             <div ref={areasRef} className="scroll-mt-20 rounded-lg border border-gray-200 bg-white p-8">
-                                <div className="mb-6">
-                                    <h3 className="text-lg font-semibold text-gray-900">Program Areas</h3>
-                                    <p className="text-sm text-gray-600">
-                                        Configure assessment areas for{' '}
-                                        <span className="font-medium text-gray-800">
-                                            {selected_level?.level === 0 ? 'Preliminary Survey Visit' : 'Level ' + selected_level?.level}
-                                        </span>
-                                    </p>
+                                <div className="mb-6 flex items-center justify-between">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900">Program Areas</h3>
+                                        <p className="text-sm text-gray-600">
+                                            Configure assessment areas for{' '}
+                                            <span className="font-medium text-gray-800">
+                                                {selected_level?.level === 0 ? 'Preliminary Survey Visit' : 'Level ' + selected_level?.level}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <Button className="border-none" size="sm" asChild>
+                                            <a
+                                                href={route('manage.program.download', {
+                                                    program_name: program.program_link,
+                                                    level_id: selected_level?.accreditation_level_id,
+                                                })}
+                                                className="flex items-center"
+                                            >
+                                                Download
+                                                <Download className="ml-2 h-4 w-4" />
+                                            </a>
+                                        </Button>
+                                    </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -220,7 +187,7 @@ export default function Programs({ program }: ProgramProps) {
                                             return (
                                                 <div
                                                     key={item.area_id}
-                                                    className="group relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:border-gray-400"
+                                                    className="flex flex-col group relative rounded-xl border border-gray-200 bg-white transition-all duration-150 hover:border-gray-400"
                                                 >
                                                     {isAssigned ? (
                                                         <Link
@@ -229,7 +196,7 @@ export default function Programs({ program }: ProgramProps) {
                                                                 level_id: selected_level.accreditation_level_id,
                                                                 area_id: item.area_id,
                                                             })}
-                                                            className="block"
+                                                            className="block p-6"
                                                         >
                                                             <div className="flex items-start justify-between">
                                                                 <h4 className="text-base font-semibold text-gray-900">Area {item.area_numeral}</h4>
@@ -245,10 +212,10 @@ export default function Programs({ program }: ProgramProps) {
                                                             <p className="mt-1 text-sm text-gray-600">{item.area_name}</p>
                                                         </Link>
                                                     ) : (
-                                                        <div className="block cursor-not-allowed opacity-50">
+                                                        <div className="block cursor-not-allowed p-6">
                                                             <div className="flex items-start justify-between">
                                                                 <h4 className="text-base font-semibold text-gray-600">Area {item.area_numeral}</h4>
-                                                                <Badge variant="outline" className="border-0 bg-red-100 text-red-700">
+                                                                <Badge variant="outline" className="border-0 bg-gray-100 text-gray-700">
                                                                     Not Assigned
                                                                 </Badge>
                                                             </div>
@@ -256,24 +223,53 @@ export default function Programs({ program }: ProgramProps) {
                                                         </div>
                                                     )}
 
-                                                    {(role === 'Admin' || role === 'Coordinator') && (
-                                                        <div className="absolute top-3 right-3 flex gap-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
                                                             <Button
                                                                 variant="ghost"
-                                                                className="h-8 w-8 rounded-full p-0 hover:bg-gray-200"
-                                                                onClick={() => openEditAreaDialog(item)}
+                                                                className="absolute top-3 right-3 h-8 w-8 rounded-full p-0 hover:bg-gray-200"
                                                             >
-                                                                <EditIcon className="h-4 w-4 text-gray-600" />
+                                                                <MoreVertical className="h-4 w-4 text-gray-600" />
                                                             </Button>
-                                                            <Button
-                                                                variant="ghost"
-                                                                className="h-8 w-8 rounded-full p-0 text-red-600 hover:bg-red-50 hover:text-red-600"
-                                                                onClick={() => openDeleteAreaDialog(item.area_id)}
-                                                            >
-                                                                <Trash2 className="h-4 w-4" />
-                                                            </Button>
-                                                        </div>
-                                                    )}
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            {(role === 'Admin' || role === 'Coordinator') &&
+                                                                selected_level.is_active &&
+                                                                selected_level.remarks !== 'Ongoing Survey' && (
+                                                                    <DropdownMenuItem onClick={() => editArea(item)}>
+                                                                        <EditIcon className="mr-2 h-4 w-4 text-gray-600" />
+                                                                        Edit
+                                                                    </DropdownMenuItem>
+                                                                )}
+                                                            <DropdownMenuItem asChild>
+                                                                <a
+                                                                    href={route('manage.area.download', {
+                                                                        program_name: program.program_link,
+                                                                        level_id: selected_level.accreditation_level_id,
+                                                                        area_id: item.area_id,
+                                                                    })}
+                                                                    className="flex w-full"
+                                                                >
+                                                                    <Download className="mr-2 h-4 w-4 text-gray-600" />
+                                                                    Download
+                                                                </a>
+                                                            </DropdownMenuItem>
+                                                            {(role === 'Admin' || role === 'Coordinator') &&
+                                                                selected_level.is_active &&
+                                                                selected_level.remarks !== 'Ongoing Survey' && (
+                                                                    <>
+                                                                        <DropdownMenuSeparator />
+                                                                        <DropdownMenuItem
+                                                                            className="text-red-600 hover:bg-red-50 hover:text-red-600"
+                                                                            onClick={() => deleteArea(item)}
+                                                                        >
+                                                                            <Trash2 className="mr-2 h-4 w-4" />
+                                                                            Delete
+                                                                        </DropdownMenuItem>
+                                                                    </>
+                                                                )}
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
                                                 </div>
                                             );
                                         })
@@ -286,16 +282,18 @@ export default function Programs({ program }: ProgramProps) {
                                     )}
 
                                     {/* Add New Area Card */}
-                                    {(role === 'Admin' || role === 'Coordinator') && (
-                                        <button
-                                            type="button"
-                                            onClick={openAddAreaDialog}
-                                            className="group flex min-h-[120px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600"
-                                        >
-                                            <Plus className="h-6 w-6" />
-                                            <span className="mt-2 text-sm font-medium">Add New Area</span>
-                                        </button>
-                                    )}
+                                    {(role === 'Admin' || role === 'Coordinator') &&
+                                        selected_level.is_active &&
+                                        selected_level.remarks !== 'Ongoing Survey' && (
+                                            <button
+                                                type="button"
+                                                onClick={addArea}
+                                                className="group flex min-h-[100px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600"
+                                            >
+                                                <Plus className="h-6 w-6" />
+                                                <span className="mt-2 text-sm font-medium">Add New Area</span>
+                                            </button>
+                                        )}
                                 </div>
                             </div>
                         </div>
@@ -330,6 +328,12 @@ export default function Programs({ program }: ProgramProps) {
                     </div>
                 </div>
             </div>
+            {dialogOpen && dialogAction !== 'delete' && (
+                <AreaDialog type={dialogAction} area={selectedArea} program={program} level={selected_level} onClose={() => setDialogOpen(false)} />
+            )}
+            {dialogOpen && dialogAction === 'delete' && (
+                <DeleteAreaDialog type="delete" area={selectedArea} program={program} level={selected_level} onClose={() => setDialogOpen(false)} />
+            )}
         </AppLayout>
     );
 }

@@ -7,6 +7,7 @@ use App\Models\ProgramObjectives;
 use App\Models\Programs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProgramContentController extends Controller
 {
@@ -31,9 +32,10 @@ class ProgramContentController extends Controller
         $program = Programs::findOrFail($request->program_id);
         $bannerName = null;
         $bannerPath = null;
+        $program->program_link = Str::of($program->program_name)->snake();
         if (isset($validated['banner'])) {
-            $bannerName = $program->program_name . '_banner.' . $validated['banner']->getClientOriginalExtension();
-            $bannerPath = $program->program_name . '/' . $bannerName;
+            $bannerName = $program->program_link . '_banner.' . $validated['banner']->getClientOriginalExtension();
+            $bannerPath = $program->program_link . '/' . $bannerName;
             if (Storage::disk('public')->exists($bannerPath)) {
                 Storage::disk('public')->delete($bannerPath);
             }
