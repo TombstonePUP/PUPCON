@@ -141,6 +141,7 @@ export interface AccreditationLevels {
     program_id: number;
     level: number;
     remarks: string;
+    survey_date: string;
     is_active: boolean;
     programs?: Program;
     areas?: ProgramAreas[];
@@ -167,7 +168,7 @@ export interface Program {
     degree_type: string;
     program_name: string;
     program_link: string;
-    levels?: AccreditationLevels[];
+    levels?: AccreditationLevels;
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -181,9 +182,10 @@ export interface Area {
     area_image_path: string;
     area_number: string;
     area_numeral?: string;
-    program?: Program;
+    // program?: Program;
     areaParameters?: AreaParameters[];
     areaForms?: AreaForms[];
+    levels?: AccreditationLevels;
     [key: string]: unknown; // This allows for additional properties...
 }
 

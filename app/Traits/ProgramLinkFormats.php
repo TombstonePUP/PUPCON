@@ -5,9 +5,10 @@ use Illuminate\Support\Str;
 
 trait ProgramLinkFormats
 {
-    public function formatPrograms($program): string
+    public function formatPrograms($program)
     {
-        $program->program_link = Str::of($program->program_name)->snake();
+        $name = $program->program_name;
+        $program->program_link = Str::of($name)->snake();
         return $program;
     }
 }

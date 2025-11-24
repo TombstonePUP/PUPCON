@@ -2,7 +2,7 @@ import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { cn } from '@/lib/utils';
 import type { Auth, GuestNavigation } from '@/types';
 import { Button } from '@headlessui/react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     BookOpen,
@@ -131,16 +131,19 @@ export default function Layout({ children, footerText }: LayoutProps) {
                 ?.filter(
                     (o: any) =>
                         o.outline_description?.toLowerCase().includes(t) ||
-                        o.area_parameters?.parameter_name?.toLowerCase().includes(t) ||
-                        o.area_parameters?.area?.area_name?.toLowerCase().includes(t) ||
-                        o.area_parameters?.area?.program?.program_name?.toLowerCase().includes(t),
+                        o.area_parameter?.parameter_name?.toLowerCase().includes(t) ||
+                        o.area_parameter?.areas?.area_name?.toLowerCase().includes(t) ||
+                        o.area_parameter?.areas?.levels?.programs?.program_name?.toLowerCase().includes(t),
                 )
                 ?.map((o: any) => ({
                     outline: o.outline_description,
                     outlineId: o.parameter_outline_id,
-                    program: o.area_parameters?.area?.program?.program_name,
-                    area: o.area_parameters?.area?.area_name,
-                    parameter: o.area_parameters?.parameter_name,
+                    program: o.area_parameter?.areas?.levels?.programs?.program_name,
+                    area: o.area_parameter?.areas?.area_name,
+                    parameter: o.area_parameter?.parameter_name,
+                    level: o.area_parameter?.areas?.levels?.level,
+                    program_link: o.area_parameter?.areas?.levels?.programs?.program_link,
+                    area_id: o.area_parameter?.areas?.area_id,
                 })) || [];
 
         setTimeout(() => {
@@ -159,6 +162,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
             }
         }, 300);
         return () => clearTimeout(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm]);
 
     // Focus input when modal opens
@@ -271,6 +275,27 @@ export default function Layout({ children, footerText }: LayoutProps) {
         setOpenDropdown(openDropdown === label ? null : label);
     };
 
+    const redirectLink = (outline: any) => {
+        const programLink = outline.program_link;
+        const areaId = outline.area_id;
+        const outlineId = outline.outlineId;
+
+        router.visit(
+            route('programs.areas.show', {
+                program_name: programLink,
+                area_id: areaId,
+            }),
+            {
+                preserveScroll: true,
+                only: [],
+                data: {
+                    outline: outlineId,
+                },
+            },
+        );
+
+        setSearchOpen(false);
+    };
 
     return (
         <div className="flex min-h-screen flex-col">
@@ -289,12 +314,12 @@ export default function Layout({ children, footerText }: LayoutProps) {
             >
                 <Link href="/" className="flex items-center" preserveScroll>
                     {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
-                    <div className="h-[14vw] w-[85vw] lg:h-[4vw] lg:w-[38vw] rounded-br-full bg-[#d2b539]">
-                        <div className="mr-3 ml-3 flex h-full items-center pl-5 lg:justify-end gap-4 rounded-br-full bg-white lg:pr-20 pb-2">
-                            <img className="size-[10vw] mt-1 lg:size-[2.9vw]" src="/images/pupsj-logo.png" alt="pupsj logo" />
+                    <div className="h-[14vw] w-[85vw] rounded-br-full bg-[#d2b539] lg:h-[4vw] lg:w-[38vw]">
+                        <div className="mr-3 ml-3 flex h-full items-center gap-4 rounded-br-full bg-white pb-2 pl-5 lg:justify-end lg:pr-20">
+                            <img className="mt-1 size-[10vw] lg:size-[2.9vw]" src="/images/pupsj-logo.png" alt="pupsj logo" />
                             <div>
-                                <h1 className="text-[4vw] lg:text-[1.4vw] font-bold text-[#7f1414]">San Juan Campus</h1>
-                                <p className="text-[2.5vw] mt-[-6px] lg:text-[0.75vw]">Polytechnic University of the Philippines</p>
+                                <h1 className="text-[4vw] font-bold text-[#7f1414] lg:text-[1.4vw]">San Juan Campus</h1>
+                                <p className="mt-[-6px] text-[2.5vw] lg:text-[0.75vw]">Polytechnic University of the Philippines</p>
                             </div>
                         </div>
                     </div>
@@ -302,7 +327,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                 <div className="relative mr-[10vw] max-w-7xl">
                     {/* Navigation + Search */}
-                    <div className="hidden lg:flex items-center justify-end gap-8">
+                    <div className="hidden items-center justify-end gap-8 lg:flex">
                         <nav>
                             <ul className="flex gap-8 text-sm font-medium tracking-wide text-white/90">
                                 {[...leftNav, ...rightNav].map((item) => (
@@ -371,7 +396,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                     <motion.button
                         onClick={() => setMenuOpen(true)}
-                        className="relative flex items-center justify-center rounded-full bg-white/10 p-2 text-white hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none ml-[3vw] lg:hidden"
+                        className="relative ml-[3vw] flex items-center justify-center rounded-full bg-white/10 p-2 text-white hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none lg:hidden"
                         title="Menu"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -419,10 +444,13 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                         Mabuhay!
                                     </h2>
                                 </div>
-                               <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2">
                                     <Button
-                                        onClick={() => {  setMenuOpen(true); setSearchOpen(false);}}
-                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 shadow-sm text-white"
+                                        onClick={() => {
+                                            setMenuOpen(true);
+                                            setSearchOpen(false);
+                                        }}
+                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 text-white shadow-sm"
                                         title="Menu"
                                     >
                                         <Menu className="h-5 w-5" />
@@ -453,7 +481,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                         ref={inputRef}
                                         type="text"
                                         placeholder="Search outlines, parameters, programs..."
-                                        className="w-full rounded-xl border border-gray-300/50 bg-white/80 py-4 px-4 text-sm placeholder-gray-500 shadow-sm backdrop-blur-sm transition-all duration-300 focus:border-[#7f1414] focus:bg-white focus:ring-4 focus:ring-[#7f1414]/20 focus:outline-none"
+                                        className="w-full rounded-xl border border-gray-300/50 bg-white/80 px-4 py-4 text-sm placeholder-gray-500 shadow-sm backdrop-blur-sm transition-all duration-300 focus:border-[#7f1414] focus:bg-white focus:ring-4 focus:ring-[#7f1414]/20 focus:outline-none"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
@@ -553,6 +581,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                                         whileHover={{
                                                             transition: { duration: 0.2 },
                                                         }}
+                                                        onClick={() => redirectLink(result)}
                                                     >
                                                         <div className="mb-3 flex items-start justify-between">
                                                             <div className="flex flex-wrap items-center space-x-2 text-sm font-medium text-gray-600">
@@ -568,7 +597,6 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                                         </div>
                                                         <p className="text-sm leading-relaxed text-gray-800 transition-colors duration-200 group-hover:text-gray-900">
                                                             {result.outline}
-                                                            {console.log(result)}
                                                         </p>
                                                     </motion.div>
                                                 ))}
@@ -621,8 +649,11 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Button
-                                        onClick={() => { setSearchOpen(true); setMenuOpen(false); }}
-                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 shadow-sm text-white"
+                                        onClick={() => {
+                                            setSearchOpen(true);
+                                            setMenuOpen(false);
+                                        }}
+                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 text-white shadow-sm"
                                         title="Search"
                                     >
                                         <Search className="h-5 w-5" />
@@ -638,10 +669,9 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                         <X className="h-5 w-5" />
                                     </motion.button>
                                 </div>
-
                             </div>
 
-                            <nav className="w-full rounded-lg overflow-hidden">
+                            <nav className="w-full overflow-hidden rounded-lg">
                                 <ul className="flex flex-col divide-y divide-white/10">
                                     {[...leftNav, ...rightNav].map((item) => {
                                         const isOpen = openDropdown === item.label;
@@ -652,23 +682,18 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                                 <div className="flex items-center justify-between px-5 py-3">
                                                     <Link
                                                         href={item.href}
-                                                        className={cn(
-                                                            'flex-1 transition-all duration-200 text-[#7f1414]'
-                                                        )}
+                                                        className={cn('flex-1 text-[#7f1414] transition-all duration-200')}
                                                         preserveScroll
                                                     >
                                                         {item.label}
                                                     </Link>
 
                                                     {item.dropdown?.length > 0 && (
-                                                        <button
-                                                            onClick={() => toggleDropdown(item.label)}
-                                                            className="p-2"
-                                                        >
+                                                        <button onClick={() => toggleDropdown(item.label)} className="p-2">
                                                             <ChevronDown
                                                                 className={cn(
-                                                                    "ml-2 text-[#7f1414] transition-transform duration-300",
-                                                                    isOpen && "rotate-180"
+                                                                    'ml-2 text-[#7f1414] transition-transform duration-300',
+                                                                    isOpen && 'rotate-180',
                                                                 )}
                                                             />
                                                         </button>
@@ -679,26 +704,19 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                                 {item.dropdown?.length > 0 && (
                                                     <div
                                                         className={cn(
-                                                            "bg-white text-[#7f1414] overflow-hidden transition-all duration-300",
-                                                            isOpen ? "max-h-96" : "max-h-0"
+                                                            'overflow-hidden bg-white text-[#7f1414] transition-all duration-300',
+                                                            isOpen ? 'max-h-96' : 'max-h-0',
                                                         )}
                                                     >
                                                         <ul className="flex flex-col">
                                                             {item.dropdown.map((drop) => (
-                                                                <li
-                                                                    key={drop.label}
-                                                                    className="border-t border-gray-100 last:border-none"
-                                                                >
+                                                                <li key={drop.label} className="border-t border-gray-100 last:border-none">
                                                                     <Link
                                                                         href={drop.href}
                                                                         className="flex items-center gap-2 px-6 py-3 text-sm transition-colors hover:bg-[#7f1414] hover:text-white"
                                                                         preserveScroll
                                                                     >
-                                                                        {drop.icon && (
-                                                                            <span className="flex-shrink-0 text-lg">
-                                                                                {drop.icon}
-                                                                            </span>
-                                                                        )}
+                                                                        {drop.icon && <span className="flex-shrink-0 text-lg">{drop.icon}</span>}
                                                                         <span>{drop.label}</span>
                                                                     </Link>
                                                                 </li>
@@ -720,7 +738,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
             <main className="flex-1">{children}</main>
 
             {/* Footer */}
-            <footer className="relative min-h-[500px] bg-[#7f1414] text-white py-10 pt-20 lg:pt-0">
+            <footer className="relative min-h-[500px] bg-[#7f1414] py-10 pt-20 text-white lg:pt-0">
                 <div
                     className="absolute inset-0 bg-cover bg-center opacity-25"
                     style={{ backgroundImage: "url('/images/homepage-slides/3.jpg')" }}
@@ -737,7 +755,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         <div>
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Quick Links</h3>
-                            <ul className="space-y-3 flex flex-col lg:items-start items-center">
+                            <ul className="flex flex-col items-center space-y-3 lg:items-start">
                                 <li>
                                     <a
                                         href="https://pupsinta.freshservice.com/support/home"
@@ -761,20 +779,14 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         <div>
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Portals</h3>
-                            <ul className="space-y-3 flex flex-col lg:items-start items-center">
+                            <ul className="flex flex-col items-center space-y-3 lg:items-start">
                                 <li>
-                                    <a
-                                        href="https://sis1.pup.edu.ph/student/"
-                                        className="flex items-center gap-2 transition hover:text-yellow-300"
-                                    >
+                                    <a href="https://sis1.pup.edu.ph/student/" className="flex items-center gap-2 transition hover:text-yellow-300">
                                         <GraduationCap className="h-4 w-4" /> SIS for Students
                                     </a>
                                 </li>
                                 <li>
-                                    <a
-                                        href="https://sis2.pup.edu.ph/faculty/"
-                                        className="flex items-center gap-2 transition hover:text-yellow-300"
-                                    >
+                                    <a href="https://sis2.pup.edu.ph/faculty/" className="flex items-center gap-2 transition hover:text-yellow-300">
                                         <BookOpen className="h-4 w-4" /> SIS for Faculty
                                     </a>
                                 </li>
@@ -787,7 +799,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                     {user?.roles?.role_name === 'Accreditor' ? (
                                         <Link
                                             href={route('logout')}
-                                            className="hover:cursor flex items-center gap-2 transition hover:text-yellow-300 hover:cursor-pointer"
+                                            className="hover:cursor flex items-center gap-2 transition hover:cursor-pointer hover:text-yellow-300"
                                             method="post"
                                             onClick={cleanup}
                                         >
@@ -795,7 +807,11 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                             Log out
                                         </Link>
                                     ) : (
-                                        <Link href="/login" className="hidden lg:flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>
+                                        <Link
+                                            href="/login"
+                                            className="hidden items-center gap-2 transition hover:text-yellow-300 lg:flex"
+                                            preserveScroll
+                                        >
                                             <Home className="h-4 w-4" /> PUPCON Login
                                         </Link>
                                     )}
@@ -805,7 +821,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                         <div>
                             <h3 className="mb-4 border-b border-white/20 pb-2 text-lg font-semibold">Socials</h3>
-                            <ul className="space-y-3 flex flex-col lg:items-start items-center">
+                            <ul className="flex flex-col items-center space-y-3 lg:items-start">
                                 <li>
                                     <a
                                         href="https://www.facebook.com/profile.php?id=100064299686924"

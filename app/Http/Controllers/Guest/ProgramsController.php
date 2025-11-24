@@ -51,14 +51,16 @@ class ProgramsController extends Controller
             'programs' => $programs,
         ]);
     }
+
     public function show(string $program_name): Response
     {
         $program = Str::of($program_name)->replace('_', ' ')->title();
 
         $program = Programs::where('program_name', $program)
+            // ->limit(1)
             ->with([
                 'Levels' => function ($query) {
-                    $query->where('is_active', true);
+                    $query->where('is_active', true)->orderBy('survey_date', 'desc');
                 },
                  'Levels.Areas',
                  'FacultyStaff',
@@ -66,6 +68,7 @@ class ProgramsController extends Controller
                  'Gallery',
             ])
             ->firstOrFail();
+
 
         $program->program_link = $program_name;
 

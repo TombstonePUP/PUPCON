@@ -47,8 +47,26 @@ class HandleInertiaRequests extends Middleware
             ->get();
 
         $outlines = ParameterOutlines::select('*')
-            ->with(['AreaParameter', 'AreaParameter.Areas', 'AreaParameter.Areas.Levels.Programs', 'ParameterOutlineCategory'])
+            ->with([
+                'AreaParameter',
+                'AreaParameter.Areas',
+                'AreaParameter.Areas.Levels' => function ($programQuery) {
+                    $programQuery->where('is_active', true)
+                        ->orderBy('survey_date', 'desc')
+                        ->limit(1)
+                        ->with([
+                            'Programs' => function ($programsQuery) {
+                                $programsQuery->where('under_survey', true);
+                            },
+                        ]);
+                },
+            ])
             ->get();
+
+        $outlines = $outlines->map(function ($outline) {
+            $outline->AreaParameter->Areas->Levels->Programs = $this->formatPrograms($outline->AreaParameter->Areas->Levels->Programs);
+            return $outline;
+        });
 
         $role = $request->user()?->Roles->role_name;
         $user = $request->user();
