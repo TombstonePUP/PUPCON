@@ -26,22 +26,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
         ...(role === 'Admin' || role === 'Coordinator'
             ? [
-                  {
-                      title: 'User Management',
-                      url: '/users',
-                      icon: SquareUser,
-                  },
-              ]
+                {
+                    title: 'User Management',
+                    url: '/users',
+                    icon: SquareUser,
+                },
+            ]
             : []),
-        ...(role === 'Admin' || role === 'Coordinator'
-            ? [
-                  {
-                      title: 'Requests',
-                      url: '/requests',
-                      icon: Boxes,
-                  },
-              ]
-            : []),
+        // ...(role === 'Admin' || role === 'Coordinator' ?
+            //  [
+                {
+                    title: 'Requests',
+                    url: '/requests',
+                    icon: Boxes,
+                },
+            // ]
+            // : []),
         {
             title: 'Programs',
             url: '/manage-programs',
@@ -52,12 +52,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
         ...(role === 'Admin' || role === 'Coordinator'
             ? [
-                  {
-                      title: 'Exhibits',
-                      url: '/manage-exhibits',
-                      icon: Book,
-                  },
-              ]
+                {
+                    title: 'Exhibits',
+                    url: '/manage-exhibits',
+                    icon: Book,
+                },
+            ]
             : []),
         /* ...(role === 'Admin' || role === 'Coordinator'
             ? [
@@ -81,21 +81,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const content = [
         ...(role === 'Admin' || role === 'Coordinator'
             ? [
-                  {
-                      title: 'Campus Information',
-                      url: '/main-content',
-                      icon: InfoIcon,
-                  },
-              ]
+                {
+                    title: 'Campus Information',
+                    url: '/main-content',
+                    icon: InfoIcon,
+                },
+            ]
             : []),
-               ...(role === 'Admin' || role === 'Coordinator'
+        ...(role === 'Admin' || role === 'Coordinator'
             ? [
-                  {
-                      title: 'Other Services',
-                      url: '/other-services',
-                      icon: Library,
-                  },
-              ]
+                {
+                    title: 'Other Services',
+                    url: '/other-services',
+                    icon: Library,
+                },
+            ]
             : []),
     ];
 
@@ -121,7 +121,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavMain label="Accreditation" items={accre} />
-                <NavMain label="Content Management" items={content} />
+                {(role === 'Admin' || role === 'Coordinator') && (
+                    <NavMain label="Content Management" items={content} />
+                )}
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />
