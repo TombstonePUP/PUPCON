@@ -8,7 +8,7 @@ export type FbPost = {
     created_time?: string | null;
 };
 
-export default function useFacebookFeed(limit = 6) {
+export default function useFacebookFeed(limit = 8) {
     const [posts, setPosts] = useState<FbPost[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);

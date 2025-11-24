@@ -33,11 +33,11 @@ class FacebookController extends Controller
         try {
             $items = Cache::remember($cacheKey, 300, function () use ($pageId, $token) {
                 $fields = 'message,created_time,full_picture,permalink_url';
-                $url = "https://graph.facebook.com/{$pageId}/posts?fields={$fields}&access_token={$token}&limit=6";
+                $url = "https://graph.facebook.com/{$pageId}/posts?fields={$fields}&access_token={$token}&limit=8";
                 
                 Log::info('Fetching Facebook posts', ['url' => $url]);
                 
-                $res = Http::timeout(10)->get($url);
+                $res = Http::withOptions(['verify' => false])->timeout(10)->get($url);
                 
                 if (!$res->successful()) {
                     Log::error('Facebook API error', [

@@ -5,7 +5,7 @@ import { BookOpen, Calendar, ChevronLeft, ChevronRight, GraduationCap, ImageIcon
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
-const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode;[key: string]: any }) => (
+const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: any }) => (
     <a href={href} {...props}>
         {children}
     </a>
@@ -321,7 +321,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
         }
     `;
 
-    const { posts: fbPosts, loading: fbLoading, error: fbError } = useFacebookFeed(6);
+    const { posts: fbPosts, loading: fbLoading, error: fbError } = useFacebookFeed(8);
 
     const newsCards = useMemo(() => {
         if (fbLoading || fbError || !fbPosts.length) {
@@ -342,7 +342,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                 {
                     title: 'Mental Health Matters',
                     img: '/images/mental.jpg',
-                    desc: 'The OCPS A School Adjustment Program (ASAP) is here to help you thrive! This infographic offers easy-to-follow tips for boosting your well-being.',
+                    desc: 'The OCPS A School Adjustment Program (ASAP) is here to help you thrive!',
                     source: 'https://www.facebook.com/PUPSJStudentAssembly/posts/pfbid0mehRRGVgQvoEgKf9LuTamcF8QcjrU2RjiS5dCCNjAiHmxuf3q6djRMrEJhBYVmoTl',
                 },
                 {
@@ -352,16 +352,28 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                     source: 'https://www.facebook.com/photo.php?fbid=911510457668935&set=pb.100064299686924.-2207520000&type=3',
                 },
                 {
-                    title: 'Sample Post 5',
+                    title: 'Student Orientation 2025',
                     img: '/images/pupcet.jpg',
-                    desc: 'This is a sample 5th post to demonstrate pagination.',
-                    source: 'https://www.facebook.com/',
+                    desc: 'Welcome to the new academic year! Join us for student orientation sessions.',
+                    source: 'https://www.facebook.com/PUPSJStudentAssembly',
                 },
                 {
-                    title: 'Sample Post 6',
+                    title: 'Research Symposium',
                     img: '/images/cpale.jpg',
-                    desc: 'This is a sample 6th post to demonstrate pagination.',
-                    source: 'https://www.facebook.com/',
+                    desc: 'Annual research symposium showcasing student and faculty research projects.',
+                    source: 'https://www.facebook.com/PUPSJStudentAssembly',
+                },
+                {
+                    title: 'Sports Fest 2025',
+                    img: '/images/mental.jpg',
+                    desc: 'Get ready for an exciting sports festival with inter-department competitions!',
+                    source: 'https://www.facebook.com/PUPSJStudentAssembly',
+                },
+                {
+                    title: 'Alumni Homecoming',
+                    img: '/images/ceremony.jpg',
+                    desc: 'Reconnect with fellow alumni and celebrate the legacy of PUP San Juan.',
+                    source: 'https://www.facebook.com/PUPSJStudentAssembly',
                 },
             ];
         }
@@ -466,8 +478,9 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                     {/* Content Overlay with Animations */}
                     <div ref={heroContentRef} className="absolute inset-0 z-20 grid w-full grid-cols-1 px-[8vw] pr-10 text-white lg:pl-70">
                         <div
-                            className={`flex w-full flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
-                                }`}
+                            className={`flex w-full flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${
+                                isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
+                            }`}
                         >
                             <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[70vw] object-cover lg:w-[29vw]" priority />
                             <h2 className="mb-3 text-[2.8vw] italic lg:mb-0 lg:text-[1.76vw]">Years of academic excellence and service</h2>
@@ -564,10 +577,11 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handlePrevPage}
                                     disabled={newsPage === 0}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === 0
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
+                                        newsPage === 0
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
                                             : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                        }`}
+                                    }`}
                                 >
                                     <ChevronLeft className="h-4 w-4" />
                                     <span>Previous</span>
@@ -579,8 +593,9 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                         <button
                                             key={index}
                                             onClick={() => setNewsPage(index)}
-                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
-                                                }`}
+                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${
+                                                index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                                            }`}
                                             aria-label={`Go to page ${index + 1}`}
                                         />
                                     ))}
@@ -590,10 +605,11 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handleNextPage}
                                     disabled={newsPage === totalPages - 1}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === totalPages - 1
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
+                                        newsPage === totalPages - 1
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
                                             : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                        }`}
+                                    }`}
                                 >
                                     <span>Next</span>
                                     <ChevronRight className="h-4 w-4" />
@@ -727,7 +743,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                 {/* Director's Message Section with Animations */}
                 <section
                     ref={directorSectionRef}
-                    className={`bg-white my-10 transition-all duration-500 ease-out ${isDirectorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                    className={`my-10 bg-white transition-all duration-500 ease-out ${isDirectorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                 >
                     <div className="mx-auto mb-12 max-w-4xl text-center">
                         <h2 className="mb-2 text-3xl font-bold text-gray-900">Message from the Campus Director</h2>
@@ -780,7 +796,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                 {/* Accreditors Section with Card Animations */}
                 <section
                     ref={accreditorSectionRef}
-                    className={`w-full flex items-center justify-center transition-all duration-500 ease-out my-10 ${isAccreditorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                    className={`my-10 flex w-full items-center justify-center transition-all duration-500 ease-out ${isAccreditorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                 >
                     <div className="flex w-[80%] max-w-[1200px] flex-col gap-12 rounded-xl border border-[#201e1e31] bg-white p-15 lg:flex-row">
                         {/* Left Column (Text) */}
