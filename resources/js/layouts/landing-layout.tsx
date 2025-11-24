@@ -346,7 +346,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                         </Link>
 
                                         {item.dropdown?.length > 0 && (
-                                            <div className="absolute left-0 mt-7 max-h-0 w-auto overflow-hidden rounded-md bg-white text-sm opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:max-h-96 group-hover:opacity-100">
+                                            <div className="absolute left-0 mt-7 max-h-0 w-auto overflow-hidden rounded-md bg-white text-sm opacity-0 transition-all duration-300 ease-out group-hover:max-h-96 group-hover:opacity-100">
                                                 <ul className="flex flex-col">
                                                     {item.dropdown.map((drop) => (
                                                         <li key={drop.label} className="border-b border-gray-100 last:border-none">
@@ -396,7 +396,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                     <motion.button
                         onClick={() => setMenuOpen(true)}
-                        className="relative ml-[3vw] flex items-center justify-center rounded-full bg-white/10 p-2 text-white hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none lg:hidden"
+                        className="relative ml-[3vw] flex items-center justify-center rounded-full bg-white/10 p-2 text-white hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none lg:hidden" 
                         title="Menu"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -424,7 +424,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                         {/* Simplified Slide-in Search Panel */}
                         <motion.aside
                             ref={searchRef}
-                            className="fixed top-0 right-0 z-50 h-full w-full max-w-lg border-l border-white/20 bg-white shadow-2xl"
+                            className="fixed top-0 right-0 z-50 h-full w-full max-w-lg border-l border-white/20 bg-white"
                             variants={sidebarVariants}
                             initial="hidden"
                             animate="visible"
@@ -434,7 +434,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             <div className="flex items-center justify-between border-b border-gray-200/50 bg-white/80 px-6 py-5 backdrop-blur-sm">
                                 <div className="flex items-center gap-3">
                                     <motion.div
-                                        className="rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 shadow-sm"
+                                        className="rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 "
                                         whileHover={{ rotate: 15 }}
                                         transition={{ duration: 0.2 }}
                                     >
@@ -450,7 +450,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                             setMenuOpen(true);
                                             setSearchOpen(false);
                                         }}
-                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 text-white shadow-sm"
+                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 text-white  lg:hidden"
                                         title="Menu"
                                     >
                                         <Menu className="h-5 w-5" />
@@ -480,8 +480,8 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                     <input
                                         ref={inputRef}
                                         type="text"
-                                        placeholder="Search outlines, parameters, programs..."
-                                        className="w-full rounded-xl border border-gray-300/50 bg-white/80 px-4 py-4 text-sm placeholder-gray-500 shadow-sm backdrop-blur-sm transition-all duration-300 focus:border-[#7f1414] focus:bg-white focus:ring-4 focus:ring-[#7f1414]/20 focus:outline-none"
+                                        placeholder="Search benchmarks..."
+                                        className="w-full rounded-xl border border-gray-300/50 bg-white/80 px-4 py-4 text-sm placeholder-gray-500  backdrop-blur-sm transition-all duration-300 focus:border-[#7f1414] focus:bg-white focus:ring-4 focus:ring-[#7f1414]/20 focus:outline-none"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
@@ -501,8 +501,8 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             </motion.div>
 
                             {/* Enhanced Results Section */}
-                            <div className="flex-1 overflow-hidden">
-                                <div className="custom-scrollbar h-full overflow-y-auto px-6 pb-6">
+                            <div className="flex-1 h-200 overflow-scroll scroll-smooth hide-scrollbar">
+                                <div className="overflow-hidden px-6 pb-6">
                                     <AnimatePresence mode="wait">
                                         {!searchTerm ? (
                                             <motion.div
@@ -576,7 +576,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                                 {searchResults.map((result, index) => (
                                                     <motion.div
                                                         key={result.outlineId || index}
-                                                        className="group cursor-pointer rounded-xl border border-gray-200/50 bg-white/60 p-4 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-[#7f1414]/30 hover:bg-white/80 hover:shadow-md"
+                                                        className="group cursor-pointer rounded-xl border border-gray-200/50 bg-white/60 p-4 backdrop-blur-sm transition-all duration-300 hover:border-[#7f1414]/30 hover:bg-white/80"
                                                         variants={resultItemVariants}
                                                         whileHover={{
                                                             transition: { duration: 0.2 },
@@ -627,7 +627,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                         {/* Simplified Slide-in Search Panel */}
                         <motion.aside
                             ref={menuRef}
-                            className="fixed top-0 right-0 z-50 h-full w-full max-w-lg border-l border-white/20 bg-white shadow-2xl"
+                            className="fixed top-0 right-0 z-50 h-full w-full max-w-lg border-l border-white/20 bg-white"
                             variants={sidebarVariants}
                             initial="hidden"
                             animate="visible"
@@ -637,7 +637,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             <div className="flex items-center justify-between border-b border-gray-200/50 bg-white/80 px-6 py-5 backdrop-blur-sm">
                                 <div className="flex items-center gap-3">
                                     <motion.div
-                                        className="rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 shadow-sm"
+                                        className="rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2"
                                         whileHover={{ rotate: 15 }}
                                         transition={{ duration: 0.2 }}
                                     >
@@ -653,7 +653,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                             setSearchOpen(true);
                                             setMenuOpen(false);
                                         }}
-                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 text-white shadow-sm"
+                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 text-white lg:hidden"
                                         title="Search"
                                     >
                                         <Search className="h-5 w-5" />
@@ -852,27 +852,6 @@ export default function Layout({ children, footerText }: LayoutProps) {
                     </div>
                 </div>
             </footer>
-
-            {/* Custom Styles */}
-            <style jsx>{`
-                .custom-scrollbar {
-                    scrollbar-width: thin;
-                    scrollbar-color: rgba(127, 20, 20, 0.3) transparent;
-                }
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 6px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: rgba(127, 20, 20, 0.3);
-                    border-radius: 3px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: rgba(127, 20, 20, 0.5);
-                }
-            `}</style>
         </div>
     );
 }

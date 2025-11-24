@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\File;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -18,9 +19,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(Request $request): Response
     {
+        $folder = public_path('images/landing');
+        $files = File::files($folder);
+
+        $images = array_map(fn($file) => asset('images/landing/' . $file->getFilename()), $files);
+
         return Inertia::render('auth/login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
+            'carouselImages' => $images,
         ]);
     }
 

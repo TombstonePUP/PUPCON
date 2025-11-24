@@ -5,7 +5,7 @@ import { BookOpen, Calendar, ChevronLeft, ChevronRight, GraduationCap, ImageIcon
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
-const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: any }) => (
+const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode;[key: string]: any }) => (
     <a href={href} {...props}>
         {children}
     </a>
@@ -466,9 +466,8 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                     {/* Content Overlay with Animations */}
                     <div ref={heroContentRef} className="absolute inset-0 z-20 grid w-full grid-cols-1 px-[8vw] pr-10 text-white lg:pl-70">
                         <div
-                            className={`flex w-full flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${
-                                isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
-                            }`}
+                            className={`flex w-full flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
+                                }`}
                         >
                             <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[70vw] object-cover lg:w-[29vw]" priority />
                             <h2 className="mb-3 text-[2.8vw] italic lg:mb-0 lg:text-[1.76vw]">Years of academic excellence and service</h2>
@@ -565,11 +564,10 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handlePrevPage}
                                     disabled={newsPage === 0}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
-                                        newsPage === 0
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === 0
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
                                             : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                    }`}
+                                        }`}
                                 >
                                     <ChevronLeft className="h-4 w-4" />
                                     <span>Previous</span>
@@ -581,9 +579,8 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                         <button
                                             key={index}
                                             onClick={() => setNewsPage(index)}
-                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${
-                                                index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
-                                            }`}
+                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                                                }`}
                                             aria-label={`Go to page ${index + 1}`}
                                         />
                                     ))}
@@ -593,11 +590,10 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handleNextPage}
                                     disabled={newsPage === totalPages - 1}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
-                                        newsPage === totalPages - 1
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === totalPages - 1
                                             ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
                                             : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                    }`}
+                                        }`}
                                 >
                                     <span>Next</span>
                                     <ChevronRight className="h-4 w-4" />
@@ -731,7 +727,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                 {/* Director's Message Section with Animations */}
                 <section
                     ref={directorSectionRef}
-                    className={`bg-white py-20 transition-all duration-500 ease-out ${isDirectorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                    className={`bg-white my-10 transition-all duration-500 ease-out ${isDirectorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                 >
                     <div className="mx-auto mb-12 max-w-4xl text-center">
                         <h2 className="mb-2 text-3xl font-bold text-gray-900">Message from the Campus Director</h2>
@@ -784,104 +780,102 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                 {/* Accreditors Section with Card Animations */}
                 <section
                     ref={accreditorSectionRef}
-                    className={`w-full items-center justify-center transition-all duration-500 ease-out ${isAccreditorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                    className={`w-full flex items-center justify-center transition-all duration-500 ease-out my-10 ${isAccreditorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                 >
-                    <section className="flex h-[50vh] items-center justify-center">
-                        <div className="flex w-[80%] max-w-[1200px] flex-col gap-12 rounded-xl border border-[#201e1e31] bg-white p-15 lg:flex-row">
-                            {/* Left Column (Text) */}
-                            <div
-                                ref={accreditorContentRef}
-                                className={`flex flex-1 flex-col justify-center gap-6 transition-all duration-500 ease-out ${isAccreditorContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
-                            >
-                                <h2 className="text-3xl font-bold text-gray-900">
-                                    Welcome{' '}
-                                    {user?.roles?.role_name === 'Accreditor' && user.first_name && user.last_name
-                                        ? user.first_name + ' ' + user.last_name
-                                        : 'Accreditors'}
-                                    !
-                                </h2>
-                                <p className="leading-relaxed text-gray-700">
-                                    It is our honor to host you, esteemed accreditors, and we deeply appreciate your role in our continued success.
-                                </p>
+                    <div className="flex w-[80%] max-w-[1200px] flex-col gap-12 rounded-xl border border-[#201e1e31] bg-white p-15 lg:flex-row">
+                        {/* Left Column (Text) */}
+                        <div
+                            ref={accreditorContentRef}
+                            className={`flex flex-1 flex-col justify-center gap-6 transition-all duration-500 ease-out ${isAccreditorContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
+                        >
+                            <h2 className="text-3xl font-bold text-gray-900">
+                                Welcome{' '}
+                                {user?.roles?.role_name === 'Accreditor' && user.first_name && user.last_name
+                                    ? user.first_name + ' ' + user.last_name
+                                    : 'Accreditors'}
+                                !
+                            </h2>
+                            <p className="leading-relaxed text-gray-700">
+                                It is our honor to host you, esteemed accreditors, and we deeply appreciate your role in our continued success.
+                            </p>
 
-                                <div className="flex flex-wrap gap-3">
-                                    {['March 2025', 'Level II AACCUP Survey Visit'].map((tag, index) => (
-                                        <span
-                                            key={tag}
-                                            className={`rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-[#7f1414] transition-all duration-300 hover:scale-105 ${isAccreditorContentInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
-                                            style={{ transitionDelay: `${200 + index * 100}ms` }}
-                                        >
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Right Column (Cards) */}
-                            <div
-                                ref={accreditorCardsRef}
-                                className={`flex flex-1 flex-col gap-4 transition-all duration-500 ease-out md:flex-row ${isAccreditorCardsInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
-                            >
-                                {[
-                                    {
-                                        title: 'Academic Programs',
-                                        desc: 'Learn more about the process, documents, and evaluation steps.',
-                                        icon: (
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-6 w-6 text-white"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M12 20l9-5-9-5-9 5 9 5zm0 0V10m0 10v-4"
-                                                />
-                                            </svg>
-                                        ),
-                                    },
-                                    {
-                                        title: 'More Info',
-                                        desc: 'Important details and updates for the accreditation visit.',
-                                        icon: (
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-6 w-6 text-white"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z"
-                                                />
-                                            </svg>
-                                        ),
-                                    },
-                                ].map((card, index) => (
-                                    <a
-                                        key={card.title}
-                                        href="#"
-                                        className={`flex flex-1 flex-col items-start gap-10 rounded-xl bg-[#7f1414] p-6 text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-102 hover:bg-[#a83232] active:scale-98 ${isAccreditorCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                            <div className="flex flex-wrap gap-3">
+                                {['March 2025', 'Level II AACCUP Survey Visit'].map((tag, index) => (
+                                    <span
+                                        key={tag}
+                                        className={`rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-[#7f1414] transition-all duration-300 hover:scale-105 ${isAccreditorContentInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
                                         style={{ transitionDelay: `${200 + index * 100}ms` }}
                                     >
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 transition-all duration-200 group-hover:scale-110 group-hover:rotate-6">
-                                            {card.icon}
-                                        </div>
-                                        <div>
-                                            <h3 className="mb-3 text-lg font-semibold">{card.title}</h3>
-                                            <p className="text-sm opacity-90">{card.desc}</p>
-                                        </div>
-                                    </a>
+                                        {tag}
+                                    </span>
                                 ))}
                             </div>
                         </div>
-                    </section>
+
+                        {/* Right Column (Cards) */}
+                        <div
+                            ref={accreditorCardsRef}
+                            className={`flex flex-1 flex-col gap-4 transition-all duration-500 ease-out md:flex-row ${isAccreditorCardsInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
+                        >
+                            {[
+                                {
+                                    title: 'Academic Programs',
+                                    desc: 'Learn more about the process, documents, and evaluation steps.',
+                                    icon: (
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-6 w-6 text-white"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M12 20l9-5-9-5-9 5 9 5zm0 0V10m0 10v-4"
+                                            />
+                                        </svg>
+                                    ),
+                                },
+                                {
+                                    title: 'More Info',
+                                    desc: 'Important details and updates for the accreditation visit.',
+                                    icon: (
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-6 w-6 text-white"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M13 16h-1v-4h-1m1-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z"
+                                            />
+                                        </svg>
+                                    ),
+                                },
+                            ].map((card, index) => (
+                                <a
+                                    key={card.title}
+                                    href="#"
+                                    className={`flex flex-1 flex-col items-start gap-10 rounded-xl bg-[#7f1414] p-6 text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-102 hover:bg-[#a83232] active:scale-98 ${isAccreditorCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                                    style={{ transitionDelay: `${200 + index * 100}ms` }}
+                                >
+                                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 transition-all duration-200 group-hover:scale-110 group-hover:rotate-6">
+                                        {card.icon}
+                                    </div>
+                                    <div>
+                                        <h3 className="mb-3 text-lg font-semibold">{card.title}</h3>
+                                        <p className="text-sm opacity-90">{card.desc}</p>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
                 </section>
 
                 {/* Campus Map Section with Animations */}

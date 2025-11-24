@@ -16,8 +16,13 @@ interface PageHeaderProps {
     breadcrumbs: Crumb[];
     quickLinks?: QuickLink[];
 }
-
-export default function PageHeader({ title, breadcrumbs, quickLinks }: PageHeaderProps) {
+interface PageHeaderProps {
+    title?: string;
+    breadcrumbs: Crumb[];
+    quickLinks?: QuickLink[];
+    className?: string;  // ← added
+}
+export default function PageHeader({ title, breadcrumbs, quickLinks, className }: PageHeaderProps) {
     const [activeSection, setActiveSection] = useState<string | null>(null);
 
     // highlight quickLinks on scroll
@@ -58,7 +63,7 @@ export default function PageHeader({ title, breadcrumbs, quickLinks }: PageHeade
     };
 
     return (
-        <div className="sticky top-0 z-30 w-full bg-white py-4 shadow-md">
+        <div className={`lg:sticky top-0 z-30 w-full bg-white py-4 shadow-md ${className || ''}`}>
             <div className="mx-auto flex w-[75%] max-w-7xl items-center justify-between text-[#7f1414]">
                 {/* Title */}
                 {title && <h1 className="text-lg font-semibold tracking-tight">{title}</h1>}
@@ -89,11 +94,10 @@ export default function PageHeader({ title, breadcrumbs, quickLinks }: PageHeade
                             <button
                                 key={link.targetId}
                                 onClick={() => scrollToSection(link.targetId)}
-                                className={`relative rounded-md px-3 py-1.5 transition-all duration-300 ease-out ${
-                                    activeSection === link.targetId
-                                        ? ' text-[#7f1414]'
-                                        : 'text-[#7f1414]/60 hover:text-[#7f1414]'
-                                } `}
+                                className={`relative rounded-md px-3 py-1.5 transition-all duration-300 ease-out ${activeSection === link.targetId
+                                    ? ' text-[#7f1414]'
+                                    : 'text-[#7f1414]/60 hover:text-[#7f1414]'
+                                    } `}
                             >
                                 {/* Background highlight animation */}
                                 {/* <span
@@ -110,9 +114,8 @@ export default function PageHeader({ title, breadcrumbs, quickLinks }: PageHeade
 
                                 {/* Animated underline */}
                                 <span
-                                    className={`absolute bottom-0 left-1/2 h-0.5 bg-[#7f1414] transition-all duration-300 ease-out ${
-                                        activeSection === link.targetId ? 'w-3/4 -translate-x-1/2' : 'w-0 -translate-x-1/2'
-                                    } `}
+                                    className={`absolute bottom-0 left-1/2 h-0.5 bg-[#7f1414] transition-all duration-300 ease-out ${activeSection === link.targetId ? 'w-3/4 -translate-x-1/2' : 'w-0 -translate-x-1/2'
+                                        } `}
                                 />
 
                                 <span className="relative z-10">{link.label}</span>

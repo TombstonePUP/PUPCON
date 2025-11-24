@@ -175,7 +175,7 @@ export default function Programs({ program }: PerProgramProps) {
         <>
             <Head title={`${program.degree_type} in ${program.program_name}`} />
             <Layout>
-                <PageHeader
+                <PageHeader className="hidden lg:block"
                     title=""
                     quickLinks={[
                         { label: 'Overview', targetId: 'overview' },
@@ -229,7 +229,7 @@ export default function Programs({ program }: PerProgramProps) {
                                 </span>
                             </div>
 
-                            <h1 className="mb-4 text-5xl font-bold drop-shadow-lg">{program.program_name}</h1>
+                            <h1 className="mb-8 text-5xl font-bold drop-shadow-lg text-center">{program.program_name}</h1>
 
                             {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>

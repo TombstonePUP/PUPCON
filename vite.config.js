@@ -27,20 +27,20 @@ export default defineConfig(({ mode }) => ({
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
-    /* server: {
+    server: {
         host: '0.0.0.0',
         port: 5173,
         strictPort: true,
         cors: {
             origin: [
-                'http://localhost:8080',
-                'http://127.0.0.1:8080',
-                'http://192.168.x.x:8080',
+                'http://localhost:8000',
+                'http://127.0.0.1:8000',
+                'http://192.168.100.159:8000',
             ],
             credentials: true,
         },
         hmr: {
-            host: '192.168.x.x', // use your LAN IP, not localhost
+            host: '192.168.100.159', // use your LAN IP, not localhost
         },
-    }, */
+    },
 }));
