@@ -7,7 +7,7 @@ import { RenderParameterDialog } from '@/components/dialogs/parameters/parameter
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { Area, AreaFormCategory, AreaForms, AreaParameters, BreadcrumbItem, ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { Edit, LucideImport, PlusCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -19,6 +19,9 @@ interface AreaFilesProps {
 }
 
 export default function Areas({ program, area, parameterOutlineCategories, areaFormsCategories }: AreaFilesProps) {
+    const { auth } = usePage().props;
+    const privileges = auth.programs || [];
+    const role = auth.user.roles.role_name;
     const [dialog, setDialog] = useState<{
         kind: 'document' | 'benchmark' | 'parameter' | 'area-form' | null;
         action: 'view' | 'upload' | 'delete' | 'delete-form' | 'add' | 'edit' | 'import' | 'rejected';
@@ -103,28 +106,31 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         </div>
 
                         {/* Right Sidebar - Actions */}
-                        <div className="w-64 shrink-0">
-                            <div className="sticky top-6 space-y-4">
-                                <div className="w-full rounded-lg border border-gray-200 bg-white p-4">
-                                    <h3 className="mb-4 text-sm font-semibold text-gray-900">Area Actions</h3>
-                                    <div className={`flex flex-col gap-2 ${area?.area_parameters?.length <= 0 ? 'hidden' : ''}`}>
-                                        <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
-                                            <PlusCircleIcon className="ml-1 h-4 w-4" />
-                                            Add Parameter
-                                        </Button>
-                                        <Button className="border-none" onClick={() => openDialog('parameter', 'import')}>
-                                            <LucideImport className="ml-1 h-4 w-4" />
-                                            Import template
-                                        </Button>
+                        {(role === 'Admin' || role === 'Coordinator') && (
+                            <div className="w-64 shrink-0">
+                                <div className="sticky top-6 space-y-4">
 
-                                        <Button type="button" variant="outline">
-                                            <Edit className="ml-1 h-4 w-4" />
-                                            Edit Area Content
-                                        </Button>
+                                    <div className="w-full rounded-lg border border-gray-200 bg-white p-4">
+                                        <h3 className="mb-4 text-sm font-semibold text-gray-900">Area Actions</h3>
+                                        <div className={`flex flex-col gap-2 ${area?.area_parameters?.length <= 0 ? 'hidden' : ''}`}>
+                                            <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
+                                                <PlusCircleIcon className="ml-1 h-4 w-4" />
+                                                Add Parameter
+                                            </Button>
+                                            <Button className="border-none" onClick={() => openDialog('parameter', 'import')}>
+                                                <LucideImport className="ml-1 h-4 w-4" />
+                                                Import template
+                                            </Button>
+
+                                            <Button type="button" variant="outline">
+                                                <Edit className="ml-1 h-4 w-4" />
+                                                Edit Area Content
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </AppLayout>
