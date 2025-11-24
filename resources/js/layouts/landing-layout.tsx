@@ -1,6 +1,7 @@
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { cn } from '@/lib/utils';
 import type { Auth, GuestNavigation } from '@/types';
+import { Button } from '@headlessui/react';
 import { Link, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -418,15 +419,25 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                         Mabuhay!
                                     </h2>
                                 </div>
-                                <motion.button
-                                    onClick={() => setSearchOpen(false)}
-                                    className="rounded-lg p-2 text-gray-500 transition-all duration-200 hover:bg-gray-100/80 hover:text-[#7f1414]"
-                                    aria-label="Close"
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.9 }}
-                                >
-                                    <X className="h-5 w-5" />
-                                </motion.button>
+                               <div className="flex items-center gap-2">
+                                    <Button
+                                        onClick={() => {  setMenuOpen(true); setSearchOpen(false);}}
+                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 shadow-sm text-white"
+                                        title="Menu"
+                                    >
+                                        <Menu className="h-5 w-5" />
+                                        Menu
+                                    </Button>
+                                    <motion.button
+                                        onClick={() => setSearchOpen(false)}
+                                        className="rounded-lg p-2 text-gray-500 transition-all duration-200 hover:bg-gray-100/80 hover:text-[#7f1414]"
+                                        aria-label="Close"
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
+                                    >
+                                        <X className="h-5 w-5" />
+                                    </motion.button>
+                                </div>
                             </div>
 
                             {/* Enhanced Search Input */}
@@ -442,7 +453,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                         ref={inputRef}
                                         type="text"
                                         placeholder="Search outlines, parameters, programs..."
-                                        className="w-full rounded-xl border border-gray-300/50 bg-white/80 py-4 pr-12 pl-12 text-sm placeholder-gray-500 shadow-sm backdrop-blur-sm transition-all duration-300 focus:border-[#7f1414] focus:bg-white focus:ring-4 focus:ring-[#7f1414]/20 focus:outline-none"
+                                        className="w-full rounded-xl border border-gray-300/50 bg-white/80 py-4 px-4 text-sm placeholder-gray-500 shadow-sm backdrop-blur-sm transition-all duration-300 focus:border-[#7f1414] focus:bg-white focus:ring-4 focus:ring-[#7f1414]/20 focus:outline-none"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
@@ -557,6 +568,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                                         </div>
                                                         <p className="text-sm leading-relaxed text-gray-800 transition-colors duration-200 group-hover:text-gray-900">
                                                             {result.outline}
+                                                            {console.log(result)}
                                                         </p>
                                                     </motion.div>
                                                 ))}
@@ -607,15 +619,26 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                         Menu
                                     </h2>
                                 </div>
-                                <motion.button
-                                    onClick={() => setMenuOpen(false)}
-                                    className="rounded-lg p-2 text-gray-500 transition-all duration-200 hover:bg-gray-100/80 hover:text-[#7f1414]"
-                                    aria-label="Close"
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.9 }}
-                                >
-                                    <X className="h-5 w-5" />
-                                </motion.button>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        onClick={() => { setSearchOpen(true); setMenuOpen(false); }}
+                                        className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#7f1414] to-[#a71d1d] p-2 px-3 shadow-sm text-white"
+                                        title="Search"
+                                    >
+                                        <Search className="h-5 w-5" />
+                                        Search
+                                    </Button>
+                                    <motion.button
+                                        onClick={() => setMenuOpen(false)}
+                                        className="rounded-lg p-2 text-gray-500 transition-all duration-200 hover:bg-gray-100/80 hover:text-[#7f1414]"
+                                        aria-label="Close"
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
+                                    >
+                                        <X className="h-5 w-5" />
+                                    </motion.button>
+                                </div>
+
                             </div>
 
                             <nav className="w-full rounded-lg overflow-hidden">
