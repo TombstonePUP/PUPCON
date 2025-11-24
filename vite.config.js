@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => ({
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
-    server: {
+    /*server: {
         host: '0.0.0.0',
         port: 5173,
         strictPort: true,
@@ -42,5 +42,5 @@ export default defineConfig(({ mode }) => ({
         hmr: {
             host: '192.168.100.159', // use your LAN IP, not localhost
         },
-    },
+    },*/
 }));
