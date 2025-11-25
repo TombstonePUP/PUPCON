@@ -10,6 +10,7 @@ use App\Traits\AreaNumeralFormat;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ManageProgramController extends Controller
 {
@@ -49,7 +50,11 @@ class ManageProgramController extends Controller
                 'Gallery',
             ])->firstOrFail();
 
-        $program->program_image_path = $program->program_image_path ? asset('storage/' . $program->program_image_path) : null;
+        $program->program_image_path = $program->program_image_path ? Storage::url($program->program_image_path) : null;
+        $program->Gallery->each(function ($gallery) {
+            $gallery->image_path = Storage::url($gallery->image_path);
+            return $gallery;
+        });
 
         $program->Levels->each(function ($level) use ($level_id) {
             if ($level->accreditation_level_id != $level_id) {

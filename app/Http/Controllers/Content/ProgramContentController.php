@@ -26,28 +26,27 @@ class ProgramContentController extends Controller
             'objectives.*.description' => ['nullable', 'string'],
             'gallery.*.gallery_id' => ['nullable', 'integer'],
             'gallery.*.image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
-            'gallery.*.caption' => ['nullable', 'string', 'max:255'],
+            'gallery.*.caption' => ['required', 'string', 'max:255'],
         ]);
 
         $program = Programs::findOrFail($request->program_id);
         $bannerName = null;
         $bannerPath = null;
-        $program->program_link = Str::of($program->program_name)->snake();
+        $program_name = Str::slug($program->program_name, '_');
         if (isset($validated['banner'])) {
-            $bannerName = $program->program_link . '_banner.' . $validated['banner']->getClientOriginalExtension();
-            $bannerPath = $program->program_link . '/' . $bannerName;
+            $bannerName = $program_name . '_banner.' . $validated['banner']->getClientOriginalExtension();
+            $bannerPath = $program_name . '/assets/' . $bannerName;
             if (Storage::disk('public')->exists($bannerPath)) {
                 Storage::disk('public')->delete($bannerPath);
             }
-            $validated['banner']->storeAs($program->program_name, $bannerName, 'public');
+            $validated['banner']->storeAs($program_name . '/assets/', $bannerName, 'public');
         }
-        $program->update([
-            'description' => $validated['description'] ?? $program->description,
-        ]);
+        $program->program_description = $validated['description'] ?? $program->progra_description;
         if (isset($bannerName) && isset($bannerPath)) {
             $program->program_image_name = $bannerName;
             $program->program_image_path = $bannerPath;
         }
+
         $program->save();
 
         $objective_ids = [];
@@ -76,12 +75,13 @@ class ProgramContentController extends Controller
             $imageName = null;
             $imagePath = null;
             if (isset($galleryItem['image'])) {
-                $imageName = $program->program_name . '_gallery_' . $galleryModel->gallery_id . '.' . $galleryItem['image']->getClientOriginalExtension();
-                $imagePath = $program->program_name . '/' . $imageName;
+                $caption = Str::slug($galleryItem['caption'], '_');
+                $imageName = 'gallery_' . $caption . '.' . $galleryItem['image']->getClientOriginalExtension();
+                $imagePath = $program_name . '/assets/gallery/' . $imageName;
                 if (Storage::disk('public')->exists($imagePath)) {
                     Storage::disk('public')->delete($imagePath);
                 };
-                $galleryItem['image']->storeAs($program->program_name, $imageName, 'public');
+                $galleryItem['image']->storeAs($program_name . '/assets/gallery/' , $imageName, 'public');
             }
             if ($galleryModel) {
                 $galleryModel->image_name = $imageName ?? $galleryModel->image_name;

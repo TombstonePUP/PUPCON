@@ -268,7 +268,6 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
     };
 
     const onSave = (e: React.MouseEvent<HTMLButtonElement>) => {
-        console.log(program);
         post(route('manage.program.update.content', {
             program_id: program.program_id,
         }));

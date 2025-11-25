@@ -53,7 +53,7 @@ const MainContent = ({...props}: MainContentProps) => {
     const faculty_page = pages.find((page: ContentPages) => page.page === "Faculty & Staff") ?? null;
     const facility_page = pages.find((page: ContentPages) => page.page === "Facilities")?? null;
     const ltf_page = pages.find((page: ContentPages) => page.page === "Local Task Force") ?? null;
-    const vmgo_page = pages.find((page: ContentPages) => page.page === "Mission Vision & Goals") ?? null;
+    const vmgo_page = pages.find((page: ContentPages) => page.page === "Vision, Mission & Goals") ?? null;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
