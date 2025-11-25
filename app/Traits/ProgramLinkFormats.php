@@ -8,7 +8,7 @@ trait ProgramLinkFormats
     public function formatPrograms($program)
     {
         $name = $program->program_name;
-        $program->program_link = Str::of($name)->snake();
+        $program->program_link = Str::slug($name, '_');
         return $program;
     }
 }

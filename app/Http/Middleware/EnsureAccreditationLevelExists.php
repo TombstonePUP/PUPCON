@@ -19,20 +19,22 @@ class EnsureAccreditationLevelExists
     {
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
         $level_id = $request->level_id;
-        $program = Programs::where('program_name', $program)
-            ->whereHas('Levels', function ($query) use ($level_id) {
-                $query->where('accreditation_level_id', $level_id);
-            })
+
+        $program = Programs::where('program_name', 'ILIKE', $program)
+            ->with([
+                'Levels' => function ($query) use ($level_id) {
+                    $query->where('accreditation_level_id', $level_id);
+                },
+            ])
             ->first();
 
-
-        if ($program) {
-            return $next($request);
+        if (!$program) {
+            return redirect()->back()
+                ->with('type', 'error')
+                ->with('title', 'Invalid Accreditation Level')
+                ->with('message', 'The specified accreditation level does not exist for the selected program.');
         }
 
-        return redirect()->back()
-            ->with('type', 'error')
-            ->with('title', 'Invalid Accreditation Level')
-            ->with('message', 'The specified accreditation level does not exist for the selected program.');
+        return $next($request);
     }
 }

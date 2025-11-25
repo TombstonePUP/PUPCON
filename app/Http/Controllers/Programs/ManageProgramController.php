@@ -42,7 +42,7 @@ class ManageProgramController extends Controller
     public function show(string $program_name, string $level_id)
     {
         $program = Str::of($program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)
+        $program = Programs::where('program_name', 'ILIKE', $program)
             ->with([
                 'Levels.Areas' => function ($query) use ($level_id) {
                     $query->where('accreditation_level_id', $level_id)

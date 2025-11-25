@@ -57,7 +57,7 @@ class ProgramsController extends Controller
     {
         $program = Str::of($program_name)->replace('_', ' ')->title();
 
-        $program = Programs::where('program_name', $program)
+        $program = Programs::where('program_name', 'ILIKE', $program)
             ->with([
                 'Levels' => function ($query) {
                     $query->with('Areas')->where('is_active', true)->orderBy('survey_date', 'desc');
