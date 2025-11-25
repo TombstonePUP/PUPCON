@@ -19,6 +19,7 @@ class ExhibitsFactory extends Factory
         return [
             'exhibit_id' => fake()->unique()->randomNumber(),
             'exhibit_name' => fake()->word(),
+            'container' => fake()->boolean(),
         ];
     }
 }

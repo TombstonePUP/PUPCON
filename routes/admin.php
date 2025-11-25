@@ -11,6 +11,7 @@ use App\Http\Controllers\Content\ManageAreasController;
 use App\Http\Controllers\Content\OtherServicesController;
 use App\Http\Controllers\Content\ProgramContentController;
 use App\Http\Controllers\Content\VmgoController;
+use App\Http\Controllers\Exhibits\ManageExhibitsController;
 use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Parameters\AreaParameterController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
@@ -31,9 +32,18 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         Route::patch('users/enable', 'enable')->name('users.enable');
     });
 
-    Route::get('manage-exhibits', function () {
-        return Inertia::render('document/exhibits');
-    })->name('manage-exhibits');
+    Route::controller(ManageExhibitsController::class)->group(function () {
+        Route::get('manage-exhibits', 'index')->name('manage.exhibits');
+        Route::post('exhibits/store', 'store')->name('exhibits.store');
+        Route::patch('exhibits/{exhibit_id}/update', 'update')->name('exhibits.update');
+        Route::delete('exhibits/{exhibit_id}/delete', 'destroy')->name('exhibits.delete');
+    });
+
+    Route::controller(ExhibitFilesController::class)->group(function () {
+        Route::post('exhibit-files/{exhibit_outline_id}/upload', 'upload')->name('exhibit.files.upload');
+        Route::get('exhibit-files/{exhibit_file_id}/download', 'download')->name('exhibit.files.download');
+        Route::delete('exhibit-files/{exhibit_file_id}/delete', 'destroy')->name('exhibit.files.delete');
+    });
 
     Route::get('ratings', function () {
         return Inertia::render('document/ratings');

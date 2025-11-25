@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Files;
+namespace App\Http\Controllers\Exhibits;
 
 use App\Http\Controllers\Controller;
-use App\Models\ExhibitFiles;
 use Illuminate\Http\Request;
 
 class ExhibitFilesController extends Controller
@@ -35,7 +34,7 @@ class ExhibitFilesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ExhibitFiles $exhibitFiles)
+    public function show(string $id)
     {
         //
     }
@@ -43,7 +42,7 @@ class ExhibitFilesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ExhibitFiles $exhibitFiles)
+    public function edit(string $id)
     {
         //
     }
@@ -51,7 +50,7 @@ class ExhibitFilesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ExhibitFiles $exhibitFiles)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -59,7 +58,7 @@ class ExhibitFilesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ExhibitFiles $exhibitFiles)
+    public function destroy(string $id)
     {
         //
     }

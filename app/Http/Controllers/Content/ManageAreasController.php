@@ -177,7 +177,6 @@ class ManageAreasController extends Controller
             $area->area_image_name = null;
             $area->area_image_path = null;
         }
-        dd($area);
         $area->save();
 
         return redirect()->back()

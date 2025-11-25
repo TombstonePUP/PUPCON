@@ -72,7 +72,7 @@ return new class extends Migration
             $table->text('file_name')->nullable();
             $table->text('file_path')->nullable();
             $table->foreignId('uploaded_by')->nullable()->references('user_id')->on('users')
-                -> onUpdate('cascade')->onDelete('cascade');
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->timestamp('uploaded_at')->nullable();
             $table->foreignId('file_status_id')->nullable()->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');
@@ -86,16 +86,19 @@ return new class extends Migration
             $table->text('file_name');
             $table->text('file_path');
             $table->foreignId('uploaded_by')->nullable()->references('user_id')->on('users')
-                -> onUpdate('cascade')->onDelete('cascade');
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->timestamp('uploaded_at')->nullable();
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
-                -> onUpdate('cascade')->onDelete('cascade');
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->text('file_rejection_reason')->nullable();
         });
 
         Schema::create('exhibits', function (Blueprint $table) {
             $table->id(column: 'exhibit_id')->autoIncrement()->primary();
             $table->string('exhibit_name');
+            $table->text('image_name')->nullable();
+            $table->text('image_path')->nullable();
+            $table->boolean('container')->default(false);
         });
 
         Schema::create('exhibit_outlines', function (Blueprint $table) {
@@ -103,7 +106,7 @@ return new class extends Migration
             $table->foreignId('exhibit_id')->references('exhibit_id')->on('exhibits')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('outline_description')->nullable();
-            $table->boolean('container');
+            $table->string('category')->nullable();
         });
 
         Schema::create('exhibit_files', function (Blueprint $table) {
@@ -113,7 +116,7 @@ return new class extends Migration
             $table->text('file_name');
             $table->text('file_path');
             $table->foreignId('uploaded_by')->nullable()->references('user_id')->on('users')
-                -> onUpdate('cascade')->onDelete('cascade');
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->timestamp('uploaded_at')->nullable();
             $table->foreignId('file_status_id')->references('file_status_id')->on('file_status')
                 ->onUpdate('cascade')->onDelete('cascade');

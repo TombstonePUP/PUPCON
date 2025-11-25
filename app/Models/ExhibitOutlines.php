@@ -23,7 +23,7 @@ class ExhibitOutlines extends Model
     protected $fillable = [
         'exhibit_id',
         'outline_description',
-        'container',
+        'category',
     ];
 
     /**

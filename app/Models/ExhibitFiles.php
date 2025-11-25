@@ -26,7 +26,7 @@ class ExhibitFiles extends Model
         'uploaded_by',
         'uploaded_at',
         'file_status_id',
-        'file_reject_reason',
+        'file_rejection_reason',
     ];
 
     protected $casts = [

@@ -21,6 +21,9 @@ class Exhibits extends Model
     protected $primaryKey = 'exhibit_id';
     protected $fillable = [
         'exhibit_name',
+        'image_name',
+        'image_path',
+        'container',
     ];
 
     /**
