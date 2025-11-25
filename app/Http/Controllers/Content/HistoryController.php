@@ -77,6 +77,9 @@ class HistoryController extends Controller
             if (isset($bannerPath) && isset($bannerName)) {
                 $page->image_name = $bannerName;
                 $page->image_path = $bannerPath;
+            } else {
+                $page->image_name = null;
+                $page->image_path = null;
             }
             $page->save();
         } else {

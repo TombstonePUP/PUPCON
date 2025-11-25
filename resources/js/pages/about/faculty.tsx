@@ -10,6 +10,8 @@ interface FacultyPageProps {
 }
 
 export default function Faculty({ faculties, page }: FacultyPageProps) {
+
+    console.log(faculties);
     return (
         <Layout>
             <Head title="Faculty and Staffs" />
@@ -60,7 +62,7 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
                 </section>
 
                 <div className="grid gap-8 md:grid-cols-5">
-                    {faculties.map((f) => (
+                    {faculties?.map((f) => (
                         <FacultyCard
                             key={f.faculty_staff_id}
                             faculty={{

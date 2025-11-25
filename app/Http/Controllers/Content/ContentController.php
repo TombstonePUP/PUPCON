@@ -35,7 +35,7 @@ class ContentController extends Controller
 
         $pages = ContentPages::all();
         $pages = $pages->map(function ($page) {
-            $page->image_path = Storage::url($page->image_path);
+            $page->image_path = $page->image_path ? Storage::url($page->image_path) : null;
             return $page;
         });
 
