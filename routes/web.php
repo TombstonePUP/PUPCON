@@ -9,6 +9,8 @@ use App\Http\Controllers\Guest\VmgoViewController;
 use App\Http\Controllers\Guest\AdministrationViewController;
 use App\Http\Controllers\Guest\FacilitiesViewController;
 use App\Http\Controllers\Guest\LocalTaskForceViewController;
+use App\Http\Controllers\Guest\OtherServicesViewController;
+
 use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -38,9 +40,8 @@ Route::get('certificate', function () {
     return Inertia::render('certificate');
 })->name('certificate');
 
-Route::get('others', function () {
-    return Inertia::render('others');
-})->name('others');
+
+Route::get('others', OtherServicesViewController::class)->name('others');
 
 Route::controller(ProgramsController::class)->prefix('programs')->group(function () {
     Route::get('/', 'index')->name('programs.index');
