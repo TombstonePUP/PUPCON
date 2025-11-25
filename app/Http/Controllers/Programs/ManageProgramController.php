@@ -44,7 +44,10 @@ class ManageProgramController extends Controller
         $program = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::where('program_name', $program)
             ->with([
-                'Levels.Areas',
+                'Levels.Areas' => function ($query) use ($level_id) {
+                    $query->where('accreditation_level_id', $level_id)
+                        ->orderByRaw('area_number::integer asc');
+                },
                 'Objectives',
                 'Gallery',
             ])->firstOrFail();

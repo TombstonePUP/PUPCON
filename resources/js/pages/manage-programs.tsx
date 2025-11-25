@@ -64,6 +64,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                 }),
             );
         } else {
+            console.log('test-test');
             setProgramToStart(program);
             setStartLevelConfirmOpen(true);
         }
@@ -214,13 +215,14 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     {filteredPrograms.length > 0 ? (
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {filteredPrograms.map((program) => {
-                                const isAssigned = assignedPrograms.find((ap: PerProgramUnderSurvey) => ap.program_id === program.program_id);
+                                const isAssigned = assignedPrograms.find((ap: PerProgramUnderSurvey) => ap.program_id === program.program_id)
+                                const canClick = role === 'Admin' || role === 'Coordinator' || isAssigned;
                                 return (
                                     <div
                                         key={program.program_id}
                                         tabIndex={0}
-                                        role={isAssigned ? 'button' : undefined}
-                                        onClick={isAssigned ? () => handleProgramClick(program) : undefined}
+                                        role={canClick ? 'button' : undefined}
+                                        onClick={canClick ? () => handleProgramClick(program) : undefined}
                                         onKeyDown={
                                             isAssigned ? (e) => (e.key === 'Enter' || e.key === ' ') && handleProgramClick(program) : undefined
                                         }

@@ -84,4 +84,12 @@ class Programs extends Model
             ->with('Areas')
             ->orderBy('survey_date', 'desc');
     }
+
+    public function activeLevels()
+    {
+        return $this->hasOne(AccreditationLevels::class, 'program_id', 'program_id')
+            ->with('Areas')
+            ->where('is_active', true)
+            ->orderBy('survey_date', 'desc');
+    }
 }

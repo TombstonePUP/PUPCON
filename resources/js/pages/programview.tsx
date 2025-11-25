@@ -331,8 +331,8 @@ export default function Programs({ program }: PerProgramProps) {
                                         </div>
                                     )}
                                     <img
-                                        src="/images/campus/comlab.jpg"
-                                        alt="Computer Lab"
+                                        src={program.program_image_path || '/images/placeholder.png'}
+                                        alt={program.program_image_name || 'Program Overview Image'}
                                         className={`h-full w-full object-cover transition-all duration-700 ${!overviewImageLoading ? 'opacity-100' : 'opacity-0'
                                             }`}
                                         onLoad={() => setOverviewImageLoading(false)}
@@ -381,14 +381,14 @@ export default function Programs({ program }: PerProgramProps) {
                                 const [cardRef, cardInView] = useInView(0.2);
                                 return (
                                     <FacultyCard
-                                        key={f.faculty_id}
+                                        key={f.faculty_staff_id}
                                         ref={cardRef}
                                         faculty={{
-                                            name: [f.first_name, f.middle_name, f.last_name, f.suffix].filter(Boolean).join(' '),
+                                            name: [f.first_name, f.middle_name, f.last_name].filter(Boolean).join(' '),
                                             photo:
-                                                f.faculty_image_path ||
+                                                f.image_path ||
                                                 `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
-                                            position: f.program_coordinator ? 'Program Head' : `${f.faculty_status} Faculty`,
+                                            position: f.program_coordinator ? 'Program Head' : `${f.status} Faculty`,
                                         }}
                                         isLoading={facultyLoading}
                                         inView={cardInView}
@@ -462,7 +462,7 @@ export default function Programs({ program }: PerProgramProps) {
                                             // }}
                                             >
                                                 <AreaCard
-                                                    imageSrc={area.image_path || '/images/placeholder.png'}
+                                                    imageSrc={area.area_image_path ?? '/images/placeholder.png'}
                                                     heading={area.area_name}
                                                     circleLetter={area.area_numeral}
                                                     href={route('programs.areas.show', [program.program_link, area.area_id])}

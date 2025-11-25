@@ -21,7 +21,7 @@ Route::get('about/vision-mission-goals', VmgoViewController::class)->name('vmgo'
 
 Route::get('about/history', HistoryViewController::class)->name('history');
 
-Route::get('about/administration', AdministrationViewController::class)->name('facilities');
+Route::get('about/administration', AdministrationViewController::class)->name('administration');
 
 Route::get('about/facilities', FacilitiesViewController::class)->name('facilities');
 

@@ -52,6 +52,8 @@ export interface ProgramsUnderSurvey {
     program_image_name: string;
     program_image_path: string;
     program_link: string;
+    levels?: AccreditationLevels;
+    active_levels?: AccreditationLevels;
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -77,7 +79,7 @@ export interface PerProgramUnderSurvey {
 export interface ProgramPrivilege {
     program_name: string;
     program_link: string;
-    levels?: AccreditationLevels[];
+    latest_level?: AccreditationLevels;
     [key: string]: unknown;
 }
 

@@ -32,7 +32,6 @@ export default function Programs({ program }: ProgramProps) {
     const assignedAreas = auth.user.areas;
 
     const selected_level = program.levels?.find((level) => level.areas) || program.levels?.[0];
-    console.log('Selected Level:', selected_level);
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Programs', href: '/manage-programs' },

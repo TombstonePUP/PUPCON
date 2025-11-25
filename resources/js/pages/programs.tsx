@@ -32,6 +32,7 @@ export default function Programs({ programs }: ProgramsProps) {
                         {programs?.length > 0 ? (
                             <div className="grid gap-10">
                                 {programs.map((program) => (
+                                    console.log(program),
                                     <div key={program.program_id} className="group">
                                         <Link href={`/programs/${program.program_link}`} className="block">
                                             <div className="overflow-hidden rounded-2xl border border-[#7f1414]/25 bg-white transition-all duration-300 hover:border-[#7f1414]">
@@ -39,8 +40,8 @@ export default function Programs({ programs }: ProgramsProps) {
                                                     {/* Program Image */}
                                                     <div className="relative h-64 overflow-hidden md:h-auto md:w-1/3">
                                                         <img
-                                                            src="/images/campus/comlab.jpg"
-                                                            alt={program.program_name}
+                                                            src={program.program_image_path ?? '/images/default-program.jpg'}
+                                                            alt={program.program_image_name ?? 'Default Program Image'}
                                                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                                         />
                                                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
@@ -69,7 +70,8 @@ export default function Programs({ programs }: ProgramsProps) {
 
                                                         <div className="items-end flex justify-end">
                                                             <p className="w-fit rounded-full bg-[#7f1414]/20 text-[#7f1414] px-4 py-1 text-sm font-semibold border border-[#7f1414]/40 text-right w-3/4">
-                                                                Accreditation Level {program.levels[0]?.level}
+                                                            {/* Accreditation Level {program.active_levels?.level} */}
+                                                                {program.active_levels.level === 0 ? 'Preliminiary Survey Visit' : `Accreditation Level ${program.active_levels.level}`}
                                                             </p>
                                                         </div>
                                                     </div>

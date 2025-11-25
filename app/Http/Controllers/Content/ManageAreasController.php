@@ -170,7 +170,14 @@ class ManageAreasController extends Controller
             $validated['area_image']->storeAs($path, $areaImageName, 'public');
             $area->area_image_name = $areaImageName;
             $area->area_image_path = $areaImagePath;
+        } else {
+            if ($disk->exists($area->area_image_path)) {
+                $disk->delete($area->area_image_path);
+            }
+            $area->area_image_name = null;
+            $area->area_image_path = null;
         }
+        dd($area);
         $area->save();
 
         return redirect()->back()
