@@ -1,9 +1,17 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
+import { ContentPages, OrganizationTypes } from '@/types/content';
 import { Head, Link } from '@inertiajs/react';
 import { Building2, GraduationCap, Mail, MapPin, Phone, School } from 'lucide-react';
 
-export default function About() {
+interface AboutPageProps {
+    page: ContentPages;
+    programs: number;
+    facilities: number;
+    org_types: OrganizationTypes[];
+}
+
+export default function About({ page, programs, facilities, org_types }: AboutPageProps) {
     const quickLinks = [
         { label: 'Vision, Mission & Goals', href: '/about/vision-mission-goals' },
         { label: 'History', href: '/about/history' },
@@ -14,21 +22,21 @@ export default function About() {
     ];
 
     const pageSections = [
-        { label: 'Academic Organizations', href: 'academic-orgs' },
-        { label: 'Non-Academic Organizations', href: 'non-academic-orgs' },
+        ...(org_types?.length
+            ? org_types.map((type) => ({
+                label: type.type_name,
+                href: type.type_name.toLowerCase().replace(/\s+/g, '-'),
+            }))
+            : []
+        ),
         { label: 'Program Accreditations', href: 'accreditations' },
         { label: 'Contact & Office Hours', href: 'contact' },
     ];
 
     const campusFacts = [
         { icon: <School className="h-6 w-6 text-[#7f1414]" />, label: 'Established', value: '2008' },
-        { icon: <GraduationCap className="h-6 w-6 text-[#7f1414]" />, label: 'Programs Offered', value: '7' },
-        { icon: <Building2 className="h-6 w-6 text-[#7f1414]" />, label: 'Facilities', value: '12+' },
-    ];
-
-    const awards = [
-        { name: 'CHED Center of Development', logo: '/images/awards/ched.png' },
-        { name: 'ISO 9001 Certified', logo: '/images/awards/iso.png' },
+        { icon: <GraduationCap className="h-6 w-6 text-[#7f1414]" />, label: 'Programs Offered', value: programs },
+        { icon: <Building2 className="h-6 w-6 text-[#7f1414]" />, label: 'Facilities', value: facilities },
     ];
 
     const academicOrgs = [
@@ -51,17 +59,6 @@ export default function About() {
         { name: 'Helping Hands Community', program: 'Campus-wide', href: '#' },
     ];
 
-    const programAccreditations = [
-        { program: 'BS Information Technology', level: 2 },
-        { program: 'BS Accountancy', level: 1 },
-        { program: 'BS Psychology', level: 3 },
-        { program: 'BS Hospitality Management', level: 4 },
-        // add more…
-    ];
-
-    // Maximum accreditation level
-    const MAX_LEVEL = 6;
-
     return (
         <>
             <Head title="About Our Campus" />
@@ -78,7 +75,7 @@ export default function About() {
                     <div className="mx-auto w-[75%] px-6 py-12 lg:flex lg:gap-8">
                         {/* Sidebar */}
                         <aside className="mb-6 flex flex-col gap-4 lg:sticky lg:top-24 lg:mb-0 lg:w-1/4 lg:flex-shrink-0">
-                            <div className="hidden lg:block rounded-xl border border-gray-200 bg-white p-6">
+                            <div className="hidden rounded-xl border border-gray-200 bg-white p-6 lg:block">
                                 <h2 className="mb-8 text-sm font-semibold text-[#7f1414ab]">QUICK LINKS</h2>
                                 <nav className="space-y-2">
                                     {quickLinks.map((item, i) => (
@@ -117,16 +114,12 @@ export default function About() {
                         <main className="hide-scrollbar max-h-[80vh] flex-1 space-y-20 overflow-auto scroll-smooth lg:w-3/4">
                             {/* Intro */}
                             <section>
-                                <h1 className="mb-4 text-3xl font-bold text-[#7f1414]">About Our Campus</h1>
-                                <p className="mb-6 leading-relaxed text-gray-700">
-                                    PUP San Juan is a vibrant academic community committed to excellence in education, research, and service. Our
-                                    campus fosters innovation and inclusivity, offering a rich array of programs and facilities designed to prepare
-                                    students for the future.
-                                </p>
+                                <h1 className="mb-4 text-3xl font-bold text-[#7f1414]">{page.title}</h1>
+                                <p className="mb-6 leading-relaxed text-gray-700">{page.description}</p>
 
                                 <div className="flex flex-col gap-6">
                                     <div className="relative h-64 w-full overflow-hidden rounded-xl">
-                                        <img src="/images/homepage-slides/street-sj.png" alt="" className="h-full w-full object-cover" />
+                                        <img src={`${page?.image_path}`} alt={`${page?.image_name}`} className="h-full w-full object-cover" />
                                     </div>
 
                                     <div className="flex flex-wrap gap-6">
@@ -145,24 +138,29 @@ export default function About() {
                             </section>
 
                             {/* Academic Orgs */}
-                            <section id="academic-orgs">
-                                <h2 className="mb-4 text-2xl font-semibold text-[#7f1414]">Academic Organizations</h2>
-                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                    {academicOrgs.map((org, i) => (
-                                        <Link
-                                            key={i}
-                                            href={org.href}
-                                            className="rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
-                                        >
-                                            <h3 className="mb-2 text-lg font-semibold text-gray-900">{org.name}</h3>
-                                            <p className="text-sm text-gray-600">{org.program}</p>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </section>
+                            {org_types &&
+                                org_types.length > 0 &&
+                                org_types.map((type) => (
+                                    <section id={`${type.type_name.toLowerCase().replace(/\s+/g, '-')}`} key={type.type_id}>
+                                        <h2 className="mb-4 text-2xl font-semibold text-[#7f1414]">{type.type_name}</h2>
+                                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                            {type.organizations?.map((org, i) => (
+                                                <Link
+                                                    key={i}
+                                                    href='#'
+                                                    className="rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
+                                                >
+                                                    <h3 className="mb-2 text-lg font-semibold text-gray-900">{org.organization_name}</h3>
+                                                    <p className="text-sm text-gray-600">{org.affiliation}</p>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </section>
+                                ))
+                            }
 
                             {/* Non-Academic Orgs */}
-                            <section id="non-academic-orgs">
+                            {/* <section id="non-academic-orgs">
                                 <h2 className="mb-4 text-2xl font-semibold text-[#7f1414]">Non-Academic Organizations</h2>
                                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                     {nonAcademicOrgs.map((org, i) => (
@@ -176,9 +174,7 @@ export default function About() {
                                         </Link>
                                     ))}
                                 </div>
-                            </section>
-
-                  
+                            </section> */}
 
                             {/*Contact & Office Hours */}
                             <section id="contact">
@@ -186,13 +182,15 @@ export default function About() {
                                 <div className="space-y-3 rounded-xl border border-gray-200 bg-white p-6 text-gray-700">
                                     <p className="flex items-center gap-2">
                                         <MapPin className="h-5 w-5 text-[#7f1414]" />
-                                        PUP San Juan Campus, San Juan City, Metro Manila
+                                        {page?.address}
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <Phone className="h-5 w-5 text-[#7f1414]" /> (02) 123-4567
+                                        <Phone className="h-5 w-5 text-[#7f1414]" />
+                                        {page?.phone_number}
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <Mail className="h-5 w-5 text-[#7f1414]" /> pupsj@pup.edu.ph
+                                        <Mail className="h-5 w-5 text-[#7f1414]" />
+                                        pupsj@pup.edu.ph
                                     </p>
                                     <p className="mt-2 text-sm">Office Hours: Mon–Fri, 8:00 AM – 5:00 PM</p>
                                 </div>

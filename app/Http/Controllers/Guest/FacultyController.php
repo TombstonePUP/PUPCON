@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Guest;
 use App\Http\Controllers\Controller;
 use App\Models\FacultyStaff;
 use Inertia\Inertia;
+use App\Models\ContentPages;
 
 class FacultyController extends Controller
 {
@@ -23,8 +24,11 @@ class FacultyController extends Controller
             'image_path'
         )->get();
 
+        $page = ContentPages::where('page', 'Faculty & Staff')->first();
+
         return Inertia::render('about/faculty', [
             'faculties' => $faculties,
+            'page' => $page,
         ]);
     }
 }

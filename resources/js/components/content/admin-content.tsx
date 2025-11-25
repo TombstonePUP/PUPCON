@@ -74,7 +74,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
 
     const [selectedOfficialId, setSelectedOfficialId] = useState<number | null>(null);
 
-    const { data, setData, post, errors } = useForm<AdministrationForm>({
+    const { data, setData, post, errors, reset } = useForm<AdministrationForm>({
         page: {
             content_page_id: admin_page?.content_page_id,
             title: admin_page?.title,

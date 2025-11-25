@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('suffix')->nullable();
             $table->string('position');
+            $table->string('type'); // e.g., 'Campus', 'U-Wide', etc.
             $table->string('profile_picture_name')->nullable();
             $table->text('profile_picture_path')->nullable();
         });

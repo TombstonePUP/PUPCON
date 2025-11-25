@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Controllers\Guest;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\ContentPages;
+use App\Models\LocalTaskForce;
+use Illuminate\Support\Facades\Storage;
+
+class LocalTaskForceViewController extends Controller
+{
+    /**
+     * Handle the incoming request.
+     */
+    public function __invoke(Request $request)
+    {
+        $page = ContentPages::where('page', 'Local Task Force')->first();
+        $local_task_force = LocalTaskForce::with('Members')->get();
+        $local_task_force->each(function ($task_force) {
+            $task_force->each(function ($chairman) {
+                $chairman->profile_image_path = Storage::url($chairman->profile_image_path);
+                return $chairman;
+            });
+        });
+
+        return inertia('about/local-task-force', [
+            'page' => $page,
+            'local_task_force' => $local_task_force,
+        ]);
+    }
+}

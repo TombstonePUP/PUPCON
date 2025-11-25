@@ -24,6 +24,7 @@ class UniversityAdministration extends Model
         'last_name',
         'suffix',
         'position',
+        'type',
         'profile_picture_name',
         'profile_picture_path',
     ];

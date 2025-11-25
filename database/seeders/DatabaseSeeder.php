@@ -733,7 +733,7 @@ class DatabaseSeeder extends Seeder
                 'page' => 'History',
             ],
             [
-                'page' => 'Mission Vision & Goals',
+                'page' => 'Vision, Mission & Goals',
             ],
             [
                 'page' => 'Other Services',

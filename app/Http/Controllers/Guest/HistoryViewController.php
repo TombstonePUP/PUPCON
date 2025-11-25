@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Controllers\Guest;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\ContentPages;
+use App\Models\CampusDirectors;
+use App\Models\CampusGallery;
+use Illuminate\Support\Facades\Storage;
+
+class HistoryViewController extends Controller
+{
+    /**
+     * Handle the incoming request.
+     */
+    public function __invoke(Request $request)
+    {
+        $pages = ContentPages::where('page', 'History')->first();
+        $pages->image_path = Storage::url($pages->image_path);
+
+        $directors = CampusDirectors::all();
+        $directors = $directors->map(function ($director) {
+            $director->progile_image_path = Storage::url($director->profile_image_path);
+            return $director;
+        });
+
+        $gallery = CampusGallery::all();
+        $gallery = $gallery->map(function ($item) {
+            $item->image_path = Storage::url($item->image_path);
+            return $item;
+        });
+
+        return inertia('about/history', [
+            'page' => $pages,
+            'directors' => $directors,
+            'gallery' => $gallery,
+        ]);
+    }
+}

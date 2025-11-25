@@ -1,97 +1,18 @@
 'use client';
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
+import { ContentPages, Facilities } from '@/types/content';
 import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-export default function Facilities() {
+interface FacilitiesPageProps {
+    page: ContentPages;
+    facilities: Facilities[];
+}
+
+export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps) {
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-
-    const facilities = [
-        {
-            id: 1,
-            name: 'Library',
-            cardImage: '/images/Facilities/lib-card.png',
-            mainImage: '/images/Facilities/lib.png',
-            description:
-                'PUP San Juan now uses a computerized library system to improve service efficiency. It allows users to locate resources, borrow books and materials, and manage the acquisition of new books.',
-            features: ['Computerized System', 'Digital Catalog', 'Study Areas', 'Research Resources'],
-        },
-        {
-            id: 2,
-            name: 'Conference Room',
-            cardImage: '/images/Facilities/conf-card.png',
-            mainImage: '/images/Facilities/conf.png',
-            description:
-                'The Conference Room is a space accessible to faculty members and students-- designed for meetings, presentations, and collaborative discussions. This room provides a productive atmosphere for focused work and effective communication.',
-            features: ['Meeting Space', 'Presentation Equipment', 'Collaborative Environment', 'Professional Setting'],
-        },
-        {
-            id: 3,
-            name: 'Computer Laboratories',
-            cardImage: '/images/Facilities/com-card.png',
-            mainImage: '/images/Facilities/com.png',
-            description:
-                "The Computer Laboratory provides students with access to computers for quizzes, defenses, and other activities requiring multiple workstations. It enhances and practices students' computer skills. PUP San Juan has three computer laboratories.",
-            features: ['3 Computer Labs', 'Multiple Workstations', 'Modern Equipment', 'Skill Development'],
-        },
-        {
-            id: 4,
-            name: 'Audio-Visual Rooms',
-            cardImage: '/images/Facilities/avr-card.png',
-            mainImage: '/images/Facilities/avr.png',
-            description:
-                'The Audio-Visual Room hosts academic presentations, thesis defenses, and similar events. PUP San Juan has two audio-visual rooms available for these activities.',
-            features: ['2 AV Rooms', 'Presentation Equipment', 'Thesis Defenses', 'Academic Events'],
-        },
-        {
-            id: 5,
-            name: 'Mini Hall',
-            cardImage: '/images/Facilities/mini-card.png',
-            mainImage: '/images/Facilities/mini-hall.png',
-            description:
-                'The Mini Hall is an indoor facility utilized for holding meetings, conferences, convocations and similar activities, both administration or student-led. It can cater up to 150 heads. The hall is appropriately decorated and equipped to fit the requirements of the event held.',
-            features: ['150 Capacity', 'Indoor Facility', 'Event Ready', 'Flexible Setup'],
-        },
-        {
-            id: 6,
-            name: 'Multipurpose Hall',
-            cardImage: '/images/Facilities/mph-card.png',
-            mainImage: '/images/Facilities/mph.png',
-            description:
-                'The Multi-Purpose Hall is a versatile space designed to accommodate various events such as assemblies, seminars, and recreational activities. It can be adapted for large gatherings or smaller functions, providing flexibility for different needs of administration and student organizations.',
-            features: ['Versatile Space', 'Large Gatherings', 'Adaptable Layout', 'Multi-functional'],
-        },
-        {
-            id: 7,
-            name: 'Gymnasium',
-            cardImage: '/images/Facilities/gym-card.png',
-            mainImage: '/images/Facilities/gym.png',
-            description:
-                'The Gymnasium is where games and physical training are held. Most of the physical and sport activities in PUP San Juan like Intramural Meet are held in the PUP San Juan gymnasium.',
-            features: ['Sports Activities', 'Physical Training', 'Intramural Events', 'Athletic Programs'],
-        },
-        {
-            id: 8,
-            name: 'Open Court',
-            cardImage: '/images/Facilities/court-card.png',
-            mainImage: '/images/Facilities/court.png',
-            description:
-                'The Quadrangle/Open Court is an outdoor facility that has an occupancy capacity of 150. The weekly flag raising ceremony, and different programs and events are conducted here.',
-            features: ['150 Capacity', 'Outdoor Facility', 'Flag Ceremonies', 'Campus Events'],
-        },
-        {
-            id: 9,
-            name: 'Student Assembly Office',
-            cardImage: '/images/Facilities/sa.png',
-            mainImage: '/images/Facilities/sa.png',
-            description:
-                'The Student Assembly Office serves as the quarters of various student-led campus organizations, where they can plan and coordinate campus initiatives that aims to make a positive impact on campus life. This is a hub for collaboration and student engagement.',
-            features: ['Student Organizations', 'Campus Initiatives', 'Collaboration Hub', 'Student Engagement'],
-        },
-    ];
-
     return (
         <>
             <Head title="Facilities - PUP San Juan">
@@ -112,20 +33,16 @@ export default function Facilities() {
                     {/* Facilities Introduction */}
                     <article className="facilities-page mt-8 w-[75%]">
                         <section className="card-fx mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8 duration-300 hover:border-[#7f1414]">
-                            <h2 className="mb-4 text-3xl font-bold text-[#7f1414]">Campus Facilities</h2>
-                            <p className="leading-relaxed text-gray-700">
-                                PUP San Juan Campus is equipped with modern facilities designed to support academic excellence and student
-                                development. Our state-of-the-art infrastructure provides an optimal learning environment for all students, faculty,
-                                and staff. Explore our comprehensive range of facilities that make learning engaging, collaborative, and effective.
-                            </p>
+                            <h2 className="mb-4 text-3xl font-bold text-[#7f1414]">{page.title}</h2>
+                            <p className="leading-relaxed text-gray-700">{page?.description}</p>
                         </section>
 
                         {/* Facilities Grid */}
-                        <section className="facilities-grid">
+                        <section className="facilities-grid mb-12">
                             <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                                 {facilities.map((facility, index) => (
                                     <motion.div
-                                        key={facility.id}
+                                        key={facility.facility_id}
                                         className="facility-card group relative overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white transition-all duration-300 duration-500 hover:border-[#7f1414]"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -133,46 +50,35 @@ export default function Facilities() {
                                     >
                                         {/* Card Front */}
                                         <div
-                                            className={`card-front transition-all duration-500 ${hoveredCard === facility.id ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}`}
+                                            className={`card-front transition-all duration-500 ${hoveredCard === facility.facility_id ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}`}
                                         >
                                             <div className="aspect-[4/3] overflow-hidden">
                                                 <img
-                                                    src={facility.cardImage || '/placeholder.svg'}
-                                                    alt={`${facility.name} Card`}
+                                                    src={facility?.image_path || '/placeholder.svg'}
+                                                    alt={`${facility?.image_name || 'Facility Image'}`}
                                                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                                 />
                                             </div>
                                             <div className="p-6">
-                                                <h3 className="mb-3 text-2xl font-bold text-[#7f1414] group-hover:text-[#a01818]">{facility.name}</h3>
+                                                <h3 className="mb-3 text-2xl font-bold text-[#7f1414] group-hover:text-[#a01818]">{facility.facility_name}</h3>
                                                 <p className="line-clamp-3 text-gray-600">{facility.description}</p>
                                             </div>
                                         </div>
 
                                         {/* Card Back */}
                                         <div
-                                            className={`card-back absolute inset-0 bg-gradient-to-br from-[#7f1414] to-[#a01818] p-6 text-white transition-all duration-500 ${hoveredCard === facility.id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+                                            className={`card-back absolute inset-0 bg-gradient-to-br from-[#7f1414] to-[#a01818] p-6 text-white transition-all duration-500 ${hoveredCard === facility.facility_id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
                                         >
                                             <div className="flex h-full flex-col">
                                                 <div className="mb-4 aspect-[4/3] overflow-hidden rounded-lg">
                                                     <img
-                                                        src={facility.mainImage || '/placeholder.svg'}
-                                                        alt={facility.name}
+                                                        src={facility.image_path || '/placeholder.svg'}
+                                                        alt={facility.image_name || 'Facility Image'}
                                                         className="h-full w-full object-cover"
                                                     />
                                                 </div>
-                                                <h3 className="mb-3 text-xl font-bold">{facility.name}</h3>
+                                                <h3 className="mb-3 text-xl font-bold">{facility.facility_name}</h3>
                                                 <p className="mb-4 flex-1 text-sm leading-relaxed opacity-90">{facility.description}</p>
-                                                <div className="space-y-2">
-                                                    <h4 className="font-semibold">Key Features:</h4>
-                                                    <div className="grid grid-cols-2 gap-1 text-xs">
-                                                        {facility.features.map((feature, idx) => (
-                                                            <div key={idx} className="flex items-center">
-                                                                <div className="mr-2 h-1 w-1 rounded-full bg-white"></div>
-                                                                {feature}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
 
@@ -188,7 +94,7 @@ export default function Facilities() {
                         </section>
 
                         {/* Facilities Stats */}
-                        <section className="facilities-stats mt-12 rounded-xl bg-gradient-to-r from-[#7f1414] to-[#a01818] p-8 text-white">
+                        {/* <section className="facilities-stats mt-12 rounded-xl bg-gradient-to-r from-[#7f1414] to-[#a01818] p-8 text-white">
                             <h2 className="mb-8 text-center text-3xl font-bold">Facilities at a Glance</h2>
                             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
                                 <div className="text-center">
@@ -208,10 +114,10 @@ export default function Facilities() {
                                     <div className="text-sm opacity-90">Major Facilities</div>
                                 </div>
                             </div>
-                        </section>
+                        </section> */}
 
                         {/* Call to Action */}
-                        <section className="cta-section mt-12 text-center">
+                        {/*<section className="cta-section mt-12 text-center">
                             <div className="rounded-xl border border-[#7f1414]/25 bg-white p-8">
                                 <h2 className="mb-4 text-3xl font-bold text-[#7f1414]">Experience Our Campus</h2>
                                 <p className="mb-6 text-lg text-gray-700">
@@ -227,7 +133,7 @@ export default function Facilities() {
                                     </button>
                                 </div>
                             </div>
-                        </section>
+                        </section> */}
                     </article>
                 </div>
             </Layout>
