@@ -175,6 +175,7 @@ class DatabaseSeeder extends Seeder
                 'level' => 2,
                 'remarks' => 'Passed',
                 'is_active' => false,
+                'survey_date' => '2022-05-15',
             ],
             [
                 // 'accreditation_level_id' => 2,
@@ -182,6 +183,7 @@ class DatabaseSeeder extends Seeder
                 'level' => 3,
                 'remarks' => 'Passed',
                 'is_active' => true,
+                'survey_date' => '2024-03-20',
             ],
             [
                 // 'accreditation_level_id' => 3,
