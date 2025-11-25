@@ -26,6 +26,11 @@ class Exhibits extends Model
         'container',
     ];
 
+    protected $casts = [
+        'image_name' => 'encrypted',
+        'image_path' => 'encrypted',
+    ];
+
     /**
      * @return HasMany<ExhibitFiles,Exhibits>
      */

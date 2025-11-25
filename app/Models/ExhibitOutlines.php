@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ExhibitOutlines extends Model
 {
@@ -35,10 +36,10 @@ class ExhibitOutlines extends Model
     }
 
     /**
-     * @return HasMany<ExhibitFiles,ExhibitOutlines>
+     * @return HasOne<ExhibitFiles,ExhibitOutlines>
      */
-    public function ExhibitFiles(): HasMany
+    public function ExhibitFiles(): HasOne
     {
-        return $this->hasMany(ExhibitFiles::class, 'exhibit_outline_id', 'exhibit_outline_id');
+        return $this->hasOne(ExhibitFiles::class, 'exhibit_outline_id', 'exhibit_outline_id');
     }
 }
