@@ -371,7 +371,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                     id="program_description"
                                     required
                                     defaultValue={program.program_description}
-                                    onChange={(e) => {setData('description', e.target.value);}}
+                                    onChange={(e) => { setData('description', e.target.value); }}
                                     placeholder="Provide a detailed description of the program..."
                                     autoResize
                                     disabled={processing}
@@ -537,7 +537,13 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                 />
             </div>
             {dialogType === 'objective' && dialogOpen && (
-                <ObjectiveDialog type={action} objective={selectedObjective} onClose={() => setDialogOpen(false)} onSave={saveObjective} />
+                <ObjectiveDialog
+                    type={action}
+                    objective={selectedObjective}
+                    nextObjectiveNumber={objectives.length + 1}   // ← ADD THIS
+                    onClose={() => setDialogOpen(false)}
+                    onSave={saveObjective}
+                />
             )}
             {dialogType === 'gallery' && dialogOpen && (
                 <GalleryDialog type={action} gallery={selectedGalleryItem} onClose={() => setDialogOpen(false)} onSave={saveGallery} />

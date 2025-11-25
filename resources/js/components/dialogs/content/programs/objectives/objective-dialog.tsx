@@ -6,27 +6,32 @@ import { Textarea } from '@/components/ui/text-area';
 import { ProgramObjectives } from '@/types';
 import { useState } from 'react';
 
-interface ObjectiveDialogProps {
-    type?: 'add' | 'edit';
-    onClose: () => void;
-    onSave: (obj: ObjectiveForm) => void;
-    objective?: ProgramObjectives;
-}
-
 interface ObjectiveForm {
     objective_id: number | null;
     title: string;
     description: string;
 }
 
-export default function ObjectiveDialog({ type, onClose, onSave, objective }: ObjectiveDialogProps) {
-    const [data, setData, errors] = useState<ObjectiveForm>({
+interface ObjectiveDialogProps {
+    type?: 'add' | 'edit';
+    onClose: () => void;
+    onSave: (obj: ObjectiveForm) => void;
+    objective?: ProgramObjectives;
+    nextObjectiveNumber?: number; // ← NEW
+}
+
+export default function ObjectiveDialog({ type, onClose, onSave, objective, nextObjectiveNumber }: ObjectiveDialogProps) {
+    const [data, setData] = useState<ObjectiveForm>({
         objective_id: objective?.program_objective_id || null,
-        title: objective?.objective_title || '',
+        title:
+            type === "add"
+                ? `Objective ${nextObjectiveNumber ?? 1}`               // ← AUTO-GENERATED TITLE
+                : objective?.objective_title || '',
         description: objective?.objective_description || '',
     });
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
         onSave(data);
         onClose();
     };
@@ -37,6 +42,7 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective }: Ob
                 <DialogHeader>
                     <DialogTitle>{type === 'edit' ? 'Edit Objective' : 'Add Objective'}</DialogTitle>
                 </DialogHeader>
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <Label>Objective Title</Label>
@@ -44,11 +50,11 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective }: Ob
                             className="mt-2"
                             type="text"
                             required
-                            defaultValue={data.title}
+                            value={data.title}                               // ← switched to value
                             onChange={(e) => setData({ ...data, title: e.target.value })}
-                            placeholder="e.g., Academic Excellence"
                         />
                     </div>
+
                     <div>
                         <Label>Description</Label>
                         <Textarea
@@ -60,11 +66,10 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective }: Ob
                             minHeight={80}
                         />
                     </div>
+
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="outline" type="button">
-                                Cancel
-                            </Button>
+                            <Button variant="outline" type="button">Cancel</Button>
                         </DialogClose>
                         <Button type="submit" variant="noborder">
                             {type === 'edit' ? 'Save Changes' : 'Add Objective'}
