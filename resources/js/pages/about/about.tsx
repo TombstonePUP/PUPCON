@@ -39,26 +39,6 @@ export default function About({ page, programs, facilities, org_types }: AboutPa
         { icon: <Building2 className="h-6 w-6 text-[#7f1414]" />, label: 'Facilities', value: facilities },
     ];
 
-    const academicOrgs = [
-        { name: 'Governing League of Information Technology Challengers (GLITCH)', program: 'BS Information Technology', href: '#' },
-        { name: 'Psychology Society (PSYSOC)', program: 'BS Psychology', href: '#' },
-        { name: 'Junior Financial Executives (JFINEX)', program: 'BSBA Financial Management', href: '#' },
-        { name: 'Junior Philippine Institute of Accountants (JPIA)', program: 'BS Accountancy', href: '#' },
-        { name: 'Young Educators Society (YES)', program: 'BS Education Major in English', href: '#' },
-        { name: 'Hospitality Management Society (HMSOC)', program: 'BS Hospitality Management', href: '#' },
-        { name: 'Collegiate Entrepreneurs Organization (CEO)', program: 'BS Entrepreneurship', href: '#' },
-    ];
-
-    const nonAcademicOrgs = [
-        { name: 'Student Council', program: 'Official Student Government', href: '#' },
-        { name: 'Paraseist', program: 'Campus Publication and Journalism', href: '#' },
-        { name: 'Rotaract Club', program: 'Campus-wide', href: '#' },
-        { name: 'ALAB Danse Club', program: 'Dance Group', href: '#' },
-        { name: 'PYLON Esport SJ', program: 'Esports Games', href: '#' },
-        { name: 'Lente Felikulas', program: 'Film and Multimedia', href: '#' },
-        { name: 'Helping Hands Community', program: 'Campus-wide', href: '#' },
-    ];
-
     return (
         <>
             <Head title="About Our Campus" />
@@ -115,7 +95,7 @@ export default function About({ page, programs, facilities, org_types }: AboutPa
                             {/* Intro */}
                             <section>
                                 <h1 className="mb-4 text-3xl font-bold text-[#7f1414]">{page.title}</h1>
-                                <p className="mb-6 leading-relaxed text-gray-700">{page.description}</p>
+                                <p className="mb-6 leading-relaxed text-gray-700">{page.subtitle}</p>
 
                                 <div className="flex flex-col gap-6">
                                     <div className="relative h-64 w-full overflow-hidden rounded-xl">

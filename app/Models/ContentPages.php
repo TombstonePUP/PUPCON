@@ -30,4 +30,9 @@ class ContentPages extends Model
         'phone_number',
         'address',
     ];
+
+    protected $casts = [
+        'image_name' => 'encrypted',
+        'image_path' => 'encrypted',
+    ];
 }

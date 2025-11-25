@@ -8,6 +8,7 @@ use App\Models\Facilities;
 use App\Models\OrganizationTypes;
 use App\Models\Programs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AboutViewController extends Controller
 {
@@ -18,6 +19,7 @@ class AboutViewController extends Controller
     {
 
         $page = ContentPages::where('page', 'About')->first();
+        $page->image_path = Storage::url( $page->image_path);
         $programs = Programs::count();
         $facilities = Facilities::count();
 
