@@ -26,7 +26,6 @@ class ManageProgramController extends Controller
                 ->orderBy('program_name', 'asc')->get();
         } else {
             $programs = Programs::with('latestLevel')
-                ->where('is_active', true)
                 ->orderBy('program_name', 'asc')->get();
         }
 

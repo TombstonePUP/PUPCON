@@ -32,6 +32,7 @@ export default function Programs({ program }: ProgramProps) {
     const assignedAreas = auth.user.areas;
 
     const selected_level = program.levels?.find((level) => level.areas) || program.levels?.[0];
+    console.log('Selected Level:', selected_level);
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Programs', href: '/manage-programs' },
@@ -87,7 +88,7 @@ export default function Programs({ program }: ProgramProps) {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Badge variant="outline" className="w-full cursor-pointer justify-center border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
-                        {selected_level?.level === 1 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + selected_level?.level}
+                        {selected_level?.level === 0 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + selected_level?.level}
                     </Badge>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
@@ -107,7 +108,7 @@ export default function Programs({ program }: ProgramProps) {
                                     )
                                 }
                             >
-                                {level.level === 1 ? 'Preliminary Survey Visit' : 'Level ' + level.level}{' '}
+                                {level.level === 0 ? 'Preliminary Survey Visit' : 'Level ' + level.level}{' '}
                                 {level.survey_date && `- (${new Date(level.survey_date).getFullYear()})`}
                             </DropdownMenuRadioItem>
                         ))}
@@ -283,8 +284,9 @@ export default function Programs({ program }: ProgramProps) {
 
                                     {/* Add New Area Card */}
                                     {(role === 'Admin' || role === 'Coordinator') &&
-                                        selected_level.is_active &&
-                                        selected_level.remarks !== 'Ongoing Survey' && (
+                                        selected_level?.is_active &&
+                                        selected_level?.remarks === 'Ongoing Survey' && (
+                                            console.log(selected_level),
                                             <button
                                                 type="button"
                                                 onClick={addArea}

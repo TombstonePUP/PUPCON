@@ -1,80 +1,82 @@
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogClose,
 } from '@/components/ui/dialog';
 import { Eye, Save } from 'lucide-react';
 import React from 'react';
 
 interface SectionFooterProps {
-  onSave: () => void;
-  onPreview: () => void;
-  previewDescription?: string;
-  previewUrl?: string;
+    onSave: () => void;
+    onPreview: () => void;
+    previewDescription?: string;
+    previewUrl?: string;
 }
 
 const SectionFooter: React.FC<SectionFooterProps> = ({
-  onSave,
-  onPreview,
-  previewDescription = 'Clicking Preview will open a new tab in guest view so you can see how your changes look publicly.',
-  previewUrl,
+    onSave,
+    onPreview,
+    previewDescription = 'Clicking Preview will open a new tab in guest view so you can see how your changes look publicly.',
+    previewUrl,
 }) => {
-  return (
-    <div className="rounded-b-lg border-t border-gray-200 bg-gray-50 px-8 py-4">
-      <div className="flex items-center justify-end gap-3">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
-              <Eye className="h-4 w-4 text-gray-600" />
-              Preview
-            </Button>
-          </DialogTrigger>
+    return (
+        <div className="rounded-b-lg border-t border-gray-200 bg-gray-50 px-8 py-4">
+            <div className="flex items-center justify-end gap-3">
+                {onPreview && (
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+                                <Eye className="h-4 w-4 text-gray-600" />
+                                Preview
+                            </Button>
+                        </DialogTrigger>
 
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Preview Content</DialogTitle>
-              <DialogDescription className="my-2 leading-relaxed">
-                {previewDescription}
-              </DialogDescription>
-            </DialogHeader>
+                        <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                                <DialogTitle>Preview Content</DialogTitle>
+                                <DialogDescription className="my-2 leading-relaxed">
+                                    {previewDescription}
+                                </DialogDescription>
+                            </DialogHeader>
 
-            <div className="flex justify-end gap-3">
-              <DialogClose asChild>
-                <Button className="cursor-pointer rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
-                  Cancel
-                </Button>
-              </DialogClose>
+                            <div className="flex justify-end gap-3">
+                                <DialogClose asChild>
+                                    <Button className="cursor-pointer rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
 
-              <DialogClose asChild>
+                                <DialogClose asChild>
+                                    <Button
+                                        onClick={() => {
+                                            if (previewUrl) window.open(previewUrl, '_blank');
+                                            else onPreview();
+                                        }}
+                                        className="cursor-pointer rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
+                                    >
+                                        Continue to Preview
+                                    </Button>
+                                </DialogClose>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                )}
+
                 <Button
-                  onClick={() => {
-                    if (previewUrl) window.open(previewUrl, '_blank');
-                    else onPreview();
-                  }}
-                  className="cursor-pointer rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
+                    onClick={onSave}
+                    className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
                 >
-                  Continue to Preview
+                    <Save className="h-4 w-4" />
+                    Save
                 </Button>
-              </DialogClose>
             </div>
-          </DialogContent>
-        </Dialog>
-
-        <Button
-          onClick={onSave}
-          className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
-        >
-          <Save className="h-4 w-4" />
-          Save
-        </Button>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default SectionFooter;

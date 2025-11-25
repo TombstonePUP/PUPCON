@@ -23,7 +23,7 @@ interface EndSurveyForm {
 export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogProps) {
     const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
     const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
-    const level = selectedProgram?.levels[0]?.level;
+    const level = selectedProgram?.latest_level?.level;
     const { data, setData, patch, processing, errors } = useForm<EndSurveyForm>({
         program_name: '',
         accreditation_level_id: 0,
@@ -61,7 +61,7 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                                 setData({
                                     ...data,
                                     program_name: program?.program_name ?? '',
-                                    accreditation_level_id: program?.levels[0]?.accreditation_level_id ?? 0,
+                                    accreditation_level_id: program?.latest_level?.accreditation_level_id ?? 0,
                                 });
                             }}
                             disabled={processing}

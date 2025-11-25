@@ -267,7 +267,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
         setDialogOpen(false);
     };
 
-    const onSave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const onSave = () => {
         post(route('manage.program.update.content', {
             program_id: program.program_id,
         }));
@@ -275,9 +275,8 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
 
     const preview = () => {
         window.open(
-            route('manage.program', {
+            route('programs.show', {
                 program_name: program.program_link,
-                level_id: program.level_id,
             }),
             '_blank',
         );
@@ -532,7 +531,10 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                         </div>
                     </div>
                 </div>
-                <SectionFooter onSave={onSave} onPreview={preview}/>
+                <SectionFooter
+                    onSave={onSave}
+                    onPreview={program.under_survey ? preview : null}
+                />
             </div>
             {dialogType === 'objective' && dialogOpen && (
                 <ObjectiveDialog type={action} objective={selectedObjective} onClose={() => setDialogOpen(false)} onSave={saveObjective} />
