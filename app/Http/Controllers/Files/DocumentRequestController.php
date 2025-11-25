@@ -11,6 +11,7 @@ use App\Models\FilesOverview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentRequestController extends Controller
 {
@@ -19,8 +20,15 @@ class DocumentRequestController extends Controller
      */
     public function index()
     {
-        $filesOverview = FilesOverview::select('*')->get();
-        $filesOverview->map(function ($file) {
+        $user = Auth::user();
+        $files = null;
+        if ($user->Roles->role_name === 'Admin' || $user->Roles->role_name === 'Coordinator') {
+            $files = FilesOverview::select('*')->get();
+        } else {
+            $name = $user->first_name . ' ' . $user->last_name;
+            $files = FilesOverview::where('uploaded_by', 'ILIKE', $name)->get();
+        }
+        $files->map(function ($file) {
             if ($file->file_path && $file->file_name) {
                 $file->file_path = Storage::url(Crypt::decryptString($file->file_path));
                 $file->file_name = Crypt::decryptString($file->file_name);
@@ -30,7 +38,7 @@ class DocumentRequestController extends Controller
         });
 
         return inertia('document/document-request', [
-            'files' => $filesOverview,
+            'files' => $files,
         ]);
     }
 

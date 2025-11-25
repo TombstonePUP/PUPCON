@@ -17,6 +17,7 @@ class EnsureAccreditationLevelExists
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // dd($request->all());
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
         $level_id = $request->level_id;
 

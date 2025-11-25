@@ -6,10 +6,11 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogClose
+    DialogClose,
+    DialogTrigger
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { MoreVertical } from 'lucide-react';
+import { MessageSquareOff, MessageSquareText, MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { type FilesOverview } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
@@ -17,6 +18,8 @@ import { ArrowUpDown } from 'lucide-react';
 import { useForm } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import { DocumentViewer } from '@/components/dialogs/documents/view-document';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/text-area';
 
 interface DocumentRequestForm {
     file_id: number;
@@ -77,7 +80,40 @@ export const columns: ColumnDef<FilesOverview>[] = [
     {
         accessorKey: 'rejection_reason',
         header: () => <div className="text-left">Comments</div>,
-        cell: ({ row }) => <div className="text-left">{row.getValue('rejection_reason')}</div>,
+        cell: ({ row }) => {
+            const rejectionReason = row.getValue('rejection_reason') as string | null;
+
+            return (
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="none" disabled={!rejectionReason} className="text-left p-0">
+                            {rejectionReason ?
+                                <MessageSquareText className="h-5 w-5 text-[#7f1414]" />
+                            :
+                                <MessageSquareOff className="h-5 w-5 text-gray-400" />}
+                            </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Rejection Comments</DialogTitle>
+                            <DialogDescription>Comments for rejected document</DialogDescription>
+                        </DialogHeader>
+                        <div>
+                            <Textarea className="min-h-[100px] text-black" disabled>
+                                {rejectionReason}
+                            </Textarea>
+                        </div>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button variant="outline" tabIndex={1}>
+                                    Close
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            );
+        },
         enableGlobalFilter: true,
     },
     {

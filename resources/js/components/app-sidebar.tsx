@@ -36,7 +36,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         // ...(role === 'Admin' || role === 'Coordinator' ?
             //  [
                 {
-                    title: 'Requests',
+                    title: 'Document Requests',
                     url: '/requests',
                     icon: Boxes,
                 },

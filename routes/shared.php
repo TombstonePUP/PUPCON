@@ -4,6 +4,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Files\AreaFilesController;
 use App\Http\Controllers\Files\AreaFormFilesController;
 use App\Http\Controllers\Files\AreaFormsController;
+use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Files\DownloadPerAreaFilesController;
 use App\Http\Controllers\Files\DownloadPerProgramFilesController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restriction'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+
+    Route::get('/requests' , [DocumentRequestController::class, 'index'])->name('requests');
 
     Route::controller(ManageProgramController::class)->prefix('manage-programs')->as('manage.')->group(function () {
         Route::get('/', 'index')->name('manage-programs');

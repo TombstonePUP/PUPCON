@@ -1,10 +1,11 @@
 import { DocumentRequestDataTable } from '@/components/charts/data-table';
 import AppLayout from '@/layouts/app-layout';
 import { FilesOverview, type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 
-import { columns } from '@/components/charts/data-table-columns/requests';
+import { columns as allColumns } from '@/components/charts/data-table-columns/requests';
 import { Boxes } from 'lucide-react';
+import { useMemo } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,6 +19,16 @@ interface DocumentRequests {
 }
 
 export default function Requests({ files }: DocumentRequests) {
+    const { auth } = usePage().props;
+    const role = auth.user.roles.role_name;
+
+    const columns = useMemo(() => {
+        if (role === 'Admin' || role === 'Coordinator') {
+            return allColumns;
+        }
+        return allColumns.filter((column) => column.id !== 'actions');
+    }, [role]);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Requests" />

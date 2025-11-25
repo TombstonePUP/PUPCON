@@ -78,11 +78,11 @@ class HandleInertiaRequests extends Middleware
                 ->with('latestLevel')
                 ->get();
         } elseif ($role === 'Chairman') {
-            $programs = Programs::whereHas('Levels.Areas', function ($query) use ($user) {
+            $programs = Programs::whereHas('latestLevel.Areas', function ($query) use ($user) {
                 $query->whereIn('areas.area_id', $user->Areas->pluck('area_id'));
             })
                 ->with([
-                    'Levels' => function ($levelQuery) use ($user) {
+                    'latestLevel' => function ($levelQuery) use ($user) {
                         $levelQuery->whereIn('accreditation_level_id', $user->Areas->pluck('accreditation_level_id'));
                     },
                 ])
