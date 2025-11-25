@@ -1,18 +1,31 @@
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { InfoIcon } from 'lucide-react';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 // Section Imports
-import VmgoContentSection from './vmgo-content';
-import FacilitiesSection from '@/components/content/facilities-content';
-import { Administration, CampusDirectors, CampusGallery, CampusGoals, ContentPages, Facilities, FacultyStaff, LocalTaskForce, OrganizationTypes, Pillars, Vmgo } from '@/types/content';
-import AdministrationSection from '@/components/content/admin-content';
 import AboutSection from '@/components/content/about-content';
+import AdministrationSection from '@/components/content/admin-content';
+import FacilitiesSection from '@/components/content/facilities-content';
 import FacultySection from '@/components/content/faculty-content';
 import HistorySection from '@/components/content/history-content';
 import LocalTaskForceSection from '@/components/content/local-task-force-content';
 import VmgoSection from '@/components/content/vmgo-content';
+import WelcomeSection from '@/components/content/welcome-content';
+
+import {
+    Administration,
+    CampusDirectors,
+    CampusGallery,
+    CampusGoals,
+    ContentPages,
+    Facilities,
+    FacultyStaff,
+    LocalTaskForce,
+    OrganizationTypes,
+    Pillars,
+    Vmgo,
+} from '@/types/content';
 
 interface History {
     directors: CampusDirectors[];
@@ -43,17 +56,17 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const MainContent = ({...props}: MainContentProps) => {
+const MainContent = ({ ...props }: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('about');
-    const {pages, officials, facilities, org_types, faculties, history, local_task_force, vmgo_data} = props;
+    const { pages, officials, facilities, org_types, faculties, history, local_task_force, vmgo_data } = props;
 
-    const about_page = pages.find((page: ContentPages) => page.page === "About")?? null;
-    const history_page = pages.find((page: ContentPages) => page.page === "History") ?? null;
-    const admin_page = pages.find((page: ContentPages) => page.page === "Administration") ?? null;
-    const faculty_page = pages.find((page: ContentPages) => page.page === "Faculty & Staff") ?? null;
-    const facility_page = pages.find((page: ContentPages) => page.page === "Facilities")?? null;
-    const ltf_page = pages.find((page: ContentPages) => page.page === "Local Task Force") ?? null;
-    const vmgo_page = pages.find((page: ContentPages) => page.page === "Vision, Mission & Goals") ?? null;
+    const about_page = pages.find((page: ContentPages) => page.page === 'About') ?? null;
+    const history_page = pages.find((page: ContentPages) => page.page === 'History') ?? null;
+    const admin_page = pages.find((page: ContentPages) => page.page === 'Administration') ?? null;
+    const faculty_page = pages.find((page: ContentPages) => page.page === 'Faculty & Staff') ?? null;
+    const facility_page = pages.find((page: ContentPages) => page.page === 'Facilities') ?? null;
+    const ltf_page = pages.find((page: ContentPages) => page.page === 'Local Task Force') ?? null;
+    const vmgo_page = pages.find((page: ContentPages) => page.page === 'Vision, Mission & Goals') ?? null;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
@@ -62,6 +75,7 @@ const MainContent = ({...props}: MainContentProps) => {
     const facultiesRef = useRef(null);
     const facilitiesRef = useRef(null);
     const localTaskForceRef = useRef(null);
+    const welcomeLandingRef = useRef(null);
 
     // --- THIS SCROLLS TO THE CLICKED SECTION ---
     const scrollToSection = (ref, sectionId) => {
@@ -75,6 +89,7 @@ const MainContent = ({...props}: MainContentProps) => {
     };
 
     const sections = [
+        { id: 'welcome-landing', label: 'Home', ref: welcomeLandingRef },
         { id: 'about', label: 'About', ref: aboutRef },
         { id: 'vmgo', label: 'Vision, Mission & Goals', ref: vmgoRef },
         { id: 'history', label: 'History', ref: historyRef },
@@ -104,53 +119,37 @@ const MainContent = ({...props}: MainContentProps) => {
                 <div className="flex gap-6">
                     <div className="flex-1">
                         <div className="space-y-6">
+                            {/* Temporary welcome holder section only */}
+                            <div ref={welcomeLandingRef} className="scroll-mt-6">
+                                <WelcomeSection  />
+                            </div>
+
                             <div ref={aboutRef} className="scroll-mt-6">
-                                <AboutSection
-                                    about_page={about_page}
-                                    org_types={org_types}
-                                />
+                                <AboutSection about_page={about_page} org_types={org_types} />
                             </div>
 
                             <div ref={vmgoRef} className="scroll-mt-6">
-                                <VmgoSection
-                                    vmgo_page={vmgo_page}
-                                    vmgo_data={vmgo_data}
-                                />
+                                <VmgoSection vmgo_page={vmgo_page} vmgo_data={vmgo_data} />
                             </div>
 
                             <div ref={historyRef} className="scroll-mt-6">
-                                <HistorySection
-                                    history_page={history_page}
-                                    history={history}
-                                />
+                                <HistorySection history_page={history_page} history={history} />
                             </div>
 
                             <div ref={administrationRef} className="scroll-mt-6">
-                                <AdministrationSection
-                                    admin_page={admin_page}
-                                    officials={officials}
-                                />
+                                <AdministrationSection admin_page={admin_page} officials={officials} />
                             </div>
 
                             <div ref={facultiesRef} className="scroll-mt-6">
-                                <FacultySection
-                                    faculty_page={faculty_page}
-                                    faculty_members={faculties}
-                                />
+                                <FacultySection faculty_page={faculty_page} faculty_members={faculties} />
                             </div>
 
                             <div ref={facilitiesRef} className="scroll-mt-6">
-                                <FacilitiesSection
-                                    facility_page={facility_page}
-                                    facilities={facilities}
-                                />
+                                <FacilitiesSection facility_page={facility_page} facilities={facilities} />
                             </div>
 
                             <div ref={localTaskForceRef} className="scroll-mt-6">
-                                <LocalTaskForceSection
-                                    ltf_page={ltf_page}
-                                    local_task_force={local_task_force}
-                                />
+                                <LocalTaskForceSection ltf_page={ltf_page} local_task_force={local_task_force} />
                             </div>
                         </div>
                     </div>
@@ -165,8 +164,9 @@ const MainContent = ({...props}: MainContentProps) => {
                                         <button
                                             key={section.id}
                                             onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                                }`}
+                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
+                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >
                                             {section.label}
                                         </button>

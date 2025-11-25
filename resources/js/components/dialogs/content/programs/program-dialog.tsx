@@ -88,7 +88,7 @@ export default function ProgramDialog({...props }: ProgramDialogProps) {
                         <Label className="mb-2 block text-sm font-medium text-gray-700">Program Name</Label>
                         <Input
                             type="text"
-                            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-[#7f1414] focus:outline-none"
+                            className="w-full"
                             placeholder="e.g., Computer Science, Business Administration"
                             value={data.program_name}
                             onChange={(e) => setData("program_name", e.target.value)}
