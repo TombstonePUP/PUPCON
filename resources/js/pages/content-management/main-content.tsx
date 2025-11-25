@@ -57,7 +57,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const MainContent = ({ ...props }: MainContentProps) => {
-    const [activeSection, setActiveSection] = useState('about');
+    const [activeSection, setActiveSection] = useState('welcome-landing');
     const { pages, officials, facilities, org_types, faculties, history, local_task_force, vmgo_data } = props;
 
     const about_page = pages.find((page: ContentPages) => page.page === 'About') ?? null;
