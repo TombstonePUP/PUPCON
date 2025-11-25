@@ -1,5 +1,4 @@
-import type React from 'react';
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import ProgramSection from '@/components/content/program/program-section';
 import AreaDialog from '@/components/dialogs/content/programs/areas/area-dialog';
@@ -44,20 +43,62 @@ export default function Programs({ program }: ProgramProps) {
     const galleryRef = useRef<HTMLDivElement>(null);
     const areasRef = useRef<HTMLDivElement>(null);
 
-    const allSections = [
-        { id: 'overview', label: 'Program Overview', ref: overviewRef, roles: ['Admin', 'Coordinator'] },
-        { id: 'objectives', label: 'Program Objectives', ref: objectivesRef, roles: ['Admin', 'Coordinator'] },
-        { id: 'gallery', label: 'Gallery', ref: galleryRef, roles: ['Admin', 'Coordinator'] },
-        { id: 'areas', label: 'Program Areas', ref: areasRef, roles: ['Admin', 'Coordinator', 'Chairman'] },
-    ];
+    const allSections = useMemo(
+        () => [
+            { id: 'overview', label: 'Program Overview', ref: overviewRef, roles: ['Admin', 'Coordinator'] },
+            { id: 'objectives', label: 'Program Objectives', ref: objectivesRef, roles: ['Admin', 'Coordinator'] },
+            { id: 'gallery', label: 'Gallery', ref: galleryRef, roles: ['Admin', 'Coordinator'] },
+            { id: 'areas', label: 'Program Areas', ref: areasRef, roles: ['Admin', 'Coordinator', 'Chairman'] },
+        ],
+        [],
+    );
     const sections = allSections.filter((section) => section.roles.includes(role));
 
-    const scrollToSection = (ref: React.RefObject<HTMLDivElement>, sectionId: string) => {
+    const [scrollLock, setScrollLock] = useState(false);
+    const scrollToSection = (ref, sectionId) => {
+        setScrollLock(true);
         setActiveSection(sectionId);
+
         if (ref.current) {
             ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
+        // Unlock when scroll really stops
+        let timeout;
+        const handleScrollEnd = () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                setScrollLock(false);
+                window.removeEventListener('scroll', handleScrollEnd);
+            }, 150); // only unlock after scrolling stops for 150ms
+        };
+
+        window.addEventListener('scroll', handleScrollEnd);
     };
+
+    useEffect(() => {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-30% 0px -30% 0px', // activates when section is near middle of screen
+            threshold: 0,
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            if (scrollLock) return; // do nothing if user clicked a link
+
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveSection(entry.target.id);
+                }
+            });
+        }, observerOptions);
+
+        sections.filter((section) => section.ref?.current !== null).forEach((section) => observer.observe(section.ref.current));
+
+        return () => {
+            sections.filter((section) => section.ref?.current !== null).forEach((section) => observer.unobserve(section.ref.current));
+        };
+    }, [sections, scrollLock]);
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogAction, setDialogAction] = useState<'add' | 'edit' | 'delete' | null>(null);
@@ -83,16 +124,15 @@ export default function Programs({ program }: ProgramProps) {
 
     const getBadgeColor = (remarks?: string) => {
         switch (remarks?.toLowerCase()) {
-            case "passed":
-                return "bg-green-100 text-green-800";
-            case "failed":
-                return "bg-red-100 text-red-800";
-            case "ongoing":
+            case 'passed':
+                return 'bg-green-100 text-green-800';
+            case 'failed':
+                return 'bg-red-100 text-red-800';
+            case 'ongoing':
             default:
-                return "bg-yellow-100 text-yellow-800";
+                return 'bg-yellow-100 text-yellow-800';
         }
     };
-
 
     // ---  Level Selector ---
     const levelSelectorControls = (
@@ -150,10 +190,7 @@ export default function Programs({ program }: ProgramProps) {
                             </div>
                         </div>
                         <div>
-                            <Badge
-                                variant="outline"
-                                className={`ml-2 border-0 ${getBadgeColor(selected_level?.remarks)}`}
-                            >
+                            <Badge variant="outline" className={`ml-2 border-0 ${getBadgeColor(selected_level?.remarks)}`}>
                                 {selected_level?.remarks}
                             </Badge>
                         </div>
@@ -171,7 +208,7 @@ export default function Programs({ program }: ProgramProps) {
                             )}
 
                             {/* --- Program Areas Section --- */}
-                            <div ref={areasRef} className="scroll-mt-20 rounded-lg border border-gray-200 bg-white p-8">
+                            <div id="areas" ref={areasRef} className="scroll-mt-20 rounded-lg border border-gray-200 bg-white p-8">
                                 <div className="mb-6 flex items-center justify-between">
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-900">Program Areas</h3>
@@ -208,7 +245,7 @@ export default function Programs({ program }: ProgramProps) {
                                             return (
                                                 <div
                                                     key={item.area_id}
-                                                    className="flex flex-col group relative rounded-xl border border-gray-200 bg-white transition-all duration-150 hover:border-gray-400"
+                                                    className="group relative flex flex-col rounded-xl border border-gray-200 bg-white transition-all duration-150 hover:border-gray-400"
                                                 >
                                                     {isAssigned ? (
                                                         <Link
@@ -229,7 +266,6 @@ export default function Programs({ program }: ProgramProps) {
                                                                     </Badge>
                                                                 )}
                                                             </div>
-
                                                         </Link>
                                                     ) : (
                                                         <div className="block cursor-not-allowed p-6">
@@ -305,17 +341,18 @@ export default function Programs({ program }: ProgramProps) {
                                     {/* Add New Area Card */}
                                     {(role === 'Admin' || role === 'Coordinator') &&
                                         selected_level?.is_active &&
-                                        selected_level?.remarks === 'Ongoing Survey' && (
-                                            console.log(selected_level),
-                                            <button
-                                                type="button"
-                                                onClick={addArea}
-                                                className="group flex min-h-[100px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600"
-                                            >
-                                                <Plus className="h-6 w-6" />
-                                                <span className="mt-2 text-sm font-medium">Add New Area</span>
-                                            </button>
-                                        )}
+                                        selected_level?.remarks === 'Ongoing Survey' &&
+                                        (console.log(selected_level),
+                                            (
+                                                <button
+                                                    type="button"
+                                                    onClick={addArea}
+                                                    className="group flex min-h-[100px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600"
+                                                >
+                                                    <Plus className="h-6 w-6" />
+                                                    <span className="mt-2 text-sm font-medium">Add New Area</span>
+                                                </button>
+                                            ))}
                                 </div>
                             </div>
                         </div>

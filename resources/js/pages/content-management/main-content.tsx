@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { InfoIcon } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 
 // Section Imports
 import AboutSection from '@/components/content/about-content';
@@ -59,6 +59,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const MainContent = ({ ...props }: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('welcome-landing');
+    const [scrollLock, setScrollLock] = useState(false);
     const { pages, officials, facilities, org_types, faculties, history, local_task_force, vmgo_data } = props;
 
     const about_page = pages.find((page: ContentPages) => page.page === 'About') ?? null;
@@ -80,16 +81,23 @@ const MainContent = ({ ...props }: MainContentProps) => {
 
     // --- THIS SCROLLS TO THE CLICKED SECTION ---
     const scrollToSection = (ref, sectionId) => {
-        setActiveSection(sectionId);
+        setScrollLock(true); // prevent observer from firing
+        setActiveSection(sectionId); // highlight the clicked section
+
         if (ref.current) {
             ref.current.scrollIntoView({
                 behavior: 'smooth',
                 block: 'start',
             });
         }
+
+        // Unlock after scrolling is likely finished
+        setTimeout(() => {
+            setScrollLock(false);
+        }, 600); // you can adjust this
     };
 
-    const sections = [
+    const sections = useMemo(() => [
         { id: 'welcome-landing', label: 'Home', ref: welcomeLandingRef },
         { id: 'about', label: 'About', ref: aboutRef },
         { id: 'vmgo', label: 'Vision, Mission & Goals', ref: vmgoRef },
@@ -98,7 +106,39 @@ const MainContent = ({ ...props }: MainContentProps) => {
         { id: 'facilities', label: 'Facilities', ref: facilitiesRef },
         { id: 'faculties', label: 'Faculty & Staff', ref: facultiesRef },
         { id: 'task-force', label: 'Local Task Force', ref: localTaskForceRef },
-    ];
+    ], []);
+
+    useEffect(() => {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-40% 0px -40% 0px', // activates when section is near middle of screen
+            threshold: 0,
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            if (scrollLock) return; // do nothing if user clicked a link
+
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveSection(entry.target.id);
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach((section) => {
+            if (section.ref.current) {
+                observer.observe(section.ref.current);
+            }
+        });
+
+        return () => {
+            sections.forEach((section) => {
+                if (section.ref.current) {
+                    observer.unobserve(section.ref.current);
+                }
+            });
+        };
+    }, [sections, scrollLock]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -122,35 +162,35 @@ const MainContent = ({ ...props }: MainContentProps) => {
                     <div className="flex-1">
                         <div className="space-y-6">
                             {/* Temporary welcome holder section only */}
-                            <div ref={welcomeLandingRef} className="scroll-mt-6">
+                            <div id="welcome-landing" ref={welcomeLandingRef} className="scroll-mt-6">
                                 <WelcomeSection />
                             </div>
 
-                            <div ref={aboutRef} className="scroll-mt-6">
+                            <div id="about" ref={aboutRef} className="scroll-mt-6">
                                 <AboutSection about_page={about_page} org_types={org_types} />
                             </div>
 
-                            <div ref={vmgoRef} className="scroll-mt-6">
+                            <div id="vmgo" ref={vmgoRef} className="scroll-mt-6">
                                 <VmgoSection vmgo_page={vmgo_page} vmgo_data={vmgo_data} />
                             </div>
 
-                            <div ref={historyRef} className="scroll-mt-6">
+                            <div id="history" ref={historyRef} className="scroll-mt-6">
                                 <HistorySection history_page={history_page} history={history} />
                             </div>
 
-                            <div ref={administrationRef} className="scroll-mt-6">
+                            <div id="administration" ref={administrationRef} className="scroll-mt-6">
                                 <AdministrationSection admin_page={admin_page} officials={officials} />
                             </div>
 
-                            <div ref={facilitiesRef} className="scroll-mt-6">
-                                <FacilitiesSection facility_page={facility_page} facilities={facilities} />
-                            </div>
-
-                            <div ref={facultiesRef} className="scroll-mt-6">
+                            <div id="faculties" ref={facultiesRef} className="scroll-mt-6">
                                 <FacultySection faculty_page={faculty_page} faculty_members={faculties} />
                             </div>
 
-                            <div ref={localTaskForceRef} className="scroll-mt-6">
+                            <div id="facilities" ref={facilitiesRef} className="scroll-mt-6">
+                                <FacilitiesSection facility_page={facility_page} facilities={facilities} />
+                            </div>
+
+                            <div id="task-force" ref={localTaskForceRef} className="scroll-mt-6">
                                 <LocalTaskForceSection ltf_page={ltf_page} local_task_force={local_task_force} />
                             </div>
                         </div>
