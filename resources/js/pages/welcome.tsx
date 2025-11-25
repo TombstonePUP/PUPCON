@@ -381,7 +381,8 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
         // Map Facebook posts to your card format
         return fbPosts.map((post) => ({
             title: post.message?.split('\n')[0]?.substring(0, 50) + '...' || 'PUP San Juan Update',
-            img: post.image || '/images/placeholder.jpg',
+            // Use placeholder if no image is available
+            img: post.image || '/images/pupsj-placeholder.png', // Add your placeholder image
             desc: post.message?.substring(0, 150) + '...' || 'Check out our latest update!',
             source: post.permalink || 'https://www.facebook.com/PUPSJStudentAssembly',
         }));
@@ -535,6 +536,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                                     src={card.img}
                                                     alt={card.title}
                                                     className="h-full w-full transition-transform duration-300 group-hover:scale-105"
+                                                    placeholderType="logo" // Shows "PUP" text if image fails
                                                 />
                                             </div>
                                             <CardHeader className="flex flex-1 flex-col p-3 sm:p-4">
