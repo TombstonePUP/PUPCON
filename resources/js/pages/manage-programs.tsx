@@ -4,13 +4,13 @@ import DeleteProgram from '@/components/dialogs/content/programs/delete-program'
 import EndSurveyDialog from '@/components/dialogs/content/programs/end-survey-dialog';
 import ProgramDialog from '@/components/dialogs/content/programs/program-dialog';
 import ProgramLevelDialog from '@/components/dialogs/content/programs/program-level-dialog';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { BookCheck, Edit, NotebookIcon, PlusCircleIcon, Trash2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -121,64 +121,66 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     </div>
                 </div>
 
-                {/* Stats Overview */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
-                    <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Total Programs</p>
-                                <p className="mt-1 text-2xl font-semibold text-gray-900">{programs?.length || 0}</p>
-                            </div>
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-50">
-                                <svg className="h-5 w-5 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Bachelor Programs</p>
-                                <p className="mt-1 text-2xl font-semibold text-gray-900">
-                                    {programs?.filter((p) => p.degree_type.toLowerCase().includes('bachelor')).length || 0}
-                                </p>
-                            </div>
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
-                                <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z" />
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-                                    />
-                                </svg>
+                <div className="grid grid-cols-[3fr_2fr] gap-4">
+                    {/* Stats Overview & Program Actions*/}
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
+                        <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600">Total Programs</p>
+                                    <p className="mt-1 text-2xl font-semibold text-gray-900">{programs?.length || 0}</p>
+                                </div>
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-50">
+                                    <svg className="h-5 w-5 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                                        />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Diploma Programs</p>
-                                <p className="mt-1 text-2xl font-semibold text-gray-900">
-                                    {programs?.filter((p) => p.degree_type.toLowerCase().includes('diploma')).length || 0}
-                                </p>
+                        <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600">Bachelor Programs</p>
+                                    <p className="mt-1 text-2xl font-semibold text-gray-900">
+                                        {programs?.filter((p) => p.degree_type.toLowerCase().includes('bachelor')).length || 0}
+                                    </p>
+                                </div>
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
+                                    <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+                                        />
+                                    </svg>
+                                </div>
                             </div>
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50">
-                                <svg className="h-5 w-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                                    />
-                                </svg>
+                        </div>
+                        <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600">Diploma Programs</p>
+                                    <p className="mt-1 text-2xl font-semibold text-gray-900">
+                                        {programs?.filter((p) => p.degree_type.toLowerCase().includes('diploma')).length || 0}
+                                    </p>
+                                </div>
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50">
+                                    <svg className="h-5 w-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                                        />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -189,7 +191,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Program Actions</p>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex w-full gap-2">
                                 <Button variant="noborder" className="flex-1" onClick={handleAddProgram}>
                                     <NotebookIcon className="h-6 w-6 text-white" />
                                     Add Program
@@ -257,7 +259,9 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                         variant="outline"
                                                         className="border-0 bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]"
                                                     >
-                                                        {program.latest_level ? `Accreditation Level ${program.latest_level?.level}` : `No Current Level`}
+                                                        {program.latest_level
+                                                            ? `Accreditation Level ${program.latest_level?.level}`
+                                                            : `No Current Level`}
                                                     </Badge>
                                                     {program.under_survey && (
                                                         <Badge variant="outline" className="ml-2 border-0 bg-yellow-100 text-yellow-800">
