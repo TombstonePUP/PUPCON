@@ -170,7 +170,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                         {pillars.map((pillar, pillarIndex) => (
                                             <div key={pillarIndex} className="space-y-4">
                                                 {/* Pillar Header */}
-                                                <div className={`rounded-xl p-6 text-center text-white` /*${pillar.color}*/}>
+                                                <div className={`rounded-xl p-6 text-center text-[#7f1414]` /*${pillar.color}*/}>
                                                     <h3 className="text-lg font-semibold">Pillar {pillarIndex + 1}</h3>
                                                     <p className="text-sm">{pillar.pillar_title}</p>
                                                 </div>

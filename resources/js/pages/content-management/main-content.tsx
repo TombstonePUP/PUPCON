@@ -26,6 +26,7 @@ import {
     Pillars,
     Vmgo,
 } from '@/types/content';
+import { Head } from '@inertiajs/react';
 
 interface History {
     directors: CampusDirectors[];
@@ -94,13 +95,14 @@ const MainContent = ({ ...props }: MainContentProps) => {
         { id: 'vmgo', label: 'Vision, Mission & Goals', ref: vmgoRef },
         { id: 'history', label: 'History', ref: historyRef },
         { id: 'administration', label: 'Administration', ref: administrationRef },
-        { id: 'faculties', label: 'Faculty & Staff', ref: facultiesRef },
         { id: 'facilities', label: 'Facilities', ref: facilitiesRef },
+        { id: 'faculties', label: 'Faculty & Staff', ref: facultiesRef },
         { id: 'task-force', label: 'Local Task Force', ref: localTaskForceRef },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Campus Information - Content Management" />
             <div className="flex flex-col gap-4 p-6">
                 {/* Header Section */}
                 <div id="header" className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
@@ -121,7 +123,7 @@ const MainContent = ({ ...props }: MainContentProps) => {
                         <div className="space-y-6">
                             {/* Temporary welcome holder section only */}
                             <div ref={welcomeLandingRef} className="scroll-mt-6">
-                                <WelcomeSection  />
+                                <WelcomeSection />
                             </div>
 
                             <div ref={aboutRef} className="scroll-mt-6">
@@ -140,12 +142,12 @@ const MainContent = ({ ...props }: MainContentProps) => {
                                 <AdministrationSection admin_page={admin_page} officials={officials} />
                             </div>
 
-                            <div ref={facultiesRef} className="scroll-mt-6">
-                                <FacultySection faculty_page={faculty_page} faculty_members={faculties} />
-                            </div>
-
                             <div ref={facilitiesRef} className="scroll-mt-6">
                                 <FacilitiesSection facility_page={facility_page} facilities={facilities} />
+                            </div>
+
+                            <div ref={facultiesRef} className="scroll-mt-6">
+                                <FacultySection faculty_page={faculty_page} faculty_members={faculties} />
                             </div>
 
                             <div ref={localTaskForceRef} className="scroll-mt-6">
@@ -164,9 +166,8 @@ const MainContent = ({ ...props }: MainContentProps) => {
                                         <button
                                             key={section.id}
                                             onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
-                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
+                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                                }`}
                                         >
                                             {section.label}
                                         </button>

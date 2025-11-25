@@ -9,6 +9,7 @@ import {
     Building,
     ChevronDown,
     ChevronRight,
+    ChevronUp,
     ExternalLink,
     Facebook,
     FileText,
@@ -64,24 +65,40 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
         const updateScrollDir = () => {
             const currentScrollY = window.scrollY;
-            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-            const scrollRatio = scrollHeight > 0 ? currentScrollY / scrollHeight : 0;
-
-            if (Math.abs(currentScrollY - lastScrollY) > 10) {
-                if (currentScrollY < lastScrollY && scrollRatio <= 0.1) {
-                    // show only if scrolling up and within top 10%
+            if (Math.abs(currentScrollY - lastScrollY) > 5) {
+                if (currentScrollY < lastScrollY) {
+                    // ✔ show when scrolling up anywhere
                     setScrollDir('up');
-                } else if (currentScrollY > lastScrollY) {
+                } else {
+                    // ✔ hide when scrolling down
                     setScrollDir('down');
                 }
-                lastScrollY = currentScrollY > 0 ? currentScrollY : 0;
+
+                lastScrollY = currentScrollY;
             }
         };
 
         window.addEventListener('scroll', updateScrollDir);
         return () => window.removeEventListener('scroll', updateScrollDir);
     }, []);
+
+    const [showTopButton, setShowTopButton] = useState(false);
+
+    useEffect(() => {
+        const checkScroll = () => {
+            if (window.scrollY > 300) {
+                setShowTopButton(true);
+            } else {
+                setShowTopButton(false);
+            }
+        };
+
+        window.addEventListener("scroll", checkScroll);
+        return () => window.removeEventListener("scroll", checkScroll);
+    }, []);
+
+
 
     const leftNav = [
         {
@@ -396,7 +413,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
 
                     <motion.button
                         onClick={() => setMenuOpen(true)}
-                        className="relative ml-[3vw] flex items-center justify-center rounded-full bg-white/10 p-2 text-white hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none lg:hidden" 
+                        className="relative ml-[3vw] flex items-center justify-center rounded-full bg-white/10 p-2 text-white hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none lg:hidden"
                         title="Menu"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -852,6 +869,20 @@ export default function Layout({ children, footerText }: LayoutProps) {
                     </div>
                 </div>
             </footer>
+            {showTopButton && (
+                <motion.button
+                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#7f1414] text-white shadow-lg hover:bg-[#a71d1d] transition-all"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    <ChevronUp className="h-6 w-6" />
+                </motion.button>
+            )}
+
         </div>
     );
 }
