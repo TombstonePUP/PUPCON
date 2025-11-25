@@ -3,6 +3,22 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'node:path';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
+import os from 'os'; 
+
+function getLocalIp() {
+    const interfaces = os.networkInterfaces();
+    for (const name in interfaces) {
+        const interfaceInfo = interfaces[name];
+        for (const { family, address, internal } of interfaceInfo) {
+            if (family === 'IPv4' && !internal) {
+                return address;
+            }
+        }
+    }
+    return '127.0.0.1'; 
+}
+
+const LAN_IP = getLocalIp();
 
 export default defineConfig(({ mode }) => ({
     plugins: [
@@ -27,7 +43,7 @@ export default defineConfig(({ mode }) => ({
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
-    /*server: {
+    server: {
         host: '0.0.0.0',
         port: 5173,
         strictPort: true,
@@ -35,12 +51,12 @@ export default defineConfig(({ mode }) => ({
             origin: [
                 'http://localhost:8000',
                 'http://127.0.0.1:8000',
-                'http://192.168.100.159:8000',
+                `http://${LAN_IP}:8000`, 
             ],
             credentials: true,
         },
         hmr: {
-            host: '192.168.100.159', // use your LAN IP, not localhost
+            host: LAN_IP, 
         },
-    },*/
+    },
 }));
