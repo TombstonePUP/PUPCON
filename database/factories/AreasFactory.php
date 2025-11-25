@@ -26,7 +26,7 @@ class AreasFactory extends Factory
             'area_name' => fake()->unique()->word(),
             'area_description' => fake()->paragraphs(4, true),
             'area_image_name' => fake()->word(),
-            'area_image_path' => fake()->imageUrl(),
+            'area_image_path' => null,
             'mean' => fake()->randomFloat(2, 0, 5),
         ];
     }

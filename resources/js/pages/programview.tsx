@@ -234,41 +234,41 @@ export default function Programs({ program }: PerProgramProps) {
                             {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
                                 {/* {user?.roles?.role_name === 'Accreditor' ? ( */}
-                                    {program.levels.length > 1 ? (
-                                        <div className="relative">
-                                            <div
-                                                onMouseEnter={() => setDropdownOpen(true)}
-                                                className="flex w-60 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
-                                            >
-                                                <span className="font-medium whitespace-nowrap">Accreditation Level {level}</span>
-                                                <ChevronRight
-                                                    className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
-                                                />
-                                            </div>
+                                {program.levels.length > 1 ? (
+                                    <div className="relative">
+                                        <div
+                                            onMouseEnter={() => setDropdownOpen(true)}
+                                            className="flex w-60 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20"
+                                        >
+                                            <span className="font-medium whitespace-nowrap">Accreditation Level {level}</span>
+                                            <ChevronRight
+                                                className={`h-5 w-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
+                                            />
+                                        </div>
 
-                                            <div
-                                                className={`absolute top-0 left-48 h-full overflow-hidden rounded-r-xl border-t border-r border-b border-white/30 backdrop-blur-md transition-all duration-300 ${dropdownOpen ? 'w-72 opacity-100' : 'w-0 opacity-0'
-                                                    }`}
-                                            >
-                                                <div className="flex h-full bg-white/10">
-                                                    {program.levels.map((lvlObj) => (
-                                                        <button
-                                                            key={lvlObj.level}
-                                                            onClick={() => handleLevelChange(lvlObj.level)}
-                                                            className={`flex-1 border-r border-white/20 px-3 py-3 text-sm text-white transition-all duration-200 last:border-r-0 hover:bg-[#7f1414]/30 ${level === lvlObj.level ? 'bg-[#7f1414]/20 font-semibold' : ''
-                                                                }`}
-                                                        >
-                                                            {lvlObj.level}
-                                                        </button>
-                                                    ))}
-                                                </div>
+                                        <div
+                                            className={`absolute top-0 left-48 h-full overflow-hidden rounded-r-xl border-t border-r border-b border-white/30 backdrop-blur-md transition-all duration-300 ${dropdownOpen ? 'w-72 opacity-100' : 'w-0 opacity-0'
+                                                }`}
+                                        >
+                                            <div className="flex h-full bg-white/10">
+                                                {program.levels.map((lvlObj) => (
+                                                    <button
+                                                        key={lvlObj.level}
+                                                        onClick={() => handleLevelChange(lvlObj.level)}
+                                                        className={`flex-1 border-r border-white/20 px-3 py-3 text-sm text-white transition-all duration-200 last:border-r-0 hover:bg-[#7f1414]/30 ${level === lvlObj.level ? 'bg-[#7f1414]/20 font-semibold' : ''
+                                                            }`}
+                                                    >
+                                                        {lvlObj.level}
+                                                    </button>
+                                                ))}
                                             </div>
                                         </div>
-                                    ) : (
-                                        <label className="w-60 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20">
-                                            Accreditation Level {program.levels[0]?.level}
-                                        </label>
-                                    )}
+                                    </div>
+                                ) : (
+                                    <label className="w-60 cursor-pointer items-center justify-between rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white backdrop-blur-md transition-all duration-300 group-hover/dropdown:w-96 hover:bg-white/20">
+                                        Accreditation Level {program.levels[0]?.level}
+                                    </label>
+                                )}
                                 {/* ) : (
                                     <label className="mb-3 block text-xl font-medium opacity-90">
                                         Accreditation Level {program.levels[0]?.level}
@@ -400,20 +400,22 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
 
                     {/* --- Gallery --- */}
-                    {/* <div ref={galleryRef} className="w-[85%] max-w-7xl" id="gallery">
+                    <div ref={galleryRef} className="w-[85%] max-w-7xl" id="gallery">
                         <div className={`transition-all duration-700 ${galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader title="Gallery of Excellence" subtitle="Showcasing the moments that define our passion and commitment" />
 
                             <ImageRow
                                 height="h-96"
-                                images={program.program_gallery?.map((item) => ({
-                                    id: item.program_gallery_id,
-                                    src: item.image_path,
-                                    alt: item.image_name,
-                                }))}
+                                images={
+                                    program.gallery?.map((item) => ({
+                                        id: item.program_gallery_id,
+                                        src: item.image_path,
+                                        alt: item.image_name,
+                                    })) ?? []
+                                }
                             />
                         </div>
-                    </div> */}
+                    </div>
 
                     {/* --- Areas Under Survey --- */}
                     <div ref={areasRef} className="w-[85%] max-w-7xl" id="areas">

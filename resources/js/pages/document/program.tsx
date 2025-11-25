@@ -81,6 +81,19 @@ export default function Programs({ program }: ProgramProps) {
         setDialogOpen(true);
     };
 
+    const getBadgeColor = (remarks?: string) => {
+        switch (remarks?.toLowerCase()) {
+            case "passed":
+                return "bg-green-100 text-green-800";
+            case "failed":
+                return "bg-red-100 text-red-800";
+            case "ongoing":
+            default:
+                return "bg-yellow-100 text-yellow-800";
+        }
+    };
+
+
     // ---  Level Selector ---
     const levelSelectorControls = (
         <div className="flex flex-row gap-2">
@@ -135,6 +148,14 @@ export default function Programs({ program }: ProgramProps) {
                                 </h1>
                                 <p className="text-sm text-gray-500">Manage program information, objectives, and assessment areas</p>
                             </div>
+                        </div>
+                        <div>
+                            <Badge
+                                variant="outline"
+                                className={`ml-2 border-0 ${getBadgeColor(selected_level?.remarks)}`}
+                            >
+                                {selected_level?.remarks}
+                            </Badge>
                         </div>
                     </div>
                 </div>
@@ -198,9 +219,9 @@ export default function Programs({ program }: ProgramProps) {
                                                             })}
                                                             className="block p-6"
                                                         >
+                                                            <h4 className="text-base font-semibold text-gray-900">Area {item.area_numeral}</h4>
                                                             <div className="flex items-start justify-between">
-                                                                <h4 className="text-base font-semibold text-gray-900">Area {item.area_numeral}</h4>
-
+                                                                <p className="mt-1 text-sm text-gray-600">{item.area_name}</p>
                                                                 {/* Badge (top-right) */}
                                                                 {role !== 'Admin' && role !== 'Coordinator' && (
                                                                     <Badge variant="outline" className="border-0 bg-green-100 text-green-800">
@@ -209,17 +230,17 @@ export default function Programs({ program }: ProgramProps) {
                                                                 )}
                                                             </div>
 
-                                                            <p className="mt-1 text-sm text-gray-600">{item.area_name}</p>
                                                         </Link>
                                                     ) : (
                                                         <div className="block cursor-not-allowed p-6">
+                                                            <h4 className="text-base font-semibold text-gray-600">Area {item.area_numeral}</h4>
+
                                                             <div className="flex items-start justify-between">
-                                                                <h4 className="text-base font-semibold text-gray-600">Area {item.area_numeral}</h4>
+                                                                <p className="mt-1 text-sm text-gray-500">{item.area_name}</p>
                                                                 <Badge variant="outline" className="border-0 bg-gray-100 text-gray-700">
                                                                     Not Assigned
                                                                 </Badge>
                                                             </div>
-                                                            <p className="mt-1 text-sm text-gray-500">{item.area_name}</p>
                                                         </div>
                                                     )}
 

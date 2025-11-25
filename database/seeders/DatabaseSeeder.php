@@ -211,9 +211,9 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        foreach ($programGallery as $attributes) {
-            ProgramGallery::factory()->create($attributes);
-        }
+        // foreach ($programGallery as $attributes) {
+        //     ProgramGallery::factory()->create($attributes);
+        // }
 
         $level1 = AccreditationLevels::where('program_id', $program1->program_id)
             ->where('level', 2)->first();

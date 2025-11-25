@@ -72,7 +72,7 @@ export interface PerProgramUnderSurvey {
     latest_level?: AccreditationLevels;
     faculty_staff?: FacultyStaff[];
     objectives: ProgramObjectives[];
-    program_gallery: ProgramGalleryImages[];
+    gallery: ProgramGalleryImages[];
     [key: string]: unknown;
 }
 
