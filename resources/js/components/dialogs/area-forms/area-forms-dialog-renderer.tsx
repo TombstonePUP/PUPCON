@@ -7,6 +7,8 @@ import { AddAreaForm } from "./add-area-form"
 import { DocumentViewer } from "@/components/dialogs/documents/view-document"
 import { RejectedAreaForm } from "./rejected-area-form"
 import { Area, AreaFormCategory, AreaForms, Program } from "@/types"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from "@/components/ui/button"
 
 interface AreaFormDialogProps {
     type: "view" | "upload" | "add" | "delete" | "delete-form" | "rejected";
@@ -21,15 +23,48 @@ interface AreaFormDialogProps {
 export function RenderAreaFormDialog({ type, forms, form, categories, program, area, onClose }: AreaFormDialogProps) {
     if(!area) return null;
 
+    console.log(form);
     switch(type) {
         case 'view':
-            return (
+            return form?.file_path ? (
                 <DocumentViewer
                     open={true}
                     onOpenChange={onClose}
-                    fileUrl={form.file_path}
-                    title={form.file_name}
+                    fileUrl={form?.file_path}
+                    title={form?.file_name}
                 />
+            ) : (
+                <Dialog open={true} onOpenChange={onClose}>
+                    <DialogContent>
+                        <DialogHeader className="flex flex-row items-start text-left">
+                            <div>
+                                <DialogTitle className="text-lg font-medium text-gray-900">
+                                    No Document Available
+                                </DialogTitle>
+                                <DialogDescription className="text-sm text-gray-500">
+                                    {form?.area_form_category?.category_name}
+                                </DialogDescription>
+                            </div>
+                        </DialogHeader>
+
+                        <div className="my-0 rounded-md border border-red-100 bg-gray-50 p-4">
+                            <p className="text-muted-foreground text-sm">
+                                <span className="text-muted-foreground mb-1 block font-semibold">
+                                    Benchmark has no associated document
+                                </span>
+                                Please upload a document to this benchmark and try viewing again.
+                            </p>
+                        </div>
+
+                        <DialogFooter className="sm:justify-end">
+                            <DialogClose asChild>
+                                <Button variant="outline" onClick={onClose}>
+                                    Close
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             );
         case 'add':
             return (

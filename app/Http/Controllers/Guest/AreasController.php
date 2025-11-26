@@ -22,7 +22,7 @@ class AreasController extends Controller
     public function __invoke(string $program_name, int $area_id)
     {
         $program_name = Str::of($program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name',$program_name)->with([
+        $program = Programs::where('program_name', $program_name)->with([
             'Levels' => function ($query) {
                 $query->where('is_active', true);
             },
@@ -63,7 +63,11 @@ class AreasController extends Controller
 
         $area->AreaForms->map(function ($form) {
             if ($form) {
-                $form->file_path = Storage::url($form->file_path);
+                if ($form->file_path && Storage::exists($form->file_path)) {
+                    $form->file_path = Storage::url($form->file_path);
+                } else {
+                    $form->file_path = null;
+                }
             }
             return $form;
         });

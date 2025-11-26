@@ -138,6 +138,7 @@ class AreaFormFilesController extends Controller
         $areaForm->file_path = null;
         $areaForm->uploaded_by = null;
         $areaForm->uploaded_at = null;
+        $areaForm->save();
 
         return redirect()->back()
             ->with('success', 'Area form deleted successfully.');

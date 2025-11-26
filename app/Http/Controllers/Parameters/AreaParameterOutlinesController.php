@@ -21,7 +21,7 @@ class AreaParameterOutlinesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(string $program_name,int $level_id, string $area_id)
+    public function index(string $program_name, int $level_id, string $area_id)
     {
         $program = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::select('program_id', 'program_name', 'degree_type')
@@ -41,7 +41,8 @@ class AreaParameterOutlinesController extends Controller
                 'AreaParameters.ParameterOutlines.ParameterOutlineCategory',
                 'AreaParameters.ParameterOutlines.AreaFiles.FileStatus',
                 'AreaForms.AreaFormCategory',
-                'AreaForms.FileStatus'])
+                'AreaForms.FileStatus'
+            ])
             ->firstOrFail();
         $parameterOutlineCategories = ParameterOutlineCategory::with([
             'ParameterOutlines' => function ($query) use ($area) {
@@ -50,7 +51,8 @@ class AreaParameterOutlinesController extends Controller
                 });
             },
             'ParameterOutlines.AreaFiles.FileStatus',
-            'ParameterOutlines.AreaParameter.Areas'])
+            'ParameterOutlines.AreaParameter.Areas'
+        ])
             ->get();
 
         $areaFormsCategories = AreaFormCategory::select('*')->get();
@@ -58,7 +60,9 @@ class AreaParameterOutlinesController extends Controller
         $area->AreaParameters->map(function ($parameter) {
             $parameter->ParameterOutlines->map(function ($outline) {
                 if ($outline->AreaFiles) {
-                    $outline->AreaFiles->file_path = Storage::url($outline->AreaFiles->file_path);
+                    if ($outline->AreaFiles->file_path && Storage::url($outline->AreaFiles->file_path)) {
+                        $outline->AreaFiles->file_path = Storage::url($outline->AreaFiles->file_path);
+                    }
                 }
                 return $outline;
             });
@@ -67,7 +71,9 @@ class AreaParameterOutlinesController extends Controller
 
         $area->AreaForms->map(function ($form) {
             if ($form) {
-                $form->file_path = Storage::url($form->file_path);
+                if ($form->file_path && Storage::url($form->file_path)) {
+                    $form->file_path = Storage::url($form->file_path);
+                }
             }
             return $form;
         });
@@ -106,9 +112,7 @@ class AreaParameterOutlinesController extends Controller
      * Display the specified resource.
      * @return void
      */
-    public function show(ParameterOutlines $parameterOutlines)
-    {
-    }
+    public function show(ParameterOutlines $parameterOutlines) {}
 
     /**
      * Update the specified resource in storage.
@@ -123,11 +127,11 @@ class AreaParameterOutlinesController extends Controller
         $area = Areas::where('area_id', $request->area_id)->first();
         $parameterOutline = ParameterOutlines::find($request->outline_id);
 
-        if($file = $parameterOutline->AreaFiles) {
+        if ($file = $parameterOutline->AreaFiles) {
             $categoryName = $parameterOutline->parameterOutlineCategory->category_name;
             $parameterName = $parameterOutline->AreaParameter->parameter_name;
             if ($categoryName === 'No Category') {
-                $initial =substr($parameterName, 0, 1);
+                $initial = substr($parameterName, 0, 1);
             } else {
                 $initial = substr($categoryName, 0, 1);
             }

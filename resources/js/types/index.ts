@@ -253,7 +253,7 @@ export interface AreaForms {
     file_path: string;
     file_status_id: number;
     file_rejection_reason: string | null;
-    areaFormCategory?: AreaFormCategory;
+    area_form_category?: AreaFormCategory;
     area?: Area;
     file_status?: FileStatus;
     [key: string]: unknown; // This allows for additional properties...

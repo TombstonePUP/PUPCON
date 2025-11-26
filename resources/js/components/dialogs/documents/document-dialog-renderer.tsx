@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Area, ParameterOutlines, Program } from '@/types';
-import { FileQuestion, FileXIcon } from 'lucide-react';
 import { DeleteDocument } from './delete-document';
 import { RejectedDocument } from './rejected-document';
 import { UploadDocument } from './upload-document';
@@ -36,13 +35,12 @@ export function RenderDocumentDialog({ type, benchmark, program, area, onClose }
                             </div>
                         </DialogHeader>
 
-
-                           <div className="my-0 rounded-md border border-red-100 bg-gray-50 p-4">
-                    <p className="text-sm text-muted-foreground">
-                        <span className="mb-1 block font-semibold text-muted-foreground">Benchmark has no associated document</span>
-                       Please upload a document to this benchmark and try viewing again.
-                    </p>
-                </div>
+                        <div className="my-0 rounded-md border border-red-100 bg-gray-50 p-4">
+                            <p className="text-muted-foreground text-sm">
+                                <span className="text-muted-foreground mb-1 block font-semibold">Benchmark has no associated document</span>
+                                Please upload a document to this benchmark and try viewing again.
+                            </p>
+                        </div>
                         <DialogFooter className="sm:justify-end">
                             <DialogClose asChild>
                                 <Button variant="outline" onClick={onClose}>
