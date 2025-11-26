@@ -26,7 +26,7 @@ import {
     Pillars,
     Vmgo,
 } from '@/types/content';
-import { Head } from '@inertiajs/react';
+import { Head, usePoll } from '@inertiajs/react';
 
 interface History {
     directors: CampusDirectors[];
@@ -58,6 +58,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const MainContent = ({ ...props }: MainContentProps) => {
+
+      
+        usePoll(2000, {}, {
+        keepAlive: true,
+    })
+
     const [activeSection, setActiveSection] = useState('welcome-landing');
     const [scrollLock, setScrollLock] = useState(false);
     const { pages, officials, facilities, org_types, faculties, history, local_task_force, vmgo_data } = props;

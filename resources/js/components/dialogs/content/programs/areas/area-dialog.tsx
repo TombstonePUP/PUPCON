@@ -84,20 +84,18 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
-            <DialogContent>
+            <DialogContent className='sm:max-w-4xl'>
                 <DialogHeader>
                     <DialogTitle className="mb-4 text-lg font-medium text-gray-900">{type === 'edit' ? 'Edit Area' : 'Add New Area'}</DialogTitle>
                     <DialogDescription className="flex flex-col text-sm text-gray-500">
                         {type === 'edit' ? 'Editing in ' : ' Adding in '} {program.program_name}
-                        <span className="font-medium">
-                            {level?.level === 0 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + level.level}
-                        </span>
+                        <span className="font-medium">{level?.level === 0 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + level.level}</span>
                     </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-2 space-y-4">
-                    <div className="flex flex-col gap-3">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-5 space-y-4">
+                    <div className="flex gap-8">
                         {!data.previewUrl ? (
-                            <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70">
+                            <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70 w-xl">
                                 <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                                 <div className="flex flex-col items-center justify-center gap-4 pt-5 pb-6">
                                     <div className="relative">
@@ -107,7 +105,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                         </div>
                                     </div>
                                     <div className="mt-4 text-center">
-                                        <p className="mb-1 text-lg font-semibold text-gray-700">Upload welcome banner</p>
+                                        <p className="mb-1 text-lg font-semibold text-gray-700">Upload area banner</p>
                                         <p className="text-sm text-gray-500">PNG, JPG up to 5MB</p>
                                     </div>
                                     <div className="mt-2 flex gap-2">
@@ -147,49 +145,53 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                 </div>
                             </div>
                         )}
-                    </div>
-                    <div>
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Area Number (numeric numbers only)</Label>
-                        <Input
-                            type="text"
-                            required
-                            value={data.area_number}
-                            onChange={(e) => setData('area_number', e.target.value)}
-                            placeholder="e.g., 1, 2 ,3"
-                            disabled={processing}
-                        />
-                        <InputError message={errors.area_number} className="mt-1" />
-                    </div>
-                    <div>
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name</Label>
-                        <Input
-                            type="text"
-                            required
-                            value={data.area_name}
-                            onChange={(e) => setData('area_name', e.target.value)}
-                            placeholder="Enter area name"
-                            disabled={processing}
-                        />
-                        <InputError message={errors.area_name} className="mt-1" />
-                    </div>
-                    <div>
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Area Description</Label>
-                        <Textarea
-                            required
-                            value={data.area_description}
-                            onChange={(e) => setData('area_description', e.target.value)}
-                            placeholder="Enter area name"
-                            disabled={processing}
-                        />
-                        <InputError message={errors.area_description} className="mt-1" />
+                        <div className='flex flex-col gap-4'>
+                            <div></div>
+                            <div>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Number (numeric numbers only)</Label>
+                                <Input
+                                    type="text"
+                                    required
+                                    value={data.area_number}
+                                    onChange={(e) => setData('area_number', e.target.value)}
+                                    placeholder="e.g., 1, 2 ,3"
+                                    disabled={processing}
+                                />
+                                <InputError message={errors.area_number} className="mt-1" />
+                            </div>
+                            <div>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name</Label>
+                                <Input
+                                    type="text"
+                                    required
+                                    value={data.area_name}
+                                    onChange={(e) => setData('area_name', e.target.value)}
+                                    placeholder="Enter area name"
+                                    disabled={processing}
+                                />
+                                <InputError message={errors.area_name} className="mt-1" />
+                            </div>
+                            <div>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Description</Label>
+                                <Textarea
+                                    required
+                                    value={data.area_description}
+                                    onChange={(e) => setData('area_description', e.target.value)}
+                                    placeholder="Enter area name"
+                                    disabled={processing}
+                                />
+                                <InputError message={errors.area_description} className="mt-1" />
+                            </div>
+
+                            <div className="my-0 mt-6 rounded-md border border-blue-100 bg-blue-50 p-4">
+                                <p className="text-sm text-blue-800">
+                                    <span className="mb-1 block font-semibold text-blue-900">Note</span>
+                                    In the <span>area number</span> field, make sure to use numeric numbers to avoid issues.
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="my-0 mb-4 rounded-md border border-blue-100 bg-blue-50 p-4">
-                        <p className="text-sm text-blue-800">
-                            <span className="mb-1 block font-semibold text-blue-900">Note</span>
-                            In the <span>area number</span> field, make sure to use numeric numbers to avoid issues.
-                        </p>
-                    </div>
                     <DialogFooter className="mt-2 gap-2">
                         <DialogClose asChild>
                             <Button type="button" variant="outline">
