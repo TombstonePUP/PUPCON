@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
-import { Head, router, usePage } from '@inertiajs/react';
+import { Head, router, usePage, usePoll } from '@inertiajs/react';
 import { BookCheck, Edit, NotebookIcon, PlusCircleIcon, Trash2 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -28,6 +28,15 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
     const user = auth.user;
     const role = user.roles.role_name;
     const assignedPrograms = auth.programs;
+
+    
+    usePoll(
+        2000,
+        {},
+        {
+            keepAlive: true,
+        },
+    );
 
     const [searchTerm, setSearchTerm] = useState('');
     const [filterDegree, setFilterDegree] = useState<string>('all');
@@ -64,7 +73,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                 }),
             );
         } else {
-            console.log('test-test');
             setProgramToStart(program);
             setStartLevelConfirmOpen(true);
         }
@@ -123,7 +131,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                 </div>
 
                 <div className="grid grid-cols-[3fr_2fr] gap-4">
-                    {/* Stats Overview & Program Actions*/}
+                    {/* Stats Overview */}
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
                         <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
                             <div className="flex items-center justify-between">
@@ -215,7 +223,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     {filteredPrograms.length > 0 ? (
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {filteredPrograms.map((program) => {
-                                const isAssigned = assignedPrograms.find((ap: PerProgramUnderSurvey) => ap.program_id === program.program_id)
+                                const isAssigned = assignedPrograms.find((ap: PerProgramUnderSurvey) => ap.program_id === program.program_id);
                                 const canClick = role === 'Admin' || role === 'Coordinator' || isAssigned;
                                 return (
                                     <div
@@ -310,6 +318,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     )}
                 </div>
 
+                {/* Dialogs */}
                 <Dialog open={startLevelConfirmOpen} onOpenChange={setStartLevelConfirmOpen}>
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
@@ -335,6 +344,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
+
                 {dialogOpen && dialogType === 'program' && dialogAction !== 'delete' && (
                     <ProgramDialog
                         type={dialogAction}

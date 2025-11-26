@@ -1,8 +1,7 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import type { ProgramsUnderSurvey } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { Badge } from 'lucide-react';
+import { Head, Link, usePage, usePoll } from '@inertiajs/react';
 
 interface ProgramsProps {
     programs: ProgramsUnderSurvey[];
@@ -12,11 +11,19 @@ export default function Programs({ programs }: ProgramsProps) {
     const { auth } = usePage<Auth>().props;
     const user = auth.user;
 
+
+    usePoll(
+        2000,
+        {},
+        {
+            keepAlive: true,
+        },
+    );
+
     return (
         <>
             <Head title="Programs Under Survey">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
-                {/* <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" /> */}
             </Head>
             <Layout>
                 <div className="flex flex-col items-center">
@@ -32,7 +39,6 @@ export default function Programs({ programs }: ProgramsProps) {
                         {programs?.length > 0 ? (
                             <div className="grid gap-10">
                                 {programs.map((program) => (
-                                    console.log(program),
                                     <div key={program.program_id} className="group">
                                         <Link href={`/programs/${program.program_link}`} className="block">
                                             <div className="overflow-hidden rounded-2xl border border-[#7f1414]/25 bg-white transition-all duration-300 hover:border-[#7f1414]">
@@ -48,7 +54,7 @@ export default function Programs({ programs }: ProgramsProps) {
                                                     </div>
 
                                                     {/* Program Content */}
-                                                    <div className="relative flex flex-col justify-center p-12 md:w-2/3 overflow-hidden">
+                                                    <div className="relative flex flex-col justify-center overflow-hidden p-12 md:w-2/3">
                                                         <div className="mb-6">
                                                             <span className="mb-4 inline-block rounded-full bg-[#7f1414]/10 px-4 py-2 text-sm font-semibold text-[#7f1414]">
                                                                 {program.degree_type}
@@ -62,16 +68,17 @@ export default function Programs({ programs }: ProgramsProps) {
                                                             {program.program_description}
                                                         </p>
 
-                                                        {(user?.roles?.role_name === 'Accreditor') && (
-                                                            <div className='rounded-xl absolute top-[-8px] right-[-8px] size-25 flex items-center justify-center px-3 py-1 text-2xl text-white font-semibold bg-[#7f1414] shadow-md'>
+                                                        {user?.roles?.role_name === 'Accreditor' && (
+                                                            <div className="absolute top-[-8px] right-[-8px] flex size-25 items-center justify-center rounded-xl bg-[#7f1414] px-3 py-1 text-2xl font-semibold text-white shadow-md">
                                                                 N/A
                                                             </div>
                                                         )}
 
-                                                        <div className="items-end flex justify-end">
-                                                            <p className="w-fit rounded-full bg-[#7f1414]/20 text-[#7f1414] px-4 py-1 text-sm font-semibold border border-[#7f1414]/40 text-right w-3/4">
-                                                            {/* Accreditation Level {program.active_levels?.level} */}
-                                                                {program.active_levels.level === 0 ? 'Preliminiary Survey Visit' : `Accreditation Level ${program.active_levels.level}`}
+                                                        <div className="flex items-end justify-end">
+                                                            <p className="w-3/4 w-fit rounded-full border border-[#7f1414]/40 bg-[#7f1414]/20 px-4 py-1 text-right text-sm font-semibold text-[#7f1414]">
+                                                                {program.active_levels.level === 0
+                                                                    ? 'Preliminary Survey Visit'
+                                                                    : `Accreditation Level ${program.active_levels.level}`}
                                                             </p>
                                                         </div>
                                                     </div>
