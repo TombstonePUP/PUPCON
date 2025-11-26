@@ -115,7 +115,7 @@ const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) 
     };
 
     const handlePreview = () => {
-        window.open('/about', '_blank');
+        window.open('/about/local-task-force', '_blank');
     };
     return (
         <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">

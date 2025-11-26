@@ -101,7 +101,7 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
     console.log(data);
 
     const handlePreview = () => {
-        window.open('/about/faculty', '_blank');
+        window.open('/about/faculty-and-staff', '_blank');
     };
 
     const handleAddClick = () => {

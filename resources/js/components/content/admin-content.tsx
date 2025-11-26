@@ -95,7 +95,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
     const selectedOfficial = officialsList.find((o) => o.administration_id === selectedOfficialId) ?? null;
 
     const handlePreview = () => {
-        window.open('/about/admin', '_blank');
+        window.open('/about/administration', '_blank');
     };
 
     const handleAddClick = () => {
@@ -262,8 +262,9 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                                         onClick={() => {
                                             setSelectedOfficialId(official.administration_id);
                                         }}
-                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${official.administration_id === selectedOfficialId ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
+                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${
+                                            official.administration_id === selectedOfficialId ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
                                     >
                                         <div className="truncate text-sm">
                                             <span
@@ -274,10 +275,11 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                                             </span>
                                         </div>
                                         <div
-                                            className={`flex items-center space-x-0.5 transition-opacity ${official.administration_id === selectedOfficialId
-                                                ? 'opacity-100'
-                                                : 'opacity-0 group-hover:opacity-100'
-                                                }`}
+                                            className={`flex items-center space-x-0.5 transition-opacity ${
+                                                official.administration_id === selectedOfficialId
+                                                    ? 'opacity-100'
+                                                    : 'opacity-0 group-hover:opacity-100'
+                                            }`}
                                         >
                                             <ActionButton
                                                 onClick={(e) => {
@@ -322,10 +324,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                             ) : (
                                 <div className="space-y-6">
                                     <div className="overflow-hidden rounded-lg border border-gray-100">
-                                        <OfficialPhoto
-                                            url={selectedOfficial.profile_picture_path}
-                                            alt={selectedOfficial.profile_picture_name}
-                                        />
+                                        <OfficialPhoto url={selectedOfficial.profile_picture_path} alt={selectedOfficial.profile_picture_name} />
                                     </div>
 
                                     <div>
@@ -344,11 +343,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />
             {dialogOpen && (
-                <AdministrationDialog
-                    type={dialogType}
-                    official={selectedOfficial}
-                    onClose={() => setDialogOpen(false)}
-                    onSave={handleSave} />
+                <AdministrationDialog type={dialogType} official={selectedOfficial} onClose={() => setDialogOpen(false)} onSave={handleSave} />
             )}
         </div>
     );
