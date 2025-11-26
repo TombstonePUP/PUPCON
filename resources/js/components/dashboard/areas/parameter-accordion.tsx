@@ -50,8 +50,6 @@ export default function ParameterAccordion({
 }: ParameterAccordionProps) {
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
-    console.log(role);
-    console.log(program);
     const canShowActions =
         (role === 'Admin' || role === 'Coordinator') && program.levels[0]?.is_active && program.levels[0]?.remarks === 'Ongoing Survey';
     return (

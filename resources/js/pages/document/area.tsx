@@ -105,7 +105,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         </div>
 
                         {/* Right Sidebar - Actions */}
-                        {(area.area_parameters.length > 0) && (role === 'Admin' || role === 'Coordinator') && (program.levels?.remarks !== "Ongoing Survey" && program.levels?.is_active) && (
+                        {(area.area_parameters.length > 0) && (role === 'Admin' || role === 'Coordinator') && (program.levels[0]?.remarks === "Ongoing Survey" && program.levels[0]?.is_active) && (
                             <div className="w-64 shrink-0">
                                 <div className="sticky top-6 space-y-4">
                                     <div className="w-full rounded-lg border border-gray-200 bg-white p-4">
