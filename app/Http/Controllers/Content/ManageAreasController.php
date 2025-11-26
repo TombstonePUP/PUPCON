@@ -45,7 +45,6 @@ class ManageAreasController extends Controller
                 },
             ])
             ->firstOrFail();
-        dd($program);
 
         $area = $program->Levels->first()->Areas()->create([
             'area_name' => $validated['area_name'],
