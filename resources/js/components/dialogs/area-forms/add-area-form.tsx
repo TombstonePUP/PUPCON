@@ -77,20 +77,22 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
         <Dialog open={true} onOpenChange={() => !isUploading && onClose()}>
             <DialogContent className="max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Add Card</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">Make a new card for Program Performance Profile, Self-Survey, or Compliance Report</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-gray-900">Add Form</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500">
+                        Make a new form for Program Performance Profile, Self-Survey, or Compliance Report
+                    </DialogDescription>
                 </DialogHeader>
-                <form className='flex flex-col gap-6' onSubmit={addAreaForm}>
+                <form className="flex flex-col gap-6" onSubmit={addAreaForm}>
                     <div className="flex flex-col gap-6">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Card Type</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Form Category</Label>
                             <Select
                                 value={data.area_form_category_id?.toString() || ''}
                                 onValueChange={(value) => setData('area_form_category_id', Number(value))}
                                 disabled={processing}
                             >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Category" />
+                                    <SelectValue placeholder="Select Form Category" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories
@@ -105,7 +107,7 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                             <InputError message={errors.area_form_category_id} className="mt-2" />
                         </div>
                         <div>
-                           <Label className="mb-2 block text-sm font-medium text-gray-700">Upload Document</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Upload Document</Label>
                             <div className="flex w-full items-center justify-center">
                                 {!data.document ? (
                                     <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">

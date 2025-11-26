@@ -228,7 +228,7 @@ export default function Programs({ program }: ProgramProps) {
                                                 })}
                                                 className="flex items-center"
                                             >
-                                                Download
+                                                Export
                                                 <Download className="ml-2 h-4 w-4" />
                                             </a>
                                         </Button>
@@ -308,7 +308,7 @@ export default function Programs({ program }: ProgramProps) {
                                                                     className="flex w-full"
                                                                 >
                                                                     <Download className="mr-2 h-4 w-4 text-gray-600" />
-                                                                    Download
+                                                                    Export
                                                                 </a>
                                                             </DropdownMenuItem>
                                                             {(role === 'Admin' || role === 'Coordinator') &&
