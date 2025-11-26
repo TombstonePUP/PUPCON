@@ -70,20 +70,16 @@ export default function ParameterAccordion({
                                     </h1>
                                     <p className="flex-1 text-center">{parameter.parameter_description}</p>
                                 </div>
-                                {role === 'Admin' ||
-                                    (role === 'Coordinator' && (
-                                        <div className="flex justify-center gap-3">
-                                            <Button
-                                                className="border-none"
-                                                onClick={() => resolveParamDialog({ type: 'edit', parameter: parameter })}
-                                            >
-                                                Edit
-                                            </Button>
-                                            <Button variant="outline" onClick={() => resolveParamDialog({ type: 'delete', parameter: parameter })}>
-                                                Remove
-                                            </Button>
-                                        </div>
-                                    ))}
+                                {canShowActions && (
+                                    <div className="flex justify-center gap-3">
+                                        <Button className="border-none" onClick={() => resolveParamDialog({ type: 'edit', parameter: parameter })}>
+                                            Edit
+                                        </Button>
+                                        <Button variant="outline" onClick={() => resolveParamDialog({ type: 'delete', parameter: parameter })}>
+                                            Remove
+                                        </Button>
+                                    </div>
+                                )}
                             </AccordionTrigger>
                             <AccordionContent>
                                 {parameter.parameter_outlines?.length > 0 ? (
@@ -130,20 +126,19 @@ export default function ParameterAccordion({
                                 )}
 
                                 {/* Add Benchmark Dialog */}
-                                {role === 'Admin' ||
-                                    (role === 'Coordinator' && (
-                                        <Button
-                                            className="w-fit cursor-pointer"
-                                            variant={'outline'}
-                                            onClick={() => {
-                                                setTimeout(() => resolveBenchDialog({ type: 'add', parameter: parameter }), 50);
-                                            }}
-                                        >
-                                            {' '}
-                                            <PlusCircle />
-                                            Add Benchmark
-                                        </Button>
-                                    ))}
+                                {canShowActions && (
+                                    <Button
+                                        className="w-fit cursor-pointer"
+                                        variant={'outline'}
+                                        onClick={() => {
+                                            setTimeout(() => resolveBenchDialog({ type: 'add', parameter: parameter }), 50);
+                                        }}
+                                    >
+                                        {' '}
+                                        <PlusCircle />
+                                        Add Benchmark
+                                    </Button>
+                                )}
                             </AccordionContent>
                         </AccordionItem>
                     ))
