@@ -37,7 +37,7 @@ export const columns: ColumnDef<ActivityLogs>[] = [
         accessorKey: 'file_name',
         header: () => <div className="text-left">File</div>,
         cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue('file_name')} </div>;
+            return <div className="w-sm text-left  truncate text-gray-900"> {row.getValue('file_name')} </div>;
         },
         enableGlobalFilter: true,
     },
