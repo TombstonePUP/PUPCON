@@ -20,7 +20,7 @@ class HistoryController extends Controller
                 'directors' => ['nullable', 'array'],
                 'gallery' => ['nullable', 'array'],
                 'page.page' => ['required', 'string'],
-                'page.content_page_id' => ['required', 'integer'],
+                'page.content_page_id' => ['nullable', 'integer'],
                 'page.title' => ['required', 'string'],
                 'page.description' => ['required', 'string'],
                 'page.banner' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],

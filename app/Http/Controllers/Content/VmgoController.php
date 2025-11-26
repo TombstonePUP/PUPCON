@@ -20,7 +20,7 @@ class VmgoController extends Controller
                 'campus_goals' => ['nullable', 'array'],
                 'pillars' => ['nullable', 'array'],
                 'vmgo' => ['nullable', 'array'],
-                'page.content_page_id' => ['required', 'integer'],
+                'page.content_page_id' => ['nullable', 'integer'],
                 'page.page' => ['required', 'string'],
                 'page.title' => ['required', 'string'],
                 'page.description' => ['required', 'string'],

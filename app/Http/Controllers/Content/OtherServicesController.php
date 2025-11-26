@@ -31,7 +31,7 @@ class OtherServicesController extends Controller
         $validated = $request->validate([
             'page' => ['required', 'array'],
             'other_services' => ['nullable', 'array'],
-            'page.content_page_id' => ['required', 'integer'],
+            'page.content_page_id' => ['nullable', 'integer'],
             'page.page' => ['required', 'string'],
             'page.title' => ['required', 'string'],
             'page.subtitle' => ['required', 'string'],

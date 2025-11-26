@@ -18,7 +18,7 @@ class LocalTaskForceController extends Controller
             'page.page' => ['required', 'string'],
             'page.title' => ['required', 'string'],
             'page.description' => ['required', 'string'],
-            'chairmen.*.local_task_force_id' => ['required', 'integer'],
+            'chairmen.*.local_task_force_id' => ['nullable', 'integer'],
             'chairmen.*.area_name' => ['nullable', 'string'],
             'chairmen.*.first_name' => ['required', 'string'],
             'chairmen.*.last_name' => ['required', 'string'],

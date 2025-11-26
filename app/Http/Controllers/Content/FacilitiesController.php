@@ -15,7 +15,7 @@ class FacilitiesController extends Controller
             'page' => ['required', 'array'],
             'facilities' => ['nullable', 'array'],
             'page.page' => ['required', 'string'],
-            'page.content_page_id' => ['required', 'integer'],
+            'page.content_page_id' => ['nullable', 'integer'],
             'page.title' => ['required', 'string'],
             'page.description' => ['required', 'string'],
             'facilities.*.facility_id' => ['required', 'integer'],

@@ -14,7 +14,7 @@ class FacultyStaffController extends Controller
         $validated = $request->validate([
             'page' => ['required', 'array'],
             'faculties' => ['nullable', 'array'],
-            'page.content_page_id' => ['required', 'integer'],
+            'page.content_page_id' => ['nullable', 'integer'],
             'page.page' => ['required', 'string', 'max:255'],
             'page.title' => ['required', 'string', 'max:255'],
             'page.subtitle' => ['required', 'string', 'max:255'],
