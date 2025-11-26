@@ -85,9 +85,14 @@ class ManageProgramController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'program_name' => ['required', 'string', 'max:255', 'unique:programs,program_name'],
+            'program_name' => ['required', 'string', 'max:255'],
             'degree_type' => ['required', 'string', 'max:100'],
-        ]);
+        ],
+        [
+            'program_name.required' => 'The program name field is required.',
+            'degree_type.required' => 'The degree type field is required.',
+        ]
+        );
 
         $program = Programs::create([
             'program_name' => $validated['program_name'],
@@ -107,6 +112,10 @@ class ManageProgramController extends Controller
         $validated = $request->validate([
             'program_name' => ['required', 'string', 'max:255'],
             'degree_type' => ['required', 'string', 'max:100'],
+        ],
+        [
+            'program_name.required' => 'The program name field is required.',
+            'degree_type.required' => 'The degree type field is required.',
         ]);
 
         $program->update([

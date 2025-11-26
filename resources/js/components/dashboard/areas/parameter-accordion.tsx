@@ -4,8 +4,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Area, AreaFormCategory, type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
-import { FolderPlus, PlusCircle } from 'lucide-react';
 import { usePage } from '@inertiajs/react';
+import { FolderPlus, PlusCircle } from 'lucide-react';
 interface DocDialogParams {
     type: 'view' | 'upload' | 'delete' | 'rejected';
     benchmark: ParameterOutlines;
@@ -50,6 +50,9 @@ export default function ParameterAccordion({
 }: ParameterAccordionProps) {
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
+    console.log(role);
+    console.log(program);
+    const canShowActions = (role === 'Admin' || role === 'Coordinator') && program.levels[0]?.is_active && program.levels[0]?.remarks === 'Ongoing Survey';
     return (
         <>
             <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
@@ -59,9 +62,10 @@ export default function ParameterAccordion({
                             <AccordionTrigger className="flex flex-row items-center justify-between group-hover:cursor-pointer">
                                 <div className="flex h-full w-full flex-row items-center">
                                     <h1 className="font-bold text-[#7f1414] group-hover:text-[#a01818]">
-                                        {parameter.parameter_name != ' '
+                                        {/*parameter.parameter_name != ' '
                                             ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
-                                            : parameter.parameter_name}
+                                            : parameter.parameter_name*/}
+                                        {parameter.parameter_name ? `Parameter ${parameter.parameter_name}` : ''}
                                     </h1>
                                     <p className="flex-1 text-center">{parameter.parameter_description}</p>
                                 </div>
@@ -142,7 +146,7 @@ export default function ParameterAccordion({
                             <EmptyTitle>Content Not Available</EmptyTitle>
                             <EmptyDescription>No available parameters in this area.</EmptyDescription>
                         </EmptyHeader>
-                        {(role === 'Admin' || role === 'Coordinator') && (
+                        {canShowActions && (
                             <EmptyContent>
                                 <div className="flex gap-2">
                                     <Button variant="outline" onClick={() => resolveParamDialog({ type: 'import' })}>

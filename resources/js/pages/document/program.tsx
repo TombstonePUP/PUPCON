@@ -79,7 +79,7 @@ export default function Programs({ program }: ProgramProps) {
     useEffect(() => {
         const observerOptions = {
             root: null,
-            rootMargin: '-30% 0px -30% 0px', // activates when section is near middle of screen
+            rootMargin: '-20% 0px -20% 0px', // activates when section is near middle of screen
             threshold: 0,
         };
 
@@ -292,7 +292,7 @@ export default function Programs({ program }: ProgramProps) {
                                                         <DropdownMenuContent align="end">
                                                             {(role === 'Admin' || role === 'Coordinator') &&
                                                                 selected_level.is_active &&
-                                                                selected_level.remarks !== 'Ongoing Survey' && (
+                                                                selected_level.remarks === 'Ongoing Survey' && (
                                                                     <DropdownMenuItem onClick={() => editArea(item)}>
                                                                         <EditIcon className="mr-2 h-4 w-4 text-gray-600" />
                                                                         Edit
@@ -313,7 +313,7 @@ export default function Programs({ program }: ProgramProps) {
                                                             </DropdownMenuItem>
                                                             {(role === 'Admin' || role === 'Coordinator') &&
                                                                 selected_level.is_active &&
-                                                                selected_level.remarks !== 'Ongoing Survey' && (
+                                                                selected_level.remarks === 'Ongoing Survey' && (
                                                                     <>
                                                                         <DropdownMenuSeparator />
                                                                         <DropdownMenuItem
@@ -341,18 +341,16 @@ export default function Programs({ program }: ProgramProps) {
                                     {/* Add New Area Card */}
                                     {(role === 'Admin' || role === 'Coordinator') &&
                                         selected_level?.is_active &&
-                                        selected_level?.remarks === 'Ongoing Survey' &&
-                                        (console.log(selected_level),
-                                            (
-                                                <button
-                                                    type="button"
-                                                    onClick={addArea}
-                                                    className="group flex min-h-[100px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600"
-                                                >
-                                                    <Plus className="h-6 w-6" />
-                                                    <span className="mt-2 text-sm font-medium">Add New Area</span>
-                                                </button>
-                                            ))}
+                                        selected_level?.remarks === 'Ongoing Survey' && (
+                                            <button
+                                                type="button"
+                                                onClick={addArea}
+                                                className="group flex min-h-[100px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600"
+                                            >
+                                                <Plus className="h-6 w-6" />
+                                                <span className="mt-2 text-sm font-medium">Add New Area</span>
+                                            </button>
+                                        )}
                                 </div>
                             </div>
                         </div>

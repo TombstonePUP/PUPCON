@@ -128,16 +128,19 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
                 </div>
             ))}
 
-            {forms.length < 3 && (role === 'Admin' || role === 'Coordinator') && (
-                <Button
-                    variant="outline"
-                    className="border-muted-foreground/40 bg-card text-muted-foreground/80 hover:border-muted-foreground/80 hover:bg-muted/50 hover:text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-colors"
-                    onClick={() => resolveFormDialog({ type: 'add' })}
-                >
-                    <Plus className="h-8 w-8" />
-                    <p className="text-sm font-medium">Add Form</p>
-                </Button>
-            )}
+            {forms.length < 3 &&
+                (role === 'Admin' || role === 'Coordinator') &&
+                program.levels[0]?.is_active &&
+                program.levels[0]?.remarks === 'Ongoing Survey' && (
+                    <Button
+                        variant="outline"
+                        className="border-muted-foreground/40 bg-card text-muted-foreground/80 hover:border-muted-foreground/80 hover:bg-muted/50 hover:text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-colors"
+                        onClick={() => resolveFormDialog({ type: 'add' })}
+                    >
+                        <Plus className="h-8 w-8" />
+                        <p className="text-sm font-medium">Add Form</p>
+                    </Button>
+                )}
         </div>
     );
 }
