@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { InfoIcon } from 'lucide-react';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 // Section Imports
 import AboutSection from '@/components/content/about-content';
@@ -58,11 +58,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const MainContent = ({ ...props }: MainContentProps) => {
-
-      
-        usePoll(2000, {}, {
-        keepAlive: true,
-    })
+    usePoll(
+        2000,
+        {},
+        {
+            keepAlive: true,
+        },
+    );
 
     const [activeSection, setActiveSection] = useState('welcome-landing');
     const [scrollLock, setScrollLock] = useState(false);
@@ -103,26 +105,30 @@ const MainContent = ({ ...props }: MainContentProps) => {
         }, 600); // you can adjust this
     };
 
-    const sections = useMemo(() => [
-        { id: 'welcome-landing', label: 'Home', ref: welcomeLandingRef },
-        { id: 'about', label: 'About', ref: aboutRef },
-        { id: 'vmgo', label: 'Vision, Mission & Goals', ref: vmgoRef },
-        { id: 'history', label: 'History', ref: historyRef },
-        { id: 'administration', label: 'Administration', ref: administrationRef },
-        { id: 'facilities', label: 'Facilities', ref: facilitiesRef },
-        { id: 'faculties', label: 'Faculty & Staff', ref: facultiesRef },
-        { id: 'task-force', label: 'Local Task Force', ref: localTaskForceRef },
-    ], []);
+    
+    const sections = useMemo(
+        () => [
+            { id: 'welcome-landing', label: 'Home', ref: welcomeLandingRef },
+            { id: 'about', label: 'About', ref: aboutRef },
+            { id: 'vmgo', label: 'Vision, Mission & Goals', ref: vmgoRef },
+            { id: 'history', label: 'History', ref: historyRef },
+            { id: 'administration', label: 'Administration', ref: administrationRef },
+            { id: 'facilities', label: 'Facilities', ref: facilitiesRef }, // ✅ Moved here
+            { id: 'faculties', label: 'Faculty & Staff', ref: facultiesRef }, // ✅ Moved after facilities
+            { id: 'task-force', label: 'Local Task Force', ref: localTaskForceRef },
+        ],
+        [],
+    );
 
     useEffect(() => {
         const observerOptions = {
             root: null,
-            rootMargin: '-40% 0px -40% 0px', // activates when section is near middle of screen
+            rootMargin: '-40% 0px -40% 0px',
             threshold: 0,
         };
 
         const observer = new IntersectionObserver((entries) => {
-            if (scrollLock) return; // do nothing if user clicked a link
+            if (scrollLock) return;
 
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -167,35 +173,42 @@ const MainContent = ({ ...props }: MainContentProps) => {
                 <div className="flex gap-6">
                     <div className="flex-1">
                         <div className="space-y-6">
-                            {/* Temporary welcome holder section only */}
+                            {/* Welcome Landing */}
                             <div id="welcome-landing" ref={welcomeLandingRef} className="scroll-mt-6">
                                 <WelcomeSection />
                             </div>
 
+                            {/* About */}
                             <div id="about" ref={aboutRef} className="scroll-mt-6">
                                 <AboutSection about_page={about_page} org_types={org_types} />
                             </div>
 
+                            {/* VMGO */}
                             <div id="vmgo" ref={vmgoRef} className="scroll-mt-6">
                                 <VmgoSection vmgo_page={vmgo_page} vmgo_data={vmgo_data} />
                             </div>
 
+                            {/* History */}
                             <div id="history" ref={historyRef} className="scroll-mt-6">
                                 <HistorySection history_page={history_page} history={history} />
                             </div>
 
+                            {/* Administration */}
                             <div id="administration" ref={administrationRef} className="scroll-mt-6">
                                 <AdministrationSection admin_page={admin_page} officials={officials} />
                             </div>
 
-                            <div id="faculties" ref={facultiesRef} className="scroll-mt-6">
-                                <FacultySection faculty_page={faculty_page} faculty_members={faculties} />
-                            </div>
-
+                            {/* Facilities - */}
                             <div id="facilities" ref={facilitiesRef} className="scroll-mt-6">
                                 <FacilitiesSection facility_page={facility_page} facilities={facilities} />
                             </div>
 
+                            {/* Faculty & Staff - */}
+                            <div id="faculties" ref={facultiesRef} className="scroll-mt-6">
+                                <FacultySection faculty_page={faculty_page} faculty_members={faculties} />
+                            </div>
+
+                            {/* Local Task Force */}
                             <div id="task-force" ref={localTaskForceRef} className="scroll-mt-6">
                                 <LocalTaskForceSection ltf_page={ltf_page} local_task_force={local_task_force} />
                             </div>
@@ -212,8 +225,9 @@ const MainContent = ({ ...props }: MainContentProps) => {
                                         <button
                                             key={section.id}
                                             onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                                }`}
+                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
+                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >
                                             {section.label}
                                         </button>
