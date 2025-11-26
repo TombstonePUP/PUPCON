@@ -1,7 +1,7 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import { CampusGoals, ContentPages, Pillars, Vmgo } from '@/types/content';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePoll } from '@inertiajs/react';
 import { AlertCircle, Construction } from 'lucide-react';
 
 interface VMGOProps {
@@ -32,6 +32,11 @@ const DataAlert = ({ message }: { message: string }) => (
 );
 
 export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
+    // Add usePoll to auto-refresh data every 2 seconds
+    usePoll(2000, {}, {
+        keepAlive: true,
+    });
+
     const quickLinks = [
         { label: 'Vision, Mission & Goals', href: '/about/vision-mission-goals', active: true },
         { label: 'History', href: '/about/history' },
@@ -252,7 +257,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                     />
                                 ) : (
                                     <div className="grid gap-6 lg:grid-cols-2">
-                                        {campus_goals.map((goal, index) => (
+                                        {campus_goals.map((goal) => (
                                             <div
                                                 key={goal.goal_id}
                                                 className="rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
@@ -269,7 +274,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                                                 View in Filipino
                                                             </summary>
                                                             <div className="mt-3 rounded-lg bg-gray-50 p-4">
-                                                                <p className="text-sm text-gray-600 italic">{goal.goal_desc_fil}</p>
+                                                                <p className="text-sm italic text-gray-600">{goal.goal_desc_fil}</p>
                                                             </div>
                                                         </details>
                                                     </div>
