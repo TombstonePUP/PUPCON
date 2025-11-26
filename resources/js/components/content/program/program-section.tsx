@@ -179,6 +179,10 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
             if (selectedObjectiveId === id) {
                 setSelectedObjectiveId(null);
             }
+            setData((prevData) => ({
+                ...prevData,
+                objectives: updated,
+            }));
             return updated;
         });
         setDialogOpen(false);
