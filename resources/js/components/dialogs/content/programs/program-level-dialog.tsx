@@ -61,7 +61,7 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
                             <SelectContent>
                                 {programs.map((program) => (
                                     <SelectItem value={String(program.program_id)}>
-                                        {program.program_name}
+                                       {program.degree_type}{}{' in '}{program.program_name}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
