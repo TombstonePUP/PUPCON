@@ -188,10 +188,16 @@ export default function Programs({ program }: PerProgramProps) {
 
     // Router progress indicator
     useEffect(() => {
-        const start = () => setLoading(true);
-        const finish = () => setLoading(false);
-        router.on('start', start);
-        router.on('finish', finish);
+        const handleStart = () => setLoading(true);
+        const handleFinish = () => setLoading(false);
+
+        router.on('start', handleStart);
+        router.on('finish', handleFinish);
+
+        return () => {
+            router.off('start', handleStart);
+            router.off('finish', handleFinish);
+        };
     }, []);
 
     const handleLevelChange = (newLevel: number) => {
@@ -205,8 +211,8 @@ export default function Programs({ program }: PerProgramProps) {
     };
 
     const campusFacts = [
-        { icon: <School className="h-6 w-6" />, label: 'Students', value: '170+' },
-        { icon: <Users className="h-6 w-6" />, label: 'Faculty', value: '12+' },
+        { icon: <School className="h-6 w-6" />, label: 'Students', value: program?.student_count || '0' },
+        { icon: <Users className="h-6 w-6" />, label: 'Faculty', value: program?.faculty_staff?.length || '0' },
         { icon: <GraduationCap className="h-6 w-6" />, label: 'Years', value: '4' },
     ];
 
@@ -335,14 +341,10 @@ export default function Programs({ program }: PerProgramProps) {
                                     <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/20">
                                         {fact.icon}
                                     </div>
-                                    {loading ? (
-                                        <div className="h-6 w-24 animate-pulse rounded bg-white/30" />
-                                    ) : (
-                                        <div>
-                                            <div className="text-2xl font-bold">{fact.value}</div>
-                                            <div className="text-sm opacity-80">{fact.label}</div>
-                                        </div>
-                                    )}
+                                    <div>
+                                        <div className="text-2xl font-bold">{fact.value}</div>
+                                        <div className="text-sm opacity-80">{fact.label}</div>
+                                    </div>
                                 </div>
                             ))}
                         </div>
