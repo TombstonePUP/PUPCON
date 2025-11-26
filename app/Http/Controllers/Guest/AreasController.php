@@ -19,7 +19,7 @@ class AreasController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(string $program_name, int $area_id)
+    public function __invoke(string $program_name, string $area_id)
     {
         $program_name = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::where('program_name', $program_name)->with([
@@ -63,11 +63,7 @@ class AreasController extends Controller
 
         $area->AreaForms->map(function ($form) {
             if ($form) {
-                if ($form->file_path && Storage::exists($form->file_path)) {
-                    $form->file_path = Storage::url($form->file_path);
-                } else {
-                    $form->file_path = null;
-                }
+                $form->file_path = Storage::url($form->file_path);
             }
             return $form;
         });
