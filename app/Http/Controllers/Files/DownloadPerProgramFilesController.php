@@ -17,7 +17,7 @@ class DownloadPerProgramFilesController extends Controller
     public function __invoke(Request $request)
     {
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)
+        $program = Programs::where('program_name', 'ILIKE', $program)
             ->with([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);

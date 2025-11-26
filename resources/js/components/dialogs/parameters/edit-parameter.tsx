@@ -41,9 +41,9 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
         reset,
     } = useForm<ParameterForm>({
         area_id: area_id,
-        area_parameter_id: undefined,
-        parameter_name: '',
-        parameter_description: '',
+        area_parameter_id: parameter.area_parameter_id,
+        parameter_name: parameter.parameter_name,
+        parameter_description: parameter.parameter_description,
     });
 
     const editParameter = (e: React.FormEvent) => {

@@ -38,13 +38,14 @@ class ManageAreasController extends Controller
         );
 
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)
+        $program = Programs::where('program_name','ILIKE', $program)
             ->with([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);
                 },
             ])
             ->firstOrFail();
+        dd($program);
 
         $area = $program->Levels->first()->Areas()->create([
             'area_name' => $validated['area_name'],
@@ -104,7 +105,7 @@ class ManageAreasController extends Controller
         );
 
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)
+        $program = Programs::where('program_name', 'ILIKE', $program)
             ->with([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);

@@ -25,7 +25,7 @@ class AreaParameterOutlinesController extends Controller
     {
         $program = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::select('program_id', 'program_name', 'degree_type')
-            ->where('program_name', $program)
+            ->where('program_name','ILIKE', $program)
             ->with([
                 'Levels' => function ($query) use ($level_id) {
                     $query->where('accreditation_level_id', $level_id);
@@ -123,7 +123,7 @@ class AreaParameterOutlinesController extends Controller
         $validated = $request->validated();
 
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)->first();
+        $program = Programs::where('program_name', 'ILIKE', $program)->first();
         $area = Areas::where('area_id', $request->area_id)->first();
         $parameterOutline = ParameterOutlines::find($request->outline_id);
 
@@ -170,7 +170,7 @@ class AreaParameterOutlinesController extends Controller
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)->first();
+        $program = Programs::where('program_name', 'ILIKE', $program)->first();
 
         $message = "";
 

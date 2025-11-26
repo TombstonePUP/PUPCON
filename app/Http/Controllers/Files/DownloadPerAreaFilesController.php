@@ -19,7 +19,7 @@ class DownloadPerAreaFilesController extends Controller
     {
         $area = Areas::findOrFail($request->area_id);
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)
+        $program = Programs::where('program_name', 'ILIKE', $program)
             ->with([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);
