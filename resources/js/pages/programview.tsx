@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Layout from '@/layouts/landing-layout';
 import { PerProgramUnderSurvey } from '@/types';
-import { Head, router, usePage, useRemember } from '@inertiajs/react';
+import { Head, router, usePage, usePoll, useRemember } from '@inertiajs/react';
 import { ChevronRight, Download, FileSpreadsheet, FileText, GraduationCap, School, Users } from 'lucide-react';
 import { forwardRef, useEffect, useRef, useState } from 'react';
+
 interface PerProgramProps {
     program: PerProgramUnderSurvey;
 }
@@ -49,9 +50,9 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
         return (
             <div
                 ref={ref}
-                className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:border-[#7f1414] ${inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                    }`}
-            // style={{ transitionDelay: `${index * 50}ms` }}
+                className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:border-[#7f1414] ${
+                    inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                }`}
             >
                 <div className="flex flex-col space-y-3">
                     <div className="relative">
@@ -70,9 +71,9 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
     return (
         <div
             ref={ref}
-            className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                }`}
-        // style={{ transitionDelay: `${index * 50}ms` }}
+            className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${
+                inView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+            }`}
         >
             <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
 
@@ -83,8 +84,9 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
                         <img
                             src={faculty.photo}
                             alt={faculty.name}
-                            className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${imgLoaded ? 'opacity-100' : 'opacity-0'
-                                }`}
+                            className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${
+                                imgLoaded ? 'opacity-100' : 'opacity-0'
+                            }`}
                             onLoad={() => setImgLoaded(true)}
                             onError={(e) => {
                                 const target = e.target as HTMLImageElement;
@@ -115,6 +117,15 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
 FacultyCard.displayName = 'FacultyCard';
 
 export default function Programs({ program }: PerProgramProps) {
+    // Add usePoll to auto-refresh data every 2 seconds
+    usePoll(
+        2000,
+        {},
+        {
+            keepAlive: true,
+        },
+    );
+
     const [level, setLevel] = useRemember(program.levels[0]?.level, 'level');
     const [loading, setLoading] = useState(false);
     const [overviewImageLoading, setOverviewImageLoading] = useState(true);
@@ -159,7 +170,7 @@ export default function Programs({ program }: PerProgramProps) {
         { icon: <GraduationCap className="h-6 w-6" />, label: 'Years', value: '4' },
     ];
 
-    const SectionHeader = ({ title, subtitle, icon: Icon, props }: { title: string; subtitle: string; icon?: any; props: string }) => (
+    const SectionHeader = ({ title, subtitle, icon: Icon, props }: { title: string; subtitle: string; icon?: any; props?: string }) => (
         <div className="relative mb-12">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#7f1414]/5 via-[#7f1414]/10 to-[#7f1414]/5" />
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] px-8 py-10 text-center text-white">
@@ -175,7 +186,8 @@ export default function Programs({ program }: PerProgramProps) {
         <>
             <Head title={`${program.degree_type} in ${program.program_name}`} />
             <Layout>
-                <PageHeader className="hidden lg:block"
+                <PageHeader
+                    className="hidden lg:block"
                     title=""
                     quickLinks={[
                         { label: 'Overview', targetId: 'overview' },
@@ -229,11 +241,10 @@ export default function Programs({ program }: PerProgramProps) {
                                 </span>
                             </div>
 
-                            <h1 className="mb-8 text-5xl font-bold drop-shadow-lg text-center">{program.program_name}</h1>
+                            <h1 className="mb-8 text-center text-5xl font-bold drop-shadow-lg">{program.program_name}</h1>
 
                             {/* Dropdown */}
                             <div className="group/dropdown relative" onMouseLeave={() => setDropdownOpen(false)}>
-                                {/* {user?.roles?.role_name === 'Accreditor' ? ( */}
                                 {program.levels.length > 1 ? (
                                     <div className="relative">
                                         <div
@@ -247,16 +258,18 @@ export default function Programs({ program }: PerProgramProps) {
                                         </div>
 
                                         <div
-                                            className={`absolute top-0 left-48 h-full overflow-hidden rounded-r-xl border-t border-r border-b border-white/30 backdrop-blur-md transition-all duration-300 ${dropdownOpen ? 'w-72 opacity-100' : 'w-0 opacity-0'
-                                                }`}
+                                            className={`absolute top-0 left-48 h-full overflow-hidden rounded-r-xl border-t border-r border-b border-white/30 backdrop-blur-md transition-all duration-300 ${
+                                                dropdownOpen ? 'w-72 opacity-100' : 'w-0 opacity-0'
+                                            }`}
                                         >
                                             <div className="flex h-full bg-white/10">
                                                 {program.levels.map((lvlObj) => (
                                                     <button
                                                         key={lvlObj.level}
                                                         onClick={() => handleLevelChange(lvlObj.level)}
-                                                        className={`flex-1 border-r border-white/20 px-3 py-3 text-sm text-white transition-all duration-200 last:border-r-0 hover:bg-[#7f1414]/30 ${level === lvlObj.level ? 'bg-[#7f1414]/20 font-semibold' : ''
-                                                            }`}
+                                                        className={`flex-1 border-r border-white/20 px-3 py-3 text-sm text-white transition-all duration-200 last:border-r-0 hover:bg-[#7f1414]/30 ${
+                                                            level === lvlObj.level ? 'bg-[#7f1414]/20 font-semibold' : ''
+                                                        }`}
                                                     >
                                                         {lvlObj.level}
                                                     </button>
@@ -269,11 +282,6 @@ export default function Programs({ program }: PerProgramProps) {
                                         Accreditation Level {program.levels[0]?.level}
                                     </label>
                                 )}
-                                {/* ) : (
-                                    <label className="mb-3 block text-xl font-medium opacity-90">
-                                        Accreditation Level {program.levels[0]?.level}
-                                    </label>
-                                )} */}
                             </div>
                         </div>
 
@@ -283,7 +291,6 @@ export default function Programs({ program }: PerProgramProps) {
                                 <div
                                     key={i}
                                     className="flex items-center gap-4 rounded-xl border border-white/20 bg-white/10 px-6 py-4 backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20"
-                                // style={{ animationDelay: `${i * 200}ms` }}
                                 >
                                     <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/20">
                                         {fact.icon}
@@ -302,13 +309,14 @@ export default function Programs({ program }: PerProgramProps) {
                     </div>
                 </section>
 
-                <div className="flex flex-col items-center gap-20 mb-10">
+                <div className="mb-10 flex flex-col items-center gap-20">
                     {/* --- Overview --- */}
                     <div
                         ref={overviewRef}
                         id="overview"
-                        className={`mt-16 w-[82%] transition-all duration-700 ${overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                            }`}
+                        className={`mt-16 w-[82%] transition-all duration-700 ${
+                            overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                        }`}
                     >
                         <div className="relative overflow-hidden rounded-xl">
                             <div className="border-black-90 grid grid-cols-1 rounded-xl border-1 transition-all duration-300 hover:border-[#7f1414] lg:grid-cols-5">
@@ -333,8 +341,9 @@ export default function Programs({ program }: PerProgramProps) {
                                     <img
                                         src={program.program_image_path || '/images/placeholder.png'}
                                         alt={program.program_image_name || 'Program Overview Image'}
-                                        className={`h-full w-full object-cover transition-all duration-700 ${!overviewImageLoading ? 'opacity-100' : 'opacity-0'
-                                            }`}
+                                        className={`h-full w-full object-cover transition-all duration-700 ${
+                                            !overviewImageLoading ? 'opacity-100' : 'opacity-0'
+                                        }`}
                                         onLoad={() => setOverviewImageLoading(false)}
                                     />
                                 </div>
@@ -352,8 +361,9 @@ export default function Programs({ program }: PerProgramProps) {
                             {program.objectives?.map((objective, index) => (
                                 <div
                                     key={objective.program_objective_id}
-                                    className={`group border-black-90 relative flex w-full max-w-2xs flex-col justify-start overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] gap-4 ${objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                                        }`}
+                                    className={`border-black-90 group relative flex w-full max-w-2xs flex-col justify-start gap-4 overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] ${
+                                        objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                    }`}
                                 >
                                     {/* Objective Header */}
                                     <div className="relative">
@@ -363,7 +373,7 @@ export default function Programs({ program }: PerProgramProps) {
                                     </div>
 
                                     {/* Objective Content */}
-                                    <p className="relative leading-relaxed text-gray-700 transition-all duration-300 group-hover:text-gray-900 grid place-items-center">
+                                    <p className="relative grid place-items-center leading-relaxed text-gray-700 transition-all duration-300 group-hover:text-gray-900">
                                         {objective.objective_description}
                                     </p>
 
@@ -457,11 +467,9 @@ export default function Programs({ program }: PerProgramProps) {
                                         .map((area, index) => (
                                             <div
                                                 key={area.area_id}
-                                                className={`transition-all duration-500 ${areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                                                    }`}
-                                            // style={{
-                                            //     transitionDelay: areasInView ? `${index * 120}ms` : '0ms',
-                                            // }}
+                                                className={`transition-all duration-500 ${
+                                                    areasInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                                }`}
                                             >
                                                 <AreaCard
                                                     imageSrc={area.area_image_path ?? '/images/placeholder.png'}
