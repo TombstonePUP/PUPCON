@@ -52,7 +52,8 @@ export default function ParameterAccordion({
     const role = auth.user.roles.role_name;
     console.log(role);
     console.log(program);
-    const canShowActions = (role === 'Admin' || role === 'Coordinator') && program.levels[0]?.is_active && program.levels[0]?.remarks === 'Ongoing Survey';
+    const canShowActions =
+        (role === 'Admin' || role === 'Coordinator') && program.levels[0]?.is_active && program.levels[0]?.remarks === 'Ongoing Survey';
     return (
         <>
             <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
@@ -123,17 +124,20 @@ export default function ParameterAccordion({
                                 )}
 
                                 {/* Add Benchmark Dialog */}
-                                <Button
-                                    className="w-fit cursor-pointer"
-                                    variant={'outline'}
-                                    onClick={() => {
-                                        setTimeout(() => resolveBenchDialog({ type: 'add', parameter: parameter }), 50);
-                                    }}
-                                >
-                                    {' '}
-                                    <PlusCircle />
-                                    Add Benchmark
-                                </Button>
+                                {role === 'Admin' ||
+                                    (role === 'Coordinator' && (
+                                        <Button
+                                            className="w-fit cursor-pointer"
+                                            variant={'outline'}
+                                            onClick={() => {
+                                                setTimeout(() => resolveBenchDialog({ type: 'add', parameter: parameter }), 50);
+                                            }}
+                                        >
+                                            {' '}
+                                            <PlusCircle />
+                                            Add Benchmark
+                                        </Button>
+                                    ))}
                             </AccordionContent>
                         </AccordionItem>
                     ))
