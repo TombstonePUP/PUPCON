@@ -17,7 +17,7 @@ class HistoryViewController extends Controller
     public function __invoke(Request $request)
     {
         $pages = ContentPages::where('page', 'History')->first();
-        $pages->image_path = Storage::url($pages->image_path);
+        $pages->image_path = $pages->image_path ? Storage::url($pages->image_path) : null;
 
         $directors = CampusDirectors::all();
         $directors = $directors->map(function ($director) {
