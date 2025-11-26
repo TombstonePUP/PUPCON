@@ -70,14 +70,20 @@ export default function ParameterAccordion({
                                     </h1>
                                     <p className="flex-1 text-center">{parameter.parameter_description}</p>
                                 </div>
-                                <div className="flex justify-center gap-3">
-                                    <Button className="border-none" onClick={() => resolveParamDialog({ type: 'edit', parameter: parameter })}>
-                                        Edit
-                                    </Button>
-                                    <Button variant="outline" onClick={() => resolveParamDialog({ type: 'delete', parameter: parameter })}>
-                                        Remove
-                                    </Button>
-                                </div>
+                                {role === 'Admin' ||
+                                    (role === 'Coordinator' && (
+                                        <div className="flex justify-center gap-3">
+                                            <Button
+                                                className="border-none"
+                                                onClick={() => resolveParamDialog({ type: 'edit', parameter: parameter })}
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button variant="outline" onClick={() => resolveParamDialog({ type: 'delete', parameter: parameter })}>
+                                                Remove
+                                            </Button>
+                                        </div>
+                                    ))}
                             </AccordionTrigger>
                             <AccordionContent>
                                 {parameter.parameter_outlines?.length > 0 ? (
