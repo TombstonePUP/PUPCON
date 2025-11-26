@@ -53,7 +53,7 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
                                 <div className="flex items-center gap-3">
                                     <div className="h-px flex-1"></div>
                                     <div className="text-right">
-                                        <div className="font-semibold">{page.author || 'John Dewey'}</div>
+                                        <div className="font-semibold">{page?.author || 'John Dewey'}</div>
                                     </div>
                                 </div>
                             </div>

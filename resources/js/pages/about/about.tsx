@@ -94,8 +94,8 @@ export default function About({ page, programs, facilities, org_types }: AboutPa
                         <main className="hide-scrollbar max-h-[80vh] flex-1 space-y-20 overflow-auto scroll-smooth lg:w-3/4">
                             {/* Intro */}
                             <section>
-                                <h1 className="mb-4 text-3xl font-bold text-[#7f1414]">{page.title}</h1>
-                                <p className="mb-6 leading-relaxed text-gray-700">{page.subtitle}</p>
+                                <h1 className="mb-4 text-3xl font-bold text-[#7f1414]">{page?.title}</h1>
+                                <p className="mb-6 leading-relaxed text-gray-700">{page?.subtitle}</p>
 
                                 <div className="flex flex-col gap-6">
                                     <div className="relative h-64 w-full overflow-hidden rounded-xl">

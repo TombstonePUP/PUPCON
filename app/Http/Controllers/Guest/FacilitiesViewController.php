@@ -18,11 +18,15 @@ class FacilitiesViewController extends Controller
         $page = ContentPages::where('page', 'Facilities')->first();
         $facilities = Facilities::all();
         $facilities = $facilities->map(function ($facility) {
-            $facility->image_path = $facility->image_path ? Storage::url($facility->image_path) : null;
+            if ($facility->image_path && Storage::exists($facility->image_path)) {
+                $facility->image_path = Storage::url($facility->image_path);
+            } else {
+                $facility->image_path = null;
+            }
             return $facility;
         });
 
-        return inertia('about/facilities',[
+        return inertia('about/facilities', [
             'page' => $page,
             'facilities' => $facilities,
         ]);

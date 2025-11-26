@@ -17,17 +17,30 @@ class HistoryViewController extends Controller
     public function __invoke(Request $request)
     {
         $pages = ContentPages::where('page', 'History')->first();
-        $pages->image_path = $pages->image_path ? Storage::url($pages->image_path) : null;
 
-        $directors = CampusDirectors::all();
-        $directors = $directors->map(function ($director) {
-            $director->progile_image_path = $director->progile_image_path ? Storage::url($director->progile_image_path) : null;
+        if ($pages) {
+            if ($pages->image_path && Storage::exists($pages->image_path)) {
+                $pages->image_path = Storage::url($pages->image_path);
+            } else {
+                $pages->image_path = null;
+            }
+        }
+
+        $directors = CampusDirectors::all()->map(function ($director) {
+            $director->progile_image_path =
+                ($director->progile_image_path && Storage::exists($director->progile_image_path))
+                ? Storage::url($director->progile_image_path)
+                : null;
+
             return $director;
         });
 
-        $gallery = CampusGallery::all();
-        $gallery = $gallery->map(function ($item) {
-            $item->image_path = $item->image_path ? Storage::url($item->image_path) : null;
+        $gallery = CampusGallery::all()->map(function ($item) {
+            $item->image_path =
+                ($item->image_path && Storage::exists($item->image_path))
+                ? Storage::url($item->image_path)
+                : null;
+
             return $item;
         });
 

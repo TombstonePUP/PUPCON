@@ -19,7 +19,11 @@ class LocalTaskForceViewController extends Controller
         $local_task_force = LocalTaskForce::with('Members')->get();
         $local_task_force->each(function ($task_force) {
             $task_force->each(function ($chairman) {
-                $chairman->profile_image_path = $chairman->profile_image_path ? Storage::url($chairman->profile_image_path) : null;
+                if ($chairman->profile_image_path && Storage::exists($chairman->profile_image_path)) {
+                    $chairman->profile_image_path = Storage::url($chairman->profile_image_path);
+                } else {
+                    $chairman->profile_image_path = null;
+                }
                 return $chairman;
             });
         });

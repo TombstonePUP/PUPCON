@@ -18,7 +18,13 @@ class VmgoViewController extends Controller
     public function __invoke(Request $request)
     {
         $page = ContentPages::where('page', 'Vision, Mission & Goals')->first();
-        $page->image_path = $page->image_path ? Storage::url($page->image_path) : null;
+        if ($page) {
+            if ($page->image_path && Storage::exists($page->image_path)) {
+                $page->image_path = Storage::url($page->image_path);
+            } else {
+                $page->image_path = null;
+            }
+        }
 
         $campus_goals = CampusGoals::all();
         $pillars = Pillars::with('PillarItems')->get();

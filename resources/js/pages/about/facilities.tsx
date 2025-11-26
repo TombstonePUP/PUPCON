@@ -33,7 +33,7 @@ export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps
                     {/* Facilities Introduction */}
                     <article className="facilities-page mt-8 w-[75%]">
                         <section className="card-fx mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8 duration-300 hover:border-[#7f1414]">
-                            <h2 className="mb-4 text-3xl font-bold text-[#7f1414]">{page.title}</h2>
+                            <h2 className="mb-4 text-3xl font-bold text-[#7f1414]">{page?.title}</h2>
                             <p className="leading-relaxed text-gray-700">{page?.description}</p>
                         </section>
 
