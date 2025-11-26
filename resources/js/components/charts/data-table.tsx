@@ -324,7 +324,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                                         {row.getVisibleCells().map((cell, index) => (
                                             <TableCell 
                                                 key={cell.id} 
-                                                className={`px-4 py-3.5 ${index === 0 ? 'pl-8' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-8' : ''}`}
+                                                className={`px-4 py-3.5 ${index === 0 ? 'pl-8' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-8' : ''}` }
                                             >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>

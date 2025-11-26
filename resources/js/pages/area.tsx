@@ -4,12 +4,13 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import Layout from '@/layouts/landing-layout';
 import type { Area, ParameterOutlineCategory, PerProgram } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage, usePoll } from '@inertiajs/react';
 import { Download, FileSpreadsheet, FileText, ImageOff, ImagePlay, ImagePlus } from 'lucide-react';
 import { useState } from 'react';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+
 
 interface AreaProps {
     program: PerProgram;
@@ -18,7 +19,7 @@ interface AreaProps {
 }
 
 export default function AreaPage({ program, area, categories }: AreaProps) {
-    // Get search keyword from query string
+    usePoll(2000);
     const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
     const searchKeyword = searchParams?.get('search') || '';
 
