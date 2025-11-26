@@ -38,10 +38,10 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
     const { vmgo_page, vmgo_data } = props;
     const { data, setData, post, errors, processing } = useForm<VmgoForm>({
         page: {
-            content_page_id: vmgo_page.content_page_id,
-            page: vmgo_page.page || 'Vision, Mission & Goals',
-            title: vmgo_page.title || '',
-            description: vmgo_page.description || '',
+            content_page_id: vmgo_page?.content_page_id || 0,
+            page: vmgo_page?.page || 'Vision, Mission & Goals',
+            title: vmgo_page?.title || '',
+            description: vmgo_page?.description || '',
         },
         campus_goals: vmgo_data.campus_goals || [],
         pillars: vmgo_data.pillars || [],

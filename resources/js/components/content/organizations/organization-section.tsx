@@ -53,7 +53,7 @@ const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
                 updatedTypes = prevTypes.map((type) => (type.type_id === selectedOrgTypeId ? { ...type, ...orgType } : type));
             } else {
                 const newType: OrganizationTypes = {
-                    type_id: orgType.type_id ?? Date.now(),
+                    type_id: orgType.type_id || Date.now(),
                     type_name: orgType.type_name,
                     organizations: [],
                 };

@@ -48,10 +48,10 @@ const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) 
     const { ltf_page, local_task_force } = props;
     const { data, setData, post, errors, processing } = useForm<LocalTaskForceForm>({
         page: {
-            content_page_id: ltf_page.content_page_id,
-            page: ltf_page.page || 'Local Task Force',
-            title: ltf_page.title || '',
-            description: ltf_page.description || '',
+            content_page_id: ltf_page?.content_page_id,
+            page: ltf_page?.page || 'Local Task Force',
+            title: ltf_page?.title || '',
+            description: ltf_page?.description || '',
         },
         chairmen: local_task_force.map((ltf) => ({
             local_task_force_id: ltf.local_task_force_id,

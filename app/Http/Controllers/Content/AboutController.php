@@ -16,7 +16,7 @@ class AboutController extends Controller
         $validated = $request->validate([
             'page' => ['nullable', 'array'],
             'org_types' => ['nullable', 'array'],
-            'page.content_page_id' => ['required', 'integer'],
+            'page.content_page_id' => ['nullable', 'integer'],
             'page.title' => ['required', 'string'],
             'page.subtitle' => ['required', 'string'],
             'page.page' => ['required', 'string'],

@@ -88,12 +88,12 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
 
     const { data, setData, post, processing, errors, reset } = useForm<FacultyForm>({
         page: {
-            content_page_id: faculty_page.content_page_id,
+            content_page_id: faculty_page?.content_page_id,
             page: faculty_page?.page || 'Faculty & Staff',
-            title: faculty_page.title || '',
-            subtitle: faculty_page.subtitle || '',
-            author: faculty_page.author || '',
-            quote: faculty_page.quote || '',
+            title: faculty_page?.title || '',
+            subtitle: faculty_page?.subtitle || '',
+            author: faculty_page?.author || '',
+            quote: faculty_page?.quote || '',
         },
         faculties: faculties || [],
     });
