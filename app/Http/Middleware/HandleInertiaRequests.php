@@ -63,8 +63,18 @@ class HandleInertiaRequests extends Middleware
             ])
             ->get();
 
-        $outlines = $outlines->map(function ($outline) {
+        /* $outlines = $outlines->map(function ($outline) {
             $outline->AreaParameter->Areas->Levels->Programs = $this->formatPrograms($outline->AreaParameter->Areas->Levels->Programs);
+            return $outline;
+        }); */
+
+        $outlines = $outlines->map(function ($outline) {
+            $levels = optional(optional(optional($outline->AreaParameter)->Areas)->Levels);
+
+            if ($levels->Programs) {
+                $levels->Programs = $this->formatPrograms($levels->Programs);
+            }
+
             return $outline;
         });
 

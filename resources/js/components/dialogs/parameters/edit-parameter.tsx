@@ -55,6 +55,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
             parameter_id: parameter.area_parameter_id,
         }), {
             onSuccess: () => {
+                onClose();
                 reset('parameter_name', 'parameter_description', 'area_parameter_id');
             },
         });
