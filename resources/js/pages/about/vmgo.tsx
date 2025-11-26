@@ -2,7 +2,7 @@ import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import { CampusGoals, ContentPages, Pillars, Vmgo } from '@/types/content';
 import { Head, Link, usePoll } from '@inertiajs/react';
-import { AlertCircle, Construction } from 'lucide-react';
+import { AlertCircle, Construction, Play } from 'lucide-react';
 
 interface VMGOProps {
     page: ContentPages;
@@ -31,11 +31,33 @@ const DataAlert = ({ message }: { message: string }) => (
     </div>
 );
 
+// Helper function to extract YouTube video ID from various URL formats
+const extractYouTubeID = (url: string): string | null => {
+    if (!url) return null;
+
+    // Match youtube.com/watch?v=VIDEO_ID
+    const watchMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+    if (watchMatch) return watchMatch[1];
+
+    // Match youtube.com/embed/VIDEO_ID
+    const embedMatch = url.match(/youtube\.com\/embed\/([^?&\s]+)/);
+    if (embedMatch) return embedMatch[1];
+
+    // If it's already just the ID
+    if (url.length === 11 && !url.includes('/')) return url;
+
+    return null;
+};
+
 export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
     // Add usePoll to auto-refresh data every 2 seconds
-    usePoll(2000, {}, {
-        keepAlive: true,
-    });
+    usePoll(
+        2000,
+        {},
+        {
+            keepAlive: true,
+        },
+    );
 
     const quickLinks = [
         { label: 'Vision, Mission & Goals', href: '/about/vision-mission-goals', active: true },
@@ -57,6 +79,11 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
     const hasPillars = pillars && pillars.length > 0;
     const hasCampusGoals = campus_goals && campus_goals.length > 0;
     const hasAvpData = vmgo && vmgo.avp_link && vmgo.avp_description;
+
+    // Extract YouTube video ID
+    const videoId = hasAvpData ? extractYouTubeID(vmgo.avp_link) : null;
+    const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=0` : null;
+    const watchUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}` : vmgo?.avp_link;
 
     return (
         <>
@@ -154,36 +181,39 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                     </div>
                                 )}
 
-                                {/* Video Section */}
-                                {hasAvpData ? (
-                                    <div className="rounded-xl border border-gray-200 bg-white p-10">
-                                        <div className="grid gap-15 lg:grid-cols-5 lg:items-center">
+                                {/* Video Section with YouTube Embed */}
+                                {hasAvpData && embedUrl ? (
+                                    <div className="rounded-xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:border-[#7f1414] hover:shadow-lg">
+                                        <div className="grid gap-8 lg:grid-cols-5 lg:items-center">
+                                            {/* YouTube Video Embed */}
                                             <div className="lg:col-span-3">
-                                                <div className="aspect-video overflow-hidden rounded-xl">
+                                                <div className="group relative aspect-video overflow-hidden rounded-xl shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
                                                     <iframe
                                                         className="h-full w-full"
-                                                        src={`${vmgo?.avp_link}?rel=0&showinfo=0&modestbranding=1`}
-                                                        title="University Development Plan"
-                                                        frameBorder="0"
+                                                        src={embedUrl}
+                                                        title={vmgo?.avp_title || 'University Development Plan'}
                                                         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                                         allowFullScreen
+                                                        loading="lazy"
                                                     ></iframe>
                                                 </div>
                                             </div>
+
+                                            {/* Content */}
                                             <div className="lg:col-span-2">
-                                                <h3 className="mb-4 text-xl font-semibold text-gray-900">
+                                                <h3 className="mb-4 text-2xl font-bold text-[#7f1414]">
                                                     {vmgo?.avp_title || 'University Development Plan'}
                                                 </h3>
-                                                <p className="mb-4 text-gray-700">{vmgo?.avp_description}</p>
+                                                <p className="mb-6 leading-relaxed text-gray-700">{vmgo?.avp_description}</p>
+
+                                                {/* Watch on YouTube Button */}
                                                 <a
-                                                    href={vmgo?.avp_link}
+                                                    href={watchUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="inline-flex items-center rounded-lg bg-[#7f1414] px-6 py-3 font-medium text-white transition-colors duration-200 hover:bg-[#a01818]"
+                                                    className="group inline-flex items-center gap-2 rounded-lg bg-[#7f1414] px-6 py-3 font-semibold text-white transition-all duration-200 hover:bg-[#a01818] hover:shadow-lg"
                                                 >
-                                                    <svg className="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M8 5v14l11-7z" />
-                                                    </svg>
+                                                    <Play className="h-5 w-5 transition-transform group-hover:scale-110" />
                                                     Watch on YouTube
                                                 </a>
                                             </div>
@@ -274,7 +304,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                                                 View in Filipino
                                                             </summary>
                                                             <div className="mt-3 rounded-lg bg-gray-50 p-4">
-                                                                <p className="text-sm italic text-gray-600">{goal.goal_desc_fil}</p>
+                                                                <p className="text-sm text-gray-600 italic">{goal.goal_desc_fil}</p>
                                                             </div>
                                                         </details>
                                                     </div>
