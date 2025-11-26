@@ -109,7 +109,7 @@ class DashboardController extends Controller
             ->leftJoin('exhibit_files AS ef', 'eo.exhibit_outline_id', '=', 'ef.exhibit_outline_id')
             ->selectRaw("
                 'exhibit_files' AS document_type,
-                GREATEST(COUNT(*) FILTER (WHERE eo.container = 'false') - COUNT(ef.exhibit_file_id),0) AS outlines,
+                COUNT(*) FILTER (WHERE ef.exhibit_file_id IS NULL) AS outlines_without_files,
                 COUNT(ef.exhibit_file_id) AS documents
             ");
         $overall_uploads = $area_files

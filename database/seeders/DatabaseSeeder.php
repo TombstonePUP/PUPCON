@@ -181,7 +181,7 @@ class DatabaseSeeder extends Seeder
                 // 'accreditation_level_id' => 2,
                 'program_id' => $program1->program_id,
                 'level' => 3,
-                'remarks' => 'Passed',
+                'remarks' => 'Ongoing Survey',
                 'is_active' => true,
                 'survey_date' => '2024-03-20',
             ],
