@@ -10,6 +10,7 @@ use App\Models\UserAreaRoles;
 use App\Models\Roles;
 use App\Models\ParameterOutlineCategory;
 use App\Models\User;
+use App\Models\FileStatus;
 
 class UserSeeder extends Seeder
 {
@@ -96,6 +97,15 @@ class UserSeeder extends Seeder
         ];
         foreach ($parameterCategory as $attributes) {
             ParameterOutlineCategory::factory()->create($attributes);
+        }
+
+        $file_status = [
+            ['status_name' => 'Approved'],
+            ['status_name' => 'Pending'],
+            ['status_name' => 'Rejected'],
+        ];
+        foreach ($file_status as $attributes) {
+            FileStatus::factory()->create($attributes);
         }
 
 
