@@ -6,7 +6,20 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import Layout from '@/layouts/landing-layout';
 import { PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, usePoll, useRemember } from '@inertiajs/react';
-import { ChevronRight, Download, FileSpreadsheet, FileText, GraduationCap, School, Users } from 'lucide-react';
+import {
+    AlertCircle,
+    BookOpen,
+    ChevronRight,
+    Construction,
+    Download,
+    FileSpreadsheet,
+    FileText,
+    GraduationCap,
+    Image as ImageIcon,
+    School,
+    Target,
+    Users,
+} from 'lucide-react';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 
 interface PerProgramProps {
@@ -35,6 +48,26 @@ const useInView = (threshold = 0.1) => {
 
     return [ref, inView] as const;
 };
+
+// Fallback Empty State Component
+const EmptyState = ({ title, description, icon: Icon = Construction }: { title: string; description: string; icon?: any }) => (
+    <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
+        <Icon className="mb-4 h-16 w-16 text-gray-400" />
+        <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
+        <p className="text-sm text-gray-500">{description}</p>
+    </div>
+);
+
+// Alert Component for missing critical data
+const DataAlert = ({ message }: { message: string }) => (
+    <div className="mb-6 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4">
+        <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600" />
+        <div>
+            <p className="text-sm font-medium text-amber-900">Content Unavailable</p>
+            <p className="mt-1 text-sm text-amber-700">{message}</p>
+        </div>
+    </div>
+);
 
 interface FacultyCardProps {
     faculty: { name: string; photo: string; position: string };
@@ -139,6 +172,13 @@ export default function Programs({ program }: PerProgramProps) {
     const [objectivesRef, objectivesInView] = useInView(0.1);
     const [galleryRef, galleryInView] = useInView(0.1);
     const [areasRef, areasInView] = useInView(0.1);
+
+    // Check if data exists
+    const hasDescription = program?.program_description;
+    const hasObjectives = program?.objectives && program.objectives.length > 0;
+    const hasFaculty = program?.faculty_staff && program.faculty_staff.length > 0;
+    const hasGallery = program?.gallery && program.gallery.length > 0;
+    const hasAreas = program?.levels?.[0]?.areas && program.levels[0].areas.length > 0;
 
     // Simulate faculty loading
     useEffect(() => {
@@ -318,37 +358,45 @@ export default function Programs({ program }: PerProgramProps) {
                             overviewInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
                         }`}
                     >
-                        <div className="relative overflow-hidden rounded-xl">
-                            <div className="border-black-90 grid grid-cols-1 rounded-xl border-1 transition-all duration-300 hover:border-[#7f1414] lg:grid-cols-5">
-                                {/* Text Content */}
-                                <div className="col-span-3 flex flex-col justify-center rounded-l-xl p-12 lg:p-20">
-                                    <div className="mb-3 inline-block w-fit rounded-full bg-[#7f1414] px-4 py-1.5 text-xs font-semibold tracking-wider text-white uppercase">
-                                        About the Program
-                                    </div>
-                                    <h2 className="mb-6 text-lg font-bold text-gray-900 lg:text-4xl">Program Overview</h2>
-                                    <p className="text-md leading-relaxed text-gray-700">
-                                        {program.program_description || 'No program overview available.'}
-                                    </p>
-                                </div>
-
-                                {/* Image */}
-                                <div className="relative col-span-2 h-[300px] lg:h-auto">
-                                    {overviewImageLoading && (
-                                        <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                                            <div className="h-12 w-12 animate-spin rounded-full" />
+                        {!hasDescription ? (
+                            <DataAlert message="Program overview is currently being updated. Please check back later." />
+                        ) : (
+                            <div className="relative overflow-hidden rounded-xl">
+                                <div className="border-black-90 grid grid-cols-1 rounded-xl border-1 transition-all duration-300 hover:border-[#7f1414] lg:grid-cols-5">
+                                    {/* Text Content */}
+                                    <div className="col-span-3 flex flex-col justify-center rounded-l-xl p-12 lg:p-20">
+                                        <div className="mb-3 inline-block w-fit rounded-full bg-[#7f1414] px-4 py-1.5 text-xs font-semibold tracking-wider text-white uppercase">
+                                            About the Program
                                         </div>
-                                    )}
-                                    <img
-                                        src={program.program_image_path || '/images/placeholder.png'}
-                                        alt={program.program_image_name || 'Program Overview Image'}
-                                        className={`h-full w-full object-cover transition-all duration-700 ${
-                                            !overviewImageLoading ? 'opacity-100' : 'opacity-0'
-                                        }`}
-                                        onLoad={() => setOverviewImageLoading(false)}
-                                    />
+                                        <h2 className="mb-6 text-lg font-bold text-gray-900 lg:text-4xl">Program Overview</h2>
+                                        <p className="text-md leading-relaxed text-gray-700">{program.program_description}</p>
+                                    </div>
+
+                                    {/* Image */}
+                                    <div className="relative col-span-2 h-[300px] lg:h-auto">
+                                        {overviewImageLoading && (
+                                            <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                                                <div className="h-12 w-12 animate-spin rounded-full" />
+                                            </div>
+                                        )}
+                                        {program.program_image_path ? (
+                                            <img
+                                                src={program.program_image_path}
+                                                alt={program.program_image_name || 'Program Overview Image'}
+                                                className={`h-full w-full object-cover transition-all duration-700 ${
+                                                    !overviewImageLoading ? 'opacity-100' : 'opacity-0'
+                                                }`}
+                                                onLoad={() => setOverviewImageLoading(false)}
+                                            />
+                                        ) : (
+                                            <div className="flex h-full w-full items-center justify-center bg-gray-100">
+                                                <ImageIcon className="h-16 w-16 text-gray-300" />
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     {/* Objectives Section */}
@@ -357,56 +405,72 @@ export default function Programs({ program }: PerProgramProps) {
                             <SectionHeader title="Program Objectives" subtitle="Our commitment to excellence through strategic goals and outcomes" />
                         </div>
 
-                        <div className="flex flex-wrap justify-center gap-8">
-                            {program.objectives?.map((objective, index) => (
-                                <div
-                                    key={objective.program_objective_id}
-                                    className={`border-black-90 group relative flex w-full max-w-2xs flex-col justify-start gap-4 overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] ${
-                                        objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-                                    }`}
-                                >
-                                    {/* Objective Header */}
-                                    <div className="relative">
-                                        <div className="mb-2 inline-block rounded-full bg-gradient-to-r from-[#7f1414] to-[#a11d1d] px-6 py-2 transition-all duration-300">
-                                            <h3 className="text-sm font-bold tracking-wider text-white uppercase">Objective {index + 1}</h3>
+                        {!hasObjectives ? (
+                            <EmptyState
+                                title="Program Objectives Coming Soon"
+                                description="The program objectives are being finalized and will be available here shortly."
+                                icon={Target}
+                            />
+                        ) : (
+                            <div className="flex flex-wrap justify-center gap-8">
+                                {program.objectives.map((objective, index) => (
+                                    <div
+                                        key={objective.program_objective_id}
+                                        className={`border-black-90 group relative flex w-full max-w-2xs flex-col justify-start gap-4 overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] ${
+                                            objectivesInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                                        }`}
+                                    >
+                                        {/* Objective Header */}
+                                        <div className="relative">
+                                            <div className="mb-2 inline-block rounded-full bg-gradient-to-r from-[#7f1414] to-[#a11d1d] px-6 py-2 transition-all duration-300">
+                                                <h3 className="text-sm font-bold tracking-wider text-white uppercase">Objective {index + 1}</h3>
+                                            </div>
                                         </div>
+
+                                        {/* Objective Content */}
+                                        <p className="relative grid place-items-center leading-relaxed text-gray-700 transition-all duration-300 group-hover:text-gray-900">
+                                            {objective.objective_description}
+                                        </p>
+
+                                        <div className="absolute bottom-0 left-0 h-1.5 w-full bg-gradient-to-r from-[#7f1414] via-[#a11d1d] to-[#7f1414] transition-all duration-300 group-hover:h-2"></div>
                                     </div>
-
-                                    {/* Objective Content */}
-                                    <p className="relative grid place-items-center leading-relaxed text-gray-700 transition-all duration-300 group-hover:text-gray-900">
-                                        {objective.objective_description}
-                                    </p>
-
-                                    <div className="absolute bottom-0 left-0 h-1.5 w-full bg-gradient-to-r from-[#7f1414] via-[#a11d1d] to-[#7f1414] transition-all duration-300 group-hover:h-2"></div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* --- Faculty Section --- */}
                     <div className="mx-auto w-[85%] max-w-7xl" id="faculty">
                         <SectionHeader title="Our Faculty" subtitle="Meet our dedicated educators who shape the future of technology" />
-                        <div className="flex flex-wrap justify-center gap-6">
-                            {program.faculty_staff?.map((f, i) => {
-                                const [cardRef, cardInView] = useInView(0.2);
-                                return (
-                                    <FacultyCard
-                                        key={f.faculty_staff_id}
-                                        ref={cardRef}
-                                        faculty={{
-                                            name: [f.first_name, f.middle_name, f.last_name].filter(Boolean).join(' '),
-                                            photo:
-                                                f.image_path ||
-                                                `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
-                                            position: f.program_coordinator ? 'Program Head' : `${f.status} Faculty`,
-                                        }}
-                                        isLoading={facultyLoading}
-                                        inView={cardInView}
-                                        index={i}
-                                    />
-                                );
-                            })}
-                        </div>
+                        {!hasFaculty && !facultyLoading ? (
+                            <EmptyState
+                                title="Faculty Information Coming Soon"
+                                description="Faculty profiles are being compiled and will be displayed here shortly."
+                                icon={Users}
+                            />
+                        ) : (
+                            <div className="flex flex-wrap justify-center gap-6">
+                                {program.faculty_staff?.map((f, i) => {
+                                    const [cardRef, cardInView] = useInView(0.2);
+                                    return (
+                                        <FacultyCard
+                                            key={f.faculty_staff_id}
+                                            ref={cardRef}
+                                            faculty={{
+                                                name: [f.first_name, f.middle_name, f.last_name].filter(Boolean).join(' '),
+                                                photo:
+                                                    f.image_path ||
+                                                    `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
+                                                position: f.program_coordinator ? 'Program Head' : `${f.status} Faculty`,
+                                            }}
+                                            isLoading={facultyLoading}
+                                            inView={cardInView}
+                                            index={i}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
 
                     {/* --- Gallery --- */}
@@ -414,16 +478,22 @@ export default function Programs({ program }: PerProgramProps) {
                         <div className={`transition-all duration-700 ${galleryInView ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                             <SectionHeader title="Gallery of Excellence" subtitle="Showcasing the moments that define our passion and commitment" />
 
-                            <ImageRow
-                                height="h-96"
-                                images={
-                                    program.gallery?.map((item) => ({
+                            {!hasGallery ? (
+                                <EmptyState
+                                    title="Gallery Coming Soon"
+                                    description="Program gallery images are being curated and will be available here shortly."
+                                    icon={ImageIcon}
+                                />
+                            ) : (
+                                <ImageRow
+                                    height="h-96"
+                                    images={program.gallery.map((item) => ({
                                         id: item.program_gallery_id,
                                         src: item.image_path,
                                         alt: item.image_name,
-                                    })) ?? []
-                                }
-                            />
+                                    }))}
+                                />
+                            )}
                         </div>
                     </div>
 
@@ -436,7 +506,7 @@ export default function Programs({ program }: PerProgramProps) {
                                 title="Areas Under Survey"
                                 subtitle="ACCREDITING AGENCY OF CHARTERED COLLEGES AND UNIVERSITIES IN THE PHILIPPINES"
                             />
-                            {user?.roles?.role_name === 'Accreditor' && (
+                            {user?.roles?.role_name === 'Accreditor' && hasAreas && (
                                 <div className="w-full text-end">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
@@ -460,8 +530,14 @@ export default function Programs({ program }: PerProgramProps) {
                                 </div>
                             )}
                             <div className="flex flex-wrap justify-center gap-8 py-6">
-                                {program?.levels[0]?.areas?.length ? (
-                                    program?.levels[0]?.areas
+                                {!hasAreas ? (
+                                    <EmptyState
+                                        title="No Areas Under Survey"
+                                        description="Survey areas for this program will be added once the accreditation process begins."
+                                        icon={BookOpen}
+                                    />
+                                ) : (
+                                    program.levels[0].areas
                                         .slice()
                                         .sort((a, b) => (Number(a.area_number) || 0) - (Number(b.area_number) || 0))
                                         .map((area, index) => (
@@ -479,8 +555,6 @@ export default function Programs({ program }: PerProgramProps) {
                                                 />
                                             </div>
                                         ))
-                                ) : (
-                                    <p className="text-center text-lg text-gray-500">No areas under survey.</p>
                                 )}
                             </div>
                         </div>
