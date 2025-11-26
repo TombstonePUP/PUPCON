@@ -41,31 +41,31 @@ class ContentController extends Controller
 
         $officials = UniversityAdministration::all();
         $officials = $officials->map(function ($official) {
-            $official->profile_picture_path = Storage::url($official->profile_picture_path);
+            $official->profile_picture_path = $official->profile_picture_path ? Storage::url($official->profile_picture_path) : null;
             return $official;
         });
 
         $faculties = FacultyStaff::all();
         $faculties = $faculties->map(function ($faculty) {
-            $faculty->image_path = Storage::url($faculty->image_path);
+            $faculty->image_path = $faculty->image_path ? Storage::url($faculty->image_path) : null;
             return $faculty;
         });
 
         $facilities = Facilities::all();
         $facilities = $facilities->map(function ($facility) {
-            $facility->image_path = Storage::url($facility->image_path);
+            $facility->image_path = $facility->image_path ? Storage::url($facility->image_path) : null;
             return $facility;
         });
 
         $directors = CampusDirectors::all();
         $directors = $directors->map(function ($director) {
-            $director->profile_image_path = Storage::url($director->profile_image_path);
+            $director->profile_image_path = $director->profile_image_path ? Storage::url($director->profile_image_path) : null;
             return $director;
         });
 
         $gallery = CampusGallery::all();
         $gallery = $gallery->map(function ($image) {
-            $image->image_path = Storage::url($image->image_path);
+            $image->image_path = $image->image_path ? Storage::url($image->image_path) : null;
             return $image;
         });
 

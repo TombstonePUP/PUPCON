@@ -19,7 +19,7 @@ class AboutViewController extends Controller
     {
 
         $page = ContentPages::where('page', 'About')->first();
-        $page->image_path = Storage::url( $page->image_path);
+        $page->image_path = $page->image_path ? Storage::url($page->image_path) : null;
         $programs = Programs::count();
         $facilities = Facilities::count();
 

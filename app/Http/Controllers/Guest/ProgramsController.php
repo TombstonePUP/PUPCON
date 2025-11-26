@@ -27,7 +27,7 @@ class ProgramsController extends Controller
 
         $programs = $programs->map(function ($program) {
             $this->formatPrograms($program);
-            $program->program_image_path = Storage::url($program->program_image_path);
+            $program->program_image_path = $program->program_image_path ? Storage::url($program->program_image_path) : null;
             return $program;
         });
 

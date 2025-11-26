@@ -21,13 +21,13 @@ class HistoryViewController extends Controller
 
         $directors = CampusDirectors::all();
         $directors = $directors->map(function ($director) {
-            $director->progile_image_path = Storage::url($director->profile_image_path);
+            $director->progile_image_path = $director->progile_image_path ? Storage::url($director->progile_image_path) : null;
             return $director;
         });
 
         $gallery = CampusGallery::all();
         $gallery = $gallery->map(function ($item) {
-            $item->image_path = Storage::url($item->image_path);
+            $item->image_path = $item->image_path ? Storage::url($item->image_path) : null;
             return $item;
         });
 
