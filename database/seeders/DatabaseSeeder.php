@@ -394,7 +394,7 @@ class DatabaseSeeder extends Seeder
         foreach ($userAreaRoles as $attributes) {
             UserAreaRoles::factory()->create($attributes);
         }
-        Facilities::factory(10)->create();
+        // Facilities::factory(10)->create(); // TODO: Remove fake data
 
         $objectives = [
             [

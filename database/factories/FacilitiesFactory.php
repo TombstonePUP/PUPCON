@@ -16,12 +16,12 @@ class FacilitiesFactory extends Factory
      */
     public function definition(): array
     {
+        // Return empty data - will be populated through content management
         return [
-            'facility_id' => fake()->unique()->randomNumber(),
-            'facility_name' => fake()->word(),
-            'description' => fake()->sentence(),
-            'image_name' => fake()->word(),
-            'image_path' => fake()->imageUrl(),
+            'facility_name' => '',
+            'description' => null,
+            'image_name' => null,
+            'image_path' => null,
         ];
     }
 }
