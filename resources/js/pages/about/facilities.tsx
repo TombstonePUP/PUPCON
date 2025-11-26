@@ -153,7 +153,7 @@ export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps
                                             </div>
 
                                             {/* Hover Indicator */}
-                                            <div className="absolute bottom-4 right-4 rounded-full bg-white/20 p-2 opacity-0 transition-opacity group-hover:opacity-100">
+                                            <div className="absolute right-4 bottom-4 rounded-full bg-white/20 p-2 opacity-0 transition-opacity group-hover:opacity-100">
                                                 <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                                 </svg>
