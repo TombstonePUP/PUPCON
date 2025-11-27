@@ -6,6 +6,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Progress } from '@/components/ui/progress';
 import { ParameterOutlines, Program } from '@/types';
 import { useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import React from 'react';
 import { toast } from 'sonner';
 
@@ -27,7 +28,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
         document: null,
     });
 
-    const [isUploading, setIsUploading] = React.useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
     const uploadDocument = async (e: React.FormEvent) => {
         e.preventDefault();

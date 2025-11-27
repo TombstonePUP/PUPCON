@@ -105,8 +105,8 @@ return new class extends Migration
             $table->id(column: 'exhibit_outline_id')->autoIncrement()->primary();
             $table->foreignId('exhibit_id')->references('exhibit_id')->on('exhibits')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->string('outline_description')->nullable();
-            $table->string('category')->nullable();
+            $table->text('outline_description')->nullable();
+            $table->text('category')->nullable();
         });
 
         Schema::create('exhibit_files', function (Blueprint $table) {

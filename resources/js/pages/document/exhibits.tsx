@@ -1,13 +1,17 @@
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
-import type React from 'react';
+import { router, usePoll } from '@inertiajs/react';
 // import type { BreadcrumbItem } from '@/types';
+import ExhibitContainerDialog from '@/components/dialogs/exhibits/exhibit-container-dialog';
 import { RenderExhibitDialog } from '@/components/dialogs/exhibits/exihibt-dialog-renderer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ExhibitOutlines, Exhibits } from '@/types/exhibits';
 import { Head } from '@inertiajs/react';
 import { Folder, GalleryHorizontalEnd, MoreVertical, Plus } from 'lucide-react';
 import { useState } from 'react';
+import DocumentExhibitDialog from '@/components/dialogs/exhibits/document/document-exhibit-dialog';
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
+import ExhibitOutlineDialogRenderer from '@/components/dialogs/exhibits/outline/exhibit-outline-dialog-renderer';
 
 interface ExhibitAdminProps {
     exhibits: Exhibits[];
@@ -20,23 +24,21 @@ const staticBreadcrumbs = [
     },
 ];
 
-const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
-    <button className={`p-1 text-gray-400 transition-colors hover:text-red-600 ${className}`} type="button" {...props}>
-        {children}
-    </button>
-);
-
 export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
+    /* usePoll(
+        2000,
+        {only: ['exhibits']},
+    ); */
     const [dialog, setDialog] = useState<{
         type: 'exhibit' | 'outline' | 'document' | null;
-        action: 'add' | 'edit' | 'delete' | null;
+        action: 'add' | 'edit' | 'delete' | 'view' | null;
         exhibit?: Exhibits | null;
         outline?: ExhibitOutlines | null;
     }>({ type: null, action: null });
 
     const openDialog = (
         type: 'exhibit' | 'outline' | 'document',
-        action: 'add' | 'edit' | 'delete',
+        action: 'add' | 'edit' | 'delete' | 'view',
         exhibit?: Exhibits | null,
         outline?: ExhibitOutlines | null,
     ) => {
@@ -81,7 +83,7 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                                                 <h3 className="truncate text-base font-semibold text-gray-900">{exhibit.exhibit_name}</h3>
                                                 <div className="flex items-center text-sm text-gray-500">
                                                     <Folder className="h-4 w-4" />
-                                                    <span className="ml-2 text-xs text-gray-400">{exhibit.outlines?.length || 0} Outlines</span>
+                                                    <span className="ml-2 text-xs text-gray-400">{exhibit.exhibit_outlines?.length || 0} Outlines</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -99,42 +101,60 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                                                             Edit Exhibit
                                                         </DropdownMenuItem>
                                                         {!exhibit.container && (
-                                                            <DropdownMenuItem
-                                                                onClick={() =>
-                                                                    openDialog(
-                                                                        'document',
-                                                                        'add',
-                                                                        null,
-                                                                        exhibit.outlines ? exhibit.outlines[0] : undefined,
-                                                                    )
-                                                                }
-                                                            >
-                                                                Upload Document
-                                                            </DropdownMenuItem>
+                                                            <>
+                                                                <DropdownMenuItem
+                                                                    onClick={() =>
+                                                                        openDialog(
+                                                                            'document',
+                                                                            'add',
+                                                                            exhibit,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    {exhibit.exhibit_outlines && exhibit.exhibit_outlines.length === 0
+                                                                        ? 'Upload Document'
+                                                                        : 'Update Document'}
+                                                                </DropdownMenuItem>
+                                                                {exhibit.exhibit_outlines && exhibit.exhibit_outlines.length > 0 && (
+                                                                    <>
+                                                                        <DropdownMenuItem
+                                                                            onClick={() =>
+                                                                                openDialog(
+                                                                                    'document',
+                                                                                    'view',
+                                                                                    null,
+                                                                                    exhibit.exhibit_outlines[0],
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            View Document
+                                                                        </DropdownMenuItem>
+                                                                        <DropdownMenuItem
+                                                                            onClick={() =>
+                                                                                openDialog(
+                                                                                    'document',
+                                                                                    'delete',
+                                                                                    exhibit,
+                                                                                    exhibit.exhibit_outlines[0],
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            Delete Document
+                                                                        </DropdownMenuItem>
+                                                                    </>
+                                                                )}
+                                                            </>
                                                         )}
                                                         {exhibit.container && (
                                                             <DropdownMenuItem onClick={() => openDialog('outline', 'edit', exhibit)}>
                                                                 Manage Outlines
                                                             </DropdownMenuItem>
                                                         )}
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog('exhibit', 'delete', exhibit)}
-                                                        >
-                                                        Delete Exhibit
+                                                        <DropdownMenuItem onClick={() => openDialog('exhibit', 'delete', exhibit)}>
+                                                            Delete Exhibit
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
-                                                {/* <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    className="w-full"
-                                                    onClick={() => {
-                                                        exhibit.container ? openDialog('exhibit', 'edit') : openDialog('outline', 'edit');
-                                                    }}
-                                                >
-                                                    <Edit className="mr-2 h-4 w-4" />
-                                                    Manage Exhibit
-                                                </Button> */}
                                             </div>
                                         </div>
                                     </div>
@@ -162,6 +182,26 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
             {dialog.type === 'exhibit' && dialog.action && (
                 <RenderExhibitDialog type={dialog.action} exhibit={dialog.exhibit} onClose={closeDialog} />
             )}
+            {dialog.type === 'outline' && dialog.action === 'edit' && (
+                <ExhibitContainerDialog
+                    exhibit={dialog.exhibit}
+                    onClose={closeDialog}
+            />)}
+            {dialog.type === 'document' && (dialog.action !== 'view' && dialog.action !== 'delete')&& (
+                <DocumentExhibitDialog
+                    type={dialog.action}
+                    exhibit={dialog.exhibit}
+                    onClose={closeDialog}
+                />
+            )}
+            {dialog.type === 'document' && (dialog.action === 'view' || dialog.action === 'delete')  && (
+                <ExhibitOutlineDialogRenderer
+                    type={dialog.action}
+                    outline={dialog.outline}
+                    onClose={closeDialog}
+                />
+            )}
+
         </AppLayout>
     );
 }

@@ -80,20 +80,15 @@ class AreaFormsController extends Controller
             $activityLog->save();
         }
 
-        /* if ($request->hasFile('form_image')) {
-            $formImageName = "{$area->area_name}-{$category}-form-image.{$validated->file('form_image')->getClientOriginalExtension()}";
-            $formImagePath = "{$program}/{$area->area_name}/area-forms/images";
-            $validated->file('form_image')->storeAs($formImagePath, $formImageName, 'public');
-            $formImagePath = "{$program}/{$area->area_name}/area-forms/images/{$formImageName}";
-        } */
-
         $areaForm->area_id = $area->area_id;
         $areaForm->area_form_category_id = $validated['area_form_category_id'];
 
         $areaForm->save();
 
         return redirect()->back()
-            ->with('success', 'Area form created successfully.');
+            ->with('type', 'success')
+            ->with('title', 'Area Form Uploaded')
+            ->with('message', 'The area form has been uploaded successfully.');
     }
 
     /**

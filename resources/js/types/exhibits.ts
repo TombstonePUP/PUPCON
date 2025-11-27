@@ -6,7 +6,7 @@ export interface Exhibits {
     image_name: string;
     image_path: string;
     container: boolean;
-    outlines?: ExhibitOutlines[];
+    exhibit_outlines?: ExhibitOutlines[];
 }
 
 export interface ExhibitOutlines {
@@ -15,7 +15,7 @@ export interface ExhibitOutlines {
     outline_description: string;
     category: string;
     exhibit?: Exhibits;
-    files?: ExhibitFiles[];
+    exhibit_files?: ExhibitFiles;
 }
 
 export interface ExhibitFiles {

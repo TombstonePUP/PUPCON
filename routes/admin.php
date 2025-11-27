@@ -19,6 +19,8 @@ use App\Http\Controllers\Parameters\ImportParametersController;
 use App\Http\Controllers\Programs\LevelsController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use App\Http\Controllers\Users\UserController;
+use App\Http\Controllers\Exhibits\ExhibitFilesController;
+use App\Http\Controllers\Exhibits\ExhibitOulinesFileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -39,10 +41,14 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         Route::delete('exhibits/{exhibit_id}/delete', 'destroy')->name('exhibits.delete');
     });
 
+    Route::controller(ExhibitOulinesFileController::class)->group(function () {
+        Route::post('exhibit-outline/upload', 'upload')->name('exhibit.outline.file.upload');
+        Route::get('exhibit-outline/{exhibit_file_id}/download', 'download')->name('exhibit.outline.file.download');
+        Route::delete('exhibit-outline/{outline_id}/delete', 'destroy')->name('exhibit.outline.file.delete');
+    });
+
     Route::controller(ExhibitFilesController::class)->group(function () {
-        Route::post('exhibit-files/{exhibit_outline_id}/upload', 'upload')->name('exhibit.files.upload');
-        Route::get('exhibit-files/{exhibit_file_id}/download', 'download')->name('exhibit.files.download');
-        Route::delete('exhibit-files/{exhibit_file_id}/delete', 'destroy')->name('exhibit.files.delete');
+        Route::post('exhibit-file/upload', '__invoke')->name('exhibit.file.upload');
     });
 
     Route::get('ratings', function () {

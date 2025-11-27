@@ -1,0 +1,136 @@
+<?php
+
+namespace App\Http\Controllers\Exhibits;
+
+use App\Http\Controllers\Controller;
+use App\Models\ExhibitOutlines;
+use App\Models\ExhibitFiles;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActivityLog;
+use App\Models\FileStatus;
+use App\Models\Exhibits;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+
+class ExhibitOulinesFileController extends Controller
+{
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function upload(Request $request)
+    {
+        $validated = $request->validate([
+            'outline_id' => ['nullable', 'integer'],
+            'exhibit_id' => ['required', 'integer'],
+            'outline_description' => ['required', 'string'],
+            'category' => ['required', 'string'],
+            'file' => ['nullable', 'file', 'mimes:pdf'],
+        ], [
+            'exhibit_id.required' => 'The exhibit ID is required.',
+            'exhibit_id.integer' => 'The exhibit ID must be an integer.',
+            'outline_description.required' => 'The outline description is required.',
+            'outline_description.string' => 'The outline description must be a string.',
+            'category.required' => 'The category is required.',
+            'category.string' => 'The category must be a string.',
+            'category.max' => 'The category may not be greater than 255 characters.',
+            'file.file' => 'The file must be a file.',
+            'file.mimes' => 'The file must be a file of type: pdf.',
+        ]);
+
+        $outline = ExhibitOutlines::find($validated['outline_id'] ?? null);
+        $exhibit = Exhibits::findOrFail($validated['exhibit_id']);
+        $exhibit_name = Str::slug($exhibit->exhibit_name, '_');
+        $user = Auth::user();
+        $file_status = ($user->Roles->role_name === 'Coordinator' || $user->Roles->role_name === 'Admin')
+            ? FileStatus::where('status_name', 'Approved')->first()->file_status_id
+            : FileStatus::where('status_name', 'Pending')->first()->file_status_id;
+
+        $existing_file = $outline->ExhibitFiles ?? null;
+        $old_file_path = $existing_file ? $existing_file->file_path : null;
+
+        $outline_slug = Str::slug($validated['outline_description'], '_');
+        $file_name = $outline_slug . '.pdf';
+        $category_slug = Str::slug($validated['category'], '_');
+        $file_path = 'exhibits/' . $exhibit_name . '/' . $category_slug . '/' . $file_name;
+
+        $new_file_upload = isset($validated['file']);
+        $activityLog = new ActivityLog();
+
+        if (!$outline) {
+            $outline = ExhibitOutlines::create([
+                'exhibit_id' => $exhibit->exhibit_id,
+                'outline_description' => $validated['outline_description'],
+                'category' => $validated['category'],
+            ]);
+        } else {
+            $outline->outline_description = $validated['outline_description'];
+            $outline->category = $validated['category'];
+            $outline->save();
+        }
+
+        if ($new_file_upload) {
+            if ($existing_file && Storage::disk('public')->exists($old_file_path)) {
+                Storage::disk('public')->delete($old_file_path);
+            }
+
+            $validated['file']->storeAs('exhibits/' . $exhibit_name . '/' . $category_slug, $file_name, 'public');
+            $activityLog->activity = $existing_file ? 'Update' : 'Upload';
+        }
+
+        if (!$new_file_upload && $existing_file) {
+            if ($old_file_path !== $file_path) {
+                if (Storage::disk('public')->exists($old_file_path)) {
+                    Storage::disk('public')->move($old_file_path, $file_path);
+                }
+                $activityLog->activity = 'Update';
+            }
+        }
+
+        if ($existing_file) {
+            $exhibit_file = $existing_file;
+        } else {
+            $exhibit_file = new ExhibitFiles();
+            $exhibit_file->exhibit_outline_id = $outline->exhibit_outline_id;
+        }
+
+        $exhibit_file->file_name = $file_name;
+        $exhibit_file->file_path = $file_path;
+        $exhibit_file->uploaded_by = $user->user_id;
+        $exhibit_file->uploaded_at = now();
+        $exhibit_file->file_status_id = $file_status;
+        $exhibit_file->save();
+
+        return redirect()->back()
+            ->with('type', 'success')
+            ->with('title', 'Exhibit Outline')
+            ->with('message', 'The outline has been saved successfully.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request)
+    {
+        $outline = ExhibitOutlines::where('exhibit_outline_id', $request->outline_id)->first();
+
+        if ($outline) {
+            $exhibit_file = $outline->ExhibitFiles;
+            if ($exhibit_file && Storage::disk('public')->exists($exhibit_file->file_path)) {
+                Storage::disk('public')->delete($exhibit_file->file_path);
+                $exhibit_file->delete();
+            }
+            $outline->delete();
+
+            return redirect()->back()
+                ->with('type', 'success')
+                ->with('title', 'Success')
+                ->with('message', 'Exhibit outline successfully deleted.');
+        } else {
+            return redirect()->back()
+                ->with('type', 'error')
+                ->with('title', 'Error')
+                ->with('message', 'Exhibit outline not found.');
+        }
+    }
+}

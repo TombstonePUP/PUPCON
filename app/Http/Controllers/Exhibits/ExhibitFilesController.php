@@ -3,63 +3,75 @@
 namespace App\Http\Controllers\Exhibits;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
+use App\Models\Exhibits;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Models\FileStatus;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ExhibitFilesController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function __invoke(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'exhibit_id' => ['required', 'integer', 'exists:exhibits,exhibit_id'],
+            'file' => ['required', 'file', 'mimes:pdf'],
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $user = Auth::user();
+        $exhibit = Exhibits::with('ExhibitOutlines.ExhibitFiles')->findOrFail($validated['exhibit_id']);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $outline = $exhibit->ExhibitOutlines->first();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        if (!$outline) {
+            // Create the single outline for the exhibit
+            $outline = $exhibit->ExhibitOutlines()->create([
+                'outline_description' => $exhibit->exhibit_name,
+                'category' => null,
+            ]);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $exhibit_name = Str::slug($exhibit->exhibit_name, '_');
+        $file_name = $exhibit_name . '.pdf';
+        $file_path = "exhibits/{$exhibit_name}/{$file_name}";
+
+        $existing_file = $outline->ExhibitFiles()->first();
+
+        $activityLog = new ActivityLog();
+
+        if ($existing_file && Storage::disk('public')->exists($existing_file->file_path)) {
+            Storage::disk('public')->delete($existing_file->file_path);
+            $existing_file->delete();
+            $activityLog->activity = 'Update';
+        } else {
+            $activityLog->activity = 'Upload';
+        }
+
+        $uploadedFile = $validated['file'];
+        Storage::disk('public')->putFileAs("exhibits/{$exhibit_name}", $uploadedFile, $file_name);
+
+        $outline->ExhibitFiles()->create([
+            'file_name' => $file_name,
+            'file_path' => $file_path,
+            'file_status_id' => FileStatus::where('status_name', 'Approved')->first()->file_status_id,
+            'uploaded_by' => $user->user_id,
+            'uploaded_at' => now(),
+        ]);
+
+        $activityLog->user_id = $user->user_id;
+        $activityLog->area = 'Exhibits';
+        $activityLog->file_name = $file_name;
+        $activityLog->activity_date = now();
+        $activityLog->save();
+
+        return redirect()->back()
+            ->with('type', 'success')
+            ->with('title', 'File Uploaded')
+            ->with('message', 'Exhibit file uploaded successfully.');
     }
 }
