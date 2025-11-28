@@ -87,6 +87,17 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
         })),
     });
 
+    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
+        const messages = Object.entries(errors)
+            .filter(([key]) => key.startsWith(parentKey))
+            .map(([, message]) => message);
+
+        // Remove duplicate messages
+        return [...new Set(messages)];
+    };
+
+    const facility_errors = extractGroupedErrors(errors, 'facilities');
+
     const selectedFacility = facilityList.find((f) => f.facility_id === selectedFacilityId) ?? null;
 
     const handlePreview = () => {
@@ -314,6 +325,16 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                         </div>
                     </div>
                 </div>
+                {facility_errors.length > 0 && (
+                    <div className="mb-4 rounded-md bg-red-50 p-4">
+                        <h4 className="mb-2 text-sm font-semibold text-red-800">Please fix the following errors:</h4>
+                        <ul className="list-disc space-y-1 pl-5 text-sm text-red-700">
+                            {facility_errors.map((error, index) => (
+                                <li key={index}>{error}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />

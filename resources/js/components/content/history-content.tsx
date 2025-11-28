@@ -86,6 +86,18 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
             })) || [],
     });
 
+    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
+        const messages = Object.entries(errors)
+            .filter(([key]) => key.startsWith(parentKey))
+            .map(([, message]) => message);
+
+        // Remove duplicate messages
+        return [...new Set(messages)];
+    };
+
+    const director_errors = extractGroupedErrors(errors, 'directors');
+    const gallery_errors = extractGroupedErrors(errors, 'gallery');
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -100,6 +112,8 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
             });
         }
     };
+
+    console.log(errors);
 
     useEffect(() => {
         return () => {
@@ -297,6 +311,16 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
                         onUpdateDirectors={handleUpdateDirectors}
                         onDeleteDirector={handleDeleteDirector}
                     />
+                    {director_errors.length > 0 && (
+                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                            <h4 className="mb-2 font-semibold text-red-700">Directors Section Errors</h4>
+                            <ul className="ml-6 list-disc text-sm text-red-600">
+                                {director_errors.map((error, index) => (
+                                    <li key={index}>{error}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </div>
 
                 <Separator className="my-10 bg-gray-200" />
@@ -308,6 +332,16 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
                         onUpdateGallery={handleUpdateGallery}
                         onDeleteGallery={handleDeleteGallery}
                     />
+                    {gallery_errors.length > 0 && (
+                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                            <h4 className="mb-2 font-semibold text-red-700">Gallery Section Errors</h4>
+                            <ul className="ml-6 list-disc text-sm text-red-600">
+                                {gallery_errors.map((error, index) => (
+                                    <li key={index}>{error}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </div>
             </div>
             <SectionFooter onSave={handleSave} onPreview={handlePreview} />

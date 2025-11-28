@@ -98,7 +98,16 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
         faculties: faculties || [],
     });
 
-    console.log(data);
+    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
+        const messages = Object.entries(errors)
+            .filter(([key]) => key.startsWith(parentKey))
+            .map(([, message]) => message);
+
+        // Remove duplicate messages
+        return [...new Set(messages)];
+    };
+
+    const faculty_errors = extractGroupedErrors(errors, 'faculties');
 
     const handlePreview = () => {
         window.open('/about/faculty-and-staff', '_blank');
@@ -385,6 +394,16 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
                         </div>
                     </div>
                 </div>
+                {faculty_errors.length > 0 && (
+                    <div className="mb-6 rounded-md bg-red-50 p-4">
+                        <h4 className="mb-2 text-sm font-medium text-red-800">Please fix the following errors:</h4>
+                        <ul className="list-disc space-y-1 pl-5 text-sm text-red-700">
+                            {faculty_errors.map((error, index) => (
+                                <li key={index}>{error}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />

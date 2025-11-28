@@ -55,6 +55,18 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
         },
     });
 
+    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
+        const messages = Object.entries(errors)
+            .filter(([key]) => key.startsWith(parentKey))
+            .map(([, message]) => message);
+
+        // Remove duplicate messages
+        return [...new Set(messages)];
+    };
+
+    const pillar_errors = extractGroupedErrors(errors, 'pillars');
+    const campus_goal_errors = extractGroupedErrors(errors, 'campus_goals');
+
     const handleUpdateCampusGoals = (updatedGoals: CampusGoals[]) => {
         setData({
             ...data,
@@ -248,6 +260,17 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     pillars={data.pillars}
                     updatePillars={handleUpdatePillars}
                 />
+                {pillar_errors.length > 0 && (
+                    <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                        <h4 className="mb-2 font-semibold text-red-700">Gallery Section Errors</h4>
+                        <ul className="ml-6 list-disc text-sm text-red-600">
+                            {pillar_errors.map((error, index) => (
+                                <li key={index}>{error}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
 
                 <Separator className="my-10 bg-gray-200" />
                 {/* --- University Campus Goals --- */}
@@ -255,6 +278,17 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     campus_goals={data.campus_goals}
                     updateCampusGoals={handleUpdateCampusGoals}
                 />
+                {campus_goal_errors.length > 0 && (
+                    <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                        <h4 className="mb-2 font-semibold text-red-700">Gallery Section Errors</h4>
+                        <ul className="ml-6 list-disc text-sm text-red-600">
+                            {campus_goal_errors.map((error, index) => (
+                                <li key={index}>{error}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
                 <SectionFooter onSave={handleSave} onPreview={handlePreview} />
             </div>
         </div>

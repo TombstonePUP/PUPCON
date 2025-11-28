@@ -70,6 +70,17 @@ const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) 
         })),
     });
 
+    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
+        const messages = Object.entries(errors)
+            .filter(([key]) => key.startsWith(parentKey))
+            .map(([, message]) => message);
+
+        // Remove duplicate messages
+        return [...new Set(messages)];
+    };
+
+    const chairman_errors = extractGroupedErrors(errors, 'chairmen');
+
     const handleUpdateLocalTaskForce = (chairmanLocal: LocalTaskForce, chairman: LtfChairmanForm) => {
         setData((prevData) => {
             const chairmanForForm: LtfChairmanForm = {
@@ -159,6 +170,16 @@ const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) 
                     />
 
                 </div>
+                {chairman_errors.length > 0 && (
+                    <div className="mb-4 rounded-md bg-red-50 p-4">
+                        <h4 className="mb-2 text-sm font-medium text-red-800">Please fix the following errors:</h4>
+                        <ul className="list-disc space-y-1 pl-5 text-sm text-red-700">
+                            {chairman_errors.map((error, index) => (
+                                <li key={index}>{error}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />
