@@ -86,7 +86,6 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
             onSuccess: () => {
                 reset();
                 onClose();
-                toast.success('User successfully created and temporary password emailed.');
             },
             onError: (err) => {
                 if (err.first_name || err.last_name || err.email) {
