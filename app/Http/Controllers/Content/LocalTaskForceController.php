@@ -6,12 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\ContentPages;
 use App\Models\LocalTaskForce;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class LocalTaskForceController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'page' => ['required', 'array'],
             'chairmen' => ['nullable', 'array'],
             'page.content_page_id' => ['required', 'integer'],
@@ -31,6 +32,16 @@ class LocalTaskForceController extends Controller
             'chairmen.*.members.*.full_name' => ['required', 'string'],
             'chairmen.*.members.*.role' => ['required', 'string'],
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // sends validation errors to Inertia
+                ->with('type', 'error')
+                ->with('title', 'Validation Error')
+                ->with('message', 'Please review all fields and try again.');
+        }
+
+        $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if ($page) {

@@ -17,6 +17,11 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import SectionFooter from '../ui/section-footer';
+import { ContentPages } from '@/types/content';
+
+interface WelcomeContentSectionProps {
+    welcome_page: ContentPages;
+}
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
     <button className={`p-1 text-gray-400 transition-colors hover:text-red-600 ${className}`} type="button" {...props}>

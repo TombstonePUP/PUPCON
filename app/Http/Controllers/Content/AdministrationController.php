@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use App\Models\UniversityAdministration;
-
+use Illuminate\Support\Facades\Validator;
 
 class AdministrationController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'page' => ['nullable', 'array'],
             'officials' => ['nullable', 'array'],
             'page.content_page_id' => ['nullable', 'integer'],
@@ -38,6 +38,16 @@ class AdministrationController extends Controller
             'officials.*.profile.mimes' => 'The profile picture must be a file of type: jpeg, png, jpg.',
             'officials.*.profile.max' => 'The profile picture may not be greater than 5MB.',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // sends validation errors to Inertia
+                ->with('type', 'error')
+                ->with('title', 'Validation Error')
+                ->with('message', 'Please review all fields and try again.');
+        }
+
+        $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if($page) {

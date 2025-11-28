@@ -31,6 +31,8 @@ export default function History({ page, directors, gallery }: HistoryProps) {
         { label: 'PUP Hymn', href: 'hymn' },
     ];
 
+    console.log(gallery);
+
     return (
         <>
             <Head title="History - PUP San Juan" />

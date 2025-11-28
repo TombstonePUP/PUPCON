@@ -101,8 +101,6 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
         }
     };
 
-    console.log(data.page);
-
     useEffect(() => {
         return () => {
             if (data.page?.previewUrl?.startsWith('blob:')) {
@@ -183,6 +181,7 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
     };
 
     const handleSave = () => {
+        console.log(data);
         post(route('content.history.update'), {});
     };
 

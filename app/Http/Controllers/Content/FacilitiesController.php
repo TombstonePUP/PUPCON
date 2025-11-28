@@ -6,12 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\ContentPages;
 use App\Models\Facilities;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FacilitiesController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'page' => ['required', 'array'],
             'facilities' => ['nullable', 'array'],
             'page.page' => ['required', 'string'],
@@ -33,6 +34,16 @@ class FacilitiesController extends Controller
             'facilities.*.facility_image.mimes' => 'The facility image must be a file of type: jpeg, png, jpg.',
             'facilities.*.facility_image.max' => 'The facility image may not be greater than 5MB.',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // sends validation errors to Inertia
+                ->with('type', 'error')
+                ->with('title', 'Validation Error')
+                ->with('message', 'Please review all fields and try again.');
+        }
+
+        $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if($page) {

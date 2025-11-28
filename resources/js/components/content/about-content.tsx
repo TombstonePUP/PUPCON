@@ -1,3 +1,4 @@
+import OrganizationsSection from '@/components/content/organizations/organization-section';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import SectionFooter from '@/components/ui/section-footer';
@@ -5,9 +6,8 @@ import { Separator } from '@/components/ui/separator';
 import { ContentPages, OrganizationTypes } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import { Edit2, Trash2, Upload } from 'lucide-react';
-import InputError from '../input-error';
 import { useEffect } from 'react';
-import OrganizationsSection from '@/components/content/organizations/organization-section';
+import InputError from '../input-error';
 
 interface AboutProps {
     about_page: ContentPages;
@@ -30,7 +30,7 @@ interface AboutForm {
 }
 
 const AboutSection = ({ about_page, org_types }: AboutProps) => {
-    const { data, setData, post, errors } = useForm<AboutForm>({
+    const { data, setData, post, errors, processing } = useForm<AboutForm>({
         page: {
             content_page_id: about_page?.content_page_id,
             page: about_page?.page || 'About',
@@ -59,6 +59,17 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
         }
     };
 
+    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
+        const messages = Object.entries(errors)
+            .filter(([key]) => key.startsWith(parentKey))
+            .map(([, message]) => message);
+
+        // Remove duplicate messages
+        return [...new Set(messages)];
+    };
+
+    const orgTypeErrors = extractGroupedErrors(errors, 'org_types');
+
     useEffect(() => {
         return () => {
             if (data.page?.previewUrl?.startsWith('blob:')) {
@@ -75,8 +86,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
     };
 
     const handleSave = () => {
-        post(route('content.about.update'), {
-        });
+        post(route('content.about.update'), {});
     };
 
     const handlePreview = () => {
@@ -105,6 +115,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                                 })
                             }
                             placeholder="Enter welcome title..."
+                            disabled={processing}
                         />
                         <InputError message={errors['page.title']} className="mt-2" />
                     </div>
@@ -120,6 +131,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                                 })
                             }
                             placeholder="Enter welcome subtitle..."
+                            disabled={processing}
                         />
                         <InputError message={errors['page.subtitle']} className="mt-2" />
                     </div>
@@ -153,7 +165,11 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                             </label>
                         ) : (
                             <div className="group relative">
-                                <img src={data.page.previewUrl} alt="Preview" className="h-48 w-full rounded-lg border border-gray-200 object-cover" />
+                                <img
+                                    src={data.page.previewUrl}
+                                    alt="Preview"
+                                    className="h-48 w-full rounded-lg border border-gray-200 object-cover"
+                                />
                                 <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-lg bg-black/40 opacity-0 transition group-hover:opacity-100">
                                     <input id="replace-image" type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
                                     <Button
@@ -161,6 +177,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                                         variant="outline"
                                         className="h-12 w-12 rounded-full bg-white p-0"
                                         onClick={() => document.getElementById('replace-image')?.click()}
+                                        disabled={processing}
                                     >
                                         <Edit2 className="h-5 w-5 text-red-600" />
                                     </Button>
@@ -174,6 +191,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                                                 page: { ...data.page, banner: null, previewUrl: null },
                                             })
                                         }
+                                        disabled={processing}
                                     >
                                         <Trash2 className="h-5 w-5 text-red-600" />
                                     </Button>
@@ -186,10 +204,17 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
 
                 <Separator className="my-10 bg-gray-200" />
 
-                <OrganizationsSection
-                    org_types={data.org_types}
-                    onUpdateOrgTypes={handleUpdateOrgTypes}
-                />
+                <OrganizationsSection org_types={data.org_types} onUpdateOrgTypes={handleUpdateOrgTypes} />
+                {orgTypeErrors.length > 0 && (
+                    <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                        <h4 className="mb-2 font-semibold text-red-700">Organization Section Errors</h4>
+                        <ul className="ml-6 list-disc text-sm text-red-600">
+                            {orgTypeErrors.map((msg, index) => (
+                                <li key={index}>{msg}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
                 <Separator className="my-10 bg-gray-200" />
 
@@ -207,6 +232,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                                 })
                             }
                             placeholder="Enter campus address..."
+                            disabled={processing}
                         />
                         <InputError message={errors['page.address']} className="mt-2" />
                     </div>
@@ -222,6 +248,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                                 })
                             }
                             placeholder="Enter phone number..."
+                            disabled={processing}
                         />
                         <InputError message={errors['page.phone_number']} className="mt-2" />
                     </div>

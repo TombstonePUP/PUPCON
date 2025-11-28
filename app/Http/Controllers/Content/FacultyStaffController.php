@@ -6,12 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\ContentPages;
 use App\Models\FacultyStaff;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FacultyStaffController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'page' => ['required', 'array'],
             'faculties' => ['nullable', 'array'],
             'page.content_page_id' => ['nullable', 'integer'],
@@ -43,6 +44,16 @@ class FacultyStaffController extends Controller
             'faculties.*.faculty_image.mimes' => 'The faculty/staff image must be a file of type: jpeg, png, jpg.',
             'faculties.*.faculty_image.max' => 'The faculty/staff image may not be greater than 5MB.',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // sends validation errors to Inertia
+                ->with('type', 'error')
+                ->with('title', 'Validation Error')
+                ->with('message', 'Please review all fields and try again.');
+        }
+
+        $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if ($page) {

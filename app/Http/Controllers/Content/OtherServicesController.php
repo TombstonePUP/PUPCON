@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ContentPages;
 use App\Models\OtherServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class OtherServicesController extends Controller
 {
@@ -28,7 +29,7 @@ class OtherServicesController extends Controller
      */
     public function update(Request $request, OtherServices $otherServices)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'page' => ['required', 'array'],
             'other_services' => ['nullable', 'array'],
             'page.content_page_id' => ['nullable', 'integer'],
@@ -47,6 +48,16 @@ class OtherServicesController extends Controller
             'other_services.*.description.required' => 'The service description is required.',
             'other_services.*.service_link.required' => 'The service link is required.',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // sends validation errors to Inertia
+                ->with('type', 'error')
+                ->with('title', 'Validation Error')
+                ->with('message', 'Please review all fields and try again.');
+        }
+
+        $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if ($page) {

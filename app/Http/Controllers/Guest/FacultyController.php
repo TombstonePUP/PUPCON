@@ -14,11 +14,7 @@ class FacultyController extends Controller
     {
         $faculties = FacultyStaff::all();
         $faculties = $faculties->map(function ($faculty) {
-            if ($faculty->image_path && Storage::exists($faculty->image_path)) {
-                $faculty->image_path = Storage::url($faculty->image_path);
-            } else {
-                $faculty->image_path = null;
-            }
+            $faculty->image_path = $faculty->image_path ? $faculty->image_path = Storage::url($faculty->image_path) : null;
             return $faculty;
         });
         $page = ContentPages::where('page', 'Faculty & Staff')->first();

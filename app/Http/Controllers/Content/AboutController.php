@@ -8,12 +8,13 @@ use App\Models\ContentPages;
 use App\Models\OrganizationTypes;
 use App\Models\Organizations;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class AboutController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'page' => ['nullable', 'array'],
             'org_types' => ['nullable', 'array'],
             'page.content_page_id' => ['nullable', 'integer'],
@@ -29,7 +30,7 @@ class AboutController extends Controller
             'org_types.*.organizations.*.organization_id' => ['required', 'integer'],
             'org_types.*.organizations.*.organization_name' => ['required', 'string'],
             'org_types.*.organizations.*.type_id' => ['required', 'integer'],
-            'org_types.*.organizations.*.affiliation' => ['nullable', 'string'],
+            'org_types.*.organizations.*.affiliation' => ['required', 'string'],
         ], [
             'page.content_page_id.required' => 'The page content ID is required.',
             'page.title.required' => 'The page title is required.',
@@ -44,6 +45,16 @@ class AboutController extends Controller
             'org_types.*.organizations.*.organization_name.required' => 'The organization name is required.',
             'org_types.*.organizations.*.affiliation.required' => 'The organization affiliation is required.',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // sends validation errors to Inertia
+                ->with('type', 'error')
+                ->with('title', 'Validation Error')
+                ->with('message', 'Please review all fields and try again.');
+        }
+
+        $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if (isset($validated['page']['banner'])) {

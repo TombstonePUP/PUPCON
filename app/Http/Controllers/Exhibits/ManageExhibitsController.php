@@ -69,7 +69,6 @@ class ManageExhibitsController extends Controller
 
         $exhibit->exhibit_name = $validated['exhibit_name'];
         $exhibit->container = $validated['container'];
-        $exhibit->ExhibitOutlines->save();
         $exhibit->save();
 
         return redirect()->back()

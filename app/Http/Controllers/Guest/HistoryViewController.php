@@ -19,11 +19,7 @@ class HistoryViewController extends Controller
         $pages = ContentPages::where('page', 'History')->first();
 
         if ($pages) {
-            if ($pages->image_path && Storage::exists($pages->image_path)) {
-                $pages->image_path = Storage::url($pages->image_path);
-            } else {
-                $pages->image_path = null;
-            }
+            $pages->image_path = $pages->image_path ? Storage::url($pages->image_path) : null;
         }
 
         $directors = CampusDirectors::all()->map(function ($director) {
@@ -35,12 +31,9 @@ class HistoryViewController extends Controller
             return $director;
         });
 
-        $gallery = CampusGallery::all()->map(function ($item) {
-            $item->image_path =
-                ($item->image_path && Storage::exists($item->image_path))
-                ? Storage::url($item->image_path)
-                : null;
-
+        $gallery = CampusGallery::all();
+        $gallery = $gallery->map(function ($item) {
+            $item->image_path = $item->image_path ? Storage::url($item->image_path) : null;
             return $item;
         });
 

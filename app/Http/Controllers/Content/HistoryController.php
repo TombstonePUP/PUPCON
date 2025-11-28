@@ -8,13 +8,14 @@ use App\Models\CampusGallery;
 use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class HistoryController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $validated = $request->validate(
+        $validator = Validator::make(
+            $request->all(),
             [
                 'page' => ['required', 'array'],
                 'directors' => ['nullable', 'array'],
@@ -31,13 +32,7 @@ class HistoryController extends Controller
                 'directors.*.term_end_date' => ['nullable', 'integer'],
                 'directors.*.profile_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
                 'gallery.*.gallery_id' => ['required', 'integer'],
-                'gallery.*.image' => [
-                    // Rule::requiredIf(fn () => !CampusGallery::find(request()->input('gallery.*.gallery_id'))),
-                    'file',
-                    'image',
-                    'mimes:jpeg,png,jpg',
-                    'max:5120'
-                ],
+                'gallery.*.image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120',],
                 'gallery.*.description' => ['nullable', 'string'],
             ],
             [
@@ -54,12 +49,22 @@ class HistoryController extends Controller
                 'directors.*.profile_image.image' => 'The director profile image must be an image file.',
                 'directors.*.profile_image.mimes' => 'The director profile image must be a file of type: jpeg, png, jpg.',
                 'directors.*.profile_image.max' => 'The director profile image may not be greater than 5MB.',
-                'gallery.*.image.required' => 'The gallery image is required.',
+                // 'gallery.*.image.required' => 'The gallery image is required.',
                 'gallery.*.image.image' => 'The gallery image must be an image file.',
                 'gallery.*.image.mimes' => 'The gallery image must be a file of type: jpeg, png, jpg.',
                 'gallery.*.image.max' => 'The gallery image may not be greater than 5MB.',
             ]
         );
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // sends validation errors to Inertia
+                ->with('type', 'error')
+                ->with('title', 'Validation Error')
+                ->with('message', 'Please review all fields and try again.');
+        }
+
+        $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if (isset($validated['page']['banner'])) {
@@ -130,7 +135,7 @@ class HistoryController extends Controller
             $galleryImagePath = null;
             $galleryImageName = null;
             if (isset($galleryData['image'])) {
-                $galleryImageName = 'history-gallery-' . uniqid() . '.' . $galleryData['image']->getClientOriginalExtension();
+                $galleryImageName = 'history-gallery-' . $galleryData['description'] . '.' . $galleryData['image']->getClientOriginalExtension();
                 $galleryImagePath = 'history-page/gallery/' . $galleryImageName;
                 $galleryData['image']->storeAs('history-page/gallery', $galleryImageName, 'public');
             }

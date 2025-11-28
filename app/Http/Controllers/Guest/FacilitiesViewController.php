@@ -18,11 +18,7 @@ class FacilitiesViewController extends Controller
         $page = ContentPages::where('page', 'Facilities')->first();
         $facilities = Facilities::all();
         $facilities = $facilities->map(function ($facility) {
-            if ($facility->image_path && Storage::exists($facility->image_path)) {
-                $facility->image_path = Storage::url($facility->image_path);
-            } else {
-                $facility->image_path = null;
-            }
+            $facility->image_path = $facility->image_path ? $facility->image_path = Storage::url($facility->image_path) : null;
             return $facility;
         });
 

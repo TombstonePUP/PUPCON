@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProgramObjectives;
 use App\Models\Programs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class ProgramContentController extends Controller
 {
@@ -16,7 +16,7 @@ class ProgramContentController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'banner' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             'description' => ['nullable', 'string', 'max:5000'],
             'objectives' => ['nullable', 'array'],
@@ -28,6 +28,16 @@ class ProgramContentController extends Controller
             'gallery.*.image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             'gallery.*.caption' => ['required', 'string', 'max:255'],
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // sends validation errors to Inertia
+                ->with('type', 'error')
+                ->with('title', 'Validation Error')
+                ->with('message', 'Please review all fields and try again.');
+        }
+
+        $validated = $validator->validated();
 
         $program = Programs::findOrFail($request->program_id);
         $bannerName = null;

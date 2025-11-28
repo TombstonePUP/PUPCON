@@ -9,12 +9,14 @@ use App\Models\ContentPages;
 use App\Models\PillarItems;
 use App\Models\Pillars;
 use App\Models\Vmgo;
+use Illuminate\Support\Facades\Validator;
 
 class VmgoController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $validated = $request->validate(
+        $validator = Validator::make(
+            $request->all(),
             [
                 'page' => ['required', 'array'],
                 'campus_goals' => ['nullable', 'array'],
@@ -57,6 +59,16 @@ class VmgoController extends Controller
                 'vmgo.*.mission.required' => 'The mission is required.',
             ]
         );
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // sends validation errors to Inertia
+                ->with('type', 'error')
+                ->with('title', 'Validation Error')
+                ->with('message', 'Please review all fields and try again.');
+        }
+
+        $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if ($page) {
