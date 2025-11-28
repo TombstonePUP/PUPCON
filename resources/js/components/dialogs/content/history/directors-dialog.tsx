@@ -156,7 +156,7 @@ export function DirectorsDialog({...props }: DirectorsDialogProps) {
                             />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Years Ended</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Year Ended</Label>
                             <Input
                                 placeholder="e.g., 1988-1992"
                                 value={data.term_end_date}

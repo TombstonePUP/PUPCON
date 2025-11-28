@@ -43,6 +43,9 @@ export default function AdministrationPage({officials, page}: AdministrationPage
         </div>
     );
 
+    const campus_officials = officials.filter((o) => o.type === 'Campus');
+    const university_officials = officials.filter((o) => o.type === 'University');
+
     return (
         <>
             <Head title="Administration - PUP San Juan" />
@@ -103,18 +106,18 @@ export default function AdministrationPage({officials, page}: AdministrationPage
                                         Meet the top officials managing PUP and driving university-wide initiatives.
                                     </p>
                                 </div>
-                                {renderOfficials(officials)}
+                                {renderOfficials(university_officials)}
                             </section>
 
-                            {/* <section id="campus" className="space-y-6">
+                            <section id="campus" className="space-y-6">
                                 <div className="card-fx rounded-xl border border-[#7f1414]/25 bg-white p-8 duration-300 hover:border-[#7f1414]">
                                     <h2 className="mb-3 text-3xl font-bold text-[#7f1414]">Campus Officials</h2>
                                     <p className="leading-relaxed text-gray-700">
                                         Meet the dedicated campus officials who ensure smooth operations at PUP San Juan.
                                     </p>
                                 </div>
-                                renderOfficials(campusOfficials)
-                            </section> */}
+                                {renderOfficials(campus_officials)}
+                            </section>
                         </main>
                     </div>
                 </div>

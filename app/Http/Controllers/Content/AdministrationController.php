@@ -25,6 +25,7 @@ class AdministrationController extends Controller
             'officials.*.last_name' => ['required', 'string'],
             'officials.*.suffix' => ['nullable', 'string'],
             'officials.*.position' => ['required', 'string'],
+            'officials.*.type' => ['required', 'string'],
             'officials.*.profile' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
         ], [
             'page.content_page_id.required' => 'The page content ID is required.',
@@ -33,6 +34,7 @@ class AdministrationController extends Controller
             'page.page.required' => 'The page identifier is required.',
             'officials.*.first_name.required' => 'The official\'s first name is required.',
             'officials.*.last_name.required' => 'The official\'s last name is required.',
+            'officials.*.type.required' => 'The official\'s type is required.',
             'officials.*.position.required' => 'The official\'s position is required.',
             'officials.*.profile.image' => 'The profile picture must be an image file.',
             'officials.*.profile.mimes' => 'The profile picture must be a file of type: jpeg, png, jpg.',
@@ -79,6 +81,7 @@ class AdministrationController extends Controller
                     'last_name' => $officialData['last_name'],
                     'suffix' => $officialData['suffix'] ?? null,
                     'position' => $officialData['position'],
+                    'type' => $officialData['type'],
                     'profile_picture_name' => $profilename ?? $official->profile_picture_name,
                     'profile_picture_path' => $profilepath ?? $official->profile_picture_path,
                 ]);
@@ -90,6 +93,7 @@ class AdministrationController extends Controller
                     'last_name' => $officialData['last_name'],
                     'suffix' => $officialData['suffix'] ?? null,
                     'position' => $officialData['position'],
+                    'type' => $officialData['type'],
                     'profile_picture_name' => $profilename,
                     'profile_picture_path' => $profilepath,
                 ]);

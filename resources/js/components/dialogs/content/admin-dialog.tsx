@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Administration } from '@/types/content';
 import { Edit2, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -19,6 +20,7 @@ interface OfficialForm {
     middle_name?: string;
     last_name: string;
     suffix?: string;
+    type: string;
     position: string;
     profile?: File | null;
     previewUrl?: string | null;
@@ -32,6 +34,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
         last_name: official?.last_name || '',
         suffix: official?.suffix || '',
         position: official?.position || '',
+        type: official?.type || '',
         profile: null,
         previewUrl: official?.profile_picture_path || null,
     });
@@ -158,6 +161,34 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                     <div>
                         <Label className="mb-2 block text-sm font-medium text-gray-700">Suffix</Label>
                         <Input placeholder="e.g., Sr., Jr., III" value={data.suffix} onChange={(e) => setData({ ...data, suffix: e.target.value })} />
+                    </div>
+
+                    <div>
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">Official Type</Label>
+                        <Select
+                            value={data.type ? String(data.type) : ''}
+                            onValueChange={(value) => setData({ ...data, type: value})}
+                        >
+                            <SelectTrigger className="w-full" tabIndex={3}>
+                                <SelectValue placeholder="Select Official" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem
+                                        key={'University'}
+                                        value={'University'}
+                                    >
+                                        University Official
+                                    </SelectItem>
+                                    <SelectItem
+                                        key={'Campus'}
+                                        value={'Campus'}
+                                    >
+                                        Campus Official
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div>

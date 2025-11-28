@@ -26,6 +26,7 @@ interface OfficialsForm {
     last_name: string;
     suffix?: string;
     position: string;
+    type: string;
     profile?: File | null;
     previewUrl?: string | null;
 }
@@ -87,6 +88,8 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
             middle_name: official.middle_name || '',
             last_name: official.last_name,
             suffix: official.suffix || '',
+            position: official.position || '',
+            type: official.type || '',
             profile: null,
             previewUrl: official.profile_picture_path || null,
         })),
@@ -166,6 +169,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                 last_name: formData.last_name,
                 suffix: formData.suffix || null,
                 position: formData.position,
+                type: formData.type,
                 profile_picture_path: formData.previewUrl || null,
             };
 
@@ -185,6 +189,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                     middle_name: officialForLocalState.middle_name || '',
                     last_name: officialForLocalState.last_name,
                     suffix: officialForLocalState.suffix || '',
+                    type: officialForLocalState.type || '',
                     position: officialForLocalState.position,
                     profile: formData.profile || null,
                     previewUrl: officialForLocalState.profile_picture_path || null,

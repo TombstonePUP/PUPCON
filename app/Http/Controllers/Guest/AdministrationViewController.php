@@ -17,11 +17,7 @@ class AdministrationViewController extends Controller
     {
         $officials = UniversityAdministration::all();
         $officials = $officials->map(function ($official) {
-            if($official->profile_picture_path && Storage::exists($official->profile_picture_path)){
-                $official->profile_picture_path = Storage::url($official->profile_picture_path);
-            } else {
-                $official->profile_picture_path = null;
-            }
+            $official->profile_picture_path = $official->profile_picture_path ? Storage::url($official->profile_picture_path) : null;
             return $official;
         });
         $page = ContentPages::where('page', 'Administration')->first();

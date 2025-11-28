@@ -44,6 +44,7 @@ export interface Administration {
     last_name: string;
     suffix?: string | null;
     position: string;
+    type: string;
     profile_picture_name?: string | null;
     profile_picture_path?: string | null;
 }
