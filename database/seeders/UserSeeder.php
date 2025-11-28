@@ -31,9 +31,6 @@ class UserSeeder extends Seeder
             [
                 'role_name' => 'Chairman'
             ],
-            [
-                'role_name' => 'Accreditor'
-            ],
             /* [
                 'role_id' => 5,
                 'role_name' => 'Unassigned'
