@@ -31,7 +31,7 @@ export default function History({ page, directors, gallery }: HistoryProps) {
         { label: 'PUP Hymn', href: 'hymn' },
     ];
 
-    console.log(gallery);
+    console.log(directors);
 
     return (
         <>
@@ -140,7 +140,7 @@ export default function History({ page, directors, gallery }: HistoryProps) {
                                                 <div className="p-6">
                                                     <h3 className="mb-1 text-xl font-bold text-gray-900">{d.name}</h3>
                                                     <p className="mb-3 font-semibold text-[#800020]">
-                                                        {new Date(d.term_end_date).getFullYear() - new Date(d.term_start_date).getFullYear()} years
+                                                        {parseInt(d.term_end_date) - parseInt(d.term_start_date)} years
                                                     </p>
                                                 </div>
                                             </motion.div>

@@ -74,18 +74,13 @@ class HistoryController extends Controller
                 Storage::disk('public')->delete($bannerPath);
             }
             $validated['page']['banner']->storeAs('history-page', $bannerName, 'public');
+            $page->image_name = $bannerName;
+            $page->image_path = $bannerPath;
         }
         if ($page) {
             $page->page = $validated['page']['page'];
             $page->title = $validated['page']['title'];
             $page->description = $validated['page']['description'];
-            if (isset($bannerPath) && isset($bannerName)) {
-                $page->image_name = $bannerName;
-                $page->image_path = $bannerPath;
-            } else {
-                $page->image_name = null;
-                $page->image_path = null;
-            }
             $page->save();
         } else {
             $page = ContentPages::create([
@@ -114,8 +109,8 @@ class HistoryController extends Controller
                     'term_start_date' => $directorData['term_start_date'],
                     'term_end_date' => $directorData['term_end_date'] ?? null,
                     'description' => $directorData['description'] ?? null,
-                    'profile_image_name' => $profileImageName ?? $director->image_name,
-                    'profile_image_path' => $profileImagePath ?? $director->image_path,
+                    'profile_image_name' => $profileImageName ?? $director->profile_image_name,
+                    'profile_image_path' => $profileImagePath ?? $director->profile_image_path,
                 ]);
                 $director_ids[] = $director->director_id;
             } else {

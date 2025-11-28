@@ -55,8 +55,8 @@ class VmgoController extends Controller
                 'campus_goals.*.goal_desc_fil.required' => 'The campus goal description in Filipino is required.',
                 'pillars.*.pillar_title.required' => 'The pillar title is required.',
                 'pillars.*.pillar_items.*.item_description.required' => 'The pillar item description is required.',
-                'vmgo.*.vision.required' => 'The vision is required.',
-                'vmgo.*.mission.required' => 'The mission is required.',
+                'vmgo.vision.required' => 'The vision is required.',
+                'vmgo.mission.required' => 'The mission is required.',
             ]
         );
 
