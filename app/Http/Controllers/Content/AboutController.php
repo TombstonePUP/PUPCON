@@ -59,9 +59,9 @@ class AboutController extends Controller
             $page->subtitle = $validated['page']['subtitle'];
             $page->address = $validated['page']['address'];
             $page->phone_number = $validated['page']['phone_number'];
-            if (isset($bannerPath) && isset($bannerName)) {
-                $page->image_name = $bannerName;
-                $page->image_path = $bannerPath;
+            if (!empty($bannerName)) {
+                $page->image_name = $bannerName ?? $page->image_name;
+                $page->image_path = $bannerPath ?? $page->image_path;
             }
             $page->save();
         } else {
