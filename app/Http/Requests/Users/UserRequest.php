@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Users;
 
+use App\Models\Roles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -23,6 +24,7 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $chairman = Roles::where('role_name', 'Chairman')->first();
         return [
             'user_id' => [
                 'integer',
@@ -48,13 +50,13 @@ class UserRequest extends FormRequest
             ],
             'assigned_role' => ['required', 'integer', 'exists:roles,role_id'],
             'assigned_areas' => [
-                Rule::requiredIf(fn () => in_array($this->assigned_role, [3, 4])),
+                Rule::requiredIf(fn () => in_array($this->assigned_role, [$chairman->role_id])),
                 'array',
             ],
             'assigned_areas.*' => ['integer', 'exists:areas,area_id'],
 
             'assigned_programs' => [
-                Rule::requiredIf(fn () => in_array($this->assigned_role, [3, 4])),
+                Rule::requiredIf(fn () => in_array($this->assigned_role, [$chairman->role_id])),
                 'array',
             ],
             'assigned_programs.*' => ['integer', 'exists:programs,program_id'],
