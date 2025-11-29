@@ -5,15 +5,6 @@ import { DocumentViewer } from "../../documents/view-document";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-interface ExhibitOutlineForm {
-    outline_id?: number;
-    category: string;
-    exhibit_id: number;
-    outline_description: string;
-    file: File | null;
-    previewFile: string | null;
-}
-
 interface ExhibitOutlineDialogRendererProps {
     type: 'add' | 'edit' | 'delete' | 'view' | null;
     outline?: ExhibitOutlines | null;

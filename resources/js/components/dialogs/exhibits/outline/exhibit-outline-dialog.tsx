@@ -39,7 +39,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose }
         e.preventDefault();
         try {
             setIsUploading(true);
-            post(route('exhibit.file.upload'),
+            post(route('exhibit.outline.file.upload'),
                 {
                     onProgress: (progress) => {
                         if (progress?.percentage) {
