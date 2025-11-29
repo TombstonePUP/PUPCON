@@ -17,15 +17,10 @@ class LocalTaskForceViewController extends Controller
     {
         $page = ContentPages::where('page', 'Local Task Force')->first();
         $local_task_force = LocalTaskForce::with('Members')->get();
-        $local_task_force->each(function ($task_force) {
-            $task_force->each(function ($chairman) {
-                if ($chairman->profile_image_path && Storage::exists($chairman->profile_image_path)) {
-                    $chairman->profile_image_path = Storage::url($chairman->profile_image_path);
-                } else {
-                    $chairman->profile_image_path = null;
-                }
-                return $chairman;
-            });
+        $local_task_force = $local_task_force->map(function ($task_force) {
+            $task_force->profile_image_path = $task_force->profile_image_path ?
+                Storage::url($task_force->profile_image_path) : null;
+            return $task_force;
         });
 
         return inertia('about/local-task-force', [

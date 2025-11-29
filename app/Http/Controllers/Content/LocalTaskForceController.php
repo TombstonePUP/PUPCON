@@ -25,13 +25,34 @@ class LocalTaskForceController extends Controller
             'chairmen.*.last_name' => ['required', 'string'],
             'chairmen.*.official' => ['required', 'boolean'],
             'chairmen.*.official_position' => ['nullable', 'string'],
-            'chairmen.*.profile_image' => ['nullable', 'file', 'image', 'mimes:jpeg,jpg,png', 'max:2048'],
+            'chairmen.*.profile_image' => ['nullable', 'file', 'image', 'mimes:jpeg,jpg,png', 'max:5120'],
             'chairmen.*.members' => ['nullable', 'array'],
-            'chairmen.*.members.*.local_task_force_id' => ['required', 'integer'],
+            'chairmen.*.members.*.local_task_force_id' => ['nullable', 'integer'],
             'chairmen.*.members.*.member_id' => ['required', 'integer'],
             'chairmen.*.members.*.full_name' => ['required', 'string'],
             'chairmen.*.members.*.role' => ['required', 'string'],
-        ]);
+        ], [
+            'page.required' => 'The page data is required.',
+            'page.array' => 'The page data must be an array.',
+            'chairmen.array' => 'The chairmen data must be an array.',
+            'page.content_page_id.required' => 'The content page ID is required.',
+            'page.content_page_id.integer' => 'The content page ID must be an integer.',
+            'page.page.required' => 'The page identifier is required.',
+            'page.title.required' => 'The page title is required.',
+            'page.description.required' => 'The page description is required.',
+            'chairmen.*.first_name.required' => 'The chairman first name is required.',
+            'chairmen.*.last_name.required' => 'The chairman last name is required.',
+            'chairmen.*.official.required' => 'The chairman official status is required.',
+            'chairmen.*.official.boolean' => 'The chairman official status must be true or false.',
+            'chairmen.*.members.array' => 'The members data must be an array.',
+            'chairmen.*.members.*.member_id.required' => 'The member ID is required.',
+            'chairmen.*.members.*.full_name.required' => 'The member full name is required.',
+            'chairmen.*.members.*.role.required' => 'The member role is required.',
+            'chairmen.*.profile_image.image' => 'The profile image must be an image.',
+            'chairmen.*.profile_image.mimes' => 'The profile image must be a file of type: jpeg, jpg, png.',
+            'chairmen.*.profile_image.max' => 'The profile image may not be greater than 5 MB.',
+        ]
+        );
 
         if ($validator->fails()) {
             return redirect()->back()

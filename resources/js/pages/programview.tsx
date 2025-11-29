@@ -186,20 +186,6 @@ export default function Programs({ program }: PerProgramProps) {
         return () => clearTimeout(timer);
     }, []);
 
-    // Router progress indicator
-    useEffect(() => {
-        const handleStart = () => setLoading(true);
-        const handleFinish = () => setLoading(false);
-
-        router.on('start', handleStart);
-        router.on('finish', handleFinish);
-
-        return () => {
-            router.off('start', handleStart);
-            router.off('finish', handleFinish);
-        };
-    }, []);
-
     const handleLevelChange = (newLevel: number) => {
         setLevel(newLevel);
         setTimeout(() => {
