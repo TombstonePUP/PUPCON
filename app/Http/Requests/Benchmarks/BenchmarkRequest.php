@@ -35,7 +35,6 @@ class BenchmarkRequest extends FormRequest
             'benchmark_number' => [
                 Rule::requiredIf(fn () => $this->method() === 'POST'),
                 'string',
-                'max:5',
             ],
             'benchmark_description' => [
                 Rule::requiredIf(fn () => $this->method() === 'POST'),

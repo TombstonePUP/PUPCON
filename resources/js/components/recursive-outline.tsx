@@ -159,7 +159,7 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
                             <div className="flex items-center">
                                 {/* Outline label */}
                                 {!outline.container ? (
-                                    <a className="cursor-pointer text-[#7f1414] underline hover:text-red-700" onClick={() => handleViewPDF(outline)}>
+                                    <a className={`cursor-pointer text-${outline.area_files ? "[#7f1414] underline hover:text-red-700" : "gray-600"}`} onClick={() => handleViewPDF(outline)}>
                                         {outline.initial}.{outline.outline_number}. {outline.outline_description}
                                     </a>
                                 ) : (
@@ -343,7 +343,9 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
 
                                 {role !== 'Chairman' && role !== 'Accreditor' && (
                                     <>
-                                        <ContextMenuSeparator />
+                                        {!outline.container && (
+                                            <ContextMenuSeparator />
+                                        )}
                                         <ContextMenuLabel>Benchmark</ContextMenuLabel>
                                         <ContextMenuItem
                                             className="justify-left flex cursor-pointer flex-row items-center gap-2"
