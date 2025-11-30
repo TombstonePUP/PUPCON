@@ -61,7 +61,7 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
                     </div>
                 </section>
 
-                <div className="grid gap-8 md:grid-cols-5">
+                <div className="grid gap-3 md:grid-cols-5">
                     {faculties?.map((f) => (
                         <FacultyCard
                             key={f.faculty_staff_id}

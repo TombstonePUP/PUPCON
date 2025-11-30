@@ -31,7 +31,7 @@ export default function FacultyCard({ faculty, isLoading = false }: Props) {
   }
 
   return (
-    <div className="group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414]">
+    <div className="group relative w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414]">
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 group-hover:opacity-0" />
 
       <div className="flex flex-col space-y-3">
@@ -62,7 +62,7 @@ export default function FacultyCard({ faculty, isLoading = false }: Props) {
         </div>
 
         {/* Info */}
-        <div className="space-y-2 pt-1 text-center">
+        <div className="space-y-1 pt-1 text-center h-25 flex flex-col justify-center">
           <h3 className="text-base font-bold text-gray-900 group-hover:text-[#7f1414]">
             {faculty.name}
           </h3>
