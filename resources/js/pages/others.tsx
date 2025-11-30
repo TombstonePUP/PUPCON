@@ -10,13 +10,7 @@ interface OtherServicesProps {
 }
 
 export default function Others({ page, others }: OtherServicesProps) {
-    usePoll(
-        2000,
-        {},
-        {
-            keepAlive: true,
-        },
-    );
+    usePoll(5000);
 
     return (
         <>

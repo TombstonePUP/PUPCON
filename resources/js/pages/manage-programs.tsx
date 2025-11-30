@@ -29,13 +29,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
     const role = user.roles.role_name;
     const assignedPrograms = auth.programs;
 
-    usePoll(
-        2000,
-        {},
-        {
-            keepAlive: true,
-        },
-    );
+    usePoll(5000);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [filterDegree, setFilterDegree] = useState<string>('all');

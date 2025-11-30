@@ -11,14 +11,7 @@ export default function Programs({ programs }: ProgramsProps) {
     const { auth } = usePage<Auth>().props;
     const user = auth.user;
 
-
-    usePoll(
-        2000,
-        {},
-        {
-            keepAlive: true,
-        },
-    );
+    usePoll(5000);
 
     return (
         <>

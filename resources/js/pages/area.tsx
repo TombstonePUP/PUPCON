@@ -1,16 +1,15 @@
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import PageHeader from '@/components/guest-page-header';
 import { buildOutlineTree, RecursiveOutline } from '@/components/recursive-outline';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { DocumentViewer } from '@/components/dialogs/documents/view-document';
+import { Button } from '@/components/ui/button';
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Layout from '@/layouts/landing-layout';
 import type { Area, ParameterOutlineCategory, PerProgram } from '@/types';
 import { Head, usePage, usePoll } from '@inertiajs/react';
-import { Download, FileSpreadsheet, FileText, ImageOff, ImagePlay, ImagePlus } from 'lucide-react';
-import { useState } from 'react';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-
+import { Download, FileSpreadsheet, FileText } from 'lucide-react';
+import { useState } from 'react';
 
 interface AreaProps {
     program: PerProgram;
@@ -19,7 +18,7 @@ interface AreaProps {
 }
 
 export default function AreaPage({ program, area, categories }: AreaProps) {
-    usePoll(2000);
+    usePoll(5000);
     const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
     const searchKeyword = searchParams?.get('search') || '';
 
@@ -80,7 +79,6 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                     )} */}
 
                     <img className="w-[45%] rounded-xl object-cover" src="/images/placeholder.png" />
-
                 </div>
                 <div className="flex justify-center">
                     <p className="w-[68%] rounded-[1vw] border border-[#7f1414]/25 bg-white px-[3vw] py-[1.5vw] text-justify indent-[2vw] transition duration-300 hover:border-[#7f1414]">
@@ -125,12 +123,12 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                 </div>
                             ))
                         ) : (
-                            <p className="text-center text-gray-500 w-full">No forms available for this area.</p>
+                            <p className="w-full text-center text-gray-500">No forms available for this area.</p>
                         )}
                     </div>
                 </div>
 
-                <div className="flex flex-col items-center justify-center w-full py-2 gap-4">
+                <div className="flex w-full flex-col items-center justify-center gap-4 py-2">
                     <Accordion type="single" collapsible className="flex w-[68%] flex-col gap-[1vw]">
                         {area.area_parameters?.length > 0 ? (
                             [...area.area_parameters]
@@ -168,12 +166,12 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                                     if (outlines.length === 0) return null;
                                                     outlines.map(
                                                         (outline) =>
-                                                        (outline.initial =
-                                                            category.category_name == 'No Category'
-                                                                ? parameter.parameter_name == ' '
-                                                                    ? ''
-                                                                    : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
-                                                                : category.category_name.match(/^[A-Za-z]/)),
+                                                            (outline.initial =
+                                                                category.category_name == 'No Category'
+                                                                    ? parameter.parameter_name == ' '
+                                                                        ? ''
+                                                                        : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
+                                                                    : category.category_name.match(/^[A-Za-z]/)),
                                                     );
 
                                                     const sortedOutlines = buildOutlineTree({ outlines });
@@ -218,24 +216,22 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                         )}
                     </Accordion>
 
-                    {(user?.roles?.role_name === 'Accreditor') && (
-                        <div className='w-[68%] text-end'>
+                    {user?.roles?.role_name === 'Accreditor' && (
+                        <div className="w-[68%] text-end">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="noborder"
-                                    >
+                                    <Button variant="noborder">
                                         Area Mean: N/A <Download className="size-6 font-black" />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Export All Parameter Means</DropdownMenuLabel>
                                     <DropdownMenuItem>
-                                        <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                        <FileSpreadsheet className="mr-2 h-4 w-4 text-green-600" />
                                         Excel
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem >
-                                        <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                    <DropdownMenuItem>
+                                        <FileText className="mr-2 h-4 w-4 text-red-600" />
                                         PDF
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
@@ -243,7 +239,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                         </div>
                     )}
                 </div>
-                <div className='h-10'></div>
+                <div className="h-10"></div>
                 <DocumentViewer open={viewerOpen} onOpenChange={setViewerOpen} fileUrl={viewerFile.url} title={viewerFile.title} />
             </Layout>
         </>

@@ -150,14 +150,7 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
 FacultyCard.displayName = 'FacultyCard';
 
 export default function Programs({ program }: PerProgramProps) {
-    // Add usePoll to auto-refresh data every 2 seconds
-    usePoll(
-        2000,
-        {},
-        {
-            keepAlive: true,
-        },
-    );
+    usePoll(5000);
 
     const [level, setLevel] = useRemember(program.levels[0]?.level, 'level');
     const [loading, setLoading] = useState(false);

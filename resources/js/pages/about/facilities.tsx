@@ -33,14 +33,7 @@ const DataAlert = ({ message }: { message: string }) => (
 );
 
 export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps) {
-    // Add usePoll to auto-refresh data every 2 seconds
-    usePoll(
-        2000,
-        {},
-        {
-            keepAlive: true,
-        },
-    );
+    usePoll(5000);
 
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 

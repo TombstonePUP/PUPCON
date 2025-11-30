@@ -2,7 +2,7 @@ import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import { ContentPages, OrganizationTypes } from '@/types/content';
 import { Head, Link, usePoll } from '@inertiajs/react';
-import { Building2, GraduationCap, Mail, MapPin, Phone, School, AlertCircle, Construction, Users } from 'lucide-react';
+import { AlertCircle, Building2, Construction, GraduationCap, Mail, MapPin, Phone, School, Users } from 'lucide-react';
 
 interface AboutPageProps {
     page: ContentPages;
@@ -32,10 +32,7 @@ const DataAlert = ({ message }: { message: string }) => (
 );
 
 export default function About({ page, programs, facilities, org_types }: AboutPageProps) {
-    // Add usePoll to auto-refresh data every 2 seconds
-    usePoll(2000, {}, {
-        keepAlive: true,
-    });
+    usePoll(5000);
 
     const quickLinks = [
         { label: 'Vision, Mission & Goals', href: '/about/vision-mission-goals' },
@@ -52,8 +49,7 @@ export default function About({ page, programs, facilities, org_types }: AboutPa
                   label: type.type_name,
                   href: type.type_name.toLowerCase().replace(/\s+/g, '-'),
               }))
-            : []
-        ),
+            : []),
         { label: 'Contact & Office Hours', href: 'contact' },
     ];
 
@@ -135,7 +131,11 @@ export default function About({ page, programs, facilities, org_types }: AboutPa
                                         <div className="flex flex-col gap-6">
                                             {page?.image_path ? (
                                                 <div className="relative h-64 w-full overflow-hidden rounded-xl">
-                                                    <img src={page.image_path} alt={page.image_name || 'Campus Image'} className="h-full w-full object-cover" />
+                                                    <img
+                                                        src={page.image_path}
+                                                        alt={page.image_name || 'Campus Image'}
+                                                        className="h-full w-full object-cover"
+                                                    />
                                                 </div>
                                             ) : (
                                                 <div className="flex h-64 w-full items-center justify-center rounded-xl bg-gray-100">

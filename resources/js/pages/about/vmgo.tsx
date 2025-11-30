@@ -50,14 +50,7 @@ const extractYouTubeID = (url: string): string | null => {
 };
 
 export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
-    // Add usePoll to auto-refresh data every 2 seconds
-    usePoll(
-        2000,
-        {},
-        {
-            keepAlive: true,
-        },
-    );
+    usePoll(5000);
 
     const quickLinks = [
         { label: 'Vision, Mission & Goals', href: '/about/vision-mission-goals', active: true },

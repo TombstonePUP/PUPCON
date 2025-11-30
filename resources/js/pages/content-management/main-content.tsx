@@ -26,7 +26,7 @@ import {
     Pillars,
     Vmgo,
 } from '@/types/content';
-import { Head, usePoll } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 
 interface History {
     directors: CampusDirectors[];
@@ -96,7 +96,6 @@ const MainContent = ({ ...props }: MainContentProps) => {
             setScrollLock(false);
         }, 600); // you can adjust this
     };
-
 
     const sections = useMemo(
         () => [
