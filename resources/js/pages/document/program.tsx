@@ -189,11 +189,6 @@ export default function Programs({ program }: ProgramProps) {
                                 <p className="text-sm text-gray-500">Manage program information, objectives, and assessment areas</p>
                             </div>
                         </div>
-                        <div>
-                            <Badge variant="outline" className={`ml-2 border-0 ${getBadgeColor(selected_level?.remarks)}`}>
-                                {selected_level?.remarks}
-                            </Badge>
-                        </div>
                     </div>
                 </div>
 
@@ -359,6 +354,13 @@ export default function Programs({ program }: ProgramProps) {
                     {/* --- Right Sidebar  --- */}
                     <div className="w-64 shrink-0">
                         <div className="sticky top-6 space-y-4">
+                            <div className="rounded-lg border border-gray-200 bg-white p-4">
+                                <div className="mb-3 text-sm font-semibold text-gray-900">Status</div>
+                                <div className="rounded-lg bg-yellow-100 p-2">
+                                    <div className="text-center text-xs font-medium text-yellow-800">{selected_level?.remarks}</div>
+                                </div>
+                            </div>
+
                             {/* --- Level Selector --- */}
                             <div className="rounded-lg border border-gray-200 bg-white p-4">
                                 <h3 className="mb-3 text-sm font-semibold text-gray-900">Accreditation Level</h3>
@@ -373,8 +375,9 @@ export default function Programs({ program }: ProgramProps) {
                                         <button
                                             key={section.id}
                                             onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                                }`}
+                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
+                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >
                                             {section.label}
                                         </button>

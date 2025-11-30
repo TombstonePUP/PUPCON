@@ -29,7 +29,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
     const role = user.roles.role_name;
     const assignedPrograms = auth.programs;
 
-    
     usePoll(
         2000,
         {},
@@ -118,21 +117,48 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
             <Head title="Manage Programs" />
             <div className="flex h-full flex-1 flex-col gap-6 p-6">
                 {/* Header Section */}
-                <div className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
-                    <div className="flex items-center gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
-                            <NotebookIcon className="h-6 w-6 text-white" />
+
+                <div className="flex gap-6">
+                    <div id="header" className="mb-2 w-full rounded-lg border border-gray-200 bg-white p-6">
+                        <div className="flex items-center gap-4">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
+                                <NotebookIcon className="h-6 w-6 text-white" />
+                            </div>
+                            <div className="ml-2">
+                                <h1 className="text-xl font-semibold text-gray-900">Programs</h1>
+                                <p className="text-sm text-gray-500">Manage academic programs for PUP San Juan.</p>
+                            </div>
                         </div>
-                        <div className="ml-2">
-                            <h1 className="text-xl font-semibold text-gray-900">Program Management</h1>
-                            <p className="text-sm text-gray-500">Manage academic programs for PUP San Juan.</p>
+                    </div>
+
+                    {/* Right Sidebar - Quick Links */}
+                    <div className="w-fit shrink-0">
+                        <div className="sticky top-6 space-y-4">
+                            <div className="rounded-lg border border-gray-200 bg-white p-4">
+                                <h3 className="mb-2 text-sm font-semibold text-gray-900">Program Actions</h3>
+                                <div className="flex gap-2">
+                                    {' '}
+                                    <Button variant="noborder" className="flex-1" onClick={handleAddProgram}>
+                                        <NotebookIcon className="h-6 w-6 text-white" />
+                                        Add Program
+                                    </Button>
+                                    <Button variant="noborder" className="flex-1" onClick={handleAddLevel}>
+                                        <PlusCircleIcon className="h-6 w-6 text-white" />
+                                        Start a Survey
+                                    </Button>
+                                    <Button variant="noborder" className="flex-1" onClick={handleEndLevel}>
+                                        <BookCheck className="h-6 w-6 text-white" />
+                                        End a Survey
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-[3fr_2fr] gap-4">
+                <div className="flex gap-4">
                     {/* Stats Overview */}
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
+                    <div className="flex w-full gap-4">
                         <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
                             <div className="flex items-center justify-between">
                                 <div>
@@ -193,29 +219,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             </div>
                         </div>
                     </div>
-
-                    {/* Program Actions Card */}
-                    {(role === 'Admin' || role === 'Coordinator') && (
-                        <div className="flex w-full flex-col gap-3 rounded-lg border border-gray-200 bg-white p-6">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Program Actions</p>
-                            </div>
-                            <div className="flex w-full gap-2">
-                                <Button variant="noborder" className="flex-1" onClick={handleAddProgram}>
-                                    <NotebookIcon className="h-6 w-6 text-white" />
-                                    Add Program
-                                </Button>
-                                <Button variant="noborder" className="flex-1" onClick={handleAddLevel}>
-                                    <PlusCircleIcon className="h-6 w-6 text-white" />
-                                    Start a Survey
-                                </Button>
-                                <Button variant="noborder" className="flex-1" onClick={handleEndLevel}>
-                                    <BookCheck className="h-6 w-6 text-white" />
-                                    End a Survey
-                                </Button>
-                            </div>
-                        </div>
-                    )}
                 </div>
 
                 {/* Programs Grid */}
