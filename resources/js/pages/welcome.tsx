@@ -485,7 +485,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                         >
                             <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[70vw] object-cover lg:w-[29vw]" priority />
                             <h2 className="mb-3 text-[2.8vw] italic lg:mb-0 lg:text-[1.76vw]">Years of academic excellence and service</h2>
-                            <div className="mt-[2.08vw] flex w-full flex-wrap justify-center gap-2 lg:justify-start">
+                            {/* <div className="mt-[2.08vw] flex w-full flex-wrap justify-center gap-2 lg:justify-start">
                                 {[
                                     { icon: BookOpen, text: 'Programs', primary: true },
                                     { icon: Calendar, text: 'Events' },
@@ -503,7 +503,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                         <span className="text-[2.5vw] lg:text-[1vw]">{btn.text}</span>
                                     </button>
                                 ))}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

@@ -130,7 +130,7 @@ export function OverallProgress({ data = [] }: OverallProgressProps) {
                     Document Upload Progress
                 </div>
                 <div className="leading-none text-muted-foreground">
-                    Area and Exhibit Document Uploads and Documeents to be uploaded
+                    Area and Exhibit Document Uploads and Documents to be uploaded
                 </div>
             </CardFooter>
         </Card>
