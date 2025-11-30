@@ -1,80 +1,82 @@
-import React, { useEffect, useState } from 'react'
-import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout'
-import { usePage } from '@inertiajs/react'
-import type { BreadcrumbItem } from '@/types'
+import React, { useEffect, useState } from "react";
+import AppLayoutTemplate from "@/layouts/app/app-sidebar-layout";
+import { usePage } from "@inertiajs/react";
+import type { BreadcrumbItem } from "@/types";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from "@/components/ui/dialog";
 
 interface AppLayoutProps {
-    children: React.ReactNode
-    breadcrumbs?: BreadcrumbItem[]
+    children: React.ReactNode;
+    breadcrumbs?: BreadcrumbItem[];
 }
 
 export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => {
-    const { url } = usePage()
-    const [openHelp, setOpenHelp] = useState(false)
-    const [helpText, setHelpText] = useState('')
+    const { url } = usePage();
+    const [openHelp, setOpenHelp] = useState(false);
+    const [helpText, setHelpText] = useState("");
 
-    // Determine help content based on current route
+    /** 📌 Set help content depending on route */
     useEffect(() => {
-        if (url.startsWith('/dashboard')) {
-            setHelpText(`
-                📌 DASHBOARD HELP
-                - View system metrics and summary cards.
-                - Check recent activity logs.
-                - Use the filters on the top right for dates.
-            `)
+        if (url.startsWith("/dashboard")) {
+            setHelpText(
+                `📌 DASHBOARD HELP\n
+- View system metrics and performance insights.
+- Check activity logs and recent updates.
+- Use the filters on the top right for quick report navigation.`
+            );
+        } else if (url.startsWith("/user-management")) {
+            setHelpText(
+                `👥 USER MANAGEMENT HELP\n
+- Manage system users (add, edit, delete).
+- Assign roles and permissions based on access level.
+- Use the search bar to quickly find a user.`
+            );
+        } else {
+            setHelpText(
+                `ℹ️ GENERAL HELP\n\nPress F1 anytime to view help for the current page.`
+            );
         }
-        else if (url.startsWith('/user-management')) {
-            setHelpText(`
-                👥 USER MANAGEMENT HELP
-                - Add, edit, or delete system users.
-                - Assign roles and permissions.
-                - Use search bar to locate users quickly.
-            `)
-        }
-        else {
-            setHelpText('Press F1 to view help for this page.')
-        }
-    }, [url])
+    }, [url]);
 
-    // F1 key listener
+    /** 📌 F1 keyboard listener */
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
-            if (e.key === 'F1') {
-                e.preventDefault()
-                setOpenHelp(true)
+            if (e.key === "F1") {
+                e.preventDefault();
+                setOpenHelp(true);
             }
-        }
+        };
 
-        window.addEventListener('keydown', handler)
-        return () => window.removeEventListener('keydown', handler)
-    }, [])
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+    }, []);
 
     return (
         <>
-            {/* Main Layout */}
             <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
                 {children}
             </AppLayoutTemplate>
 
-            {/* Help Modal */}
-            {openHelp && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
-                    <div className="bg-white p-6 rounded-xl shadow-xl max-w-lg w-full">
-                        <h2 className="text-xl font-semibold mb-4">Help Center</h2>
+            {/* 📌 Help Dialog (shadcn/ui) */}
+            <Dialog open={openHelp} onOpenChange={setOpenHelp}>
+                <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Help Center</DialogTitle>
+                        <DialogDescription>
+                            Quick help based on your current page.
+                        </DialogDescription>
+                    </DialogHeader>
 
-                        <pre className="whitespace-pre-wrap text-sm">
-                            {helpText}
-                        </pre>
-
-                        <button
-                            className="mt-5 px-4 py-2 bg-blue-600 text-white rounded-lg"
-                            onClick={() => setOpenHelp(false)}
-                        >
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}
+                    <pre className="whitespace-pre-wrap text-sm leading-relaxed mt-2">
+                        {helpText}
+                    </pre>
+                </DialogContent>
+            </Dialog>
         </>
-    )
-}
+    );
+};
