@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use Faker\Factory as Faker;
 
 
@@ -60,14 +61,6 @@ class UserSeeder extends Seeder
                 'role_id' => $role3->role_id, // Chairman
                 'password' => bcrypt('chairman@123'),
             ],
-            [
-                'user_id' => 33333,
-                'first_name' => 'Jane',
-                'last_name' => 'Doe',
-                'email' => 'janedoe@accreditor.com',
-                'role_id' => $role4->role_id, // Accreditor
-                'password' => bcrypt('accreditor@123'),
-            ],
         ];
         foreach ($users as $attributes) {
             User::factory()->create($attributes);
@@ -104,7 +97,5 @@ class UserSeeder extends Seeder
         foreach ($file_status as $attributes) {
             FileStatus::factory()->create($attributes);
         }
-
-
     }
 }
