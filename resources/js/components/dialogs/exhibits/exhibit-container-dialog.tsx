@@ -1,6 +1,6 @@
 import ExhibitOutlineDialogRenderer from '@/components/dialogs/exhibits/outline/exhibit-outline-dialog-renderer';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { ExhibitOutlines, Exhibits } from '@/types/exhibits';
 import { EditIcon, Eye, FolderOpen, Plus, Trash2Icon, X } from 'lucide-react';
@@ -33,7 +33,7 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
         setDialog({ type, action, outline });
     };
 
-    const closeDialog = () => {
+    const closeDialog = (wasSuccessful: boolean = false) => {
         setDialog({ type: null, action: null, outline: null });
     };
 
@@ -44,12 +44,12 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
 
     return (
         <>
-            <Dialog open={true} onOpenChange={onClose}>
-                <DialogContent className="sm:max-w-5xl">
-                    <DialogHeader>
-                        <DialogTitle className="text-lg font-medium text-gray-900">{exhibit.exhibit_name}</DialogTitle>
-                        <DialogDescription className="text-sm text-gray-500">Manage Documents in this Exhibit</DialogDescription>
-                    </DialogHeader>
+            <Drawer open={true} onOpenChange={onClose}>
+                <DrawerContent className="mx-auto p-4 sm:max-w-5xl">
+                    <DrawerHeader>
+                        <DrawerTitle className="text-lg font-medium text-gray-900">{exhibit.exhibit_name}</DrawerTitle>
+                        <DrawerDescription className="text-sm text-gray-500">Manage Documents in this Exhibit</DrawerDescription>
+                    </DrawerHeader>
 
                     {outlines.length === 0 ? (
                         <div className="flex min-h-[400px] rounded-lg">
@@ -102,7 +102,10 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
                                                 <p className="text-sm text-gray-500 italic">No documents found in this category.</p>
                                             ) : (
                                                 filteredOutlines.map((outline) => (
-                                                    <div className="group flex items-start justify-between rounded-md border border-gray-100 bg-white p-3 px-6 transition-all hover:border-red-200">
+                                                    <div
+                                                        className="group flex items-start justify-between rounded-md border border-gray-100 bg-white p-3 px-6 transition-all hover:border-red-200"
+                                                        key={outline.id}
+                                                    >
                                                         <div>
                                                             <span className="text-sm font-medium text-gray-900">{outline.outline_description}</span>
                                                         </div>
@@ -136,89 +139,24 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
                             </div>
                         </div>
                     )}
-                    <DialogFooter>
-                        {outlines.length > 0 && (
-                            <Button
-                                variant="noborder"
-                                onClick={() => openDialog('outline', 'add')}
-                            >
-                                <Plus className="mr-1 h-4 w-4" />
-                                New Outline
-                            </Button>
-                        )}
-                        <DialogClose asChild>
-                            <Button variant="outline">Close</Button>
-                        </DialogClose>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    <DrawerFooter className="pr-0">
+                        <div className="flex w-full items-center justify-end space-x-2">
+                            {outlines.length > 0 && (
+                                <Button variant="noborder" onClick={() => openDialog('outline', 'add')}>
+                                    <Plus className="mr-1 h-4 w-4" />
+                                    New Outline
+                                </Button>
+                            )}
+                            <DrawerClose asChild>
+                                <Button variant="outline">Close</Button>
+                            </DrawerClose>
+                        </div>
+                    </DrawerFooter>
+                </DrawerContent>
+            </Drawer>
             {dialog.type === 'outline' && (
                 <ExhibitOutlineDialogRenderer type={dialog.action} exhibit={exhibit} outline={dialog.outline || null} onClose={closeDialog} />
             )}
         </>
     );
 }
-// const [newCategory, setNewCategory] = useState<string>('');
-{
-    /*<div className="flex items-center space-x-0.5 opacity-100 transition-opacity">
-    <ActionButton
-        onClick={(e) => {
-            e.stopPropagation();
-            setIsDialogOpen(true);
-        }}
-    >
-        <EditIcon className="h-4 w-4" />
-    </ActionButton>
-    <ActionButton
-        onClick={(e) => {
-            e.stopPropagation();
-            handleDeleteCategory(cat);
-        }}
-    >
-        <Trash2Icon className="h-4 w-4" />
-    </ActionButton>
-</div>*/
-}
-/* <div className="mt-4 border-gray-200 pt-4">
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger className="w-full">
-            <Button className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition">
-                <Plus className="mr-2 h-4 w-4" /> New Category
-            </Button>
-        </DialogTrigger>
-        <DialogContent>
-            <DialogHeader>
-                <DialogTitle className="text-lg font-medium text-gray-900">Create New Category</DialogTitle>
-                <DialogDescription className="text-sm text-gray-500">Create a new category within an exhibit</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-2">
-                <Label className="mb-2 block text-sm font-medium text-gray-700">Category Name</Label>
-                <Input
-                    type="text"
-                    autoFocus
-                    tabIndex={1}
-                    placeholder="ex. Syllabus for BSHM"
-                    value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value)}
-                />
-            </div>
-            <DialogFooter className="mt-2">
-                <DialogClose asChild>
-                    <Button type="button" variant="outline" id="add-card-dialog-close">
-                        Cancel
-                    </Button>
-                </DialogClose>
-                <Button
-                    type="submit"
-                    className="border-none"
-                    onClick={() => {
-                        addCategory();
-                        setIsDialogOpen(false);
-                    }}
-                >
-                    Create
-                </Button>
-            </DialogFooter>
-        </DialogContent>
-    </Dialog>
-</div>; */
