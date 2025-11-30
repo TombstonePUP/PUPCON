@@ -13,6 +13,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/text-area';
 import { type FilesOverview } from '@/types';
 import { useForm } from '@inertiajs/react';
@@ -136,7 +137,9 @@ export const columns: ColumnDef<FilesOverview>[] = [
 
             return (
                 <div className="text-center">
-                    <Badge className={`hover:bg-gray-100 rounded-full px-3 py-0.5 text-xs font-medium capitalize ${variantColor}`}>{statusText}</Badge>
+                    <Badge className={`rounded-full px-3 py-0.5 text-xs font-medium capitalize hover:bg-gray-100 ${variantColor}`}>
+                        {statusText}
+                    </Badge>
                 </div>
             );
         },
@@ -169,13 +172,19 @@ export const columns: ColumnDef<FilesOverview>[] = [
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Rejection Comments</DialogTitle>
-                            <DialogDescription>Comments for rejected document</DialogDescription>
+                            <DialogTitle className="text-lg font-medium text-gray-900">Rejection Comments</DialogTitle>
+                            <DialogDescription className="text-sm text-gray-500">Comments for rejected document</DialogDescription>
                         </DialogHeader>
                         <div>
-                            <Textarea className="min-h-[100px] text-black" disabled>
+                            <Textarea className="min-h-[100px] text-black" disabled autoResize>
                                 {rejectionReason}
                             </Textarea>
+                        </div>
+
+                        <div className="my-0 rounded-md border border-red-100 bg-red-50 p-4">
+                            <p className="text-sm text-red-800">
+                                To proceed, please resubmit or re-upload the document after making the necessary adjustments.{' '}
+                            </p>
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
@@ -260,6 +269,40 @@ export const columns: ColumnDef<FilesOverview>[] = [
                 });
             };
 
+            // Parameter Name Filtering
+
+            const rawFileType = row.original.file_type;
+            const rawOutline = row.original.outline;
+
+            const isAreaType = rawFileType.startsWith('area');
+
+            let formattedAreaName;
+
+            if (!isAreaType) {
+                const areaParameterPart = rawFileType.replace(/Area-(\d+)-Parameter-([A-Z])/, 'Area $1 - Parameter $2');
+
+                formattedAreaName = `${areaParameterPart}: ${rawOutline}`;
+            } else if (isAreaType) {
+                const parts = rawOutline.split('-');
+                const reportName = parts.pop();
+                const rawTopic = parts.join('-');
+                const formattedTopic = rawTopic
+                    .replace(/-/g, ' ')
+                    .toLowerCase()
+                    .split(' ')
+                    .map((word) => {
+                        if (['and', 'or', 'of', 'a', 'the', 'in', 'for', 'with'].includes(word) && word !== rawTopic.toLowerCase().split(' ')[0]) {
+                            return word;
+                        }
+                        return word.charAt(0).toUpperCase() + word.slice(1);
+                    })
+                    .join(' ');
+
+                formattedAreaName = `${reportName}: ${formattedTopic}`;
+            } else {
+                formattedAreaName = 'Uncategorized';
+            }
+
             return (
                 <>
                     <DropdownMenu>
@@ -292,14 +335,16 @@ export const columns: ColumnDef<FilesOverview>[] = [
                     <Dialog open={revertDialogOpen} onOpenChange={setRevertDialogOpen}>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>Reset</DialogTitle>
-                                <DialogDescription>Reset Document Status</DialogDescription>
+                                <DialogTitle className="text-lg font-medium text-gray-900">Reset Status</DialogTitle>
+                                <DialogDescription className="text-sm text-gray-500">Reset document status to pending</DialogDescription>
                             </DialogHeader>
-                            <div>
-                                <label className="text-muted-foreground mb-1 block w-100 text-sm font-medium">
-                                    Do you want to reset the status of this Document?
-                                </label>
+                            <div className="my-0 rounded-md border border-yellow-100 bg-yellow-50 p-4">
+                                <p className="text-sm text-yellow-800">
+                                    <span className="mb-1 block font-semibold text-yellow-900">Note: Important Action!</span>
+                                    This action will reset the status of this Document back to pending status.
+                                </p>
                             </div>
+
                             <DialogFooter>
                                 <DialogClose asChild>
                                     <Button tabIndex={3} variant="outline" onClick={() => setRevertDialogOpen(false)}>
@@ -317,16 +362,14 @@ export const columns: ColumnDef<FilesOverview>[] = [
                     <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>Reject Document</DialogTitle>
-                                <DialogDescription>
-                                    {row.original.file_type.charAt(0).toUpperCase() + row.original.file_type.slice(1).toLowerCase()} -{' '}
-                                    {row.original.outline}
-                                </DialogDescription>
+                                <DialogTitle className="text-lg font-medium text-gray-900">Reject Document</DialogTitle>
+                                <DialogDescription className="text-sm text-gray-500">{formattedAreaName}</DialogDescription>
                             </DialogHeader>
                             <form onSubmit={rejectDocument}>
                                 <div className="mb-2">
-                                    <label className="text-muted-foreground mb-1 block w-100 text-sm font-medium">Rejection Comments</label>
-                                    <textarea
+                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Rejection Comments</Label>
+                                    <Textarea
+                                        autoResize
                                         id="rejection_reason"
                                         required
                                         autoFocus
@@ -335,11 +378,11 @@ export const columns: ColumnDef<FilesOverview>[] = [
                                         onChange={(e) => setDocsData('rejection_reason', e.target.value)}
                                         disabled={processingDocs}
                                         placeholder="Enter comments here..."
-                                        className="focus:border-ring focus:ring-ring min-h-[100px] w-full resize-y rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:outline-none"
+                                        className=""
                                     />
                                     <InputError className="mt-2" />
                                 </div>
-                                <DialogFooter>
+                                <DialogFooter className="mt-6">
                                     <DialogClose asChild>
                                         <Button tabIndex={3} variant="outline" onClick={() => setRejectDialogOpen(false)} disabled={processingDocs}>
                                             Cancel

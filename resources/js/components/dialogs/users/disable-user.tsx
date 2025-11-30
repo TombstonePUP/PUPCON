@@ -1,36 +1,22 @@
-"use client"
-import { UserMinus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-    DialogClose,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { useForm } from "@inertiajs/react"
-import { UserRecords } from "@/types/user-management"
+'use client';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { UserRecords } from '@/types/user-management';
+import { useForm } from '@inertiajs/react';
 
 interface DisableUserDialogProps {
-  user: UserRecords;
-  onClose: () => void;
+    user: UserRecords;
+    onClose: () => void;
 }
 
 export function DisableUser({ user, onClose }: DisableUserDialogProps) {
-    const {
-        data,
-        patch,
-        reset,
-    } = useForm<{ user_id: number }>({
+    const { data, patch, reset } = useForm<{ user_id: number }>({
         user_id: user.user_id,
     });
 
     const disableUser = (e: React.FormEvent) => {
         e.preventDefault();
-        patch(route("users.disable"), {
+        patch(route('users.disable'), {
             onSuccess: () => {
                 reset();
                 onClose();
@@ -42,35 +28,30 @@ export function DisableUser({ user, onClose }: DisableUserDialogProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className='flex items-center gap-2'>
-                        <UserMinus className="h-5 w-5 text-[#7f1414]" />
+                    <DialogTitle className="text-lg font-medium text-gray-900">
+                        {/* <User className="h-5 w-5 text-[#7f1414]" /> */}
                         Disable User
                     </DialogTitle>
-                    <DialogDescription>
-                        Are you sure you want to disable this user?
-                    </DialogDescription>
+                    <DialogDescription className="text-sm text-gray-500">Are you sure you want to disable this user?</DialogDescription>
                 </DialogHeader>
-                <Label className="text-sm text-muted-foreground">
-                    This action only disables the user account. The user data will still be stored in the database.
-                </Label>
+
+                <div className="my-0 rounded-md border border-red-100 bg-red-50 p-4">
+                    <p className="text-sm text-red-800">
+                        <span className="mb-1 block font-semibold text-red-900">Note: Important Action!</span>
+                        This action only disables the user account. The user data will still be stored in the database.
+                    </p>
+                </div>
                 <DialogFooter className="space-x-2">
                     <DialogClose asChild>
-                        <Button
-                            variant="outline"
-                            tabIndex={1}
-                        >
+                        <Button variant="outline" tabIndex={1}>
                             Cancel
                         </Button>
                     </DialogClose>
-                    <Button
-                        variant="noborder"
-                        tabIndex={2}
-                        onClick={disableUser}
-                    >
+                    <Button variant="noborder" tabIndex={2} onClick={disableUser}>
                         Disable
                     </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
