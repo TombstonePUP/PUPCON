@@ -94,7 +94,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
                     <div className="text-left">
                         <div
                             onClick={() => setDialogOpen(true)}
-                            className="w-sm cursor-pointer truncate text-gray-900 underline transition-colors hover:text-[#7f1414]"
+                            className="max-w-sm cursor-pointer truncate text-gray-900 underline transition-colors hover:text-[#7f1414]"
                         >
                             {row.getValue('outline')}
                         </div>
@@ -112,7 +112,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
     },
     {
         accessorKey: 'file_status',
-        header: () => <div className="text-left text-gray-700">Status</div>,
+        header: () => <div className="text-center text-gray-700">Status</div>,
         cell: ({ row }) => {
             const status = row.getValue('file_status') as string;
             let variantColor;
@@ -135,7 +135,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
             }
 
             return (
-                <div className="text-left">
+                <div className="text-center">
                     <Badge className={`hover:bg-gray-100 rounded-full px-3 py-0.5 text-xs font-medium capitalize ${variantColor}`}>{statusText}</Badge>
                 </div>
             );
@@ -201,7 +201,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
         header: ({ column }) => (
             <div className="flex items-center">
                 <div className="text-gray-700"> Date Uploaded</div>
-                <Button className="ml-2 text-left" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button className="ml-2 text-left" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'dsc')}>
                     <ArrowUpDown className="h-4" />
                 </Button>
             </div>

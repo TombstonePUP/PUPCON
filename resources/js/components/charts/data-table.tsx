@@ -206,19 +206,23 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                                         data-state={row.getIsSelected() && 'selected'}
                                         className="hover:bg-muted/50 border-b transition-colors"
                                     >
-                                        {row.getVisibleCells().map((cell, index) => (
-                                            <TableCell
-                                                key={cell.id}
-                                                className={`px-4 py-3.5 ${index === 0 ? 'pl-8' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-8' : ''}`}
-                                            >
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </TableCell>
-                                        ))}
+                                        {row.getVisibleCells().map((cell, index) => {
+                                            const isAreasColumn = cell.column.id === 'areas';
+                                            const cellClasses = isAreasColumn ? 'mx-auto h-full' : '';
+                                            return (
+                                                <TableCell
+                                                    key={cell.id}
+                                                    className={`px-4 py-3.5 ${cellClasses} ${index === 0 ? 'pl-6' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-6' : ''}`}
+                                                >
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </TableCell>
+                                            );
+                                        })}
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center">
+                                    <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center h-full">
                                         No results.
                                     </TableCell>
                                 </TableRow>
@@ -242,7 +246,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
     const filteredData = React.useMemo(() => {
         // @ts-ignore
         if (tab.toLowerCase() === 'all') {
-            return data; 
+            return data;
         }
         return data.filter((file) => file.file_status === tab.charAt(0).toUpperCase() + tab.slice(1));
     }, [data, tab]);

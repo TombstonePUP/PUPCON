@@ -205,7 +205,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                 <div className="mt-12 rounded-md border border-blue-100 bg-blue-50 p-4">
                                     <p className="text-sm text-blue-800">
                                         {/* <span className="mb-1 block font-semibold text-red-900">Note</span> */}
-                                        Please check your mail inbox for the email we sent containing your user credentials.
+                                        After clicking next, please check your mail inbox for the email we sent containing your user credentials and proceed to verification.
                                     </p>
                                 </div>
                             </div>
