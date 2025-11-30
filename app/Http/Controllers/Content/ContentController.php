@@ -36,7 +36,15 @@ class ContentController extends Controller
         $pages = ContentPages::all();
         $pages = $pages->map(function ($page) {
             $page->image_path = $page->image_path ? Storage::url($page->image_path) : null;
+            $page->director_image_path = $page->director_image_path ? Storage::url($page->director_image_path) : null;
+            $page->certificate_of_authenticity = $page->certificate_of_authenticity ? Storage::url($page->certificate_of_authenticity) : null;
             return $page;
+        });
+
+        $welcome_carousel = CampusGallery::where('carousel', true)->get();
+        $welcome_carousel = $welcome_carousel->map(function ($image) {
+            $image->image_path = $image->image_path ? Storage::url($image->image_path) : null;
+            return $image;
         });
 
         $officials = UniversityAdministration::all();
@@ -63,7 +71,7 @@ class ContentController extends Controller
             return $director;
         });
 
-        $gallery = CampusGallery::all();
+        $gallery = CampusGallery::where('carousel', false)->get();
         $gallery = $gallery->map(function ($image) {
             $image->image_path = $image->image_path ? Storage::url($image->image_path) : null;
             return $image;
@@ -92,6 +100,7 @@ class ContentController extends Controller
 
         return Inertia::render('content-management/main-content', [
             'pages' => $pages,
+            'welcome_gallery' => $welcome_carousel,
             'org_types' => $orgTypes,
             'officials' => $officials,
             'faculties' => $faculties,

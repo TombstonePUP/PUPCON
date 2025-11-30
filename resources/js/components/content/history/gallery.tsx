@@ -62,7 +62,7 @@ export function GallerySection({...props}: GalleryProps) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogAction, setDialogAction] = useState<'add' | 'edit'>('add');
 
-    const selectedGallery = galleryList.find((gallery: CampusGallery) => gallery.gallery_id === selectedGalleryId);
+    const selectedGallery = galleryList?.find((gallery: CampusGallery) => gallery.gallery_id === selectedGalleryId);
 
     useEffect(() => {
         setGalleryList(gallery ?? []);

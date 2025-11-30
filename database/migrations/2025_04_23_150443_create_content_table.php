@@ -11,15 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('news', function (Blueprint $table) {
-            $table->id(column: 'news_id')->autoIncrement()->primary();
-            $table->string('title');
-            $table->text('description');
-            $table->text('news_url')->nullable();
-            $table->string('image_name')->nullable();
-            $table->text('image_path')->nullable();
-        });
-
         Schema::create('facilities', function (Blueprint $table) {
             $table->id(column: 'facility_id')->autoIncrement()->primary();
             $table->string('facility_name');
@@ -38,6 +29,14 @@ return new class extends Migration
             $table->text('image_path')->nullable();
             $table->text('quote')->nullable();
             $table->text('author')->nullable();
+            $table->text('director_image_name')->nullable();
+            $table->text('director_image_path')->nullable();
+            $table->text('director_message')->nullable();
+            $table->string('director_name')->nullable();
+            $table->text('certificate_of_authenticity')->nullable();
+            $table->text('video_link')->nullable();
+            $table->string('video_title')->nullable();
+            $table->text('video_description')->nullable();
             $table->string('phone_number')->nullable();
             $table->text('address')->nullable();
         });
@@ -48,7 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('news');
         Schema::dropIfExists('facilities');
         Schema::dropIfExists('content_pages');
     }

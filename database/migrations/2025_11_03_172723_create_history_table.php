@@ -25,6 +25,7 @@ return new class extends Migration
             $table->id(column: 'gallery_id')->autoIncrement()->primary();
             $table->text('image_name');
             $table->text('image_path');
+            $table->boolean('carousel')->default(0);
             $table->text('description')->nullable();
         });
     }

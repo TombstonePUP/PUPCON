@@ -27,6 +27,14 @@ class ContentPages extends Model
         'image_path',
         'quote',
         'author',
+        'director_image_name',
+        'director_image_path',
+        'director_message',
+        'director_name',
+        'certificate_of_authenticity',
+        'video_link',
+        'video_title',
+        'video_description',
         'phone_number',
         'address',
     ];
@@ -34,5 +42,7 @@ class ContentPages extends Model
     protected $casts = [
         'image_name' => 'encrypted',
         'image_path' => 'encrypted',
+        'directors_image_name' => 'encrypted',
+        'directors_image_path' => 'encrypted',
     ];
 }

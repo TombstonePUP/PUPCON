@@ -21,6 +21,7 @@ class CampusGallery extends Model
     protected $fillable = [
         'image_name',
         'image_path',
+        'carousel',
         'description',
     ];
 

@@ -26,6 +26,9 @@ class VmgoController extends Controller
                 'page.page' => ['required', 'string'],
                 'page.title' => ['required', 'string'],
                 'page.description' => ['required', 'string'],
+                'page.video_link' => ['nullable', 'string'],
+                'page.video_title' => ['nullable', 'string'],
+                'page.video_description' => ['nullable', 'string'],
                 'campus_goals.*.goal_id' => ['required', 'integer'],
                 'campus_goals.*.goal_title_eng' => ['required', 'string'],
                 'campus_goals.*.goal_desc_eng' => ['required', 'string'],
@@ -40,9 +43,6 @@ class VmgoController extends Controller
                 'vmgo.vmgo_id' => ['required', 'integer'],
                 'vmgo.vision' => ['required', 'string'],
                 'vmgo.mission' => ['required', 'string'],
-                'vmgo.avp_link' => ['nullable', 'string'],
-                'vmgo.avp_title' => ['nullable', 'string'],
-                'vmgo.avp_description' => ['nullable', 'string'],
             ],
             [
                 'page.content_page_id.required' => 'The page content ID is required.',
@@ -75,12 +75,18 @@ class VmgoController extends Controller
             $page->page = $validated['page']['page'];
             $page->title = $validated['page']['title'];
             $page->description = $validated['page']['description'];
+            $page->video_link = $validated['page']['video_link'] ?? null;
+            $page->video_title = $validated['page']['video_title'] ?? null;
+            $page->video_description = $validated['page']['video_description'] ?? null;
             $page->save();
         } else {
             $page = ContentPages::create([
                 'page' => $validated['page']['page'],
                 'title' => $validated['page']['title'],
                 'description' => $validated['page']['description'],
+                'video_link' => $validated['page']['video_link'] ?? null,
+                'video_title' => $validated['page']['video_title'] ?? null,
+                'video_description' => $validated['page']['video_description'] ?? null,
             ]);
         }
 
@@ -88,17 +94,11 @@ class VmgoController extends Controller
         if ($vmgo) {
             $vmgo->vision = $validated['vmgo']['vision'];
             $vmgo->mission = $validated['vmgo']['mission'];
-            $vmgo->avp_link = $validated['vmgo']['avp_link'] ?? null;
-            $vmgo->avp_title = $validated['vmgo']['avp_title'] ?? null;
-            $vmgo->avp_description = $validated['vmgo']['avp_description'] ?? null;
             $vmgo->save();
         } else {
             Vmgo::create([
                 'vision' => $validated['vmgo']['vision'],
                 'mission' => $validated['vmgo']['mission'],
-                'avp_link' => $validated['vmgo']['avp_link'] ?? null,
-                'avp_title' => $validated['vmgo']['avp_title'] ?? null,
-                'avp_description' => $validated['vmgo']['avp_description'] ?? null,
             ]);
         }
 

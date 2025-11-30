@@ -15,9 +15,6 @@ return new class extends Migration
             $table->id(column: 'vmgo_id')->autoIncrement()->primary();
             $table->text('vision')->nullable();
             $table->text('mission')->nullable();
-            $table->text('avp_link')->nullable();
-            $table->text('avp_title')->nullable();
-            $table->text('avp_description')->nullable();
         });
 
         Schema::create('pillars', function (Blueprint $table) {

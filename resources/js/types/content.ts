@@ -10,6 +10,14 @@ export interface ContentPages {
     image_path?: string | null;
     quote?: string | null;
     author?: string | null;
+    director_image_name?: string | null;
+    director_image_path?: string | null;
+    director_message?: string | null;
+    director_name?: string | null;
+    certificate_of_authenticity?: string | null;
+    video_link?: string | null;
+    video_title?: string | null;
+    video_description?: string | null;
     phone_number?: string | null;
     address?: string | null;
 }
@@ -77,6 +85,7 @@ export interface CampusGallery {
     gallery_id: number;
     image_name: string;
     image_path: string;
+    carousel: boolean;
     description: string;
 }
 
@@ -125,9 +134,6 @@ export interface Vmgo {
     vmgo_id: number;
     vision: string;
     mission: string;
-    avp_link?: string | null;
-    avp_title?: string | null;
-    avp_description?: string | null;
 }
 
 export interface OtherServices {

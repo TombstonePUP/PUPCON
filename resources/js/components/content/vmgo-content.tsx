@@ -25,6 +25,9 @@ interface VmgoPageForm {
     page: string;
     title: string;
     description: string;
+    video_link: string;
+    video_title: string;
+    video_description: string;
 }
 
 interface VmgoForm {
@@ -42,6 +45,9 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
             page: vmgo_page?.page || 'Vision, Mission & Goals',
             title: vmgo_page?.title || '',
             description: vmgo_page?.description || '',
+            video_link: vmgo_page?.video_link || '',
+            video_title: vmgo_page?.video_title || '',
+            video_description: vmgo_page?.video_description || '',
         },
         campus_goals: vmgo_data.campus_goals || [],
         pillars: vmgo_data.pillars || [],
@@ -49,9 +55,6 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
             vmgo_id: vmgo_data.vmgo?.vmgo_id || Date.now(),
             vision: vmgo_data.vmgo?.vision || '',
             mission: vmgo_data.vmgo?.mission || '',
-            avp_link: vmgo_data.vmgo?.avp_link || null,
-            avp_title: vmgo_data.vmgo?.avp_title || null,
-            avp_description: vmgo_data.vmgo?.avp_description || null,
         },
     });
 
@@ -199,37 +202,37 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                     <label className="mb-2 block text-sm font-medium text-gray-700">YouTube Link</label>
                                     <Input
                                         placeholder="https://www.youtube.com/watch?v=..."
-                                        value={data.vmgo.avp_link || ''}
+                                        value={data.page.video_link || ''}
                                         onChange={(e) =>
                                             setData({
                                                 ...data,
-                                                vmgo: {
-                                                    ...data.vmgo,
-                                                    avp_link: e.target.value
+                                                page: {
+                                                    ...data.page,
+                                                    video_link: e.target.value
                                                 },
                                             })
                                         }
                                         disabled={processing}
                                     />
-                                    <InputError message={errors['vmgo.avp_link']} className="mt-2" />
+                                    <InputError message={errors['page.video_link']} className="mt-2" />
                                 </div>
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-gray-700">Video Title</label>
                                     <Input
                                         placeholder="Enter video title..."
-                                        value={data.vmgo.avp_title || ''}
+                                        value={data.page.video_title || ''}
                                         onChange={(e) =>
                                             setData({
                                                 ...data,
-                                                vmgo: {
-                                                    ...data.vmgo,
-                                                    avp_title: e.target.value
+                                                page: {
+                                                    ...data.page,
+                                                    video_title: e.target.value
                                                 },
                                             })
                                         }
                                         disabled={processing}
                                     />
-                                    <InputError message={errors['vmgo.avp_title']} className="mt-2" />
+                                    <InputError message={errors['page.video_title']} className="mt-2" />
                                 </div>
                             </div>
                             <div className="flex flex-col">
@@ -237,19 +240,19 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                 <Textarea
                                     className="flex-1"
                                     placeholder="Enter video description..."
-                                    value={data.vmgo.avp_description || ''}
+                                    value={data.page.video_description || ''}
                                     onChange={(e) =>
                                         setData({
                                             ...data,
-                                            vmgo: {
-                                                ...data.vmgo,
-                                                avp_description: e.target.value
+                                            page: {
+                                                ...data.page,
+                                                video_description: e.target.value
                                             },
                                         })
                                     }
                                     disabled={processing}
                                 />
-                                <InputError message={errors['vmgo.avp_description']} className="mt-2" />
+                                <InputError message={errors['page.video_description']} className="mt-2" />
                             </div>
                         </div>
                     </div>

@@ -41,6 +41,7 @@ interface VisionMissionGoals {
 
 interface MainContentProps {
     pages: ContentPages;
+    welcome_gallery: CampusGallery[];
     org_types: OrganizationTypes[];
     officials: Administration[];
     faculties: FacultyStaff[];
@@ -60,7 +61,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const MainContent = ({ ...props }: MainContentProps) => {
     const [activeSection, setActiveSection] = useState('welcome-landing');
     const [scrollLock, setScrollLock] = useState(false);
-    const { pages, officials, facilities, org_types, faculties, history, local_task_force, vmgo_data } = props;
+    const { pages, officials, facilities, org_types, faculties, history, local_task_force, vmgo_data, welcome_gallery } = props;
 
     const about_page = pages.find((page: ContentPages) => page.page === 'About') ?? null;
     const history_page = pages.find((page: ContentPages) => page.page === 'History') ?? null;
@@ -69,6 +70,7 @@ const MainContent = ({ ...props }: MainContentProps) => {
     const facility_page = pages.find((page: ContentPages) => page.page === 'Facilities') ?? null;
     const ltf_page = pages.find((page: ContentPages) => page.page === 'Local Task Force') ?? null;
     const vmgo_page = pages.find((page: ContentPages) => page.page === 'Vision, Mission & Goals') ?? null;
+    const welcome_page = pages.find((page: ContentPages) => page.page === 'Welcome') ?? null;
 
     const aboutRef = useRef(null);
     const vmgoRef = useRef(null);
@@ -166,7 +168,7 @@ const MainContent = ({ ...props }: MainContentProps) => {
                         <div className="space-y-6">
                             {/* Welcome Landing */}
                             <div id="welcome-landing" ref={welcomeLandingRef} className="scroll-mt-6">
-                                <WelcomeSection />
+                                <WelcomeSection welcome_page={welcome_page} gallery={welcome_gallery}/>
                             </div>
 
                             {/* About */}

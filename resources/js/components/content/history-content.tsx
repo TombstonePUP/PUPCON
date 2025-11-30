@@ -113,8 +113,6 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
         }
     };
 
-    console.log(errors);
-
     useEffect(() => {
         return () => {
             if (data.page?.previewUrl?.startsWith('blob:')) {

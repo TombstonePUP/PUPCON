@@ -79,7 +79,6 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                 }
             );
         } catch (error) {
-            console.error('Unexpected upload error:', error);
             toast.dismiss('uploading');
             toast.error('Unexpected error occurred', {
                 description: 'Please check your connection or try again later.',

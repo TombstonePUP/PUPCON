@@ -71,12 +71,12 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
     const hasVmgoData = vmgo && (vmgo.vision || vmgo.mission);
     const hasPillars = pillars && pillars.length > 0;
     const hasCampusGoals = campus_goals && campus_goals.length > 0;
-    const hasAvpData = vmgo && vmgo.avp_link && vmgo.avp_description;
+    const hasAvpData = page && page.video_link && page.video_description;
 
     // Extract YouTube video ID
-    const videoId = hasAvpData ? extractYouTubeID(vmgo.avp_link) : null;
+    const videoId = hasAvpData ? extractYouTubeID(page.video_link) : null;
     const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=0` : null;
-    const watchUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}` : vmgo?.avp_link;
+    const watchUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}` : page.video_link;
 
     return (
         <>
@@ -184,7 +184,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                                     <iframe
                                                         className="h-full w-full"
                                                         src={embedUrl}
-                                                        title={vmgo?.avp_title || 'University Development Plan'}
+                                                        title={page?.video_title || 'University Development Plan'}
                                                         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                                         allowFullScreen
                                                         loading="lazy"
@@ -195,9 +195,9 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                             {/* Content */}
                                             <div className="lg:col-span-2">
                                                 <h3 className="mb-4 text-2xl font-bold text-[#7f1414]">
-                                                    {vmgo?.avp_title || 'University Development Plan'}
+                                                    {page?.video_title || 'University Development Plan'}
                                                 </h3>
-                                                <p className="mb-6 leading-relaxed text-gray-700">{vmgo?.avp_description}</p>
+                                                <p className="mb-6 leading-relaxed text-gray-700">{page.video_description}</p>
 
                                                 {/* Watch on YouTube Button */}
                                                 <a

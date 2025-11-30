@@ -21,8 +21,5 @@ class Vmgo extends Model
     protected $fillable = [
         'vision',
         'mission',
-        'avp_link',
-        'avp_title',
-        'avp_description',
     ];
 }

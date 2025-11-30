@@ -21,10 +21,9 @@ class ActivityLog extends Model
     protected $primaryKey = 'activity_log_id';
     protected $fillable = [
         'user_id',
-        'area',
-        'program',
-        'file_name',
+        'description',
         'activity',
+        'type',
         'activity_date',
     ];
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Content\AboutController;
+use App\Http\Controllers\Content\WelcomeController;
 use App\Http\Controllers\Content\AdministrationController;
 use App\Http\Controllers\Content\ContentController;
 use App\Http\Controllers\Content\FacilitiesController;
@@ -104,6 +105,7 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     });
 
     Route::get('main-content/', ContentController::class)->name('content.main');
+    Route::post('main-content/welcome/update', WelcomeController::class)->name('content.welcome.update');
     Route::post('main-content/about/update', AboutController::class)->name('content.about.update');
     Route::post('main-content/vmgo/update', VmgoController::class)->name('content.vmgo.update');
     Route::post('main-content/history/update', HistoryController::class)->name('content.history.update');

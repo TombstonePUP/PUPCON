@@ -70,8 +70,8 @@ class HistoryController extends Controller
         if (isset($validated['page']['banner'])) {
             $bannerName = 'history-banner.' . $validated['page']['banner']->getClientOriginalExtension();
             $bannerPath = 'history-page/' . $bannerName;
-            if (Storage::disk('public')->exists($bannerPath)) {
-                Storage::disk('public')->delete($bannerPath);
+            if (Storage::disk('public')->exists($page->image_path)) {
+                Storage::disk('public')->delete($page->image_path);
             }
             $validated['page']['banner']->storeAs('history-page', $bannerName, 'public');
             $page->image_name = $bannerName;
