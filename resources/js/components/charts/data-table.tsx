@@ -64,8 +64,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                             <TableRow key={headerGroup.id} className="hover:bg-transparent">
                                 {headerGroup.headers.map((header, index) => {
                                     return (
-                                        <TableHead 
-                                            key={header.id} 
+                                        <TableHead
+                                            key={header.id}
                                             className={`h-12 px-4 font-medium ${index === 0 ? 'pl-8' : ''} ${index === headerGroup.headers.length - 1 ? 'pr-8' : ''}`}
                                         >
                                             {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -78,10 +78,14 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="border-b transition-colors hover:bg-muted/50">
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                    className="hover:bg-muted/50 border-b transition-colors"
+                                >
                                     {row.getVisibleCells().map((cell, index) => (
-                                        <TableCell 
-                                            key={cell.id} 
+                                        <TableCell
+                                            key={cell.id}
                                             className={`px-4 py-3.5 ${index === 0 ? 'pl-8' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-8' : ''}`}
                                         >
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -91,7 +95,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="h-32 text-center text-muted-foreground">
+                                <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center">
                                     No results.
                                 </TableCell>
                             </TableRow>
@@ -177,15 +181,15 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                 </div>
             </div>
 
-            <TabsContent value={tab} className="m-0 data-[state=active]:animate-in data-[state=active]:fade-in-0">
+            <TabsContent value={tab} className="data-[state=active]:animate-in data-[state=active]:fade-in-0 m-0">
                 <div className="rounded-lg border">
                     <Table>
                         <TableHeader className="bg-muted/50 sticky top-0 z-10">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id} className="hover:bg-transparent">
                                     {headerGroup.headers.map((header, index) => (
-                                        <TableHead 
-                                            key={header.id} 
+                                        <TableHead
+                                            key={header.id}
                                             className={`h-12 px-4 font-medium ${index === 0 ? 'pl-8' : ''} ${index === headerGroup.headers.length - 1 ? 'pr-8' : ''}`}
                                         >
                                             {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -197,10 +201,14 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                         <TableBody>
                             {table.getRowModel().rows?.length ? (
                                 table.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="border-b transition-colors hover:bg-muted/50">
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && 'selected'}
+                                        className="hover:bg-muted/50 border-b transition-colors"
+                                    >
                                         {row.getVisibleCells().map((cell, index) => (
-                                            <TableCell 
-                                                key={cell.id} 
+                                            <TableCell
+                                                key={cell.id}
                                                 className={`px-4 py-3.5 ${index === 0 ? 'pl-8' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-8' : ''}`}
                                             >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -210,7 +218,7 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} className="h-32 text-center text-muted-foreground">
+                                    <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center">
                                         No results.
                                     </TableCell>
                                 </TableRow>
@@ -229,10 +237,13 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
 export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = React.useState('');
-    const [tab, setTab] = React.useState<'pending' | 'approved' | 'rejected'>('pending');
+    const [tab, setTab] = React.useState<'pending' | 'approved' | 'rejected' | 'all'>('all');
 
     const filteredData = React.useMemo(() => {
         // @ts-ignore
+        if (tab.toLowerCase() === 'all') {
+            return data; 
+        }
         return data.filter((file) => file.file_status === tab.charAt(0).toUpperCase() + tab.slice(1));
     }, [data, tab]);
 
@@ -252,7 +263,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
     });
 
     return (
-        <Tabs defaultValue="pending" className="w-full space-y-4">
+        <Tabs defaultValue="all" className="w-full space-y-4">
             <div className="flex items-center gap-3">
                 <Input
                     placeholder="Search..."
@@ -262,9 +273,20 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                 />
                 <TabsList className="inline-flex h-8 rounded-md border border-gray-300 bg-white p-0.5">
                     <TabsTrigger
+                        value="all"
+                        onClick={() => setTab('all')}
+                        className="h-full flex-1 border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                    >
+                        All
+                        <Badge className="ml-2 transition-colors duration-200" variant="secondary">
+                            {data.length}
+                        </Badge>
+                    </TabsTrigger>
+
+                    <TabsTrigger
                         value="pending"
                         onClick={() => setTab('pending')}
-                        className="h-full flex-1 rounded-md rounded-r-none border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                        className="h-full flex-1 border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
                     >
                         Pending
                         <Badge className="ml-2 transition-colors duration-200" variant="secondary">
@@ -275,7 +297,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                     <TabsTrigger
                         value="approved"
                         onClick={() => setTab('approved')}
-                        className="h-full flex-1 rounded-none border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                        className="h-full flex-1 border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
                     >
                         Approved
                         <Badge className="ml-2 transition-colors duration-200" variant="secondary">
@@ -286,7 +308,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                     <TabsTrigger
                         value="rejected"
                         onClick={() => setTab('rejected')}
-                        className="h-full flex-1 rounded-md rounded-l-none border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                        className="h-full flex-1 border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
                     >
                         Rejected
                         <Badge className="ml-2 transition-colors duration-200" variant="secondary">
@@ -298,7 +320,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                     <DataTableViewOptions table={table} />
                 </div>
             </div>
-            <TabsContent value={tab} className="m-0 data-[state=active]:animate-in data-[state=active]:fade-in-0">
+            <TabsContent value={tab} className="data-[state=active]:animate-in data-[state=active]:fade-in-0 m-0">
                 <div className="rounded-lg border">
                     <Table>
                         <TableHeader className="bg-muted/50 sticky top-0 z-10">
@@ -306,8 +328,8 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                                 <TableRow key={headerGroup.id} className="hover:bg-transparent">
                                     {headerGroup.headers.map((header, index) => {
                                         return (
-                                            <TableHead 
-                                                key={header.id} 
+                                            <TableHead
+                                                key={header.id}
                                                 className={`h-12 px-4 font-medium ${index === 0 ? 'pl-8' : ''} ${index === headerGroup.headers.length - 1 ? 'pr-8' : ''}`}
                                             >
                                                 {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -320,11 +342,15 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                         <TableBody>
                             {table.getRowModel().rows?.length ? (
                                 table.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="border-b transition-colors hover:bg-muted/50 ">
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && 'selected'}
+                                        className="hover:bg-muted/50 border-b transition-colors"
+                                    >
                                         {row.getVisibleCells().map((cell, index) => (
-                                            <TableCell 
-                                                key={cell.id} 
-                                                className={`px-4 py-3.5 ${index === 0 ? 'pl-8' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-8' : ''}` }
+                                            <TableCell
+                                                key={cell.id}
+                                                className={`px-4 py-3.5 ${index === 0 ? 'pl-8' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-8' : ''}`}
                                             >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>
@@ -333,7 +359,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} className="h-32 text-center text-muted-foreground">
+                                    <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center">
                                         No results.
                                     </TableCell>
                                 </TableRow>
@@ -387,7 +413,7 @@ export function ActivityLogDataTable<TData, TValue>({ columns, data }: DataTable
                     <TabsTrigger
                         value="document"
                         onClick={() => setTab('document')}
-                        className="h-9 items-center gap-2 rounded-md border border-input bg-transparent px-4 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground data-[state=active]:bg-muted data-[state=active]:text-accent-foreground"
+                        className="border-input hover:bg-accent hover:text-accent-foreground data-[state=active]:bg-muted data-[state=active]:text-accent-foreground h-9 items-center gap-2 rounded-md border bg-transparent px-4 text-sm font-medium transition-all"
                     >
                         Documents
                         <Badge className="ml-1 h-5 min-w-[20px] px-1.5 text-xs font-medium" variant="secondary">
@@ -398,7 +424,7 @@ export function ActivityLogDataTable<TData, TValue>({ columns, data }: DataTable
                     <TabsTrigger
                         value="content"
                         onClick={() => setTab('content')}
-                        className="h-9 items-center gap-2 rounded-md border border-input bg-transparent px-4 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground data-[state=active]:bg-muted data-[state=active]:text-accent-foreground"
+                        className="border-input hover:bg-accent hover:text-accent-foreground data-[state=active]:bg-muted data-[state=active]:text-accent-foreground h-9 items-center gap-2 rounded-md border bg-transparent px-4 text-sm font-medium transition-all"
                     >
                         Content
                         <Badge className="ml-1 h-5 min-w-[20px] px-1.5 text-xs font-medium" variant="secondary">
@@ -411,7 +437,7 @@ export function ActivityLogDataTable<TData, TValue>({ columns, data }: DataTable
                 </div>
             </div>
 
-            <TabsContent value={tab} className="m-0 data-[state=active]:animate-in data-[state=active]:fade-in-0">
+            <TabsContent value={tab} className="data-[state=active]:animate-in data-[state=active]:fade-in-0 m-0">
                 <div className="rounded-lg border">
                     <Table>
                         <TableHeader className="bg-muted/50 sticky top-0 z-10">
@@ -428,7 +454,11 @@ export function ActivityLogDataTable<TData, TValue>({ columns, data }: DataTable
                         <TableBody>
                             {table.getRowModel().rows?.length ? (
                                 table.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="border-b transition-colors hover:bg-muted/50">
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && 'selected'}
+                                        className="hover:bg-muted/50 border-b transition-colors"
+                                    >
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell key={cell.id} className="px-4 py-3.5">
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -438,7 +468,7 @@ export function ActivityLogDataTable<TData, TValue>({ columns, data }: DataTable
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} className="h-32 text-center text-muted-foreground">
+                                    <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center">
                                         No results.
                                     </TableCell>
                                 </TableRow>

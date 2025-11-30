@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { type ActivityLogs } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpCircleIcon, ArrowUpDown, CircleFadingPlus, LucideUpload, Trash2Icon } from 'lucide-react';
 
 export const columns: ColumnDef<ActivityLogs>[] = [
     /* {
@@ -21,7 +21,11 @@ export const columns: ColumnDef<ActivityLogs>[] = [
         accessorKey: 'area',
         header: () => <div className="text-left">Area</div>,
         cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue('area')} </div>;
+            const areaString = row.getValue('area') as String;
+            const lowered = areaString.toLowerCase();
+            const areaFormat = lowered.charAt(0).toUpperCase() + lowered.slice(1).toLowerCase();
+
+            return <div className="text-left"> {areaFormat} </div>;
         },
         enableGlobalFilter: true,
     },
@@ -37,7 +41,7 @@ export const columns: ColumnDef<ActivityLogs>[] = [
         accessorKey: 'file_name',
         header: () => <div className="text-left">File</div>,
         cell: ({ row }) => {
-            return <div className="w-sm text-left  truncate text-gray-900"> {row.getValue('file_name')} </div>;
+            return <div className="w-sm truncate text-left text-gray-900"> {row.getValue('file_name')} </div>;
         },
         enableGlobalFilter: true,
     },
@@ -45,14 +49,33 @@ export const columns: ColumnDef<ActivityLogs>[] = [
         accessorKey: 'activity',
         header: () => <div className="text-left">Activity</div>,
         cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue('activity')} </div>;
+            const activityString = row.getValue('activity');
+
+            const ActivityIconMap = {
+                'Upload Document': ArrowUpCircleIcon,
+                'Delete Document': Trash2Icon,
+                'Update Document': CircleFadingPlus,
+            };
+
+            const IconComponent = ActivityIconMap[activityString] || LucideUpload;
+
+            return (
+                <div className="flex items-center gap-2 text-left">
+                    <IconComponent className="h-5 w-5" />
+                    {activityString}
+                </div>
+            );
         },
     },
     {
         accessorKey: 'activity_date',
         header: ({ column }) => {
             return (
-                <Button variant="ghost" className='text-left has-[>svg]:px-0 min-w-1' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button
+                    variant="ghost"
+                    className="min-w-1 text-left has-[>svg]:px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
                     Date
                     <ArrowUpDown className="h-4 w-4" />
                 </Button>

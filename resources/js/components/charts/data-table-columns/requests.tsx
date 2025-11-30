@@ -15,7 +15,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Textarea } from '@/components/ui/text-area';
 import { type FilesOverview } from '@/types';
-import { useForm, usePoll } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MessageSquareOff, MessageSquareText, MoreVertical } from 'lucide-react';
 import React, { useState } from 'react';
@@ -38,13 +38,6 @@ export const columns: ColumnDef<FilesOverview>[] = [
             </div>
         ),
         cell: ({ row }) => {
-            usePoll(
-                2000,
-                {},
-                {
-                    keepAlive: true,
-                },
-            );
             const filePath = row.original.file_path;
             const pathSegments = filePath.split('/').filter(Boolean);
             let rawSegment = '';
@@ -95,13 +88,6 @@ export const columns: ColumnDef<FilesOverview>[] = [
             </div>
         ),
         cell: ({ row }) => {
-            usePoll(
-                2000,
-                {},
-                {
-                    keepAlive: true,
-                },
-            );
             const [dialogOpen, setDialogOpen] = useState(false);
             return (
                 <>
@@ -150,7 +136,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
 
             return (
                 <div className="text-left">
-                    <Badge className={`rounded-full px-3 py-0.5 text-xs font-medium capitalize ${variantColor}`}>{statusText}</Badge>
+                    <Badge className={`hover:bg-gray-100 rounded-full px-3 py-0.5 text-xs font-medium capitalize ${variantColor}`}>{statusText}</Badge>
                 </div>
             );
         },
@@ -215,7 +201,7 @@ export const columns: ColumnDef<FilesOverview>[] = [
         header: ({ column }) => (
             <div className="flex items-center">
                 <div className="text-gray-700"> Date Uploaded</div>
-                <Button className="ml-2 text-left " variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button className="ml-2 text-left" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
                     <ArrowUpDown className="h-4" />
                 </Button>
             </div>
