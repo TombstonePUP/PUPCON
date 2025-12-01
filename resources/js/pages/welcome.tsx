@@ -1,11 +1,13 @@
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import useFacebookFeed from '@/hooks/useFacebookFeed';
 import Layout from '@/layouts/landing-layout';
+import { CampusGallery, ContentPages } from '@/types/content';
 import { Head } from '@inertiajs/react';
-import { BookOpen, Calendar, ChevronLeft, ChevronRight, GraduationCap, ImageIcon, MapPin, Play, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Image, ImageIcon, MapPin, Play, X } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
-const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: any }) => (
+const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode;[key: string]: any }) => (
     <a href={href} {...props}>
         {children}
     </a>
@@ -53,7 +55,8 @@ const HomeCardDescription = ({ className, children, ...props }: { className?: st
 );
 
 interface LandingProps {
-    carouselImages: string[];
+    page: ContentPages;
+    carousel_images: CampusGallery[];
 }
 
 interface Auth {
@@ -200,7 +203,17 @@ const SimpleCarousel = React.memo(({ images }: { images: string[] }) => {
     if (!images || images.length === 0) {
         return (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                <p>No images for carousel</p>
+                <Empty>
+                    <EmptyHeader>
+                        <EmptyMedia variant="icon">
+                            <Image className="h-50 w-50 text-gray-400" />
+                        </EmptyMedia>
+                        <EmptyTitle>
+                            Content Not Available
+                        </EmptyTitle>
+                        <EmptyDescription>No Available Images At The Moment.</EmptyDescription>
+                    </EmptyHeader>
+                </Empty>
             </div>
         );
     }
@@ -253,7 +266,7 @@ const ActionButton = React.memo(
     },
 );
 
-export default function Welcome({ carouselImages = [] }: LandingProps) {
+export default function Welcome({ page, carousel_images }: LandingProps) {
     const [showModal, setShowModal] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isPageReady, setIsPageReady] = useState(false);
@@ -264,7 +277,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
 
     const [newsPage, setNewsPage] = useState(0);
 
-    const images = carouselImages;
+    const images = carousel_images;
     const {
         props: { auth },
     } = usePage() as { props: { auth: Auth } };
@@ -461,7 +474,7 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
             <Head title="PUP San Juan">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-                <link rel="preload" href={carouselImages[0] || '/images/landing/1.png'} as="image" />
+                <link rel="preload" href={carousel_images[0] || '/images/landing/1.png'} as="image" />
             </Head>
 
             <style>{animationStyles}</style>
@@ -479,9 +492,8 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                     {/* Content Overlay with Animations */}
                     <div ref={heroContentRef} className="absolute inset-0 z-20 grid w-full grid-cols-1 px-[8vw] pr-10 text-white lg:pl-70">
                         <div
-                            className={`flex w-full flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${
-                                isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
-                            }`}
+                            className={`flex w-full flex-col justify-center space-y-[1.25vw] transition-all duration-500 ease-out ${isHeroContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'
+                                }`}
                         >
                             <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[70vw] object-cover lg:w-[29vw]" priority />
                             <h2 className="mb-3 text-[2.8vw] italic lg:mb-0 lg:text-[1.76vw]">Years of academic excellence and service</h2>
@@ -579,11 +591,10 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handlePrevPage}
                                     disabled={newsPage === 0}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
-                                        newsPage === 0
-                                            ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
-                                            : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                    }`}
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === 0
+                                        ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
+                                        : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
+                                        }`}
                                 >
                                     <ChevronLeft className="h-4 w-4" />
                                     <span>Previous</span>
@@ -595,9 +606,8 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                         <button
                                             key={index}
                                             onClick={() => setNewsPage(index)}
-                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${
-                                                index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
-                                            }`}
+                                            className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                                                }`}
                                             aria-label={`Go to page ${index + 1}`}
                                         />
                                     ))}
@@ -607,11 +617,10 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                                 <button
                                     onClick={handleNextPage}
                                     disabled={newsPage === totalPages - 1}
-                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${
-                                        newsPage === totalPages - 1
-                                            ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
-                                            : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
-                                    }`}
+                                    className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === totalPages - 1
+                                        ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
+                                        : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414]'
+                                        }`}
                                 >
                                     <span>Next</span>
                                     <ChevronRight className="h-4 w-4" />
@@ -709,8 +718,8 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                             <div className="relative h-[250px] w-full overflow-hidden rounded-xl transition-transform duration-300 hover:scale-102 sm:h-[350px] sm:rounded-2xl md:h-[400px]">
                                 <iframe
                                     className="h-full w-full"
-                                    src="https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=0"
-                                    title="PUPSJ AVP 2024"
+                                    src={page.video_link || 'https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=0'}
+                                    title={page.video_title || 'Campus Audio-Visual Presentation'}
                                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
                                     loading="lazy"
@@ -725,16 +734,11 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                             <h2 className="mb-3 text-xl font-bold text-[#7f1414] sm:mb-4 sm:text-2xl lg:text-[2rem]">
                                 Campus Audio-Visual Presentation
                             </h2>
-                            <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">
-                                A Leading Comprehensive Polytechnic University in Asia
-                            </p>
-                            <p className="mb-6 text-sm text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">
-                                Discover the roadmap that shapes our future — goals, strategies, and developments leading PUP into a new era of
-                                excellence.
-                            </p>
+                            <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">{page.video_title}</p>
+                            <p className="mb-6 text-sm text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">{page.video_description}</p>
 
                             <div className="flex justify-center lg:justify-start">
-                                <ActionButton href="https://www.youtube.com/watch?v=9ypv1kOj7CU" icon={Play} external>
+                                <ActionButton href={page?.video_link || '/'} icon={Play} external>
                                     Watch on YouTube
                                 </ActionButton>
                             </div>
@@ -759,8 +763,8 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
                             className={`relative mx-auto h-[350px] w-[280px] shrink-0 overflow-hidden rounded-xl transition-all duration-500 ease-out lg:mx-0 ${isDirectorImageInView ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
                         >
                             <SafeImage
-                                src="/images/adfa-new/faculty/Cecilia-R.-Alagon.jpg"
-                                alt="Director"
+                                src={page.director_image_path}
+                                alt={page.director_name || 'Campus Director'}
                                 className="h-full w-full rounded-xl" // Converted
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#7f1414]/20 to-transparent" />
@@ -781,14 +785,12 @@ export default function Welcome({ carouselImages = [] }: LandingProps) {
 
                             <div className="scrollbar-thin scrollbar-thumb-white/20 max-h-[120px] overflow-y-auto pr-2">
                                 <p className="text-left leading-relaxed">
-                                    Welcome to PUP San Juan! As the Campus Director, I am proud to see our institution thrive through innovation,
-                                    collaboration, and excellence. We continue to build a community that uplifts each learner and shapes the future of
-                                    education. Maraming salamat sa inyong suporta!
+                                    {page.director_message}
                                 </p>
                             </div>
 
                             <div className="mt-auto text-left">
-                                <p className="font-semibold">Dr. Cecilia R. Alagon</p>
+                                <p className="font-semibold">{page.director_name}</p>
                                 <p className="text-sm opacity-90">Campus Director</p>
                             </div>
                         </div>

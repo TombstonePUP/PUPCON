@@ -26,10 +26,9 @@ export default function Others({ page, others }: OtherServicesProps) {
 
                 <div className="mx-auto w-[75%] px-6 py-12">
                     <section className="card-fx mb-12 rounded-xl border border-[#7f1414]/25 bg-white p-8 duration-300 hover:border-[#7f1414]">
-                        <h2 className="mb-2 text-3xl font-bold text-[#7f1414]">Other Services & Portals</h2>
+                        <h2 className="mb-2 text-3xl font-bold text-[#7f1414]">{page.title}</h2>
                         <p className="leading-relaxed text-gray-700">
-                            Quick access to official university portals, campus-built systems, downloadable forms, and trusted external resources for
-                            students and faculty.
+                            {page.description}
                         </p>
                     </section>
 

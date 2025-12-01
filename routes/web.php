@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Content\WelcomeController;
 use App\Http\Controllers\Guest\AboutViewController;
 use App\Http\Controllers\Guest\AreasController;
 use App\Http\Controllers\Guest\ProgramsController;
@@ -7,15 +8,16 @@ use App\Http\Controllers\Guest\FacultyController;
 use App\Http\Controllers\Guest\HistoryViewController;
 use App\Http\Controllers\Guest\VmgoViewController;
 use App\Http\Controllers\Guest\AdministrationViewController;
+use App\Http\Controllers\Guest\CertificateController;
+use App\Http\Controllers\Guest\ExhibitsController;
 use App\Http\Controllers\Guest\FacilitiesViewController;
 use App\Http\Controllers\Guest\LocalTaskForceViewController;
 use App\Http\Controllers\Guest\OtherServicesViewController;
-
-use App\Http\Controllers\LandingController;
+use App\Http\Controllers\Guest\WelcomeViewController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', LandingController::class)->name('home');
+Route::get('/', WelcomeViewController::class)->name('home');
 
 Route::get('about', AboutViewController::class)->name('about');
 
@@ -32,13 +34,10 @@ Route::get('about/faculty-and-staff', [FacultyController::class, 'index'])
 
 Route::get('about/local-task-force', LocalTaskForceViewController::class)->name('local-task-force');
 
-Route::get('exhibits', function () {
-    return Inertia::render('exhibits');
-})->name('exhibits');
+Route::get('certificate', CertificateController::class)->name('certificate');
 
-Route::get('certificate', function () {
-    return Inertia::render('certificate');
-})->name('certificate');
+Route::get('exhibits', ExhibitsController::class)->name('exhibits');
+
 
 
 Route::get('others', OtherServicesViewController::class)->name('others');

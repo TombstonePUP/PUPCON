@@ -1,10 +1,16 @@
 'use client';
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
+import { ContentPages } from '@/types/content';
 import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 
-export default function Certificate() {
+interface CertificateProps {
+    certificate: ContentPages;
+}
+
+export default function Certificate({ certificate }: CertificateProps) {
+    console.log(certificate.certificate_of_authenticity);
     return (
         <>
             <Head title="Certificate of Authenticity - PUP San Juan">
