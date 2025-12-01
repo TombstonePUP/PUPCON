@@ -126,7 +126,7 @@ return new class extends Migration
         DB::statement(<<<SQL
             CREATE VIEW public.files_overview AS
             SELECT
-                CONCAT('Area', '-', a.area_number, '-','Parameter', '-', ap.parameter_name) file_type, -- area_name and parameter_name
+                CONCAT(p.degree_type , ' ', p.program_name, '-', 'Level ', l.level, '-', 'Area', '-', a.area_number, '-','Parameter', '-', ap.parameter_name) file_type, -- area_name and parameter_name
                 po.outline_description outline,
                 af.area_file_id file_id,
                 af.file_name file_name,
@@ -139,11 +139,15 @@ return new class extends Migration
                 LEFT JOIN parameter_outlines po ON po.parameter_outline_id = af.parameter_outline_id
                 LEFT JOIN area_parameters ap ON ap.area_parameter_id = po.area_parameter_id
                 LEFT JOIN areas a ON a.area_id = ap.area_id
+                LEFT JOIN accreditation_levels l on l.accreditation_level_id = a.accreditation_level_id
+                LEFT JOIN programs p on p.program_id = l.program_id
                 LEFT JOIN users u ON u.user_id = af.uploaded_by
                 LEFT JOIN file_status fs ON fs.file_status_id = af.file_status_id
+                WHERE p.under_survey = true
+                AND l.is_active = true
             UNION ALL
             SELECT
-                'area-forms' file_type,
+                CONCAT(p.degree_type , ' ', p.program_name, '-', 'Level ', l.level, '-', 'area-forms') file_type,
                 CONCAT(a.area_name,'-', afc.category_name) outline,
                 afo.area_form_id file_id,
                 afo.file_name file_name,
@@ -155,9 +159,13 @@ return new class extends Migration
             FROM area_forms afo
                 LEFT JOIN area_form_categories afc on afc.area_form_category_id = afo.area_form_category_id
                 LEFT JOIN areas a ON a.area_id = afo.area_id
+                LEFT JOIN accreditation_levels l on l.accreditation_level_id = a.accreditation_level_id
+                LEFT JOIN programs p on p.program_id = l.program_id
                 LEFT JOIN users u ON u.user_id = afo.uploaded_by
                 LEFT JOIN file_status fs ON fs.file_status_id = afo.file_status_id
-            WHERE afo.file_name IS NOT NULL
+                WHERE afo.file_name IS NOT NULL
+                AND p.under_survey = true
+                AND l.is_active = true
             UNION ALL
             SELECT
                 'exhibits' file_type,
