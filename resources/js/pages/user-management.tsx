@@ -47,35 +47,6 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
         setDialog({ type: null });
     };
 
-    /* const renderDialog = () => {
-        if (!selectedUser) return null;
-
-        switch (dialogType) {
-            case 'assign':
-                return (
-                    <AssignRoleDialog
-                        user={selectedUser}
-                        programRoles={programRoles}
-                        roles={roles}
-                        onClose={closeDialog} />
-                );
-            case 'disable':
-                return (
-                    <DisableUserDialog
-                        user={selectedUser}
-                        onClose={closeDialog} />
-                );
-            case 'enable':
-                return (
-                    <EnableUserDialog
-                        user={selectedUser}
-                        onClose={closeDialog} />
-                );
-            default:
-                return null;
-        }
-    }; */
-
     return (
         <>
             <AppLayout breadcrumbs={breadcrumbs}>
@@ -118,28 +89,10 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                         <div className="animate-in fade-in-0 w-full rounded-lg border bg-white p-4 duration-500">
                             <UsersDataTable columns={columns} data={userRecords} />
                         </div>
-
-                        {/* Right Sidebar - Quick Links */}
-                        {/* <div className="w-64 shrink-0">
-                            <div className="sticky top-6">
-                                <div className="rounded-lg border border-gray-200 bg-white p-4">
-                                    <h3 className="mb-3 text-sm font-semibold text-gray-900">Quick Actions</h3>
-                                    <div>
-                                        <Button
-                                            onClick={() => openDialog('add')}
-                                            className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-8 py-2 text-sm font-medium text-white transition hover:bg-[#7f1414]/90"
-                                        >
-                                            <User2 className="h-4 w-4" />
-                                            Add User
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
+                <RenderUserDialog type={dialog.type} user={dialog.user} program={programRoles} roles={roles} onClose={closeDialog} />
             </AppLayout>
-            {<RenderUserDialog type={dialog.type} user={dialog.user} program={programRoles} roles={roles} onClose={closeDialog} />}
         </>
     );
 }
