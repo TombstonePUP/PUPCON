@@ -718,8 +718,8 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                             <div className="relative h-[250px] w-full overflow-hidden rounded-xl transition-transform duration-300 hover:scale-102 sm:h-[350px] sm:rounded-2xl md:h-[400px]">
                                 <iframe
                                     className="h-full w-full"
-                                    src={page.video_link || 'https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=0'}
-                                    title={page.video_title || 'Campus Audio-Visual Presentation'}
+                                    src={page.video_link ?? 'https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=0'}
+                                    title={page.video_title ?? 'Campus Audio-Visual Presentation'}
                                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
                                     loading="lazy"
