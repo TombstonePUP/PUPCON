@@ -3,14 +3,15 @@ import RejectRequest from "./reject-document";
 import RevertRequest from "./revert-document";
 
 interface RequestDialogProps {
-    type: 'reject' | 'revert' | null;
-    file: FilesOverview;
+    type: 'reject' | 'revert' | 'approve' | null;
+    file: FilesOverview[];
     onClose: () => void;
 }
 
 export default function RenderRequestDialog({ type, file, onClose }: RequestDialogProps) {
     switch (type) {
         case 'reject':
+            console.log('Rendering RejectRequest dialog for files:', file);
             return (
                 <RejectRequest
                     file={file}

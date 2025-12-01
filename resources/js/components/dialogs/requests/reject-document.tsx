@@ -14,19 +14,25 @@ import { Textarea } from '@/components/ui/text-area';
 import InputError from '@/components/input-error';
 import { useForm } from '@inertiajs/react';
 import { FilesOverview } from '@/types';
+import { useEffect } from 'react';
 
-interface DocumentRequestForm {
+interface FileForm {
     file_id: number;
     file_type: string;
     rejection_reason?: string;
 }
 
+interface DocumentRequestForm {
+    file: FileForm[];
+}
+
 interface RejectRequestProps {
-    file: FilesOverview;
+    file: FilesOverview[];
     onClose: () => void;
 }
 
 export default function RejectRequest({ file, onClose }: RejectRequestProps) {
+    const [rejectionComment, setRejectionComment] = React.useState('');
     const {
         data,
         setData,
@@ -35,14 +41,21 @@ export default function RejectRequest({ file, onClose }: RejectRequestProps) {
         errors,
         reset,
     } = useForm<DocumentRequestForm>({
-        file_id: file.file_id,
-        file_type: file.file_type,
-        rejection_reason: null,
+        file: [],
     });
+
+    useEffect(() => {
+        setData('file', file.map(f => ({
+            file_id: f.file_id,
+            file_type: f.file_type,
+            rejection_reason: rejectionComment,
+        })));
+    }, [file, rejectionComment, setData]);
 
     const rejectDocument = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('rejectDocument', [data.file_id]), {
+        console.log(data);
+        post(route('rejectDocument'), {
             onSuccess: () => {
                 reset();
                 onClose();
@@ -50,8 +63,8 @@ export default function RejectRequest({ file, onClose }: RejectRequestProps) {
         });
     };
 
-    const rawFileType = file.file_type;
-    const rawOutline = file.outline;
+    const rawFileType = file.length !> 0 ? file[0].file_type : '';
+    const rawOutline = file.length !> 0 ? file[0].outline : '';
 
     const isAreaType = rawFileType.startsWith('area');
 
@@ -87,7 +100,7 @@ export default function RejectRequest({ file, onClose }: RejectRequestProps) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-lg font-medium text-gray-900">Reject Document</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">{formattedAreaName}</DialogDescription>
+                    <DialogDescription className="text-sm text-gray-500">{file.length === 0 ? formattedAreaName : 'Comments for Rejecting Files'}</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={rejectDocument}>
                     <div className="mb-2">
@@ -98,8 +111,9 @@ export default function RejectRequest({ file, onClose }: RejectRequestProps) {
                             required
                             autoFocus
                             tabIndex={1}
-                            value={data.rejection_reason}
-                            onChange={(e) => setData('rejection_reason', e.target.value)}
+                            value={rejectionComment}
+                            onChange={(e) => setRejectionComment(e.target.value)}
+                            rows={4}
                             disabled={processing}
                             placeholder="Enter comments here..."
                             className=""

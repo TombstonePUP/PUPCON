@@ -48,22 +48,31 @@ class DocumentRequestController extends Controller
     public function approve(Request $request)
     {
         $validated = $request->validate([
-            'file_id' => 'required|integer',
-            'file_type' => 'required|string'
+            'file' => ['required', 'array'],
+            'file.*.file_id' => ['required', 'integer'],
+            'file.*.file_type' => ['required', 'string'],
         ]);
 
-        $file = null;
-        if ($validated['file_type'] === 'exhibits') {
-            $file = ExhibitFiles::findOrFail($validated['file_id']);
-        } elseif (preg_match('/area-forms/i', $validated['file_type'])) {
-            $file = AreaForms::findOrFail($validated['file_id']);
-        } elseif (preg_match('/area/i', $validated['file_type'])) {
-            $file = AreaFiles::findOrFail($validated['file_id']);
-        }
+        $status_id = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
 
-        $file->file_status_id = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
-        $file->file_rejection_reason = '';
-        $file->save();
+        foreach ($validated['file'] as $fileData) {
+            $file = null;
+            if ($fileData['file_type'] === 'exhibits') {
+                $file = ExhibitFiles::findOrFail($fileData['file_id']);
+            } elseif (preg_match('/area-forms/i', $fileData['file_type'])) {
+                $file = AreaForms::findOrFail($fileData['file_id']);
+            } elseif (preg_match('/area/i', $fileData['file_type'])) {
+                $file = AreaFiles::findOrFail($fileData['file_id']);
+            }
+
+            if (!$file) {
+                continue;
+            }
+
+            $file->file_status_id = $status_id;
+            $file->file_rejection_reason = '';
+            $file->save();
+        }
 
         return redirect()->back()
             ->with('type', 'success')
@@ -77,23 +86,33 @@ class DocumentRequestController extends Controller
     public function reject(Request $request)
     {
         $validated = $request->validate([
-            'file_id' => 'required|integer',
-            'file_type' => 'required|string',
-            'rejection_reason' => 'required|string',
+            'file' => ['required', 'array'],
+            'file.*.file_id' => ['required', 'integer'],
+            'file.*.file_type' => ['required', 'string'],
+            'file.*.rejection_reason' => ['required', 'string'],
         ]);
 
-        $file = null;
-        if ($validated['file_type'] === 'exhibits') {
-            $file = ExhibitFiles::findOrFail($validated['file_id']);
-        } elseif (preg_match('/area-forms/i', $validated['file_type'])) {
-            $file = AreaForms::findOrFail($validated['file_id']);
-        } elseif (preg_match('/area/i', $validated['file_type'])) {
-            $file = AreaFiles::findOrFail($validated['file_id']);
-        }
 
-        $file->file_status_id = FileStatus::where('status_name', 'Rejected')->first()->file_status_id;
-        $file->file_rejection_reason = $validated['rejection_reason'];
-        $file->save();
+        $status_id = FileStatus::where('status_name', 'Rejected')->first()->file_status_id;
+
+        foreach ($validated['file'] as $fileData) {
+            $file = null;
+            if ($fileData['file_type'] === 'exhibits') {
+                $file = ExhibitFiles::findOrFail($fileData['file_id']);
+            } elseif (preg_match('/area-forms/i', $fileData['file_type'])) {
+                $file = AreaForms::findOrFail($fileData['file_id']);
+            } elseif (preg_match('/area/i', $fileData['file_type'])) {
+                $file = AreaFiles::findOrFail($fileData['file_id']);
+            }
+
+            if (!$file) {
+                continue;
+            }
+
+            $file->file_status_id = $status_id;
+            $file->file_rejection_reason = $fileData['rejection_reason'];
+            $file->save();
+        }
 
         return redirect()->back()
             ->with('type', 'success')
@@ -107,23 +126,32 @@ class DocumentRequestController extends Controller
     public function revert(Request $request)
     {
         $validated = $request->validate([
-            'file_id' => 'required|integer',
-            'file_type' => 'required|string'
+            'file' => ['required', 'array'],
+            'file.*.file_id' => ['required', 'integer'],
+            'file.*.file_type' => ['required', 'string'],
         ]);
 
-        $file = null;
 
-        if ($validated['file_type'] === 'exhibits') {
-            $file = ExhibitFiles::findOrFail($validated['file_id']);
-        } elseif (preg_match('/area-forms/i', $validated['file_type'])) {
-            $file = AreaForms::findOrFail($validated['file_id']);
-        } elseif (preg_match('/area/i', $validated['file_type'])) {
-            $file = AreaFiles::findOrFail($validated['file_id']);
+        $status_id = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
+
+        foreach ($validated['file'] as $fileData) {
+            $file = null;
+            if ($fileData['file_type'] === 'exhibits') {
+                $file = ExhibitFiles::findOrFail($fileData['file_id']);
+            } elseif (preg_match('/area-forms/i', $fileData['file_type'])) {
+                $file = AreaForms::findOrFail($fileData['file_id']);
+            } elseif (preg_match('/area/i', $fileData['file_type'])) {
+                $file = AreaFiles::findOrFail($fileData['file_id']);
+            }
+
+            if (!$file) {
+                continue;
+            }
+
+            $file->file_status_id = $status_id;
+            $file->file_rejection_reason = '';
+            $file->save();
         }
-
-        $file->file_status_id = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
-        $file->file_rejection_reason = '';
-        $file->save();
 
         return redirect()->back()
             ->with('type', 'success')

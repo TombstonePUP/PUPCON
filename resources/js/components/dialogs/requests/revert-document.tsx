@@ -11,13 +11,18 @@ import { Button } from "@/components/ui/button";
 import { FilesOverview } from "@/types";
 import { useForm } from "@inertiajs/react";
 
-interface DocumentRequestForm {
+interface FileForm {
     file_id: number;
     file_type: string;
+    rejection_reason?: string;
+}
+
+interface DocumentRequestForm {
+    file: FileForm[];
 }
 
 interface RevertRequestProps {
-    file: FilesOverview;
+    file: FilesOverview[];
     onClose: () => void;
 }
 
@@ -27,14 +32,16 @@ export default function RevertRequest({ file, onClose }: RevertRequestProps) {
         post,
         reset,
     } = useForm<DocumentRequestForm>({
-        file_id: file.file_id,
-        file_type: file.file_type,
+        file: file.map(f => ({
+            file_id: f.file_id,
+            file_type: f.file_type,
+        })),
     });
 
     const revertDocument = (e: React.FormEvent) => {
         e.preventDefault();
         onClose();
-        post(route('revertDocument', [data.file_id]), {
+        post(route('revertDocument'), {
             onSuccess: () => {
                 reset();
             }

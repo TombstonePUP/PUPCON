@@ -1,5 +1,4 @@
 import { DocumentViewer } from '@/components/dialogs/documents/view-document';
-import InputError from '@/components/input-error';
 import DocumentRequestActions from '@/components/request-table-actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,20 +15,36 @@ import {
 import { Textarea } from '@/components/ui/text-area';
 import { type FilesOverview } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MessageSquareOff, MessageSquareText, MoreVertical } from 'lucide-react';
+import { ArrowUpDown, MessageSquareOff, MessageSquareText } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useState } from 'react';
 
 interface DialogProps {
     type: 'aprove' | 'reject' | 'revert' | null;
-    file: FilesOverview;
+    file: FilesOverview[];
 }
 
 interface DocumentRecordProps {
     resolveDialog: ({ type, file }: DialogProps) => void;
 }
 
-export function getRequestsColumns({resolveDialog}: DocumentRecordProps): ColumnDef<FilesOverview>[] {
+export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): ColumnDef<FilesOverview>[] {
     return [
+        {
+            id: 'select',
+            header: ({ table }) => (
+                <Checkbox
+                    checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label="Select all"
+                />
+            ),
+            cell: ({ row }) => (
+                <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />
+            ),
+            enableSorting: false,
+            enableHiding: false,
+        },
         {
             accessorKey: 'file_type',
             header: ({ column }) => (
@@ -235,10 +250,7 @@ export function getRequestsColumns({resolveDialog}: DocumentRecordProps): Column
             cell: ({ row }) => {
                 return (
                     <div className="flex justify-end">
-                        <DocumentRequestActions
-                            file={row.original}
-                            resolveDialog={resolveDialog}
-                        />
+                        <DocumentRequestActions file={[row.original]} resolveDialog={resolveDialog} />
                     </div>
                 );
             },

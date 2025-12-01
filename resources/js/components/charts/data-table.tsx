@@ -4,6 +4,7 @@ import { DataTableViewOptions } from '@/components/column-toggle';
 import { DataTablePagination } from '@/components/pagination';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 
 import {
     ColumnDef,
@@ -20,10 +21,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import React from 'react';
+import { Button } from '../ui/button';
+import DocumentRequestActions from '../request-table-actions';
+import { FilesOverview } from '@/types';
+
+interface DialogProps {
+    type: 'aprove' | 'reject' | 'revert' | null;
+    file: FilesOverview | FilesOverview[];
+}
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    resolveDialog: ({ type, file }: DialogProps) => void;
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
@@ -157,7 +167,7 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                     <TabsTrigger
                         value="active"
                         onClick={() => setTab('active')}
-                        className="h-full flex-1 rounded-md  border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                        className="h-full flex-1 rounded-md border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
                     >
                         Active
                         <Badge className="ml-2 transition-colors duration-200" variant="secondary">
@@ -168,7 +178,7 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                     <TabsTrigger
                         value="inactive"
                         onClick={() => setTab('inactive')}
-                        className="h-full flex-1 rounded-md  border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                        className="h-full flex-1 rounded-md border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
                     >
                         Inactive
                         <Badge className="ml-2 transition-colors duration-200" variant="secondary">
@@ -222,7 +232,7 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center h-full">
+                                    <TableCell colSpan={columns.length} className="text-muted-foreground h-32 h-full text-center">
                                         No results.
                                     </TableCell>
                                 </TableRow>
@@ -238,10 +248,11 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
     );
 }
 
-export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DocumentRequestDataTable<TData, TValue>({ columns, data, resolveDialog }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = React.useState('');
     const [tab, setTab] = React.useState<'pending' | 'approved' | 'rejected' | 'all'>('all');
+    const [rowSelection, setRowSelection] = useState({});
 
     const filteredData = React.useMemo(() => {
         // @ts-ignore
@@ -254,6 +265,8 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
     const table = useReactTable({
         data: filteredData,
         columns,
+        onRowSelectionChange: setRowSelection,
+        getRowId: row => row.file_id,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
@@ -263,8 +276,11 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
         state: {
             globalFilter,
             sorting,
+            rowSelection,
         },
     });
+
+    const selectedFiles = table.getSelectedRowModel().rows.map(row => row.original) as FilesOverview[];
 
     return (
         <Tabs defaultValue="all" className="w-full space-y-4">
@@ -320,8 +336,9 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data }: DataT
                         </Badge>
                     </TabsTrigger>
                 </TabsList>
-                <div className="ml-auto">
+                <div className="ml-auto flex items-center gap-2">
                     <DataTableViewOptions table={table} />
+                    <DocumentRequestActions file={selectedFiles} resolveDialog={resolveDialog} />
                 </div>
             </div>
             <TabsContent value={tab} className="data-[state=active]:animate-in data-[state=active]:fade-in-0 m-0">

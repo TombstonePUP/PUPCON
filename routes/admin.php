@@ -99,9 +99,9 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
 
     Route::controller(DocumentRequestController::class)->prefix('requests')->group(function () {
         // Route::get('/', 'index')->name('requests');
-        Route::post('/{file_id}/approveDocument', 'approve')->name('approveDocument');
-        Route::post('/{file_id}/rejectDocument', 'reject')->name('rejectDocument');
-        Route::post('/{file_id}/revertDocument', 'revert')->name('revertDocument');
+        Route::post('/approveDocument', 'approve')->name('approveDocument');
+        Route::post('/rejectDocument', 'reject')->name('rejectDocument');
+        Route::post('/revertDocument', 'revert')->name('revertDocument');
     });
 
     Route::get('main-content/', ContentController::class)->name('content.main');

@@ -18,7 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface DialogProps {
     type: 'approve' | 'reject' | 'revert' | null;
-    file: FilesOverview;
+    file: FilesOverview[];
 }
 
 interface DocumentRequests {
@@ -31,10 +31,10 @@ export default function Requests({ files }: DocumentRequests) {
 
     const [dialog, setDialog] = useState<{
         type: 'approve' | 'reject' | 'revert' | null;
-        file: FilesOverview;
-    }>({ type: null, file: {} as FilesOverview });
+        file: FilesOverview[];
+    }>({ type: null, file: [] as FilesOverview[] });
 
-    const openDialog = useCallback((type: 'approve' | 'reject' | 'revert', file: FilesOverview) => {
+    const openDialog = useCallback((type: 'approve' | 'reject' | 'revert' | null, file: FilesOverview[]) => {
         setDialog({ type, file });
     }, []);
 
@@ -70,7 +70,7 @@ export default function Requests({ files }: DocumentRequests) {
                 </div>
 
                 <div className="rounded-lg border bg-white p-4">
-                    <DocumentRequestDataTable columns={columns} data={files} />
+                    <DocumentRequestDataTable columns={columns} data={files} resolveDialog={({ type, file }: DialogProps) => openDialog(type, file)} />
                 </div>
             </div>
             <RenderRequestDialog type={dialog.type} file={dialog.file} onClose={closeDialog} />
