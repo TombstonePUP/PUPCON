@@ -111,7 +111,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
             <Head title="Manage Programs" />
             <div className="flex h-full flex-1 flex-col gap-6 p-6">
                 {/* Header Section */}
-
                 <div className="flex gap-6">
                     <div id="header" className="mb-2 w-full rounded-lg border border-gray-200 bg-white p-6">
                         <div className="flex items-center gap-4">
@@ -120,7 +119,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             </div>
                             <div className="ml-2">
                                 <h1 className="text-xl font-semibold text-gray-900">Programs</h1>
-                                <p className="text-sm text-gray-500">Manage academic programs for PUP San Juan.</p>
+                                <p className="text-sm text-gray-500 line-clamp-1">Manage academic programs for PUP San Juan.</p>
                             </div>
                         </div>
                     </div>

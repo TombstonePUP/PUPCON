@@ -82,9 +82,8 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                 <Head title="User Management" />
                 <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
                     {/* Header Section */}
-                    <div id="header" className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
-                        <div className="flex items-center justify-between gap-4">
-                            {/* Left Side */}
+                    <div className="flex gap-6">
+                        <div id="header" className="mb-2 w-full rounded-lg border border-gray-200 bg-white p-6">
                             <div className="flex items-center gap-4">
                                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
                                     <User2Icon className="h-6 w-6 stroke-[2.5] text-white" />
@@ -94,33 +93,49 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                                     <p className="text-sm text-gray-500">Manage all user related information and access rights.</p>
                                 </div>
                             </div>
+                        </div>
 
-                            
+                        {/* Right Sidebar - Quick Links */}
+                        <div className="w-fit shrink-0">
+                            <div className="sticky top-6 space-y-4">
+                                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                                    <h3 className="mb-2 text-sm font-semibold text-gray-900">Program Actions</h3>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            onClick={() => openDialog('add')}
+                                            className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-8 py-2 text-sm font-medium text-white transition hover:bg-[#7f1414]/90"
+                                        >
+                                            <User2 className="h-4 w-4" />
+                                            Add User
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div className="flex gap-6">
-                        <div className="animate-in fade-in-0 rounded-lg border bg-white p-4 duration-500 w-full">
+                        <div className="animate-in fade-in-0 w-full rounded-lg border bg-white p-4 duration-500">
                             <UsersDataTable columns={columns} data={userRecords} />
                         </div>
 
                         {/* Right Sidebar - Quick Links */}
-                        <div className="w-64 shrink-0">
+                        {/* <div className="w-64 shrink-0">
                             <div className="sticky top-6">
                                 <div className="rounded-lg border border-gray-200 bg-white p-4">
                                     <h3 className="mb-3 text-sm font-semibold text-gray-900">Quick Actions</h3>
-                                   <div>
-                                <Button
-                                    onClick={() => openDialog('add')}
-                                    className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-8 py-2 text-sm font-medium text-white transition hover:bg-[#7f1414]/90 w-full"
-                                >
-                                    <User2 className="h-4 w-4" />
-                                    Add User
-                                </Button>
-                            </div>
+                                    <div>
+                                        <Button
+                                            onClick={() => openDialog('add')}
+                                            className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-8 py-2 text-sm font-medium text-white transition hover:bg-[#7f1414]/90"
+                                        >
+                                            <User2 className="h-4 w-4" />
+                                            Add User
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </AppLayout>
