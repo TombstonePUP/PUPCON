@@ -12,6 +12,8 @@ use App\Models\Roles;
 use App\Models\ParameterOutlineCategory;
 use App\Models\User;
 use App\Models\FileStatus;
+use App\Models\AreaFormCategory;
+
 
 class UserSeeder extends Seeder
 {
@@ -97,5 +99,16 @@ class UserSeeder extends Seeder
         foreach ($file_status as $attributes) {
             FileStatus::factory()->create($attributes);
         }
+
+
+        $area_forms_category = [
+            ['category_name' => 'Program Performance Profile'],
+            ['category_name' => 'Self-Survey'],
+            ['category_name' => 'Compliance Report']
+        ];
+        foreach ($area_forms_category as $attributes) {
+            AreaFormCategory::factory()->create($attributes);
+        }
+
     }
 }
