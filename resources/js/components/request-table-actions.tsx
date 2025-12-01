@@ -58,7 +58,7 @@ export default function DocumentRequestActions({ file, resolveDialog }: Document
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
-                        variant="ghost"
+                        variant={files.length > 1 ? 'outline' : 'ghost'}
                         className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
                         size="icon"
                         disabled={!canApprove && !canRevert && !canReject}
