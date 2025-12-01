@@ -55,19 +55,20 @@ class DocumentRequestController extends Controller
         $file = null;
         if ($validated['file_type'] === 'exhibits') {
             $file = ExhibitFiles::findOrFail($validated['file_id']);
-        } elseif ($validated['file_type'] === 'area-forms') {
+        } elseif (preg_match('/area-forms/i', $validated['file_type'])) {
             $file = AreaForms::findOrFail($validated['file_id']);
-        } elseif (substr($validated['file_type'], 0, 4) === 'Area') {
+        } elseif (preg_match('/area/i', $validated['file_type'])) {
             $file = AreaFiles::findOrFail($validated['file_id']);
-        };
+        }
 
         $file->file_status_id = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
         $file->file_rejection_reason = '';
         $file->save();
 
         return redirect()->back()
-            ->with('success', 'File Approved Successfully');
-
+            ->with('type', 'success')
+            ->with('title', 'Success')
+            ->with('message', 'File Approved Successfully');
     }
 
     /**
@@ -84,18 +85,20 @@ class DocumentRequestController extends Controller
         $file = null;
         if ($validated['file_type'] === 'exhibits') {
             $file = ExhibitFiles::findOrFail($validated['file_id']);
-        } elseif ($validated['file_type'] === 'area-forms') {
+        } elseif (preg_match('/area-forms/i', $validated['file_type'])) {
             $file = AreaForms::findOrFail($validated['file_id']);
-        } elseif (substr($validated['file_type'], 0, 4) === 'Area') {
+        } elseif (preg_match('/area/i', $validated['file_type'])) {
             $file = AreaFiles::findOrFail($validated['file_id']);
-        };
+        }
 
         $file->file_status_id = FileStatus::where('status_name', 'Rejected')->first()->file_status_id;
         $file->file_rejection_reason = $validated['rejection_reason'];
         $file->save();
 
         return redirect()->back()
-            ->with('success', 'File Approved Successfully');
+            ->with('type', 'success')
+            ->with('title', 'Success')
+            ->with('message', 'File Rejected Successfully');
     }
 
     /**
@@ -112,17 +115,19 @@ class DocumentRequestController extends Controller
 
         if ($validated['file_type'] === 'exhibits') {
             $file = ExhibitFiles::findOrFail($validated['file_id']);
-        } elseif ($validated['file_type'] === 'area-forms') {
+        } elseif (preg_match('/area-forms/i', $validated['file_type'])) {
             $file = AreaForms::findOrFail($validated['file_id']);
-        } elseif (substr($validated['file_type'], 0, 4) === 'Area') {
+        } elseif (preg_match('/area/i', $validated['file_type'])) {
             $file = AreaFiles::findOrFail($validated['file_id']);
-        };
+        }
 
         $file->file_status_id = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
         $file->file_rejection_reason = '';
         $file->save();
 
         return redirect()->back()
-            ->with('success', 'File Approved Successfully');
+            ->with('type', 'success')
+            ->with('title', 'Success')
+            ->with('message', 'File Reverted Successfully');
     }
 }
