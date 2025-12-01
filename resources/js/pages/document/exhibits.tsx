@@ -119,7 +119,7 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                                                             </Button>
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end" className="w-40">
-                                                            <DropdownMenuItem onClick={() => openDialog('exhibit', 'edit', exhibit)}>
+                                                            <DropdownMenuItem onClick={() => setTimeout (() => openDialog('exhibit', 'edit', exhibit), 50)}>
                                                                 Edit Exhibit
                                                             </DropdownMenuItem>
 
@@ -132,14 +132,14 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                                                                     </DropdownMenuItem>
                                                                     {exhibit.exhibit_outlines && exhibit.exhibit_outlines.length > 0 && (
                                                                         <>
-                                                                            <DropdownMenuItem
+                                                                             <DropdownMenuItem
                                                                                 onClick={() =>
-                                                                                    openDialog(
+                                                                                    setTimeout (() => openDialog(
                                                                                         'document',
                                                                                         'delete',
                                                                                         exhibit,
                                                                                         exhibit.exhibit_outlines[0],
-                                                                                    )
+                                                                                    ),50 )
                                                                                 }
                                                                             >
                                                                                 Delete Document
@@ -149,7 +149,9 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                                                                 </>
                                                             )}
 
-                                                            <DropdownMenuItem onClick={() => openDialog('exhibit', 'delete', exhibit)}>
+                                                            <DropdownMenuItem
+                                                                onClick={() => setTimeout(() => openDialog('exhibit', 'delete', exhibit), 50)}
+                                                            >
                                                                 Delete Exhibit
                                                             </DropdownMenuItem>
                                                         </DropdownMenuContent>
