@@ -25,14 +25,10 @@ interface LandingProps {
     carouselImages: string[];
 }
 
-interface LoginPageProps extends LoginProps, LandingProps { }
+interface LoginPageProps extends LoginProps, LandingProps {}
 
-export default function Login({
-    status,
-    canResetPassword,
-    carouselImages = [],
-}: LoginPageProps) {
-    const { data, setData, post, processing, errors, reset } = useForm<LoginForm>({
+export default function Login({ status, canResetPassword, carouselImages = [] }: LoginPageProps) {
+    const { data, setData, post, processing, errors, reset, clearErrors } = useForm<LoginForm>({
         email: '',
         password: '',
         remember: false,
@@ -44,6 +40,34 @@ export default function Login({
             onFinish: () => reset('password'),
         });
     };
+    const [attemptSeconds, setAttemptSeconds] = useState<number | null>(null);
+    useEffect(() => {
+        if (errors.email) {
+            const match = errors.email.match(/(\d+)\s*seconds?/i);
+            if (match) {
+                const seconds = parseInt(match[1], 10);
+                setAttemptSeconds(seconds);
+            }
+        }
+    }, [errors.email]);
+
+    useEffect(() => {
+        if (attemptSeconds === null) return;
+
+        if (attemptSeconds <= 0) {
+            setAttemptSeconds(null);
+            clearErrors('email'); // <-- remove the lockout error
+            return;
+        }
+
+        const interval = setInterval(() => {
+            setAttemptSeconds((s) => (s !== null ? s - 1 : null));
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [attemptSeconds]);
+
+    const isLocked = attemptSeconds !== null && attemptSeconds > 0;
 
     const images = carouselImages;
 
@@ -69,7 +93,7 @@ export default function Login({
 
         if (!images || images.length === 0) {
             return (
-                <div className="absolute z-[-1] inset-0 flex items-center justify-center bg-gray-200">
+                <div className="absolute inset-0 z-[-1] flex items-center justify-center bg-gray-200">
                     <p>No images for carousel</p>
                 </div>
             );
@@ -181,7 +205,9 @@ export default function Login({
                             onChange={(e) => setData('email', e.target.value)}
                             placeholder="email@example.com"
                         />
-                        <InputError message={errors.email} />
+                        <InputError
+                            message={attemptSeconds !== null ? `Too many attempts. Please try again in ${attemptSeconds} seconds.` : errors.email}
+                        />
                     </div>
 
                     <div className="grid gap-2">
@@ -211,7 +237,12 @@ export default function Login({
                         <Label htmlFor="remember">Remember me</Label>
                     </div>
 
-                    <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
+                    <Button
+                        type="submit"
+                        className="mt-4 w-full"
+                        tabIndex={4}
+                        disabled={processing || isLocked} // <── prevent login while locked
+                    >
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Log in
                     </Button>
@@ -224,7 +255,6 @@ export default function Login({
                     </TextLink>
                 </div> */}
             </form>
-
 
             {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
         </AuthLayout>
