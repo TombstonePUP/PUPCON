@@ -96,7 +96,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                         </div>
 
                         {/* Right Sidebar - Quick Links */}
-                        <div className="w-fit shrink-0">
+                        <div className="w-fit min-w-3xs shrink-0">
                             <div className="sticky top-6 space-y-4">
                                 <div className="rounded-lg border border-gray-200 bg-white p-4">
                                     <h3 className="mb-2 text-sm font-semibold text-gray-900">Program Actions</h3>

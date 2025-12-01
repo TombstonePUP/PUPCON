@@ -157,7 +157,7 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                     <TabsTrigger
                         value="active"
                         onClick={() => setTab('active')}
-                        className="h-full flex-1 rounded-md rounded-r-none border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                        className="h-full flex-1 rounded-md  border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
                     >
                         Active
                         <Badge className="ml-2 transition-colors duration-200" variant="secondary">
@@ -168,7 +168,7 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                     <TabsTrigger
                         value="inactive"
                         onClick={() => setTab('inactive')}
-                        className="h-full flex-1 rounded-md rounded-l-none border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                        className="h-full flex-1 rounded-md  border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
                     >
                         Inactive
                         <Badge className="ml-2 transition-colors duration-200" variant="secondary">
