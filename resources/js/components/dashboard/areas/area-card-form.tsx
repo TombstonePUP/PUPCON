@@ -63,14 +63,21 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
             {forms.map((card) => (
                 <div
                     key={card.area_form_id}
-                    className="group bg-card relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg border p-6 transition-all duration-300"
+                    className="group bg-card relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg border p-6 transition-all duration-300 hover:border-red-800"
                     onClick={() => resolveFormDialog({ type: 'view', form: card })}
                 >
-                    <div className="flex flex-grow items-center gap-4 overflow-hidden">
-                        <StatusIcon form={card} />
-                        <h1 className="text-card-foreground flex-grow truncate text-base font-semibold">
-                            {(card.area_form_category as AreaFormCategory | undefined)?.category_name}
-                        </h1>
+                    <div className="flex flex-grow items-center gap-6 overflow-hidden">
+                        <div className="rounded-lg bg-gray-100 p-2">
+                            <StatusIcon form={card} />
+                        </div>
+                        <div>
+                            <h1 className="text-card-foreground flex-grow truncate text-base font-semibold">
+                                {(card.area_form_category as AreaFormCategory | undefined)?.category_name}
+                            </h1>
+                            <h1 className="flex-grow truncate text-sm font-base text-gray-700">
+                               Area form
+                            </h1>
+                        </div>
                     </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
