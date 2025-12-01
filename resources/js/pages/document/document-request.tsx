@@ -1,11 +1,13 @@
 import { DocumentRequestDataTable } from '@/components/charts/data-table';
+import { getRequestsColumns } from '@/components/charts/data-table-columns/requests';
 import AppLayout from '@/layouts/app-layout';
 import { FilesOverview, type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import { useCallback } from 'react';
 
-import { columns as allColumns } from '@/components/charts/data-table-columns/requests';
 import { Boxes } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import RenderRequestDialog from '@/components/dialogs/requests/request-dialog-renderer';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,6 +15,11 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: `/requests`,
     },
 ];
+
+interface DialogProps {
+    type: 'approve' | 'reject' | 'revert' | null;
+    file: FilesOverview;
+}
 
 interface DocumentRequests {
     files: FilesOverview[];
@@ -22,12 +29,28 @@ export default function Requests({ files }: DocumentRequests) {
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
 
+    const [dialog, setDialog] = useState<{
+        type: 'approve' | 'reject' | 'revert' | null;
+        file: FilesOverview;
+    }>({ type: null, file: {} as FilesOverview });
+
+    const openDialog = useCallback((type: 'approve' | 'reject' | 'revert', file: FilesOverview) => {
+        setDialog({ type, file });
+    }, []);
+
     const columns = useMemo(() => {
-        if (role === 'Admin' || role === 'Coordinator') {
-            return allColumns;
-        }
-        return allColumns.filter((column) => column.id !== 'actions');
-    }, [role]);
+        const generatedColumns = getRequestsColumns({
+            resolveDialog: ({ type, file }: DialogProps) => openDialog(type, file),
+        });
+
+        if (role === 'Admin' || role === 'Coordinator') return generatedColumns;
+
+        return generatedColumns.filter((column) => column.id !== 'actions');
+    }, [role, openDialog]);
+
+    const closeDialog = () => {
+        setDialog({ type: null, file: {} as FilesOverview });
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -50,6 +73,7 @@ export default function Requests({ files }: DocumentRequests) {
                     <DocumentRequestDataTable columns={columns} data={files} />
                 </div>
             </div>
+            <RenderRequestDialog type={dialog.type} file={dialog.file} onClose={closeDialog} />
         </AppLayout>
     );
 }

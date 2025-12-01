@@ -16,7 +16,6 @@ interface UserDialogProps {
 }
 
 export function RenderUserDialog({ type, user, program, roles, onClose }: UserDialogProps) {
-    console.log(program);
     switch(type) {
         case 'add':
             return (

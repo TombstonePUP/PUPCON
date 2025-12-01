@@ -23,7 +23,6 @@ interface AreaFormDialogProps {
 export function RenderAreaFormDialog({ type, forms, form, categories, program, area, onClose }: AreaFormDialogProps) {
     if(!area) return null;
 
-    console.log(form);
     switch(type) {
         case 'view':
             return form?.file_path ? (
