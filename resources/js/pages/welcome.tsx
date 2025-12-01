@@ -718,8 +718,8 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                             <div className="relative h-[250px] w-full overflow-hidden rounded-xl transition-transform duration-300 hover:scale-102 sm:h-[350px] sm:rounded-2xl md:h-[400px]">
                                 <iframe
                                     className="h-full w-full"
-                                    src={page.video_link ?? 'https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=0'}
-                                    title={page.video_title ?? 'Campus Audio-Visual Presentation'}
+                                    src={page?.video_link || 'https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=0'}
+                                    title={page?.video_title || 'Campus Audio-Visual Presentation'}
                                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
                                     loading="lazy"
@@ -734,8 +734,8 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                             <h2 className="mb-3 text-xl font-bold text-[#7f1414] sm:mb-4 sm:text-2xl lg:text-[2rem]">
                                 Campus Audio-Visual Presentation
                             </h2>
-                            <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">{page.video_title}</p>
-                            <p className="mb-6 text-sm text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">{page.video_description}</p>
+                            <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">{page?.video_title}</p>
+                            <p className="mb-6 text-sm text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">{page?.video_description}</p>
 
                             <div className="flex justify-center lg:justify-start">
                                 <ActionButton href={page?.video_link || '/'} icon={Play} external>
@@ -763,8 +763,8 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                             className={`relative mx-auto h-[350px] w-[280px] shrink-0 overflow-hidden rounded-xl transition-all duration-500 ease-out lg:mx-0 ${isDirectorImageInView ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
                         >
                             <SafeImage
-                                src={page.director_image_path}
-                                alt={page.director_name || 'Campus Director'}
+                                src={page?.director_image_path}
+                                alt={page?.director_name || 'Campus Director'}
                                 className="h-full w-full rounded-xl" // Converted
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#7f1414]/20 to-transparent" />
@@ -785,12 +785,12 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
 
                             <div className="scrollbar-thin scrollbar-thumb-white/20 max-h-[120px] overflow-y-auto pr-2">
                                 <p className="text-left leading-relaxed">
-                                    {page.director_message}
+                                    {page?.director_message}
                                 </p>
                             </div>
 
                             <div className="mt-auto text-left">
-                                <p className="font-semibold">{page.director_name}</p>
+                                <p className="font-semibold">{page?.director_name}</p>
                                 <p className="text-sm opacity-90">Campus Director</p>
                             </div>
                         </div>
