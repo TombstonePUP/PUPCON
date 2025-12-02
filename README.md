@@ -302,6 +302,12 @@ php --ini
 echo "<?php phpinfo(); ?>" > info.php
 # Then visit: http://localhost/info.php
 # Look for "Loaded Configuration File"
+
+# preferred modifications
+upload_max_filesize = 2G
+max_file_uploads = 50
+memory_limit = 2G
+post_max_size = 3G
 ```
 
 </details>
