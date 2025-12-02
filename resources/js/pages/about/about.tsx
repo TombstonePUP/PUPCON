@@ -33,7 +33,6 @@ const DataAlert = ({ message }: { message: string }) => (
 
 export default function About({ page, programs, facilities, org_types }: AboutPageProps) {
     usePoll(5000);
-
     const quickLinks = [
         { label: 'Vision, Mission & Goals', href: '/about/vision-mission-goals' },
         { label: 'History', href: '/about/history' },
@@ -214,7 +213,7 @@ export default function About({ page, programs, facilities, org_types }: AboutPa
                                         )}
                                         <p className="flex items-center gap-2">
                                             <Mail className="h-5 w-5 text-[#7f1414]" />
-                                            pupsj@pup.edu.ph
+                                            sanjuan@pup.edu.ph
                                         </p>
                                         <p className="mt-2 text-sm">Office Hours: Mon–Fri, 8:00 AM – 5:00 PM</p>
                                     </div>

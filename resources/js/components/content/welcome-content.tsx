@@ -278,6 +278,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                 <div className="flex flex-col">
                                     <label className="mb-2 block text-sm font-medium text-gray-700">Video Description</label>
                                     <Textarea
+                                        autoResize
                                         className="flex-1"
                                         placeholder="Enter video description..."
                                         value={data.page.video_description || ''}
@@ -301,7 +302,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                     <Separator className="my-10 bg-gray-200" />
 
                     <div className="mb-6">
-                        <h3 className="mb-4 text-base font-semibold text-gray-900">Campus Audio-Visual Presentation</h3>
+                        {/* <h3 className="mb-4 text-base font-semibold text-gray-900">Campus Audio-Visual Presentation</h3> */}
 
                         {/* Banner Upload */}
                         <div className="mb-8">
@@ -398,7 +399,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                     <InputError message={errors['page.director_name']} className="mt-2" />
                                 </div>
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-gray-700">Director's Message</label>
+                                    <label className="mb-2 mt-6 block text-sm font-medium text-gray-700">Director's Message</label>
                                     <Textarea
                                         placeholder="Enter your message..."
                                         autoResize

@@ -222,7 +222,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
 
                             {/* University Strategic Goals */}
                             <section id="university-goals">
-                                <h2 className="mb-4 text-2xl font-semibold text-[#7f1414]">University Strategic Goals</h2>
+                                <h2 className="mb-2 text-2xl font-semibold text-[#7f1414]">University Strategic Goals</h2>
                                 <p className="mb-6 text-gray-600">Three fundamental pillars supporting our academic mission</p>
 
                                 {!hasPillars ? (
@@ -270,7 +270,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
 
                             {/* PUP San Juan Goals */}
                             <section id="campus-goals">
-                                <h2 className="mb-4 text-2xl font-semibold text-[#7f1414]">PUP San Juan Campus Goals</h2>
+                                <h2 className="mb-2 text-2xl font-semibold text-[#7f1414]">PUP San Juan Campus Goals</h2>
                                 <p className="mb-6 text-gray-600">Six strategic goals driving our campus excellence</p>
 
                                 {!hasCampusGoals ? (
@@ -280,30 +280,39 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                     />
                                 ) : (
                                     <div className="grid gap-6 lg:grid-cols-2">
-                                        {campus_goals.map((goal) => (
-                                            <div
-                                                key={goal.goal_id}
-                                                className="rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
-                                            >
-                                                <div className="mb-4 flex items-start space-x-4">
-                                                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#7f1414] text-lg font-bold text-white">
-                                                        {goal.goal_id}
-                                                    </div>
-                                                    <div>
-                                                        <h3 className="mb-3 text-lg font-semibold text-gray-900">{goal.goal_title_eng}</h3>
-                                                        <p className="mb-4 leading-relaxed text-gray-700">{goal.goal_desc_eng}</p>
-                                                        <details className="group">
-                                                            <summary className="cursor-pointer text-sm font-medium text-[#7f1414] transition-colors hover:text-[#a01818]">
-                                                                View in Filipino
-                                                            </summary>
-                                                            <div className="mt-3 rounded-lg bg-gray-50 p-4">
-                                                                <p className="text-sm text-gray-600 italic">{goal.goal_desc_fil}</p>
-                                                            </div>
-                                                        </details>
+                                        {campus_goals.map((goal, index) => {
+                                            // index starts at 0, so add 1 for display
+                                            const displayNumber = index + 1;
+
+                                            return (
+                                                <div
+                                                    key={goal.goal_id} // still use real ID for React key
+                                                    className="rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
+                                                >
+                                                    <div className="mb-4 flex items-start space-x-4">
+                                                        {/* Use displayNumber instead of goal.goal_id */}
+                                                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#7f1414] text-lg font-bold text-white">
+                                                            {displayNumber}
+                                                        </div>
+
+                                                        <div>
+                                                            <h3 className="mb-3 text-lg font-semibold text-gray-900">{goal.goal_title_eng}</h3>
+
+                                                            <p className="mb-4 leading-relaxed text-gray-700">{goal.goal_desc_eng}</p>
+
+                                                            <details className="group">
+                                                                <summary className="cursor-pointer text-sm font-medium text-[#7f1414] transition-colors hover:text-[#a01818]">
+                                                                    View in Filipino
+                                                                </summary>
+                                                                <div className="mt-3 rounded-lg bg-gray-50 p-4">
+                                                                    <p className="text-sm text-gray-600 italic">{goal.goal_desc_fil}</p>
+                                                                </div>
+                                                            </details>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </section>
