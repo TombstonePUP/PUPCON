@@ -78,7 +78,7 @@ export function NavMain({
                                                             <TooltipProvider>
                                                                 <Tooltip>
                                                                     <TooltipTrigger asChild>
-                                                                        <Badge className="justify-center rounded border-none bg-[#7f1414]/80 text-white hover:bg-[#7f1414]">
+                                                                        <Badge className="justify-center rounded border-none bg-[#7f1414]/50 text-white hover:bg-[#7f1414] rounded-full">
                                                                             {subItem.badge}
                                                                         </Badge>
                                                                     </TooltipTrigger>
@@ -112,7 +112,7 @@ export function NavMain({
                                                     <TooltipTrigger asChild>
                                                         <Badge
                                                             variant="outline"
-                                                            className="justify-center rounded border-none bg-[#7f1414]/80 text-white hover:bg-[#7f1414]"
+                                                            className="justify-center rounded border-none bg-[#7f1414]/50 text-white hover:bg-[#7f1414] rounded-full"
                                                         >
                                                             {item.badge}
                                                         </Badge>
