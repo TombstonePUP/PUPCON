@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->boolean('official')->default(false);
             $table->string('official_position')->nullable();
-            $table->string('profile_image_name')->nullable();
+            $table->text('profile_image_name')->nullable();
             $table->text('profile_image_path')->nullable();
         });
 
