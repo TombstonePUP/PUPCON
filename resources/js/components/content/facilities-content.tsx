@@ -1,3 +1,4 @@
+import { FacilitiesDialog } from '@/components/dialogs/content/facilities-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import SectionFooter from '@/components/ui/section-footer';
@@ -7,7 +8,6 @@ import { ContentPages, Facilities } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import { EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { FacilitiesDialog } from '@/components/dialogs/content/facilities-dialog';
 import InputError from '../input-error';
 
 interface FacilitiesProps {
@@ -133,7 +133,9 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
         post(route('content.facilities.update'), {
             onSuccess: () => {
                 // reset();
-            }
+            },
+            preserveScroll: true,
+            preserveState: true,
         });
     };
 
@@ -253,10 +255,11 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                                         onClick={() => {
                                             setSelectedFacilityId(facility.facility_id);
                                         }}
-                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${facility.facility_id === selectedFacility?.facility_id
-                                            ? 'bg-[#7f1414]/4'
-                                            : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
+                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${
+                                            facility.facility_id === selectedFacility?.facility_id
+                                                ? 'bg-[#7f1414]/4'
+                                                : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
                                     >
                                         <div className="truncate text-sm">
                                             <span
@@ -266,10 +269,11 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                                             </span>
                                         </div>
                                         <div
-                                            className={`flex items-center space-x-0.5 transition-opacity ${facility.facility_id === selectedFacility?.facility_id
-                                                ? 'opacity-100'
-                                                : 'opacity-0 group-hover:opacity-100'
-                                                }`}
+                                            className={`flex items-center space-x-0.5 transition-opacity ${
+                                                facility.facility_id === selectedFacility?.facility_id
+                                                    ? 'opacity-100'
+                                                    : 'opacity-0 group-hover:opacity-100'
+                                            }`}
                                         >
                                             <ActionButton
                                                 onClick={() => {

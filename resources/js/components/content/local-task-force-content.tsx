@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import SectionFooter from '@/components/ui/section-footer';
 import { Separator } from '@/components/ui/separator';
@@ -42,9 +41,9 @@ interface LtfChairmanForm {
 interface LocalTaskForceForm {
     page: PageForm;
     chairmen: LtfChairmanForm[];
-};
+}
 
-const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) => {
+const LocalTaskForceSection: React.FC = ({ ...props }: LocalTaskForceSectionProps) => {
     const { ltf_page, local_task_force } = props;
     const { data, setData, post, errors, processing } = useForm<LocalTaskForceForm>({
         page: {
@@ -62,11 +61,13 @@ const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) 
             official_position: ltf.official_position || null,
             profile_image: null,
             previewUrl: ltf.profile_image_path || null,
-            members: ltf.members ? ltf.members.map((member) => ({
-                member_id: member.member_id,
-                local_task_force_id: member.local_task_force_id,
-                full_name: member.full_name,
-            })) : [],
+            members: ltf.members
+                ? ltf.members.map((member) => ({
+                      member_id: member.member_id,
+                      local_task_force_id: member.local_task_force_id,
+                      full_name: member.full_name,
+                  }))
+                : [],
         })),
     });
 
@@ -112,16 +113,16 @@ const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) 
     };
 
     const handleDelete = (id: number) => {
-        setData((prev) => (
-            {
-                ...prev,
-                chairmen: prev.chairmen.filter((chairman) => chairman.local_task_force_id !== id),
-            }
-        ));
+        setData((prev) => ({
+            ...prev,
+            chairmen: prev.chairmen.filter((chairman) => chairman.local_task_force_id !== id),
+        }));
     };
 
     const handleSubmit = () => {
         post(route('content.local_task_force.update'), {
+            preserveScroll: true,
+            preserveState: true,
         });
     };
 
@@ -168,7 +169,6 @@ const LocalTaskForceSection: React.FC = ({...props}:LocalTaskForceSectionProps) 
                         onUpdateTaskForceOfficial={handleUpdateLocalTaskForce}
                         onDeleteTaskForceOfficial={handleDelete}
                     />
-
                 </div>
                 {chairman_errors.length > 0 && (
                     <div className="mb-4 rounded-md bg-red-50 p-4">

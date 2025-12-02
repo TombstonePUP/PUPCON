@@ -8,8 +8,8 @@ import { ContentPages, FacultyStaff } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import { EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import InputError from '../input-error';
 import { FacultyDialog } from '../dialogs/content/faculty-dialog';
+import InputError from '../input-error';
 
 interface FacultyProps {
     faculty_page: ContentPages;
@@ -208,8 +208,10 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
             onSuccess: () => {
                 // Optionally reset form or show success message
             },
+            preserveScroll: true,
+            preserveState: true,
         });
-    }
+    };
 
     return (
         <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
@@ -324,19 +326,26 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
                                             onClick={() => {
                                                 setSelectedFacultyId(member.faculty_staff_id);
                                             }}
-                                            className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${member.faculty_staff_id === selectedFacultyId ? 'bg-[#7f1414]/4' : 'border-gray-100 bg-white hover:bg-gray-50'
-                                                }`}
+                                            className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${
+                                                member.faculty_staff_id === selectedFacultyId
+                                                    ? 'bg-[#7f1414]/4'
+                                                    : 'border-gray-100 bg-white hover:bg-gray-50'
+                                            }`}
                                         >
                                             <div className="truncate text-sm">
                                                 <span
                                                     className={` ${member.faculty_staff_id === selectedFacultyId ? 'font-normal text-red-900' : 'text-gray-700'}`}
                                                 >
-                                                    {member.first_name} {member.middle_name ? member.middle_name[0] + '. ' : ''}{member.last_name}
+                                                    {member.first_name} {member.middle_name ? member.middle_name[0] + '. ' : ''}
+                                                    {member.last_name}
                                                 </span>
                                             </div>
                                             <div
-                                                className={`flex items-center space-x-0.5 transition-opacity ${member.faculty_staff_id === selectedFacultyId ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                                                    }`}
+                                                className={`flex items-center space-x-0.5 transition-opacity ${
+                                                    member.faculty_staff_id === selectedFacultyId
+                                                        ? 'opacity-100'
+                                                        : 'opacity-0 group-hover:opacity-100'
+                                                }`}
                                             >
                                                 <ActionButton
                                                     onClick={(e) => {
@@ -385,7 +394,10 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
                                     </div>
 
                                     <div>
-                                        <h4 className="text-lg font-semibold break-words text-gray-900">{selectedFaculty.first_name} {selectedFaculty.middle_name ? selectedFaculty.middle_name + ' ' : ''}{selectedFaculty.last_name}</h4>
+                                        <h4 className="text-lg font-semibold break-words text-gray-900">
+                                            {selectedFaculty.first_name} {selectedFaculty.middle_name ? selectedFaculty.middle_name + ' ' : ''}
+                                            {selectedFaculty.last_name}
+                                        </h4>
                                         <h6 className="text-lg font-semibold break-words text-gray-900">{selectedFaculty.programs?.program_name}</h6>
                                         <p className="text-sm font-normal text-red-700">{selectedFaculty.status}</p>
                                     </div>
@@ -408,16 +420,10 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />
             {dialogOpen && dialogType && (
-                <FacultyDialog
-                    type={dialogType}
-                    faculty={selectedFaculty}
-                    onClose={() => setDialogOpen(false)}
-                    onSave={handleSave}
-                />
+                <FacultyDialog type={dialogType} faculty={selectedFaculty} onClose={() => setDialogOpen(false)} onSave={handleSave} />
             )}
         </div>
     );
 };
 
 export default FacultySection;
-
