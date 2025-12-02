@@ -21,7 +21,7 @@ interface ProgramSectionProps {
 interface GalleryForm {
     gallery_id: number | null;
     image: File | null;
-    previewUrl: string | null;
+    previewUrl?: string | null;
     caption: string;
 }
 
@@ -96,6 +96,18 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
             caption: item.caption,
         })),
     });
+
+    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
+        const messages = Object.entries(errors)
+            .filter(([key]) => key.startsWith(parentKey))
+            .map(([, message]) => message);
+
+        // Remove duplicate messages
+        return [...new Set(messages)];
+    };
+
+    const objectiveErrors = extractGroupedErrors(errors, 'objectives');
+    const galleryErrors = extractGroupedErrors(errors, 'gallery');
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -176,15 +188,24 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
     const deleteObjective = (id: number) => {
         setObjectives((prev) => {
             const updated = prev.filter((o) => o.program_objective_id !== id);
+
             if (selectedObjectiveId === id) {
                 setSelectedObjectiveId(null);
             }
+            const formObjectives = updated.map((o) => ({
+                objective_id: o.program_objective_id,
+                title: o.objective_title,
+                description: o.objective_description,
+            }));
+
             setData((prevData) => ({
                 ...prevData,
-                objectives: updated,
+                objectives: formObjectives,
             }));
+
             return updated;
         });
+
         setDialogOpen(false);
     };
 
@@ -258,23 +279,31 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
     const deleteGallery = (id: number) => {
         setGalleryItems((prev) => {
             const updated = prev.filter((g) => g.program_gallery_id !== id);
-            if (selectedGalleryId === id) {
-                setSelectedGalleryId(null);
-            }
+
+            const formGallery = updated.map((item) => ({
+                gallery_id: item.program_gallery_id,
+                image: null,
+                previewUrl: item.image_path,
+                caption: item.caption,
+            }));
 
             setData((prevData) => ({
                 ...prevData,
-                gallery: updated,
+                gallery: formGallery,
             }));
+
             return updated;
         });
         setDialogOpen(false);
     };
 
     const onSave = () => {
-        post(route('manage.program.update.content', {
-            program_id: program.program_id,
-        }));
+        console.log('Saving program content...', data);
+        post(
+            route('manage.program.update.content', {
+                program_id: program.program_id,
+            }),
+        );
     };
 
     const preview = () => {
@@ -302,7 +331,13 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                 <div className="mt-5 flex flex-col gap-3">
                                     {!data.previewUrl ? (
                                         <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70">
-                                            <input type="file" className="hidden" accept="image/*" disabled={processing} onChange={handleImageChange} />
+                                            <input
+                                                type="file"
+                                                className="hidden"
+                                                accept="image/*"
+                                                disabled={processing}
+                                                onChange={handleImageChange}
+                                            />
                                             <div className="flex flex-col items-center justify-center gap-4 pt-5 pb-6">
                                                 <div className="relative">
                                                     <div className="rounded-fullopacity-20 absolute inset-0 animate-pulse"></div>
@@ -375,7 +410,9 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                     id="program_description"
                                     required
                                     defaultValue={program.program_description}
-                                    onChange={(e) => { setData('description', e.target.value); }}
+                                    onChange={(e) => {
+                                        setData('description', e.target.value);
+                                    }}
                                     placeholder="Provide a detailed description of the program..."
                                     autoResize
                                     disabled={processing}
@@ -460,6 +497,16 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                             </div>
                         </div>
                     </div>
+                    {objectiveErrors.length > 0 && (
+                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                            <h4 className="mb-2 text-sm font-semibold text-red-600">Objective Errors</h4>
+                            <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                {objectiveErrors.map((error, index) => (
+                                    <li key={index}>{error}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
                     <Separator className="my-10 bg-gray-200" />
 
@@ -534,17 +581,24 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                             </div>
                         </div>
                     </div>
+                    {galleryErrors.length > 0 && (
+                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                            <h4 className="mb-2 text-sm font-semibold text-red-600">Gallery Errors</h4>
+                            <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                {galleryErrors.map((error, index) => (
+                                    <li key={index}>{error}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </div>
-                <SectionFooter
-                    onSave={onSave}
-                    onPreview={program.under_survey ? preview : null}
-                />
+                <SectionFooter onSave={onSave} onPreview={program.under_survey ? preview : null} />
             </div>
             {dialogType === 'objective' && dialogOpen && (
                 <ObjectiveDialog
                     type={action}
                     objective={selectedObjective}
-                    nextObjectiveNumber={objectives.length + 1}   // ← ADD THIS
+                    nextObjectiveNumber={objectives.length + 1} // ← ADD THIS
                     onClose={() => setDialogOpen(false)}
                     onSave={saveObjective}
                 />

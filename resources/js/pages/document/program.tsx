@@ -79,7 +79,7 @@ export default function Programs({ program }: ProgramProps) {
     useEffect(() => {
         const observerOptions = {
             root: null,
-            rootMargin: '-20% 0px -20% 0px', // activates when section is near middle of screen
+            rootMargin: '-50% 0px -50% 0px', // activates when section is near middle of screen
             threshold: 0,
         };
 
@@ -294,7 +294,11 @@ export default function Programs({ program }: ProgramProps) {
                                                             {(role === 'Admin' || role === 'Coordinator') &&
                                                                 selected_level.is_active &&
                                                                 selected_level.remarks === 'Ongoing Survey' && (
-                                                                    <DropdownMenuItem onClick={() => editArea(item)}>
+                                                                    <DropdownMenuItem
+                                                                            onClick={() => {
+                                                                                setTimeout(() => editArea(item), 50);
+                                                                            }}
+                                                                    >
                                                                         <EditIcon className="mr-2 h-4 w-4 text-gray-600" />
                                                                         Edit
                                                                     </DropdownMenuItem>
@@ -319,7 +323,9 @@ export default function Programs({ program }: ProgramProps) {
                                                                         <DropdownMenuSeparator />
                                                                         <DropdownMenuItem
                                                                             className="text-red-600 hover:bg-red-50 hover:text-red-600"
-                                                                            onClick={() => deleteArea(item)}
+                                                                            onClick={() => {
+                                                                                setTimeout(() => deleteArea(item), 50);
+                                                                            }}
                                                                         >
                                                                             <Trash2 className="mr-2 h-4 w-4" />
                                                                             Delete

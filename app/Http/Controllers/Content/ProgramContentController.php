@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProgramContentController extends Controller
 {
@@ -16,18 +17,43 @@ class ProgramContentController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'banner' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
-            'description' => ['nullable', 'string', 'max:5000'],
-            'objectives' => ['nullable', 'array'],
-            'gallery' => ['nullable', 'array'],
-            'objectives.*.objective_id' => ['required', 'integer'],
-            'objectives.*.title' => ['required', 'string', 'max:255'],
-            'objectives.*.description' => ['nullable', 'string'],
-            'gallery.*.gallery_id' => ['nullable', 'integer'],
-            'gallery.*.image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
-            'gallery.*.caption' => ['required', 'string', 'max:255'],
-        ]);
+        // dd($request->all());
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'banner' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
+                'previewUrl' => ['nullable', 'string'],
+                'description' => ['nullable', 'string', 'max:5000'],
+                'objectives' => ['nullable', 'array'],
+                'gallery' => ['nullable', 'array'],
+                'objectives.*.objective_id' => ['required', 'integer'],
+                'objectives.*.title' => ['required', 'string', 'max:255'],
+                'objectives.*.description' => ['nullable', 'string'],
+                'gallery.*.gallery_id' => ['required', 'integer'],
+                'gallery.*.image' => [
+                    'required_without:gallery.*.previewUrl',
+                    // 'sometimes',
+                    'nullable',
+                    'file',
+                    'mimes:jpg,jpeg,png',
+                    'max:5120'
+                ],
+                'gallery.*.previewUrl' => ['nullable', 'string'],
+                'gallery.*.caption' => ['required', 'string', 'max:255'],
+            ],
+            [
+                // 'banner.image' => 'The banner must be an image file.',
+                'banner.mimes' => 'The banner must be a file of type: jpg, jpeg, png.',
+                'banner.max' => 'The banner may not be greater than 5MB.',
+                'objectives.*.title.required' => 'The objective title is required.',
+                'gallery.*.image.required' => 'The gallery image is required.',
+                'gallery.*.image.required_without' => 'The gallery image is required',
+                'gallery.*.image.sometimes' => 'The gallery image is required.',
+                'gallery.*.image.mimes' => 'The gallery image must be a file of type: jpg, jpeg, png.',
+                'gallery.*.image.max' => 'The gallery image may not be greater than 5MB.',
+                'gallery.*.caption.required' => 'The gallery caption is required.',
+            ]
+        );
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -38,6 +64,7 @@ class ProgramContentController extends Controller
         }
 
         $validated = $validator->validated();
+
 
         $program = Programs::findOrFail($request->program_id);
         $bannerName = null;
@@ -51,7 +78,14 @@ class ProgramContentController extends Controller
             }
             $validated['banner']->storeAs($program_name . '/assets/', $bannerName, 'public');
         }
-        $program->program_description = $validated['description'] ?? $program->progra_description;
+
+        if ($program->program_image_path && !isset($validated['previewUrl'])) {
+            Storage::disk('public')->delete($program->program_image_path);
+            $program->program_image_name = null;
+            $program->program_image_path = null;
+        }
+
+        $program->program_description = $validated['description'] ?? $program->program_description;
         if (isset($bannerName) && isset($bannerPath)) {
             $program->program_image_name = $bannerName;
             $program->program_image_path = $bannerPath;
@@ -91,7 +125,7 @@ class ProgramContentController extends Controller
                 if (Storage::disk('public')->exists($imagePath)) {
                     Storage::disk('public')->delete($imagePath);
                 };
-                $galleryItem['image']->storeAs($program_name . '/assets/gallery/' , $imageName, 'public');
+                $galleryItem['image']->storeAs($program_name . '/assets/gallery/', $imageName, 'public');
             }
             if ($galleryModel) {
                 $galleryModel->image_name = $imageName ?? $galleryModel->image_name;

@@ -45,16 +45,19 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
         setDialog({ kind: null });
     };
 
+    const levelId = program.levels?.[0]?.accreditation_level_id ?? '';
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: program.program_name,
-            href: `/manage-programs/${program.program_link}/${program.levels[0]?.accreditation_level_id}`,
+            href: `/manage-programs/${program.program_id}/${levelId}`,
         },
         {
             title: area?.area_name,
-            href: `/manage-programs/${program.program_link}/${area?.area_id}`,
+            href: `/manage-programs/${program.program_id}/${levelId}/${area?.area_id}`,
         },
     ];
+
+    console.log(program);
 
     return (
         <>
