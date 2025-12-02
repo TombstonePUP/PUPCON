@@ -35,6 +35,7 @@ class BenchmarkRequest extends FormRequest
             'benchmark_number' => [
                 Rule::requiredIf(fn () => $this->method() === 'POST'),
                 'string',
+                'regex:/^\d+(?:\.\d+)*$/',
             ],
             'benchmark_description' => [
                 Rule::requiredIf(fn () => $this->method() === 'POST'),
@@ -53,6 +54,7 @@ class BenchmarkRequest extends FormRequest
             'area_parameter_id.required' => 'The area parameter field is required.',
             'benchmark_category.required' => 'The parameter outline category field is required.',
             'benchmark_number.required' => 'The outline number field is required.',
+            'benchmark_number.regex' => 'The outline number format is invalid. It should contain only numbers and periods (e.g., 1.2.3).',
             'benchmark_description.required' => 'The outline description field is required.',
             'is_container.required' => 'The container field is required.',
         ];
