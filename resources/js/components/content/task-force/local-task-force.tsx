@@ -270,7 +270,7 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
                     </div>
 
                     {/* Bottom part: Add Buttons */}
-                    <div className="mt-4 flex gap-3 space-y-2 border-t border-gray-200 pt-4">
+                    <div className="mt-4 flex gap-3 space-y-2 border-t border-gray-200 pt-4 flex-col">
                         <Button
                             onClick={handleAddOfficial}
                             variant="outline"

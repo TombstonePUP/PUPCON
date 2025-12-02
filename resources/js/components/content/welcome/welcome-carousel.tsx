@@ -167,7 +167,7 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
                         onClick={handleAddGallery}
                         className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
                     >
-                        <Plus className="mr-2 h-4 w-4" /> Add New Photo
+                        <Plus className="mr-2 h-4 w-4" /> <p className='truncate'>Add New Photo</p>
                     </Button>
                 </div>
             </div>
