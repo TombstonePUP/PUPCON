@@ -10,7 +10,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, usePoll } from '@inertiajs/react';
-import { BookCheck, Edit, NotebookIcon, PlusCircleIcon, Trash2 } from 'lucide-react';
+import { BookCheck, CircleSlash, Edit, Folders, NotebookIcon, PlusCircleIcon, Trash2 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -217,7 +217,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                 </div>
 
                 {/* Programs Grid */}
-                <div className="mt-10">
+                <div className="mt-5">
                     {filteredPrograms.length > 0 ? (
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {filteredPrograms.map((program) => {
@@ -261,8 +261,8 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                     </Button>
                                                 </div>
                                             )}
-                                            <div className="mb-3 flex items-center justify-between">
-                                                <div>
+                                            <div className="mb-3 flex items-start justify-between">
+                                                <div className="flex flex-wrap gap-1">
                                                     <Badge
                                                         variant="outline"
                                                         className="border-0 bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]"
@@ -272,7 +272,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                             : `No Current Level`}
                                                     </Badge>
                                                     {program.under_survey && (
-                                                        <Badge variant="outline" className="ml-2 border-0 bg-yellow-100 text-yellow-800">
+                                                        <Badge variant="outline" className="border-0 bg-yellow-100 text-yellow-800">
                                                             Under Survey
                                                         </Badge>
                                                     )}
@@ -291,19 +291,16 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                             <h3 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
                                                 {program.program_name}
                                             </h3>
-                                            <p className="mb-3 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name} `}</p>
+                                            <p className="mb-3 line-clamp-1 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name} `}</p>
 
                                             <div className="flex items-center gap-4 text-xs text-gray-500">
                                                 <div className="flex items-center gap-1">
-                                                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth="2"
-                                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                                        />
-                                                    </svg>
+                                                    <Folders className="h-3 w-3" />
                                                     <span>{program.latest_level?.areas ? program.latest_level?.areas?.length : 0} areas</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <CircleSlash className="h-3 w-3" />
+                                                    <span>20 missing</span>
                                                 </div>
                                             </div>
                                         </div>

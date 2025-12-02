@@ -18,7 +18,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgram, ProgramAreas } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { BookOpen, Download, EditIcon, MoreVertical, Plus, Trash2 } from 'lucide-react';
+import { BookOpen, CircleSlash, Download, EditIcon, MoreVertical, Plus, Trash2 } from 'lucide-react';
 
 export interface ProgramProps {
     program: PerProgram;
@@ -260,6 +260,12 @@ export default function Programs({ program }: ProgramProps) {
                                                                         Assigned
                                                                     </Badge>
                                                                 )}
+                                                            </div>
+                                                              <div className="flex justify-start mt-2 gap-4 text-xs text-gray-500">
+                                                                <div className="flex items-center gap-1">
+                                                                    <CircleSlash className="h-3 w-3" />
+                                                                    <span>20 missing</span>
+                                                                </div>
                                                             </div>
                                                         </Link>
                                                     ) : (

@@ -1,6 +1,6 @@
 'use client';
 
-import { Book, Boxes, ChartArea, FileChartColumnIncreasing, GalleryVerticalEnd, InfoIcon, Library, Monitor, Notebook, SquareTerminal, SquareUser } from 'lucide-react';
+import { Book, Boxes, ChartArea, GalleryVerticalEnd, InfoIcon, Library, Notebook, SquareUser } from 'lucide-react';
 import * as React from 'react';
 
 import { NavMain } from '@/components/nav-main';
@@ -26,38 +26,46 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
         ...(role === 'Admin' || role === 'Coordinator'
             ? [
-                {
-                    title: 'User Management',
-                    url: '/users',
-                    icon: SquareUser,
-                },
-            ]
+                  {
+                      title: 'User Management',
+                      url: '/users',
+                      icon: SquareUser,
+                  },
+              ]
             : []),
         // ...(role === 'Admin' || role === 'Coordinator' ?
-            //  [
-                {
-                    title: 'Document Requests',
-                    url: '/requests',
-                    icon: Boxes,
-                },
-            // ]
-            // : []),
+        //  [
+        {
+            title: 'Document Requests',
+            url: '/requests',
+            icon: Boxes,
+            badge: 11, // or any number
+        },
+        // ]
+        // : []),
         {
             title: 'Programs',
             url: '/manage-programs',
             icon: Notebook,
             isActive: true,
             collapsible: true,
-            items: programItems,
+            items: [
+                ...programItems,
+                {
+                    title: 'PlaceholderPlaceholderPlaceholder',
+                    url: '/#',
+                    badge: 12,
+                },
+            ],
         },
         ...(role === 'Admin' || role === 'Coordinator'
             ? [
-                {
-                    title: 'Exhibits',
-                    url: '/manage-exhibits',
-                    icon: Book,
-                },
-            ]
+                  {
+                      title: 'Exhibits',
+                      url: '/manage-exhibits',
+                      icon: Book,
+                  },
+              ]
             : []),
         /* ...(role === 'Admin' || role === 'Coordinator'
             ? [
@@ -81,21 +89,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const content = [
         ...(role === 'Admin' || role === 'Coordinator'
             ? [
-                {
-                    title: 'Campus Information',
-                    url: '/main-content',
-                    icon: InfoIcon,
-                },
-            ]
+                  {
+                      title: 'Campus Information',
+                      url: '/main-content',
+                      icon: InfoIcon,
+                  },
+              ]
             : []),
         ...(role === 'Admin' || role === 'Coordinator'
             ? [
-                {
-                    title: 'Other Services',
-                    url: '/other-services',
-                    icon: Library,
-                },
-            ]
+                  {
+                      title: 'Other Services',
+                      url: '/other-services',
+                      icon: Library,
+                  },
+              ]
             : []),
     ];
 
@@ -121,9 +129,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavMain label="Accreditation" items={accre} />
-                {(role === 'Admin' || role === 'Coordinator') && (
-                    <NavMain label="Content Management" items={content} />
-                )}
+                {(role === 'Admin' || role === 'Coordinator') && <NavMain label="Content Management" items={content} />}
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />
