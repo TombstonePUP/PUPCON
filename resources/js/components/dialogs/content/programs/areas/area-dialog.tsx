@@ -151,7 +151,6 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                 <Label className="mb-2 block text-sm font-medium text-gray-700">Area Number (numeric numbers only)</Label>
                                 <Input
                                     type="text"
-                                    required
                                     value={data.area_number}
                                     onChange={(e) => setData('area_number', e.target.value)}
                                     placeholder="e.g., 1, 2 ,3"
@@ -163,7 +162,6 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                 <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name</Label>
                                 <Input
                                     type="text"
-                                    required
                                     value={data.area_name}
                                     onChange={(e) => setData('area_name', e.target.value)}
                                     placeholder="Enter area name"
@@ -174,10 +172,9 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                             <div>
                                 <Label className="mb-2 block text-sm font-medium text-gray-700">Area Description</Label>
                                 <Textarea
-                                    required
                                     value={data.area_description}
                                     onChange={(e) => setData('area_description', e.target.value)}
-                                    placeholder="Enter area name"
+                                    placeholder="Enter area description"
                                     disabled={processing}
                                 />
                                 <InputError message={errors.area_description} className="mt-1" />

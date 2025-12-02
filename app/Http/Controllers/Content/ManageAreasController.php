@@ -22,7 +22,7 @@ class ManageAreasController extends Controller
             [
                 'area_name' => ['required', 'string', 'max:255'],
                 'area_number' => ['required', 'integer'],
-                'area_description' => ['nullable', 'string'],
+                'area_description' => ['required', 'string'],
                 'area_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             ],
             [
@@ -31,6 +31,7 @@ class ManageAreasController extends Controller
                 'area_name.max' => 'The area name may not be greater than 255 characters.',
                 'area_number.required' => 'The area number is required.',
                 'area_number.integer' => 'The area number must be an integer.',
+                'area_description.required' => 'The area description is required.',
                 'area_description.string' => 'The area description must be a string.',
                 'area_image.file' => 'The area image must be a file.',
                 'area_image.mimes' => 'The area image must be a file of type: jpg, jpeg, png.',
@@ -85,7 +86,7 @@ class ManageAreasController extends Controller
                 'area_id' => ['required', 'integer', 'exists:areas,area_id'],
                 'area_name' => ['required', 'string', 'max:255'],
                 'area_number' => ['required', 'integer'],
-                'area_description' => ['nullable', 'string'],
+                'area_description' => ['required', 'string'],
                 'area_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             ],
             [
@@ -97,6 +98,7 @@ class ManageAreasController extends Controller
                 'area_name.max' => 'The area name may not be greater than 255 characters.',
                 'area_number.required' => 'The area number is required.',
                 'area_number.integer' => 'The area number must be an integer.',
+                'area_description.required' => 'The area description is required.',
                 'area_description.string' => 'The area description must be a string.',
                 'area_image.file' => 'The area image must be a file.',
                 'area_image.mimes' => 'The area image must be a file of type: jpg, jpeg, png.',
