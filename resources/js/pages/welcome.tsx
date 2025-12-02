@@ -469,12 +469,12 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
         }, 200);
     }, []);
 
+    const carousel_paths = carousel_images.map((img) => img.image_path);
+
     return (
         <>
             <Head title="PUP San Juan">
-                <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-                <link rel="preload" href={carousel_images[0] || '/images/landing/1.png'} as="image" />
+                <link rel="preload" href={carousel_images[0].image_path || '/images/landing/1.png'} as="image" />
             </Head>
 
             <style>{animationStyles}</style>
@@ -484,7 +484,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                     ref={heroRef}
                     className={`relative h-[70vw] w-full overflow-hidden transition-opacity duration-500 lg:h-[60vh] ${isHeroInView ? 'opacity-100' : 'opacity-0'}`}
                 >
-                    <SimpleCarousel images={images} />
+                {/*<SimpleCarousel images={carousel_paths} />*/}
 
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>
