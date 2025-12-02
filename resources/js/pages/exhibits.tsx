@@ -5,7 +5,7 @@ import Layout from '@/layouts/landing-layout';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function Programs() {
+export default function Exhibits() {
     const [viewDialogOpen, setViewDialogOpen] = useState(false);
     const [selectedDoc, setSelectedDoc] = useState<{ fileUrl: string; title: string }>({
         fileUrl: '',
