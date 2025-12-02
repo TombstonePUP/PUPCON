@@ -13,8 +13,10 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import { Link, router } from '@inertiajs/react';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { ChevronRight, type LucideIcon } from 'lucide-react';
 import { Badge } from './ui/badge';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 export function NavMain({
     label,
@@ -66,16 +68,25 @@ export function NavMain({
                                     )}
                                 </div>
                                 <CollapsibleContent>
-                                    <SidebarMenuSub>
+                                    <SidebarMenuSub className="mr-0 pr-0">
                                         {item.items?.map((subItem) => (
                                             <SidebarMenuSubItem key={subItem.title}>
                                                 <SidebarMenuSubButton asChild>
-                                                    <Link href={subItem.url} className="hover:cursor-pointer flex justify-between">
-                                                        <span className='line-clamp-1'>{subItem.title}</span>
+                                                    <Link href={subItem.url} className="flex justify-between hover:cursor-pointer">
+                                                        <span className="truncate">{subItem.title}</span>
                                                         {subItem.badge !== undefined && (
-                                                            <Badge className="border-none bg-[#7f1414] text-white hover:bg-[#7f1414] justify-center">
-                                                                {subItem.badge}
-                                                            </Badge>
+                                                            <TooltipProvider>
+                                                                <Tooltip>
+                                                                    <TooltipTrigger asChild>
+                                                                        <Badge className="justify-center rounded border-none bg-[#7f1414]/80 text-white hover:bg-[#7f1414]">
+                                                                            {subItem.badge}
+                                                                        </Badge>
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent>
+                                                                        <p>Pending</p>
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                            </TooltipProvider>
                                                         )}
                                                     </Link>
                                                 </SidebarMenuSubButton>
@@ -89,12 +100,29 @@ export function NavMain({
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton tooltip={item.title} asChild className="hover:cursor-pointer">
                                 <Link href={item.url} className="flex w-full items-center justify-between hover:cursor-pointer">
-                                    <div className="flex items-center justify-center gap-2">
+                                    <div className="flex items-center gap-2">
                                         {item.icon && <item.icon className="size-4" />}
-                                        <span>{item.title}</span>
+                                        <span className="sidebar-label truncate">{item.title}</span>
                                     </div>
+
                                     {item.badge !== undefined && (
-                                        <Badge className="border-none bg-[#7f1414] text-white hover:bg-[#7f1414]">{item.badge}</Badge>
+                                        <span className="sidebar-badge">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Badge
+                                                            variant="outline"
+                                                            className="justify-center rounded border-none bg-[#7f1414]/80 text-white hover:bg-[#7f1414]"
+                                                        >
+                                                            {item.badge}
+                                                        </Badge>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Pendings</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </span>
                                     )}
                                 </Link>
                             </SidebarMenuButton>
