@@ -63,10 +63,10 @@ const LocalTaskForceSection: React.FC = ({ ...props }: LocalTaskForceSectionProp
             previewUrl: ltf.profile_image_path || null,
             members: ltf.members
                 ? ltf.members.map((member) => ({
-                      member_id: member.member_id,
-                      local_task_force_id: member.local_task_force_id,
-                      full_name: member.full_name,
-                  }))
+                    member_id: member.member_id,
+                    local_task_force_id: member.local_task_force_id,
+                    full_name: member.full_name,
+                }))
                 : [],
         })),
     });

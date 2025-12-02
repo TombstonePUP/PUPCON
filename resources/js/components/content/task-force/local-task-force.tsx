@@ -6,13 +6,6 @@ import { Button } from "@/components/ui/button";
 import TaskForceAreaOfficialDialog from "@/components/dialogs/content/task-force-area-official-dialog";
 import TaskForceOfficialDialog from "@/components/dialogs/content/task-force-official-dialog";
 
-
-interface LocalTaskForceContentSectionProps {
-    local_task_force: LocalTaskForce[];
-    onUpdateTaskForceOfficial: (chairmanLocal: LocalTaskForce, chairman: LtfChairmanForm) => void;
-    onDeleteTaskForceOfficial: (id: number) => void;
-}
-
 interface MemberForm {
     member_id?: number;
     local_task_force_id: number;
@@ -33,6 +26,11 @@ interface LtfChairmanForm {
     members: MemberForm[];
 }
 
+interface LocalTaskForceContentSectionProps {
+    local_task_force: LocalTaskForce[];
+    onUpdateTaskForceOfficial: (chairmanLocal: LocalTaskForce, chairman: LtfChairmanForm) => void;
+    onDeleteTaskForceOfficial: (id: number) => void;
+}
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
     <button className={`p-1 text-gray-400 transition-colors hover:text-red-600 ${className}`} type="button" {...props}>
