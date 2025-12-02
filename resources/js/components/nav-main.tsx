@@ -83,7 +83,7 @@ export function NavMain({
                                                                         </Badge>
                                                                     </TooltipTrigger>
                                                                     <TooltipContent>
-                                                                        <p>Pending</p>
+                                                                        <p>Missing Uploads</p>
                                                                     </TooltipContent>
                                                                 </Tooltip>
                                                             </TooltipProvider>
@@ -118,7 +118,7 @@ export function NavMain({
                                                         </Badge>
                                                     </TooltipTrigger>
                                                     <TooltipContent>
-                                                        <p>Pendings</p>
+                                                        <p>Pending Uploads</p>
                                                     </TooltipContent>
                                                 </Tooltip>
                                             </TooltipProvider>
