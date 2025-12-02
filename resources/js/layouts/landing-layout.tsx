@@ -363,7 +363,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                         </Link>
 
                                         {item.dropdown?.length > 0 && (
-                                            <div className="absolute left-0 mt-7 max-h-0 w-auto overflow-hidden rounded-md bg-white text-sm opacity-0 transition-all duration-300 ease-out group-hover:max-h-96 group-hover:opacity-100">
+                                            <div className="absolute left-0 mt-[1vw] max-h-0 w-auto overflow-hidden rounded-md bg-white text-sm opacity-0 transition-all duration-300 ease-out group-hover:max-h-96 group-hover:opacity-100">
                                                 <ul className="flex flex-col">
                                                     {item.dropdown.map((drop) => (
                                                         <li key={drop.label} className="border-b border-gray-100 last:border-none">
@@ -373,7 +373,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                                                 preserveScroll
                                                             >
                                                                 {drop.icon && <span className="flex-shrink-0 text-lg">{drop.icon}</span>}
-                                                                <span>{drop.label}</span>
+                                                                <span className='text-[0.85vw]'>{drop.label}</span>
                                                             </Link>
                                                         </li>
                                                     ))}
