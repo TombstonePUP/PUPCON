@@ -272,7 +272,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                             </div>
 
                             <div className="flex-1">
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Members</Label>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Members (Optional)</Label>
                                 <Textarea
                                     placeholder="Enter one member name per line..."
                                     value={membersText}
