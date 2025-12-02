@@ -51,11 +51,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             collapsible: true,
             items: [
                 ...programItems,
-                {
-                    title: 'PlaceholderPlaceholderPlaceholder',
-                    url: '/#',
-                    badge: 12,
-                },
+                // {
+                //     title: 'PlaceholderPlaceholderPlaceholder',
+                //     url: '/#',
+                //     badge: 12,
+                // },
             ],
         },
         ...(role === 'Admin' || role === 'Coordinator'

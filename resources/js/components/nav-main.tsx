@@ -74,7 +74,7 @@ export function NavMain({
                                                 <SidebarMenuSubButton asChild>
                                                     <Link href={subItem.url} className="flex justify-between hover:cursor-pointer">
                                                         <span className="truncate">{subItem.title}</span>
-                                                        {subItem.badge !== undefined && (
+                                                        {/* {subItem.badge !== undefined && (
                                                             <TooltipProvider>
                                                                 <Tooltip>
                                                                     <TooltipTrigger asChild>
@@ -87,7 +87,7 @@ export function NavMain({
                                                                     </TooltipContent>
                                                                 </Tooltip>
                                                             </TooltipProvider>
-                                                        )}
+                                                        )} */}
                                                     </Link>
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
@@ -105,7 +105,7 @@ export function NavMain({
                                         <span className="sidebar-label truncate">{item.title}</span>
                                     </div>
 
-                                    {item.badge !== undefined && (
+                                    {/* {item.badge !== undefined  && (
                                         <span className="sidebar-badge">
                                             <TooltipProvider>
                                                 <Tooltip>
@@ -123,7 +123,7 @@ export function NavMain({
                                                 </Tooltip>
                                             </TooltipProvider>
                                         </span>
-                                    )}
+                                    )} */}
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

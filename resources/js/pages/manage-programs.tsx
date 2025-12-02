@@ -298,10 +298,10 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                     <Folders className="h-3 w-3" />
                                                     <span>{program.latest_level?.areas ? program.latest_level?.areas?.length : 0} areas</span>
                                                 </div>
-                                                <div className="flex items-center gap-1">
+                                                {/* <div className="flex items-center gap-1">
                                                     <CircleSlash className="h-3 w-3" />
                                                     <span>20 missing</span>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>
