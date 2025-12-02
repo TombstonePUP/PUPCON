@@ -21,9 +21,9 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
         Route::get('/', 'index')->name('manage-programs');
 
         Route::middleware(['user.program.role'])->group(function () {
-            Route::get('/{program_name}/{level_id}/', 'show')->name('program')->middleware('program.level.exists');
-            Route::get('/{program_name}/{level_id}/download', DownloadPerProgramFilesController::class)->name('program.download');
-            Route::prefix('{program_name}/{level_id}')->group(function () {
+            Route::get('/{program_id}/{level_id}/', 'show')->name('program')->middleware('program.level.exists');
+            Route::get('/{program_id}/{level_id}/download', DownloadPerProgramFilesController::class)->name('program.download');
+            Route::prefix('{program_id}/{level_id}')->group(function () {
                 Route::get('/{area_id}/download', DownloadPerAreaFilesController::class)->name('area.download');
 
                 Route::middleware(['user.area.role'])->group(function () {
@@ -34,11 +34,6 @@ Route::middleware(['auth', 'verified', 'update.password', 'user.accreditor.restr
                             Route::get('/{outline_id}/download_file', 'download')->name('download.file');
                             Route::post('/upload_file', 'store')->name('upload.file');
                             Route::delete('/{outline_id}/delete_file', 'destroy')->name('delete.file');
-                        });
-
-                        Route::controller(AreaFormsController::class)->group(function () {
-                            Route::post('/add_form', 'store')->name('add.area.form');
-                            Route::delete('/{form_id}/delete_form', 'destroy')->name('delete.area.form');
                         });
 
                         Route::controller(AreaFormFilesController::class)->group(function () {

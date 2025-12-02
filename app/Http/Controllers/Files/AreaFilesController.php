@@ -39,8 +39,14 @@ class AreaFilesController extends Controller
             ]
         );
 
-        $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)->first();
+        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::findOrFail($request->program_id)
+            ->load([
+                'Levels' => function ($query) use ($request) {
+                    $query->where('accreditation_level_id', $request->level_id);
+                },
+            ])
+            ->firstOrFail();
         $level = $program->Levels->where('accreditation_level_id', $request->level_id)->first();
         $level = $level->level === 0 ? 'Preliminiary Survey Visit' : $level->level;
         $area = Areas::where('area_id', $request->area_id)->first();
@@ -180,8 +186,8 @@ class AreaFilesController extends Controller
         $areaFile = $parameterOutlines->AreaFiles;
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)->first();
+        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::findOrFail($request->program_id);
 
         if ($areaFile) {
             Storage::disk('public')->delete($areaFile->file_path);

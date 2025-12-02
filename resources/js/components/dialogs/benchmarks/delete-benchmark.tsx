@@ -17,7 +17,7 @@ export function DeleteBenchmark({ outline, program, area_id, onClose }: DeleteBe
         e.preventDefault();
         router.delete(
             route('manage.area.delete.benchmark', {
-                program_name: program.program_link,
+                program_id: program.program_id,
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
                 outline_id: outline.parameter_outline_id,

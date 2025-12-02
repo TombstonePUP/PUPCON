@@ -17,7 +17,7 @@ export default function DeleteAreaDialog({ area, program, level, onClose }: Dele
         e.preventDefault();
         router.delete(
             route('manage.area.delete', {
-                program_name: program.program_link,
+                program_id: program.program_id,
                 level_id: level.accreditation_level_id,
                 area_id: area.area_id,
             }),

@@ -61,7 +61,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
         if (type === 'edit') {
             post(
                 route('manage.area.update', {
-                    program_name: program.program_link,
+                    program_id: program.program_id,
                     level_id: level.accreditation_level_id,
                     area_id: area?.area_id,
                 }),
@@ -72,7 +72,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
         } else {
             post(
                 route('manage.area.store', {
-                    program_name: program.program_link,
+                    program_id: program.program_id,
                     level_id: level.accreditation_level_id,
                 }),
                 {

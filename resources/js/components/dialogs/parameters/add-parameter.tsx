@@ -50,7 +50,7 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
     const addParameter = (e: React.FormEvent) => {
         e.preventDefault();
         post(route('manage.area.add.parameter', {
-                program_name: program.program_link,
+                program_id: program.program_id,
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
             }), {
@@ -81,7 +81,7 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                                 onChange={(e) => setData('parameter_name', e.target.value)}
                                 disabled={processing}
                                 placeholder="A"
-                              
+
                             />
                         </div>
                         <div className="flex-1">
@@ -96,7 +96,7 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                                 onChange={(e) => setData('parameter_description', e.target.value)}
                                 disabled={processing}
                                 placeholder="Enter description"
-                              
+
                             />
                         </div>
                     </div>

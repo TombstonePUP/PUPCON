@@ -61,7 +61,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         if (program.latest_level) {
             router.visit(
                 route('manage.program', {
-                    program_name: program.program_link,
+                    program_id: program.program_id,
                     level_id: program.latest_level?.accreditation_level_id || 0,
                 }),
             );

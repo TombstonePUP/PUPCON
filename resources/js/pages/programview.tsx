@@ -532,7 +532,7 @@ export default function Programs({ program }: PerProgramProps) {
                                                     imageSrc={area.area_image_path ?? '/images/placeholder.png'}
                                                     heading={area.area_name}
                                                     circleLetter={area.area_numeral}
-                                                    href={route('programs.areas.show', [program.program_link, area.area_id])}
+                                                    href={route('programs.areas.show', [program.program_id, area.area_id])}
                                                 />
                                             </div>
                                         ))

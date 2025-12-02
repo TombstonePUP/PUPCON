@@ -38,10 +38,17 @@ class AreaFormFilesController extends Controller
 
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)->with('Levels')->first();
-        $level = $program->Levels->where('accreditation_level_id', $request->level_id)->first();
-        $level = $level->level === 0 ? 'Preliminiary Survey Visit' : $level->level;
+        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::with('Levels')->findOrFail($request->program_id);
+
+        $level = $program->Levels
+            ->where('accreditation_level_id', $request->level_id)
+            ->first();
+
+        $level = $level->level === 0
+            ? 'Preliminiary Survey Visit'
+            : $level->level;
+
         if ($user->Roles->role_name === 'Coordinator' || $user->Roles->role_name === 'Admin') {
             $status = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
         } else {
@@ -121,14 +128,20 @@ class AreaFormFilesController extends Controller
         $areaForm = $areaForms->find($request->form_id);
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        $program = $request->program_name;
+        $program = Programs::findOrFail($request->program_id)
+            ->load([
+                'Levels' => function ($query) use ($request) {
+                    $query->where('accreditation_level_id', $request->level_id);
+                },
+            ])
+            ->firstOrFail();
 
         Storage::disk('public')->delete($areaForm->file_path);
 
         $activityLog = new ActivityLog();
         $activityLog->user_id = $user->user_id;
         $activityLog->area = $area->area_name;
-        $activityLog->program = $program;
+        $activityLog->program = $program->program_name;
         $activityLog->file_name = $areaForm->file_name;
         $activityLog->activity = "Delete Document";
         $activityLog->activity_date = now();

@@ -39,7 +39,7 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
         e.preventDefault();
         patch(
             route('manage.area.edit.benchmark', {
-                program_name: program.program_link,
+                program_id: program.program_id,
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
                 outline_id: outline.parameter_outline_id,

@@ -44,10 +44,10 @@ Route::get('others', OtherServicesViewController::class)->name('others');
 
 Route::controller(ProgramsController::class)->prefix('programs')->group(function () {
     Route::get('/', 'index')->name('programs.index');
-    Route::get('/{program_name}', 'show')->name('programs.show');
+    Route::get('/{program_id}', 'show')->name('programs.show');
 });
 
-Route::get('/programs/{program_name}/{area_id}', AreasController::class)
+Route::get('/programs/{program_id}/{area_id}', AreasController::class)
     ->name('programs.areas.show');
 
 /* Route::get('test/ui-testing', function () {

@@ -38,7 +38,7 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
         setIsUploading(true);
         post(
             route('manage.area.add.area.form', {
-                program_name: program.program_name,
+                program_id: program.program_id,
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
             }),

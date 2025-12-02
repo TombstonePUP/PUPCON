@@ -17,7 +17,9 @@ class UserProgramPrivileges
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::findOrFail($request->program_id);
+        $program = $program->program_id;
 
         if ($this->programAccess($request->user(), $program)) {
             return $next($request);
@@ -34,13 +36,13 @@ class UserProgramPrivileges
         $role = $user->Roles->role_name;
 
         return match ($role) {
-            'Admin', 'Coordinator' => Programs::where('program_name', 'ILIKE', $program)->exists(),
+            'Admin', 'Coordinator' => Programs::findOrFail($program),
             'Chairman' => $user->Areas()
                 ->whereHas(
                     'Levels', function ($levelQuery) use ($program) {
                         $levelQuery->whereHas(
                             'Programs', function ($programQuery) use ($program) {
-                                $programQuery->where('program_name', 'ILIKE', $program);
+                                $programQuery->findOrFail($program);
                             },
                         );
                     },

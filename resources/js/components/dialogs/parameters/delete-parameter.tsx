@@ -17,7 +17,7 @@ export function DeleteParameter({ parameter, program, area_id, onClose }: Delete
     const deleteParameter = (e: React.FormEvent) => {
         e.preventDefault();
         router.delete(route('manage.area.delete.parameter', {
-            program_name: program.program_link,
+            program_id: program.program_id,
             level_id: program.levels[0]?.accreditation_level_id,
             area_id: area_id,
             parameter_id: parameter.area_parameter_id,

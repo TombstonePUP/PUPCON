@@ -24,26 +24,34 @@ class AreaFormsController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'area_form_category_id' => 'required|integer|exists:area_form_categories,area_form_category_id',
-            'document' => 'nullable|file|mimes:pdf',
-        ],
-        [
-            'area_form_category_id.required' => 'Form category ID is required.',
-            'area_form_category_id.integer' => 'Form category ID must be an integer.',
-            'area_form_category_id.exists' => 'The selected form category does not exist.',
-            'document.file' => 'The uploaded file must be a valid file.',
-            'document.pdf' => 'The uploaded file must be a PDF document.'
-        ]);
+        $validated = $request->validate(
+            [
+                'area_form_category_id' => 'required|integer|exists:area_form_categories,area_form_category_id',
+                'document' => 'nullable|file|mimes:pdf',
+            ],
+            [
+                'area_form_category_id.required' => 'Form category ID is required.',
+                'area_form_category_id.integer' => 'Form category ID must be an integer.',
+                'area_form_category_id.exists' => 'The selected form category does not exist.',
+                'document.file' => 'The uploaded file must be a valid file.',
+                'document.pdf' => 'The uploaded file must be a PDF document.'
+            ]
+        );
 
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program)->with('Levels')->first();
-        $level = $program->Levels->where('accreditation_level_id', $request->level_id)->first();
-        $level = $level->level === 0 ? 'Preliminiary Survey Visit' : $level->level;
+        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::with('Levels')->findOrFail($request->program_id);
 
-        if($user->Roles->role_name === 'Coordinator' || $user->Roles->role_name === 'Admin') {
+        $level = $program->Levels
+            ->where('accreditation_level_id', $request->level_id)
+            ->first();
+
+        $level = $level->level === 0
+            ? 'Preliminiary Survey Visit'
+            : $level->level;
+
+        if ($user->Roles->role_name === 'Coordinator' || $user->Roles->role_name === 'Admin') {
             $status = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
         } else {
             $status = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
@@ -100,14 +108,21 @@ class AreaFormsController extends Controller
         $areaForm = $areaForms->find($request->form_id);
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        $program = $request->program_name;
+        // $program = $request->program_name;
+        $program = Programs::findOrFail($request->program_id)
+            ->load([
+                'Levels' => function ($query) use ($request) {
+                    $query->where('accreditation_level_id', $request->level_id);
+                },
+            ])
+            ->firstOrFail();
 
         if ($areaForm->file_path) {
             Storage::disk('public')->delete($areaForm->file_path);
             $activityLog = new ActivityLog();
             $activityLog->user_id = $user->user_id;
             $activityLog->area = $area->area_name;
-            $activityLog->program = $program;
+            $activityLog->program = $program->program_name;
             $activityLog->file_name = $areaForm->file_name;
             $activityLog->activity = "Delete Document";
             $activityLog->activity_date = now();
