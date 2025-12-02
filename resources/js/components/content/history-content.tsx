@@ -55,6 +55,7 @@ interface HistoryForm {
 }
 
 const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProps) => {
+
     const { history, history_page } = props;
     const directors = history.directors;
     const gallery = history.gallery;
@@ -192,10 +193,13 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
         ));
     };
 
-    const handleSave = () => {
-        console.log(data);
-        post(route('content.history.update'), {});
-    };
+  const handleSave = () => {
+    post(route('content.history.update'), {
+        preserveScroll: true, 
+        preserveState: true, 
+    });
+};
+
 
     const handlePreview = () => {
         window.open('/about/history', '_blank');

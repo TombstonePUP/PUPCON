@@ -38,15 +38,9 @@ class UserProgramPrivileges
         return match ($role) {
             'Admin', 'Coordinator' => Programs::findOrFail($program),
             'Chairman' => $user->Areas()
-                ->whereHas(
-                    'Levels', function ($levelQuery) use ($program) {
-                        $levelQuery->whereHas(
-                            'Programs', function ($programQuery) use ($program) {
-                                $programQuery->findOrFail($program);
-                            },
-                        );
-                    },
-                )
+                ->whereHas('Levels.Programs', function ($query) use ($program) {
+                    $query->where('program_id', $program);
+                })
                 ->exists(),
             default => false,
         };

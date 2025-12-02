@@ -86,7 +86,9 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
     };
 
     const handleSave = () => {
-        post(route('content.about.update'), {});
+        post(route('content.about.update'), { 
+            preserveScroll: true, 
+            preserveState: true, });
     };
 
     const handlePreview = () => {
