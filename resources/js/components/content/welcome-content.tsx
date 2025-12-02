@@ -113,6 +113,8 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                     toast.dismiss('uploading');
                     setIsUploading(false);
                 },
+                    preserveScroll: true, 
+                    preserveState: true, 
             });
         } catch (error) {
             toast.dismiss('uploading');

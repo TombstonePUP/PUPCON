@@ -84,10 +84,14 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
         });
     };
 
-    const handleSave = () => {
-        console.log('Submitting VMGO Data:', data);
-        post(route('content.vmgo.update'));
-    };
+  const handleSave = () => {
+    console.log('Submitting VMGO Data:', data);
+    post(route('content.vmgo.update'), {
+        preserveScroll: true,
+        preserveState: true,
+    });
+};
+
 
     const handlePreview = () => {
         window.open('/about/vision-mission-goals', '_blank');
