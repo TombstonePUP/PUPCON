@@ -44,7 +44,6 @@ class WelcomeController extends Controller
                 'page.director_image.mimes' => 'The director image must be a file of type: jpeg, png, jpg.',
                 'page.director_image.max' => 'The director image may not be greater than 5MB.',
                 'page.certificate_of_authenticity.mimes' => 'The certificate of authenticity must be a file of type: pdf.',
-                // 'gallery.*.image.required' => 'The gallery image is required.',
                 'gallery.*.description.required' => 'The gallery description is required.',
                 'gallery.*.image.image' => 'The gallery image must be an image file.',
                 'gallery.*.image.mimes' => 'The gallery image must be a file of type: jpeg, png, jpg.',
@@ -81,6 +80,12 @@ class WelcomeController extends Controller
             $certPath = 'welcome/' . $certName;
             $storedCertPath = $validated['page']['certificate_of_authenticity']->storeAs('welcome', $certName, 'public');
             $page->certificate_of_authenticity = $storedCertPath;
+        }
+        if ($page->certificate_of_authenticity && !isset($validated['page']['certificate_of_authenticity'])) {
+            if (Storage::disk()->exists($page->certificate_of_authenticity)) {
+                Storage::disk()->delete($page->certificate_of_authenticity);
+            }
+            $page->certificate_of_authenticity = null;
         }
         if ($page) {
             $page->page = $validated['page']['page'];

@@ -44,5 +44,6 @@ class ContentPages extends Model
         'image_path' => 'encrypted',
         'directors_image_name' => 'encrypted',
         'directors_image_path' => 'encrypted',
+        'certificate_of_authenticity' => 'encrypted',
     ];
 }
