@@ -39,10 +39,20 @@ class ManageProgramController extends Controller
         ]);
     }
 
-    public function show(string $program_name, string $level_id)
+    public function show(string $program_id, string $level_id)
     {
-        $program = Str::of($program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', 'ILIKE', $program)
+        // $program = Str::of($program_name)->replace('_', ' ')->title();
+        $program = Programs::findOrFail($program_id)->load([
+            'Levels.Areas' => function ($query) use ($level_id) {
+                $query->where('accreditation_level_id', $level_id)
+                    ->orderByRaw('area_number::integer asc');
+            },
+            'Objectives',
+            'Gallery',
+        ]);
+
+        //
+        /* $program = Programs::where('program_name', 'ILIKE', $program)
             ->with([
                 'Levels.Areas' => function ($query) use ($level_id) {
                     $query->where('accreditation_level_id', $level_id)
@@ -50,7 +60,7 @@ class ManageProgramController extends Controller
                 },
                 'Objectives',
                 'Gallery',
-            ])->firstOrFail();
+            ])->firstOrFail(); */
 
         $program->program_image_path = $program->program_image_path ? Storage::url($program->program_image_path) : null;
         $program->Gallery->each(function ($gallery) {
@@ -75,7 +85,7 @@ class ManageProgramController extends Controller
             }
         });
 
-        $program->program_link = $program_name;
+        $program->program_link = Str::slug($program->program_name, '_');
 
         return inertia('document/program', [
             'program' => $program,
@@ -84,14 +94,15 @@ class ManageProgramController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'program_name' => ['required', 'string', 'max:255'],
-            'degree_type' => ['required', 'string', 'max:100'],
-        ],
-        [
-            'program_name.required' => 'The program name field is required.',
-            'degree_type.required' => 'The degree type field is required.',
-        ]
+        $validated = $request->validate(
+            [
+                'program_name' => ['required', 'string', 'max:255'],
+                'degree_type' => ['required', 'string', 'max:100'],
+            ],
+            [
+                'program_name.required' => 'The program name field is required.',
+                'degree_type.required' => 'The degree type field is required.',
+            ]
         );
 
         $program = Programs::create([
@@ -109,14 +120,16 @@ class ManageProgramController extends Controller
     {
         $program = Programs::findOrFail($request->program_id);
 
-        $validated = $request->validate([
-            'program_name' => ['required', 'string', 'max:255'],
-            'degree_type' => ['required', 'string', 'max:100'],
-        ],
-        [
-            'program_name.required' => 'The program name field is required.',
-            'degree_type.required' => 'The degree type field is required.',
-        ]);
+        $validated = $request->validate(
+            [
+                'program_name' => ['required', 'string', 'max:255'],
+                'degree_type' => ['required', 'string', 'max:100'],
+            ],
+            [
+                'program_name.required' => 'The program name field is required.',
+                'degree_type.required' => 'The degree type field is required.',
+            ]
+        );
 
         $program->update([
             'program_name' => $validated['program_name'],

@@ -49,7 +49,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
     const editParameter = (e: React.FormEvent) => {
         e.preventDefault();
         patch(route('manage.area.update.parameter', {
-            program_name: program.program_link,
+            program_id: program.program_id,
             level_id: program.levels[0]?.accreditation_level_id,
             area_id: area_id,
             parameter_id: parameter.area_parameter_id,

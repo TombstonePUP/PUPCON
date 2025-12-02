@@ -22,6 +22,7 @@ use App\Http\Controllers\Programs\ManageProgramController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Exhibits\ExhibitFilesController;
 use App\Http\Controllers\Exhibits\ExhibitOulinesFileController;
+use App\Http\Controllers\Files\AreaFormsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -74,26 +75,32 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     });
 
     Route::controller(ManageAreasController::class)->group(function () {
-        Route::post('manage-programs/{program_name}/{level_id}/area/store', 'store')->name('manage.area.store');
-        Route::post('manage-programs/{program_name}/{level_id}/area/{area_id}/update', 'update')->name('manage.area.update');
-        Route::delete('manage-programs/{program_name}/{level_id}/area/{area_id}/delete', 'destroy')->name('manage.area.delete');
+        Route::post('manage-programs/{program_id}/{level_id}/area/store', 'store')->name('manage.area.store');
+        Route::post('manage-programs/{program_id}/{level_id}/area/{area_id}/update', 'update')->name('manage.area.update');
+        Route::delete('manage-programs/{program_id}/{level_id}/area/{area_id}/delete', 'destroy')->name('manage.area.delete');
     });
 
-    Route::prefix('manage-programs/{program_name}/{level_id}/{area_id}')->as('manage.')->group(function () {
+    Route::prefix('manage-programs/{program_id}/{level_id}/{area_id}')->as('manage.area.')->group(function () {
         Route::controller(ImportParametersController::class)->group(function () {
-            Route::get('/download_parameter_template', 'download')->name('area.download.template');
-            Route::post('/import_parameters', 'import')->name('area.import.parameters');
+            Route::get('/download_parameter_template', 'download')->name('download.template');
+            Route::post('/import_parameters', 'import')->name('import.parameters');
         });
+
+        Route::controller(AreaFormsController::class)->group(function () {
+            Route::post('/add_form', 'store')->name('add.area.form');
+            Route::delete('/{form_id}/delete_form', 'destroy')->name('delete.area.form');
+        });
+
         Route::controller(AreaParameterController::class)->group(function () {
-            Route::post('/store_parameter', 'store')->name('area.add.parameter');
-            Route::patch('/{parameter_id}/update_parameter', 'update')->name('area.update.parameter');
-            Route::delete('/{parameter_id}/delete_parameter', 'destroy')->name('area.delete.parameter');
+            Route::post('/store_parameter', 'store')->name('add.parameter');
+            Route::patch('/{parameter_id}/update_parameter', 'update')->name('update.parameter');
+            Route::delete('/{parameter_id}/delete_parameter', 'destroy')->name('delete.parameter');
         });
 
         Route::controller(AreaParameterOutlinesController::class)->group(function () {
-            Route::post('/store_benchmark', 'store')->name('area.add.benchmark');
-            Route::patch('/{outline_id}/edit_benchmark', 'edit')->name('area.edit.benchmark');
-            Route::delete('/{outline_id}/delete_benchmark', 'destroy')->name('area.delete.benchmark');
+            Route::post('/store_benchmark', 'store')->name('add.benchmark');
+            Route::patch('/{outline_id}/edit_benchmark', 'edit')->name('edit.benchmark');
+            Route::delete('/{outline_id}/delete_benchmark', 'destroy')->name('delete.benchmark');
         });
     });
 

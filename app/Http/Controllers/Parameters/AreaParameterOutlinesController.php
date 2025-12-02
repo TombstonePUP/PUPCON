@@ -21,18 +21,26 @@ class AreaParameterOutlinesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(string $program_name, int $level_id, string $area_id)
+    public function index(string $program_id, int $level_id, string $area_id)
     {
-        $program = Str::of($program_name)->replace('_', ' ')->title();
+        // $program = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::select('program_id', 'program_name', 'degree_type')
-            ->where('program_name','ILIKE', $program)
+            ->where('program_id', $program_id)
             ->with([
                 'Levels' => function ($query) use ($level_id) {
                     $query->where('accreditation_level_id', $level_id);
                 }
             ])
             ->firstOrFail();
-        $program->program_link = $program_name;
+        /* $program = Programs::select('program_id', 'program_name', 'degree_type')
+            ->where('program_name','ILIKE', $program)
+            ->with([
+                'Levels' => function ($query) use ($level_id) {
+                    $query->where('accreditation_level_id', $level_id);
+                }
+            ])
+            ->firstOrFail(); */
+        $program->program_link = Str::slug($program->program_name, '_');
         $area = Areas::select('area_id', 'area_name', 'area_number', 'accreditation_level_id')
             ->where('area_id', $area_id)
             ->where('accreditation_level_id', $level_id)
@@ -122,8 +130,8 @@ class AreaParameterOutlinesController extends Controller
     {
         $validated = $request->validated();
 
-        $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', 'ILIKE', $program)->first();
+        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::findOrFail($request->program_id);
         $area = Areas::where('area_id', $request->area_id)->first();
         $parameterOutline = ParameterOutlines::find($request->outline_id);
 
@@ -169,8 +177,9 @@ class AreaParameterOutlinesController extends Controller
         $parameterOutlines = ParameterOutlines::where('parameter_outline_id', $request->outline_id)->first();
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', 'ILIKE', $program)->first();
+        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        // $program = Programs::where('program_name', 'ILIKE', $program)->first();
+        $program = Programs::findOrFail($request->program_id);
 
         $message = "";
 

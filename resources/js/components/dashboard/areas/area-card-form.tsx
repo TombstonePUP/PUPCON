@@ -44,7 +44,7 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
     const role = auth.user.roles.role_name;
     const download = (form: AreaForms) => {
         const url = route('manage.area.download.area.form.file', {
-            program_name: program.program_link,
+            program_id: program.program_id,
             level_id: program.levels[0]?.accreditation_level_id,
             area_id: area_id,
             form_id: form.area_form_id,
@@ -91,7 +91,7 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
                                 className="justify-left flex cursor-pointer flex-row items-center gap-3"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    resolveFormDialog({ type: 'upload', form: card });
+                                    setTimeout(() => resolveFormDialog({ type: 'upload', form: card }), 50);
                                 }}
                             >
                                 {card.file_path ? (
@@ -123,7 +123,7 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
                                     className="justify-left flex cursor-pointer flex-row items-center gap-3"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        resolveFormDialog({ type: 'rejected', form: card });
+                                        setTimeout(() => resolveFormDialog({ type: 'rejected', form: card }), 50);
                                     }}
                                 >
                                     <Info className="inline-block h-4 w-4" />
@@ -136,7 +136,7 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
                                     className="justify-left flex cursor-pointer flex-row items-center gap-3"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        resolveFormDialog({ type: 'delete', form: card });
+                                        setTimeout(() => resolveFormDialog({ type: 'delete', form: card }), 50);
                                     }}
                                 >
                                     <FileX className="inline-block h-4 w-4" />
@@ -153,7 +153,7 @@ export default function AreaCards({ program, area_id, forms, resolveFormDialog }
                                         className="justify-left flex cursor-pointer flex-row items-center gap-3"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            resolveFormDialog({ type: 'delete-form', form: card });
+                                            setTimeout(() => resolveFormDialog({ type: 'delete-form', form: card }), 50);
                                         }}
                                     >
                                         <Trash2 className="inline-block h-4 w-4" />

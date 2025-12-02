@@ -9,6 +9,7 @@ use App\Models\Programs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\AreaForms;
 
 class ManageAreasController extends Controller
 {
@@ -37,8 +38,8 @@ class ManageAreasController extends Controller
             ]
         );
 
-        $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name','ILIKE', $program)
+        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::findOrFail($request->program_id)
             ->with([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);
@@ -104,7 +105,7 @@ class ManageAreasController extends Controller
         );
 
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', 'ILIKE', $program)
+        $program = Programs::findOrFail($request->program_id)
             ->with([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);
@@ -148,7 +149,7 @@ class ManageAreasController extends Controller
         }
 
         if ($area->area_name !== $validated['area_name']) {
-            if ($disk->exists($area->area_image_path) && $area->area_image_name) {
+            if ($disk->exists($area->area_image_path)) {
                 $newAreaImageName = Str::slug($validated['area_name'], '_') . '.' . Str::afterLast($area->area_image_name, '.');
                 $newAreaImagePath = Str::of($area->area_image_path)->replace($area->area_image_name, $newAreaImageName);
                 $disk->move($area->area_image_path, $newAreaImagePath);
@@ -200,6 +201,15 @@ class ManageAreasController extends Controller
                     Storage::disk('public')->delete($file->file_path);
                     $file->delete();
                 });
+
+            AreaForms::query()
+                ->where('area_id', $area->area_id)
+                ->cursor()
+                ->each(function ($form) {
+                    Storage::disk('public')->delete($form->file_path);
+                    $form->delete();
+                });
+            $area->area_image_path && Storage::disk('public')->delete($area->area_image_path);
             $areaName = $area->area_name;
             $area->delete();
         } else {

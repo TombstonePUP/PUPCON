@@ -24,7 +24,7 @@ class ProgramContentController extends Controller
             'objectives.*.objective_id' => ['required', 'integer'],
             'objectives.*.title' => ['required', 'string', 'max:255'],
             'objectives.*.description' => ['nullable', 'string'],
-            'gallery.*.program_gallery_id' => ['nullable', 'integer'],
+            'gallery.*.gallery_id' => ['nullable', 'integer'],
             'gallery.*.image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             'gallery.*.caption' => ['required', 'string', 'max:255'],
         ]);
@@ -81,7 +81,7 @@ class ProgramContentController extends Controller
 
         $gallery_ids = [];
         foreach ($validated['gallery'] ?? [] as $galleryItem) {
-            $galleryModel = $program->Gallery()->find($galleryItem['program_gallery_id']);
+            $galleryModel = $program->Gallery()->find($galleryItem['gallery_id']);
             $imageName = null;
             $imagePath = null;
             if (isset($galleryItem['image'])) {

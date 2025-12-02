@@ -33,7 +33,7 @@ export default function Programs({ programs }: ProgramsProps) {
                             <div className="grid gap-10">
                                 {programs.map((program) => (
                                     <div key={program.program_id} className="group">
-                                        <Link href={`/programs/${program.program_link}`} className="block">
+                                        <Link href={`/programs/${program.program_id}`} className="block">
                                             <div className="overflow-hidden rounded-2xl border border-[#7f1414]/25 bg-white transition-all duration-300 hover:border-[#7f1414]">
                                                 <div className="md:flex">
                                                     {/* Program Image */}

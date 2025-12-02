@@ -18,13 +18,18 @@ class DownloadPerAreaFilesController extends Controller
     public function __invoke(Request $request)
     {
         $area = Areas::findOrFail($request->area_id);
-        $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', 'ILIKE', $program)
+        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
+        $program = Programs::findOrFail($request->program_id)->load([
+            'Levels' => function ($query) use ($request) {
+                $query->where('accreditation_level_id', $request->level_id);
+            }
+        ]);
+        /* $program = Programs::where('program_name', 'ILIKE', $program)
             ->with([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);
                 }
-            ])->firstOrFail();
+            ])->firstOrFail(); */
 
         $program_name = Str::slug($program->program_name, '_');
         $area_name = Str::slug($area->area_name, '_');

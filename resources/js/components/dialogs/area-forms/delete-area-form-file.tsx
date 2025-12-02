@@ -18,7 +18,7 @@ export function DeleteAreaFormFile({ form, program, area_id, onClose }: DeleteAr
         e.preventDefault();
         router.delete(
             route('manage.area.delete.area.form.file', {
-                program_name: program.program_link,
+                program_id: program.program_id,
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
                 form_id: form.area_form_id,

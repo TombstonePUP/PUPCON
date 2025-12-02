@@ -34,7 +34,7 @@ export default function Programs({ program }: ProgramProps) {
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Programs', href: '/manage-programs' },
-        { title: program.program_name, href: `/manage-program/${program.program_link}` },
+        { title: program.program_name, href: `/manage-program/${program.program_id}` },
     ];
 
     const [activeSection, setActiveSection] = useState(role === 'Admin' || role === 'Coordinator' ? 'overview' : 'areas');
@@ -154,7 +154,7 @@ export default function Programs({ program }: ProgramProps) {
                                 onClick={() =>
                                     router.visit(
                                         route('manage.program', {
-                                            program_name: program.program_link,
+                                            program_id: program.program_id,
                                             level_id: level.accreditation_level_id,
                                         }),
                                     )
@@ -218,7 +218,7 @@ export default function Programs({ program }: ProgramProps) {
                                         <Button className="border-none" size="sm" asChild>
                                             <a
                                                 href={route('manage.program.download', {
-                                                    program_name: program.program_link,
+                                                    program_id: program.program_id,
                                                     level_id: selected_level?.accreditation_level_id,
                                                 })}
                                                 className="flex items-center"
@@ -245,7 +245,7 @@ export default function Programs({ program }: ProgramProps) {
                                                     {isAssigned ? (
                                                         <Link
                                                             href={route('manage.area', {
-                                                                program_name: program.program_link,
+                                                                program_id: program.program_id,
                                                                 level_id: selected_level.accreditation_level_id,
                                                                 area_id: item.area_id,
                                                             })}
@@ -302,7 +302,7 @@ export default function Programs({ program }: ProgramProps) {
                                                             <DropdownMenuItem asChild>
                                                                 <a
                                                                     href={route('manage.area.download', {
-                                                                        program_name: program.program_link,
+                                                                        program_id: program.program_id,
                                                                         level_id: selected_level.accreditation_level_id,
                                                                         area_id: item.area_id,
                                                                     })}

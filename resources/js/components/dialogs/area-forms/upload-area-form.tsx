@@ -36,7 +36,7 @@ export function UploadAreaForm({ program, form, area_id, onClose }: UploadAreaFo
         setIsUploading(true);
         post(
             route('manage.area.upload.area.form.file', {
-                program_name: program.program_name,
+                program_id: program.program_id,
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
                 form_id: form.area_form_id,

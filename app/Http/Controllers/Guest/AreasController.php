@@ -19,16 +19,22 @@ class AreasController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(string $program_name, string $area_id)
+    public function __invoke(string $program_id, string $area_id)
     {
-        $program_name = Str::of($program_name)->replace('_', ' ')->title();
-        $program = Programs::where('program_name', $program_name)->with([
+        // $program_name = Str::of($program_name)->replace('_', ' ')->title();
+        //
+        $program = Programs::findOrFail($program_id)->load([
             'Levels' => function ($query) {
                 $query->where('is_active', true);
             },
-        ])->firstOrFail();
+        ]);
+        /* $program = Programs::where('program_name', $program_name)->with([
+            'Levels' => function ($query) {
+                $query->where('is_active', true);
+            },
+        ])->firstOrFail(); */
 
-        $program->program_link = $program_name;
+        // $program->program_link = $program_name;
 
         $area = Areas::select('area_id', 'area_name', 'area_number', 'area_description', 'area_image_name', 'area_image_path')
             ->where('area_id', $area_id)

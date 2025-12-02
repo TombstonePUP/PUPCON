@@ -41,7 +41,7 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
         e.preventDefault();
         post(
             route('manage.area.add.benchmark', {
-                program_name: program.program_link,
+                program_id: program.program_id,
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
             }),

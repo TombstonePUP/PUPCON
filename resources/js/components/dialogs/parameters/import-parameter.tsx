@@ -25,7 +25,7 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
         e.preventDefault();
         post(
             route('manage.area.import.parameters', {
-                program_name: program.program_link,
+                program_id: program.program_id,
                 level_id: program.levels[0]?.accreditation_level_id,
                 area_id: area_id,
             }),
@@ -111,7 +111,7 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
                         <Button className="sm:mr-auto" variant="outline">
                             <a
                                 href={route('manage.area.download.template', {
-                                    program_name: program.program_link,
+                                    program_id: program.program_id,
                                     level_id: program.levels[0]?.accreditation_level_id,
                                     area_id: area_id,
                                 })}
