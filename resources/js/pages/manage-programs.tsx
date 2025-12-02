@@ -119,34 +119,36 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             </div>
                             <div className="ml-2">
                                 <h1 className="text-xl font-semibold text-gray-900">Programs</h1>
-                                <p className="text-sm text-gray-500 line-clamp-1">Manage academic programs for PUP San Juan.</p>
+                                <p className="line-clamp-1 text-sm text-gray-500">Manage academic programs for PUP San Juan.</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Right Sidebar - Quick Links */}
-                    <div className="w-fit shrink-0">
-                        <div className="sticky top-6 space-y-4">
-                            <div className="rounded-lg border border-gray-200 bg-white p-4">
-                                <h3 className="mb-2 text-sm font-semibold text-gray-900">Program Actions</h3>
-                                <div className="flex gap-2">
-                                    {' '}
-                                    <Button variant="noborder" className="flex-1" onClick={handleAddProgram}>
-                                        <NotebookIcon className="h-6 w-6 text-white" />
-                                        Add Program
-                                    </Button>
-                                    <Button variant="noborder" className="flex-1" onClick={handleAddLevel}>
-                                        <PlusCircleIcon className="h-6 w-6 text-white" />
-                                        Start a Survey
-                                    </Button>
-                                    <Button variant="noborder" className="flex-1" onClick={handleEndLevel}>
-                                        <BookCheck className="h-6 w-6 text-white" />
-                                        End a Survey
-                                    </Button>
+                    {(role === 'Admin' || role === 'Coordinator') && (
+                        <div className="w-fit shrink-0">
+                            <div className="sticky top-6 space-y-4">
+                                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                                    <h3 className="mb-2 text-sm font-semibold text-gray-900">Program Actions</h3>
+                                    <div className="flex gap-2">
+                                        {' '}
+                                        <Button variant="noborder" className="flex-1" onClick={handleAddProgram}>
+                                            <NotebookIcon className="h-6 w-6 text-white" />
+                                            Add Program
+                                        </Button>
+                                        <Button variant="noborder" className="flex-1" onClick={handleAddLevel}>
+                                            <PlusCircleIcon className="h-6 w-6 text-white" />
+                                            Start a Survey
+                                        </Button>
+                                        <Button variant="noborder" className="flex-1" onClick={handleEndLevel}>
+                                            <BookCheck className="h-6 w-6 text-white" />
+                                            End a Survey
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 <div className="flex gap-4">
