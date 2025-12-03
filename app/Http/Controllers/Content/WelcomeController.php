@@ -8,6 +8,7 @@ use App\Models\ContentPages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class WelcomeController extends Controller
 {
@@ -25,13 +26,31 @@ class WelcomeController extends Controller
                 'page.director_name' => ['required', 'string'],
                 'page.director_message' => ['required', 'string'],
                 'page.director_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:20480'],
+                'page.previewUrl' => ['nullable', 'string'],
                 'page.video_link' => ['nullable', 'string'],
                 'page.video_title' => ['nullable', 'string'],
                 'page.video_description' => ['nullable', 'string'],
                 'page.certificate_of_authenticity' => ['nullable', 'file', 'mimes:pdf'],
                 'gallery' => ['nullable', 'array'],
                 'gallery.*.gallery_id' => ['required', 'integer'],
-                'gallery.*.image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:20480',],
+                'gallery.*.image' => [
+                    Rule::requiredIf(function () use ($request) {
+                        $index = null;
+                        foreach ($request->input('gallery', []) as $i => $item) {
+                            if (!isset($item['image']) && empty($item['previewUrl'])) {
+                                $index = $i;
+                                break;
+                            }
+                        }
+                        return $index !== null;
+                    }),
+                    'nullable',
+                    'file',
+                    'image',
+                    'mimes:jpeg,png,jpg',
+                    'max:20480',
+                ],
+                'gallery.*.previewUrl' => ['nullable', 'string'],
                 'gallery.*.description' => ['required', 'string'],
                 'gallery.*.carousel' => ['nullable', 'boolean'],
             ],
@@ -46,6 +65,7 @@ class WelcomeController extends Controller
                 'page.certificate_of_authenticity.mimes' => 'The certificate of authenticity must be a file of type: pdf.',
                 'gallery.*.description.required' => 'The gallery description is required.',
                 'gallery.*.image.image' => 'The gallery image must be an image file.',
+                'gallery.*.image.required' => 'The gallery image is required.',
                 'gallery.*.image.mimes' => 'The gallery image must be a file of type: jpeg, png, jpg.',
                 'gallery.*.image.max' => 'The gallery image may not be greater than 20MB.',
             ]

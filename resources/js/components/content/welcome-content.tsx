@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { Label } from '../ui/label';
 import { Progress } from '../ui/progress';
 import WelcomeCarouselSection from './welcome/welcome-carousel';
+import { Badge } from '../ui/badge';
 
 interface WelcomeContentSectionProps {
     welcome_page: ContentPages;
@@ -75,17 +76,6 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
             })) || [],
     });
 
-    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
-        const messages = Object.entries(errors)
-            .filter(([key]) => key.startsWith(parentKey))
-            .map(([, message]) => message);
-
-        // Remove duplicate messages
-        return [...new Set(messages)];
-    };
-
-    const gallery_errors = extractGroupedErrors(errors, 'gallery');
-
     const [isUploading, setIsUploading] = useState(false);
 
     const handleSave = () => {
@@ -113,8 +103,8 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                     toast.dismiss('uploading');
                     setIsUploading(false);
                 },
-                    preserveScroll: true, 
-                    preserveState: true, 
+                    preserveScroll: true,
+                    preserveState: true,
             });
         } catch (error) {
             toast.dismiss('uploading');
@@ -209,6 +199,8 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
         }));
     };
 
+    const galleryErrorCount = errors ? Object.keys(errors).filter((key) => key.startsWith('gallery.')).length : 0;
+
     return (
         <>
             <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
@@ -218,18 +210,20 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                         <p className="text-sm text-gray-600">Configure welcome page content</p>
                     </div>
                     {/* Gallery Pane */}
-                    <h3 className="mb-4 text-base font-semibold text-gray-900">Campus Image Gallery</h3>
-                    <WelcomeCarouselSection gallery={gallery} onUpdate={handleUpdateGallery} onDelete={handleDeleteGallery} />
-                    {gallery_errors.length > 0 && (
-                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
-                            <h4 className="mb-2 font-semibold text-red-700">Directors Section Errors</h4>
-                            <ul className="ml-6 list-disc text-sm text-red-600">
-                                {gallery_errors.map((error, index) => (
-                                    <li key={index}>{error}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
+                    <h3 className="mb-4 text-base font-semibold text-gray-900">
+                        Campus Image Gallery
+                        {galleryErrorCount > 0 && (
+                            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                {galleryErrorCount}
+                            </Badge>
+                        )}
+                    </h3>
+                    <WelcomeCarouselSection
+                        gallery={gallery}
+                        onUpdate={handleUpdateGallery}
+                        onDelete={handleDeleteGallery}
+                        errors={errors}
+                    />
 
                     <Separator className="my-10 bg-gray-200" />
 

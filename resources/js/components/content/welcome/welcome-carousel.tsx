@@ -1,7 +1,7 @@
 import { CampusGalleryDialog } from '@/components/dialogs/content/history/campus-gallery-dialog';
 import { Button } from '@/components/ui/button';
 import { CampusGallery } from '@/types/content';
-import { EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
+import { CircleAlert, EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 interface GalleryForm {
@@ -16,6 +16,7 @@ interface WelcomeCarouselProps {
     gallery: CampusGallery[];
     onUpdate: (gallery: CampusGallery, form: GalleryForm) => void;
     onDelete: (id: number) => void;
+    errors?: Record<string, string>; // new prop for errors
 }
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
@@ -53,7 +54,7 @@ const SharedPhotoPreview: React.FC<{ url: string | null; alt: string; heightClas
 };
 
 export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProps) {
-    const { gallery, onUpdate, onDelete } = props;
+    const { gallery, onUpdate, onDelete, errors } = props;
     const [galleryList, setGalleryList] = React.useState<CampusGallery[]>(gallery);
 
     const [selectedGalleryId, setSelectedGalleryId] = React.useState<number | null>(null);
@@ -62,9 +63,20 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
 
     const selectedGallery = galleryList?.find((g) => g.gallery_id === selectedGalleryId);
 
-    useEffect(() => {
-        setGalleryList(gallery ?? []);
-    }, [gallery]);
+    const getSelectedGalleryIndex = () => {
+        return galleryList?.findIndex((o) => o.gallery_id === selectedGalleryId);
+    };
+
+    const getSelectedGalleryErrors = () => {
+        const index = getSelectedGalleryIndex();
+        if (index === -1 || index === undefined) return [];
+
+        return Object.entries(errors)
+            .filter(([key]) => key.startsWith(`gallery.${index}.`))
+            .map(([, msg]) => msg);
+    };
+
+    const selectedGalleryErrors = getSelectedGalleryErrors();
 
     const handleAddGallery = () => {
         setDialogAction('add');
@@ -122,7 +134,7 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
             <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-6">
                 <h4 className="mb-3 text-xs text-gray-500">Select an image</h4>
                 <div className="space-y-1">
-                    {galleryList?.map((image) => (
+                    {galleryList?.map((image, index) => (
                         <div
                             key={image.gallery_id}
                             onClick={() => {
@@ -135,6 +147,9 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
                                 <span className={` ${image.gallery_id === selectedGalleryId ? 'font-normal text-red-900' : 'text-gray-700'}`}>
                                     {image.description}
                                 </span>
+                                {(errors[`gallery.${index}.image`] || errors[`gallery.${index}.description`]) && (
+                                    <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                )}
                             </div>
                             <div
                                 className={`flex items-center space-x-0.5 transition-opacity ${image.gallery_id === selectedGalleryId ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
@@ -167,7 +182,7 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
                         onClick={handleAddGallery}
                         className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
                     >
-                        <Plus className="mr-2 h-4 w-4" /> <p className='truncate'>Add New Photo</p>
+                        <Plus className="mr-2 h-4 w-4" /> <p className="truncate">Add New Photo</p>
                     </Button>
                 </div>
             </div>
@@ -188,6 +203,16 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
                                 alt={selectedGallery.image_name || 'Gallery Image'}
                                 heightClass="h-80"
                             />
+                            {selectedGalleryErrors.length > 0 && (
+                                <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                                    <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Objective</h4>
+                                    <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                        {selectedGalleryErrors.map((msg, i) => (
+                                            <li key={i}>{msg}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
 
                         {selectedGallery.description && (
@@ -200,12 +225,7 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
                 )}
             </div>
             {dialogOpen && (
-                <CampusGalleryDialog
-                    gallery={selectedGallery}
-                    type={dialogAction}
-                    onClose={() =>
-                        setDialogOpen(false)}
-                    onSave={handleSave} />
+                <CampusGalleryDialog gallery={selectedGallery} type={dialogAction} onClose={() => setDialogOpen(false)} onSave={handleSave} />
             )}
         </div>
     );

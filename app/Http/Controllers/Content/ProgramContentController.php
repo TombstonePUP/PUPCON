@@ -41,18 +41,6 @@ class ProgramContentController extends Controller
                         }
                         return $index !== null;
                     }),
-                    /* function ($attribute, $value, $fail) use ($request) {
-                        // Extract the index (e.g. gallery.0.image → 0)
-                        preg_match('/gallery\.(\d+)\.image/', $attribute, $matches);
-                        $index = $matches[1] ?? null;
-
-                        $previewUrl = $request->input("gallery.$index.previewUrl");
-
-                        // If no previewUrl AND no image file
-                        if (!$previewUrl ) {
-                            $fail("The gallery image is required.");
-                        }
-                    }, */
                     'nullable',
                     'file',
                     'mimes:jpg,jpeg,png',
@@ -68,8 +56,8 @@ class ProgramContentController extends Controller
                 'objectives.*.title.required' => 'The objective title is required.',
                 'objectives.*.description.required' => 'The objective description is required.',
                 'gallery.*.image.required' => 'The gallery image is required.',
-                'gallery.*.image.required_without' => 'The gallery image is required',
-                'gallery.*.image.sometimes' => 'The gallery image is required.',
+                // 'gallery.*.image.required_without' => 'The gallery image is required',
+                // 'gallery.*.image.sometimes' => 'The gallery image is required.',
                 'gallery.*.image.mimes' => 'The gallery image must be a file of type: jpg, jpeg, png.',
                 'gallery.*.image.max' => 'The gallery image may not be greater than 20MB.',
                 'gallery.*.caption.required' => 'The gallery caption is required.',
