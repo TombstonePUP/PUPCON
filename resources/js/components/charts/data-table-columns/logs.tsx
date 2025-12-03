@@ -82,7 +82,8 @@ export const columns: ColumnDef<ActivityLogs>[] = [
             );
         },
         cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue('activity_date')} </div>;
+            const date = (row.getValue('activity_date') as string).replace(',', ', ');
+            return <div className="text-left">{date}</div>;
         },
         enableGlobalFilter: true,
     },
