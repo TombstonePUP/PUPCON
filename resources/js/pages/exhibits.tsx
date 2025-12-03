@@ -46,20 +46,27 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                             setSelectedContainer(exhibit);
                                             setContainerDialogOpen(true);
                                         } else {
-                                            setSelectedDoc({
-                                                fileUrl: '/sample-files/student-handbook.pdf',
-                                                title: 'Student Handbook',
-                                            });
-                                            setViewDialogOpen(true);
+                                            if (exhibit.exhibit_files?.file_status?.status_name === 'Approved') {
+                                                setSelectedDoc({
+                                                    fileUrl: exhibit.exhibit_files?.file_path,
+                                                    title: exhibit.exhibit_files?.file_name,
+                                                });
+                                                setViewDialogOpen(true);
+                                            }
                                         }
-                                    }}
-                                    className="group flex flex-col p-2 overflow-hidden rounded-xl border bg-white duration-300 cursor-pointer hover:border-[#7f1414] hover:text-[#7f1414]"
+                                    }
+                                    }
+                                    className={`group flex flex-col p-2 gap-4 overflow-hidden rounded-xl border bg-white duration-300 cursor-pointer hover:border-[#7f1414] hover:text-[#7f1414]  ${!exhibit.container ? `${exhibit.exhibit_files?.file_status?.status_name === 'Approved' ? '' : 'grayscale cursor-not-allowed'}` : ''}`}
                                 >
-                                    <img
-                                        className="w-full transition duration-300 group-hover:scale-105 object-contain"
-                                        src="/images/exhibits/student-handbook.png"
-                                        alt={exhibit.exhibit_name}
-                                    />
+                                    <div className='overflow-hidden rounded h-50'>
+                                        <img
+                                            className="h-full transition duration-300 group-hover:scale-105 object-cover"
+                                            // src="/images/exhibits/student-handbook.png"
+                                            src={exhibit.image_path || '/images/placeholder.png'}
+                                            alt={exhibit.exhibit_name}
+                                        />
+                                    </div>
+
                                     <p className="font-bold text-center mb-4">
                                         {exhibit.exhibit_name}
                                     </p>
@@ -78,14 +85,14 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                         <DialogHeader>
                             <DialogTitle>{selectedContainer?.exhibit_name}</DialogTitle>
                         </DialogHeader>
-                        <DialogDescription className='space-y-2'>
+                        <DialogDescription className='space-y-4'>
                             {selectedContainer?.exhibit_outlines?.length > 0 ? (
                                 [...selectedContainer.exhibit_outlines]
                                     .sort((a, b) => a.category.localeCompare(b.category))
                                     .map((exhibit) => (
                                         <div
                                             key={exhibit.exhibit_outline_id}
-                                            className="p-4 border rounded-lg"
+                                            className="p-4 bg-gray-100"
                                             onClick={() => {
                                                 if (exhibit.exhibit_files?.file_status?.status_name === 'Approved') {
                                                     setSelectedDoc({
@@ -99,7 +106,7 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                             <p className="font-semibold mb-1">
                                                 {exhibit.category}
                                             </p>
-                                            <h3 className={` ${exhibit.exhibit_files?.file_status?.status_name === 'Approved' ? 'underline cursor-pointer text-[#7f1414]' : ''}`}>{exhibit.outline_description} </h3>
+                                            <h3 className={`ml-2 text-sm ${exhibit.exhibit_files?.file_status?.status_name === 'Approved' ? 'underline cursor-pointer text-[#7f1414]' : ''}`}>{exhibit.outline_description} </h3>
                                         </div>
                                     ))
                             ) : (
