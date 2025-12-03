@@ -22,7 +22,7 @@ class FacilitiesController extends Controller
             'facilities.*.facility_id' => ['required', 'integer'],
             'facilities.*.facility_name' => ['required', 'string'],
             'facilities.*.description' => ['required', 'string'],
-            'facilities.*.facility_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+            'facilities.*.facility_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:20480'],
         ], [
             'page.content_page_id.required' => 'The page content ID is required.',
             'page.title.required' => 'The page title is required.',
@@ -32,7 +32,7 @@ class FacilitiesController extends Controller
             'facilities.*.description.required' => 'The facility description is required.',
             'facilities.*.facility_image.image' => 'The facility image must be an image file.',
             'facilities.*.facility_image.mimes' => 'The facility image must be a file of type: jpeg, png, jpg.',
-            'facilities.*.facility_image.max' => 'The facility image may not be greater than 5MB.',
+            'facilities.*.facility_image.max' => 'The facility image may not be greater than 20MB.',
         ]);
 
         if ($validator->fails()) {

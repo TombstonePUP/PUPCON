@@ -29,7 +29,7 @@ class FacultyStaffController extends Controller
             'faculties.*.status' => ['nullable', 'string', 'max:255'],
             'faculties.*.program_id' => ['nullable', 'integer'],
             'faculties.*.program_coordinator' => ['required', 'boolean'],
-            'faculties.*.faculty_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+            'faculties.*.faculty_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:20480'],
         ], [
             'page.page_content_id.required' => 'The page content ID is required.',
             'page.page_content_id.exists' => 'The selected page content ID is invalid.',
@@ -42,7 +42,7 @@ class FacultyStaffController extends Controller
             'faculties.*.program_coordinator.required' => 'The program coordinator field is required.',
             'faculties.*.faculty_image.image' => 'The faculty/staff image must be an image file.',
             'faculties.*.faculty_image.mimes' => 'The faculty/staff image must be a file of type: jpeg, png, jpg.',
-            'faculties.*.faculty_image.max' => 'The faculty/staff image may not be greater than 5MB.',
+            'faculties.*.faculty_image.max' => 'The faculty/staff image may not be greater than 20MB.',
         ]);
 
         if ($validator->fails()) {

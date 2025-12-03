@@ -26,7 +26,7 @@ class AdministrationController extends Controller
             'officials.*.suffix' => ['nullable', 'string'],
             'officials.*.position' => ['required', 'string'],
             'officials.*.type' => ['required', 'string'],
-            'officials.*.profile' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+            'officials.*.profile' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:20480'],
         ], [
             'page.content_page_id.required' => 'The page content ID is required.',
             'page.title.required' => 'The page title is required.',
@@ -38,7 +38,7 @@ class AdministrationController extends Controller
             'officials.*.position.required' => 'The official\'s position is required.',
             'officials.*.profile.image' => 'The profile picture must be an image file.',
             'officials.*.profile.mimes' => 'The profile picture must be a file of type: jpeg, png, jpg.',
-            'officials.*.profile.max' => 'The profile picture may not be greater than 5MB.',
+            'officials.*.profile.max' => 'The profile picture may not be greater than 20MB.',
         ]);
 
         if ($validator->fails()) {

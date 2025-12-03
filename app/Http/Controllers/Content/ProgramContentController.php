@@ -21,7 +21,7 @@ class ProgramContentController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'banner' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
+                'banner' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:20480'],
                 'previewUrl' => ['nullable', 'string'],
                 'description' => ['nullable', 'string', 'max:5000'],
                 'objectives' => ['nullable', 'array'],
@@ -36,7 +36,7 @@ class ProgramContentController extends Controller
                     'nullable',
                     'file',
                     'mimes:jpg,jpeg,png',
-                    'max:5120'
+                    'max:20480'
                 ],
                 'gallery.*.previewUrl' => ['nullable', 'string'],
                 'gallery.*.caption' => ['required', 'string', 'max:255'],
@@ -44,13 +44,13 @@ class ProgramContentController extends Controller
             [
                 // 'banner.image' => 'The banner must be an image file.',
                 'banner.mimes' => 'The banner must be a file of type: jpg, jpeg, png.',
-                'banner.max' => 'The banner may not be greater than 5MB.',
+                'banner.max' => 'The banner may not be greater than 20MB.',
                 'objectives.*.title.required' => 'The objective title is required.',
                 'gallery.*.image.required' => 'The gallery image is required.',
                 'gallery.*.image.required_without' => 'The gallery image is required',
                 'gallery.*.image.sometimes' => 'The gallery image is required.',
                 'gallery.*.image.mimes' => 'The gallery image must be a file of type: jpg, jpeg, png.',
-                'gallery.*.image.max' => 'The gallery image may not be greater than 5MB.',
+                'gallery.*.image.max' => 'The gallery image may not be greater than 20MB.',
                 'gallery.*.caption.required' => 'The gallery caption is required.',
             ]
         );

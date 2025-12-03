@@ -27,7 +27,7 @@ class LocalTaskForceController extends Controller
                 'chairmen.*.last_name' => ['required', 'string'],
                 'chairmen.*.official' => ['required', 'boolean'],
                 'chairmen.*.official_position' => ['nullable', 'string'],
-                'chairmen.*.profile_image' => ['nullable', 'file', 'image', 'mimes:jpeg,jpg,png', 'max:10240'],
+                'chairmen.*.profile_image' => ['nullable', 'file', 'image', 'mimes:jpeg,jpg,png', 'max:20480'],
                 'chairmen.*.members' => ['nullable', 'array'],
                 'chairmen.*.members.*.local_task_force_id' => ['nullable', 'integer'],
                 'chairmen.*.members.*.member_id' => ['required', 'integer'],
@@ -53,7 +53,7 @@ class LocalTaskForceController extends Controller
                 'chairmen.*.members.*.role.required' => 'The member role is required.',
                 'chairmen.*.profile_image.image' => 'The profile image must be an image.',
                 'chairmen.*.profile_image.mimes' => 'The profile image must be a file of type: jpeg, jpg, png.',
-                'chairmen.*.profile_image.max' => 'The profile image may not be greater than 10MB.',
+                'chairmen.*.profile_image.max' => 'The profile image may not be greater than 20MB.',
             ]
         );
 

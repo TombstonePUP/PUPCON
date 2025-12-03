@@ -23,7 +23,7 @@ class ManageAreasController extends Controller
                 'area_name' => ['required', 'string', 'max:255'],
                 'area_number' => ['required', 'integer'],
                 'area_description' => ['required', 'string'],
-                'area_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
+                'area_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:20480'],
             ],
             [
                 'area_name.required' => 'The area name is required.',
@@ -35,7 +35,7 @@ class ManageAreasController extends Controller
                 'area_description.string' => 'The area description must be a string.',
                 'area_image.file' => 'The area image must be a file.',
                 'area_image.mimes' => 'The area image must be a file of type: jpg, jpeg, png.',
-                'area_image.max' => 'The area image may not be greater than 5 MB.',
+                'area_image.max' => 'The area image may not be greater than 20MB.',
             ]
         );
 
