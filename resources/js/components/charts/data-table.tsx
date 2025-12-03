@@ -262,11 +262,19 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data, resolve
         return data.filter((file) => file.file_status === tab.charAt(0).toUpperCase() + tab.slice(1));
     }, [data, tab]);
 
+    const processedData = React.useMemo(
+        () => filteredData.map((item, index) => ({
+            ...item,
+            _uniqueId: `${item.file_id}-${index}`,
+        })),
+        [filteredData]
+    );
+
     const table = useReactTable({
         data: filteredData,
         columns,
         onRowSelectionChange: setRowSelection,
-        getRowId: (row, index) => `${row.file_id}-${index}`,
+        getRowId: (row) => row._uniqueId,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
