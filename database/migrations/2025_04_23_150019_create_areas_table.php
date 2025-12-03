@@ -147,7 +147,7 @@ return new class extends Migration
                 AND l.is_active = true
             UNION ALL
             SELECT
-                CONCAT(p.degree_type , ' ', p.program_name, '-', 'Level ', l.level, '-', 'Area', '-', a.area_number, '-', afc.category_name) file_type,
+                CONCAT(p.degree_type , ' ', p.program_name, '-', 'Level ', l.level, '-', 'Area', '-', a.area_number, '-', 'area-forms', '-', afc.category_name) file_type,
                 CONCAT(a.area_name,'-', afc.category_name) outline,
                 afo.area_form_id file_id,
                 afo.file_name file_name,
