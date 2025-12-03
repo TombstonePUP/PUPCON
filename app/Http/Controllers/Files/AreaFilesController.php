@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\AreaFiles;
 use App\Models\AreaFormCategory;
+use App\Models\AccreditationLevels;
 use App\Models\Areas;
 use App\Models\FileStatus;
 use App\Models\ParameterOutlineCategory;
@@ -40,14 +41,14 @@ class AreaFilesController extends Controller
         );
 
         // $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::findOrFail($request->program_id)
-            ->load([
+        $program = Programs::with
+            ([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);
                 },
             ])
-            ->firstOrFail();
-        $level = $program->Levels->where('accreditation_level_id', $request->level_id)->first();
+            ->findOrFail($request->program_id);
+        $level = AccreditationLevels::where('accreditation_level_id', $request->level_id)->first();
         $level = $level->level === 0 ? 'Preliminiary Survey Visit' : $level->level;
         $area = Areas::where('area_id', $request->area_id)->first();
         $parameterOutlines = ParameterOutlines::find($validated['outline_id']);
