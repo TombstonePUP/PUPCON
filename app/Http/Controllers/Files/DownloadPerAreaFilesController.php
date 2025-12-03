@@ -18,39 +18,24 @@ class DownloadPerAreaFilesController extends Controller
     public function __invoke(Request $request)
     {
         $area = Areas::findOrFail($request->area_id);
-        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
         $program = Programs::findOrFail($request->program_id)->load([
             'Levels' => function ($query) use ($request) {
                 $query->where('accreditation_level_id', $request->level_id);
             }
         ]);
-        /* $program = Programs::where('program_name', 'ILIKE', $program)
-            ->with([
-                'Levels' => function ($query) use ($request) {
-                    $query->where('accreditation_level_id', $request->level_id);
-                }
-            ])->firstOrFail(); */
 
         $program_name = Str::slug($program->program_name, '_');
         $area_name = Str::slug($area->area_name, '_');
-        $level = $program->Levels->first()->level;
+        $level = $program->Levels->first();
+        $area = $level->Areas->find($request->area_id);
 
+        $folderPath = $program_name . '/level_' . $level->level . '/' . $area_name;
 
-        if (!$level) {
-            return redirect()->back()
-                ->with('type', 'error')
-                ->with('title', 'Download Failed')
-                ->with('message', 'Invalid program level specified for download.');
-        }
-
-        $folderPath = $program_name . '/level_' . $level . '/' . $area_name;
-
-        $zipFileName = $program_name . '_level_' . $level . '_area_' . $area->area_number . '.zip';
+        $zipFileName = $program_name . '_level_' . $level->level . '_area_' . $area->area_number . '.zip';
 
         $files = Storage::disk('public')->allFiles($folderPath);
 
-
-        if (empty($files)) {
+        if (!$level || !$area || empty($files)) {
             return redirect()->back()
                 ->with('type', 'error')
                 ->with('title', 'Download Failed')

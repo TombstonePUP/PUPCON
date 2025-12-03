@@ -23,7 +23,6 @@ class AreaParameterOutlinesController extends Controller
      */
     public function index(string $program_id, int $level_id, string $area_id)
     {
-        // $program = Str::of($program_name)->replace('_', ' ')->title();
         $program = Programs::select('program_id', 'program_name', 'degree_type')
             ->where('program_id', $program_id)
             ->with([
@@ -32,14 +31,6 @@ class AreaParameterOutlinesController extends Controller
                 }
             ])
             ->firstOrFail();
-        /* $program = Programs::select('program_id', 'program_name', 'degree_type')
-            ->where('program_name','ILIKE', $program)
-            ->with([
-                'Levels' => function ($query) use ($level_id) {
-                    $query->where('accreditation_level_id', $level_id);
-                }
-            ])
-            ->firstOrFail(); */
         $program->program_link = Str::slug($program->program_name, '_');
         $area = Areas::select('area_id', 'area_name', 'area_number', 'accreditation_level_id')
             ->where('area_id', $area_id)

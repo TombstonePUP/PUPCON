@@ -16,34 +16,31 @@ class DownloadPerProgramFilesController extends Controller
      */
     public function __invoke(Request $request)
     {
-        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
         $program = Programs::findOrFail($request->program_id)->load([
             'Levels' => function ($query) use ($request) {
                 $query->where('accreditation_level_id', $request->level_id);
             }
         ]);
-        /* $program = Programs::where('program_name', 'ILIKE', $program)
-            ->with([
-                'Levels' => function ($query) use ($request) {
-                    $query->where('accreditation_level_id', $request->level_id);
-                }
-            ])->firstOrFail(); */
 
         $program_name = Str::slug($program->program_name, '_');
-        $level = $program->Levels->first()->level;
+        $level = $program->Levels->first();
 
-        if (!$level) {
-            return redirect()->back()
-                ->with('type', 'error')
-                ->with('title', 'Download Failed')
-                ->with('message', 'Invalid program level specified for download.');
-        }
+        $areas = $level ? $level->Areas : null;
+        $parameter = $areas ? $areas->flatMap(function ($area) {
+            return $area->AreaParameters;
+        }) : collect();
+        $outlines = $parameter ? $parameter->flatMap(function ($param) {
+            return $param->ParameterOutlines;
+        }) : collect();
+        $forms = $areas ? $areas->flatMap(function ($area) {
+            return $area->AreaForms;
+        }) : collect();
 
-        $folderPath = $program_name . '/level_' . $level;
-        $zipFileName = $program_name . '_level_' . $level . '_all_areas.zip';
+        $folderPath = $program_name . '/level_' . $level->level;
+        $zipFileName = $program_name . '_level_' . $level->levle . '_all_areas.zip';
         $files = Storage::disk('public')->allFiles($folderPath);
 
-        if (empty($files)) {
+        if (!$level || $areas->isEmpty() || $parameter->isEmpty() || $outlines->isEmpty() || $forms->isEmpty() || empty($files)) {
             return redirect()->back()
                 ->with('type', 'error')
                 ->with('title', 'Download Failed')
