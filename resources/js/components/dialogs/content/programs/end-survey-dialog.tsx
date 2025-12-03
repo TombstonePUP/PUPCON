@@ -89,7 +89,7 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">New Level</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Remarks</Label>
                             <Select value={data.remarks} onValueChange={(value) => setData('remarks', value)} disabled={processing}>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select Remarks" />
