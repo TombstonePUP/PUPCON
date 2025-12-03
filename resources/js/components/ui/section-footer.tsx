@@ -32,13 +32,13 @@ const SectionFooter: React.FC<SectionFooterProps> = ({
                         <DialogTrigger asChild>
                             <Button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
                                 <Eye className="h-4 w-4 text-gray-600" />
-                                Preview
+                                View
                             </Button>
                         </DialogTrigger>
 
                         <DialogContent className="sm:max-w-md">
                             <DialogHeader>
-                                <DialogTitle>Preview Content</DialogTitle>
+                                <DialogTitle>View Content</DialogTitle>
                                 <DialogDescription className="my-2 leading-relaxed">
                                     {previewDescription}
                                 </DialogDescription>
@@ -59,7 +59,7 @@ const SectionFooter: React.FC<SectionFooterProps> = ({
                                         }}
                                         className="cursor-pointer rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
                                     >
-                                        Continue to Preview
+                                        Continue to Page
                                     </Button>
                                 </DialogClose>
                             </div>
