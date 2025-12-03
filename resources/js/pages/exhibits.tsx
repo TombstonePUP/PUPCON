@@ -1,11 +1,15 @@
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import PageHeader from '@/components/guest-page-header';
 import { Button } from '@/components/ui/button';
-import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import Layout from '@/layouts/landing-layout';
+import { ExhibitFiles } from '@/types/exhibits';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function Exhibits() {
+interface ExhibitsProps {
+    exhibits: ExhibitFiles[];
+}
+export default function Exhibits({ exhibits }: ExhibitsProps) {
     const [viewDialogOpen, setViewDialogOpen] = useState(false);
     const [selectedDoc, setSelectedDoc] = useState<{ fileUrl: string; title: string }>({
         fileUrl: '',
@@ -29,41 +33,47 @@ export default function Exhibits() {
                     />
 
                     <div className="grid w-[75%] grid-cols-4 gap-2 py-12">
-                        <div className="group overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white duration-300 hover:border-[#7f1414]">
-                            <div className="grid place-items-center bg-[linear-gradient(120deg,#7f1414_0%,#c12c2c_100%)]">
-                                <img
-                                    className="my-5 h-40 transition duration-300 group-hover:scale-110"
-                                    src="/images/exhibits/student-handbook.png"
-                                    alt="Student Handbook"
-                                />
-                            </div>
-                            <div className="rounded-b-xl p-6">
-                                <h1 className="mb-2 text-xl font-bold text-[#7f1414] group-hover:text-[#a01818]">Student Handbook</h1>
-                                <p> Click to explore this interactive exhibit and discover its contents. </p>
-                                <div className="flex justify-end">
-                                    <Button
-                                        onClick={() => {
-                                            setSelectedDoc({
-                                                fileUrl: '/sample-files/student-handbook.pdf', // your PDF path
-                                                title: 'Student Handbook',
-                                            });
-                                            setViewDialogOpen(true);
-                                        }}
-                                        className="mt-10 w-30 cursor-pointer rounded-full border-none bg-[linear-gradient(130deg,#7f1414_0%,#c12c2c_50%,#7f1414_100%)] bg-[length:200%_200%] font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-left hover:text-white"
-                                    >
-                                        View
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                            />
-                                        </svg>
-                                    </Button>
+                        {exhibits.length > 0 ? (
+                            exhibits.map((exhibit) => (
+                                <div className="group overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white duration-300 hover:border-[#7f1414]">
+                                    <div className="grid place-items-center bg-[linear-gradient(120deg,#7f1414_0%,#c12c2c_100%)]">
+                                        <img
+                                            className="my-5 h-40 transition duration-300 group-hover:scale-110"
+                                            src="/images/exhibits/student-handbook.png"
+                                            alt="Student Handbook"
+                                        />
+                                    </div>
+                                    <div className="rounded-b-xl p-6">
+                                        <h1 className="mb-2 text-xl font-bold text-[#7f1414] group-hover:text-[#a01818]">Student Handbook</h1>
+                                        <p> Click to explore this interactive exhibit and discover its contents. </p>
+                                        <div className="flex justify-end">
+                                            <Button
+                                                onClick={() => {
+                                                    setSelectedDoc({
+                                                        fileUrl: '/sample-files/student-handbook.pdf', // your PDF path
+                                                        title: 'Student Handbook',
+                                                    });
+                                                    setViewDialogOpen(true);
+                                                }}
+                                                className="mt-10 w-30 cursor-pointer rounded-full border-none bg-[linear-gradient(130deg,#7f1414_0%,#c12c2c_50%,#7f1414_100%)] bg-[length:200%_200%] font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-left hover:text-white"
+                                            >
+                                                View
+                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                                    />
+                                                </svg>
+                                            </Button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            ))
+                        ) : (
+                            <p className="col-span-4 text-center text-gray-500">No exhibits available.</p>
+                        )}
                     </div>
                 </div>
 
