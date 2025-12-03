@@ -105,6 +105,17 @@ class ManageProgramController extends Controller
             ]
         );
 
+        // Check if program with same name and degree type already exists
+        $existingProgram = Programs::where('program_name', 'ILIKE', $validated['program_name'])
+            ->where('degree_type', $validated['degree_type'])
+            ->first();
+
+        if ($existingProgram) {
+            return back()->withErrors([
+                'program_name' => 'A program with this name and degree type already exists.'
+            ]);
+        }
+
         $program = Programs::create([
             'program_name' => $validated['program_name'],
             'degree_type' => $validated['degree_type'],
@@ -130,6 +141,18 @@ class ManageProgramController extends Controller
                 'degree_type.required' => 'The degree type field is required.',
             ]
         );
+
+        // Check if another program with same name and degree type exists (excluding current program)
+        $existingProgram = Programs::where('program_name', 'ILIKE', $validated['program_name'])
+            ->where('degree_type', $validated['degree_type'])
+            ->where('program_id', '!=', $program->program_id)
+            ->first();
+
+        if ($existingProgram) {
+            return back()->withErrors([
+                'program_name' => 'A program with this name and degree type already exists.'
+            ]);
+        }
 
         $program->update([
             'program_name' => $validated['program_name'],
