@@ -1,6 +1,7 @@
 import GalleryDialog from '@/components/dialogs/content/programs/gallery/gallery-dialog';
 import ObjectiveDialog from '@/components/dialogs/content/programs/objectives/objective-dialog';
 import InputError from '@/components/input-error';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import SectionFooter from '@/components/ui/section-footer';
@@ -8,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/text-area';
 import { PerProgram, ProgramGalleryImages, ProgramObjectives } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { Edit2, EditIcon, ImageIcon, Plus, Trash2, Upload, X } from 'lucide-react';
+import { CircleAlert, Edit2, EditIcon, ImageIcon, Plus, Trash2, Upload, X } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react';
 
 interface ProgramSectionProps {
@@ -97,18 +98,6 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
         })),
     });
 
-    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
-        const messages = Object.entries(errors)
-            .filter(([key]) => key.startsWith(parentKey))
-            .map(([, message]) => message);
-
-        // Remove duplicate messages
-        return [...new Set(messages)];
-    };
-
-    const objectiveErrors = extractGroupedErrors(errors, 'objectives');
-    const galleryErrors = extractGroupedErrors(errors, 'gallery');
-
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -120,6 +109,40 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
             });
         }
     };
+
+    const objectiveErrorCount = Object.keys(errors).filter((key) => key.startsWith('objectives.')).length;
+
+    const getSelectedObjectiveIndex = () => {
+        return data.objectives?.findIndex((o) => o.objective_id === selectedObjectiveId);
+    };
+
+    const getSelectedObjectiveErrors = () => {
+        const index = getSelectedObjectiveIndex();
+        if (index === -1 || index === undefined) return [];
+
+        return Object.entries(errors)
+            .filter(([key]) => key.startsWith(`objectives.${index}.`))
+            .map(([, msg]) => msg);
+    };
+
+    const selectedObjectiveErrors = getSelectedObjectiveErrors();
+
+    const galleryErrorCount = Object.keys(errors).filter((key) => key.startsWith('gallery.')).length;
+
+    const getSelectedGalleryIndex = () => {
+        return data.gallery?.findIndex((o) => o.gallery_id === selectedGalleryId);
+    };
+
+    const getSelectedGalleryErrors = () => {
+        const index = getSelectedGalleryIndex();
+        if (index === -1 || index === undefined) return [];
+
+        return Object.entries(errors)
+            .filter(([key]) => key.startsWith(`gallery.${index}.`))
+            .map(([, msg]) => msg);
+    };
+
+    const selectedGalleryErrors = getSelectedGalleryErrors();
 
     useEffect(() => {
         return () => {
@@ -428,7 +451,15 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                     {/* --- Program Objectives --- */}
                     <div id="objectives" ref={objectivesRef} className="scroll-mt-20">
                         <div className="mb-6">
-                            <h2 className="text-lg font-semibold text-gray-900">Program Objectives</h2>
+                            <h2 className="flex items-center gap-3 text-lg font-semibold text-gray-900">
+                                Program Objectives
+                                {objectiveErrorCount > 0 && (
+                                    <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                        {objectiveErrorCount}
+                                    </Badge>
+                                    // <CircleAlert className="ml-2 inline-block h-5 w-5 text-red-600" />
+                                )}
+                            </h2>
                             <p className="text-sm text-gray-600">Define learning outcomes and goals</p>
                         </div>
                         <div className="flex min-h-[300px] rounded-lg border border-gray-200">
@@ -440,7 +471,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                             <p className="text-center text-sm text-gray-500">No objectives added.</p>
                                         </div>
                                     ) : (
-                                        objectives?.map((objective) => (
+                                        objectives?.map((objective, index) => (
                                             <div
                                                 key={objective.program_objective_id}
                                                 onClick={() => setSelectedObjectiveId(objective.program_objective_id)}
@@ -449,7 +480,12 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                                     : 'text-gray-700 hover:bg-[#7f1414]/4'
                                                     }`}
                                             >
-                                                <span className="truncate text-sm">{objective.objective_title}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="truncate text-sm">{objective.objective_title}</span>
+                                                    {(errors[`objectives.${index}.title`] || errors[`objectives.${index}.description`]) && (
+                                                        <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                                    )}
+                                                </div>
                                                 <div className="flex items-center space-x-0.5 opacity-0 group-hover:opacity-100">
                                                     <ActionButton
                                                         onClick={(e) => {
@@ -482,11 +518,23 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                             </div>
                             <div className="w-2/3 p-6">
                                 {selectedObjective ? (
-                                    <div className="space-y-4">
-                                        <h4 className="text-lg font-semibold break-words text-gray-900">{selectedObjective.objective_title}</h4>
-                                        <Separator />
-                                        <h5 className="mb-2 text-sm font-semibold text-gray-700">Description</h5>
-                                        <p className="text-sm whitespace-pre-wrap text-gray-700">{selectedObjective.objective_description}</p>
+                                    <div className="flex h-full flex-col justify-between space-y-4">
+                                        <div className="space-y-4">
+                                            <h4 className="text-lg font-semibold break-words text-gray-900">{selectedObjective.objective_title}</h4>
+                                            <Separator />
+                                            <h5 className="mb-2 text-sm font-semibold text-gray-700">Description</h5>
+                                            <p className="text-sm whitespace-pre-wrap text-gray-700">{selectedObjective.objective_description}</p>
+                                        </div>
+                                        {selectedObjectiveErrors.length > 0 && (
+                                            <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                                                <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Objective</h4>
+                                                <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                                    {selectedObjectiveErrors.map((msg, i) => (
+                                                        <li key={i}>{msg}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="flex h-full flex-col items-center justify-center text-center text-gray-500">
@@ -497,23 +545,20 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                             </div>
                         </div>
                     </div>
-                    {objectiveErrors.length > 0 && (
-                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
-                            <h4 className="mb-2 text-sm font-semibold text-red-600">Objective Errors</h4>
-                            <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
-                                {objectiveErrors.map((error, index) => (
-                                    <li key={index}>{error}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
 
                     <Separator className="my-10 bg-gray-200" />
 
                     {/* --- Gallery --- */}
                     <div id="gallery" ref={galleryRef} className="scroll-mt-20">
                         <div className="mb-6">
-                            <h2 className="text-lg font-semibold text-gray-900">Gallery of Excellence</h2>
+                            <h2 className="flex items-center gap-3 text-lg font-semibold text-gray-900">
+                                Gallery of Excellence
+                                {galleryErrorCount > 0 && (
+                                    <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                        {galleryErrorCount}
+                                    </Badge>
+                                )}
+                            </h2>
                             <p className="text-sm text-gray-600">Showcase program facilities and activities</p>
                         </div>
                         <div className="flex min-h-[300px] rounded-lg border border-gray-200">
@@ -525,7 +570,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                             <p className="text-center text-sm text-gray-500">No images added.</p>
                                         </div>
                                     ) : (
-                                        galleryItems?.map((item) => (
+                                        galleryItems?.map((item, index) => (
                                             <div
                                                 key={item.program_gallery_id}
                                                 onClick={() => setSelectedGalleryId(item.program_gallery_id)}
@@ -534,7 +579,12 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                                     : 'text-gray-700 hover:bg-[#7f1414]/4'
                                                     }`}
                                             >
-                                                <span className="truncate text-sm">{item.caption}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="truncate text-sm">{item.caption}</span>
+                                                    {(errors[`gallery.${index}.image`] || errors[`gallery.${index}.caption`]) && (
+                                                        <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                                    )}
+                                                </div>
                                                 <div className="flex items-center space-x-0.5 opacity-0 group-hover:opacity-100">
                                                     <ActionButton
                                                         onClick={(e) => {
@@ -567,10 +617,22 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                             </div>
                             <div className="w-2/3 p-6">
                                 {selectedGalleryItem ? (
-                                    <div className="space-y-4">
-                                        <ImageDisplay url={selectedGalleryItem.image_path} alt={selectedGalleryItem.image_name} />
-                                        <h5 className="text-gray-70fs-auto0 mb-1 text-sm font-semibold">Caption</h5>
-                                        <p className="text-sm text-gray-900">{selectedGalleryItem.caption}</p>
+                                    <div className="flex h-full flex-col justify-between space-y-4">
+                                        <div className="space-y-4">
+                                            <ImageDisplay url={selectedGalleryItem.image_path} alt={selectedGalleryItem.image_name} />
+                                            <h5 className="text-gray-70fs-auto0 mb-1 text-sm font-semibold">Caption</h5>
+                                            <p className="text-sm text-gray-900">{selectedGalleryItem.caption}</p>
+                                        </div>
+                                        {selectedGalleryErrors.length > 0 && (
+                                            <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                                                <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Objective</h4>
+                                                <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                                    {selectedGalleryErrors.map((msg, i) => (
+                                                        <li key={i}>{msg}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="flex h-full flex-col items-center justify-center text-center text-gray-500">
@@ -581,16 +643,6 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                             </div>
                         </div>
                     </div>
-                    {galleryErrors.length > 0 && (
-                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
-                            <h4 className="mb-2 text-sm font-semibold text-red-600">Gallery Errors</h4>
-                            <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
-                                {galleryErrors.map((error, index) => (
-                                    <li key={index}>{error}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
                 </div>
                 <SectionFooter onSave={onSave} onPreview={program.under_survey ? preview : null} />
             </div>

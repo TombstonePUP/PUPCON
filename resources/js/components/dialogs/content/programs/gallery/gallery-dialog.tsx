@@ -118,7 +118,6 @@ export default function GalleryDialog({ type, onClose, onSave, gallery }: Galler
                         <Input
                             className="mt-2"
                             type="text"
-                            required
                             value={data.caption}
                             onChange={(e) => setData({ ...data, caption: e.target.value })}
                             placeholder="Image caption"

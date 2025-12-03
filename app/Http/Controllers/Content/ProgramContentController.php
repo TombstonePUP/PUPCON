@@ -28,11 +28,31 @@ class ProgramContentController extends Controller
                 'gallery' => ['nullable', 'array'],
                 'objectives.*.objective_id' => ['required', 'integer'],
                 'objectives.*.title' => ['required', 'string', 'max:255'],
-                'objectives.*.description' => ['nullable', 'string'],
+                'objectives.*.description' => ['required', 'string'],
                 'gallery.*.gallery_id' => ['required', 'integer'],
                 'gallery.*.image' => [
-                    'required_without:gallery.*.previewUrl',
-                    // 'sometimes',
+                    Rule::requiredIf(function () use ($request) {
+                        $index = null;
+                        foreach ($request->input('gallery', []) as $i => $item) {
+                            if (!isset($item['image']) && empty($item['previewUrl'])) {
+                                $index = $i;
+                                break;
+                            }
+                        }
+                        return $index !== null;
+                    }),
+                    /* function ($attribute, $value, $fail) use ($request) {
+                        // Extract the index (e.g. gallery.0.image → 0)
+                        preg_match('/gallery\.(\d+)\.image/', $attribute, $matches);
+                        $index = $matches[1] ?? null;
+
+                        $previewUrl = $request->input("gallery.$index.previewUrl");
+
+                        // If no previewUrl AND no image file
+                        if (!$previewUrl ) {
+                            $fail("The gallery image is required.");
+                        }
+                    }, */
                     'nullable',
                     'file',
                     'mimes:jpg,jpeg,png',
@@ -46,6 +66,7 @@ class ProgramContentController extends Controller
                 'banner.mimes' => 'The banner must be a file of type: jpg, jpeg, png.',
                 'banner.max' => 'The banner may not be greater than 20MB.',
                 'objectives.*.title.required' => 'The objective title is required.',
+                'objectives.*.description.required' => 'The objective description is required.',
                 'gallery.*.image.required' => 'The gallery image is required.',
                 'gallery.*.image.required_without' => 'The gallery image is required',
                 'gallery.*.image.sometimes' => 'The gallery image is required.',

@@ -49,7 +49,7 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective, next
                         <Input
                             className="mt-2"
                             type="text"
-                            required
+                            // required
                             value={data.title}                               // ← switched to value
                             onChange={(e) => setData({ ...data, title: e.target.value })}
                         />
@@ -59,7 +59,7 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective, next
                         <Label>Description</Label>
                         <Textarea
                             className="mt-2"
-                            required
+                            // required
                             value={data.description}
                             onChange={(e) => setData({ ...data, description: e.target.value })}
                             placeholder="Describe the learning objective..."
