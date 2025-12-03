@@ -6,7 +6,7 @@ import React from "react";
 
 interface DeleteExhibitOutlineDialogProps {
     outline: ExhibitOutlines;
-    onClose: () => void;
+    onClose: (deletedId?: number) => void;
 }
 
 export default function DeleteExhibitOutlineDialog({ outline, onClose }: DeleteExhibitOutlineDialogProps) {
@@ -19,13 +19,13 @@ export default function DeleteExhibitOutlineDialog({ outline, onClose }: DeleteE
         destroy(route('exhibit.outline.file.delete', { outline_id: data.outline_id }), {
             onSuccess: () => {
                 reset();
-                onClose();
+               onClose(data.outline_id);
             },
         });
     }
 
     return (
-        <Dialog open={true} onOpenChange={onClose}>
+        <Dialog open={true} onOpenChange={() => onClose()}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Delete Exhibit Outline</DialogTitle>

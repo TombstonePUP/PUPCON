@@ -5,9 +5,10 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Exhibits } from '@/types/exhibits';
 import { useForm } from '@inertiajs/react';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, HelpCircleIcon, Trash2 } from 'lucide-react';
 import { useEffect } from 'react';
 
 interface ExhibitDialogProps {
@@ -64,7 +65,7 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                 },
             });
         }
-    }
+    };
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
@@ -171,6 +172,17 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                             >
                                 Exhibit Container
                             </Label>
+
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <span className="flex cursor-default items-center gap-1 italic">
+                                            <HelpCircleIcon className="h-auto w-4 text-red-800" />
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Enable this switch to allow uploading multiple files in this category.</TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                         </div>
                         <DialogFooter className="pt-4">
                             <DialogClose asChild>
@@ -179,7 +191,7 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                                 </Button>
                             </DialogClose>
                             <Button type="submit" variant={'noborder'} disabled={processing}>
-                            {type === 'edit' ? 'Save Changes' : 'Add Exhibit'}
+                                {type === 'edit' ? 'Save Changes' : 'Add Exhibit'}
                             </Button>
                         </DialogFooter>
                     </form>
