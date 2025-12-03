@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use App\Models\UniversityAdministration;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class AdministrationController extends Controller
 {
@@ -27,6 +28,7 @@ class AdministrationController extends Controller
             'officials.*.position' => ['required', 'string'],
             'officials.*.type' => ['required', 'string'],
             'officials.*.profile' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:20480'],
+            'officials.*.previewUrl' => ['nullable', 'string'],
         ], [
             'page.content_page_id.required' => 'The page content ID is required.',
             'page.title.required' => 'The page title is required.',
@@ -52,7 +54,7 @@ class AdministrationController extends Controller
         $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
-        if($page) {
+        if ($page) {
             $page->title = $validated['page']['title'];
             $page->subtitle = $validated['page']['subtitle'];
             $page->save();
@@ -68,13 +70,33 @@ class AdministrationController extends Controller
         foreach ($validated['officials'] ?? [] as $officialData) {
             $profilepath = null;
             $profilename = null;
+
+            $official = UniversityAdministration::find($officialData['administration_id']);
+
+            // --- DELETE IF NO NEW IMAGE AND NO PREVIEW URL ---
+            if (empty($officialData['profile']) && empty($officialData['previewUrl'])) {
+                if ($official && $official->profile_picture_path && Storage::disk('public')->exists($official->profile_picture_path)) {
+                    Storage::disk('public')->delete($official->profile_picture_path);
+                }
+                $profilename = null;
+                $profilepath = null;
+            }
+
+            // --- UPLOAD NEW IMAGE IF PRESENT ---
             if (isset($officialData['profile'])) {
                 $profilename = $officialData['first_name'] . '-' . $officialData['last_name'] . '.' . $officialData['profile']->getClientOriginalExtension();
                 $profilepath = 'administration_profiles/' . $profilename;
+
+                // delete old one
+                if ($official && $official->profile_picture_path && Storage::disk('public')->exists($official->profile_picture_path)) {
+                    Storage::disk('public')->delete($official->profile_picture_path);
+                }
+
                 $officialData['profile']->storeAs('administration_profiles', $profilename, 'public');
             }
 
-            if($official = UniversityAdministration::find($officialData['administration_id'])) {
+            // --- UPDATE OR CREATE ---
+            if ($official) {
                 $official->update([
                     'first_name' => $officialData['first_name'],
                     'middle_name' => $officialData['middle_name'] ?? null,
@@ -98,6 +120,13 @@ class AdministrationController extends Controller
                     'profile_picture_path' => $profilepath,
                 ]);
                 $administration_ids[] = $official->administration_id;
+            }
+        }
+
+        $officialsToDelete = UniversityAdministration::whereNotIn('administration_id', $administration_ids)->get();
+        foreach ($officialsToDelete as $official) {
+            if ($official->profile_picture_path && Storage::disk('public')->exists($official->profile_picture_path)) {
+                Storage::disk('public')->delete($official->profile_picture_path);
             }
         }
 

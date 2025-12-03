@@ -4,10 +4,11 @@ import SectionFooter from '@/components/ui/section-footer';
 import { Separator } from '@/components/ui/separator';
 import { Administration, ContentPages } from '@/types/content';
 import { useForm } from '@inertiajs/react';
-import { EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
+import { CircleAlert, EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { AdministrationDialog } from '../dialogs/content/admin-dialog';
 import InputError from '../input-error';
+import { Badge } from '../ui/badge';
 
 interface AdministrationProps {
     admin_page: ContentPages;
@@ -105,6 +106,23 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
     };
 
     const official_errors = extractGroupedErrors(errors, 'officials');
+
+    const getSelectedOfficialIndex = () => {
+        return officialsList?.findIndex((o) => o.administration_id === selectedOfficialId);
+    };
+
+    const getSelectedOfficialErrors = () => {
+        const index = getSelectedOfficialIndex();
+        if (index === -1 || index === undefined) return [];
+
+        return Object.entries(errors)
+            .filter(([key]) => key.startsWith(`officials.${index}.`))
+            .map(([, msg]) => msg);
+    };
+
+    const selectedOfficialErrors = getSelectedOfficialErrors();
+
+    const officialErrorCount = errors ? Object.keys(errors).filter((key) => key.startsWith('officials.')).length : 0;
 
     const selectedOfficial = officialsList.find((o) => o.administration_id === selectedOfficialId) ?? null;
 
@@ -217,6 +235,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
             return updatedList;
         });
     };
+
     return (
         <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
             <div className="p-8">
@@ -268,21 +287,27 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
 
                 {/* --- Campus Facilities Section --- */}
                 <div className="mb-6">
-                    <h3 className="mb-4 text-base font-semibold text-gray-900">University Officials</h3>
+                    <h3 className="mb-4 text-base font-semibold text-gray-900">
+                        University Officials
+                        {officialErrorCount > 0 && (
+                            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                {officialErrorCount}
+                            </Badge>
+                        )}
+                    </h3>
                     <div className="flex min-h-[400px] rounded-lg border border-gray-200">
                         {/* Left Pane: Official List */}
                         <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-6">
                             <h4 className="mb-3 text-xs text-gray-500">Select an Official</h4>
                             <div className="space-y-1">
-                                {officialsList.map((official) => (
+                                {officialsList.map((official, index) => (
                                     <div
                                         key={official.administration_id}
                                         onClick={() => {
                                             setSelectedOfficialId(official.administration_id);
                                         }}
-                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${
-                                            official.administration_id === selectedOfficialId ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'
-                                        }`}
+                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${official.administration_id === selectedOfficialId ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                     >
                                         <div className="truncate text-sm">
                                             <span
@@ -291,13 +316,19 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                                                 {official.first_name} {official.middle_name ? official.middle_name[0] + ' ' : ''}
                                                 {official.last_name} {official.suffix ? ', ' + official.suffix : ''} - {official.position}
                                             </span>
+                                            {(errors[`officials.${index}.first_name`] ||
+                                                errors[`officials.${index}.last_name`] ||
+                                                errors[`officials.${index}.position`] ||
+                                                errors[`officials.${index}.type`] ||
+                                                errors[`officials.${index}.profile`]) && (
+                                                    <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                                )}
                                         </div>
                                         <div
-                                            className={`flex items-center space-x-0.5 transition-opacity ${
-                                                official.administration_id === selectedOfficialId
-                                                    ? 'opacity-100'
-                                                    : 'opacity-0 group-hover:opacity-100'
-                                            }`}
+                                            className={`flex items-center space-x-0.5 transition-opacity ${official.administration_id === selectedOfficialId
+                                                ? 'opacity-100'
+                                                : 'opacity-0 group-hover:opacity-100'
+                                                }`}
                                         >
                                             <ActionButton
                                                 onClick={(e) => {
@@ -352,21 +383,21 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                                         </h4>
                                         <p className="text-sm font-normal text-red-700">{selectedOfficial.position}</p>
                                     </div>
+                                    {selectedOfficialErrors.length > 0 && (
+                                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                                            <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Gallery</h4>
+                                            <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                                {selectedOfficialErrors.map((msg, i) => (
+                                                    <li key={i}>{msg}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
                     </div>
                 </div>
-                {official_errors.length > 0 && (
-                    <div className="mb-6 rounded-md bg-red-50 p-4">
-                        <h4 className="mb-2 text-sm font-medium text-red-800">Please fix the following errors:</h4>
-                        <ul className="list-disc space-y-1 pl-5 text-sm text-red-700">
-                            {official_errors.map((error, index) => (
-                                <li key={index}>{error}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
             </div>
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />
