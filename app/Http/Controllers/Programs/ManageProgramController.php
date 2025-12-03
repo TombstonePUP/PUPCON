@@ -151,6 +151,6 @@ class ManageProgramController extends Controller
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Program Archived')
-            ->with('message', $programName . ' has been archived successfully. The program data is preserved and can be restored at any time.');
+            ->with('message', $programName . ' has been archived successfully.');
     }
 }
