@@ -152,9 +152,9 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
                 title={currentDocumentTitle}
             />
 
-            <ul className="flex flex-col gap-1 pl-[1vw]">
+            <ul>
                 {outlines.map((outline) => (
-                    <li key={outline.parameter_outline_id}>
+                    <li className='flex flex-col gap-1' key={outline.parameter_outline_id}>
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center">
                                 {/* Outline label */}
@@ -254,7 +254,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
         <>
             <ul className="flex flex-col gap-2 pl-[1vw]">
                 {outlines.map((outline) => (
-                    <li key={outline.parameter_outline_id}>
+                    <li  className='flex flex-col gap-1'  key={outline.parameter_outline_id}>
                         <ContextMenu>
                             <ContextMenuTrigger className="flex flex-row items-center gap-2">
                                 {outline.container ? (
@@ -285,7 +285,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
                                                     setTimeout(() => resolveDocDialog({ type: 'view', benchmark: outline }), 50);
                                                 }
                                             }}
-                                            className="cursor-pointer underline"
+                                            className="cursor-pointer"
                                         >
                                             {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                                         </a>
@@ -321,7 +321,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
                                             <>
                                                 <ContextMenuItem
                                                     className="justify-left flex cursor-pointer flex-row items-center gap-2"
-                                                    onSelect={() => {download(outline)}}
+                                                    onSelect={() => { download(outline) }}
                                                 >
                                                     <DownloadIcon className="inline-block h-4 w-4" />
                                                     Download
