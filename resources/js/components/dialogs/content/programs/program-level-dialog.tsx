@@ -24,6 +24,7 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
     const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
     const level = selectedProgram?.latest_level?.level;
     const { data, setData, post, processing, errors } = useForm<ProgramLevelForm>({
+        program_id: selectedProgramId || 0,
         program_name: '',
         new_level: '',
     });
@@ -34,6 +35,16 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
             onSuccess: () => onClose(),
         });
     };
+
+    const programList = programs.filter((p) => !p.under_survey);
+
+    const newLevels = [
+        { value: '0', label: 'Preliminary' },
+        { value: '1', label: 'Level 1' },
+        { value: '2', label: 'Level 2' },
+        { value: '3', label: 'Level 3' },
+        { value: '4', label: 'Level 4' },
+    ].filter((l) => Number(l.value) >= (level ?? 0));
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
@@ -50,7 +61,7 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
                             onValueChange={(value) => {
                                 const programId = Number(value);
                                 setSelectedProgramId(programId);
-                                const program = programs.find(p => p.program_id === programId);
+                                const program = programs.find((p) => p.program_id === programId);
                                 setData('program_name', program?.program_name);
                             }}
                             disabled={processing}
@@ -59,14 +70,17 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
                                 <SelectValue placeholder="Select a program" />
                             </SelectTrigger>
                             <SelectContent>
-                                {programs.map((program) => (
+                                {programList.map((program) => (
                                     <SelectItem value={String(program.program_id)}>
-                                       {program.degree_type}{}{' in '}{program.program_name}
+                                        {program.degree_type}
+                                        { }
+                                        {' in '}
+                                        {program.program_name}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
-                        <InputError message={errors.program_name}/>
+                        <InputError message={errors.program_name} />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
@@ -81,40 +95,28 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
                         </div>
                         <div className="space-y-2">
                             <Label className="mb-2 block text-sm font-medium text-gray-700">New Level</Label>
-                            <Select
-                                value={data.new_level}
-                                onValueChange={(value) => setData('new_level', value)}
-                                disabled={processing}
-                            >
+                            <Select value={data.new_level} onValueChange={(value) => setData('new_level', value)} disabled={processing}>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select level" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="0">Preliminary</SelectItem>
-                                    <SelectItem value="1">Level 1</SelectItem>
-                                    <SelectItem value="2">Level 2</SelectItem>
-                                    <SelectItem value="3">Level 3</SelectItem>
-                                    <SelectItem value="4">Level 4</SelectItem>
+                                    {newLevels.map((lvl) => (
+                                        <SelectItem key={lvl.value} value={lvl.value}>
+                                            {lvl.label}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
-                        <InputError message={errors.new_level}/>
+                        <InputError message={errors.new_level} />
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button
-                                variant="outline"
-                                onClick={onClose}
-                                disabled={processing}
-                            >
+                            <Button variant="outline" onClick={onClose} disabled={processing}>
                                 Cancel
                             </Button>
                         </DialogClose>
-                        <Button
-                            variant="noborder"
-                            type="submit"
-                            disabled={processing}
-                        >
+                        <Button variant="noborder" type="submit" disabled={processing}>
                             Submit
                         </Button>
                     </DialogFooter>
