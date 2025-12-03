@@ -81,15 +81,14 @@ class Programs extends Model
     public function latestLevel()
     {
         return $this->hasOne(AccreditationLevels::class, 'program_id', 'program_id')
-            ->with('Areas')
             ->orderBy('survey_date', 'desc');
     }
 
-    public function activeLevels()
+    /* public function activeLevels()
     {
         return $this->hasOne(AccreditationLevels::class, 'program_id', 'program_id')
             ->with('Areas')
             ->where('is_active', true)
             ->orderBy('survey_date', 'desc');
-    }
+    } */
 }

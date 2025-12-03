@@ -20,14 +20,10 @@ class ManageProgramController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        if ($user->Roles->role_name === 'Admin' || $user->Roles->role_name === 'Coordinator') {
-            $programs = Programs::with('latestLevel')
-                ->orderBy('program_name', 'asc')->get();
-        } else {
-            $programs = Programs::with('latestLevel')
-                ->orderBy('program_name', 'asc')->get();
-        }
+        $programs = Programs::with([
+                'latestLevel.Areas',
+            ])
+            ->get();
 
         $programs = $programs->map(function ($program) {
             $this->formatPrograms($program);

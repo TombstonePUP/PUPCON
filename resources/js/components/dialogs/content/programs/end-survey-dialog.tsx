@@ -95,8 +95,8 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                                     <SelectValue placeholder="Select Remarks" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Pass">Pass</SelectItem>
-                                    <SelectItem value="Fail">Fail</SelectItem>
+                                    <SelectItem value="Passed">Pass</SelectItem>
+                                    <SelectItem value="Faile">Fail</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
