@@ -21,7 +21,7 @@ interface SectionFooterProps {
 const SectionFooter: React.FC<SectionFooterProps> = ({
     onSave,
     onPreview,
-    previewDescription = 'Clicking Preview will open a new tab in guest view so you can see how your changes look publicly.',
+    previewDescription = 'Clicking view will open a new tab in guest view so you can see how your changes look publicly.',
     previewUrl,
 }) => {
     return (

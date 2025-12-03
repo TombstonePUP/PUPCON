@@ -1,6 +1,7 @@
 import { FilesOverview } from "@/types";
 import RejectRequest from "./reject-document";
 import RevertRequest from "./revert-document";
+import ApproveRequest from "./approve-document";
 
 interface RequestDialogProps {
     type: 'reject' | 'revert' | 'approve' | null;
@@ -21,6 +22,13 @@ export default function RenderRequestDialog({ type, file, onClose }: RequestDial
         case 'revert':
             return (
                 <RevertRequest
+                    file={file}
+                    onClose={onClose}
+                />
+            );
+        case 'approve':
+            return (
+                <ApproveRequest
                     file={file}
                     onClose={onClose}
                 />

@@ -67,28 +67,27 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({ open, onOpenChan
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className={`!max-w-none ${dialogSize} flex flex-col gap-0 bg-slate-50 p-0 [&>button]:hidden`}>
-                <DialogHeader className="rounded-t-lg text-lg font-medium text-gray-900 
-                bg-gra-100">
+            <DialogContent className={`!max-w-none ${dialogSize} flex flex-col gap-0 bg-slate-50 p-0 [&>button]:hidden border-none`}>
+                <DialogHeader className="rounded-t-lg text-lg font-medium text-gray-900 bg-gradient-to-r from-[#7f1414] to-[#d9133a] text-white">
                     <div className="flex items-center justify-between gap-0 p-4 pl-6">
                         <div>
-                            <DialogTitle className="flex-1 truncate text-base font-medium text-slate-900">{title || 'Document Viewer'}</DialogTitle>
-                            <DialogDescription className="text-xs text-gray-500">{subtitle || 'Document Viewer'}</DialogDescription>
+                            <DialogTitle className="flex-1 truncate text-lg font-semibold">{title || 'Document Viewer'}</DialogTitle>
+                            {/* <DialogDescription className="text-sm text-white">{subtitle || 'Document Viewer'}</DialogDescription> */}
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                            <Button variant="outline" size="sm" onClick={zoomOut} title="Zoom Out" disabled={scale <= 0.5 || hasError}>
+                            <Button className='bg-[#d9405b] hover:scale-105 hover:bg-[#de5870]' size="sm" onClick={zoomOut} title="Zoom Out" disabled={scale <= 0.5 || hasError}>
                                 <Minus className="h-4 w-4" />
                             </Button>
-                            <span className="min-w-[3rem] text-center font-mono text-sm">{Math.round(scale * 100)}%</span>
-                            <Button variant="outline" size="sm" onClick={zoomIn} title="Zoom In" disabled={scale >= 3.0 || hasError}>
+                            <span className="min-w-[3rem] text-center text-sm">{Math.round(scale * 100)}%</span>
+                            <Button className='bg-[#d9405b] hover:scale-105 hover:bg-[#de5870]' size="sm" onClick={zoomIn} title="Zoom In" disabled={scale >= 3.0 || hasError}>
                                 <Plus className="h-4 w-4" />
                             </Button>
 
-                            <Button variant="outline" size="sm" onClick={toggleFullscreen} title="Toggle Fullscreen">
+                            <Button className='bg-[#d9405b] hover:scale-105 hover:bg-[#de5870]' size="sm" onClick={toggleFullscreen} title="Toggle Fullscreen">
                                 {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
                             </Button>
                             <Button
-                                variant="outline"
+                                className='bg-[#d9405b] hover:scale-105 hover:bg-[#de5870]'
                                 size="sm"
                                 onClick={() => onOpenChange(false)} // Call the handler to close the dialog
                                 title="Close Document Viewer"
@@ -100,7 +99,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({ open, onOpenChan
                 </DialogHeader>
 
                 <div className="relative flex-1 overflow-hidden">
-                    <div className="relative flex h-full w-full items-center justify-center overflow-auto rounded-b-lg border-t border-slate-200 bg-black/50 shadow-sm">
+                    <div className="relative flex h-full w-full items-center justify-center overflow-auto rounded-b-lg bg-[#1e1e1e] shadow-sm">
                         {hasError && (
                             <div className="absolute inset-0 z-10 flex items-center justify-center bg-white">
                                 <div className="flex flex-col items-center gap-3">

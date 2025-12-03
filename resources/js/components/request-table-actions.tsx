@@ -6,7 +6,7 @@ import { MoreVertical } from 'lucide-react';
 import { useEffect } from 'react';
 
 interface DialogProps {
-    type: 'aprove' | 'reject' | 'revert' | null;
+    type: 'approve' | 'reject' | 'revert' | null;
     file: FilesOverview | FilesOverview[];
 }
 
@@ -70,9 +70,10 @@ export default function DocumentRequestActions({ file, resolveDialog }: Document
                     {canApprove && (
                         <DropdownMenuItem
                             className="cursor-pointer"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                approveDocument(e);
+                            onClick={() => {
+                                // e.stopPropagation();
+                                // approveDocument(e);
+                                setTimeout(() => resolveDialog?.({ type: 'approve', file: files }), 50);
                             }}
                         >
                             Approve
