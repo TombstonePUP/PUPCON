@@ -1,11 +1,11 @@
 import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import PageHeader from '@/components/guest-page-header';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Layout from '@/layouts/landing-layout';
 import { Exhibits } from '@/types/exhibits';
 import { Head } from '@inertiajs/react';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { FileX, FolderOpen } from 'lucide-react';
 import { useState } from 'react';
 
 interface ExhibitsProps {
@@ -21,15 +21,14 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
     const [containerDialogOpen, setContainerDialogOpen] = useState(false);
 
     // Group exhibits by category
-    const groupedExhibits =
-        selectedContainer?.exhibit_outlines?.reduce((acc, exhibit) => {
-            const category = exhibit.category;
-            if (!acc[category]) {
-                acc[category] = [];
-            }
-            acc[category].push(exhibit);
-            return acc;
-        }, {}) || {};
+    const groupedExhibits = selectedContainer?.exhibit_outlines?.reduce((acc, exhibit) => {
+        const category = exhibit.category;
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        acc[category].push(exhibit);
+        return acc;
+    }, {}) || {};
 
     // Sort categories alphabetically
     const sortedCategories = Object.keys(groupedExhibits).sort();
@@ -60,9 +59,9 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                         ]}
                     />
 
-                    {exhibits.length > 0 ? (
-                        <div className="grid w-[75%] grid-cols-2 gap-4 py-12 lg:grid-cols-3 xl:grid-cols-5">
-                            {exhibits.map((exhibit) => (
+                    <div className="grid w-[75%] grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 py-12">
+                        {exhibits.length > 0 ? (
+                            exhibits.map((exhibit) => (
                                 <div
                                     key={exhibit.exhibit_id}
                                     onClick={() => {
@@ -78,37 +77,28 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                                 setViewDialogOpen(true);
                                             }
                                         }
-                                    }}
-                                    className={`group flex flex-col gap-4 overflow-hidden rounded-xl border bg-white p-2 duration-300 hover:border-[#7f1414] hover:text-[#7f1414] ${exhibit.exhibit_outlines.length > 0 ? 'cursor-pointer' : 'grayscale'}`}
+                                    }
+                                    }
+                                    className={`group flex flex-col p-2 gap-4 overflow-hidden rounded-xl border bg-white duration-300  hover:border-[#7f1414] hover:text-[#7f1414]  ${exhibit.exhibit_outlines.length > 0 ? 'cursor-pointer' : 'grayscale'}`}
                                 >
                                     <div className='overflow-hidden rounded h-50 w-full'>
                                         <img
-                                            className="h-full object-cover transition duration-300 group-hover:scale-105"
+                                            className="w-full h-full transition duration-300 group-hover:scale-105 object-cover"
                                             src={exhibit.image_path || '/images/placeholder.png'}
                                             alt={exhibit.exhibit_name}
                                         />
                                     </div>
 
-                                    <p className="mb-4 text-center font-bold">{exhibit.exhibit_name}</p>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="flex min-h-[500px] w-full items-center justify-center py-12">
-                            <div className="flex max-w-md flex-col items-center gap-4 text-center">
-                                <div className="rounded-full bg-gray-100 p-6">
-                                    <FolderOpen className="h-16 w-16 text-gray-400" />
-                                </div>
-                                <div className="space-y-2">
-                                    <h3 className="text-xl font-semibold text-gray-900">No Exhibits Available</h3>
-                                    <p className="text-sm text-gray-500">
-                                        There are currently no exhibits to display. Exhibits will appear here once they are uploaded and made
-                                        available.
+                                    <p className="font-bold text-center mb-4">
+                                        {exhibit.exhibit_name}
                                     </p>
                                 </div>
-                            </div>
-                        </div>
-                    )}
+                            ))
+                        ) : (
+                            <p className="col-span-4 text-center text-gray-500">No exhibits available.</p>
+                        )}
+                    </div>
+
                 </div>
 
                 <DocumentViewer open={viewDialogOpen} onOpenChange={setViewDialogOpen} fileUrl={selectedDoc.fileUrl} title={selectedDoc.title} />
@@ -117,20 +107,24 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                         <DialogHeader>
                             <DialogTitle>{selectedContainer?.exhibit_name}</DialogTitle>
                         </DialogHeader>
-                        <DialogDescription className="space-y-4">
+                        <DialogDescription className='space-y-4'>
                             {selectedContainer?.exhibit_outlines?.length > 0 ? (
                                 sortedCategories.map((category) => (
-                                    <div key={category} className="space-y-2 rounded bg-gray-100 p-4">
-                                        <h2 className="pb-1 text-lg font-bold text-gray-800">{category}</h2>
+                                    <div key={category} className="space-y-2 bg-gray-100 p-4 rounded">
+                                        <h2 className="font-bold text-lg text-gray-800 pb-1">
+                                            {category}
+                                        </h2>
                                         {groupedExhibits[category].map((exhibit) => (
-                                            <div key={exhibit.exhibit_outline_id} className="ml-4">
+                                            <div
+                                                key={exhibit.exhibit_outline_id}
+                                                className="ml-4"
+                                            >
                                                 <h3
                                                     onClick={() => handleClick(exhibit)}
-                                                    className={`text-sm ${
-                                                        exhibit.outline_description !== undefined
-                                                            ? 'cursor-pointer text-[#7f1414] underline hover:text-[#a01c1c]'
-                                                            : ''
-                                                    }`}
+                                                    className={`text-sm ${exhibit.outline_description !== undefined
+                                                        ? 'underline cursor-pointer text-[#7f1414] hover:text-[#a01c1c]'
+                                                        : ''
+                                                        }`}
                                                 >
                                                     {exhibit.outline_description}
                                                 </h3>
@@ -139,17 +133,13 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                     </div>
                                 ))
                             ) : (
-                                <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
-                                    <div className="rounded-full bg-gray-100 p-4">
-                                        <FileX className="h-12 w-12 text-gray-400" />
-                                    </div>
-                                    <p className="text-sm text-gray-500">No outlines available for this exhibit.</p>
-                                </div>
+                                <p className="col-span-4 w-full text-gray-500 flex items-center justify-center">No outlines available.</p>
                             )}
                         </DialogDescription>
                     </DialogContent>
                 </Dialog>
-            </Layout>
+
+            </Layout >
         </>
     );
 }
