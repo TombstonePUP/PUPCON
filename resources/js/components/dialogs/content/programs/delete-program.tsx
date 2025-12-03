@@ -1,8 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { PerProgramUnderSurvey } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Archive } from 'lucide-react';
+import { useState } from 'react';
 
 interface DeleteProgramProps {
     program: PerProgramUnderSurvey;
@@ -11,6 +14,7 @@ interface DeleteProgramProps {
 
 export default function DeleteProgram({ program, onClose }: DeleteProgramProps) {
     const { processing, delete: destroy } = useForm();
+    const [confirmationText, setConfirmationText] = useState('');
 
     const handleDelete = (e: React.FormEvent) => {
         e.preventDefault();
@@ -21,30 +25,43 @@ export default function DeleteProgram({ program, onClose }: DeleteProgramProps) 
         });
     };
 
+    const isConfirmed = confirmationText === program.program_name;
+
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="text-lg font-medium text-gray-900">Archive Program</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
-                        Are you sure you want to archive <span className="font-semibold text-gray-900">"{program.program_name}"</span>?
-                    </DialogDescription>
-                    <div className="mt-3 rounded-lg bg-gray-50 p-3 text-gray-700">
-                        <p className="text-xs font-medium">⚠️ What happens when you archive:</p>
-                        <ul className="mt-2 space-y-1 text-xs">
-                            <li>• The program will be hidden from active listings</li>
-                            <li>• All data will be preserved and can be restored</li>
-                            <li>• Accreditation history remains intact</li>
-                        </ul>
+                    <DialogDescription className="text-sm text-gray-500">Are you sure you want to archive?</DialogDescription>
+
+                    <div className="my-6 rounded-md border border-yellow-100 bg-yellow-50 p-4">
+                        <p className="text-sm text-yellow-800">
+                            <span className="mb-1 block font-semibold text-yellow-900">Note: Important Action!</span>
+
+                            
+                                The program will be hidden from active listings, all data will be preserved and restorable, and accreditation history
+                                will remain intact.
+                            
+                        </p>
+                    </div>
+                    <div className="mt-4">
+                         <Label className="mb-2 block text-sm font-medium text-gray-700">Type the program name to confirm:</Label>
+                        <Input
+                            type="text"
+                            className="w-full rounded border px-2 py-1 text-sm"
+                            value={confirmationText}
+                            onChange={(e) => setConfirmationText(e.target.value)}
+                            placeholder={`Type "${program.program_name}"`}
+                        />
                     </div>
                 </DialogHeader>
-                <DialogFooter className="gap-2 sm:gap-0">
+                <DialogFooter className="gap-2 sm:gap-2">
                     <DialogClose asChild>
                         <Button variant="outline" onClick={onClose} disabled={processing}>
                             Cancel
                         </Button>
                     </DialogClose>
-                    <Button variant="noborder" onClick={handleDelete} disabled={processing}>
+                    <Button variant="noborder" onClick={handleDelete} disabled={!isConfirmed || processing}>
                         {processing ? (
                             <>
                                 <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -52,7 +69,7 @@ export default function DeleteProgram({ program, onClose }: DeleteProgramProps) 
                             </>
                         ) : (
                             <>
-                                <Archive className="mr-2 h-4 w-4" />
+                                <Archive className="mr-0 h-4 w-4" />
                                 Archive Program
                             </>
                         )}
