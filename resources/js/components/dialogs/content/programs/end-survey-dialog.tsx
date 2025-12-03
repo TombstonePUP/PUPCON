@@ -96,7 +96,7 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="Passed">Pass</SelectItem>
-                                    <SelectItem value="Faile">Fail</SelectItem>
+                                    <SelectItem value="Failed">Fail</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
