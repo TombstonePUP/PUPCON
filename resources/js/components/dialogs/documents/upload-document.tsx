@@ -88,7 +88,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
     };
 
     return (
-        <Dialog open={true} onOpenChange={() => !isUploading && onClose()}>
+        <Dialog open={true} onOpenChange={() =>onClose()}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-lg font-medium text-gray-900">Upload Document</DialogTitle>
@@ -102,7 +102,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                         <div className="flex flex-col w-full items-center justify-center">
                             {!data.document ? (
                                 <label
-                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
+                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${processing ? 'pointer-events-none opacity-70' : 'cursor-pointer'
                                         }`}
                                 >
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -130,7 +130,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                                         type="file"
                                         className="hidden"
                                         accept=".pdf"
-                                        disabled={isUploading}
+                                        disabled={processing}
                                         onChange={(e) => {
                                             const file = e.target.files ? e.target.files[0] : null;
                                             setData('document', file);
@@ -139,7 +139,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                                 </label>
                             ) : (
                                 <div
-                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : ''
+                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${processing ? 'pointer-events-none opacity-70' : ''
                                         }`}
                                 >
                                     <span className="text-sm font-semibold text-gray-700">{data.document.name}</span>
@@ -148,7 +148,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                                         variant="outline"
                                         size="sm"
                                         className="mt-2"
-                                        disabled={isUploading}
+                                        disabled={processing}
                                         onClick={() => setData('document', null)}
                                     >
                                         Remove File
@@ -161,12 +161,12 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
 
                     <DialogFooter className="mt-4">
                         <DialogClose asChild>
-                            <Button variant="outline" disabled={isUploading} onClick={() => !isUploading && onClose()}>
+                            <Button variant="outline" disabled={processing} onClick={() =>onClose()}>
                                 Cancel
                             </Button>
                         </DialogClose>
-                        <Button variant="noborder" type="submit" disabled={isUploading || processing}>
-                            {isUploading ? 'Uploading...' : 'Upload Document'}
+                        <Button variant="noborder" type="submit" disabled={processing}>
+                            Upload Document
                         </Button>
                     </DialogFooter>
                 </form>
