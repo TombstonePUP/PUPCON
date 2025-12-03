@@ -142,6 +142,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
             members: [...newCo, ...newMembers],
         };
 
+        console.log('Final Data to Submit:', finalData);
         setData(finalData);
         onSave(finalData);
         onClose();

@@ -1,10 +1,10 @@
-import { LocalTaskForce } from "@/types/content";
-import { useEffect, useState } from "react";
-import { EditIcon, ImageIcon, Plus, Trash2, User, X } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import TaskForceAreaOfficialDialog from "@/components/dialogs/content/task-force-area-official-dialog";
-import TaskForceOfficialDialog from "@/components/dialogs/content/task-force-official-dialog";
+import TaskForceAreaOfficialDialog from '@/components/dialogs/content/task-force-area-official-dialog';
+import TaskForceOfficialDialog from '@/components/dialogs/content/task-force-official-dialog';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { LocalTaskForce } from '@/types/content';
+import { CircleAlert, EditIcon, ImageIcon, Plus, Trash2, User, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface MemberForm {
     member_id?: number;
@@ -30,6 +30,7 @@ interface LocalTaskForceContentSectionProps {
     local_task_force: LocalTaskForce[];
     onUpdateTaskForceOfficial: (chairmanLocal: LocalTaskForce, chairman: LtfChairmanForm) => void;
     onDeleteTaskForceOfficial: (id: number) => void;
+    errors?: Record<string, string>;
 }
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
@@ -64,24 +65,29 @@ const OfficialPhoto: React.FC<{ url: string | null; alt: string; heightClass?: s
     );
 };
 
-export default function LocalTaskForceContentSection({...props}: LocalTaskForceContentSectionProps) {
-    const { local_task_force, onUpdateTaskForceOfficial, onDeleteTaskForceOfficial } = props;
-    const [localTaskForceList, setLocalTaskForceList] = useState<LocalTaskForce[]>(local_task_force ?? []);
-    const [chairmenList, setChairmenList] = useState<LocalTaskForce[]>(local_task_force.filter(ltf => !ltf.official) ?? []);
-    const [officialsList, setOfficialsList] = useState<LocalTaskForce[]>(local_task_force.filter(ltf => ltf.official) ?? []);
+export default function LocalTaskForceContentSection({ ...props }: LocalTaskForceContentSectionProps) {
+    const { local_task_force, onUpdateTaskForceOfficial, onDeleteTaskForceOfficial, errors } = props;
+    const [localTaskForceList, setLocalTaskForceList] = useState(
+        local_task_force.map((ltf, index) => ({
+            ...ltf,
+            __index: index, // ← store original Laravel index
+        })),
+    );
+    const [chairmenList, setChairmenList] = useState<LocalTaskForce[]>([]);
+    const [officialsList, setOfficialsList] = useState<LocalTaskForce[]>([]);
     const [selectedItem, setSelectedItem] = useState<{ type: 'chairman' | 'official'; id: number | null }>({ type: 'chairman', id: null });
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogType, setDialogType] = useState<'chairman' | 'official'>('chairman');
     const [dialogAction, setDialogAction] = useState<'add' | 'edit'>('add');
 
-    const selectedChairman = selectedItem.type === 'chairman' ? chairmenList.find(ltf => ltf.local_task_force_id === selectedItem.id) : null;
-    const selectedOfficial = selectedItem.type === 'official' ?officialsList.find(ltf => ltf.local_task_force_id === selectedItem.id) : null;
-    const coChairmenList = selectedChairman ? selectedChairman.members?.filter(member => member.role === 'Co-Chairman') : [];
-    const membersList = selectedChairman ? selectedChairman.members?.filter(member => member.role === 'Member') : [];
+    const selectedChairman = selectedItem.type === 'chairman' ? chairmenList.find((ltf) => ltf.local_task_force_id === selectedItem.id) : null;
+    const selectedOfficial = selectedItem.type === 'official' ? officialsList.find((ltf) => ltf.local_task_force_id === selectedItem.id) : null;
+    const coChairmenList = selectedChairman ? selectedChairman.members?.filter((member) => member.role === 'Co-Chairman') : [];
+    const membersList = selectedChairman ? selectedChairman.members?.filter((member) => member.role === 'Member') : [];
 
     useEffect(() => {
-        setChairmenList(localTaskForceList.filter(ltf => !ltf.official) ?? []);
-        setOfficialsList(localTaskForceList.filter(ltf => ltf.official) ?? []);
+        setChairmenList(localTaskForceList.filter((ltf) => !ltf.official) ?? []);
+        setOfficialsList(localTaskForceList.filter((ltf) => ltf.official) ?? []);
     }, [localTaskForceList]);
 
     const handleAddOfficial = () => {
@@ -132,7 +138,6 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
             }
             return updatedList;
         });
-        console.log(chairmenList);
     };
 
     const handleSaveLocalTaskForce = (official: LtfChairmanForm) => {
@@ -151,27 +156,48 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
                 official: official.official,
                 official_position: official.official_position || null,
                 profile_image_path: official.previewUrl || '',
-                members: official.members?.map((member) => ({
-                    member_id: member.member_id || 0,
-                    local_task_force_id: member.local_task_force_id,
-                    full_name: member.full_name,
-                    role: member.role || null,
-                })) || [],
+                members:
+                    official.members?.map((member) => ({
+                        member_id: member.member_id || 0,
+                        local_task_force_id: member.local_task_force_id,
+                        full_name: member.full_name,
+                        role: member.role || null,
+                    })) || [],
             };
 
             if (existingIndex !== -1) {
-                updatedList = current.map((o) => (o.local_task_force_id === officialForLocalState.local_task_force_id ? officialForLocalState : o));
+                updatedList = current.map((o) =>
+                    o.local_task_force_id === officialForLocalState.local_task_force_id ? { ...officialForLocalState, __index: o.__index } : o,
+                );
             } else {
                 const newId = Math.max(0, ...current.map((o) => o.local_task_force_id || 0)) + 1;
                 officialForLocalState.local_task_force_id = newId; // Assign new ID to the local object
-                updatedList = [...current, officialForLocalState];
+                updatedList = [...current, { ...officialForLocalState, __index: current.length }];
             }
 
-            console.log('Updated Local Task Force List:', updatedList);
             onUpdateTaskForceOfficial(officialForLocalState, official);
             return updatedList;
         });
     };
+
+    const getSelectedTaskForceIndex = () => {
+        const current = localTaskForceList.find((ltf) => ltf.local_task_force_id === selectedItem.id);
+        return current?.__index ?? -1;
+    };
+
+    const getSelectedTaskForceErrors = () => {
+        const current = getSelectedTaskForceIndex() !== -1 ? localTaskForceList.find((ltf) => ltf.local_task_force_id === selectedItem.id) : null;
+
+        if (!current) return [];
+
+        const index = current.__index;
+
+        return Object.entries(errors ?? {})
+            .filter(([key]) => key.startsWith(`chairmen.${index}.`))
+            .map(([_, msg]) => msg);
+    };
+
+    const selectedErrors = getSelectedTaskForceErrors();
 
     return (
         <>
@@ -198,6 +224,9 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
                                         >
                                             {official.first_name} {official.last_name}
                                         </span>
+                                        {(errors[`chairmen.${official.__index}.first_name`] || errors[`chairmen.${official.__index}.last_name`]) && (
+                                            <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                        )}
                                     </div>
                                     <div className="flex items-center space-x-0.5">
                                         <ActionButton
@@ -229,7 +258,9 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
                                 <div
                                     key={chairman.local_task_force_id}
                                     onClick={() => setSelectedItem({ type: 'chairman', id: chairman.local_task_force_id })}
-                                    className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${selectedItem.type === 'chairman' && selectedItem.id === chairman.local_task_force_id ? 'bg-[#7f1414]/4' : 'bg-white hover:bg-gray-50'
+                                    className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${selectedItem.type === 'chairman' && selectedItem.id === chairman.local_task_force_id
+                                        ? 'bg-[#7f1414]/4'
+                                        : 'bg-white hover:bg-gray-50'
                                         }`}
                                 >
                                     <div className="truncate text-sm">
@@ -238,6 +269,11 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
                                         >
                                             {chairman.area_name}
                                         </span>
+                                        {(errors[`chairmen.${chairman.__index}.first_name`] ||
+                                            errors[`chairmen.${chairman.__index}.last_name`] ||
+                                            errors[`chairmen.${chairman.__index}.area_name`]) && (
+                                                <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                            )}
                                     </div>
                                     <div
                                         className={`flex items-center space-x-0.5 transition-opacity ${selectedItem.type === 'chairman' && selectedItem.id === chairman.local_task_force_id
@@ -268,7 +304,7 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
                     </div>
 
                     {/* Bottom part: Add Buttons */}
-                    <div className="mt-4 flex gap-3 space-y-2 border-t border-gray-200 pt-4 flex-col">
+                    <div className="mt-4 flex flex-col gap-3 space-y-2 border-t border-gray-200 pt-4">
                         <Button
                             onClick={handleAddOfficial}
                             variant="outline"
@@ -299,14 +335,28 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
                     {selectedOfficial && (
                         <div className="space-y-6">
                             <div className="overflow-hidden rounded-lg border border-gray-100">
-                                <OfficialPhoto url={selectedOfficial.profile_image_path} alt={selectedOfficial.profile_image_name} heightClass="h-72" />
+                                <OfficialPhoto
+                                    url={selectedOfficial.profile_image_path}
+                                    alt={selectedOfficial.profile_image_name}
+                                    heightClass="h-72"
+                                />
                             </div>
                             <div className="rounded-md border p-8">
-                                <h4 className="text-lg font-medium break-words text-gray-900">{selectedOfficial.first_name} {selectedOfficial.last_name}</h4>
-                                <p className="text-xs font-normal text-gray-400">
-                                    {selectedOfficial.official_position}
-                                </p>
+                                <h4 className="text-lg font-medium break-words text-gray-900">
+                                    {selectedOfficial.first_name} {selectedOfficial.last_name}
+                                </h4>
+                                <p className="text-xs font-normal text-gray-400">{selectedOfficial.official_position}</p>
                             </div>
+                            {selectedOfficial && selectedErrors.length > 0 && (
+                                <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                                    <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Official</h4>
+                                    <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                        {selectedErrors.map((msg, i) => (
+                                            <li key={i}>{msg}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -323,14 +373,16 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
                                         onError={(e) => (e.currentTarget.src = 'https://placehold.co/100x100/eeeeee/7f1414?text=No+Photo')}
                                     />
                                     <div>
-                                        <h4 className="text-lg font-medium break-words text-gray-900">{selectedChairman.first_name} {selectedChairman.last_name}</h4>
+                                        <h4 className="text-lg font-medium break-words text-gray-900">
+                                            {selectedChairman.first_name} {selectedChairman.last_name}
+                                        </h4>
                                         <p className="text-xs font-normal text-gray-700">{selectedChairman.area_name}</p>
                                     </div>
                                 </div>
                             </div>
 
                             {/* --- Co-Chairmen List --- */}
-                            {coChairmenList.length > 0 && (
+                            {coChairmenList?.length > 0 && (
                                 <div>
                                     <h5 className="mb-2 text-sm font-semibold text-gray-700">Co-chairman</h5>
                                     <div className="mt-2 space-y-3">
@@ -364,6 +416,16 @@ export default function LocalTaskForceContentSection({...props}: LocalTaskForceC
                                     </ul>
                                 )}
                             </div>
+                            {selectedChairman && selectedErrors.length > 0 && (
+                                <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                                    <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Chairman</h4>
+                                    <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                        {selectedErrors.map((msg, i) => (
+                                            <li key={i}>{msg}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

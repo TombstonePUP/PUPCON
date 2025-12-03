@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/text-area';
 import { ContentPages, LocalTaskForce } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import LocalTaskForceContentSection from './task-force/local-task-force';
+import { Badge } from '../ui/badge';
 
 interface LocalTaskForceSectionProps {
     ltf_page: ContentPages;
@@ -66,21 +67,11 @@ const LocalTaskForceSection: React.FC = ({ ...props }: LocalTaskForceSectionProp
                     member_id: member.member_id,
                     local_task_force_id: member.local_task_force_id,
                     full_name: member.full_name,
+                    role: member.role || null,
                 }))
                 : [],
         })),
     });
-
-    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
-        const messages = Object.entries(errors)
-            .filter(([key]) => key.startsWith(parentKey))
-            .map(([, message]) => message);
-
-        // Remove duplicate messages
-        return [...new Set(messages)];
-    };
-
-    const chairman_errors = extractGroupedErrors(errors, 'chairmen');
 
     const handleUpdateLocalTaskForce = (chairmanLocal: LocalTaskForce, chairman: LtfChairmanForm) => {
         setData((prevData) => {
@@ -120,6 +111,7 @@ const LocalTaskForceSection: React.FC = ({ ...props }: LocalTaskForceSectionProp
     };
 
     const handleSubmit = () => {
+        console.log('Submitting Local Task Force Data:', data);
         post(route('content.local_task_force.update'), {
             preserveScroll: true,
             preserveState: true,
@@ -129,6 +121,9 @@ const LocalTaskForceSection: React.FC = ({ ...props }: LocalTaskForceSectionProp
     const handlePreview = () => {
         window.open('/about/local-task-force', '_blank');
     };
+
+    const localTaskForceErrorCount = errors ? Object.keys(errors).filter((key) => key.startsWith('chairmen.')).length : 0;
+
     return (
         <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
             <div className="p-8">
@@ -163,23 +158,21 @@ const LocalTaskForceSection: React.FC = ({ ...props }: LocalTaskForceSectionProp
 
                 {/* --- Task Force Officials & Areas Section --- */}
                 <div className="mb-6">
-                    <h3 className="mb-4 text-base font-semibold text-gray-900">Task Force Officials & Areas</h3>
+                    <h3 className="mb-4 text-base font-semibold text-gray-900">
+                        Task Force Officials & Areas
+                        {localTaskForceErrorCount > 0 && (
+                            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                {localTaskForceErrorCount}
+                            </Badge>
+                        )}
+                    </h3>
                     <LocalTaskForceContentSection
                         local_task_force={local_task_force}
                         onUpdateTaskForceOfficial={handleUpdateLocalTaskForce}
                         onDeleteTaskForceOfficial={handleDelete}
+                        errors={errors}
                     />
                 </div>
-                {chairman_errors.length > 0 && (
-                    <div className="mb-4 rounded-md bg-red-50 p-4">
-                        <h4 className="mb-2 text-sm font-medium text-red-800">Please fix the following errors:</h4>
-                        <ul className="list-disc space-y-1 pl-5 text-sm text-red-700">
-                            {chairman_errors.map((error, index) => (
-                                <li key={index}>{error}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
             </div>
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />

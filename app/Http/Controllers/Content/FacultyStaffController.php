@@ -81,6 +81,7 @@ class FacultyStaffController extends Controller
 
             $faculty = FacultyStaff::find($facultyData['faculty_staff_id']);
 
+            // Handle image deletion
             if ($faculty && empty($facultyData['faculty_image']) && empty($facultyData['previewUrl'])) {
                 if ($faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
                     Storage::disk('public')->delete($faculty->image_path);
@@ -91,6 +92,7 @@ class FacultyStaffController extends Controller
                 $imagepath = null;
             }
 
+            // Handle new image upload
             if (!empty($facultyData['faculty_image'])) {
 
                 // Delete old image if it exists
@@ -105,6 +107,7 @@ class FacultyStaffController extends Controller
                 $facultyData['faculty_image']->storeAs('faculty_staff_images', $imagename, 'public');
             }
 
+            // Update or create faculty/staff record
             if ($faculty) {
                 $faculty->update([
                     'first_name' => $facultyData['first_name'],
@@ -138,14 +141,15 @@ class FacultyStaffController extends Controller
             }
         }
 
+        // Delete faculty/staff records not in the submitted list
         $facultyToDelete = FacultyStaff::whereNotIn('faculty_staff_id', $faculty_staff_ids)->get();
         foreach ($facultyToDelete as $faculty) {
             if ($faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
                 Storage::disk('public')->delete($faculty->image_path);
             }
         }
-
         FacultyStaff::whereNotIn('faculty_staff_id', $faculty_staff_ids)->delete();
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Update Successful')
