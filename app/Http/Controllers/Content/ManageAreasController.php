@@ -40,15 +40,18 @@ class ManageAreasController extends Controller
         );
 
         // $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::findOrFail($request->program_id)
-            ->with([
+        $program = Programs::with
+            ([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);
                 },
+                'Levels.Areas',
             ])
-            ->firstOrFail();
+            ->findOrFail($request->program_id);
 
-        $area = $program->Levels->first()->Areas()->create([
+        $level = $program->Levels->first();
+
+        $area = $level->Areas()->create([
             'area_name' => $validated['area_name'],
             'area_number' => $validated['area_number'],
             'area_description' => $validated['area_description'] ?? null,
