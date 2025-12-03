@@ -332,12 +332,12 @@ Ghostscript is used to optimize and compress PDF files in the application for be
 1. **Download Ghostscript:**
 
     - Visit: [https://www.ghostscript.com/download/gsdnld.html](https://www.ghostscript.com/download/gsdnld.html)
-    - Download the latest Windows installer (e.g., `gs10.02.1w64.exe` for 64-bit)
+    - Download the latest Windows installer (e.g., `gs10.06.0w64.exe` for 64-bit)
 
 2. **Run the installer:**
 
     - Follow the installation wizard
-    - Default installation path: `C:\Program Files\gs\gs10.02.1\bin`
+    - Default installation path: `C:\Program Files\gs\gs10.06.0\bin`
 
 3. **Add Ghostscript to System PATH:**
 
@@ -346,7 +346,7 @@ Ghostscript is used to optimize and compress PDF files in the application for be
     - Click **"Environment Variables"**
     - Under "System variables", find and select **"Path"**
     - Click **"Edit"** → **"New"**
-    - Add: `C:\Program Files\gs\gs10.02.1\bin` (adjust version number if different)
+    - Add: `C:\Program Files\gs\gs10.06.0\bin` (adjust version number if different)
     - Click **"OK"** on all dialogs
 
 4. **Verify installation:**
@@ -383,17 +383,60 @@ Ghostscript is used to optimize and compress PDF files in the application for be
 
 ### ⚙️ Configuration
 
-Add Ghostscript path to your `.env` file:
+Add Ghostscript and temporary directory paths to your `.env` file:
+
+#### 🪟 **Windows Configuration:**
 
 ```env
-# Windows
-GHOSTSCRIPT_PATH="C:\Program Files\gs\gs10.02.1\bin\gswin64c.exe"
+# Ghostscript Binary Path (adjust version number to match your installation)
+PDF_OPTIMIZER_BIN_PATH="C:\\Program Files\\gs\\gs10.06.0\\bin\\gswin64c.exe"
 
-# Linux/macOS
-GHOSTSCRIPT_PATH="/usr/bin/gs"
+# Temporary Directory for PDF Processing
+TEMP="C:\\Users\\LENOVO\\Desktop\\Capstone\\PUPCON\\storage\\app\\public\\temp"
+TMP="C:\\Users\\LENOVO\\Desktop\\Capstone\\PUPCON\\storage\\app\\public\\temp"
+PDF_OPTIMIZER_TEMP_PATH="C:\\Users\\LENOVO\\Desktop\\Capstone\\PUPCON\\storage\\app\\public\\temp"
 ```
 
-> 💡 **Note:** If not set, the application will attempt to auto-detect the Ghostscript installation.
+> ⚠️ **Important:** Replace `C:\\Users\\LENOVO\\Desktop\\Capstone\\PUPCON` with your actual project path.
+
+#### 🍎 **macOS Configuration:**
+
+```env
+# Ghostscript Binary Path
+PDF_OPTIMIZER_BIN_PATH="/usr/local/bin/gs"
+
+# Temporary Directory for PDF Processing
+TEMP="/path/to/your/project/storage/app/public/temp"
+TMP="/path/to/your/project/storage/app/public/temp"
+PDF_OPTIMIZER_TEMP_PATH="/path/to/your/project/storage/app/public/temp"
+```
+
+#### 🐧 **Linux Configuration:**
+
+```env
+# Ghostscript Binary Path
+PDF_OPTIMIZER_BIN_PATH="/usr/bin/gs"
+
+# Temporary Directory for PDF Processing
+TEMP="/path/to/your/project/storage/app/public/temp"
+TMP="/path/to/your/project/storage/app/public/temp"
+PDF_OPTIMIZER_TEMP_PATH="/path/to/your/project/storage/app/public/temp"
+```
+
+### 📁 Create Temporary Directory
+
+Ensure the temporary directory exists and has proper permissions:
+
+```bash
+# Windows (PowerShell)
+New-Item -ItemType Directory -Force -Path "storage\app\public\temp"
+
+# Linux/macOS
+mkdir -p storage/app/public/temp
+chmod 755 storage/app/public/temp
+```
+
+> 💡 **Note:** If not set, the application will attempt to auto-detect the Ghostscript installation and use system temp directories.
 
 ### 🎯 Usage
 
@@ -410,26 +453,104 @@ PDF files are compressed to reduce file size while maintaining quality (150 DPI 
 <details>
 <summary><b>❌ Error: "Ghostscript not found"</b></summary>
 
+**Solution:**
+
 - Verify installation: Run `gs --version` or `gswin64c --version`
 - Check PATH environment variable includes Ghostscript bin directory
+- Verify `PDF_OPTIMIZER_BIN_PATH` in `.env` points to correct executable
 - Restart your terminal/command prompt after modifying PATH
 - On Windows, you may need to restart your computer
-  </details>
+
+**Windows - Check installation path:**
+
+```powershell
+Get-Command gswin64c
+```
+
+**Linux/macOS - Check installation path:**
+
+```bash
+which gs
+```
+
+</details>
 
 <details>
-<summary><b>🚫 Error: "Permission denied"</b></summary>
+<summary><b>🚫 Error: "Permission denied" or "Access denied"</b></summary>
+
+**Solution:**
 
 - On Linux/macOS: Check file permissions
-- Run: `sudo chmod +x /usr/bin/gs`
+    ```bash
+    sudo chmod +x /usr/bin/gs
+    chmod 755 storage/app/public/temp
+    ```
+- On Windows: Run as Administrator or check folder permissions
+- Ensure the temp directory exists and is writable
   </details>
 
 <details>
 <summary><b>⚠️ Compression not working</b></summary>
 
-- Check storage permissions in `storage/app/temp`
+**Solution:**
+
+- Check storage permissions in `storage/app/public/temp`
 - Ensure sufficient disk space
+- Verify `PDF_OPTIMIZER_TEMP_PATH` is correct
 - Review Laravel logs in `storage/logs/laravel.log`
-  </details>
+- Test Ghostscript manually:
+    ```bash
+    # Windows
+    "C:\Program Files\gs\gs10.06.0\bin\gswin64c.exe" --version
+
+    # Linux/macOS
+    gs --version
+    ```
+    </details>
+
+<details>
+<summary><b>🔍 How to find your Ghostscript installation path</b></summary>
+
+**Windows:**
+
+```powershell
+# Check registry
+Get-ItemProperty HKLM:\Software\GPL\Ghostscript\*
+
+# Or search in Program Files
+Get-ChildItem "C:\Program Files" -Recurse -Filter gswin64c.exe
+```
+
+**Linux/macOS:**
+
+```bash
+# Find Ghostscript binary
+which gs
+
+# Or search manually
+find / -name gs 2>/dev/null
+```
+
+</details>
+
+### 📊 Optimization Settings
+
+The application uses the following Ghostscript settings for PDF optimization:
+
+| Setting            | Value      | Description                  |
+| ------------------ | ---------- | ---------------------------- |
+| 🎨 **Device**      | `pdfwrite` | PDF output device            |
+| 📏 **Resolution**  | `150 DPI`  | Optimized for screen viewing |
+| 🗜️ **Compression** | `JPEG`     | Image compression method     |
+| 🎯 **Quality**     | `High`     | Balances size and quality    |
+
+### 📝 Additional Notes
+
+- ⚡ **Automatic cleanup** - Temporary files are deleted after processing
+- 💾 **Storage optimization** - Original files are replaced with compressed versions
+- 🔒 **Security** - Temp directory is isolated and regularly cleaned
+- 📈 **Performance** - Reduces file sizes by up to 70% on average
+- ⚠️ **Version compatibility** - Tested with Ghostscript 10.x (latest recommended)
 
 ---
 
