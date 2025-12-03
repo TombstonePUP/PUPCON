@@ -103,6 +103,7 @@ cd PUPCON
 
 # 2️⃣ Install dependencies
 composer install
+composer require mostafaznv/pdf-optimizer  # 📄 Install PDF Optimizer package
 npm install
 
 # 3️⃣ Environment setup
@@ -327,6 +328,25 @@ Ghostscript is used to optimize and compress PDF files in the application for be
 
 ### 📦 Installation
 
+#### 📚 Laravel PDF Optimizer Package
+
+First, install the Laravel PDF Optimizer package:
+
+```bash
+# Install via Composer
+composer require mostafaznv/pdf-optimizer
+```
+
+**Package Features:**
+
+- ✅ Automatic PDF compression
+- ✅ Quality optimization
+- ✅ Batch processing support
+- ✅ Laravel integration
+- ✅ Chainable methods
+
+**Documentation:** [https://github.com/mostafaznv/pdf-optimizer](https://github.com/mostafaznv/pdf-optimizer)
+
 #### 🪟 Windows
 
 1. **Download Ghostscript:**
@@ -438,7 +458,30 @@ chmod 755 storage/app/public/temp
 
 > 💡 **Note:** If not set, the application will attempt to auto-detect the Ghostscript installation and use system temp directories.
 
-### 🎯 Usage
+### 💻 Usage Examples
+
+The PDF optimizer can be used in your Laravel application:
+
+```php
+use Mostafaznv\PdfOptimizer\Pdf;
+
+// Basic optimization
+Pdf::optimize('path/to/input.pdf')
+    ->save('path/to/output.pdf');
+
+// With quality settings
+Pdf::optimize('path/to/input.pdf')
+    ->quality(150) // DPI
+    ->save('path/to/output.pdf');
+
+// Chain multiple operations
+Pdf::optimize('path/to/input.pdf')
+    ->quality(150)
+    ->grayscale()
+    ->save('path/to/output.pdf');
+```
+
+### 🎯 Automatic Usage
 
 The PDF optimizer is automatically used when:
 
@@ -499,14 +542,34 @@ which gs
 - Verify `PDF_OPTIMIZER_TEMP_PATH` is correct
 - Review Laravel logs in `storage/logs/laravel.log`
 - Test Ghostscript manually:
-    ```bash
-    # Windows
-    "C:\Program Files\gs\gs10.06.0\bin\gswin64c.exe" --version
+  ```bash # Windows
+  "C:\Program Files\gs\gs10.06.0\bin\gswin64c.exe" --version
 
-    # Linux/macOS
-    gs --version
-    ```
+        # Linux/macOS
+        gs --version
+        ```
+
     </details>
+
+<details>
+<summary><b>📦 Package installation issues</b></summary>
+
+**Solution:**
+
+```bash
+# Clear Composer cache
+composer clear-cache
+
+# Remove vendor directory and reinstall
+rm -rf vendor
+composer install
+
+# If still having issues, update Composer
+composer self-update
+composer require mostafaznv/pdf-optimizer --with-all-dependencies
+```
+
+</details>
 
 <details>
 <summary><b>🔍 How to find your Ghostscript installation path</b></summary>
@@ -551,6 +614,7 @@ The application uses the following Ghostscript settings for PDF optimization:
 - 🔒 **Security** - Temp directory is isolated and regularly cleaned
 - 📈 **Performance** - Reduces file sizes by up to 70% on average
 - ⚠️ **Version compatibility** - Tested with Ghostscript 10.x (latest recommended)
+- 📦 **Laravel Package** - Uses [mostafaznv/pdf-optimizer](https://github.com/mostafaznv/pdf-optimizer) for seamless integration
 
 ---
 
