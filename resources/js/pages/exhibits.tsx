@@ -92,7 +92,7 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                 >
                                     <div className="h-50 w-full overflow-hidden rounded">
                                         <img
-                                            className="w-full object-cover transition duration-300 group-hover:scale-105"
+                                            className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
                                             src={exhibit.image_path || '/images/placeholder.png'}
                                             alt={exhibit.exhibit_name}
                                         />
