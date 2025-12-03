@@ -232,7 +232,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                         onKeyDown={
                                             isAssigned ? (e) => (e.key === 'Enter' || e.key === ' ') && handleProgramClick(program) : undefined
                                         }
-                                        className={`${isAssigned ? 'cursor-pointer' : 'cursor-not-allowed'} group`}
+                                        className={`${role !== 'Admin' && role !== 'Coordinator' ? isAssigned ? 'cursor-pointer' : 'cursor-not-allowed' : 'cursor-pointer'} group`}
                                     >
                                         <div className="relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400">
                                             {(role === 'Admin' || role === 'Coordinator') && (

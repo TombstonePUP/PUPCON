@@ -261,12 +261,12 @@ export default function Programs({ program }: ProgramProps) {
                                                                     </Badge>
                                                                 )}
                                                             </div>
-                                                              <div className="flex justify-start mt-2 gap-4 text-xs text-gray-500">
+                                                            {/* <div className="flex justify-start mt-2 gap-4 text-xs text-gray-500">
                                                                 <div className="flex items-center gap-1">
                                                                     <CircleSlash className="h-3 w-3" />
-                                                                    <span>20 missing</span>
+                                                                    <span>{item.levels.}</span>
                                                                 </div>
-                                                            </div>
+                                                            </div> */}
                                                         </Link>
                                                     ) : (
                                                         <div className="block cursor-not-allowed p-6">
@@ -295,9 +295,9 @@ export default function Programs({ program }: ProgramProps) {
                                                                 selected_level.is_active &&
                                                                 selected_level.remarks === 'Ongoing Survey' && (
                                                                     <DropdownMenuItem
-                                                                            onClick={() => {
-                                                                                setTimeout(() => editArea(item), 50);
-                                                                            }}
+                                                                        onClick={() => {
+                                                                            setTimeout(() => editArea(item), 50);
+                                                                        }}
                                                                     >
                                                                         <EditIcon className="mr-2 h-4 w-4 text-gray-600" />
                                                                         Edit
@@ -387,9 +387,8 @@ export default function Programs({ program }: ProgramProps) {
                                         <button
                                             key={section.id}
                                             onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
-                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
+                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                                }`}
                                         >
                                             {section.label}
                                         </button>
