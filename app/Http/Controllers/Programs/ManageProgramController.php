@@ -23,6 +23,7 @@ class ManageProgramController extends Controller
         $programs = Programs::with([
                 'latestLevel.Areas',
             ])
+            ->orderBy('program_name', 'asc')
             ->get();
 
         $programs = $programs->map(function ($program) {

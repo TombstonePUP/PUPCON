@@ -81,6 +81,7 @@ class Programs extends Model
     public function latestLevel()
     {
         return $this->hasOne(AccreditationLevels::class, 'program_id', 'program_id')
+            ->whereIn('remarks', ['Ongoing Survey', 'Passed'])
             ->orderBy('survey_date', 'desc');
     }
 
