@@ -46,17 +46,17 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                             setSelectedContainer(exhibit);
                                             setContainerDialogOpen(true);
                                         } else {
-                                            if (exhibit.exhibit_files?.file_status?.status_name === 'Approved') {
+                                            if (exhibit.exhibit_outlines.length > 0) {
                                                 setSelectedDoc({
-                                                    fileUrl: exhibit.exhibit_files?.file_path,
-                                                    title: exhibit.exhibit_files?.file_name,
+                                                    fileUrl: exhibit.exhibit_outlines[0].exhibit_files?.file_path,
+                                                    title: exhibit.exhibit_outlines[0].exhibit_files?.file_name,
                                                 });
                                                 setViewDialogOpen(true);
                                             }
                                         }
                                     }
                                     }
-                                    className={`group flex flex-col p-2 gap-4 overflow-hidden rounded-xl border bg-white duration-300  hover:border-[#7f1414] hover:text-[#7f1414]  ${!exhibit.container ? `${exhibit.exhibit_files?.file_status?.status_name === 'Approved' ? 'cursor-pointer' : 'grayscale'}` : 'cursor-pointer'}`}
+                                    className={`group flex flex-col p-2 gap-4 overflow-hidden rounded-xl border bg-white duration-300  hover:border-[#7f1414] hover:text-[#7f1414]  ${!exhibit.container ? `${exhibit.exhibit_outlines.length > 0 ? 'cursor-pointer' : 'grayscale'}` : 'cursor-pointer'}`}
                                 >
                                     <div className='overflow-hidden rounded h-50'>
                                         <img
