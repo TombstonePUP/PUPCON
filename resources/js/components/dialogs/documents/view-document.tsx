@@ -68,7 +68,8 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({ open, onOpenChan
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className={`!max-w-none ${dialogSize} flex flex-col gap-0 bg-slate-50 p-0 [&>button]:hidden`}>
-                <DialogHeader className="rounded-t-lg text-lg font-medium text-gray-900">
+                <DialogHeader className="rounded-t-lg text-lg font-medium text-gray-900 
+                bg-gra-100">
                     <div className="flex items-center justify-between gap-0 p-4 pl-6">
                         <div>
                             <DialogTitle className="flex-1 truncate text-base font-medium text-slate-900">{title || 'Document Viewer'}</DialogTitle>
@@ -99,7 +100,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({ open, onOpenChan
                 </DialogHeader>
 
                 <div className="relative flex-1 overflow-hidden">
-                    <div className="relative flex h-full w-full items-center justify-center overflow-auto rounded-b-lg border-t border-slate-200 bg-white shadow-sm">
+                    <div className="relative flex h-full w-full items-center justify-center overflow-auto rounded-b-lg border-t border-slate-200 bg-black/50 shadow-sm">
                         {hasError && (
                             <div className="absolute inset-0 z-10 flex items-center justify-center bg-white">
                                 <div className="flex flex-col items-center gap-3">
