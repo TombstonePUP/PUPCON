@@ -5,7 +5,7 @@ import Layout from '@/layouts/landing-layout';
 import { Exhibits } from '@/types/exhibits';
 import { Head, router } from '@inertiajs/react';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { FileX, FolderOpen } from 'lucide-react';
+import { Eye, FileX, FolderOpen } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface ExhibitsProps {
@@ -71,36 +71,78 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
 
                     {exhibits.length > 0 ? (
                         <div className="grid w-[75%] grid-cols-2 gap-4 py-12 lg:grid-cols-3 xl:grid-cols-5">
-                            {exhibits.map((exhibit) => (
-                                <div
-                                    key={exhibit.exhibit_id}
-                                    onClick={() => {
-                                        if (exhibit.container && exhibit.exhibit_outlines.length > 0) {
-                                            setSelectedContainer(exhibit);
-                                            setContainerDialogOpen(true);
-                                        } else {
-                                            if (exhibit.exhibit_outlines.length > 0) {
-                                                setSelectedDoc({
-                                                    fileUrl: exhibit.exhibit_outlines[0].exhibit_files?.file_path,
-                                                    title: exhibit.exhibit_outlines[0].exhibit_files?.file_name,
-                                                });
-                                                setViewDialogOpen(true);
-                                            }
-                                        }
-                                    }}
-                                    className={`group flex flex-col gap-4 overflow-hidden rounded-xl border bg-white p-2 duration-300 hover:border-[#7f1414] hover:text-[#7f1414] ${exhibit.exhibit_outlines.length > 0 ? 'cursor-pointer' : 'grayscale'}`}
-                                >
-                                    <div className="h-50 w-full overflow-hidden rounded">
-                                        <img
-                                            className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                                            src={exhibit.image_path || '/images/placeholder.png'}
-                                            alt={exhibit.exhibit_name}
-                                        />
-                                    </div>
+                            {exhibits.map((exhibit, index) => {
+                                const hasFiles = exhibit.exhibit_outlines && exhibit.exhibit_outlines.length > 0;
 
-                                    <p className="mb-4 text-center font-bold">{exhibit.exhibit_name}</p>
-                                </div>
-                            ))}
+                                return (
+                                    <div
+                                        key={exhibit.exhibit_id}
+                                        onClick={() => {
+                                            if (hasFiles) {
+                                                if (exhibit.container) {
+                                                    setSelectedContainer(exhibit);
+                                                    setContainerDialogOpen(true);
+                                                } else {
+                                                    setSelectedDoc({
+                                                        fileUrl: exhibit.exhibit_outlines[0].exhibit_files?.file_path,
+                                                        title: exhibit.exhibit_outlines[0].exhibit_files?.file_name,
+                                                    });
+                                                    setViewDialogOpen(true);
+                                                }
+                                            }
+                                        }}
+                                        className={`group relative overflow-hidden rounded-xl bg-white transition-all duration-300 ${
+                                            hasFiles ? 'cursor-pointer hover:-translate-y-1' : 'grayscale'
+                                        }`}
+                                        style={{
+                                            animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`,
+                                        }}
+                                    >
+                                        {/* Gradient Overlay on Hover */}
+                                        {hasFiles && (
+                                            <div className="pointer-events-none absolute inset-0 z-10 rounded-xl bg-gradient-to-br from-[#7f1414]/5 to-[#dc143c]/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                        )}
+
+                                        {/* Image Section */}
+                                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#7f1414] to-[#dc143c]">
+                                            {/* Decorative Circle */}
+                                            {hasFiles && (
+                                                <div className="absolute top-1/2 left-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 scale-75 rounded-full bg-white/10 transition-all duration-300 group-hover:scale-100 group-hover:opacity-60"></div>
+                                            )}
+
+                                            <div className="relative z-20 flex h-full items-center justify-center p-6">
+                                                <img
+                                                    src={exhibit.image_path || '/images/placeholder.png'}
+                                                    alt={exhibit.exhibit_name}
+                                                    className={`max-h-28 max-w-28 rounded-lg object-contain transition-all duration-300 ${
+                                                        hasFiles ? 'group-hover:scale-105' : 'grayscale'
+                                                    }`}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Content Section */}
+                                        <div className="relative z-20 p-4">
+                                            <h3
+                                                className={`mb-2 line-clamp-2 text-center text-base font-bold transition-colors duration-300 ${
+                                                    hasFiles ? 'text-gray-900 group-hover:text-[#7f1414]' : 'text-gray-600'
+                                                }`}
+                                            >
+                                                {exhibit.exhibit_name}
+                                            </h3>
+
+                                            {hasFiles && (
+                                                <div className="mt-3 flex items-center justify-center">
+                                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#7f1414] to-[#dc143c] px-3 py-1.5 text-xs font-semibold text-white transition-all duration-300 group-hover:scale-105">
+                                                        <Eye className="h-3 w-3" />
+                                                        View
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     ) : (
                         <div className="flex min-h-[500px] w-full items-center justify-center py-12">
@@ -159,6 +201,19 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                     </DialogContent>
                 </Dialog>
             </Layout>
+
+            <style>{`
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `}</style>
         </>
     );
 }
