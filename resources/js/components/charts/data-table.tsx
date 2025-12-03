@@ -266,7 +266,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data, resolve
         data: filteredData,
         columns,
         onRowSelectionChange: setRowSelection,
-        getRowId: row => row.file_id,
+        getRowId: (row, index) => `${row.file_id}-${index}`,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
