@@ -1,13 +1,15 @@
 import { OrganizationDialog } from '@/components/dialogs/content/organization-dialog';
 import { OrganizationTypeDialog } from '@/components/dialogs/content/organization-type-dialog';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Organizations, OrganizationTypes } from '@/types/content';
-import { EditIcon, Plus, Trash2, X } from 'lucide-react';
+import { CircleAlert, EditIcon, Plus, Trash2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface OrganizationsSectionProps {
     org_types: OrganizationTypes[];
     onUpdateOrgTypes: (org_type: OrganizationTypes[]) => void;
+    errors?: Record<string, string>; // new prop for errors
 }
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
@@ -17,7 +19,7 @@ const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, clas
 );
 
 const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
-    const { org_types, onUpdateOrgTypes } = props;
+    const { org_types, onUpdateOrgTypes, errors } = props;
     const [orgTypes, setOrgTypes] = useState<OrganizationTypes[]>(org_types ?? []);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogType, setDialogType] = useState<'org_type' | 'org'>('org_type');
@@ -131,10 +133,24 @@ const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
         });
     };
 
+    const orgErrorCount = Object.keys(errors).filter((key) => key.startsWith('org_types.')).length;
+
+    const getOrgErrors = (typeIndex: number, orgIndex: number) => {
+        if (!errors) return [];
+        return Object.keys(errors).filter((key) => key.startsWith(`org_types.${typeIndex}.organizations.${orgIndex}.`));
+    };
+
     return (
         <>
             <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Campus Organizations</h2>
+                <h2 className="text-lg font-semibold text-gray-900">
+                    Campus Organizations
+                    {orgErrorCount > 0 && (
+                        <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                            {orgErrorCount}
+                        </Badge>
+                    )}
+                </h2>
                 <p className="text-sm text-gray-600">Manage academic and non-academic organizations</p>
             </div>
 
@@ -144,18 +160,23 @@ const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
                 <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-6">
                     <h4 className="mb-3 text-xs text-gray-500">Select an Organization Type</h4>
                     <div className="space-y-1">
-                        {orgTypes.map((type) => (
+                        {orgTypes.map((type, index) => (
                             <div
                                 key={type.type_id}
                                 onClick={() => setSelectedOrgTypeId(type.type_id)}
                                 className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${type.type_id === selectedOrgTypeId ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'
                                     }`}
                             >
-                                <span
-                                    className={`truncate text-sm ${type.type_id === selectedOrgTypeId ? 'font-normal text-red-900' : 'text-gray-700'}`}
-                                >
-                                    {type.type_name}
-                                </span>
+                                <div className="truncate text-sm">
+                                    <span
+                                        className={`truncate text-sm ${type.type_id === selectedOrgTypeId ? 'font-normal text-red-900' : 'text-gray-700'}`}
+                                    >
+                                        {type.type_name}
+                                    </span>
+                                    {Object.keys(errors).some((key) => key.startsWith(`org_types.${index}.`)) && (
+                                        <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                    )}
+                                </div>
                                 <div
                                     className={`flex items-center space-x-0.5 transition-opacity ${type.type_id === selectedOrgTypeId ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
                                 >
@@ -184,7 +205,7 @@ const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
                             onClick={handleAddOrgType}
                             className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
                         >
-                            <Plus className="mr-2 h-4 w-4" /> <p className='truncate'>Add New Type</p>
+                            <Plus className="mr-2 h-4 w-4" /> <p className="truncate">Add New Type</p>
                         </Button>
                     </div>
                 </div>
@@ -204,25 +225,51 @@ const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
                                 {!selectedOrgType?.organizations?.length ? (
                                     <p className="text-sm text-gray-500 italic">No organizations added to this type yet.</p>
                                 ) : (
-                                    selectedOrgType?.organizations?.map((org) => (
-                                        <div
-                                            key={org.organization_id}
-                                            className="group flex items-start justify-between rounded-md border border-gray-100 bg-white p-3 px-6 transition-all hover:border-red-200"
-                                        >
+                                    selectedOrgType?.organizations?.map((org, orgIndex) => {
+                                        const hasErrors =
+                                            getOrgErrors(
+                                                orgTypes.findIndex((t) => t.type_id === selectedOrgTypeId),
+                                                orgIndex,
+                                            ).length > 0;
+                                        return (
                                             <div>
-                                                <span className="block text-sm font-medium text-gray-900">{org.organization_name}</span>
-                                                <span className="text-xs text-gray-500">{org.affiliation}</span>
+                                                <div
+                                                    key={org.organization_id}
+                                                    className="group flex items-start justify-between rounded-md border border-gray-100 bg-white p-3 px-6 transition-all hover:border-red-200"
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <div>
+                                                            <span className="block text-sm font-medium text-gray-900">{org.organization_name}</span>
+                                                            <span className="text-xs text-gray-500">{org.affiliation}</span>
+                                                        </div>
+
+                                                        {hasErrors && <CircleAlert className="h-4 w-4 text-red-600" />}
+                                                    </div>
+                                                    <div className="flex flex-shrink-0 items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
+                                                        <ActionButton onClick={() => handleEditOrg(org)}>
+                                                            <EditIcon className="h-4 w-4" />
+                                                        </ActionButton>
+                                                        <ActionButton
+                                                            onClick={() => handleDeleteOrg(org.organization_id)}
+                                                            className="hover:text-red-500"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </ActionButton>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    {getOrgErrors(
+                                                        orgTypes.findIndex((t) => t.type_id === selectedOrgTypeId),
+                                                        orgIndex,
+                                                    ).map((errorKey) => (
+                                                        <p key={errorKey} className="mt-1 text-xs text-red-600">
+                                                            {errors[errorKey]}
+                                                        </p>
+                                                    ))}
+                                                </div>
                                             </div>
-                                            <div className="flex flex-shrink-0 items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
-                                                <ActionButton onClick={() => handleEditOrg(org)}>
-                                                    <EditIcon className="h-4 w-4" />
-                                                </ActionButton>
-                                                <ActionButton onClick={() => handleDeleteOrg(org.organization_id)} className="hover:text-red-500">
-                                                    <Trash2 className="h-4 w-4" />
-                                                </ActionButton>
-                                            </div>
-                                        </div>
-                                    ))
+                                        );
+                                    })
                                 )}
                             </div>
                             <div className="mt-6">

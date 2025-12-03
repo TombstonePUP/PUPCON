@@ -59,16 +59,19 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
         }
     };
 
-    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
-        const messages = Object.entries(errors)
-            .filter(([key]) => key.startsWith(parentKey))
-            .map(([, message]) => message);
+    const extractOrgTypeErrors = (errors: Record<string, string>) => {
+        return Object.entries(errors)
+            .filter(([key]) => {
+                // Must start with org_types
+                if (!key.startsWith('org_types.')) return false;
 
-        // Remove duplicate messages
-        return [...new Set(messages)];
+                // Exclude nested organizations keys
+                return !key.includes('.organizations.');
+            })
+            .map(([, message]) => message);
     };
 
-    const orgTypeErrors = extractGroupedErrors(errors, 'org_types');
+    const orgTypeErrors = extractOrgTypeErrors(errors);
 
     useEffect(() => {
         return () => {
@@ -86,9 +89,10 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
     };
 
     const handleSave = () => {
-        post(route('content.about.update'), { 
-            preserveScroll: true, 
-            preserveState: true, });
+        post(route('content.about.update'), {
+            preserveScroll: true,
+            preserveState: true,
+        });
     };
 
     const handlePreview = () => {
@@ -206,10 +210,10 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
 
                 <Separator className="my-10 bg-gray-200" />
 
-                <OrganizationsSection org_types={data.org_types} onUpdateOrgTypes={handleUpdateOrgTypes} />
+                <OrganizationsSection org_types={data.org_types} onUpdateOrgTypes={handleUpdateOrgTypes} errors={errors} />
                 {orgTypeErrors.length > 0 && (
                     <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
-                        <h4 className="mb-2 font-semibold text-red-700">Organization Section Errors</h4>
+                        <h4 className="mb-2 font-semibold text-red-700">Organization Type Errors</h4>
                         <ul className="ml-6 list-disc text-sm text-red-600">
                             {orgTypeErrors.map((msg, index) => (
                                 <li key={index}>{msg}</li>
