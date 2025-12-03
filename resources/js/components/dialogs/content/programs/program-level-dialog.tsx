@@ -24,7 +24,6 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
     const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
     const level = selectedProgram?.latest_level?.level;
     const { data, setData, post, processing, errors } = useForm<ProgramLevelForm>({
-        program_id: selectedProgramId || 0,
         program_name: '',
         new_level: '',
     });

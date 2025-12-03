@@ -21,20 +21,27 @@ class LevelsController extends Controller
      */
     public function store(Request $request)
     {
+        $program = Programs::find($request->program_id);
+        $level = $program->latestlevel->level;
+
         $validated = $request->validate([
             'program_name' => ['required', 'string'],
-            'new_level' => ['required', 'integer'],
+            'new_level' => [
+                'required',
+                'integer',
+                "min:$level",
+            ],
         ],
         [
             'program_name.required' => 'Program is required.',
             'program_name.string' => 'Program must be a string.',
             'program_name.max' => 'Program must not exceed 255 characters.',
             'new_level.required' => 'Level is required.',
-            'new_level.string' => 'Level must be a string.',
+            'new_level.integer' => 'Level must be an integer.',
+            'new_level.min' => 'Level must be at least Level' . $level . '.',
             'new_level.max' => 'Level must not exceed 255 characters.',
         ]);
 
-        $program = Programs::find($request->program_id);
         $program->update([
             'under_survey' => true,
         ]);
