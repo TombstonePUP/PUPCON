@@ -2,12 +2,13 @@ import PillarDialog from '@/components/dialogs/content/pillar-dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/text-area';
 import { PillarItems, Pillars } from '@/types/content';
-import { EditIcon, Plus, Trash2, X } from 'lucide-react';
+import { CircleAlert, EditIcon, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface PillarSectionProps {
     pillars: Pillars[];
     updatePillars: (updatedPillars: Pillars[]) => void;
+    errors?: Record<string, string>; // new prop for errors
 }
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
@@ -17,7 +18,7 @@ const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, clas
 );
 
 export default function PillarsSection({ ...props }: PillarSectionProps) {
-    const { pillars, updatePillars } = props;
+    const { pillars, updatePillars, errors } = props;
     const [pillarList, setPillarList] = useState<Pillars[]>(pillars);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [action, setAction] = useState<'add' | 'edit'>('add');
@@ -65,6 +66,13 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
             updatePillars(updatedPillars);
             return updatedPillars;
         });
+    };
+
+    const pillarErrorCount = Object.keys(errors).filter((key) => key.startsWith('pillars.')).length;
+
+    const getPillarErrors = (pillarIndex: number, itemIndex: number) => {
+        if (!errors) return [];
+        return Object.keys(errors).filter((key) => key.startsWith(`pillars.${pillarIndex}.pillar_items.${pillarIndex}.`));
     };
 
     const handleDeletePillar = (pillarId: number) => {
@@ -121,9 +129,7 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                 if (pillar.pillar_id === selectedPillar.pillar_id) {
                     let updatedItems: PillarItems[] = pillar.pillar_items ? [...pillar.pillar_items] : [];
                     if (editingItem && selectedPillarItemId !== null) {
-                        updatedItems = updatedItems.map((item) =>
-                            item.item_id === selectedPillarItemId ? { ...item, ...data } : item,
-                        );
+                        updatedItems = updatedItems.map((item) => (item.item_id === selectedPillarItemId ? { ...item, ...data } : item));
                     } else {
                         updatedItems.push({ ...data });
                     }
@@ -143,7 +149,7 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
             pillar_id: selectedPillar.pillar_id,
             item_description: '',
         });
-    }
+    };
 
     return (
         <>
@@ -174,6 +180,9 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                                             </div>
                                             {'    '}
                                             <div className="truncate">{pillar.pillar_title}</div>
+                                            {Object.keys(errors).some((key) => key.startsWith(`pillars.${index}.`)) && (
+                                                <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                            )}
                                         </div>
                                     </div>
 
@@ -215,8 +224,7 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
 
                     {/* Right Pane: Pillar Details */}
                     <div className="w-2/3 p-6">
-                        {
-                            !selectedPillar ? (
+                        {!selectedPillar ? (
                             <div className="flex h-full flex-col items-center justify-center text-center text-gray-500">
                                 <X className="mb-2 h-8 w-8" />
                                 <p className="font-medium">No Pillar Selected</p>
@@ -233,58 +241,80 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                                         <p className="text-sm text-gray-500 italic">No items have been added to this pillar yet.</p>
                                     )}
 
-                                    {selectedPillar.pillar_items?.map((item) => (
-                                        <div key={item.item_id}>
-                                            <div
-                                                className={`group cursor-pointer items-center justify-between rounded-md border border-gray-100 bg-white p-2 transition-all hover:border-red-200 ${selectedPillarItemId === item.item_id ? 'hidden' : 'flex'}`}
-                                            >
-                                                <span className="flex-1 px-2 text-sm text-gray-700">{item.item_description}</span>
-                                                <div className="flex items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
-                                                    <ActionButton onClick={() => handleEditPillarItem(item)}>
-                                                        <EditIcon className="h-4 w-4" />
-                                                    </ActionButton>
-                                                    <ActionButton
-                                                        onClick={() => handleDeletePillarItem(selectedPillar.pillar_id, item.item_id)}
-                                                        className="hover:text-red-500"
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </ActionButton>
+                                    {selectedPillar.pillar_items?.map((item, index) => {
+                                        const hasErrors =
+                                            getPillarErrors(
+                                                pillars.findIndex((t) => t.pillar_id === selectedPillarId),
+                                                index,
+                                            ).length > 0;
+                                        return (
+                                            <div key={item.item_id}>
+                                                <div
+                                                    className={`group cursor-pointer items-center justify-between rounded-md border border-gray-100 bg-white p-2 transition-all hover:border-red-200 ${selectedPillarItemId === item.item_id ? 'hidden' : 'flex'}`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="flex-1 px-2 text-sm text-gray-700">{item.item_description}</span>
+                                                        {hasErrors && <CircleAlert className="h-4 w-4 text-red-600" />}
+                                                    </div>
+                                                    <div className="flex items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
+                                                        <ActionButton onClick={() => handleEditPillarItem(item)}>
+                                                            <EditIcon className="h-4 w-4" />
+                                                        </ActionButton>
+                                                        <ActionButton
+                                                            onClick={() => handleDeletePillarItem(selectedPillar.pillar_id, item.item_id)}
+                                                            className="hover:text-red-500"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </ActionButton>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                <div>
+                                                    {getPillarErrors(
+                                                        pillars.findIndex((t) => t.pillar_id === selectedPillarId),
+                                                        index,
+                                                    ).map((errorKey) => (
+                                                        <p key={errorKey} className="mt-1 text-xs text-red-600">
+                                                            {errors[errorKey]}
+                                                        </p>
+                                                    ))}
+                                                </div>
 
-                                            <div
-                                                className={`overflow-hidden transition-all duration-300 ease-in-out ${selectedPillarItemId === item.item_id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} `}
-                                            >
-                                                <div className="rounded-md border border-gray-200 bg-white p-6">
-                                                    <label className="mb-2 block text-sm font-medium text-gray-700">Edit Item Description</label>
-                                                    <Textarea
-                                                        placeholder="Enter item description..."
-                                                        value={data.item_description}
-                                                        onChange={(e) => setData({ ...data, item_description: e.target.value })}
-                                                        autoFocus
-                                                        autoResize
-                                                        minHeight={80}
-                                                    />
-                                                    <div className="mt-4 flex justify-end space-x-3">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setSelectedPillarItemId(null)}
-                                                            className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                                                        >
-                                                            Cancel
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {handleSavePillarItem()}}
-                                                            className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
-                                                        >
-                                                            Save Changes
-                                                        </button>
+                                                <div
+                                                    className={`overflow-hidden transition-all duration-300 ease-in-out ${selectedPillarItemId === item.item_id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} `}
+                                                >
+                                                    <div className="rounded-md border border-gray-200 bg-white p-6">
+                                                        <label className="mb-2 block text-sm font-medium text-gray-700">Edit Item Description</label>
+                                                        <Textarea
+                                                            placeholder="Enter item description..."
+                                                            value={data.item_description}
+                                                            onChange={(e) => setData({ ...data, item_description: e.target.value })}
+                                                            autoFocus
+                                                            autoResize
+                                                            minHeight={80}
+                                                        />
+                                                        <div className="mt-4 flex justify-end space-x-3">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setSelectedPillarItemId(null)}
+                                                                className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                                            >
+                                                                Cancel
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    handleSavePillarItem();
+                                                                }}
+                                                                className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
+                                                            >
+                                                                Save Changes
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
 
                                 {/* --- Inline Add Item Form --- */}
@@ -312,7 +342,9 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                                                 </Button>
                                                 <Button
                                                     type="button"
-                                                    onClick={() => {handleSavePillarItem()}}
+                                                    onClick={() => {
+                                                        handleSavePillarItem();
+                                                    }}
                                                     className="flex cursor-pointer items-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
                                                 >
                                                     Save Item

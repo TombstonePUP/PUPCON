@@ -6,8 +6,8 @@ import { CampusGoals, ContentPages, Pillars, Vmgo } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
 import InputError from '../input-error';
-import PillarsSection from './vmgo/pillars';
 import CampusGoalsSection from './vmgo/campus-goals';
+import PillarsSection from './vmgo/pillars';
 
 interface VmgoData {
     campus_goals: CampusGoals[];
@@ -58,17 +58,17 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
         },
     });
 
-    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
-        const messages = Object.entries(errors)
-            .filter(([key]) => key.startsWith(parentKey))
+    const extractShallowErrors = (errors: Record<string, string>, parentKey: string) => {
+        return Object.entries(errors)
+            .filter(([key]) => {
+                // must start with parentKey + index, but not deeper
+                const regex = new RegExp(`^${parentKey}\\.\\d+\\.[^.]+$`);
+                return regex.test(key);
+            })
             .map(([, message]) => message);
-
-        // Remove duplicate messages
-        return [...new Set(messages)];
     };
 
-    const pillar_errors = extractGroupedErrors(errors, 'pillars');
-    const campus_goal_errors = extractGroupedErrors(errors, 'campus_goals');
+    const pillar_errors = extractShallowErrors(errors, 'pillars');
 
     const handleUpdateCampusGoals = (updatedGoals: CampusGoals[]) => {
         setData({
@@ -84,14 +84,13 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
         });
     };
 
-  const handleSave = () => {
-    console.log('Submitting VMGO Data:', data);
-    post(route('content.vmgo.update'), {
-        preserveScroll: true,
-        preserveState: true,
-    });
-};
-
+    const handleSave = () => {
+        console.log('Submitting VMGO Data:', data);
+        post(route('content.vmgo.update'), {
+            preserveScroll: true,
+            preserveState: true,
+        });
+    };
 
     const handlePreview = () => {
         window.open('/about/vision-mission-goals', '_blank');
@@ -163,7 +162,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                         ...data,
                                         vmgo: {
                                             ...data.vmgo,
-                                            vision: e.target.value
+                                            vision: e.target.value,
                                         },
                                     })
                                 }
@@ -184,7 +183,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                         ...data,
                                         vmgo: {
                                             ...data.vmgo,
-                                            mission: e.target.value
+                                            mission: e.target.value,
                                         },
                                     })
                                 }
@@ -212,7 +211,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                                 ...data,
                                                 page: {
                                                     ...data.page,
-                                                    video_link: e.target.value
+                                                    video_link: e.target.value,
                                                 },
                                             })
                                         }
@@ -230,7 +229,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                                 ...data,
                                                 page: {
                                                     ...data.page,
-                                                    video_title: e.target.value
+                                                    video_title: e.target.value,
                                                 },
                                             })
                                         }
@@ -250,7 +249,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                             ...data,
                                             page: {
                                                 ...data.page,
-                                                video_description: e.target.value
+                                                video_description: e.target.value,
                                             },
                                         })
                                     }
@@ -266,6 +265,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                 <PillarsSection
                     pillars={data.pillars}
                     updatePillars={handleUpdatePillars}
+                    errors={errors}
                 />
                 {pillar_errors.length > 0 && (
                     <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
@@ -278,14 +278,14 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     </div>
                 )}
 
-
                 <Separator className="my-10 bg-gray-200" />
                 {/* --- University Campus Goals --- */}
                 <CampusGoalsSection
                     campus_goals={data.campus_goals}
                     updateCampusGoals={handleUpdateCampusGoals}
+                    errors={errors}
                 />
-                {campus_goal_errors.length > 0 && (
+                {/*campus_goal_errors.length > 0 && (
                     <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
                         <h4 className="mb-2 font-semibold text-red-700">Gallery Section Errors</h4>
                         <ul className="ml-6 list-disc text-sm text-red-600">
@@ -294,7 +294,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                             ))}
                         </ul>
                     </div>
-                )}
+                )*/}
 
                 <SectionFooter onSave={handleSave} onPreview={handlePreview} />
             </div>

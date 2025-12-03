@@ -1,15 +1,15 @@
-import { CampusGoals } from "@/types/content";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { EditIcon, Plus } from "lucide-react";
-import { Trash2 } from "lucide-react";
-import { X } from "lucide-react";
-import { useState } from "react";
-import CampusGoalDialog from "@/components/dialogs/content/campus-goal-dialog";
+import CampusGoalDialog from '@/components/dialogs/content/campus-goal-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { CampusGoals } from '@/types/content';
+import { EditIcon, Plus, Trash2, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface CampusGoalsSectionProps {
     campus_goals: CampusGoals[];
     updateCampusGoals: (goals: CampusGoals[]) => void;
+    errors?: Record<string, string>; // new prop for errors
 }
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
@@ -19,7 +19,7 @@ const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, clas
 );
 
 export default function CampusGoalsSection({ ...props }: CampusGoalsSectionProps) {
-    const { campus_goals, updateCampusGoals } = props;
+    const { campus_goals, updateCampusGoals, errors } = props;
     const [goalsList, setGoalsList] = useState<CampusGoals[]>(campus_goals);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [action, setAction] = useState<'add' | 'edit'>('add');
@@ -37,7 +37,7 @@ export default function CampusGoalsSection({ ...props }: CampusGoalsSectionProps
         setDialogOpen(true);
         setAction('edit');
         setSelectedGoalId(goal.goal_id);
-    }
+    };
 
     const handleSaveGoal = (goal: CampusGoals) => {
         setGoalsList((prevGoals) => {
@@ -51,7 +51,7 @@ export default function CampusGoalsSection({ ...props }: CampusGoalsSectionProps
             updateCampusGoals(updatedGoals);
             return updatedGoals;
         });
-    }
+    };
 
     const handleDeleteGoal = (id: number) => {
         setGoalsList((prevGoals) => {
@@ -64,10 +64,27 @@ export default function CampusGoalsSection({ ...props }: CampusGoalsSectionProps
         });
     };
 
+    const goalsErrorCount = Object.keys(errors).filter((key) => key.startsWith('campus_goals.')).length;
+
+    const selectedGoalIndex = selectedGoal ? goalsList.findIndex((g) => g.goal_id === selectedGoal.goal_id) : -1;
+
+    const selectedGoalErrors =
+        selectedGoalIndex >= 0 ? Object.entries(errors || {}).filter(([key, _]) => key.startsWith(`campus_goals.${selectedGoalIndex}`)) : [];
+
     return (
         <>
             <div className="mb-6">
-                <h3 className="mb-4 text-base font-semibold text-gray-900">PUP San Juan Campus Goals</h3>
+                <div className="mb-4">
+                    <h2 className="text-lg font-semibold text-gray-900">
+                        PUP San Juan Campus Goals
+                        {goalsErrorCount > 0 && (
+                            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                {goalsErrorCount}
+                            </Badge>
+                        )}
+                    </h2>
+                    <p className="text-sm text-gray-600">Manage academic and non-academic organizations</p>
+                </div>
 
                 <div className="flex min-h-[400px] rounded-lg border border-gray-200">
                     {/* Left Pane: Goal List */}
@@ -154,6 +171,14 @@ export default function CampusGoalsSection({ ...props }: CampusGoalsSectionProps
                                     <p className="text-xs font-normal text-gray-600">Filipino Details</p>
                                     <p className="mt-2 text-sm text-gray-700 italic">{selectedGoal.goal_desc_fil}</p>
                                 </div>
+                                {selectedGoalErrors.length > 0 && (
+                                    <div className="mt-4 space-y-1 rounded bg-red-50 p-2 text-sm text-red-700">
+                                        <p className="font-semibold">Errors:</p>
+                                        {selectedGoalErrors.map(([key, message]) => (
+                                            <p key={key}>• {message}</p>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
