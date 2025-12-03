@@ -96,17 +96,6 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
         })),
     });
 
-    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
-        const messages = Object.entries(errors)
-            .filter(([key]) => key.startsWith(parentKey))
-            .map(([, message]) => message);
-
-        // Remove duplicate messages
-        return [...new Set(messages)];
-    };
-
-    const official_errors = extractGroupedErrors(errors, 'officials');
-
     const getSelectedOfficialIndex = () => {
         return officialsList?.findIndex((o) => o.administration_id === selectedOfficialId);
     };

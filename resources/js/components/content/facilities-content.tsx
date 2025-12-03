@@ -6,9 +6,10 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/text-area';
 import { ContentPages, Facilities } from '@/types/content';
 import { useForm } from '@inertiajs/react';
-import { EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
+import { CircleAlert, EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import InputError from '../input-error';
+import { Badge } from '../ui/badge';
 
 interface FacilitiesProps {
     facility_page: ContentPages;
@@ -97,6 +98,23 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
     };
 
     const facility_errors = extractGroupedErrors(errors, 'facilities');
+
+    const getSelectedFacilityIndex = () => {
+        return facilityList?.findIndex((f) => f.facility_id === selectedFacilityId);
+    };
+
+    const getSelectedFacilityErrors = () => {
+        const index = getSelectedFacilityIndex();
+        if (index === -1 || index === undefined) return [];
+
+        return Object.entries(errors)
+            .filter(([key]) => key.startsWith(`facilities.${index}.`))
+            .map(([, msg]) => msg);
+    };
+
+    const selectedFacilityerrors = getSelectedFacilityErrors();
+
+    const facilitiesErrorCount = errors ? Object.keys(errors).filter((key) => key.startsWith('facilities.')).length : 0;
 
     const selectedFacility = facilityList.find((f) => f.facility_id === selectedFacilityId) ?? null;
 
@@ -243,23 +261,29 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
 
                 {/* --- Campus Facilities Section --- */}
                 <div className="mb-6">
-                    <h3 className="mb-4 text-base font-semibold text-gray-900">Campus Facilities</h3>
+                    <h3 className="mb-4 text-base font-semibold text-gray-900">
+                        Campus Facilities
+                        {facilitiesErrorCount > 0 && (
+                            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                {facilitiesErrorCount}
+                            </Badge>
+                        )}
+                    </h3>
                     <div className="flex min-h-[400px] rounded-lg border border-gray-200">
                         <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-6">
                             <h4 className="mb-3 text-xs text-gray-500">Select a Facility</h4>
                             <div className="space-y-1">
-                                {facilityList?.map((facility) => (
+                                {facilityList?.map((facility, index) => (
                                     // console.log('Rendering facility:', facility),
                                     <div
                                         key={facility.facility_id}
                                         onClick={() => {
                                             setSelectedFacilityId(facility.facility_id);
                                         }}
-                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${
-                                            facility.facility_id === selectedFacility?.facility_id
-                                                ? 'bg-[#7f1414]/4'
-                                                : 'text-gray-700 hover:bg-gray-100'
-                                        }`}
+                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${facility.facility_id === selectedFacility?.facility_id
+                                            ? 'bg-[#7f1414]/4'
+                                            : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                     >
                                         <div className="truncate text-sm">
                                             <span
@@ -267,13 +291,17 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                                             >
                                                 {facility.facility_name}
                                             </span>
+                                            {(errors[`facilities.${index}.facility_name`] ||
+                                                errors[`facilities.${index}.description`] ||
+                                                errors[`facilities.${index}.facility_image`]) && (
+                                                    <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                                )}
                                         </div>
                                         <div
-                                            className={`flex items-center space-x-0.5 transition-opacity ${
-                                                facility.facility_id === selectedFacility?.facility_id
-                                                    ? 'opacity-100'
-                                                    : 'opacity-0 group-hover:opacity-100'
-                                            }`}
+                                            className={`flex items-center space-x-0.5 transition-opacity ${facility.facility_id === selectedFacility?.facility_id
+                                                ? 'opacity-100'
+                                                : 'opacity-0 group-hover:opacity-100'
+                                                }`}
                                         >
                                             <ActionButton
                                                 onClick={() => {
@@ -305,7 +333,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
 
                         {/* Right Pane: Facility Details */}
                         <div className="w-2/3 p-6">
-                            {selectedFacility === null ? (
+                            {!selectedFacility ? (
                                 <div className="flex h-full flex-col items-center justify-center text-center text-gray-500">
                                     <X className="mb-2 h-8 w-8" />
                                     <p className="font-medium">No Facility Selected</p>
@@ -324,21 +352,21 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                                         <h5 className="mb-2 text-sm font-semibold text-gray-700">Description</h5>
                                         <p className="text-sm text-gray-700">{selectedFacility.description}</p>
                                     </div>
+                                    {selectedFacilityerrors.length > 0 && (
+                                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                                            <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Gallery</h4>
+                                            <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                                {selectedFacilityerrors.map((msg, i) => (
+                                                    <li key={i}>{msg}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
                     </div>
                 </div>
-                {facility_errors.length > 0 && (
-                    <div className="mb-4 rounded-md bg-red-50 p-4">
-                        <h4 className="mb-2 text-sm font-semibold text-red-800">Please fix the following errors:</h4>
-                        <ul className="list-disc space-y-1 pl-5 text-sm text-red-700">
-                            {facility_errors.map((error, index) => (
-                                <li key={index}>{error}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
             </div>
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />
