@@ -11,6 +11,7 @@ import InputError from '../input-error';
 import { Label } from '../ui/label';
 import { DirectorsSection } from './history/directors';
 import { GallerySection } from './history/gallery';
+import { Badge } from '../ui/badge';
 
 interface History {
     directors: CampusDirectors[];
@@ -86,18 +87,6 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
                 description: g.description || '',
             })) || [],
     });
-
-    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
-        const messages = Object.entries(errors)
-            .filter(([key]) => key.startsWith(parentKey))
-            .map(([, message]) => message);
-
-        // Remove duplicate messages
-        return [...new Set(messages)];
-    };
-
-    const director_errors = extractGroupedErrors(errors, 'directors');
-    const gallery_errors = extractGroupedErrors(errors, 'gallery');
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -195,8 +184,8 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
 
   const handleSave = () => {
     post(route('content.history.update'), {
-        preserveScroll: true, 
-        preserveState: true, 
+        preserveScroll: true,
+        preserveState: true,
     });
 };
 
@@ -204,6 +193,10 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
     const handlePreview = () => {
         window.open('/about/history', '_blank');
     };
+
+    const directorErrorCount = Object.keys(errors).filter((key) => key.startsWith('directors.')).length;
+
+    const galleryErrorCount = Object.keys(errors).filter((key) => key.startsWith('gallery.')).length;
 
     return (
         <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
@@ -307,43 +300,39 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
                 <Separator className="my-10 bg-gray-200" />
 
                 <div className="mb-6">
-                    <h3 className="mb-4 text-base font-semibold text-gray-900">Past Presidents</h3>
+                    <h3 className="mb-4 text-base font-semibold text-gray-900">
+                        Past Presidents
+                        {directorErrorCount > 0 && (
+                            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                {directorErrorCount}
+                            </Badge>
+                        )}
+                    </h3>
                     <DirectorsSection
                         directors={directors}
                         onUpdateDirectors={handleUpdateDirectors}
                         onDeleteDirector={handleDeleteDirector}
+                        errors={errors}
                     />
-                    {director_errors.length > 0 && (
-                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
-                            <h4 className="mb-2 font-semibold text-red-700">Directors Section Errors</h4>
-                            <ul className="ml-6 list-disc text-sm text-red-600">
-                                {director_errors.map((error, index) => (
-                                    <li key={index}>{error}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
                 </div>
 
                 <Separator className="my-10 bg-gray-200" />
 
                 <div className="mb-6">
-                    <h3 className="mb-4 text-base font-semibold text-gray-900">Campus Gallery</h3>
+                    <h3 className="mb-4 text-base font-semibold text-gray-900">
+                        Campus Gallery
+                        {galleryErrorCount > 0 && (
+                            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                {galleryErrorCount}
+                            </Badge>
+                        )}
+                    </h3>
                     <GallerySection
                         gallery={gallery}
                         onUpdateGallery={handleUpdateGallery}
                         onDeleteGallery={handleDeleteGallery}
+                        errors={errors}
                     />
-                    {gallery_errors.length > 0 && (
-                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
-                            <h4 className="mb-2 font-semibold text-red-700">Gallery Section Errors</h4>
-                            <ul className="ml-6 list-disc text-sm text-red-600">
-                                {gallery_errors.map((error, index) => (
-                                    <li key={index}>{error}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
                 </div>
             </div>
             <SectionFooter onSave={handleSave} onPreview={handlePreview} />

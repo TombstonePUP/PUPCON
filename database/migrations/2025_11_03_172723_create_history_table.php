@@ -23,8 +23,8 @@ return new class extends Migration
 
         Schema::create('campus_gallery', function (Blueprint $table) {
             $table->id(column: 'gallery_id')->autoIncrement()->primary();
-            $table->text('image_name');
-            $table->text('image_path');
+            $table->text('image_name')->nullable();
+            $table->text('image_path')->nullable();
             $table->boolean('carousel')->default(0);
             $table->text('description')->nullable();
         });

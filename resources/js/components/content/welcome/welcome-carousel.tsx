@@ -132,7 +132,7 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
         <div className="flex min-h-[400px] rounded-lg border border-gray-200">
             {/* Left Pane */}
             <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-6">
-                <h4 className="mb-3 text-xs text-gray-500">Select an image</h4>
+                <h4 className="mb-3 text-xs text-gray-500">Select an Photo</h4>
                 <div className="space-y-1">
                     {galleryList?.map((image, index) => (
                         <div
@@ -205,7 +205,7 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
                             />
                             {selectedGalleryErrors.length > 0 && (
                                 <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
-                                    <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Objective</h4>
+                                    <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Gallery</h4>
                                     <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
                                         {selectedGalleryErrors.map((msg, i) => (
                                             <li key={i}>{msg}</li>

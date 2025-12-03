@@ -159,7 +159,16 @@ class WelcomeController extends Controller
             }
         }
 
-        CampusGallery::whereNotIn('gallery_id', $gallery_ids)->delete();
+        $galleryToDelete = CampusGallery::where('carousel', 1)
+            ->whereNotIn('gallery_id', $gallery_ids)->get();
+        foreach ($galleryToDelete as $gallery) {
+            if ($gallery->image_path && Storage::disk()->exists($gallery->image_path)) {
+                Storage::disk()->delete($gallery->image_path);
+            }
+        }
+
+        CampusGallery::where('carousel', true)
+            ->whereNotIn('gallery_id', $gallery_ids)->delete();
 
         return redirect()->back()
             ->with('type', 'success')

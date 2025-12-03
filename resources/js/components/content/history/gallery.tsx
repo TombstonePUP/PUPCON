@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { ImageIcon } from 'lucide-react';
-import { EditIcon } from 'lucide-react';
-import { Trash2 } from 'lucide-react';
-import { Plus } from 'lucide-react';
-import { X } from 'lucide-react';
-import { CampusGallery } from "@/types/content";
 import { CampusGalleryDialog } from '@/components/dialogs/content/history/campus-gallery-dialog';
+import { Button } from '@/components/ui/button';
+import { CampusGallery } from '@/types/content';
+import { CircleAlert, EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface GalleryForm {
     gallery_id: number;
@@ -17,8 +13,9 @@ interface GalleryForm {
 
 interface GalleryProps {
     gallery: CampusGallery[];
-    onUpdateGallery: (gallery: CampusGallery, form: GalleryForm ) => void;
-    onDeleteGallery: (id: number) => void,
+    onUpdateGallery: (gallery: CampusGallery, form: GalleryForm) => void;
+    onDeleteGallery: (id: number) => void;
+    errors?: Record<string, string>; // new prop for errors
 }
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
@@ -55,8 +52,8 @@ const SharedPhotoPreview: React.FC<{ url: string | null; alt: string; heightClas
     );
 };
 
-export function GallerySection({...props}: GalleryProps) {
-    const { gallery, onUpdateGallery, onDeleteGallery } = props;
+export function GallerySection({ ...props }: GalleryProps) {
+    const { gallery, onUpdateGallery, onDeleteGallery, errors } = props;
     const [galleryList, setGalleryList] = useState<CampusGallery[]>(gallery);
     const [selectedGalleryId, setSelectedGalleryId] = useState<number | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -64,21 +61,17 @@ export function GallerySection({...props}: GalleryProps) {
 
     const selectedGallery = galleryList?.find((gallery: CampusGallery) => gallery.gallery_id === selectedGalleryId);
 
-    useEffect(() => {
-        setGalleryList(gallery ?? []);
-    }, [gallery]);
-
     const handleAddGallery = () => {
         setDialogAction('add');
         setDialogOpen(true);
         setSelectedGalleryId(null);
-    }
+    };
 
     const handleEditGallery = (galleryId: number) => {
         setDialogAction('edit');
         setDialogOpen(true);
         setSelectedGalleryId(galleryId);
-    }
+    };
 
     const handleSave = (gallery: GalleryForm) => {
         setGalleryList((prev) => {
@@ -107,6 +100,21 @@ export function GallerySection({...props}: GalleryProps) {
         });
     };
 
+    const getSelectedGalleryIndex = () => {
+        return galleryList?.findIndex((o) => o.gallery_id === selectedGalleryId);
+    };
+
+    const getSelectedGalleryErrors = () => {
+        const index = getSelectedGalleryIndex();
+        if (index === -1 || index === undefined) return [];
+
+        return Object.entries(errors)
+            .filter(([key]) => key.startsWith(`gallery.${index}.`))
+            .map(([, msg]) => msg);
+    };
+
+    const selectedGalleryErrors = getSelectedGalleryErrors();
+
     const handleDelete = (id: number) => {
         setGalleryList((prevTypes) => {
             const updatedList = prevTypes.filter((g) => g.gallery_id !== id);
@@ -125,25 +133,28 @@ export function GallerySection({...props}: GalleryProps) {
                 <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-6">
                     <h4 className="mb-3 text-xs text-gray-500">Select a Photo</h4>
                     <div className="space-y-1">
-                        {galleryList.map((image) => (
+                        {galleryList.map((image, index) => (
                             <div
                                 key={image.gallery_id}
                                 onClick={() => {
                                     setSelectedGalleryId(image.gallery_id);
                                 }}
-                                className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${image.gallery_id === selectedGalleryId ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'
-                                    }`}
+                                className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${
+                                    image.gallery_id === selectedGalleryId ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'
+                                }`}
                             >
                                 <div className="truncate text-sm">
-                                    <span
-                                        className={` ${image.gallery_id === selectedGalleryId ? 'font-normal text-red-900' : 'text-gray-700'}`}
-                                    >
+                                    <span className={` ${image.gallery_id === selectedGalleryId ? 'font-normal text-red-900' : 'text-gray-700'}`}>
                                         {image.description}
                                     </span>
+                                    {(errors[`gallery.${index}.image`] || errors[`gallery.${index}.description`]) && (
+                                        <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                    )}
                                 </div>
                                 <div
-                                    className={`flex items-center space-x-0.5 transition-opacity ${image.gallery_id === selectedGalleryId ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                                        }`}
+                                    className={`flex items-center space-x-0.5 transition-opacity ${
+                                        image.gallery_id === selectedGalleryId ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                                    }`}
                                 >
                                     <ActionButton
                                         onClick={(e) => {
@@ -191,6 +202,16 @@ export function GallerySection({...props}: GalleryProps) {
                                     alt={selectedGallery.image_name || 'Gallery Image'}
                                     heightClass="h-80"
                                 />
+                                {selectedGalleryErrors.length > 0 && (
+                                    <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                                        <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Gallery</h4>
+                                        <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                            {selectedGalleryErrors.map((msg, i) => (
+                                                <li key={i}>{msg}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </div>
 
                             {selectedGallery.description && (
@@ -204,12 +225,7 @@ export function GallerySection({...props}: GalleryProps) {
                 </div>
             </div>
             {dialogOpen && (
-                <CampusGalleryDialog
-                    gallery={selectedGallery}
-                    type={dialogAction}
-                    onClose={() => setDialogOpen(false)}
-                    onSave={handleSave}
-                />
+                <CampusGalleryDialog gallery={selectedGallery} type={dialogAction} onClose={() => setDialogOpen(false)} onSave={handleSave} />
             )}
         </>
     );

@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { DirectorsDialog } from '@/components/dialogs/content/history/directors-dialog';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ImageIcon } from 'lucide-react';
-import { EditIcon } from 'lucide-react';
-import { Trash2 } from 'lucide-react';
-import { Plus } from 'lucide-react';
-import { X } from 'lucide-react';
-import { DirectorsDialog } from '@/components/dialogs/content/history/directors-dialog';
 import { CampusDirectors } from '@/types/content';
+import { CircleAlert, EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface DirectorsForm {
     director_id: number;
@@ -20,9 +16,10 @@ interface DirectorsForm {
 }
 
 interface DirectorsProps {
-   directors: CampusDirectors[];
-   onUpdateDirectors: (directorLocal: CampusDirectors, director: DirectorsForm) => void;
-   onDeleteDirector: (id: number) => void;
+    directors: CampusDirectors[];
+    onUpdateDirectors: (directorLocal: CampusDirectors, director: DirectorsForm) => void;
+    onDeleteDirector: (id: number) => void;
+    errors?: Record<string, string>; // new prop for errors
 }
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
@@ -59,8 +56,8 @@ const SharedPhotoPreview: React.FC<{ url: string | null; alt: string; heightClas
     );
 };
 
-export function DirectorsSection({...props}: DirectorsProps) {
-    const { directors, onUpdateDirectors, onDeleteDirector } = props;
+export function DirectorsSection({ ...props }: DirectorsProps) {
+    const { directors, onUpdateDirectors, onDeleteDirector, errors } = props;
     const [directorsList, setDirectorsList] = useState<CampusDirectors[]>(directors);
     const [selectedDirectorId, setSelectedDirectorId] = useState<number | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -68,21 +65,21 @@ export function DirectorsSection({...props}: DirectorsProps) {
 
     const selectedDirector = directorsList.find((director: CampusDirectors) => director.director_id === selectedDirectorId);
 
-    useEffect(() => {
+    /* useEffect(() => {
         setDirectorsList(directors ?? []);
-    }, [directors]);
+    }, [directors]); */
 
     const handleAddDirector = () => {
         setDialogAction('add');
         setDialogOpen(true);
         setSelectedDirectorId(null);
-    }
+    };
 
     const handleEditDirector = (directorId: number) => {
         setDialogAction('edit');
         setDialogOpen(true);
         setSelectedDirectorId(directorId);
-    }
+    };
 
     const handleSave = (director: DirectorsForm) => {
         setDirectorsList((prev) => {
@@ -126,6 +123,23 @@ export function DirectorsSection({...props}: DirectorsProps) {
         });
     };
 
+    const getSelectedDirectorIndex = () => {
+        return directorsList?.findIndex((o) => o.director_id === selectedDirectorId);
+    };
+
+    const getSelectedDirectorErrors = () => {
+        const index = getSelectedDirectorIndex();
+        if (index === -1 || index === undefined) return [];
+
+        // const safeErrors = errors ?? {}; // <-- ensure it's never undefined
+
+        return Object.entries(errors)
+            .filter(([key]) => key.startsWith(`directors.${index}.`))
+            .map(([, msg]) => msg);
+    };
+
+    const selectedDirectorErrors = getSelectedDirectorErrors();
+
     return (
         <>
             <div className="flex min-h-[400px] rounded-lg border border-gray-200">
@@ -133,7 +147,7 @@ export function DirectorsSection({...props}: DirectorsProps) {
                 <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-6">
                     <h4 className="mb-3 text-xs text-gray-500">Select a President</h4>
                     <div className="space-y-1">
-                        {directorsList.map((director) => (
+                        {directorsList?.map((director, index) => (
                             <div
                                 key={director.director_id}
                                 onClick={() => {
@@ -143,9 +157,18 @@ export function DirectorsSection({...props}: DirectorsProps) {
                                     }`}
                             >
                                 <div className="truncate text-sm">
-                                    <span className={` ${director.director_id === selectedDirectorId ? 'font-normal text-red-900' : 'text-gray-700'}`}>
+                                    <span
+                                        className={` ${director.director_id === selectedDirectorId ? 'font-normal text-red-900' : 'text-gray-700'}`}
+                                    >
                                         {director.name}
                                     </span>
+                                    {(errors[`directors.${index}.name`] ||
+                                        errors[`directors.${index}.term_start_date`] ||
+                                        errors[`directors.${index}.term_end_date`] ||
+                                        errors[`directors.${index}.description`] ||
+                                        errors[`directors.${index}.image`]) && (
+                                            <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                    )}
                                 </div>
                                 <div
                                     className={`flex items-center space-x-0.5 transition-opacity ${director.director_id === selectedDirectorId ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
@@ -197,7 +220,9 @@ export function DirectorsSection({...props}: DirectorsProps) {
 
                             <div>
                                 <h4 className="text-lg font-semibold break-words text-gray-900">{selectedDirector.name}</h4>
-                                <p className="text-sm font-medium text-red-700">{selectedDirector.term_start_date}-{selectedDirector.term_end_date}</p>
+                                <p className="text-sm font-medium text-red-700">
+                                    {selectedDirector.term_start_date}-{selectedDirector.term_end_date}
+                                </p>
                             </div>
 
                             <Separator className="bg-gray-200" />
@@ -206,17 +231,22 @@ export function DirectorsSection({...props}: DirectorsProps) {
                                 <h5 className="mb-2 text-sm font-semibold text-gray-700">Details</h5>
                                 <p className="text-sm text-gray-700">{selectedDirector.description}</p>
                             </div>
+                            {selectedDirectorErrors.length > 0 && (
+                                <div className="rounded-md bg-red-50 p-4">
+                                    <h6 className="mb-2 text-sm font-medium text-red-800">Please address the following errors:</h6>
+                                    <ul className="list-disc space-y-1 pl-5 text-sm text-red-700">
+                                        {selectedDirectorErrors.map((error, idx) => (
+                                            <li key={idx}>{error}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
             </div>
             {dialogOpen && (
-                <DirectorsDialog
-                    director={selectedDirector ?? null}
-                    type={dialogAction}
-                    onClose={() => setDialogOpen(false)}
-                    onSave={handleSave}
-                />
+                <DirectorsDialog director={selectedDirector ?? null} type={dialogAction} onClose={() => setDialogOpen(false)} onSave={handleSave} />
             )}
         </>
     );
