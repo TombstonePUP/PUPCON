@@ -106,11 +106,11 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                             <p className="font-semibold mb-1">
                                                 {exhibit.category}
                                             </p>
-                                            <h3 className={`ml-2 text-sm ${exhibit.outline_description !== undefined  ? 'underline cursor-pointer text-[#7f1414]' : ''}`}>{exhibit.outline_description} </h3>
+                                            <h3 className={`ml-2 text-sm ${exhibit.outline_description !== undefined ? 'underline cursor-pointer text-[#7f1414]' : ''}`}>{exhibit.outline_description} </h3>
                                         </div>
                                     ))
                             ) : (
-                                <p className="col-span-4 w-full text-gray-500 size-100 flex items-center justify-center">No outlines available.</p>
+                                <p className="col-span-4 w-full text-gray-500 flex items-center justify-center">No outlines available.</p>
                             )}
                         </DialogDescription>
                     </DialogContent>
