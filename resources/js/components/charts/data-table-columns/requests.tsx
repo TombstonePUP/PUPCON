@@ -117,7 +117,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                 return (
                     <div className="w-xs text-left">
                         <div className="mb-0 flex items-center justify-between text-sm">
-                            <div className="font-md mr-2 grow truncate text-gray-900">{segmentPart}</div>
+                            <div className="font-md mr-2 grow truncate text-gray-900 capitalize">{segmentPart === 'N/A' ? subjectPart : segmentPart}</div>
 
                             {/* {levelPart && (
                                 <span className="min-w-fit rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold whitespace-nowrap text-indigo-700">
@@ -126,7 +126,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                             )} */}
                         </div>
 
-                        <div className="truncate text-sm text-gray-500">{subjectPart}</div>
+                        <div className={`truncate text-sm text-gray-500 capitalize ${subjectPart === 'exhibits' ? 'hidden' : ''}`}>{subjectPart}</div>
 
                         {/* <div className="text-xs text-gray-400 mt-1 italic">
             {finalPathName}
