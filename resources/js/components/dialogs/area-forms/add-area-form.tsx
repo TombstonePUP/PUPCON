@@ -69,6 +69,8 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                     });
                     setIsUploading(false);
                 },
+                preserveScroll: true,
+                preserveState: true,
             },
         );
     };

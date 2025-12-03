@@ -2,6 +2,7 @@ import { DocumentViewer } from '@/components/dialogs/documents/view-document';
 import DocumentRequestActions from '@/components/request-table-actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
     DialogClose,
@@ -14,9 +15,9 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/text-area';
 import { type FilesOverview } from '@/types';
+import { usePoll } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MessageSquareOff, MessageSquareText } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
 import { useState } from 'react';
 
 interface DialogProps {
@@ -37,10 +38,11 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                     checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
                     onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                     aria-label="Select all"
+                    className='cursor-pointer hover:border-red-400 transition-colors border-gray-700'
                 />
             ),
             cell: ({ row }) => (
-                <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />
+                <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" className='cursor-pointer hover:border-red-400 transition-colors border-gray-300 mr-4' />
             ),
             enableSorting: false,
             enableHiding: false,
@@ -56,6 +58,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                 </div>
             ),
             cell: ({ row }) => {
+                usePoll(5000);
                 const filePath = row.original.file_path;
                 const pathSegments = filePath.split('/').filter(Boolean);
                 let rawSegment = '';
@@ -68,28 +71,66 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                 }
                 const cleanedPath = rawSegment.replace(/_/g, ' ');
                 const finalPathName = cleanedPath.charAt(0).toUpperCase() + cleanedPath.slice(1);
+                // console.log("orig ftype: " + row.original.file_type);
 
                 const fileType = row.getValue('file_type') as string;
                 const cleanedData = fileType.replace(/-/g, ' ');
-                const regex = /(.*?)\s(Parameter.*)/i;
+                // console.log("cleaned ftype: " + fileType);
+
+                let subjectPart = '';
+                let segmentPart = '';
+                let levelPart = '';
+
+                const regex = /(.*?)\s(Level\s\d)\s(.*)/i;
                 const match = cleanedData.match(regex);
-                let areaPart = '';
-                let parameterPart = '';
+                // console.log("match: " + match[1].trim());
 
                 if (match) {
-                    areaPart = match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase();
-                    parameterPart = match[2].charAt(0).toUpperCase() + match[2].slice(1);
+                    subjectPart = match[1].trim();
+
+                    levelPart = match[2];
+
+                    const rawSegmentDetail = match[3];
+
+                    if (rawSegmentDetail.includes('Area')) {
+                        const parts = rawSegmentDetail.split(' ');
+                        // console.log(parts);
+
+                        if((rawSegmentDetail.includes('area forms'))){
+                            segmentPart =  parts[0] + ' ' + parts[1];
+                        } else {
+                             segmentPart = parts[0] + ' ' + parts[1] + ' > ' + parts[2] + ' ' + parts[3];
+                        }
+                        // segmentPart = parts[0] + ' ' + parts[1] + ' > ' + parts[2] + ' ' + parts[3];
+                    } else {
+                        segmentPart = rawSegmentDetail
+                            .split(' ')
+                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                            .join(' ');
+                    }
                 } else {
-                    areaPart = cleanedData.charAt(0).toUpperCase() + cleanedData.slice(1);
-                    parameterPart = '';
+                    subjectPart = cleanedData;
+                    segmentPart = 'N/A';
+                    levelPart = '';
                 }
+
                 return (
-                    <div>
-                        <div className="flex gap-2 text-left">
-                            <div className="font-base">{areaPart}</div>
-                            <div className="text-sm">{parameterPart}</div>
+                    <div className="w-xs text-left">
+                        <div className="mb-0 flex items-center justify-between text-sm">
+                            <div className="font-md mr-2 grow truncate text-gray-900">{segmentPart}</div>
+
+                            {/* {levelPart && (
+                                <span className="min-w-fit rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold whitespace-nowrap text-indigo-700">
+                                    {levelPart}
+                                </span>
+                            )} */}
                         </div>
-                        <div className="text-sm text-gray-500">{finalPathName}</div>
+
+                        <div className="truncate text-sm text-gray-500">{subjectPart}</div>
+
+                        {/* <div className="text-xs text-gray-400 mt-1 italic">
+            {finalPathName}
+        </div>  */}
                     </div>
                 );
             },
@@ -107,6 +148,26 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
             ),
             cell: ({ row }) => {
                 const [dialogOpen, setDialogOpen] = useState(false);
+                const origpath = row.original.file_path ?? '';
+                // console.log('raw: ' + origpath);
+
+                const segments = origpath.split('/');
+                const hasNoCategory = segments.includes('no_category');
+
+                let prefix = '';
+
+                if (hasNoCategory) {
+                    prefix = '';
+                } else {
+                    prefix =
+                        origpath
+                            .split('/')
+                            .pop()
+                            ?.match(/^[A-Za-z0-9](?:\.\d+)+\./)?.[0] ?? '';
+                }
+
+                // console.log('prefix:', prefix);
+
                 return (
                     <>
                         <div className="text-left">
@@ -114,7 +175,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                                 onClick={() => setDialogOpen(true)}
                                 className="max-w-sm cursor-pointer truncate text-gray-900 underline transition-colors hover:text-[#7f1414]"
                             >
-                                {row.getValue('outline')}
+                                {prefix + ' ' + row.getValue('outline')}
                             </div>
                         </div>
                         <DocumentViewer
@@ -227,7 +288,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
             header: ({ column }) => (
                 <div className="flex items-center">
                     <div className="text-gray-700"> Date Uploaded</div>
-                    <Button className="ml-2 text-left" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'dsc')}>
+                    <Button className="ml-2 text-left" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
                         <ArrowUpDown className="h-4" />
                     </Button>
                 </div>

@@ -65,8 +65,11 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                     level_id: level.accreditation_level_id,
                     area_id: area?.area_id,
                 }),
+
                 {
                     onSuccess: () => onClose(),
+                    preserveScroll: true,
+                    preserveState: true,
                 },
             );
         } else {
@@ -77,6 +80,8 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                 }),
                 {
                     onSuccess: () => onClose(),
+                    preserveScroll: true,
+                    preserveState: true,
                 },
             );
         }
@@ -84,7 +89,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
-            <DialogContent className='sm:max-w-4xl'>
+            <DialogContent className="sm:max-w-4xl">
                 <DialogHeader>
                     <DialogTitle className="mb-4 text-lg font-medium text-gray-900">{type === 'edit' ? 'Edit Area' : 'Add New Area'}</DialogTitle>
                     <DialogDescription className="flex flex-col text-sm text-gray-500">
@@ -95,7 +100,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5 space-y-4">
                     <div className="flex gap-8">
                         {!data.previewUrl ? (
-                            <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70 w-xl">
+                            <label className="group relative w-xl cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70">
                                 <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                                 <div className="flex flex-col items-center justify-center gap-4 pt-5 pb-6">
                                     <div className="relative">
@@ -145,7 +150,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                 </div>
                             </div>
                         )}
-                        <div className='flex flex-col gap-4'>
+                        <div className="flex flex-col gap-4">
                             <div></div>
                             <div>
                                 <Label className="mb-2 block text-sm font-medium text-gray-700">Area Number (numeric numbers only)</Label>
