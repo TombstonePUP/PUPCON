@@ -296,8 +296,8 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     </div>
                 )*/}
 
-                <SectionFooter onSave={handleSave} onPreview={handlePreview} />
             </div>
+            <SectionFooter onSave={handleSave} onPreview={handlePreview} />
         </div>
     );
 };
