@@ -91,7 +91,6 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
 
                                     <p className="font-bold text-center mb-4">
                                         {exhibit.exhibit_name}
-                                        image {exhibit.image_path}
                                     </p>
                                 </div>
                             ))
