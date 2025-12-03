@@ -124,7 +124,6 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                                                             >
                                                                 Edit Exhibit
                                                             </DropdownMenuItem>
-
                                                             {!exhibit.container && (
                                                                 <>
                                                                     <DropdownMenuItem

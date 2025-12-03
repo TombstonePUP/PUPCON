@@ -93,20 +93,20 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                         <div
                                             key={exhibit.exhibit_outline_id}
                                             className="p-4 bg-gray-100"
-                                            onClick={() => {
-                                                if (exhibit.outline_description !== undefined) {
-                                                    setSelectedDoc({
-                                                        fileUrl: exhibit.exhibit_files?.file_path,
-                                                        title: selectedContainer?.outline_description,
-                                                    });
-                                                    setViewDialogOpen(true);
-                                                }
-                                            }}
                                         >
                                             <p className="font-semibold mb-1">
                                                 {exhibit.category}
                                             </p>
-                                            <h3 className={`ml-2 text-sm ${exhibit.outline_description !== undefined ? 'underline cursor-pointer text-[#7f1414]' : ''}`}>{exhibit.outline_description} </h3>
+                                            <h3
+                                                onClick={() => {
+                                                    if (exhibit.outline_description !== undefined) {
+                                                        setSelectedDoc({
+                                                            fileUrl: exhibit.exhibit_files?.file_path,
+                                                            title: selectedContainer?.outline_description,
+                                                        });
+                                                        setViewDialogOpen(true);
+                                                    }
+                                                }} className={`ml-2 text-sm ${exhibit.outline_description !== undefined ? 'underline cursor-pointer text-[#7f1414]' : ''}`}>{exhibit.outline_description} </h3>
                                         </div>
                                     ))
                             ) : (
