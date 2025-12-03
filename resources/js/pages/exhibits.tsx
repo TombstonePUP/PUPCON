@@ -56,7 +56,7 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                         }
                                     }
                                     }
-                                    className={`group flex flex-col p-2 gap-4 overflow-hidden rounded-xl border bg-white duration-300 cursor-pointer hover:border-[#7f1414] hover:text-[#7f1414]  ${!exhibit.container ? `${exhibit.exhibit_files?.file_status?.status_name === 'Approved' ? '' : 'grayscale cursor-not-allowed'}` : ''}`}
+                                    className={`group flex flex-col p-2 gap-4 overflow-hidden rounded-xl border bg-white duration-300  hover:border-[#7f1414] hover:text-[#7f1414]  ${!exhibit.container ? `${exhibit.exhibit_files?.file_status?.status_name === 'Approved' ? 'cursor-pointer' : 'grayscale'}` : 'cursor-pointer'}`}
                                 >
                                     <div className='overflow-hidden rounded h-50'>
                                         <img
