@@ -81,7 +81,7 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                     }
                                     className={`group flex flex-col p-2 gap-4 overflow-hidden rounded-xl border bg-white duration-300  hover:border-[#7f1414] hover:text-[#7f1414]  ${exhibit.exhibit_outlines.length > 0 ? 'cursor-pointer' : 'grayscale'}`}
                                 >
-                                    <div className='overflow-hidden rounded h-50'>
+                                    <div className='overflow-hidden rounded h-50 w-full'>
                                         <img
                                             className="w-full h-full transition duration-300 group-hover:scale-105 object-cover"
                                             src={exhibit.image_path || '/images/placeholder.png'}
