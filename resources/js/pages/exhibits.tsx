@@ -5,7 +5,7 @@ import Layout from '@/layouts/landing-layout';
 import { Exhibits } from '@/types/exhibits';
 import { Head, router } from '@inertiajs/react';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { Eye, FileX, FolderOpen } from 'lucide-react';
+import { Eye, FileX } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface ExhibitsProps {
@@ -91,8 +91,10 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                                 }
                                             }
                                         }}
-                                        className={`group relative overflow-hidden rounded-xl bg-white transition-all duration-300 ${
-                                            hasFiles ? 'cursor-pointer hover:-translate-y-1' : 'grayscale'
+                                        className={`group relative overflow-hidden rounded-xl border-2 bg-white transition-all duration-300 ${
+                                            hasFiles
+                                                ? 'cursor-pointer border-gray-200 hover:-translate-y-1 hover:border-[#7f1414]'
+                                                : 'border-gray-300 grayscale'
                                         }`}
                                         style={{
                                             animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`,
@@ -145,17 +147,21 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                             })}
                         </div>
                     ) : (
-                        <div className="flex min-h-[500px] w-full items-center justify-center py-12">
-                            <div className="flex max-w-md flex-col items-center gap-4 text-center">
-                                <div className="rounded-full bg-gray-100 p-6">
-                                    <FolderOpen className="h-16 w-16 text-gray-400" />
-                                </div>
-                                <div className="space-y-2">
-                                    <h3 className="text-xl font-semibold text-gray-900">No Exhibits Available</h3>
-                                    <p className="text-sm text-gray-500">
-                                        There are currently no exhibits to display. Exhibits will appear here once they are uploaded and made
-                                        available.
-                                    </p>
+                        <div className="mx-auto my-10 w-[75%]">
+                            <div className="px-8 py-24 text-center">
+                                <div className="mx-auto max-w-md">
+                                    <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-gray-100">
+                                        <svg className="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <h3 className="mb-4 text-2xl font-bold text-gray-900">No Exhibits Available</h3>
+                                    <p className="text-lg text-gray-500">There are currently no exhibits to display. Please check back later.</p>
                                 </div>
                             </div>
                         </div>
