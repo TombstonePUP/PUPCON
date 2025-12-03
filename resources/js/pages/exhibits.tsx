@@ -20,6 +20,29 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
     const [selectedContainer, setSelectedContainer] = useState(null);
     const [containerDialogOpen, setContainerDialogOpen] = useState(false);
 
+    // Group exhibits by category
+    const groupedExhibits = selectedContainer?.exhibit_outlines?.reduce((acc, exhibit) => {
+        const category = exhibit.category;
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        acc[category].push(exhibit);
+        return acc;
+    }, {}) || {};
+
+    // Sort categories alphabetically
+    const sortedCategories = Object.keys(groupedExhibits).sort();
+
+    const handleClick = (exhibit) => {
+        if (exhibit.outline_description !== undefined) {
+            setSelectedDoc({
+                fileUrl: exhibit.exhibit_files?.file_path,
+                title: exhibit.outline_description,
+            });
+            setViewDialogOpen(true);
+        }
+    };
+
     return (
         <>
             <Head title="Exhibits">
@@ -42,7 +65,7 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                 <div
                                     key={exhibit.exhibit_id}
                                     onClick={() => {
-                                        if (exhibit.container) {
+                                        if (exhibit.container && exhibit.exhibit_outlines.length > 0) {
                                             setSelectedContainer(exhibit);
                                             setContainerDialogOpen(true);
                                         } else {
@@ -56,12 +79,11 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                         }
                                     }
                                     }
-                                    className={`group flex flex-col p-2 gap-4 overflow-hidden rounded-xl border bg-white duration-300  hover:border-[#7f1414] hover:text-[#7f1414]  ${!exhibit.container ? `${exhibit.exhibit_outlines.length > 0 ? 'cursor-pointer' : 'grayscale'}` : 'cursor-pointer'}`}
+                                    className={`group flex flex-col p-2 gap-4 overflow-hidden rounded-xl border bg-white duration-300  hover:border-[#7f1414] hover:text-[#7f1414]  ${exhibit.exhibit_outlines.length > 0 ? 'cursor-pointer' : 'grayscale'}`}
                                 >
                                     <div className='overflow-hidden rounded h-50'>
                                         <img
                                             className="h-full transition duration-300 group-hover:scale-105 object-cover"
-                                            // src="/images/exhibits/student-handbook.png"
                                             src={exhibit.image_path || '/images/placeholder.png'}
                                             alt={exhibit.exhibit_name}
                                         />
@@ -69,6 +91,7 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
 
                                     <p className="font-bold text-center mb-4">
                                         {exhibit.exhibit_name}
+                                        image {exhibit.image_path}
                                     </p>
                                 </div>
                             ))
@@ -87,28 +110,29 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                         </DialogHeader>
                         <DialogDescription className='space-y-4'>
                             {selectedContainer?.exhibit_outlines?.length > 0 ? (
-                                [...selectedContainer.exhibit_outlines]
-                                    .sort((a, b) => a.category.localeCompare(b.category))
-                                    .map((exhibit) => (
-                                        <div
-                                            key={exhibit.exhibit_outline_id}
-                                            className="p-4 bg-gray-100"
-                                        >
-                                            <p className="font-semibold mb-1">
-                                                {exhibit.category}
-                                            </p>
-                                            <h3
-                                                onClick={() => {
-                                                    if (exhibit.outline_description !== undefined) {
-                                                        setSelectedDoc({
-                                                            fileUrl: exhibit.exhibit_files?.file_path,
-                                                            title: selectedContainer?.outline_description,
-                                                        });
-                                                        setViewDialogOpen(true);
-                                                    }
-                                                }} className={`ml-2 text-sm ${exhibit.outline_description !== undefined ? 'underline cursor-pointer text-[#7f1414]' : ''}`}>{exhibit.outline_description} </h3>
-                                        </div>
-                                    ))
+                                sortedCategories.map((category) => (
+                                    <div key={category} className="space-y-2 bg-gray-100 p-4 rounded">
+                                        <h2 className="font-bold text-lg text-gray-800 pb-1">
+                                            {category}
+                                        </h2>
+                                        {groupedExhibits[category].map((exhibit) => (
+                                            <div
+                                                key={exhibit.exhibit_outline_id}
+                                                className="ml-4"
+                                            >
+                                                <h3
+                                                    onClick={() => handleClick(exhibit)}
+                                                    className={`text-sm ${exhibit.outline_description !== undefined
+                                                        ? 'underline cursor-pointer text-[#7f1414] hover:text-[#a01c1c]'
+                                                        : ''
+                                                        }`}
+                                                >
+                                                    {exhibit.outline_description}
+                                                </h3>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))
                             ) : (
                                 <p className="col-span-4 w-full text-gray-500 flex items-center justify-center">No outlines available.</p>
                             )}
