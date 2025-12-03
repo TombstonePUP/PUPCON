@@ -474,7 +474,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
     return (
         <>
             <Head title="PUP San Juan">
-                <link rel="preload" href={carousel_images[0].image_path || '/images/landing/1.png'} as="image" />
+                <link rel="preload" href={carousel_images[0]?.image_path || '/images/landing/1.png'} as="image" />
             </Head>
 
             <style>{animationStyles}</style>
