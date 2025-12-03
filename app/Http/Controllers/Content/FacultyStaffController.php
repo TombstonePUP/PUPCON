@@ -7,6 +7,7 @@ use App\Models\ContentPages;
 use App\Models\FacultyStaff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class FacultyStaffController extends Controller
 {
@@ -30,6 +31,7 @@ class FacultyStaffController extends Controller
             'faculties.*.program_id' => ['nullable', 'integer'],
             'faculties.*.program_coordinator' => ['required', 'boolean'],
             'faculties.*.faculty_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:20480'],
+            'faculties.*.previewUrl' => ['nullable', 'string'],
         ], [
             'page.page_content_id.required' => 'The page content ID is required.',
             'page.page_content_id.exists' => 'The selected page content ID is invalid.',
@@ -73,15 +75,37 @@ class FacultyStaffController extends Controller
         }
         $faculty_staff_ids = [];
         foreach ($validated['faculties'] ?? [] as $facultyData) {
+
             $imagepath = null;
             $imagename = null;
-            if (isset($facultyData['faculty_image'])) {
-                $imagename = $facultyData['first_name'] . '-' . $facultyData['last_name'] . '.' . $facultyData['faculty_image']->getClientOriginalExtension();
+
+            $faculty = FacultyStaff::find($facultyData['faculty_staff_id']);
+
+            if ($faculty && empty($facultyData['faculty_image']) && empty($facultyData['previewUrl'])) {
+                if ($faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
+                    Storage::disk('public')->delete($faculty->image_path);
+                }
+
+                // Reset after delete
+                $imagename = null;
+                $imagepath = null;
+            }
+
+            if (!empty($facultyData['faculty_image'])) {
+
+                // Delete old image if it exists
+                if ($faculty && $faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
+                    Storage::disk('public')->delete($faculty->image_path);
+                }
+
+                $imagename = $facultyData['first_name'] . '-' . $facultyData['last_name'] . '.' .
+                    $facultyData['faculty_image']->getClientOriginalExtension();
                 $imagepath = 'faculty_staff_images/' . $imagename;
+
                 $facultyData['faculty_image']->storeAs('faculty_staff_images', $imagename, 'public');
             }
 
-            if ($faculty = FacultyStaff::find($facultyData['faculty_staff_id'])) {
+            if ($faculty) {
                 $faculty->update([
                     'first_name' => $facultyData['first_name'],
                     'middle_name' => $facultyData['middle_name'] ?? null,
@@ -90,9 +114,12 @@ class FacultyStaffController extends Controller
                     'status' => $facultyData['status'] ?? null,
                     'program_id' => $facultyData['program_id'] ?? null,
                     'program_coordinator' => $facultyData['program_coordinator'],
+
+                    // If no change, keep existing image
                     'image_name' => $imagename ?? $faculty->image_name,
                     'image_path' => $imagepath ?? $faculty->image_path,
                 ]);
+
                 $faculty_staff_ids[] = $faculty->faculty_staff_id;
             } else {
                 $faculty = FacultyStaff::create([
@@ -106,9 +133,18 @@ class FacultyStaffController extends Controller
                     'image_name' => $imagename,
                     'image_path' => $imagepath,
                 ]);
+
                 $faculty_staff_ids[] = $faculty->faculty_staff_id;
             }
         }
+
+        $facultyToDelete = FacultyStaff::whereNotIn('faculty_staff_id', $faculty_staff_ids)->get();
+        foreach ($facultyToDelete as $faculty) {
+            if ($faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
+                Storage::disk('public')->delete($faculty->image_path);
+            }
+        }
+
         FacultyStaff::whereNotIn('faculty_staff_id', $faculty_staff_ids)->delete();
         return redirect()->back()
             ->with('type', 'success')

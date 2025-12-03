@@ -88,17 +88,6 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
         })),
     });
 
-    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
-        const messages = Object.entries(errors)
-            .filter(([key]) => key.startsWith(parentKey))
-            .map(([, message]) => message);
-
-        // Remove duplicate messages
-        return [...new Set(messages)];
-    };
-
-    const facility_errors = extractGroupedErrors(errors, 'facilities');
-
     const getSelectedFacilityIndex = () => {
         return facilityList?.findIndex((f) => f.facility_id === selectedFacilityId);
     };

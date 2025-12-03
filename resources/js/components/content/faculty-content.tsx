@@ -6,10 +6,11 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/text-area';
 import { ContentPages, FacultyStaff } from '@/types/content';
 import { useForm } from '@inertiajs/react';
-import { EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
+import { CircleAlert, EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { FacultyDialog } from '../dialogs/content/faculty-dialog';
 import InputError from '../input-error';
+import { Badge } from '../ui/badge';
 
 interface FacultyProps {
     faculty_page: ContentPages;
@@ -98,16 +99,22 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
         faculties: faculties || [],
     });
 
-    const extractGroupedErrors = (errors: Record<string, string>, parentKey: string) => {
-        const messages = Object.entries(errors)
-            .filter(([key]) => key.startsWith(parentKey))
-            .map(([, message]) => message);
-
-        // Remove duplicate messages
-        return [...new Set(messages)];
+    const getSelectedFacultyIndex = () => {
+        return faculties?.findIndex((f) => f.faculty_staff_id === selectedFacultyId);
     };
 
-    const faculty_errors = extractGroupedErrors(errors, 'faculties');
+    const getSelectedFacultyErrors = () => {
+        const index = getSelectedFacultyIndex();
+        if (index === -1 || index === undefined) return [];
+
+        return Object.entries(errors)
+            .filter(([key]) => key.startsWith(`faculties.${index}.`))
+            .map(([, msg]) => msg);
+    };
+
+    const selectedFacultyErrors = getSelectedFacultyErrors();
+
+    const facultiesErrorCount = errors ? Object.keys(errors).filter((key) => key.startsWith('faculties.')).length : 0;
 
     const handlePreview = () => {
         window.open('/about/faculty-and-staff', '_blank');
@@ -313,14 +320,21 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
 
                 {/* --- Faculty List Section --- */}
                 <div className="mb-6">
-                    <h3 className="mb-4 text-base font-semibold text-gray-900">Faculty & Staff Members</h3>
+                    <h3 className="mb-4 text-base font-semibold text-gray-900">
+                        Faculty & Staff Members
+                        {facultiesErrorCount > 0 && (
+                            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
+                                {facultiesErrorCount}
+                            </Badge>
+                        )}
+                    </h3>
 
                     <div className="flex min-h-[400px] rounded-lg border border-gray-200">
                         <div className="flex w-2/3 flex-col justify-between border-r border-gray-200 bg-gray-50/50 p-6">
                             <div>
                                 <h4 className="mb-3 text-xs text-gray-500">Select a Member</h4>
                                 <div className="grid max-h-[400px] grid-cols-1 gap-2 overflow-y-auto pr-2 md:grid-cols-3">
-                                    {faculties.map((member) => (
+                                    {faculties.map((member, index) => (
                                         <div
                                             key={member.faculty_staff_id}
                                             onClick={() => {
@@ -339,6 +353,15 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
                                                     {member.first_name} {member.middle_name ? member.middle_name[0] + '. ' : ''}
                                                     {member.last_name}
                                                 </span>
+                                                {(errors[`faculties.${index}.first_name`] ||
+                                                    errors[`faculties.${index}.last_name`] ||
+                                                    errors[`faculties.${index}.status`] ||
+                                                    errors[`faculties.${index}.personnel_type`] ||
+                                                    errors[`faculties.${index}.status`] ||
+                                                    errors[`faculties.${index}.program_coordinator`] ||
+                                                    errors[`faculties.${index}.faculty_image`]) && (
+                                                        <CircleAlert className="inline-block h-4 w-4 text-red-600" />
+                                                )}
                                             </div>
                                             <div
                                                 className={`flex items-center space-x-0.5 transition-opacity ${
@@ -401,21 +424,21 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
                                         <h6 className="text-lg font-semibold break-words text-gray-900">{selectedFaculty.programs?.program_name}</h6>
                                         <p className="text-sm font-normal text-red-700">{selectedFaculty.status}</p>
                                     </div>
+                                    {selectedFacultyErrors.length > 0 && (
+                                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
+                                            <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Gallery</h4>
+                                            <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
+                                                {selectedFacultyErrors.map((msg, i) => (
+                                                    <li key={i}>{msg}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
                     </div>
                 </div>
-                {faculty_errors.length > 0 && (
-                    <div className="mb-6 rounded-md bg-red-50 p-4">
-                        <h4 className="mb-2 text-sm font-medium text-red-800">Please fix the following errors:</h4>
-                        <ul className="list-disc space-y-1 pl-5 text-sm text-red-700">
-                            {faculty_errors.map((error, index) => (
-                                <li key={index}>{error}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
             </div>
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />
