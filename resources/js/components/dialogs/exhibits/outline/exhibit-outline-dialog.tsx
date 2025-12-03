@@ -2,11 +2,12 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { useState } from 'react';
-import { useForm } from '@inertiajs/react';
-import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Exhibits } from '@/types/exhibits';
+import { useForm } from '@inertiajs/react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface ExhibitOutlineForm {
     outline_id?: number;
@@ -18,15 +19,16 @@ interface ExhibitOutlineForm {
 }
 
 interface ExhibitOutlineDialogProps {
+    category?: string[];
     outline?: ExhibitOutlineForm | null;
     exhibit?: Exhibits | null;
     type: 'add' | 'edit';
-    onClose: () => void;
+    onClose: (updated?: any) => void;
 }
 
-export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose }: ExhibitOutlineDialogProps) {
+export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, category }: ExhibitOutlineDialogProps) {
     const [isUploading, setIsUploading] = useState(false);
-    const {data, setData, post, errors, processing, reset} = useForm<ExhibitOutlineForm>({
+    const { data, setData, post, errors, processing, reset } = useForm<ExhibitOutlineForm>({
         outline_id: outline?.outline_id || undefined,
         category: outline?.category || '',
         exhibit_id: outline?.exhibit_id || exhibit?.exhibit_id || 0,
@@ -39,36 +41,36 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose }
         e.preventDefault();
         try {
             setIsUploading(true);
-            post(route('exhibit.outline.file.upload'),
-                {
-                    onProgress: (progress) => {
-                        if (progress?.percentage) {
-                            toast.info('Uploading...', {
-                                description: (
-                                    <div className="flex w-full items-center gap-1">
-                                        <Progress value={progress.percentage} className="h-2 w-68" />
-                                        <p className="text-right text-xs text-gray-500">{progress.percentage}%</p>
-                                    </div>
-                                ),
-                                id: 'uploading',
-                            });
-                        }
-                    },
-                    onSuccess: () => {
-                        toast.dismiss('uploading');
-                        reset();
-                        setIsUploading(false);
-                        onClose();
-                    },
-                    onError: (errors) => {
-                        toast.dismiss('uploading');
-                        toast.error('Failed to upload document', {
-                            description: errors.document ?? 'There was an error uploading the document.',
+            post(route('exhibit.outline.file.upload'), {
+                onProgress: (progress) => {
+                    if (progress?.percentage) {
+                        toast.info('Uploading...', {
+                            description: (
+                                <div className="flex w-full items-center gap-1">
+                                    <Progress value={progress.percentage} className="h-2 w-68" />
+                                    <p className="text-right text-xs text-gray-500">{progress.percentage}%</p>
+                                </div>
+                            ),
+                            id: 'uploading',
                         });
-                        setIsUploading(false);
-                    },
-                }
-            );
+                    }
+                },
+                onSuccess: (page) => {
+                    toast.dismiss('uploading');
+                    setIsUploading(false);
+                    const updated = page?.props?.updatedOutline ?? null;
+                    reset();
+                    onClose(updated);
+                },
+
+                onError: (errors) => {
+                    toast.dismiss('uploading');
+                    toast.error('Failed to upload document', {
+                        description: errors.document ?? 'There was an error uploading the document.',
+                    });
+                    setIsUploading(false);
+                },
+            });
         } catch (error) {
             toast.dismiss('uploading');
             toast.error('Unexpected error occurred', {
@@ -77,27 +79,29 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose }
             setIsUploading(false);
         }
     };
+    // console.log('test: ' + category);
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="space-y-6 sm:max-w-lg">
                 <DialogHeader className="flex flex-col items-start text-left">
                     <DialogTitle className="text-lg font-medium text-gray-900">
                         {type === 'add' ? 'Add Exhibit Outline' : 'Edit Exhibit Outline'}
                     </DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">
-                        {type === 'add' ? 'Fill out the form below to add a new exhibit outline.' : 'Update the details of the exhibit outline below.'}
+                        {type === 'add'
+                            ? 'Fill out the form below to add a new exhibit outline.'
+                            : 'Update the details of the exhibit outline below.'}
                     </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="m-0">
                     <div className="flex w-full flex-col items-center justify-center">
-                        <Label className="mb-2 text-left w-full">
-                            Upload PDF File
-                        </Label>
+                        <Label className="mb-2 w-full text-left text-sm font-medium text-gray-700">Upload PDF File</Label>
                         {!data.file ? (
                             <label
-                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
-                                    }`}
+                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${
+                                    isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
+                                }`}
                             >
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg
@@ -133,8 +137,9 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose }
                             </label>
                         ) : (
                             <div
-                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : ''
-                                    }`}
+                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${
+                                    isUploading ? 'pointer-events-none opacity-70' : ''
+                                }`}
                             >
                                 <span className="text-sm font-semibold text-gray-700">{data.file.name}</span>
                                 <Button
@@ -152,25 +157,30 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose }
                         <InputError message={errors.file} className="mt-2" />
                     </div>
                     <div className="grid w-full gap-4 py-4">
-                        <div>
-                            <Label htmlFor="category" className="mb-2">
-                                Category
-                            </Label>
-                            <input
-                                type="text"
-                                id="category"
-                                value={data.category}
-                                onChange={(e) => setData({ ...data, category: e.target.value })}
-                                placeholder="Enter category"
-                                disabled={isUploading || processing}
-                                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-1 focus:outline-none sm:text-sm"
-                            />
-                            <InputError message={errors.category} className="mt-2" />
+                        <div className="space-y-2">
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Category</Label>
+
+                            <Select value={data.category} onValueChange={(value) => setData('category', value)} disabled={isUploading || processing}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select category" />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    {category.map((item, index) => (
+                                        <SelectItem key={index} value={item}>
+                                            {item}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+
+                            <InputError message={errors.category} />
                         </div>
                     </div>
+
                     <div>
                         <div>
-                            <Label htmlFor="outline_description" className="mb-2">
+                            <Label htmlFor="outline_description" className="mb-2 block text-sm font-medium text-gray-700">
                                 Outline Description
                             </Label>
                             <input
@@ -185,7 +195,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose }
                             <InputError message={errors.outline_description} className="mt-2" />
                         </div>
                     </div>
-                    <DialogFooter className="mt-6 sm:justify-end">
+                    <DialogFooter className="mt-10 sm:justify-end">
                         <DialogClose asChild>
                             <Button type="button" variant="outline" id="exhibit-outline-dialog-close">
                                 Cancel

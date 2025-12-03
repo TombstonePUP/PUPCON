@@ -23,6 +23,8 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const filteredOutlines: ExhibitOutlines[] = selectedCategory ? outlines.filter((outline) => outline.category === selectedCategory) : [];
 
+    // usePoll(1000);
+
     const [dialog, setDialog] = useState<{
         type: 'outline' | null;
         action: 'add' | 'edit' | 'delete' | 'view' | null;
@@ -33,14 +35,35 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
         setDialog({ type, action, outline });
     };
 
-    const closeDialog = (wasSuccessful: boolean = false) => {
+    const closeDialog = (updated?: ExhibitOutlines | ExhibitOutlines[] | null) => {
+        // Always close dialog
         setDialog({ type: null, action: null, outline: null });
+
+        if (!updated) return;
+
+        // If dialog returns an updated array: replace all
+        if (Array.isArray(updated)) {
+            setOutlines(updated);
+            setCategory(Array.from(new Set(updated.map((o) => o.category))));
+            return;
+        }
+
+        // If dialog returns a single outline (add or update)
+        setOutlines((prev) => {
+            const exists = prev.some((o) => o.id === updated.id);
+
+            const merged = exists ? prev.map((o) => (o.id === updated.id ? updated : o)) : [...prev, updated]; // append new outline
+
+            setCategory(Array.from(new Set(merged.map((o) => o.category))));
+            return merged;
+        });
     };
 
     useEffect(() => {
         setOutlines(exhibit.exhibit_outlines || []);
         setCategory(Array.from(new Set((exhibit.exhibit_outlines || []).map((outline) => outline.category))));
     }, [exhibit.exhibit_outlines]);
+    console.log(category);
 
     return (
         <>
@@ -103,13 +126,14 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
                                             ) : (
                                                 filteredOutlines.map((outline) => (
                                                     <div
-                                                        className="group flex items-start justify-between rounded-md border border-gray-100 bg-white p-3 px-6 transition-all hover:border-red-200"
+                                                        className="group flex cursor-pointer items-start justify-between rounded-md border border-gray-100 bg-white p-3 px-6 transition-all hover:border-red-200"
                                                         key={outline.id}
+                                                       
                                                     >
                                                         <div>
                                                             <span className="text-sm font-medium text-gray-900">{outline.outline_description}</span>
                                                         </div>
-                                                        <div className="flex flex-shrink-0 items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
+                                                        <div className="flex shrink-0 items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
                                                             <ActionButton
                                                                 className="cursor-pointer rounded-md text-gray-200 hover:bg-red-50 hover:text-gray-700"
                                                                 onClick={() => openDialog('outline', 'view', outline)}
@@ -155,7 +179,13 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
                 </DrawerContent>
             </Drawer>
             {dialog.type === 'outline' && (
-                <ExhibitOutlineDialogRenderer type={dialog.action} exhibit={exhibit} outline={dialog.outline || null} onClose={closeDialog} />
+                <ExhibitOutlineDialogRenderer
+                    type={dialog.action}
+                    exhibit={exhibit}
+                    outline={dialog.outline || null}
+                    onClose={closeDialog}
+                    category={category}
+                />
             )}
         </>
     );

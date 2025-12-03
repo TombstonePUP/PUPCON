@@ -64,7 +64,7 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                         <div className="sticky top-6 space-y-4">
                             <div className="rounded-lg border border-gray-200 bg-white p-4">
                                 <h3 className="mb-2 text-sm font-semibold text-gray-900">Exhibit Actions</h3>
-                                <Button variant="noborder" className="w-full" onClick={() => openDialog('exhibit', 'add')}>
+                                <Button variant="noborder" className="w-full" onClick={() => setTimeout(() => openDialog('exhibit', 'add'), 50)}>
                                     <Plus className="h-6 w-6 text-white" />
                                     Add New Exhibit
                                 </Button>
@@ -79,11 +79,11 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                             exhibits.map((exhibit, index) => {
                                 const handleCardClick = () => {
                                     if (exhibit.container) {
-                                        openDialog('outline', 'edit', exhibit);
+                                        setTimeout(() => openDialog('outline', 'edit', exhibit), 50);
                                     } else if (exhibit.exhibit_outlines && exhibit.exhibit_outlines.length > 0) {
-                                        openDialog('document', 'view', null, exhibit.exhibit_outlines[0]);
+                                        setTimeout(() => openDialog('document', 'view', null, exhibit.exhibit_outlines[0]), 50);
                                     } else {
-                                        openDialog('exhibit', 'edit', exhibit);
+                                        setTimeout(() => openDialog('document', 'add', exhibit), 50);
                                     }
                                 };
 
@@ -119,27 +119,35 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                                                             </Button>
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end" className="w-40">
-                                                            <DropdownMenuItem onClick={() => setTimeout (() => openDialog('exhibit', 'edit', exhibit), 50)}>
+                                                            <DropdownMenuItem
+                                                                onClick={() => setTimeout(() => openDialog('exhibit', 'edit', exhibit), 50)}
+                                                            >
                                                                 Edit Exhibit
                                                             </DropdownMenuItem>
 
                                                             {!exhibit.container && (
                                                                 <>
-                                                                    <DropdownMenuItem onClick={() => openDialog('document', 'add', exhibit)}>
+                                                                    <DropdownMenuItem
+                                                                        onClick={() => setTimeout(() => openDialog('document', 'add', exhibit))}
+                                                                    >
                                                                         {exhibit.exhibit_outlines && exhibit.exhibit_outlines.length === 0
                                                                             ? 'Upload Document'
                                                                             : 'Update Document'}
                                                                     </DropdownMenuItem>
                                                                     {exhibit.exhibit_outlines && exhibit.exhibit_outlines.length > 0 && (
                                                                         <>
-                                                                             <DropdownMenuItem
+                                                                            <DropdownMenuItem
                                                                                 onClick={() =>
-                                                                                    setTimeout (() => openDialog(
-                                                                                        'document',
-                                                                                        'delete',
-                                                                                        exhibit,
-                                                                                        exhibit.exhibit_outlines[0],
-                                                                                    ),50 )
+                                                                                    setTimeout(
+                                                                                        () =>
+                                                                                            openDialog(
+                                                                                                'document',
+                                                                                                'delete',
+                                                                                                exhibit,
+                                                                                                exhibit.exhibit_outlines[0],
+                                                                                            ),
+                                                                                        50,
+                                                                                    )
                                                                                 }
                                                                             >
                                                                                 Delete Document
