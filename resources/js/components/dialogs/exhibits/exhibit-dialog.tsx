@@ -52,19 +52,11 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (type === 'add') {
-            post(route('exhibits.store'), {
-                onSuccess: () => {
-                    onClose();
-                },
-            });
-        } else if (type === 'edit' && exhibit) {
-            patch(route('exhibits.update', { exhibit_id: exhibit.exhibit_id }), {
-                onSuccess: () => {
-                    onClose();
-                },
-            });
-        }
+        post(route('exhibits.store'), {
+            onSuccess: () => {
+                onClose();
+            },
+        });
     };
 
     return (
