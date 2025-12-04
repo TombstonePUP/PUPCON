@@ -225,7 +225,7 @@ export default function Programs({ program }: PerProgramProps) {
                     breadcrumbs={[
                         { label: 'Home', href: '/' },
                         { label: 'Programs', href: '/programs' },
-                        { label: `${program.program_name} • Level ${program.levels[0]?.level}`, href: '#' },
+                        { label: `${program.program_name} • Level ${program.levels[0]?.level}`, href: `/programs/${program.program_id}` },
                     ]}
                 />
 
@@ -445,13 +445,13 @@ export default function Programs({ program }: PerProgramProps) {
                                                     f.image_path ||
                                                     `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
                                                 position: f.program_coordinator ? 'Program Head' : `${f.status} `,
-                                            
+
                                             }}
                                             isLoading={facultyLoading}
                                             inView={cardInView}
                                             index={i}
                                         />
-                                        
+
                                     );
                                 })}
                             </div>
