@@ -38,6 +38,8 @@ class ExhibitOulinesFileController extends Controller
             'file.mimes' => 'The file must be a file of type: pdf.',
         ]);
 
+        $user = Auth::user();
+
         $outline = isset($validated['outline_id'])
             ? ExhibitOutlines::find($validated['outline_id'])
             : null;
@@ -114,6 +116,12 @@ class ExhibitOulinesFileController extends Controller
             $exhibit_file->save();
         }
 
+        $activityLog->user_id = $user->user_id;
+        $activityLog->description = "{$activityLog->activity}d exhibit outline for '{$exhibit->exhibit_name}'.";
+        $activityLog->type = 'Files';
+        $activityLog->activity_date = now();
+        $activityLog->save();
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Exhibit Outline')
@@ -126,6 +134,7 @@ class ExhibitOulinesFileController extends Controller
     public function destroy(Request $request)
     {
         $outline = ExhibitOutlines::where('exhibit_outline_id', $request->outline_id)->first();
+        $user = Auth::user();
 
         if ($outline) {
             $exhibit_file = $outline->ExhibitFiles;
@@ -134,6 +143,14 @@ class ExhibitOulinesFileController extends Controller
                 $exhibit_file->delete();
             }
             $outline->delete();
+
+            ActivityLog::create([
+                'user_id' => $user->user_id,
+                'description' => 'Deleted Exhibit Outline: ' . $outline->outline_description,
+                'activity' => 'Delete',
+                'type' => 'Files',
+                'activity_date' => now(),
+            ]);
 
             return redirect()->back()
                 ->with('type', 'success')

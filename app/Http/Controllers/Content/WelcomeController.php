@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\CampusGallery;
 use App\Models\ContentPages;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -81,6 +83,8 @@ class WelcomeController extends Controller
 
         $validated = $validator->validated();
 
+        $user = Auth::user();
+
         $page = ContentPages::find($validated['page']['content_page_id']);
         if (isset($validated['page']['director_image'])) {
             if ($page && $page->director_image_path && Storage::disk()->exists($page->director_image_path)) {
@@ -130,6 +134,14 @@ class WelcomeController extends Controller
             ]);
         }
 
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated Welcome Page Content',
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         $gallery_ids = [];
         foreach ($validated['gallery'] ?? [] as $galleryData) {
             $imagePath = null;
@@ -147,6 +159,13 @@ class WelcomeController extends Controller
                     'image_path' => $imagePath ?? $gallery->image_path,
                     'carousel' => $galleryData['carousel'] ?? $gallery->carousel,
                 ]);
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Updated Welcome Page Gallery Item ID: ' . $gallery->gallery_id,
+                    'activity' => 'Update',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
                 $gallery_ids[] = $gallery->gallery_id;
             } else {
                 $gallery = CampusGallery::create([
@@ -154,6 +173,13 @@ class WelcomeController extends Controller
                     'image_name' => $imageName,
                     'image_path' => $imagePath,
                     'carousel' => $galleryData['carousel'] ?? false,
+                ]);
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Created Welcome Page Gallery Item ID: ' . $gallery->gallery_id,
+                    'activity' => 'Create',
+                    'type' => 'Content',
+                    'activity_date' => now(),
                 ]);
                 $gallery_ids[] = $gallery->gallery_id;
             }
@@ -165,6 +191,13 @@ class WelcomeController extends Controller
             if ($gallery->image_path && Storage::disk()->exists($gallery->image_path)) {
                 Storage::disk()->delete($gallery->image_path);
             }
+            ActivityLog::create([
+                'user_id' => $user->user_id,
+                'description' => 'Deleted Welcome Page Gallery Item ID: ' . $gallery->gallery_id,
+                'activity' => 'Delete',
+                'type' => 'Content',
+                'activity_date' => now(),
+            ]);
         }
 
         CampusGallery::where('carousel', true)

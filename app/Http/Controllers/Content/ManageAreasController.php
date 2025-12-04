@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\AreaFiles;
 use App\Models\Areas;
 use App\Models\Programs;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AreaForms;
+use Illuminate\Support\Facades\Auth;
 
 class ManageAreasController extends Controller
 {
@@ -38,6 +40,8 @@ class ManageAreasController extends Controller
                 'area_image.max' => 'The area image may not be greater than 20MB.',
             ]
         );
+
+        $user = Auth::user();
 
         // $program = Str::of($request->program_name)->replace('_', ' ')->title();
         $program = Programs::with([
@@ -73,6 +77,14 @@ class ManageAreasController extends Controller
             $area->area_image_path = $areaImagePath;
         }
         $area->save();
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Created Area "' . $area->area_name . '" in ' . $program->program_name . ' - ' . Str::title(str_replace('_', ' ', $level_name)),
+            'activity' => 'Create',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         return redirect()->back()
             ->with('type', 'success')
@@ -189,6 +201,15 @@ class ManageAreasController extends Controller
         }
         $area->save();
 
+        $user = Auth::user();
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated Area "' . $area->area_name . '" in ' . $program->program_name . ' - level_' . $level->level,
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Area Updated')
@@ -227,6 +248,15 @@ class ManageAreasController extends Controller
                 ->with('title', 'Area Not Found')
                 ->with('message', 'The specified area could not be found.');
         }
+
+        $user = Auth::user();
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Archived Area "' . $areaName . '"' . 'From ' . $request->program_name . ' - level_' . $request->level_id,
+            'activity' => 'Archive',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         return redirect()->back()
             ->with('type', 'success')

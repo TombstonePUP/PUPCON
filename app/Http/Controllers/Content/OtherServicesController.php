@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\ContentPages;
 use App\Models\OtherServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class OtherServicesController extends Controller
 {
@@ -58,6 +60,7 @@ class OtherServicesController extends Controller
         }
 
         $validated = $validator->validated();
+        $user = Auth::user();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
         if ($page) {
@@ -73,6 +76,14 @@ class OtherServicesController extends Controller
             ]);
         }
 
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated Other Services Content Page',
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         $service_ids = [];
         foreach ($validated['other_services'] as $serviceData) {
             $service = OtherServices::find($serviceData['service_id']);
@@ -81,11 +92,25 @@ class OtherServicesController extends Controller
                 $service->description = $serviceData['description'];
                 $service->service_link = $serviceData['service_link'];
                 $service->save();
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Updated Other Service: ' . $service->service_name,
+                    'activity' => 'Update',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
             } else {
                 $service = OtherServices::create([
                     'service_name' => $serviceData['service_name'],
                     'description' => $serviceData['description'],
                     'service_link' => $serviceData['service_link'],
+                ]);
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Created Other Service: ' . $service->service_name,
+                    'activity' => 'Create',
+                    'type' => 'Content',
+                    'activity_date' => now(),
                 ]);
             }
             $service_ids[] = $service->service_id;

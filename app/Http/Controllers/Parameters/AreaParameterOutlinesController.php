@@ -101,17 +101,21 @@ class AreaParameterOutlinesController extends Controller
         $parameterOutline->container = $validated['is_container'];
         $parameterOutline->save();
 
+        $user = Auth::user();
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'activity' => 'Create Benchmark',
+            'description' => "Created benchmark: {$parameterOutline->outline_description}",
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Create Successful')
             ->with('message', 'The benchmark has been added.');
     }
-
-    /**
-     * Display the specified resource.
-     * @return void
-     */
-    public function show(ParameterOutlines $parameterOutlines) {}
 
     /**
      * Update the specified resource in storage.
@@ -154,6 +158,15 @@ class AreaParameterOutlinesController extends Controller
         $parameterOutline->container = $validated['is_container'] ?? $parameterOutline->container;
         $parameterOutline->save();
 
+        $user = Auth::user();
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'activity' => 'Update Benchmark',
+            'description' => "Updated benchmark: {$parameterOutline->outline_description}",
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Update Successful')
@@ -179,15 +192,21 @@ class AreaParameterOutlinesController extends Controller
             $file->delete();
             $activityLog = new ActivityLog();
             $activityLog->user_id = $user->user_id;
-            $activityLog->area = $area->area_name;
-            $activityLog->program = $program->program_name;
-            $activityLog->file_name = $file->file_name;
+            $activityLog->description = "Deleted document for benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.";
             $activityLog->activity = "Delete Document";
+            $activityLog->type = "Files";
             $activityLog->activity_date = now();
             $activityLog->save();
             $message = "The benchmark and its associated document have been deleted.";
         } else {
             $message = "The benchmark has been deleted.";
+            $activityLog = new ActivityLog();
+            $activityLog->user_id = $user->user_id;
+            $activityLog->description = "Deleted benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.";
+            $activityLog->activity = "Delete";
+            $activityLog->type = "Content";
+            $activityLog->activity_date = now();
+            $activityLog->save();
         }
 
         $parameterOutlines->delete();

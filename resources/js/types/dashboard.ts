@@ -1,10 +1,9 @@
 export interface ActivityLogs {
     activity_log_id: number;
     full_name: string;
-    area: string;
-    program: string;
-    file_name: string;
+    description: string;
     activity: string;
+    type: string;
     activity_date: string;
     [key: string]: unknown;
 }

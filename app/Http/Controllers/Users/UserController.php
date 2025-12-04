@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserRequest;
+use App\Models\ActivityLog;
 use App\Models\Programs;
 use App\Models\Roles;
 use App\Models\User;
@@ -102,6 +103,15 @@ class UserController extends Controller
             $user->notify(new NewUser($user->email, $name, $password));
         }
 
+        $userAct = Auth::user();
+        ActivityLog::create([
+            'user_id' => $userAct->user_id,
+            'description' => 'Created New User: ' . $user->first_name . ' ' . $user->last_name,
+            'activity' => 'Create',
+            'type' => 'Users',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', "User Created Successfully")
@@ -133,6 +143,16 @@ class UserController extends Controller
             $user->Areas()->sync($validated['assigned_areas']);
         }
 
+        $userAct = Auth::user();
+
+        ActivityLog::create([
+            'user_id' => $userAct->user_id,
+            'description' => 'Updated User Privileges: ' . $user->first_name . ' ' . $user->last_name,
+            'activity' => 'Update',
+            'type' => 'Users',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', "User Updated Successfully")
@@ -149,6 +169,16 @@ class UserController extends Controller
         $user->updated_at = now();
         $user->save();
 
+        $userAct = Auth::user();
+
+        ActivityLog::create([
+            'user_id' => $userAct->user_id,
+            'description' => 'Disabled User: ' . $user->first_name . ' ' . $user->last_name,
+            'activity' => 'Disable',
+            'type' => 'Users',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', "User Disabled Successfully")
@@ -164,6 +194,17 @@ class UserController extends Controller
         $user->is_active = true;
         $user->updated_at = now();
         $user->save();
+
+        $userAct = Auth::user();
+
+        ActivityLog::create([
+            'user_id' => $userAct->user_id,
+            'description' => 'Enabled User: ' . $user->first_name . ' ' . $user->last_name,
+            'activity' => 'Enable',
+            'type' => 'Users',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', "User Enabled Successfully")

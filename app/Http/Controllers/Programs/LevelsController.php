@@ -3,57 +3,32 @@
 namespace App\Http\Controllers\Programs;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Programs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LevelsController extends Controller
 {
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
         $program = Programs::find($request->program_id);
-        /* $level = isset($program->latestlevel->level)
-            ? $program->latestlevel->level
-            : null;
-
-        $min = $level ?? 0;
-        $max = $level !== null ? $level + 1 : 0; */
-
-        /* $level = $program->levels()
-            ->where('remarks', 'passed')
-            ->orderBy('level', 'desc')
-            ->first(); */
 
         $level = isset($program->latestlevel->level)
             ? $program->latestlevel->level
             : null;
 
+        $user = Auth::user();
+
         $validated = $request->validate([
             'program_name' => ['required', 'string'],
-            /* 'new_level' => [
-                'required',
-                'integer',
-                "min:$min",
-                "max:$max",
-            ], */
         ], [
             'program_name.required' => 'Program is required.',
             'program_name.string' => 'Program must be a string.',
             'program_name.max' => 'Program must not exceed 255 characters.',
-            /* 'new_level.required' => 'Level is required.',
-            'new_level.integer' => 'Level must be an integer.',
-            'new_level.min' => "Level must be at least Level $min.",
-            'new_level.max' => "Level must not exceed Level $max.", */
         ]);
 
         $program->update([
@@ -61,7 +36,6 @@ class LevelsController extends Controller
         ]);
         $program = $program->Levels()->create([
             'program_id' => $program->program_id,
-            // 'level' => $validated['new_level'],
             'level' => $level === null ? 0 : $level + 1,
             'survey_date' => now(),
             'remarks' => 'Ongoing Survey',
@@ -69,6 +43,14 @@ class LevelsController extends Controller
         ]);
 
         $level = $program->level === 0 ? 'Preliminary Survey' : 'Level ' . $program->level;
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Added a new level: ' . $level . ' to program: ' . $validated['program_name'],
+            'activity' => 'Create',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         return redirect()->back()
             ->with('type', 'success')
@@ -100,6 +82,7 @@ class LevelsController extends Controller
             ]
         );
 
+        $user = Auth::user();
         $program = $programs->find($request->program_id);
         $level = $program->levels()->where('accreditation_level_id', $validated['accreditation_level_id'])->first();
 
@@ -110,6 +93,15 @@ class LevelsController extends Controller
         $level->update([
             'remarks' => $validated['remarks'],
             'is_active' => $validated['is_active'],
+        ]);
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated level: ' . ($level->level === 0 ? 'Preliminary Survey' : 'Level ' . $level->level) .
+                ' for program: ' . $validated['program_name'],
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
         ]);
 
         return redirect()->back()

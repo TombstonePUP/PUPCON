@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use App\Models\UniversityAdministration;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class AdministrationController extends Controller
 {
@@ -53,6 +55,8 @@ class AdministrationController extends Controller
 
         $validated = $validator->validated();
 
+        $user = Auth::user();
+
         $page = ContentPages::find($validated['page']['content_page_id']);
         if ($page) {
             $page->title = $validated['page']['title'];
@@ -65,6 +69,14 @@ class AdministrationController extends Controller
                 'page' => $validated['page']['page'],
             ]);
         }
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated University Administration Page',
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         $administration_ids = [];
         foreach ($validated['officials'] ?? [] as $officialData) {
@@ -108,6 +120,13 @@ class AdministrationController extends Controller
                     'profile_picture_path' => $profilepath ?? $official->profile_picture_path,
                 ]);
                 $administration_ids[] = $official->administration_id;
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Updated University Official: ' . $official->first_name . ' ' . $official->last_name,
+                    'activity' => 'Update',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
             } else {
                 $official = UniversityAdministration::create([
                     'first_name' => $officialData['first_name'],
@@ -120,6 +139,13 @@ class AdministrationController extends Controller
                     'profile_picture_path' => $profilepath,
                 ]);
                 $administration_ids[] = $official->administration_id;
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Added University Official: ' . $official->first_name . ' ' . $official->last_name,
+                    'activity' => 'Create',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
             }
         }
 
@@ -128,6 +154,13 @@ class AdministrationController extends Controller
             if ($official->profile_picture_path && Storage::disk('public')->exists($official->profile_picture_path)) {
                 Storage::disk('public')->delete($official->profile_picture_path);
             }
+            ActivityLog::create([
+                'user_id' => $user->user_id,
+                'description' => 'Deleted University Official: ' . $official->first_name . ' ' . $official->last_name,
+                'activity' => 'Delete',
+                'type' => 'Content',
+                'activity_date' => now(),
+            ]);
         }
 
         UniversityAdministration::whereNotIn('administration_id', $administration_ids)->delete();

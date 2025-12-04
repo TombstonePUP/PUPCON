@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Parameters;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\AreaParameters;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AreaParameterController extends Controller
 {
@@ -23,6 +25,16 @@ class AreaParameterController extends Controller
 
         $areaParameter = new AreaParameters();
         $areaParameter->create($validated);
+
+        $user = Auth::user();
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Created a new Area Parameter: ' . $validated['parameter_name'] . $validated['parameter_description'],
+            'activity' => 'Create',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         return redirect()->back()
             ->with('type', 'success')
@@ -49,6 +61,15 @@ class AreaParameterController extends Controller
                 'parameter_description' => $validated['parameter_description'],
             ]);
 
+        $user = Auth::user();
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated Area Parameter:' . $validated['parameter_name'] . $validated['parameter_description'],
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Update Successful')
@@ -60,7 +81,16 @@ class AreaParameterController extends Controller
      */
     public function destroy(Request $request, AreaParameters $areaParameters): RedirectResponse
     {
-        $areaParameters->find($request->parameter_id)->delete();
+        $parameter = $areaParameters->find($request->parameter_id)->delete();
+
+        $user = Auth::user();
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Deleted Area Parameter: ' . $parameter->parameter_name . $parameter->parameter_description,
+            'activity' => 'Delete',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         return redirect()->back()
             ->with('type', 'success')

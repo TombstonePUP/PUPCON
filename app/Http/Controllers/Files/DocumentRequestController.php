@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\AreaFiles;
 use App\Models\AreaForms;
 use App\Models\ExhibitFiles;
@@ -54,6 +55,7 @@ class DocumentRequestController extends Controller
         ]);
 
         $status_id = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
+        $user = Auth::user();
 
         foreach ($validated['file'] as $fileData) {
             $file = null;
@@ -68,6 +70,14 @@ class DocumentRequestController extends Controller
             if (!$file) {
                 continue;
             }
+
+            ActivityLog::create([
+                'user_id' => $user->user_id,
+                'activity' => 'Approve',
+                'description' => "Approved file: {$file->file_name}",
+                'type' => 'Files',
+                'activity_date' => now(),
+            ]);
 
             $file->file_status_id = $status_id;
             $file->file_rejection_reason = '';
@@ -93,6 +103,7 @@ class DocumentRequestController extends Controller
         ]);
 
 
+        $user = Auth::user();
         $status_id = FileStatus::where('status_name', 'Rejected')->first()->file_status_id;
 
         foreach ($validated['file'] as $fileData) {
@@ -108,6 +119,14 @@ class DocumentRequestController extends Controller
             if (!$file) {
                 continue;
             }
+
+            ActivityLog::create([
+                'user_id' => $user->user_id,
+                'activity' => 'Reject',
+                'description' => "Rejected file: {$file->file_name}. Reason: {$fileData['rejection_reason']}",
+                'type' => 'Files',
+                'activity_date' => now(),
+            ]);
 
             $file->file_status_id = $status_id;
             $file->file_rejection_reason = $fileData['rejection_reason'];
@@ -133,6 +152,7 @@ class DocumentRequestController extends Controller
 
 
         $status_id = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
+        $user = Auth::user();
 
         foreach ($validated['file'] as $fileData) {
             $file = null;
@@ -147,6 +167,14 @@ class DocumentRequestController extends Controller
             if (!$file) {
                 continue;
             }
+
+            ActivityLog::create([
+                'user_id' => $user->user_id,
+                'activity' => 'Revert',
+                'description' => "Reverted file to pending status: {$file->file_name}",
+                'type' => 'Files',
+                'activity_date' => now(),
+            ]);
 
             $file->file_status_id = $status_id;
             $file->file_rejection_reason = '';

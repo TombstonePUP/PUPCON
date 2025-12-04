@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\ContentPages;
 use App\Models\Facilities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class FacilitiesController extends Controller
 {
@@ -45,6 +47,7 @@ class FacilitiesController extends Controller
                 ->with('message', 'Please review all fields and try again.');
         }
 
+        $user = Auth::user();
         $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
@@ -59,6 +62,14 @@ class FacilitiesController extends Controller
                 'page' => $validated['page']['page'],
             ]);
         }
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated Facilities Content Page',
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         $facility_id = [];
 
@@ -101,6 +112,15 @@ class FacilitiesController extends Controller
                     'image_path' => $imagepath ?? $facility->image_path,
                 ]);
                 $facility_id[] = $facility->facility_id;
+
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Updated Facility: ' . $facility->facility_name,
+                    'activity' => 'Update',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
+
             } else {
                 $facility = Facilities::create([
                     'facility_name' => $facilityData['facility_name'],
@@ -109,6 +129,15 @@ class FacilitiesController extends Controller
                     'image_path' => $imagepath,
                 ]);
                 $facility_id[] = $facility->facility_id;
+
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Created Facility: ' . $facility->facility_name,
+                    'activity' => 'Create',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
+
             }
         }
 
