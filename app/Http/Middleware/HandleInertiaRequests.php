@@ -64,11 +64,6 @@ class HandleInertiaRequests extends Middleware
             ])
             ->get();
 
-        /* $outlines = $outlines->map(function ($outline) {
-            $outline->AreaParameter->Areas->Levels->Programs = $this->formatPrograms($outline->AreaParameter->Areas->Levels->Programs);
-            return $outline;
-        }); */
-
         $outlines = $outlines->map(function ($outline) {
             $levels = optional(optional(optional($outline->AreaParameter)->Areas)->Levels);
 
@@ -85,7 +80,7 @@ class HandleInertiaRequests extends Middleware
 
         if ($role === 'Admin' || $role === 'Coordinator') {
             $programs = Programs::select('program_name', 'program_id')
-                ->where('is_active', true)    
+                ->where('is_active', true)
             ->whereHas('latestLevel')
                 ->with('latestLevel')
                 ->get();
