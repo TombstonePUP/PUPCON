@@ -24,7 +24,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
     const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
     const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
     const level = selectedProgram?.latest_level?.level;
-    const { data, setData, post, processing, errors } = useForm<ProgramLevelForm>({
+    const { data, setData, post, reset, processing, errors } = useForm<ProgramLevelForm>({
         program_name: '',
         new_level: '',
     });
@@ -43,7 +43,10 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post(route('manage.level.store', { program_id: selectedProgram?.program_id }), {
-            onSuccess: () => onClose(),
+            onSuccess: () => {
+                reset();
+                onClose();
+            },
         });
     };
 
