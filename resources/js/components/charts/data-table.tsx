@@ -156,7 +156,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="text-muted-foreground h-32 h-full text-center">
-                                        No results.
+                                        <div className='h-16 flex items-center justify-center'>
+                                            No results.
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -284,7 +286,9 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="text-muted-foreground h-32 h-full text-center">
-                                        No results.
+                                        <div className='h-16 flex items-center justify-center'>
+                                            No Users.
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -441,7 +445,9 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data, resolve
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center">
-                                        No results.
+                                        <div className='h-16 flex items-center justify-center'>
+                                            No results.
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             )}
