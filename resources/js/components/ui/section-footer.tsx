@@ -21,7 +21,7 @@ interface SectionFooterProps {
 const SectionFooter: React.FC<SectionFooterProps> = ({
     onSave,
     onPreview,
-    previewDescription = 'Clicking view will open a new tab in guest view so you can see how your changes look publicly.',
+    previewDescription = 'Easily view your changes on the site.',
     previewUrl,
 }) => {
     return (
@@ -36,13 +36,22 @@ const SectionFooter: React.FC<SectionFooterProps> = ({
                             </Button>
                         </DialogTrigger>
 
+
+
                         <DialogContent className="sm:max-w-md">
                             <DialogHeader>
-                                <DialogTitle>View Content</DialogTitle>
-                                <DialogDescription className="my-2 leading-relaxed">
+                                <DialogTitle className="text-lg font-medium text-gray-900">View Content</DialogTitle>
+                                <DialogDescription className="text-sm text-gray-500">
                                     {previewDescription}
                                 </DialogDescription>
                             </DialogHeader>
+
+                            <div className="my-0 rounded-md border border-yellow-100 bg-yellow-50 p-4">
+                                <p className="text-sm text-yellow-800">
+                                    <span className="mb-1 block font-semibold text-yellow-900">Note: Redirecting page!</span>
+                                   This will open a new tab and take you to the section you edited.
+                                </p>
+                            </div>
 
                             <div className="flex justify-end gap-3">
                                 <DialogClose asChild>
