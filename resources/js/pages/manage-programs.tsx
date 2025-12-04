@@ -7,11 +7,10 @@ import ProgramLevelDialog from '@/components/dialogs/content/programs/program-le
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, usePoll } from '@inertiajs/react';
-import { Archive, BookCheck, Edit, Folders, NotebookIcon, PlusCircleIcon, Trash2 } from 'lucide-react';
+import { BookCheck, Edit, Folders, NotebookIcon, PlusCircleIcon, Trash2 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,7 +31,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
 
     usePoll(5000);
 
-    const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
     const [searchTerm, setSearchTerm] = useState('');
     const [filterDegree, setFilterDegree] = useState<string>('all');
 
@@ -52,13 +50,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         }
     }, [programToStart]);
 
-    // Split programs into active and archived
-    const activePrograms = programs?.filter((p) => p.is_active) || [];
-    const archivedPrograms = programs?.filter((p) => !p.is_active) || [];
-
-    // Filter based on role
-    const filteredActivePrograms = role === 'Admin' || role === 'Coordinator' ? activePrograms : activePrograms;
-    const filteredArchivedPrograms = role === 'Admin' || role === 'Coordinator' ? archivedPrograms : [];
+    const filteredPrograms = role === 'Admin' || role === 'Coordinator' ? programs : programs?.filter((p) => p.is_active) || [];
 
     const handleProgramClick = (program: PerProgramUnderSurvey) => {
         if (program.latest_level) {
@@ -74,7 +66,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         }
     };
 
-    const underSurvey = activePrograms.filter((p) => p.under_survey === true);
+    const underSurvey = filteredPrograms.filter((p) => p.under_survey === true);
 
     const handleAddProgram = () => {
         setSelectedProgramId(null);
@@ -109,114 +101,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         setDialogOpen(true);
     };
 
-    const renderProgramGrid = (programsList: PerProgramUnderSurvey[]) => {
-        if (programsList.length === 0) {
-            return (
-                <div className="flex min-h-[400px] items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 py-12">
-                    <div className="text-center">
-                        <Archive className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-                        <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                            {activeTab === 'active' ? 'No Active Programs' : 'No Archived Programs'}
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                            {activeTab === 'active' ? 'There are no active programs at the moment.' : 'There are no archived programs.'}
-                        </p>
-                    </div>
-                </div>
-            );
-        }
-
-        return (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {programsList.map((program) => {
-                    const isAssigned = assignedPrograms.find((ap: PerProgramUnderSurvey) => ap.program_id === program.program_id);
-                    const canClick = (role === 'Admin' || role === 'Coordinator' || isAssigned) && program.is_active;
-                    return (
-                        <div
-                            key={program.program_id}
-                            tabIndex={0}
-                            role={canClick ? 'button' : undefined}
-                            onClick={canClick ? () => handleProgramClick(program) : undefined}
-                            onKeyDown={canClick ? (e) => (e.key === 'Enter' || e.key === ' ') && handleProgramClick(program) : undefined}
-                            className={`${canClick ? 'cursor-pointer' : 'cursor-not-allowed'} group`}
-                        >
-                            <div className="relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400">
-                                {(role === 'Admin' || role === 'Coordinator') && program.is_active && (
-                                    <div className="absolute top-4 right-4 flex h-18 w-18 gap-2">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleEditProgram(program);
-                                            }}
-                                        >
-                                            <Edit className="h-4 w-4 text-gray-500" />
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleDeleteProgram(program);
-                                            }}
-                                        >
-                                            <Trash2 className="h-4 w-4 text-gray-500" />
-                                        </Button>
-                                    </div>
-                                )}
-                                <div className="mb-3 flex items-start justify-between">
-                                    <div className="flex flex-wrap gap-1">
-                                        <Badge variant="outline" className="border-0 bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]">
-                                            {program.latest_level
-                                                ? program.latest_level.level === 0
-                                                    ? 'Preliminary Survey Visit'
-                                                    : `Accreditation Level ${program.latest_level?.level}`
-                                                : `No Current Level`}
-                                        </Badge>
-                                        {program.under_survey && (
-                                            <Badge variant="outline" className="border-0 bg-yellow-100 text-yellow-800">
-                                                Under Survey
-                                            </Badge>
-                                        )}
-                                    </div>
-                                    {!program.is_active && (
-                                        <Badge variant="outline" className="border-0 bg-gray-200 text-gray-600">
-                                            Archived
-                                        </Badge>
-                                    )}
-                                    {role === 'Admin' || role === 'Coordinator' ? null : isAssigned ? (
-                                        <Badge variant="outline" className="border-0 bg-green-100 text-green-800">
-                                            Assigned
-                                        </Badge>
-                                    ) : (
-                                        <Badge variant="outline" className="border-0 bg-gray-100 text-gray-800">
-                                            Not Assigned
-                                        </Badge>
-                                    )}
-                                </div>
-
-                                <h3 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
-                                    {program.program_name}
-                                </h3>
-                                <p className="mb-3 line-clamp-1 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name} `}</p>
-
-                                <div className="flex items-center gap-4 text-xs text-gray-500">
-                                    <div className="flex items-center gap-1">
-                                        <Folders className="h-3 w-3" />
-                                        <span>{program.latest_level?.areas ? program.latest_level?.areas?.length : 0} areas</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Manage Programs" />
@@ -242,6 +126,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                 <div className="rounded-lg border border-gray-200 bg-white p-4">
                                     <h3 className="mb-2 text-sm font-semibold text-gray-900">Program Actions</h3>
                                     <div className="flex gap-2">
+                                        {' '}
                                         <Button variant="noborder" className="flex-1" onClick={handleAddProgram}>
                                             <NotebookIcon className="h-6 w-6 text-white" />
                                             Add Program
@@ -326,27 +211,109 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     </div>
                 </div>
 
-                {/* Tabs Section */}
-                <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'active' | 'archived')} className="w-full">
-                    <TabsList className="mb-4 grid w-full max-w-md grid-cols-2">
-                        <TabsTrigger value="active" className="flex items-center gap-2">
-                            <NotebookIcon className="h-4 w-4" />
-                            Active ({activePrograms.length})
-                        </TabsTrigger>
-                        <TabsTrigger value="archived" className="flex items-center gap-2">
-                            <Archive className="h-4 w-4" />
-                            Archived ({archivedPrograms.length})
-                        </TabsTrigger>
-                    </TabsList>
+                {/* Programs Grid */}
+                <div className="mt-5">
+                    {filteredPrograms.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {filteredPrograms.map((program) => {
+                                const isAssigned = assignedPrograms.find((ap: PerProgramUnderSurvey) => ap.program_id === program.program_id);
+                                const canClick = role === 'Admin' || role === 'Coordinator' || isAssigned;
+                                return (
+                                    <div
+                                        key={program.program_id}
+                                        tabIndex={0}
+                                        role={canClick ? 'button' : undefined}
+                                        onClick={canClick ? () => handleProgramClick(program) : undefined}
+                                        onKeyDown={
+                                            isAssigned ? (e) => (e.key === 'Enter' || e.key === ' ') && handleProgramClick(program) : undefined
+                                        }
+                                        className={`${role !== 'Admin' && role !== 'Coordinator' ? (isAssigned ? 'cursor-pointer' : 'cursor-not-allowed') : 'cursor-pointer'} group`}
+                                    >
+                                        <div className="relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400">
+                                            {(role === 'Admin' || role === 'Coordinator') && program.is_active && (
+                                                <div className="absolute top-4 right-4 flex h-18 w-18 gap-2">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleEditProgram(program);
+                                                        }}
+                                                    >
+                                                        <Edit className="h-4 w-4 text-gray-500" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteProgram(program);
+                                                        }}
+                                                    >
+                                                        <Trash2 className="h-4 w-4 text-gray-500" />
+                                                    </Button>
+                                                </div>
+                                            )}
+                                            <div className="mb-3 flex items-start justify-between">
+                                                <div className="flex flex-wrap gap-1">
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="border-0 bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]"
+                                                    >
+                                                        {program.latest_level
+                                                            ? program.latest_level.level === 0
+                                                                ? 'Preliminary Survey Visit'
+                                                                : `Accreditation Level ${program.latest_level?.level}`
+                                                            : `No Current Level`}
+                                                    </Badge>
+                                                    {program.under_survey && (
+                                                        <Badge variant="outline" className="border-0 bg-yellow-100 text-yellow-800">
+                                                            Under Survey
+                                                        </Badge>
+                                                    )}
+                                                </div>
+                                                {!program.is_active && (
+                                                    <Badge variant="outline" className="border-0 bg-gray-200 text-gray-600">
+                                                        Archived
+                                                    </Badge>
+                                                )}
+                                                {role === 'Admin' || role === 'Coordinator' ? null : isAssigned ? (
+                                                    <Badge variant="outline" className="border-0 bg-green-100 text-green-800">
+                                                        Assigned
+                                                    </Badge>
+                                                ) : (
+                                                    <Badge variant="outline" className="border-0 bg-gray-100 text-gray-800">
+                                                        Not Assigned
+                                                    </Badge>
+                                                )}
+                                            </div>
 
-                    <TabsContent value="active" className="mt-0">
-                        {renderProgramGrid(filteredActivePrograms)}
-                    </TabsContent>
+                                            <h3 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
+                                                {program.program_name}
+                                            </h3>
+                                            <p className="mb-3 line-clamp-1 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name} `}</p>
 
-                    <TabsContent value="archived" className="mt-0">
-                        {renderProgramGrid(filteredArchivedPrograms)}
-                    </TabsContent>
-                </Tabs>
+                                            <div className="flex items-center gap-4 text-xs text-gray-500">
+                                                <div className="flex items-center gap-1">
+                                                    <Folders className="h-3 w-3" />
+                                                    <span>{program.latest_level?.areas ? program.latest_level?.areas?.length : 0} areas</span>
+                                                </div>
+                                                {/* <div className="flex items-center gap-1">
+                                                    <CircleSlash className="h-3 w-3" />
+                                                    <span>20 missing</span>
+                                                </div> */}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="py-12 text-center"></div>
+                    )}
+                </div>
 
                 {/* Dialogs */}
                 <Dialog open={startLevelConfirmOpen} onOpenChange={setStartLevelConfirmOpen}>
