@@ -155,11 +155,19 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                             <div>
                                 <Label className="mb-2 block text-sm font-medium text-gray-700">Area Number (numeric numbers only)</Label>
                                 <Input
-                                    type="text"
+                                    type="number"
                                     value={data.area_number}
                                     onChange={(e) => setData('area_number', e.target.value)}
-                                    placeholder="e.g., 1, 2 ,3"
+                                    placeholder="e.g., 1, 2, 3"
                                     disabled={processing}
+                                    min="1"
+                                    step="1"
+                                    onKeyDown={(e) => {
+                                        // Prevent decimal point, minus sign, and 'e' (scientific notation)
+                                        if (e.key === '.' || e.key === '-' || e.key === 'e' || e.key === 'E') {
+                                            e.preventDefault();
+                                        }
+                                    }}
                                 />
                                 <InputError message={errors.area_number} className="mt-1" />
                             </div>
