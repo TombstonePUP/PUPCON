@@ -322,6 +322,24 @@ post_max_size = 3G
 
 ---
 
+## 📧 Mail Configuration (SMTP Setup)
+
+Email notifications (password reset, user invitations, system alerts) require proper SMTP configuration.
+Update the following values inside your `.env` file:
+
+```php
+MAIL_MAILER=smtp
+MAIL_ENCRYPTION=tls
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_generated_app_password
+MAIL_FROM_ADDRESS="your_email@gmail.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+---
+
 ## 📄 Ghostscript PDF Optimizer Setup
 
 Ghostscript is used to optimize and compress PDF files in the application for better performance and reduced storage.
