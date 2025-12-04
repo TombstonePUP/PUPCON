@@ -368,8 +368,22 @@ export default function Programs({ program }: ProgramProps) {
                         <div className="sticky top-6 space-y-4">
                             <div className="rounded-lg border border-gray-200 bg-white p-4">
                                 <div className="mb-3 text-sm font-semibold text-gray-900">Status</div>
-                                <div className="rounded-lg bg-yellow-100 p-2">
-                                    <div className="text-center text-xs font-medium text-yellow-800">{selected_level?.remarks}</div>
+                                <div className={`rounded-lg p-2 ${
+                                    selected_level?.remarks?.toLowerCase().includes('passed') 
+                                        ? 'bg-green-100' 
+                                        : selected_level?.remarks?.toLowerCase().includes('failed') 
+                                        ? 'bg-red-100' 
+                                        : 'bg-yellow-100'
+                                }`}>
+                                    <div className={`text-center text-xs font-medium ${
+                                        selected_level?.remarks?.toLowerCase().includes('passed') 
+                                            ? 'text-green-800' 
+                                            : selected_level?.remarks?.toLowerCase().includes('failed') 
+                                            ? 'text-red-800' 
+                                            : 'text-yellow-800'
+                                    }`}>
+                                        {selected_level?.remarks}
+                                    </div>
                                 </div>
                             </div>
 
