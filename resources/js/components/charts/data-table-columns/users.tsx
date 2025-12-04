@@ -125,11 +125,10 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
                                 <Badge
                                     key={idx}
                                     variant="outline"
-                                    className="items-center rounded-md border-none bg-gray-100 px-5 py-0.5 text-xs font-medium text-gray-700 hover:bg-gray-200"
-                                    style={{
-                                        backgroundColor: `${area?.levels.programs.color}15`,
-                                    }}
+                                    className="items-center bg-gray-100 rounded-md border-none px-5 py-0.5 text-xs font-medium text-gray-700 hover:bg-gray-200"
                                 >
+                                    <Circle className="h-0.5 w-0.5" fill={area?.levels.programs.color} strokeWidth={0} />
+
                                     Area {area.area_number}
                                 </Badge>
                             ))

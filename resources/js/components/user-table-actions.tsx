@@ -16,10 +16,10 @@ interface dialogProps {
 
 interface UserActionsProps {
     user: UserRecords;
-    resolveDialog: ({type, user}: dialogProps) => void;
+    resolveDialog: ({ type, user }: dialogProps) => void;
 }
 
-export function UserTableActions({ user, resolveDialog}: UserActionsProps) {
+export function UserTableActions({ user, resolveDialog }: UserActionsProps) {
     const userStatus = user.is_active;
 
     return (
@@ -31,25 +31,27 @@ export function UserTableActions({ user, resolveDialog}: UserActionsProps) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-10 space-y-1">
-                <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => resolveDialog({type: 'assign', user: user})}
-                >
-                    Edit Privileges
-                </DropdownMenuItem>
                 {userStatus ? (
-                    <DropdownMenuItem
-                        className="cursor-pointer"
-                        variant="destructive"
-                        onClick={() => resolveDialog({type: 'disable', user: user})}
-                    >
-                        Disable User
-                    </DropdownMenuItem>
+                    <div>
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => resolveDialog({ type: 'assign', user: user })}
+                        >
+                            Edit Privileges
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            variant="destructive"
+                            onClick={() => resolveDialog({ type: 'disable', user: user })}
+                        >
+                            Disable User
+                        </DropdownMenuItem>
+                    </div>
                 ) : (
                     <DropdownMenuItem
-                        className="cursot-pointer"
+                        className="cursor-pointer"
                         variant="default"
-                        onClick={() => resolveDialog({type: 'enable', user: user})}
+                        onClick={() => resolveDialog({ type: 'enable', user: user })}
                     >
                         Enable User
                     </DropdownMenuItem>
