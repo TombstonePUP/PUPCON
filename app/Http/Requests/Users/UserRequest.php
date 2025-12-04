@@ -43,6 +43,7 @@ class UserRequest extends FormRequest
             ],
             'email' => [
                 'lowercase',
+                'unique:users,email',
                 'string',
                 'email',
                 'max:255',
@@ -74,6 +75,7 @@ class UserRequest extends FormRequest
             'last_name.required' => 'Last name is required',
             'email.required' => 'Email is required',
             'email.email' => 'Email must be a valid email address',
+            'email.unique' => 'The email has already been taken',
 
             // Role
             'assigned_role.required' => 'Assigned role is required',
