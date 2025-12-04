@@ -215,17 +215,24 @@ export default function Programs({ program }: ProgramProps) {
                                         </p>
                                     </div>
                                     <div>
-                                        <Button className="border-none" size="sm" asChild>
-                                            <a
-                                                href={route('manage.program.download', {
-                                                    program_id: program.program_id,
-                                                    level_id: selected_level?.accreditation_level_id,
-                                                })}
-                                                className="flex items-center"
-                                            >
+                                        <Button
+                                            className="border-none"
+                                            size="sm"
+                                            onClick={() => {
+                                                router.get(
+                                                    route('manage.program.download', {
+                                                        program_id: program.program_id,
+                                                        level_id: selected_level?.accreditation_level_id,
+                                                    }),
+                                                    {},
+                                                    { preserveScroll: true, preserveState: true },
+                                                );
+                                            }}
+                                        >
+                                            <div className="flex items-center">
                                                 Export
                                                 <Download className="ml-2 h-4 w-4" />
-                                            </a>
+                                            </div>
                                         </Button>
                                     </div>
                                 </div>
@@ -369,22 +376,20 @@ export default function Programs({ program }: ProgramProps) {
                             <div className="rounded-lg border border-gray-200 bg-white p-4">
                                 <div className="mb-3 text-sm font-semibold text-gray-900">Status</div>
                                 <div
-                                    className={`rounded-lg p-2 ${
-                                        selected_level?.remarks?.toLowerCase().includes('passed')
+                                    className={`rounded-lg p-2 ${selected_level?.remarks?.toLowerCase().includes('passed')
                                             ? 'bg-green-100'
                                             : selected_level?.remarks?.toLowerCase().includes('failed')
-                                              ? 'bg-red-100'
-                                              : 'bg-yellow-100'
-                                    }`}
+                                                ? 'bg-red-100'
+                                                : 'bg-yellow-100'
+                                        }`}
                                 >
                                     <div
-                                        className={`text-center text-xs font-medium ${
-                                            selected_level?.remarks?.toLowerCase().includes('passed')
+                                        className={`text-center text-xs font-medium ${selected_level?.remarks?.toLowerCase().includes('passed')
                                                 ? 'text-green-800'
                                                 : selected_level?.remarks?.toLowerCase().includes('failed')
-                                                  ? 'text-red-800'
-                                                  : 'text-yellow-800'
-                                        }`}
+                                                    ? 'text-red-800'
+                                                    : 'text-yellow-800'
+                                            }`}
                                     >
                                         {selected_level?.remarks}
                                     </div>
@@ -405,9 +410,8 @@ export default function Programs({ program }: ProgramProps) {
                                         <button
                                             key={section.id}
                                             onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
-                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
+                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                                }`}
                                         >
                                             {section.label}
                                         </button>

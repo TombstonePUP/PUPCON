@@ -33,7 +33,7 @@ interface ProgramForm {
     program_name: string;
 }
 
-export default function ProgramDialog({...props }: ProgramDialogProps) {
+export default function ProgramDialog({ ...props }: ProgramDialogProps) {
     const { program, type, onClose } = props;
 
     const { data, setData, post, patch, processing, errors } = useForm<ProgramForm>({
@@ -79,7 +79,10 @@ export default function ProgramDialog({...props }: ProgramDialogProps) {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="Bachelor of Science">Bachelor of Science</SelectItem>
+                                <SelectItem value="Bachelor of Secondary Education">Bachelor of Secondary Education</SelectItem>
                                 <SelectItem value="Diploma">Diploma</SelectItem>
+
+
                             </SelectContent>
                         </Select>
                         <InputError message={errors.degree_type} />
