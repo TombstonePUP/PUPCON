@@ -42,7 +42,7 @@ class ManageExhibitsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function saveExhibit(Request $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'exhibit_id' => ['nullable', 'integer', 'exists:exhibits,exhibit_id'],
