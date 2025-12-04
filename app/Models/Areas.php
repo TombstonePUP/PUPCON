@@ -28,7 +28,13 @@ class Areas extends Model
         'area_description',
         'area_image_name',
         'area_image_path',
+        'archive',
         'mean',
+    ];
+
+    protected $casts = [
+        'area_image_name' => 'encrypted',
+        'area_image_path' => 'encrypted',
     ];
 
     /**
