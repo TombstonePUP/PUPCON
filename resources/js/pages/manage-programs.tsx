@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, usePoll } from '@inertiajs/react';
-import { Archive, BookCheck, Edit, Folders, NotebookIcon, PlusCircleIcon } from 'lucide-react';
+import { Archive, BookCheck, Edit, Folders, GraduationCap, NotebookIcon, PlusCircleIcon, ScrollText } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -276,14 +276,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                     <p className="mt-1 text-2xl font-semibold text-gray-900">{activePrograms.length || 0}</p>
                                 </div>
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-50">
-                                    <svg className="h-5 w-5 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                        />
-                                    </svg>
+                                    <NotebookIcon className="h-5 w-5 text-[#7f1414]" />
                                 </div>
                             </div>
                         </div>
@@ -296,15 +289,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                     </p>
                                 </div>
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
-                                    <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z" />
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-                                        />
-                                    </svg>
+                                    <GraduationCap className="h-5 w-5 text-green-600" />
                                 </div>
                             </div>
                         </div>
@@ -317,14 +302,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                     </p>
                                 </div>
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50">
-                                    <svg className="h-5 w-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                                        />
-                                    </svg>
+                                    <ScrollText className="h-5 w-5 text-orange-600" />
                                 </div>
                             </div>
                         </div>
