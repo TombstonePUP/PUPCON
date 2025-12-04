@@ -81,10 +81,9 @@ class AreaFormsController extends Controller
             //Log the activity
             $activityLog = new ActivityLog();
             $activityLog->user_id = $user->user_id;
-            $activityLog->area = $area->area_name;
-            $activityLog->program = $program->program_name;
-            $activityLog->file_name = $formFileName;
-            $activityLog->activity = "Upload Document";
+            $activityLog->description = "Uploaded area form for '{$area->area_name}' in program '{$program->program_name}'.";
+            $activityLog->activity = "Upload";
+            $activityLog->type = "Files";
             $activityLog->activity_date = now();
             $activityLog->save();
         }
@@ -93,6 +92,14 @@ class AreaFormsController extends Controller
         $areaForm->area_form_category_id = $validated['area_form_category_id'];
 
         $areaForm->save();
+
+        $activityLog = new ActivityLog();
+        $activityLog->user_id = $user->user_id;
+        $activityLog->description = "Created area form entry for '{$area->area_name}' in program '{$program->program_name}'.";
+        $activityLog->activity = "Create";
+        $activityLog->type = "Files";
+        $activityLog->activity_date = now();
+        $activityLog->save();
 
         return redirect()->back()
             ->with('type', 'success')
@@ -122,13 +129,20 @@ class AreaFormsController extends Controller
             Storage::disk('public')->delete($areaForm->file_path);
             $activityLog = new ActivityLog();
             $activityLog->user_id = $user->user_id;
-            $activityLog->area = $area->area_name;
-            $activityLog->program = $program->program_name;
-            $activityLog->file_name = $areaForm->file_name;
+            $activityLog->description = "Deleted area form file for '{$area->area_name}' in program '{$program->program_name}'.";
             $activityLog->activity = "Delete Document";
+            $activityLog->type = "Files";
             $activityLog->activity_date = now();
             $activityLog->save();
         }
+
+        $activityLog = new ActivityLog();
+        $activityLog->user_id = $user->user_id;
+        $activityLog->description = "Deleted area form for '{$area->area_name}' in program '{$program->program_name}'.";
+        $activityLog->activity = "Delete";
+        $activityLog->type = "Files";
+        $activityLog->activity_date = now();
+        $activityLog->save();
 
         $areaForm->delete();
 

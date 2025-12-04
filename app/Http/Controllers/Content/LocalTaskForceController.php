@@ -8,6 +8,7 @@ use App\Models\LocalTaskForce;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ActivityLog;
 
 class LocalTaskForceController extends Controller
 {
@@ -79,6 +80,8 @@ class LocalTaskForceController extends Controller
 
         $validated = $validator->validated();
 
+        $user = Auth::user();
+
         $page = ContentPages::find($validated['page']['content_page_id']);
         if ($page) {
             $page->title = $validated['page']['title'];
@@ -91,6 +94,14 @@ class LocalTaskForceController extends Controller
                 'description' => $validated['page']['description'],
             ]);
         }
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated Local Task Force Content Page',
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         $task_force_ids = [];
         foreach ($validated['chairmen'] as $chairmanData) {
@@ -134,6 +145,13 @@ class LocalTaskForceController extends Controller
                     'profile_image_path' => $profileImagePath,
                 ]);
                 $task_force_ids[] = $chairman->local_task_force_id;
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Updated Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
+                    'activity' => 'Update',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
             } else {
                 $chairman = LocalTaskForce::create([
                     'area_name' => $chairmanData['area_name'] ?? null,
@@ -145,6 +163,13 @@ class LocalTaskForceController extends Controller
                     'profile_image_path' => $profileImagePath,
                 ]);
                 $task_force_ids[] = $chairman->local_task_force_id;
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Created Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
+                    'activity' => 'Create',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
             }
 
             // handle members
@@ -176,6 +201,14 @@ class LocalTaskForceController extends Controller
             if ($chairman->profile_image_path && Storage::disk('public')->exists($chairman->profile_image_path)) {
                 Storage::disk('public')->delete($chairman->profile_image_path);
             }
+
+            ActivityLog::create([
+                'user_id' => $user->user_id,
+                'description' => 'Deleted Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
+                'activity' => 'Delete',
+                'type' => 'Content',
+                'activity_date' => now(),
+            ]);
 
             $chairman->delete();
         }

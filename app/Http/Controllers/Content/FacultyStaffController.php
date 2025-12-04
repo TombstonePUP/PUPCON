@@ -8,6 +8,8 @@ use App\Models\FacultyStaff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActivityLog;
 
 class FacultyStaffController extends Controller
 {
@@ -55,6 +57,8 @@ class FacultyStaffController extends Controller
                 ->with('message', 'Please review all fields and try again.');
         }
 
+        $user = Auth::user();
+
         $validated = $validator->validated();
 
         $page = ContentPages::find($validated['page']['content_page_id']);
@@ -73,6 +77,15 @@ class FacultyStaffController extends Controller
                 'page' => $validated['page']['page'],
             ]);
         }
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated Faculty and Staff Content Page',
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         $faculty_staff_ids = [];
         foreach ($validated['faculties'] ?? [] as $facultyData) {
 
@@ -124,6 +137,15 @@ class FacultyStaffController extends Controller
                 ]);
 
                 $faculty_staff_ids[] = $faculty->faculty_staff_id;
+
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Updated Faculty/Staff: ' . $faculty->first_name . ' ' . $faculty->last_name,
+                    'activity' => 'Update',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
+
             } else {
                 $faculty = FacultyStaff::create([
                     'first_name' => $facultyData['first_name'],
@@ -138,6 +160,14 @@ class FacultyStaffController extends Controller
                 ]);
 
                 $faculty_staff_ids[] = $faculty->faculty_staff_id;
+
+                ActivityLog::create([
+                    'user_id' => $user->user_id,
+                    'description' => 'Added Faculty/Staff: ' . $faculty->first_name . ' ' . $faculty->last_name,
+                    'activity' => 'Create',
+                    'type' => 'Content',
+                    'activity_date' => now(),
+                ]);
             }
         }
 
@@ -147,6 +177,14 @@ class FacultyStaffController extends Controller
             if ($faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
                 Storage::disk('public')->delete($faculty->image_path);
             }
+
+            ActivityLog::create([
+                'user_id' => $user->user_id,
+                'description' => 'Deleted Faculty/Staff: ' . $faculty->first_name . ' ' . $faculty->last_name,
+                'activity' => 'Delete',
+                'type' => 'Content',
+                'activity_date' => now(),
+            ]);
         }
         FacultyStaff::whereNotIn('faculty_staff_id', $faculty_staff_ids)->delete();
 

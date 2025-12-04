@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use App\Models\OrganizationTypes;
 use App\Models\Organizations;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class AboutController extends Controller
 {
@@ -56,6 +58,8 @@ class AboutController extends Controller
 
         $validated = $validator->validated();
 
+        $user = Auth::user();
+
         $page = ContentPages::find($validated['page']['content_page_id']);
         if (isset($validated['page']['banner'])) {
             $bannerName = 'about-banner.' . $validated['page']['banner']->getClientOriginalExtension();
@@ -87,6 +91,14 @@ class AboutController extends Controller
             ]);
         }
 
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated About Page Content',
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         $type_ids = [];
         $organization_ids = [];
         foreach ($validated['org_types'] ?? [] as $typeData) {
@@ -109,11 +121,28 @@ class AboutController extends Controller
                     $organization->affiliation = $orgData['affiliation'];
                     $organization->type_id = $type->type_id;
                     $organization->save();
+
+                    ActivityLog::create([
+                        'user_id' => $user->user_id,
+                        'description' => 'Updated Organization: ' . $organization->organization_name,
+                        'activity' => 'Update',
+                        'type' => 'Content',
+                        'activity_date' => now(),
+                    ]);
+
                 } else {
                     $organization = Organizations::create([
                         'organization_name' => $orgData['organization_name'],
                         'affiliation' => $orgData['affiliation'],
                         'type_id' => $type->type_id,
+                    ]);
+
+                    ActivityLog::create([
+                        'user_id' => $user->user_id,
+                        'description' => 'Created Organization: ' . $organization->organization_name,
+                        'activity' => 'Create',
+                        'type' => 'Content',
+                        'activity_date' => now(),
                     ]);
                 }
                 $organization_ids[] = $organization->organization_id;

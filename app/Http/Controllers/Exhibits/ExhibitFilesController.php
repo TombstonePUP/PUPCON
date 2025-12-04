@@ -24,6 +24,7 @@ class ExhibitFilesController extends Controller
         ]);
 
         $user = Auth::user();
+
         $exhibit = Exhibits::with('ExhibitOutlines.ExhibitFiles')->findOrFail($validated['exhibit_id']);
 
         $outline = $exhibit->ExhibitOutlines->first();
@@ -64,8 +65,8 @@ class ExhibitFilesController extends Controller
         ]);
 
         $activityLog->user_id = $user->user_id;
-        $activityLog->area = 'Exhibits';
-        $activityLog->file_name = $file_name;
+        $activityLog->description = "{$activityLog->activity}d exhibit file for '{$exhibit->exhibit_name}'.";
+        $activityLog->type = 'Files';
         $activityLog->activity_date = now();
         $activityLog->save();
 

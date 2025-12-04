@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Exhibits;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Exhibits;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -50,6 +52,8 @@ class ManageExhibitsController extends Controller
 
         $exhibit = new Exhibits();
 
+        $user = Auth::user();
+
         if(isset($validated['image'])){
             $imageName = $validated['exhibit_name'] . '.' . $validated['image']->getClientOriginalExtension();
             $imagePath = 'exhibits/assets/' . $imageName;
@@ -71,17 +75,18 @@ class ManageExhibitsController extends Controller
         $exhibit->container = $validated['container'];
         $exhibit->save();
 
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'activity' => 'Create',
+            'description' => "Created exhibit '{$exhibit->exhibit_name}'.",
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Success')
             ->with('message', 'Exhibit successfully added.');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Exhibits $exhibits)
-    {
     }
 
     /**
@@ -90,6 +95,7 @@ class ManageExhibitsController extends Controller
     public function destroy(Request $request)
     {
         $exhibit = Exhibits::find($request->exhibit_id);
+        $user = Auth::user();
         if($exhibit) {
             $exhibit->delete();
             if($exhibit->image_path && Storage::disk('public')->exists($exhibit->image_path)) {
@@ -106,6 +112,15 @@ class ManageExhibitsController extends Controller
                     $outline->delete();
                 }
             }
+
+            ActivityLog::create([
+                'user_id' => $user->user_id,
+                'activity' => 'Delete',
+                'description' => "Deleted exhibit '{$exhibit->exhibit_name}'.",
+                'type' => 'Content',
+                'activity_date' => now(),
+            ]);
+
             return redirect()->back()
                 ->with('type', 'success')
                 ->with('title', 'Success')

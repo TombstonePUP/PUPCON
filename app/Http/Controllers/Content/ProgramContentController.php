@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Auth;
 
 class ProgramContentController extends Controller
 {
@@ -74,6 +76,7 @@ class ProgramContentController extends Controller
 
         $validated = $validator->validated();
 
+        $user = Auth::user();
 
         $program = Programs::findOrFail($request->program_id);
         $bannerName = null;
@@ -155,6 +158,14 @@ class ProgramContentController extends Controller
         $program->Gallery()
             ->whereNotIn('program_gallery_id', $gallery_ids)
             ->delete();
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated Program Content: ' . $program->program_name,
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         return redirect()->back()
             ->with('type', 'success')

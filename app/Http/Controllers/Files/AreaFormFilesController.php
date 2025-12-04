@@ -61,9 +61,9 @@ class AreaFormFilesController extends Controller
         $activityLog = new ActivityLog();
         if ($file = $areaForm->file_path) {
             Storage::disk('public')->delete($file);
-            $activityLog->activity = "Update Document";
+            $activityLog->activity = "Update";
         } else {
-            $activityLog->activity = "Upload Document";
+            $activityLog->activity = "Upload";
         }
 
         $category = Str::slug($category, '_');
@@ -82,26 +82,16 @@ class AreaFormFilesController extends Controller
         $areaForm->file_status_id = $status;
 
         $activityLog->user_id = $user->user_id;
-        $activityLog->area = $area->area_name;
-        $activityLog->program = $program->program_name;
-        $activityLog->file_name = $formFileName;
         $activityLog->activity_date = now();
+        $activityLog->description = "{$activityLog->activity} for '{$area->area_name}' in program '{$program->program_name}'.";
+        $activityLog->type = "Files";
         $activityLog->save();
-
-        /* if ($request->hasFile('form_image')) {
-            if($file = $areaForm->form_image_path) {
-                Storage::disk('public')->delete($file);
-            }
-            $formImageName = "{$area->area_name}-{$category}-form-image.{$validated->file('form_image')->getClientOriginalExtension()}";
-            $formImagePath = "{$program}/{$area->area_name}/area-forms/images";
-            $validated->file('form_image')->storeAs($formImagePath, $formImageName, 'public');
-            $formImagePath = "{$program}/{$area->area_name}/area-forms/images/{$formImageName}";
-        } */
-
         $areaForm->save();
 
         return redirect()->back()
-            ->with('success', 'Area form updated successfully.');
+            ->with('type', 'success')
+            ->with('title', 'File Uploaded')
+            ->with('message', 'Area form file uploaded successfully.');
     }
 
     /**
@@ -141,10 +131,9 @@ class AreaFormFilesController extends Controller
 
         $activityLog = new ActivityLog();
         $activityLog->user_id = $user->user_id;
-        $activityLog->area = $area->area_name;
-        $activityLog->program = $program->program_name;
-        $activityLog->file_name = $areaForm->file_name;
-        $activityLog->activity = "Delete Document";
+        $activityLog->activity = "Delete";
+        $activityLog->description = "Deleted area form for '{$area->area_name}' in program '{$program->program_name}'.";
+        $activityLog->type = "Files";
         $activityLog->activity_date = now();
         $activityLog->save();
 

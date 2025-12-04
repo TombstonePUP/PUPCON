@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { type ActivityLogs } from '@/types';
+import { ActivityLogs } from '@/types/dashboard';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpCircleIcon, ArrowUpDown, CircleFadingPlus, LucideUpload, Trash2Icon } from 'lucide-react';
 
@@ -18,30 +18,14 @@ export const columns: ColumnDef<ActivityLogs>[] = [
         enableGlobalFilter: true,
     },
     {
-        accessorKey: 'area',
-        header: () => <div className="text-left">Area</div>,
+        accessorKey: 'description',
+        header: () => <div className="text-left">Description</div>,
         cell: ({ row }) => {
-            const areaString = row.getValue('area') as String;
+            /* const areaString = row.getValue('area') as String;
             const lowered = areaString.toLowerCase();
-            const areaFormat = lowered.charAt(0).toUpperCase() + lowered.slice(1).toLowerCase();
+            const areaFormat = lowered.charAt(0).toUpperCase() + lowered.slice(1).toLowerCase(); */
 
-            return <div className="text-left"> {areaFormat} </div>;
-        },
-        enableGlobalFilter: true,
-    },
-    {
-        accessorKey: 'program',
-        header: () => <div className="text-left">Program</div>,
-        cell: ({ row }) => {
-            return <div className="text-left"> {row.getValue('program')} </div>;
-        },
-        enableGlobalFilter: true,
-    },
-    {
-        accessorKey: 'file_name',
-        header: () => <div className="text-left">File</div>,
-        cell: ({ row }) => {
-            return <div className="w-sm truncate text-left text-gray-900"> {row.getValue('file_name')} </div>;
+            return <div className="text-left"> {row.getValue('description')} </div>;
         },
         enableGlobalFilter: true,
     },
@@ -49,23 +33,17 @@ export const columns: ColumnDef<ActivityLogs>[] = [
         accessorKey: 'activity',
         header: () => <div className="text-left">Activity</div>,
         cell: ({ row }) => {
-            const activityString = row.getValue('activity');
-
-            const ActivityIconMap = {
-                'Upload Document': ArrowUpCircleIcon,
-                'Delete Document': Trash2Icon,
-                'Update Document': CircleFadingPlus,
-            };
-
-            const IconComponent = ActivityIconMap[activityString] || LucideUpload;
-
-            return (
-                <div className="flex items-center gap-2 text-left">
-                    <IconComponent className="h-5 w-5" />
-                    {activityString}
-                </div>
-            );
+            return <div className="text-left"> {row.getValue('activity')} </div>;
         },
+        enableGlobalFilter: true,
+    },
+    {
+        accessorKey: 'type',
+        header: () => <div className="text-left">Type</div>,
+        cell: ({ row }) => {
+            return <div className="w-sm truncate text-left text-gray-900"> {row.getValue('type')} </div>;
+        },
+        enableGlobalFilter: true,
     },
     {
         accessorKey: 'activity_date',

@@ -64,9 +64,9 @@ class AreaFilesController extends Controller
         if ($file = $parameterOutlines->AreaFiles) {
             Storage::disk('public')->delete($file->file_path);
             $file->delete();
-            $activityLog->activity = 'Update Document';
+            $activityLog->activity = 'Update';
         } else {
-            $activityLog->activity = 'Upload Document';
+            $activityLog->activity = 'Upload';
         }
 
         $categoryName = $parameterOutlines->parameterOutlineCategory->category_name;
@@ -149,10 +149,9 @@ class AreaFilesController extends Controller
         ]);
 
         $activityLog->user_id = $user->user_id;
-        $activityLog->area = $area->area_name;
-        $activityLog->program = $program->program_name;
+        $activityLog->description = "{$activityLog->activity} for '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.";
+        $activityLog->type = "Files";
         $activityLog->activity_date = now();
-        $activityLog->file_name = $fileName;
         $activityLog->save();
 
         return redirect()->back()
@@ -196,12 +195,10 @@ class AreaFilesController extends Controller
             $areaFile->delete();
 
             $activityLog = new ActivityLog();
-            $activityLog->activity = "Delete Document";
+            $activityLog->activity = "Delete";
             $activityLog->user_id = $user->user_id;
-            $activityLog->area = $area->area_name;
-            $activityLog->program = $program->program_name;
             $activityLog->activity_date = now();
-            $activityLog->file_name = $areaFile->file_name;
+            $activityLog->type = "Files";
             $activityLog->save();
         }
 

@@ -44,10 +44,9 @@ class DashboardController extends Controller
             ->select(
                 'al.activity_log_id',
                 DB::raw("concat(u.first_name, ' ', u.last_name) as full_name"),
-                'al.area',
-                'al.program',
-                'al.file_name',
+                'al.description',
                 'al.activity',
+                'al.type',
                 'al.activity_date'
             )
             ->orderBy('al.activity_date', 'desc')
@@ -94,27 +93,37 @@ class DashboardController extends Controller
     {
         $area_files = ParameterOutlines::from('parameter_outlines AS po')
             ->leftJoin('area_files AS af', 'po.parameter_outline_id', '=', 'af.parameter_outline_id')
+            ->leftJoin('area_parameters AS ap', 'po.area_parameter_id', '=', 'ap.area_parameter_id')
+            ->leftJoin('areas AS a', 'ap.area_id', '=', 'a.area_id')
+            ->leftJoin('accreditation_levels AS al', 'a.accreditation_level_id', '=', 'al.accreditation_level_id')
             ->selectRaw("
-                'area_files' AS document_type,
-                GREATEST(COUNT(*) FILTER (WHERE po.container = 'false') - COUNT(af.area_file_id),0) AS outlines,
-                COUNT(af.area_file_id) AS documents
-            ");
+            'area_files' AS document_type,
+            GREATEST(COUNT(*) FILTER (WHERE po.container = 'false') - COUNT(af.area_file_id),0) AS outlines,
+            COUNT(af.area_file_id) AS documents
+        ")
+            ->where('al.remarks', 'Ongoing Survey');
+
         $area_forms = AreaForms::from('area_forms AS afs')
+            ->leftJoin('areas AS a', 'afs.area_id', '=', 'a.area_id')
+            ->leftJoin('accreditation_levels AS al', 'a.accreditation_level_id', '=', 'al.accreditation_level_id')
+            ->where('al.remarks', 'Ongoing Survey')
             ->selectRaw("
-                'area_forms' AS document_type,
-                GREATEST(COUNT(*) FILTER (WHERE afs.file_path IS NOT NULL) - COUNT(afs.area_form_id),0) AS outlines,
-                COUNT(afs.area_form_id) AS documents
-            ");
+            'area_forms' AS document_type,
+            GREATEST(COUNT(*) FILTER (WHERE afs.file_path IS NOT NULL) - COUNT(afs.area_form_id),0) AS outlines,
+            COUNT(afs.area_form_id) AS documents
+        ");
+
         $exhibit_files = ExhibitOutlines::from('exhibit_outlines AS eo')
             ->leftJoin('exhibit_files AS ef', 'eo.exhibit_outline_id', '=', 'ef.exhibit_outline_id')
             ->selectRaw("
-                'exhibit_files' AS document_type,
-                COUNT(*) FILTER (WHERE ef.exhibit_file_id IS NULL) AS outlines_without_files,
-                COUNT(ef.exhibit_file_id) AS documents
-            ");
-        $overall_uploads = $area_files
+            'exhibit_files' AS document_type,
+            COUNT(*) FILTER (WHERE ef.exhibit_file_id IS NULL) AS outlines,
+            COUNT(ef.exhibit_file_id) AS documents
+        ");
+
+        return $area_files
             ->unionAll($area_forms)
-            ->unionAll($exhibit_files)->get();
-        return $overall_uploads;
+            ->unionAll($exhibit_files)
+            ->get();
     }
 }

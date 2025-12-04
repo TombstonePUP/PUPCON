@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Programs;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\AreaForms;
 use App\Models\Areas;
 use App\Models\AreaFiles;
@@ -95,6 +96,8 @@ class ManageProgramController extends Controller
             ]
         );
 
+        $user = Auth::user();
+
         // Check if program with same name and degree type already exists
         $existingProgram = Programs::where('program_name', 'ILIKE', $validated['program_name'])
             ->where('degree_type', $validated['degree_type'])
@@ -109,6 +112,14 @@ class ManageProgramController extends Controller
         $program = Programs::create([
             'program_name' => $validated['program_name'],
             'degree_type' => $validated['degree_type'],
+        ]);
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Created a new program: ' . $program->program_name,
+            'activity' => 'Create',
+            'type' => 'Content',
+            'activity_date' => now(),
         ]);
 
         return redirect()->back()
@@ -131,6 +142,8 @@ class ManageProgramController extends Controller
                 'degree_type.required' => 'The degree type field is required.',
             ]
         );
+
+        $user = Auth::user();
 
         // Check for duplicates
         $existingProgram = Programs::where('program_name', 'ILIKE', $validated['program_name'])
@@ -252,6 +265,14 @@ class ManageProgramController extends Controller
             ]);
         });
 
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Updated program: ' . $program->program_name,
+            'activity' => 'Update',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Program Updated')
@@ -273,9 +294,19 @@ class ManageProgramController extends Controller
             ]
         );
 
+        $user = Auth::user();
+
         $program = Programs::findOrFail($validated['program_id']);
         $programName = $program->program_name;
         $program->update(['is_active' => false]);
+
+        ActivityLog::create([
+            'user_id' => $user->user_id,
+            'description' => 'Archived program: ' . $program->degree_type . ' ' . $program->program_name,
+            'activity' => 'Archive',
+            'type' => 'Content',
+            'activity_date' => now(),
+        ]);
 
         return redirect()->back()
             ->with('type', 'success')
