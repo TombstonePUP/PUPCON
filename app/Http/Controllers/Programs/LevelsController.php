@@ -22,10 +22,12 @@ class LevelsController extends Controller
     public function store(Request $request)
     {
         $program = Programs::find($request->program_id);
-        $level = $program->latestlevel->level ?? null;
+        $level = isset($program->latestlevel->level)
+            ? $program->latestlevel->level
+            : null;
 
         $min = $level ?? 0;
-        $max = $level ? $level + 1 : 0;
+        $max = $level !== null ? $level + 1 : 0;
 
         $validated = $request->validate([
             'program_name' => ['required', 'string'],
