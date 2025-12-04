@@ -63,7 +63,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Add Program Level</DialogTitle>
+                    <DialogTitle className="text-lg font-medium text-gray-900">Start a survey</DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">Start a new accreditation level for an existing program.</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
