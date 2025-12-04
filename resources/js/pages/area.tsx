@@ -58,7 +58,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                         { label: 'Programs', href: '/programs' },
                         {
                             label: `${program.program_name} - Level ${program.levels[0]?.level}`,
-                            href: '/programs/' + program.program_link,
+                            href: '/programs/' + program.program_id,
                         },
                         { label: area.area_name, href: '#' },
                     ]}
