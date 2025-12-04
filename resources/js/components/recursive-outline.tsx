@@ -154,7 +154,7 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
 
             <ul>
                 {outlines.map((outline) => (
-                    <li className='flex flex-col gap-1' key={outline.parameter_outline_id}>
+                    <li className='flex flex-col gap-1 pl-[1vw]' key={outline.parameter_outline_id}>
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center">
                                 {/* Outline label */}
