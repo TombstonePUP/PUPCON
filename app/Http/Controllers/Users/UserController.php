@@ -22,6 +22,7 @@ class UserController extends Controller
         $user = Auth::user();
         $programs = Programs::select('program_id', 'program_name')
             ->where('under_survey', true)
+            ->where('is_active', true)
             ->with([
                 'Levels' => function ($query) {
                     $query->select('accreditation_level_id', 'program_id', 'level', 'is_active')
@@ -121,7 +122,12 @@ class UserController extends Controller
         }
         $user->save();
 
-        if (in_array($validated['assigned_role'], [1, 2])) {
+        $roles = Roles::where('role_name', 'Admin')
+            ->orWhere('role_name', 'Coordinator')
+            ->pluck('role_id')
+            ->toArray();
+
+        if (in_array($validated['assigned_role'], $roles)) {
             $user->Areas()->detach();
         } else {
             $user->Areas()->sync($validated['assigned_areas']);
