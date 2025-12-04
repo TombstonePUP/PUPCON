@@ -2,6 +2,7 @@ import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import type { ProgramsUnderSurvey } from '@/types';
 import { Head, Link, usePage, usePoll } from '@inertiajs/react';
+import { Construction } from 'lucide-react';
 
 interface ProgramsProps {
     programs: ProgramsUnderSurvey[];
@@ -12,6 +13,14 @@ export default function Programs({ programs }: ProgramsProps) {
     const user = auth.user;
 
     usePoll(5000);
+
+    const EmptyState = ({ title, description }: { title: string; description: string }) => (
+        <div className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-16 text-center">
+            <Construction className="mb-6 h-16 w-16 text-gray-400" />
+            <h3 className="mb-2 text-xl font-semibold text-gray-900">{title}</h3>
+            <p className="max-w-md text-sm text-gray-500">{description}</p>
+        </div>
+    );
 
     return (
         <>
@@ -52,7 +61,7 @@ export default function Programs({ programs }: ProgramsProps) {
                                                             <span className="mb-4 inline-block rounded-full bg-[#7f1414]/10 px-4 py-2 text-sm font-semibold text-[#7f1414]">
                                                                 {program.degree_type}
                                                             </span>
-                                                            <h2 className="text-3xl leading-tight font-bold text-[#7f1414] transition-colors duration-200 group-hover:text-[#a01818] md:text-4xl">
+                                                            <h2 className="text-3xl font-bold leading-tight text-[#7f1414] transition-colors duration-200 group-hover:text-[#a01818] md:text-4xl">
                                                                 {program.program_name}
                                                             </h2>
                                                         </div>
@@ -62,13 +71,13 @@ export default function Programs({ programs }: ProgramsProps) {
                                                         </p>
 
                                                         {user?.roles?.role_name === 'Accreditor' && (
-                                                            <div className="absolute top-[-8px] right-[-8px] flex size-25 items-center justify-center rounded-xl bg-[#7f1414] px-3 py-1 text-2xl font-semibold text-white shadow-md">
+                                                            <div className="absolute right-[-8px] top-[-8px] flex size-25 items-center justify-center rounded-xl bg-[#7f1414] px-3 py-1 text-2xl font-semibold text-white shadow-md">
                                                                 N/A
                                                             </div>
                                                         )}
 
                                                         <div className="flex items-end justify-end">
-                                                            <p className="w-3/4 w-fit rounded-full border border-[#7f1414]/40 bg-[#7f1414]/20 px-4 py-1 text-right text-sm font-semibold text-[#7f1414]">
+                                                            <p className="w-fit rounded-full border border-[#7f1414]/40 bg-[#7f1414]/20 px-4 py-1 text-right text-sm font-semibold text-[#7f1414]">
                                                                 {program.active_levels.level === 0
                                                                     ? 'Preliminary Survey Visit'
                                                                     : `Accreditation Level ${program.active_levels.level}`}
@@ -82,21 +91,11 @@ export default function Programs({ programs }: ProgramsProps) {
                                 ))}
                             </div>
                         ) : (
-                            <div className="px-8 py-24 text-center">
-                                <div className="mx-auto max-w-md">
-                                    <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-gray-100">
-                                        <svg className="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <h3 className="mb-4 text-2xl font-bold text-gray-900">No Programs Available</h3>
-                                    <p className="text-lg text-gray-500">There are currently no programs under survey. Please check back later.</p>
-                                </div>
+                            <div className="mx-auto my-16 w-full">
+                                <EmptyState
+                                    title="No Programs Available"
+                                    description="There are currently no programs under survey. Please check back later."
+                                />
                             </div>
                         )}
                     </div>
