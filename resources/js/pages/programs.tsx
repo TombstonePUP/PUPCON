@@ -61,7 +61,7 @@ export default function Programs({ programs }: ProgramsProps) {
                                                             <span className="mb-4 inline-block rounded-full bg-[#7f1414]/10 px-4 py-2 text-sm font-semibold text-[#7f1414]">
                                                                 {program.degree_type}
                                                             </span>
-                                                            <h2 className="text-3xl font-bold leading-tight text-[#7f1414] transition-colors duration-200 group-hover:text-[#a01818] md:text-4xl">
+                                                            <h2 className="text-3xl leading-tight font-bold text-[#7f1414] transition-colors duration-200 group-hover:text-[#a01818] md:text-4xl">
                                                                 {program.program_name}
                                                             </h2>
                                                         </div>
@@ -71,7 +71,7 @@ export default function Programs({ programs }: ProgramsProps) {
                                                         </p>
 
                                                         {user?.roles?.role_name === 'Accreditor' && (
-                                                            <div className="absolute right-[-8px] top-[-8px] flex size-25 items-center justify-center rounded-xl bg-[#7f1414] px-3 py-1 text-2xl font-semibold text-white shadow-md">
+                                                            <div className="absolute top-[-8px] right-[-8px] flex size-25 items-center justify-center rounded-xl bg-[#7f1414] px-3 py-1 text-2xl font-semibold text-white shadow-md">
                                                                 N/A
                                                             </div>
                                                         )}
