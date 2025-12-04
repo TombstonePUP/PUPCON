@@ -40,9 +40,9 @@ export default function LoginFormLayout({ children, title, description, classNam
                         <CardContent className="grid items-center justify-center p-0 md:grid-cols-2">
                             <div className="mt-15 flex h-full flex-col p-15">
                                 <div className="grid place-items-center">
-                                    <img className="object-fit h-18" src="images/pupcon-logo.png" alt="Login Banner" />
+                                    <img className="object-fit h-18" src="/images/pupcon-logo.png" alt="app logo" />
                                 </div>
-                                <p className="text-muted-foreground pt-5 pb-15 text-center text-sm">{description}</p>
+                                <p className="text-muted-foreground pt-5 pb-15 text-center text-sm font-medium">{description}</p>
 
                                 {children}
 
