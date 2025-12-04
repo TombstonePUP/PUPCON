@@ -23,6 +23,7 @@ class ManageProgramController extends Controller
         $programs = Programs::with([
                 'latestLevel.Areas',
             ])
+            ->orderBy('is_active', 'desc')
             ->orderBy('program_name', 'asc')
             ->get();
 
@@ -151,6 +152,21 @@ class ManageProgramController extends Controller
             ]);
         }
 
+        /* $program_name = Str::slug($program->program_name, '_');
+        $degree_type = Str::slug($program->degree_type, '_');
+
+        $base_path = 'documents/' . $degree_type . '/' . $program_name;
+
+        $old_folder = Str::slug($program->program_name, '_');
+        $new_folder = Str::slug($validated['program_name'], '_');
+
+        $disk = Storage::disk('public');
+
+        if ($old_folder !== $new_folder && $disk->exists($base_path)) {
+            $new_base_path = 'documents/' . Str::slug($validated['degree_type'], '_') . '/' . $new_folder;
+            $disk->move($base_path, $new_base_path);
+        } */
+
         $program->update([
             'program_name' => $validated['program_name'],
             'degree_type' => $validated['degree_type'],
@@ -165,6 +181,17 @@ class ManageProgramController extends Controller
     public function destroy(Request $request)
     {
         $program = Programs::findOrFail($request->program_id);
+        $programName = $program->program_name;
+
+        $validated = $request->validate([
+            'program_id' => ['required', 'exists:programs,program_id'],
+            'confirmation_text' => ['required', "in:$programName"],
+        ],
+        [
+            'confirmation_text.in' => 'The confirmation text does not match the program name.',
+        ]);
+
+        $program = Programs::findOrFail($validated['program_id']);
         $programName = $program->program_name;
         $program->update(['is_active' => false]);
 

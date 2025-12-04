@@ -33,7 +33,7 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        patch(route('manage.level.update', { program_id: selectedProgram?.program_id}), {
+        patch(route('manage.level.update', { program_id: selectedProgram?.program_id }), {
             onSuccess: () => onClose(),
         });
     };
@@ -71,7 +71,12 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                             </SelectTrigger>
                             <SelectContent>
                                 {programs.map((program) => (
-                                    <SelectItem value={String(program.program_id)}>{program.program_name}</SelectItem>
+                                    <SelectItem value={String(program.program_id)}>
+                                        {program.degree_type.match(/\b[A-Z]/g)}
+                                        { }
+                                        {' in '}
+                                        {program.program_name}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>

@@ -67,6 +67,7 @@ export interface PerProgramUnderSurvey {
     under_survey: boolean;
     program_image_name: string;
     program_image_path: string;
+    is_active: boolean;
     color?: string;
     levels?: AccreditationLevels[];
     latest_level?: AccreditationLevels;

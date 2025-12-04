@@ -21,20 +21,11 @@ class AreasController extends Controller
      */
     public function __invoke(string $program_id, string $area_id)
     {
-        // $program_name = Str::of($program_name)->replace('_', ' ')->title();
-        //
         $program = Programs::findOrFail($program_id)->load([
             'Levels' => function ($query) {
                 $query->where('is_active', true);
             },
         ]);
-        /* $program = Programs::where('program_name', $program_name)->with([
-            'Levels' => function ($query) {
-                $query->where('is_active', true);
-            },
-        ])->firstOrFail(); */
-
-        // $program->program_link = $program_name;
 
         $area = Areas::select('area_id', 'area_name', 'area_number', 'area_description', 'area_image_name', 'area_image_path')
             ->where('area_id', $area_id)
@@ -73,6 +64,8 @@ class AreasController extends Controller
             }
             return $form;
         });
+
+        $area->area_image_path = $area->area_image_path ? Storage::url($area->area_image_path) : null;
 
         return inertia('area', [
             'area' => $area,

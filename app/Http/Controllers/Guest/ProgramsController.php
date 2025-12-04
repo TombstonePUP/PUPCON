@@ -38,30 +38,15 @@ class ProgramsController extends Controller
 
     public function show(string $program_id): Response
     {
-        // $program = Str::of($program_name)->replace('_', ' ')->title();
-        //
         $program = Programs::findOrFail($program_id)->load([
             'Levels' => function ($query) {
-                $query->with('Areas')->where('is_active', true)->orderBy('survey_date', 'desc');
+                $query->with('Areas')->where('is_active', true)->where('remarks', 'Ongoing Survey')->orderBy('survey_date', 'desc');
             },
             'FacultyStaff',
             'Objectives',
             'Gallery',
         ]);
 
-        /* $program = Programs::where('program_name', 'ILIKE', $program)
-            ->with([
-                'Levels' => function ($query) {
-                    $query->with('Areas')->where('is_active', true)->orderBy('survey_date', 'desc');
-                },
-                'FacultyStaff',
-                'Objectives',
-                'Gallery',
-            ])
-            ->firstOrFail(); */
-
-
-        // $program->program_link = $progra->pro
         $program->program_image_path = $program->program_image_path ? Storage::url($program->program_image_path) : null;
 
         $program->FacultyStaff = $program->FacultyStaff->map(function ($faculty) {

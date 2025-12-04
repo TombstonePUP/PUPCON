@@ -6,11 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PerProgramUnderSurvey } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ProgramLevelDialogProps {
     programs: PerProgramUnderSurvey[];
     onClose: () => void;
+    selected_program_id?: number;
 }
 
 interface ProgramLevelForm {
@@ -19,7 +20,7 @@ interface ProgramLevelForm {
     new_level: string;
 }
 
-export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDialogProps) {
+export default function ProgramLevelDialog({ programs, onClose, selected_program_id }: ProgramLevelDialogProps) {
     const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
     const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
     const level = selectedProgram?.latest_level?.level;
@@ -28,6 +29,17 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
         new_level: '',
     });
 
+    useEffect(() => {
+        setSelectedProgramId(selected_program_id ?? null);
+    }, [selected_program_id]);
+
+    useEffect(() => {
+        if (selectedProgramId) {
+            const program = programs.find((p) => p.program_id === selectedProgramId);
+            setData('program_name', program?.program_name ?? '');
+        }
+    }, [selectedProgramId, programs, setData]);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post(route('manage.level.store', { program_id: selectedProgram?.program_id }), {
@@ -35,7 +47,7 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
         });
     };
 
-    const programList = programs.filter((p) => !p.under_survey);
+    const programList = programs.filter((p) => !p.under_survey && p.is_active);
 
     const newLevels = [
         { value: '0', label: 'Preliminary' },
@@ -71,7 +83,7 @@ export default function ProgramLevelDialog({ programs, onClose }: ProgramLevelDi
                             <SelectContent>
                                 {programList.map((program) => (
                                     <SelectItem value={String(program.program_id)}>
-                                        {program.degree_type}
+                                        {program.degree_type.match(/\b[A-Z]/g)}
                                         { }
                                         {' in '}
                                         {program.program_name}

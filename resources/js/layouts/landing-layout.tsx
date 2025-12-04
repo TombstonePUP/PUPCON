@@ -45,7 +45,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
     const underSurveyPrograms = (guest as any)?.programs?.length
         ? (guest as any).programs.map((program: any) => ({
             label: program.program_name,
-            href: `/programs/${program.program_link}`,
+            href: `/programs/${program.program_id}`,
         }))
         : [];
 

@@ -10,7 +10,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, usePoll } from '@inertiajs/react';
-import { BookCheck, CircleSlash, Edit, Folders, NotebookIcon, PlusCircleIcon, Trash2 } from 'lucide-react';
+import { BookCheck, Edit, Folders, NotebookIcon, PlusCircleIcon, Trash2 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -50,12 +50,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         }
     }, [programToStart]);
 
-    const filteredPrograms =
-        programs?.filter((program) => {
-            const matchesSearch = program.program_name.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesDegree = filterDegree === 'all' || program.degree_type === filterDegree;
-            return matchesSearch && matchesDegree;
-        }) || [];
+    const filteredPrograms = role === 'Admin' || role === 'Coordinator' ? programs : programs?.filter((p) => p.is_active) || [];
 
     const handleProgramClick = (program: PerProgramUnderSurvey) => {
         if (program.latest_level) {
@@ -232,10 +227,10 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                         onKeyDown={
                                             isAssigned ? (e) => (e.key === 'Enter' || e.key === ' ') && handleProgramClick(program) : undefined
                                         }
-                                        className={`${role !== 'Admin' && role !== 'Coordinator' ? isAssigned ? 'cursor-pointer' : 'cursor-not-allowed' : 'cursor-pointer'} group`}
+                                        className={`${role !== 'Admin' && role !== 'Coordinator' ? (isAssigned ? 'cursor-pointer' : 'cursor-not-allowed') : 'cursor-pointer'} group`}
                                     >
                                         <div className="relative rounded-xl border border-gray-200 bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-gray-400">
-                                            {(role === 'Admin' || role === 'Coordinator') && (
+                                            {(role === 'Admin' || role === 'Coordinator') && program.is_active && (
                                                 <div className="absolute top-4 right-4 flex h-18 w-18 gap-2">
                                                     <Button
                                                         variant="ghost"
@@ -268,7 +263,9 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                         className="border-0 bg-red-100/50 px-2 py-1 text-xs font-medium text-[#7f1414]"
                                                     >
                                                         {program.latest_level
-                                                            ? `Accreditation Level ${program.latest_level?.level}`
+                                                            ? program.latest_level.level === 0
+                                                                ? 'Preliminary Survey Visit'
+                                                                : `Accreditation Level ${program.latest_level?.level}`
                                                             : `No Current Level`}
                                                     </Badge>
                                                     {program.under_survey && (
@@ -277,6 +274,11 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                                         </Badge>
                                                     )}
                                                 </div>
+                                                {!program.is_active && (
+                                                    <Badge variant="outline" className="border-0 bg-gray-200 text-gray-600">
+                                                        Archived
+                                                    </Badge>
+                                                )}
                                                 {role === 'Admin' || role === 'Coordinator' ? null : isAssigned ? (
                                                     <Badge variant="outline" className="border-0 bg-green-100 text-green-800">
                                                         Assigned
@@ -319,23 +321,27 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                         <DialogHeader>
                             <DialogTitle className="mb-4 text-lg font-medium text-gray-900">No Levels Found</DialogTitle>
                             <DialogDescription className="text-sm text-gray-500">
-                                The program "{programToStart?.degree_type} in {programToStart?.program_name}" has no accreditation levels yet. Do you
-                                want to start one now?
+                                {programToStart?.is_active
+                                    ? `The program "${programToStart?.degree_type} in ${programToStart?.program_name}" has no accreditation levels yet. Do you
+                                want to start one now?`
+                                    : `The program "${programToStart?.degree_type} in ${programToStart?.program_name}" is currently archived, there is no accreditation level to access the program.`}
                             </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>
                             <DialogClose asChild>
                                 <Button variant="outline">Cancel</Button>
                             </DialogClose>
-                            <Button
-                                variant="noborder"
-                                onClick={() => {
-                                    setStartLevelConfirmOpen(false);
-                                    handleAddLevel();
-                                }}
-                            >
-                                Start First Level
-                            </Button>
+                            {programToStart?.is_active && (
+                                <Button
+                                    variant="noborder"
+                                    onClick={() => {
+                                        setStartLevelConfirmOpen(false);
+                                        handleAddLevel();
+                                    }}
+                                >
+                                    Start First Level
+                                </Button>
+                            )}
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
@@ -351,7 +357,11 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     <DeleteProgram program={selectedProgram} onClose={() => setDialogOpen(false)} />
                 )}
                 {dialogOpen && dialogType === 'level' && dialogAction === 'add' && (
-                    <ProgramLevelDialog programs={programs} onClose={() => setDialogOpen(false)} />
+                    <ProgramLevelDialog
+                        programs={programs}
+                        onClose={() => setDialogOpen(false)}
+                        selected_program_id={selectedProgramId || undefined}
+                    />
                 )}
                 {dialogOpen && dialogType === 'level' && dialogAction === 'end' && (
                     <EndSurveyDialog programs={underSurvey} onClose={() => setDialogOpen(false)} />

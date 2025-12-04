@@ -72,13 +72,11 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
 
                         <h1 className="text-[1.7vw] leading-[1.7vw] font-bold text-white">{area.area_name}</h1>
                     </div>
-                    {/* {area.area_image_path ? (
+                    {area.area_image_path ? (
                         <img className="w-[45%] rounded-xl object-cover" src={area.area_image_path} />
                     ) : (
                         <img className="w-[45%] rounded-xl object-cover" src="/images/placeholder.png" />
-                    )} */}
-
-                    <img className="w-[45%] rounded-xl object-cover" src="/images/placeholder.png" />
+                    )}
                 </div>
                 <div className="flex justify-center">
                     <p className="w-[68%] rounded-[1vw] border border-[#7f1414]/25 bg-white px-[3vw] py-[1.5vw] text-justify indent-[2vw] transition duration-300 hover:border-[#7f1414]">

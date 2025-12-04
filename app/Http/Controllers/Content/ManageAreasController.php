@@ -40,8 +40,7 @@ class ManageAreasController extends Controller
         );
 
         // $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::with
-            ([
+        $program = Programs::with([
                 'Levels' => function ($query) use ($request) {
                     $query->where('accreditation_level_id', $request->level_id);
                 },
@@ -110,15 +109,18 @@ class ManageAreasController extends Controller
         );
 
         $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::findOrFail($request->program_id)
-            ->with([
-                'Levels' => function ($query) use ($request) {
-                    $query->where('accreditation_level_id', $request->level_id);
-                },
-            ])
+        // Get program
+        $program = Programs::findOrFail($request->program_id);
+
+        // Get the specific level (never null)
+        $level = $program->Levels()
+            ->where('accreditation_level_id', $request->level_id)
             ->firstOrFail();
 
-        $area = $program->Levels->first()->Areas()->where('area_id', $validated['area_id'])->firstOrFail();
+        // Get area
+        $area = $level->Areas()
+            ->where('area_id', $validated['area_id'])
+            ->firstOrFail();
 
         $base_path = Str::slug($program->program_name, '_') . '/level_' . $program->Levels->first()->level;
 
@@ -229,5 +231,4 @@ class ManageAreasController extends Controller
             ->with('title', 'Area Deleted')
             ->with('message', 'Area "' . $areaName . '" has been deleted successfully.');
     }
-
 }

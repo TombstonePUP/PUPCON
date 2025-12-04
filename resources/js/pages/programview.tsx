@@ -404,7 +404,7 @@ export default function Programs({ program }: PerProgramProps) {
                                         {/* Objective Header */}
                                         <div className="relative">
                                             <div className="mb-2 inline-block rounded-full bg-gradient-to-r from-[#7f1414] to-[#a11d1d] px-6 py-2 transition-all duration-300">
-                                                <h3 className="text-sm font-bold tracking-wider text-white uppercase">Objective {index + 1}</h3>
+                                                <h3 className="text-sm font-bold tracking-wider text-white uppercase">{objective.objective_title}</h3>
                                             </div>
                                         </div>
 

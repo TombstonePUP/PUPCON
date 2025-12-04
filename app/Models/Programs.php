@@ -86,11 +86,11 @@ class Programs extends Model
             ->latest('accreditation_level_id'); // Used as a tie-breaker for rows with the same survey_date
     }
 
-    /* public function activeLevels()
+    public function activeLevels()
     {
         return $this->hasOne(AccreditationLevels::class, 'program_id', 'program_id')
             ->with('Areas')
             ->where('is_active', true)
             ->orderBy('survey_date', 'desc');
-    } */
+    }
 }
