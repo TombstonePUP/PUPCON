@@ -85,7 +85,8 @@ class HandleInertiaRequests extends Middleware
 
         if ($role === 'Admin' || $role === 'Coordinator') {
             $programs = Programs::select('program_name', 'program_id')
-                ->whereHas('latestLevel')
+                ->where('is_active', true)    
+            ->whereHas('latestLevel')
                 ->with('latestLevel')
                 ->get();
         } elseif ($role === 'Chairman') {
