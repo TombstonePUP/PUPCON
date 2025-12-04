@@ -3,6 +3,7 @@ import FacultyCard from '@/components/ui/facultyCard';
 import Layout from '@/layouts/landing-layout';
 import { ContentPages, FacultyStaff } from '@/types/content';
 import { Head } from '@inertiajs/react';
+import { Construction } from 'lucide-react';
 
 interface FacultyPageProps {
     faculties: FacultyStaff[];
@@ -10,6 +11,14 @@ interface FacultyPageProps {
 }
 
 export default function Faculty({ faculties, page }: FacultyPageProps) {
+
+    const EmptyState = ({ title, description }: { title: string; description: string }) => (
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center col-span-full">
+            <Construction className="mb-4 h-16 w-16 text-gray-400" />
+            <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
+            <p className="text-sm text-gray-500">{description}</p>
+        </div>
+    );
 
     console.log(faculties);
     return (
@@ -61,19 +70,27 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
                     </div>
                 </section>
 
-                <div className="grid gap-3 md:grid-cols-5">
-                    {faculties?.map((f) => (
-                        <FacultyCard
-                            key={f.faculty_staff_id}
-                            faculty={{
-                                id: f.faculty_staff_id,
-                                name: `${f.first_name} ${f.middle_name ?? ''} ${f.last_name}`,
-                                photo: f.image_path || '/images/placeholder.png',
-                                position: f.status
-                            }}
+                <div className="grid gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+                    {faculties.length > 0 ? (
+                        faculties.map((f) => (
+                            <FacultyCard
+                                key={f.faculty_staff_id}
+                                faculty={{
+                                    id: f.faculty_staff_id,
+                                    name: `${f.first_name} ${f.middle_name ?? ''} ${f.last_name}`,
+                                    photo: f.image_path || '/images/placeholder.png',
+                                    position: f.status
+                                }}
+                            />
+                        ))
+                    ) : (
+                        <EmptyState
+                            title="No Faculty or Staff Available"
+                            description="There are currently no faculty or staff members to display. Please check again later."
                         />
-                    ))}
+                    )}
                 </div>
+
             </div>
         </Layout>
     );

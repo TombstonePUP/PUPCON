@@ -4,13 +4,14 @@ import Layout from '@/layouts/landing-layout';
 import FacultyCard from '@/components/ui/facultyCard';
 import { Head, Link } from '@inertiajs/react';
 import { Administration, ContentPages } from '@/types/content';
+import { Construction } from 'lucide-react';
 
 interface AdministrationPageProps {
     officials: Administration[];
-    page:ContentPages;
+    page: ContentPages;
 }
 
-export default function AdministrationPage({officials, page}: AdministrationPageProps) {
+export default function AdministrationPage({ officials, page }: AdministrationPageProps) {
     const quickLinks = [
         { label: 'Vision, Mission & Goals', href: '/about/vision-mission-goals' },
         { label: 'History', href: '/about/history' },
@@ -25,23 +26,48 @@ export default function AdministrationPage({officials, page}: AdministrationPage
         { label: 'Campus Officials', href: 'campus' },
     ];
 
-    const renderOfficials = (officials: Administration[]) => (
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-            {officials?.map((a) => (
-                <div key={a.administration_id} className="transform scale-95 transition-all duration-300 hover:scale-100 h-full flex">
-                    <FacultyCard
-                        className="h-full flex-1"
-                        faculty={{
-                            id: a.administration_id,
-                            name: `${a.first_name} ${a.middle_name ?? ''} ${a.last_name} ${a.suffix ?? ''}`.trim(),
-                            photo: a.profile_picture_path || '/images/placeholder.png',
-                            position: a.position,
-                        }}
-                    />
-                </div>
-            ))}
+    // Fallback Empty State Component
+    const EmptyState = ({ title, description }: { title: string; description: string }) => (
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
+            <Construction className="mb-4 h-16 w-16 text-gray-400" />
+            <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
+            <p className="text-sm text-gray-500">{description}</p>
         </div>
     );
+
+
+    const renderOfficials = (officials: Administration[]) => {
+        if (!officials || officials.length === 0) {
+            return (
+                <EmptyState
+                    title="No Officials Found"
+                    description="There are currently no officials available for this section."
+                />
+            );
+        }
+
+        return (
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+                {officials.map((a) => (
+                    <div
+                        key={a.administration_id}
+                        className="transform scale-95 transition-all duration-300 hover:scale-100 h-full flex"
+                    >
+                        <FacultyCard
+                            className="h-full flex-1"
+                            faculty={{
+                                id: a.administration_id,
+                                name: `${a.first_name} ${a.middle_name ?? ''} ${a.last_name} ${a.suffix ?? ''}`.trim(),
+                                photo: a.profile_picture_path || '/images/placeholder.png',
+                                position: a.position,
+                            }}
+                        />
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
 
     const campus_officials = officials.filter((o) => o.type === 'Campus');
     const university_officials = officials.filter((o) => o.type === 'University');

@@ -50,10 +50,11 @@ const Certificate: React.FC<{ certificate: ContentPages }> = ({ certificate }) =
                         ]}
                     />
 
-                    <div className="flex min-h-[80vh] w-full justify-center bg-gray-50 py-16">
-                        <div className="w-full max-w-[1100px]">
-                            <EmptyState title="No Certificate Available" description="The certificate of authenticity has not been uploaded yet." />
-                        </div>
+                    <div className="mx-auto my-16 w-[75%]">
+                        <EmptyState
+                            title="No Certificate Available"
+                            description="The certificate of authenticity has not been uploaded yet."
+                        />
                     </div>
                 </div>
             </Layout>
@@ -68,7 +69,7 @@ const Certificate: React.FC<{ certificate: ContentPages }> = ({ certificate }) =
                 <div
                     className="relative flex w-full flex-col items-center bg-cover bg-center"
                     style={{
-                        backgroundImage: `url('/images/campus/ground.jpg')`, 
+                        backgroundImage: `url('/images/campus/ground.jpg')`,
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-b from-[rgba(128,0,0,0.64)] to-[rgb(255,255,255)]"></div>
