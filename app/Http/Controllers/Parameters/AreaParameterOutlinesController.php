@@ -151,7 +151,7 @@ class AreaParameterOutlinesController extends Controller
         $parameterOutline->parameter_outline_category_id = $cateogry;
         $parameterOutline->outline_number = $validated['benchmark_number'] ?? $parameterOutline->outline_number;
         $parameterOutline->outline_description = $validated['benchmark_description'] ?? $parameterOutline->outline_description;
-        $parameterOutline->container = $validated['container'] ?? $parameterOutline->container;
+        $parameterOutline->container = $validated['is_container'] ?? $parameterOutline->container;
         $parameterOutline->save();
 
         return redirect()->back()

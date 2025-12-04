@@ -31,7 +31,7 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
     const { data, setData, patch, processing, errors, reset } = useForm<EditBenchmarkForm>({
         benchmark_number: outline.outline_number || '',
         benchmark_description: outline.outline_description || '',
-        benchmark_category: outline.outline_category || 0,
+        benchmark_category: outline.parameter_outline_category_id || 0,
         is_container: outline.is_container || false,
     });
 
@@ -102,7 +102,7 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                             <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Category</Label>
                             <Select
                                 value={data.benchmark_category ? String(data.benchmark_category) : ''}
-                                onValueChange={(value) => setData('benchmark_category', value)}
+                                onValueChange={(value) => setData('benchmark_category', Number(value))}
                                 disabled={processing}
                             >
                                 <SelectTrigger className="w-full" tabIndex={3}>
@@ -125,18 +125,21 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                             </Select>
                             <InputError message={errors.benchmark_category} className="mt-2" />
                         </div>
-                        <div className="flex items-center gap-3">
-                            <Switch
-                                id="is-container-mode"
-                                checked={data.is_container}
-                                onCheckedChange={(checked) => setData('is_container', checked)}
-                            />
-                            <Label
-                                htmlFor="is-container-mode"
-                                className="block text-sm leading-none font-medium text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                                Benchmark Container
-                            </Label>
+                        <div>
+                            <div className="flex items-center gap-3">
+                                <Switch
+                                    id="is-container-mode"
+                                    checked={data.is_container}
+                                    onCheckedChange={(checked) => setData('is_container', checked)}
+                                />
+                                <Label
+                                    htmlFor="is-container-mode"
+                                    className="block text-sm leading-none font-medium text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    Benchmark Container
+                                </Label>
+                            </div>
+                            <InputError message={errors.is_container} className="mt-2" />
                         </div>
                         <DialogFooter className="mt-4">
                             <DialogClose asChild>

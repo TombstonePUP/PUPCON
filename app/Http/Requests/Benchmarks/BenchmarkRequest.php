@@ -29,20 +29,20 @@ class BenchmarkRequest extends FormRequest
                 'integer',
             ],
             'benchmark_category' => [
-                Rule::requiredIf(fn () => $this->method() === 'POST'),
+                'required',
                 'integer',
             ],
             'benchmark_number' => [
-                Rule::requiredIf(fn () => $this->method() === 'POST'),
+                'required',
                 'string',
                 'regex:/^\d+(?:\.\d+)*$/',
             ],
             'benchmark_description' => [
-                Rule::requiredIf(fn () => $this->method() === 'POST'),
+                'required',
                 'string',
             ],
             'is_container' => [
-                Rule::requiredIf(fn () => $this->method() === 'POST'),
+                'required',
                 'boolean',
             ],
         ];
