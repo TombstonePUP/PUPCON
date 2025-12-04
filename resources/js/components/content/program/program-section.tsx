@@ -326,6 +326,10 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
             route('manage.program.update.content', {
                 program_id: program.program_id,
             }),
+            {
+                preserveScroll: true,
+                preserveState: true,
+            },
         );
     };
 
@@ -475,10 +479,11 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                             <div
                                                 key={objective.program_objective_id}
                                                 onClick={() => setSelectedObjectiveId(objective.program_objective_id)}
-                                                className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${objective.program_objective_id === selectedObjectiveId
-                                                    ? 'bg-[#7f1414]/4 text-[#7f1414]'
-                                                    : 'text-gray-700 hover:bg-[#7f1414]/4'
-                                                    }`}
+                                                className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${
+                                                    objective.program_objective_id === selectedObjectiveId
+                                                        ? 'bg-[#7f1414]/4 text-[#7f1414]'
+                                                        : 'text-gray-700 hover:bg-[#7f1414]/4'
+                                                }`}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     <span className="truncate text-sm">{objective.objective_title}</span>
@@ -574,10 +579,11 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                             <div
                                                 key={item.program_gallery_id}
                                                 onClick={() => setSelectedGalleryId(item.program_gallery_id)}
-                                                className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${item.program_gallery_id === selectedGalleryId
-                                                    ? 'bg-[#7f1414]/4 text-[#7f1414]'
-                                                    : 'text-gray-700 hover:bg-[#7f1414]/4'
-                                                    }`}
+                                                className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${
+                                                    item.program_gallery_id === selectedGalleryId
+                                                        ? 'bg-[#7f1414]/4 text-[#7f1414]'
+                                                        : 'text-gray-700 hover:bg-[#7f1414]/4'
+                                                }`}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     <span className="truncate text-sm">{item.caption}</span>
