@@ -1,5 +1,5 @@
 import DocumentExhibitDialog from '@/components/dialogs/exhibits/document/document-exhibit-dialog';
-import ExhibitContainerDialog from '@/components/dialogs/exhibits/exhibit-container-dialog';
+import ExhibitContainerDrawer from '@/components/dialogs/exhibits/exhibit-container-dialog';
 import { RenderExhibitDialog } from '@/components/dialogs/exhibits/exihibt-dialog-renderer';
 import ExhibitOutlineDialogRenderer from '@/components/dialogs/exhibits/outline/exhibit-outline-dialog-renderer';
 import { Button } from '@/components/ui/button';
@@ -77,7 +77,7 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                 {/* --- Exhibits Grid --- */}
                 <div className="flex gap-6">
                     {exhibits.length > 0 ? (
-                        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
                             {exhibits.map((exhibit, index) => {
                                 const handleCardClick = () => {
                                     if (exhibit.container) {
@@ -196,7 +196,9 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
             {dialog.type === 'exhibit' && dialog.action && (
                 <RenderExhibitDialog type={dialog.action} exhibit={dialog.exhibit} onClose={closeDialog} />
             )}
-            {dialog.type === 'outline' && dialog.action === 'edit' && <ExhibitContainerDialog exhibit={dialog.exhibit} onClose={closeDialog} />}
+            {dialog.type === 'outline' && dialog.action === 'edit' && (
+                <ExhibitContainerDrawer exhibit={dialog.exhibit} onClose={closeDialog} />
+            )}
             {dialog.type === 'document' && dialog.action !== 'view' && dialog.action !== 'delete' && (
                 <DocumentExhibitDialog type={dialog.action} exhibit={dialog.exhibit} onClose={closeDialog} />
             )}

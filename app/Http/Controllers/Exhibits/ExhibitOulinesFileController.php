@@ -38,7 +38,9 @@ class ExhibitOulinesFileController extends Controller
             'file.mimes' => 'The file must be a file of type: pdf.',
         ]);
 
-        $outline = ExhibitOutlines::find($validated['outline_id'] ?? null);
+        $outline = isset($validated['outline_id'])
+            ? ExhibitOutlines::find($validated['outline_id'])
+            : null;
         $exhibit = Exhibits::findOrFail($validated['exhibit_id']);
         $exhibit_name = Str::slug($exhibit->exhibit_name, '_');
         $user = Auth::user();
@@ -46,7 +48,7 @@ class ExhibitOulinesFileController extends Controller
             ? FileStatus::where('status_name', 'Approved')->first()->file_status_id
             : FileStatus::where('status_name', 'Pending')->first()->file_status_id;
 
-        $existing_file = $outline->ExhibitFiles ?? null;
+        $existing_file = $outline ? $outline->ExhibitFiles()->first() : null;
         $old_file_path = $existing_file ? $existing_file->file_path : null;
 
         $outline_slug = Str::slug($validated['outline_description'], '_');
@@ -64,9 +66,10 @@ class ExhibitOulinesFileController extends Controller
                 'category' => $validated['category'],
             ]);
         } else {
-            $outline->outline_description = $validated['outline_description'];
-            $outline->category = $validated['category'];
-            $outline->save();
+            $outline->update([
+                'outline_description' => $validated['outline_description'],
+                'category' => $validated['category'],
+            ]);
         }
 
         if ($new_file_upload) {
@@ -78,15 +81,6 @@ class ExhibitOulinesFileController extends Controller
             $activityLog->activity = $existing_file ? 'Update' : 'Upload';
         }
 
-        if (!$new_file_upload && $existing_file) {
-            if ($old_file_path !== $file_path) {
-                if (Storage::disk('public')->exists($old_file_path)) {
-                    Storage::disk('public')->move($old_file_path, $file_path);
-                }
-                $activityLog->activity = 'Update';
-            }
-        }
-
         if ($existing_file) {
             $exhibit_file = $existing_file;
         } else {
@@ -94,12 +88,31 @@ class ExhibitOulinesFileController extends Controller
             $exhibit_file->exhibit_outline_id = $outline->exhibit_outline_id;
         }
 
-        $exhibit_file->file_name = $file_name;
-        $exhibit_file->file_path = $file_path;
-        $exhibit_file->uploaded_by = $user->user_id;
-        $exhibit_file->uploaded_at = now();
-        $exhibit_file->file_status_id = $file_status;
-        $exhibit_file->save();
+        if ($new_file_upload) {
+            $exhibit_file->file_name = $file_name;
+            $exhibit_file->file_path = $file_path;
+        } elseif ($existing_file) {
+            if (Storage::disk('public')->exists($old_file_path) && $old_file_path !== $file_path) {
+                if (Storage::disk('public')->move($old_file_path, $file_path)) {
+                    $exhibit_file->file_name = $file_name;
+                    $exhibit_file->file_path = $file_path;
+                    $activityLog->activity = 'Update';
+                } else {
+                    $exhibit_file->file_name = $existing_file->file_name;
+                    $exhibit_file->file_path = $old_file_path;
+                }
+            } else {
+                $exhibit_file->file_name = $existing_file->file_name;
+                $exhibit_file->file_path = $old_file_path;
+            }
+        }
+
+        if (!empty($exhibit_file->file_path)) {
+            $exhibit_file->uploaded_by = $user->user_id;
+            $exhibit_file->uploaded_at = now();
+            $exhibit_file->file_status_id = $file_status;
+            $exhibit_file->save();
+        }
 
         return redirect()->back()
             ->with('type', 'success')

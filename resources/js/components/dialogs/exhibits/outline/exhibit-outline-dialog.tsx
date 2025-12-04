@@ -3,8 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Exhibits } from '@/types/exhibits';
+import { ExhibitOutlines, Exhibits } from '@/types/exhibits';
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -20,16 +19,29 @@ interface ExhibitOutlineForm {
 
 interface ExhibitOutlineDialogProps {
     category?: string[];
-    outline?: ExhibitOutlineForm | null;
+    outline?: ExhibitOutlines | null;
     exhibit?: Exhibits | null;
     type: 'add' | 'edit';
-    onClose: (updated?: any) => void;
+    onClose: () => void;
+    onUpdate?: (outline: ExhibitOutlines) => void;
 }
 
-export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, category }: ExhibitOutlineDialogProps) {
+function getUpdatedFilePath(outline: ExhibitOutlines | null, exhibit: Exhibits | null, category: string, description: string) {
+    if (!outline?.exhibit_files || !exhibit) return null;
+
+    const slugify = (text: string) => text.toLowerCase().trim().replace(/\s+/g, '_'); // lowercase + replace spaces with _
+
+    const exhibitNameSlug = slugify(exhibit.exhibit_name);
+    const categorySlug = slugify(category);
+    const descriptionSlug = slugify(description);
+
+    return `/storage/exhibits/${exhibitNameSlug}/${categorySlug}/${descriptionSlug}.pdf`;
+}
+
+export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, onUpdate }: ExhibitOutlineDialogProps) {
     const [isUploading, setIsUploading] = useState(false);
     const { data, setData, post, errors, processing, reset } = useForm<ExhibitOutlineForm>({
-        outline_id: outline?.outline_id || undefined,
+        outline_id: outline?.exhibit_outline_id || undefined,
         category: outline?.category || '',
         exhibit_id: outline?.exhibit_id || exhibit?.exhibit_id || 0,
         outline_description: outline?.outline_description || '',
@@ -55,12 +67,32 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                         });
                     }
                 },
-                onSuccess: (page) => {
-                    toast.dismiss('uploading');
+                onSuccess: () => {
                     setIsUploading(false);
-                    const updated = page?.props?.updatedOutline ?? null;
+                    const updatedFilePath = data.file
+                        ? URL.createObjectURL(data.file) // new uploaded file
+                        : getUpdatedFilePath(outline ?? null, exhibit ?? null, data.category, data.outline_description); // moved file path
+                    const outlineToUpdate: ExhibitOutlines = {
+                        exhibit_outline_id: data.outline_id || Date.now(),
+                        category: data.category,
+                        outline_description: data.outline_description,
+                        exhibit_files: data.file
+                            ? {
+                                file_name: data.file.name,
+                                file_path: URL.createObjectURL(data.file),
+                            }
+                            : {
+                                file_name: data.outline_description,
+                                file_path: updatedFilePath || '',
+                            },
+                        exhibit_id: data.exhibit_id,
+                    };
+
+                    console.log('outlineToUpdate: ', outlineToUpdate);
+                    if (onUpdate) onUpdate(outlineToUpdate);
+                    console.log(data);
                     reset();
-                    onClose(updated);
+                    onClose();
                 },
 
                 onError: (errors) => {
@@ -99,9 +131,8 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                         <Label className="mb-2 w-full text-left text-sm font-medium text-gray-700">Upload PDF File</Label>
                         {!data.file ? (
                             <label
-                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${
-                                    isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
-                                }`}
+                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
+                                    }`}
                             >
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg
@@ -137,9 +168,8 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                             </label>
                         ) : (
                             <div
-                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${
-                                    isUploading ? 'pointer-events-none opacity-70' : ''
-                                }`}
+                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : ''
+                                    }`}
                             >
                                 <span className="text-sm font-semibold text-gray-700">{data.file.name}</span>
                                 <Button
@@ -160,19 +190,15 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                         <div className="space-y-2">
                             <Label className="mb-2 block text-sm font-medium text-gray-700">Category</Label>
 
-                            <Select value={data.category} onValueChange={(value) => setData('category', value)} disabled={isUploading || processing}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select category" />
-                                </SelectTrigger>
-
-                                <SelectContent>
-                                    {category.map((item, index) => (
-                                        <SelectItem key={index} value={item}>
-                                            {item}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <input
+                                type="text"
+                                id="category"
+                                value={data.category}
+                                onChange={(e) => setData({ ...data, category: e.target.value })}
+                                placeholder="Enter category"
+                                disabled={isUploading || processing}
+                                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-1 focus:outline-none sm:text-sm"
+                            />
 
                             <InputError message={errors.category} />
                         </div>

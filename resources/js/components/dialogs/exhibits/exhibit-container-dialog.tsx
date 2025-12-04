@@ -4,7 +4,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { ExhibitOutlines, Exhibits } from '@/types/exhibits';
 import { EditIcon, Eye, FolderOpen, Plus, Trash2Icon, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface ExhibitContainerDialogProps {
     exhibit: Exhibits;
@@ -17,13 +17,12 @@ const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, clas
     </button>
 );
 
-export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitContainerDialogProps) {
+export default function ExhibitContainerDrawer({ exhibit, onClose }: ExhibitContainerDialogProps) {
     const [outlines, setOutlines] = useState<ExhibitOutlines[]>(exhibit.exhibit_outlines || []);
-    const [category, setCategory] = useState<string[]>(() => Array.from(new Set(outlines.map((outline) => outline.category))));
+    const [category, setCategory] = useState<string[]>(() => Array.from(new Set(outlines.map((o) => o.category))));
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const filteredOutlines: ExhibitOutlines[] = selectedCategory ? outlines.filter((outline) => outline.category === selectedCategory) : [];
 
-    // usePoll(1000);
+    const filteredOutlines = selectedCategory ? outlines.filter((o) => o.category === selectedCategory) : [];
 
     const [dialog, setDialog] = useState<{
         type: 'outline' | null;
@@ -35,35 +34,31 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
         setDialog({ type, action, outline });
     };
 
-    const closeDialog = (updated?: ExhibitOutlines | ExhibitOutlines[] | null) => {
-        // Always close dialog
-        setDialog({ type: null, action: null, outline: null });
-
-        if (!updated) return;
-
-        // If dialog returns an updated array: replace all
-        if (Array.isArray(updated)) {
-            setOutlines(updated);
-            setCategory(Array.from(new Set(updated.map((o) => o.category))));
-            return;
+    // Add a new outline to the state
+    const handleAddOutline = (newOutline: ExhibitOutlines) => {
+        setOutlines((prev) => [...prev, newOutline]);
+        if (!category.includes(newOutline.category)) {
+            setCategory((prev) => [...prev, newOutline.category]);
         }
-
-        // If dialog returns a single outline (add or update)
-        setOutlines((prev) => {
-            const exists = prev.some((o) => o.id === updated.id);
-
-            const merged = exists ? prev.map((o) => (o.id === updated.id ? updated : o)) : [...prev, updated]; // append new outline
-
-            setCategory(Array.from(new Set(merged.map((o) => o.category))));
-            return merged;
-        });
     };
 
-    useEffect(() => {
-        setOutlines(exhibit.exhibit_outlines || []);
-        setCategory(Array.from(new Set((exhibit.exhibit_outlines || []).map((outline) => outline.category))));
-    }, [exhibit.exhibit_outlines]);
-    console.log(category);
+    // Edit an existing outline in the state
+    const handleEditOutline = (updatedOutline: ExhibitOutlines) => {
+        setOutlines((prev) => prev.map((o) => (o.exhibit_outline_id === updatedOutline.exhibit_outline_id ? updatedOutline : o)));
+        if (!category.includes(updatedOutline.category)) {
+            setCategory((prev) => [...prev, updatedOutline.category]);
+        }
+    };
+
+    // Delete an outline from the state
+    const handleDeleteOutline = (deletedOutlineId: number) => {
+        setOutlines((prev) => prev.filter((o) => o.exhibit_outline_id !== deletedOutlineId));
+    };
+
+    // Pure dialog closer
+    const closeDialog = () => {
+        setDialog({ type: null, action: null, outline: null });
+    };
 
     return (
         <>
@@ -97,10 +92,10 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
                             <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-6">
                                 <h4 className="mb-3 text-xs text-gray-500">Select a category</h4>
                                 <div className="space-y-1">
-                                    {category?.map((cat) => (
+                                    {category.map((cat) => (
                                         <div
-                                            className={`group flex cursor-pointer items-center justify-between rounded-md ${cat === selectedCategory ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'} p-2 px-4 transition-colors`}
                                             key={cat}
+                                            className={`group flex cursor-pointer items-center justify-between rounded-md ${cat === selectedCategory ? 'bg-[#7f1414]/4' : 'text-gray-700 hover:bg-gray-100'} p-2 px-4 transition-colors`}
                                             onClick={() => setSelectedCategory(cat)}
                                         >
                                             <span className="truncate text-sm font-normal text-red-900">{cat}</span>
@@ -126,31 +121,20 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
                                             ) : (
                                                 filteredOutlines.map((outline) => (
                                                     <div
+                                                        key={outline.exhibit_outline_id}
                                                         className="group flex cursor-pointer items-start justify-between rounded-md border border-gray-100 bg-white p-3 px-6 transition-all hover:border-red-200"
-                                                        key={outline.id}
-                                                       
                                                     >
                                                         <div>
                                                             <span className="text-sm font-medium text-gray-900">{outline.outline_description}</span>
                                                         </div>
                                                         <div className="flex shrink-0 items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
-                                                            <ActionButton
-                                                                className="cursor-pointer rounded-md text-gray-200 hover:bg-red-50 hover:text-gray-700"
-                                                                onClick={() => openDialog('outline', 'view', outline)}
-                                                            >
+                                                            <ActionButton onClick={() => openDialog('outline', 'view', outline)}>
                                                                 <Eye className="h-4 w-4" />
                                                             </ActionButton>
-                                                            <ActionButton
-                                                                className="cursor-pointer rounded-md text-gray-200 hover:bg-red-50 hover:text-gray-700"
-                                                                onClick={() => openDialog('outline', 'edit', outline)}
-                                                            >
+                                                            <ActionButton onClick={() => openDialog('outline', 'edit', outline)}>
                                                                 <EditIcon className="h-4 w-4" />
                                                             </ActionButton>
-
-                                                            <ActionButton
-                                                                className="cursor-pointer rounded-md text-gray-200 hover:bg-red-50 hover:text-red-700"
-                                                                onClick={() => openDialog('outline', 'delete', outline)}
-                                                            >
+                                                            <ActionButton onClick={() => openDialog('outline', 'delete', outline)}>
                                                                 <Trash2Icon className="h-4 w-4" />
                                                             </ActionButton>
                                                         </div>
@@ -163,6 +147,7 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
                             </div>
                         </div>
                     )}
+
                     <DrawerFooter className="pr-0">
                         <div className="flex w-full items-center justify-end space-x-2">
                             {outlines.length > 0 && (
@@ -178,6 +163,7 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
+
             {dialog.type === 'outline' && (
                 <ExhibitOutlineDialogRenderer
                     type={dialog.action}
@@ -185,6 +171,9 @@ export default function ExhibitContainerDialog({ exhibit, onClose }: ExhibitCont
                     outline={dialog.outline || null}
                     onClose={closeDialog}
                     category={category}
+                    onAdd={handleAddOutline}
+                    onEdit={handleEditOutline}
+                    onDelete={handleDeleteOutline}
                 />
             )}
         </>

@@ -7,7 +7,6 @@ export interface Exhibits {
     image_path: string;
     container: boolean;
     exhibit_outlines?: ExhibitOutlines[];
-    exhibit_files?: ExhibitFiles;
 }
 
 export interface ExhibitOutlines {
