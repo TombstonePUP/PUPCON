@@ -3,7 +3,7 @@ import useFacebookFeed from '@/hooks/useFacebookFeed';
 import Layout from '@/layouts/landing-layout';
 import { CampusGallery, ContentPages } from '@/types/content';
 import { Head } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, Image, ImageIcon, MapPin, Play, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Image as ImageIconComponent, MapPin, Play, X } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
@@ -157,7 +157,7 @@ const SafeImage = React.memo(
                         {placeholderType === 'logo' ? (
                             <span className="text-lg font-semibold text-[#7f1414]">PUP</span>
                         ) : (
-                            <ImageIcon className="h-15 w-15 text-gray-300" />
+                            <ImageIconComponent className="h-15 w-15 text-gray-300" />
                         )}
                     </div>
                 ) : shouldLoad ? (
@@ -195,7 +195,7 @@ const SimpleCarousel = React.memo(({ images }: { images: string[] }) => {
 
         const interval = setInterval(() => {
             setCurrent((prev) => (prev + 1) % images.length);
-        }, 4000);
+        }, 9000);
 
         return () => clearInterval(interval);
     }, [images]);
@@ -206,7 +206,7 @@ const SimpleCarousel = React.memo(({ images }: { images: string[] }) => {
                 <Empty>
                     <EmptyHeader>
                         <EmptyMedia variant="icon">
-                            <Image className="h-50 w-50 text-gray-400" />
+                            <ImageIconComponent className="h-50 w-50 text-gray-400" />
                         </EmptyMedia>
                         <EmptyTitle>
                             Content Not Available
@@ -470,6 +470,11 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
     }, []);
 
     const carousel_paths = carousel_images.map((img) => img.image_path);
+    // console.log(carousel_images[0].image_path);
+    // console.log(carousel_images);
+
+
+
 
     return (
         <>
@@ -484,7 +489,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                     ref={heroRef}
                     className={`relative h-[70vw] w-full overflow-hidden transition-opacity duration-500 lg:h-[60vh] ${isHeroInView ? 'opacity-100' : 'opacity-0'}`}
                 >
-                {/*<SimpleCarousel images={carousel_paths} />*/}
+                    <SimpleCarousel images={carousel_paths} />
 
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#800000]/100 to-transparent"></div>

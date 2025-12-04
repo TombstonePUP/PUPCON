@@ -64,7 +64,7 @@ export function CampusGalleryDialog({...props}: CampusGalleryDialogProps) {
                                 : 'Fill out the details below to add a new Campus Gallery.'}
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="max-h-[70vh] overflow-y-auto pr-2">
+                    <div className="max-h-[70vh] overflow-y-auto flex flex-col gap-4">
                         <div>
                             <Label className="mb-2 block text-sm font-medium text-gray-700">Gallery Photo</Label>
                             {!data.previewUrl ? (
@@ -135,7 +135,6 @@ export function CampusGalleryDialog({...props}: CampusGalleryDialogProps) {
                                 placeholder="Enter Gallery Description/Caption"
                                 value={data.description}
                                 onChange={(e) => setData({ ...data, description: e.target.value })}
-                                autoFocus
                             />
                         </div>
                     </div>
