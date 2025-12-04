@@ -18,15 +18,15 @@ class ManageExhibitsController extends Controller
     public function index()
     {
         $exhibits = Exhibits::with(['ExhibitOutlines.ExhibitFiles'])->get();
-        $exhibits = $exhibits->map(function($exhibit) {
-            if($exhibit->image_path) {
+        $exhibits = $exhibits->map(function ($exhibit) {
+            if ($exhibit->image_path) {
                 $exhibit->image_path = Storage::url($exhibit->image_path);
             }
             return $exhibit;
         });
-        $exhibits->map(function($exhibit) {
-            $exhibit->ExhibitOutlines->map(function($outline) {
-                if($outline->ExhibitFiles->file_path) {
+        $exhibits->map(function ($exhibit) {
+            $exhibit->ExhibitOutlines->map(function ($outline) {
+                if ($outline->ExhibitFiles->file_path) {
                     $outline->ExhibitFiles->file_path = Storage::url($outline->ExhibitFiles->file_path);
                 }
                 return $outline;
@@ -34,7 +34,7 @@ class ManageExhibitsController extends Controller
             return $exhibit;
         });
 
-        return Inertia::render('document/exhibits',[
+        return Inertia::render('document/exhibits', [
             'exhibits' => $exhibits,
         ]);
     }
@@ -42,28 +42,46 @@ class ManageExhibitsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function store(Request $request)
+    public function saveExhibit(Request $request)
     {
         $validated = $request->validate([
+            'exhibit_id' => ['nullable', 'integer', 'exists:exhibits,exhibit_id'],
             'exhibit_name' => ['required', 'string'],
             'image' => ['nullable', 'image', 'max:5120', 'mimes:jpg,jpeg,png'],
             'container' => ['required', 'boolean'],
         ]);
 
-        $exhibit = new Exhibits();
-
         $user = Auth::user();
 
-        if(isset($validated['image'])){
+        // Determine if this is an update or create
+        $isUpdate = isset($validated['exhibit_id']);
+
+        if ($isUpdate) {
+            $exhibit = Exhibits::findOrFail($validated['exhibit_id']);
+        } else {
+            $exhibit = new Exhibits();
+        }
+
+        // Handle image upload if provided
+        if (isset($validated['image'])) {
             $imageName = $validated['exhibit_name'] . '.' . $validated['image']->getClientOriginalExtension();
             $imagePath = 'exhibits/assets/' . $imageName;
+
             $validated['image']->storeAs('exhibits/assets', $imageName, 'public');
+
             $exhibit->image_name = $imageName;
             $exhibit->image_path = $imagePath;
         }
 
-        if(!$validated['container']) {
-            if(!$exhibit->ExhibitOutlines) {
+        // Assign basic fields
+        $exhibit->exhibit_name = $validated['exhibit_name'];
+        $exhibit->container = $validated['container'];
+        $exhibit->save();
+
+        //  AUTO-CREATE OUTLINE IF NOT A CONTAINER
+        //  Only for NEW exhibits (not updating)
+        if (!$exhibit->container && !$isUpdate) {
+            if (!$exhibit->ExhibitOutlines()->exists()) {
                 $exhibit->ExhibitOutlines()->create([
                     'outline_description' => $exhibit->exhibit_name,
                     'category' => null,
@@ -71,14 +89,13 @@ class ManageExhibitsController extends Controller
             }
         }
 
-        $exhibit->exhibit_name = $validated['exhibit_name'];
-        $exhibit->container = $validated['container'];
-        $exhibit->save();
-
+        //  Log activity
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'activity' => 'Create',
-            'description' => "Created exhibit '{$exhibit->exhibit_name}'.",
+            'activity' => $isUpdate ? 'Update' : 'Create',
+            'description' => ($isUpdate
+                ? "Updated exhibit '{$exhibit->exhibit_name}'."
+                : "Created exhibit '{$exhibit->exhibit_name}'."),
             'type' => 'Content',
             'activity_date' => now(),
         ]);
@@ -86,7 +103,9 @@ class ManageExhibitsController extends Controller
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Success')
-            ->with('message', 'Exhibit successfully added.');
+            ->with('message', $isUpdate
+                ? 'Exhibit successfully updated.'
+                : 'Exhibit successfully added.');
     }
 
     /**
@@ -96,15 +115,15 @@ class ManageExhibitsController extends Controller
     {
         $exhibit = Exhibits::find($request->exhibit_id);
         $user = Auth::user();
-        if($exhibit) {
+        if ($exhibit) {
             $exhibit->delete();
-            if($exhibit->image_path && Storage::disk('public')->exists($exhibit->image_path)) {
+            if ($exhibit->image_path && Storage::disk('public')->exists($exhibit->image_path)) {
                 Storage::disk('public')->delete($exhibit->image_path);
             }
-            if($exhibit->ExhibitOutlines) {
-                foreach($exhibit->ExhibitOutlines as $outline) {
-                    if($outline->ExhibitFiles) {
-                        if(Storage::disk('public')->exists($outline->ExhibitFiles->file_path)) {
+            if ($exhibit->ExhibitOutlines) {
+                foreach ($exhibit->ExhibitOutlines as $outline) {
+                    if ($outline->ExhibitFiles) {
+                        if (Storage::disk('public')->exists($outline->ExhibitFiles->file_path)) {
                             Storage::disk('public')->delete($outline->ExhibitFiles->file_path);
                         }
                         $outline->ExhibitFiles->delete();
