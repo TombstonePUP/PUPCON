@@ -153,7 +153,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm font-medium text-gray-600">Total Programs</p>
-                                    <p className="mt-1 text-2xl font-semibold text-gray-900">{programs?.length || 0}</p>
+                                    <p className="mt-1 text-2xl font-semibold text-gray-900">{programs?.filter((p) => p.is_active).length || 0}</p>
                                 </div>
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-50">
                                     <svg className="h-5 w-5 text-[#7f1414]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,7 +172,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                 <div>
                                     <p className="text-sm font-medium text-gray-600">Bachelor Programs</p>
                                     <p className="mt-1 text-2xl font-semibold text-gray-900">
-                                        {programs?.filter((p) => p.degree_type.toLowerCase().includes('bachelor')).length || 0}
+                                        {programs?.filter((p) => p.is_active && p.degree_type.toLowerCase().includes('bachelor')).length || 0}
                                     </p>
                                 </div>
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
@@ -193,7 +193,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                 <div>
                                     <p className="text-sm font-medium text-gray-600">Diploma Programs</p>
                                     <p className="mt-1 text-2xl font-semibold text-gray-900">
-                                        {programs?.filter((p) => p.degree_type.toLowerCase().includes('diploma')).length || 0}
+                                        {programs?.filter((p) => p.is_active && p.degree_type.toLowerCase().includes('diploma')).length || 0}
                                     </p>
                                 </div>
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50">
