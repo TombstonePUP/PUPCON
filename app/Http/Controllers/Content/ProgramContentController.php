@@ -79,13 +79,14 @@ class ProgramContentController extends Controller
         $bannerName = null;
         $bannerPath = null;
         $program_name = Str::slug($program->program_name, '_');
+        $degree_type = Str::slug($program->degree_type, '_');
         if (isset($validated['banner'])) {
             $bannerName = $program_name . '_banner.' . $validated['banner']->getClientOriginalExtension();
-            $bannerPath = $program_name . '/assets/' . $bannerName;
+            $bannerPath = 'documents/' . $degree_type . '_' . $program_name . '/assets/' . $bannerName;
             if (Storage::disk('public')->exists($bannerPath)) {
                 Storage::disk('public')->delete($bannerPath);
             }
-            $validated['banner']->storeAs($program_name . '/assets/', $bannerName, 'public');
+            $validated['banner']->storeAs('documents/' . $degree_type . '_' . $program_name . '/assets/', $bannerName, 'public');
         }
 
         if ($program->program_image_path && !isset($validated['previewUrl'])) {
@@ -130,11 +131,11 @@ class ProgramContentController extends Controller
             if (isset($galleryItem['image'])) {
                 $caption = Str::slug($galleryItem['caption'], '_');
                 $imageName = 'gallery_' . $caption . '.' . $galleryItem['image']->getClientOriginalExtension();
-                $imagePath = $program_name . '/assets/gallery/' . $imageName;
+                $imagePath = 'documents/' . $degree_type . '_' . $program_name . '/assets/gallery/' . $imageName;
                 if (Storage::disk('public')->exists($imagePath)) {
                     Storage::disk('public')->delete($imagePath);
                 };
-                $galleryItem['image']->storeAs($program_name . '/assets/gallery/', $imageName, 'public');
+                $galleryItem['image']->storeAs('documents/' . $degree_type . '_' . $program_name . '/assets/gallery/', $imageName, 'public');
             }
             if ($galleryModel) {
                 $galleryModel->image_name = $imageName ?? $galleryModel->image_name;

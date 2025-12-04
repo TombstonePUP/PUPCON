@@ -50,6 +50,8 @@ class ManageAreasController extends Controller
 
         $level = $program->Levels->first();
 
+        $level_name = $level->level === 0 ? 'psv' : 'level_' . $level->level;
+
         $area = $level->Areas()->create([
             'area_name' => $validated['area_name'],
             'area_number' => $validated['area_number'],
@@ -60,7 +62,7 @@ class ManageAreasController extends Controller
 
         if (isset($validated['area_image'])) {
             $areaImageName = Str::slug($validated['area_name'], '_') . '.' . $validated['area_image']->getClientOriginalExtension();
-            $path = Str::slug($program->program_name, '_') . '/level_' . $program->Levels->first()->level . '/assets';
+            $path = Str::slug($program->program_name, '_') . $level_name . '/assets';
             $areaImagePath = $path . '/' . $areaImageName;
             if ($disk->exists($areaImagePath)) {
                 $disk->delete($areaImagePath);

@@ -46,8 +46,8 @@ class AreaFormFilesController extends Controller
             ->first();
 
         $level = $level->level === 0
-            ? 'Preliminiary Survey Visit'
-            : $level->level;
+            ? 'psv'
+            : 'level_' . $level->level;
 
         if ($user->Roles->role_name === 'Coordinator' || $user->Roles->role_name === 'Admin') {
             $status = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
@@ -68,9 +68,10 @@ class AreaFormFilesController extends Controller
 
         $category = Str::slug($category, '_');
         $program_name = Str::slug($program->program_name, '_');
+        $degree_type = Str::slug($program->degree_type, '_');
         $area_name = Str::slug($area->area_name, '_');
         $formFileName = "{$category}.{$validated['document']->getClientOriginalExtension()}";
-        $formFilePath = "{$program_name}/level_{$level}/{$area_name}/area_forms/files";
+        $formFilePath = "documents/{$degree_type}_{$program_name}/{$level}/{$area_name}/area_forms";
         $request->file('document')->storeAs($formFilePath, $formFileName, 'public');
 
         $formFilePath = "{$formFilePath}/{$formFileName}";

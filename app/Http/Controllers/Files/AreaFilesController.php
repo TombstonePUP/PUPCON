@@ -49,7 +49,7 @@ class AreaFilesController extends Controller
             ])
             ->findOrFail($request->program_id);
         $level = AccreditationLevels::where('accreditation_level_id', $request->level_id)->first();
-        $level = $level->level === 0 ? 'Preliminiary Survey Visit' : $level->level;
+        $level = $level->level === 0 ? 'psv' : 'level_' . $level->level;
         $area = Areas::where('area_id', $request->area_id)->first();
         $parameterOutlines = ParameterOutlines::find($validated['outline_id']);
 
@@ -82,10 +82,11 @@ class AreaFilesController extends Controller
         $parameter_outline = Str::slug($parameterOutlines->outline_description, '_');
         $fileName = $initial . '.' . $parameterOutlines->outline_number . '.' . $parameter_outline . '.' . $file->getClientOriginalExtension();
         $program_name = Str::slug($program->program_name, '_');
+        $degree_type = Str::slug($program->degree_type, '_');
         $area_name = Str::slug($area->area_name, '_');
         $parameter_name = Str::slug($parameterName, '_');
         $category_name = Str::slug($categoryName, '_');
-        $filePath = "{$program_name}/level_{$level}/{$area_name}/{$parameter_name}/{$category_name}";
+        $filePath = "documents/{$degree_type}_{$program_name}/{$level}/{$area_name}/{$parameter_name}/{$category_name}";
 
         // Ensure temp directory exists
         if (!Storage::disk('public')->exists('temp')) {
