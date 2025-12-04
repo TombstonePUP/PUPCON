@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
     {
         $programs_under_survey = Programs::select('program_name', 'program_id')
             ->where('under_survey', true)
+            ->where('is_active', true)
             ->get();
 
         $outlines = ParameterOutlines::select('*')
@@ -96,6 +97,7 @@ class HandleInertiaRequests extends Middleware
                         $levelQuery->whereIn('accreditation_level_id', $user->Areas->pluck('accreditation_level_id'));
                     },
                 ])
+                ->where('is_active', true)
                 ->get()
                 ->unique('program_id');
         } else {

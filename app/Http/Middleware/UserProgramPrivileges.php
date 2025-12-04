@@ -39,7 +39,7 @@ class UserProgramPrivileges
             'Admin', 'Coordinator' => Programs::findOrFail($program),
             'Chairman' => $user->Areas()
                 ->whereHas('Levels.Programs', function ($query) use ($program) {
-                    $query->where('program_id', $program);
+                    $query->where('program_id', $program)->where('is_active', true)->where('under_survey', true);
                 })
                 ->exists(),
             default => false,
