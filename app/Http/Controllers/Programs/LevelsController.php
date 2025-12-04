@@ -22,24 +22,28 @@ class LevelsController extends Controller
     public function store(Request $request)
     {
         $program = Programs::find($request->program_id);
-        $level = $program->latestlevel->level ?? 0;
+        $level = $program->latestlevel->level ?? null;
+
+        $min = $level ?? 0;
+        $max = $level ? $level + 1 : 0;
 
         $validated = $request->validate([
             'program_name' => ['required', 'string'],
             'new_level' => [
                 'required',
                 'integer',
-                "min:$level",
+                "min:$min",
+                "max:$max",
             ],
-        ],
-        [
+        ], [
             'program_name.required' => 'Program is required.',
             'program_name.string' => 'Program must be a string.',
             'program_name.max' => 'Program must not exceed 255 characters.',
+
             'new_level.required' => 'Level is required.',
             'new_level.integer' => 'Level must be an integer.',
-            'new_level.min' => 'Level must be at least Level' . $level . '.',
-            'new_level.max' => 'Level must not exceed 255 characters.',
+            'new_level.min' => "Level must be at least Level $min.",
+            'new_level.max' => "Level must not exceed Level $max.",
         ]);
 
         $program->update([
@@ -66,22 +70,24 @@ class LevelsController extends Controller
      */
     public function update(Request $request, Programs $programs)
     {
-        $validated = $request->validate([
-            'program_name' => ['required', 'string'],
-            'accreditation_level_id' => ['required', 'integer'],
-            'remarks' => ['required', 'string'],
-            'is_active' => ['required', 'boolean'],
-        ],
-        [
-            'program_name.required' => 'Program is required.',
-            'program_name.string' => 'Program must be a string.',
-            'program_name.max' => 'Program must not exceed 255 characters.',
-            'accreditation_level_id.required' => 'Level is required.',
-            'accreditation_level_id.integer' => 'Level must be an integer.',
-            'remarks.required' => 'Remarks is required.',
-            'remarks.string' => 'Remarks must be a string.',
-            'remarks.max' => 'Remarks must not exceed 255 characters.',
-        ]);
+        $validated = $request->validate(
+            [
+                'program_name' => ['required', 'string'],
+                'accreditation_level_id' => ['required', 'integer'],
+                'remarks' => ['required', 'string'],
+                'is_active' => ['required', 'boolean'],
+            ],
+            [
+                'program_name.required' => 'Program is required.',
+                'program_name.string' => 'Program must be a string.',
+                'program_name.max' => 'Program must not exceed 255 characters.',
+                'accreditation_level_id.required' => 'Level is required.',
+                'accreditation_level_id.integer' => 'Level must be an integer.',
+                'remarks.required' => 'Remarks is required.',
+                'remarks.string' => 'Remarks must be a string.',
+                'remarks.max' => 'Remarks must not exceed 255 characters.',
+            ]
+        );
 
         $program = $programs->find($request->program_id);
         $level = $program->levels()->where('accreditation_level_id', $validated['accreditation_level_id'])->first();
@@ -100,5 +106,4 @@ class LevelsController extends Controller
             ->with('title', 'Level Updated')
             ->with('message', 'Level has been updated successfully for program.');
     }
-
 }
