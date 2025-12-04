@@ -22,30 +22,38 @@ class LevelsController extends Controller
     public function store(Request $request)
     {
         $program = Programs::find($request->program_id);
-        $level = isset($program->latestlevel->level)
+        /* $level = isset($program->latestlevel->level)
             ? $program->latestlevel->level
             : null;
 
         $min = $level ?? 0;
-        $max = $level !== null ? $level + 1 : 0;
+        $max = $level !== null ? $level + 1 : 0; */
+
+        /* $level = $program->levels()
+            ->where('remarks', 'passed')
+            ->orderBy('level', 'desc')
+            ->first(); */
+
+        $level = isset($program->latestlevel->level)
+            ? $program->latestlevel->level
+            : null;
 
         $validated = $request->validate([
             'program_name' => ['required', 'string'],
-            'new_level' => [
+            /* 'new_level' => [
                 'required',
                 'integer',
                 "min:$min",
                 "max:$max",
-            ],
+            ], */
         ], [
             'program_name.required' => 'Program is required.',
             'program_name.string' => 'Program must be a string.',
             'program_name.max' => 'Program must not exceed 255 characters.',
-
-            'new_level.required' => 'Level is required.',
+            /* 'new_level.required' => 'Level is required.',
             'new_level.integer' => 'Level must be an integer.',
             'new_level.min' => "Level must be at least Level $min.",
-            'new_level.max' => "Level must not exceed Level $max.",
+            'new_level.max' => "Level must not exceed Level $max.", */
         ]);
 
         $program->update([
@@ -53,7 +61,8 @@ class LevelsController extends Controller
         ]);
         $program = $program->Levels()->create([
             'program_id' => $program->program_id,
-            'level' => $validated['new_level'],
+            // 'level' => $validated['new_level'],
+            'level' => $level === null ? 0 : $level + 1,
             'survey_date' => now(),
             'remarks' => 'Ongoing Survey',
             'is_active' => true,

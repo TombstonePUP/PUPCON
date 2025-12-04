@@ -18,7 +18,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgram, ProgramAreas } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { BookOpen, CircleSlash, Download, EditIcon, MoreVertical, Plus, Trash2 } from 'lucide-react';
+import { BookOpen, Download, EditIcon, MoreVertical, Plus, Trash2 } from 'lucide-react';
 
 export interface ProgramProps {
     program: PerProgram;
@@ -368,8 +368,26 @@ export default function Programs({ program }: ProgramProps) {
                         <div className="sticky top-6 space-y-4">
                             <div className="rounded-lg border border-gray-200 bg-white p-4">
                                 <div className="mb-3 text-sm font-semibold text-gray-900">Status</div>
-                                <div className="rounded-lg bg-yellow-100 p-2">
-                                    <div className="text-center text-xs font-medium text-yellow-800">{selected_level?.remarks}</div>
+                                <div
+                                    className={`rounded-lg p-2 ${
+                                        selected_level?.remarks?.toLowerCase().includes('passed')
+                                            ? 'bg-green-100'
+                                            : selected_level?.remarks?.toLowerCase().includes('failed')
+                                              ? 'bg-red-100'
+                                              : 'bg-yellow-100'
+                                    }`}
+                                >
+                                    <div
+                                        className={`text-center text-xs font-medium ${
+                                            selected_level?.remarks?.toLowerCase().includes('passed')
+                                                ? 'text-green-800'
+                                                : selected_level?.remarks?.toLowerCase().includes('failed')
+                                                  ? 'text-red-800'
+                                                  : 'text-yellow-800'
+                                        }`}
+                                    >
+                                        {selected_level?.remarks}
+                                    </div>
                                 </div>
                             </div>
 
@@ -387,8 +405,9 @@ export default function Programs({ program }: ProgramProps) {
                                         <button
                                             key={section.id}
                                             onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                                }`}
+                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
+                                                activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >
                                             {section.label}
                                         </button>
