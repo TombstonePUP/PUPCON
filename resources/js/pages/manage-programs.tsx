@@ -60,11 +60,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
     const filteredPrograms = role === 'Admin' || role === 'Coordinator' ? programs : activePrograms;
 
     const handleProgramClick = (program: PerProgramUnderSurvey) => {
-        // Don't allow clicking archived programs
-        if (!program.is_active) {
-            return;
-        }
-
         if (program.latest_level) {
             router.visit(
                 route('manage.program', {
@@ -133,7 +128,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {programsList.map((program) => {
                     const isAssigned = assignedPrograms.find((ap: PerProgramUnderSurvey) => ap.program_id === program.program_id);
-                    const canClick = !isArchived && (role === 'Admin' || role === 'Coordinator' || isAssigned);
+                    const canClick = role === 'Admin' || role === 'Coordinator' ? true : !isArchived && isAssigned;
                     return (
                         <div
                             key={program.program_id}
