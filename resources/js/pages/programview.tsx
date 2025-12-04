@@ -76,6 +76,8 @@ interface FacultyCardProps {
     index: number;
 }
 
+
+
 const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isLoading, inView, index }, ref) => {
     const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -136,11 +138,11 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
                     <h3 className="text-base font-bold text-gray-900 transition-colors group-hover:text-[#7f1414]">{faculty.name}</h3>
                     <p className="mt-1 text-xs font-medium text-gray-600">{faculty.position}</p>
 
-                    <div className="border-t border-gray-100 pt-2">
+                    {/* <div className="border-t border-gray-100 pt-2">
                         <div className="inline-flex items-center gap-2 rounded-lg bg-[#7f1414]/5 px-2.5 py-1.5 text-xs text-gray-600 transition-all duration-200 group-hover:scale-105 hover:bg-[#7f1414] hover:text-white">
                             <span className="max-w-[140px] truncate">Regular Faculty</span>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
@@ -442,12 +444,14 @@ export default function Programs({ program }: PerProgramProps) {
                                                 photo:
                                                     f.image_path ||
                                                     `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
-                                                position: f.program_coordinator ? 'Program Head' : `${f.status} Faculty`,
+                                                position: f.program_coordinator ? 'Program Head' : `${f.status} `,
+                                            
                                             }}
                                             isLoading={facultyLoading}
                                             inView={cardInView}
                                             index={i}
                                         />
+                                        
                                     );
                                 })}
                             </div>
