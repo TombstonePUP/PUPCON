@@ -130,11 +130,12 @@ export function CampusGalleryDialog({...props}: CampusGalleryDialogProps) {
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Caption</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Caption <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="Enter Gallery Description/Caption"
                                 value={data.description}
                                 onChange={(e) => setData({ ...data, description: e.target.value })}
+                                required
                             />
                         </div>
                     </div>
