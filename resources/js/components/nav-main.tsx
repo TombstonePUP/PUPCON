@@ -72,7 +72,7 @@ export function NavMain({
                                         {item.items?.map((subItem) => (
                                             <SidebarMenuSubItem key={subItem.title}>
                                                 <SidebarMenuSubButton asChild>
-                                                    <Link href={subItem.url} className="flex justify-between hover:cursor-pointer">
+                                                    <Link href={subItem.url} className="flex justify-between hover:cursor-pointer capitalize ">
                                                         <span className="truncate">{subItem.title}</span>
                                                         {/* {subItem.badge !== undefined && (
                                                             <TooltipProvider>

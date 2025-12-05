@@ -79,7 +79,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                             }}
                             disabled={processing}
                         >
-                            <SelectTrigger className="w-full">
+                            <SelectTrigger className="w-full capitalize">
                                 <SelectValue placeholder="Select a program" />
                             </SelectTrigger>
                             <SelectContent>
@@ -97,6 +97,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                                         <SelectItem
                                             key={program.program_id}
                                             value={String(program.program_id)}
+                                            className='capitalize'
                                         >
                                             {program.degree_type.match(/\b[A-Z]/g)?.join('')}
                                             {' in '}

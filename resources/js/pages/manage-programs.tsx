@@ -198,10 +198,16 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                     )}
                                 </div>
 
-                                <h3 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414]">
+                                <h3 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] capitalize">
                                     {program.program_name}
                                 </h3>
-                                <p className="mb-3 line-clamp-1 text-sm text-gray-600">{`${program.degree_type} in ${program.program_name} `}</p>
+                                <div className="mb-3 flex text-sm text-gray-600 w-full truncate">
+                                    <span>{program.degree_type}</span>
+                                    <span className="mx-1">in</span>
+                                    <span className="capitalize">{program.program_name}</span>
+                                </div>
+
+
 
                                 <div className="flex items-center gap-4 text-xs text-gray-500">
                                     <div className="flex items-center gap-1">

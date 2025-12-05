@@ -70,14 +70,29 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                                 <SelectValue placeholder="Select a program" />
                             </SelectTrigger>
                             <SelectContent>
-                                {programs.map((program) => (
+                                 {programs.length > 0 ? (
+                                    programs.map((program) => (
+                                        <SelectItem
+                                            key={program.program_id}
+                                            value={String(program.program_id)}
+                                            className='capitalize'
+                                        >
+                                            {program.degree_type.match(/\b[A-Z]/g)?.join('')}
+                                            {' in '}
+                                            {program.program_name}
+                                        </SelectItem>
+                                    ))
+                                ) : (
+                                    <div className='text-sm py-2 pl-4 text-gray-500'>No programs available</div>
+                                )}
+                                {/* {programs.map((program) => (
                                     <SelectItem value={String(program.program_id)}>
                                         {program.degree_type.match(/\b[A-Z]/g)}
                                         { }
                                         {' in '}
                                         {program.program_name}
                                     </SelectItem>
-                                ))}
+                                ))} */}
                             </SelectContent>
                         </Select>
                         <InputError message={errors.program_name} />
