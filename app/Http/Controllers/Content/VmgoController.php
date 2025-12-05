@@ -187,8 +187,8 @@ class VmgoController extends Controller
                 }
             }
         }
-        Pillars::whereNotIn('pillar_id', $pillar_ids)->with('PillarItems')->delete();
         PillarItems::whereNotIn('item_id', $pillar_items_ids)->delete();
+        Pillars::whereNotIn('pillar_id', $pillar_ids)->with('PillarItems')->delete();
 
         foreach ($validated['campus_goals'] as $goalData) {
             $goal = CampusGoals::find($goalData['goal_id']);
