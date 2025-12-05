@@ -7,8 +7,8 @@ import { RenderParameterDialog } from '@/components/dialogs/parameters/parameter
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { Area, AreaFormCategory, AreaForms, AreaParameters, BreadcrumbItem, ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
-import { Edit, LucideImport, PlusCircleIcon } from 'lucide-react';
+import { Head, usePage, usePoll } from '@inertiajs/react';
+import { LucideImport, PlusCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 
 interface AreaFilesProps {
@@ -21,6 +21,10 @@ interface AreaFilesProps {
 export default function Areas({ program, area, parameterOutlineCategories, areaFormsCategories }: AreaFilesProps) {
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
+
+    // Add polling
+    usePoll(5000);
+
     const [dialog, setDialog] = useState<{
         kind: 'document' | 'benchmark' | 'parameter' | 'area-form' | null;
         action: 'view' | 'upload' | 'delete' | 'delete-form' | 'add' | 'edit' | 'import' | 'rejected';
@@ -108,25 +112,28 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         </div>
 
                         {/* Right Sidebar - Actions */}
-                        {(area.area_parameters.length > 0) && (role === 'Admin' || role === 'Coordinator') && (program.levels[0]?.remarks === "Ongoing Survey" && program.levels[0]?.is_active) && (
-                            <div className="w-64 shrink-0">
-                                <div className="sticky top-6 space-y-4">
-                                    <div className="w-full rounded-lg border border-gray-200 bg-white p-4">
-                                        <h3 className="mb-4 text-sm font-semibold text-gray-900">Area Actions</h3>
-                                        <div className="flex flex-col gap-2">
-                                            <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
-                                                <PlusCircleIcon className="ml-1 h-4 w-4" />
-                                                Add Parameter
-                                            </Button>
-                                            <Button className="border-none" onClick={() => openDialog('parameter', 'import')}>
-                                                <LucideImport className="ml-1 h-4 w-4" />
-                                                Import template
-                                            </Button>
+                        {area.area_parameters.length > 0 &&
+                            (role === 'Admin' || role === 'Coordinator') &&
+                            program.levels[0]?.remarks === 'Ongoing Survey' &&
+                            program.levels[0]?.is_active && (
+                                <div className="w-64 shrink-0">
+                                    <div className="sticky top-6 space-y-4">
+                                        <div className="w-full rounded-lg border border-gray-200 bg-white p-4">
+                                            <h3 className="mb-4 text-sm font-semibold text-gray-900">Area Actions</h3>
+                                            <div className="flex flex-col gap-2">
+                                                <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
+                                                    <PlusCircleIcon className="ml-1 h-4 w-4" />
+                                                    Add Parameter
+                                                </Button>
+                                                <Button className="border-none" onClick={() => openDialog('parameter', 'import')}>
+                                                    <LucideImport className="ml-1 h-4 w-4" />
+                                                    Import template
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
                     </div>
                 </div>
             </AppLayout>
