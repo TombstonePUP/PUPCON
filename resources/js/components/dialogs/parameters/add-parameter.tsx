@@ -69,7 +69,7 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                     <DialogDescription className="text-sm text-gray-500">Create a new parameter</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={addParameter} className="flex flex-col gap-4">
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 flex-col">
                         <div className="w-1/4">
                             <Label className="mb-2 block text-sm font-medium text-gray-700">Parameter</Label>
                             <Input
@@ -98,12 +98,13 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                                 disabled={processing}
                                 placeholder="Dissemination and Accessibility"
                                 autoResize
+                                className='min-h-9 h-9'
                             />
                         </div>
                     </div>
                     <InputError message={errors.parameter_name} className="mt-2" />
                     <InputError message={errors.parameter_description} className="mt-2" />
-                    <DialogFooter>
+                    <DialogFooter className='mt-2'>
                         <DialogClose asChild>
                             <Button tabIndex={3} variant="outline" onClick={() => onClose}>
                                 Cancel

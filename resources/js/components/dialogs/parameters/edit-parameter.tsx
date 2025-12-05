@@ -73,7 +73,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={editParameter} className="flex flex-col gap-4">
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 flex-col">
                         <div className="w-1/4">
                             <Label className="mb-2 block text-sm font-medium text-gray-700">Parameter</Label>
                             <Input
@@ -92,7 +92,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                             />
                         </div>
                         <div className="flex-1">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description <span className="text-red-500">*</span></Label>
                             <Textarea
                                 id="parameter_description"
                                 autoFocus
@@ -104,12 +104,13 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                                 }}
                                 placeholder={parameter.parameter_description}
                                 autoResize
+                                className='h-10'
                             />
                         </div>
                     </div>
                     <InputError message={errors.parameter_name} className="mt-2" />
                     <InputError message={errors.parameter_description} className="mt-2" />
-                    <DialogFooter>
+                    <DialogFooter className='mt-2'>
                         <DialogClose asChild>
                             <Button tabIndex={3} variant="outline">
                                 Cancel

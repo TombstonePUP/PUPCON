@@ -66,7 +66,7 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                 <DialogHeader>
                     <DialogTitle className="text-lg font-medium text-gray-900">Add Benchmark</DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">
-                        Create A New Benchmark for {parameter.parameter_description}
+                        Create a new benchmark for {parameter.parameter_description}
                     </DialogDescription>
                 </DialogHeader>
 
