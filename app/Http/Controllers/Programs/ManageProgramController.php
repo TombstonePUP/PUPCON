@@ -147,7 +147,7 @@ class ManageProgramController extends Controller
         $user = Auth::user();
 
         // Check for duplicates
-        $existingProgram = Programs::where('program_name', 'ILIKE', $validated['program_name'])
+        $existingProgram = Programs::where('program_name', $validated['program_name'])
             ->where('degree_type', $validated['degree_type'])
             ->where('program_id', '!=', $program->program_id)
             ->first();
