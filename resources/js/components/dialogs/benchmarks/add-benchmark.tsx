@@ -95,7 +95,6 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                                 disabled={processing}
                                 placeholder="Enter benchmark description"
                                 autoResize
-                                minHeight={100}
                             />
                             <InputError message={errors.benchmark_description} className="mt-2" />
                         </div>

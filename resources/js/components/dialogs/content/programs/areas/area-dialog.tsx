@@ -211,6 +211,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                     onChange={(e) => setData('area_description', e.target.value)}
                                     placeholder="Enter area description"
                                     disabled={processing}
+                                    autoResize
                                 />
                                 <InputError message={errors.area_description} className="mt-1" />
                             </div>

@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/text-area';
 import { AreaParameters, Program } from '@/types';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
@@ -91,10 +92,9 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                             />
                         </div>
                         <div className="flex-1">
-                             <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
-                            <Input
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
+                            <Textarea
                                 id="parameter_description"
-                                type="text"
                                 autoFocus
                                 tabIndex={2}
                                 value={data.parameter_description}
@@ -103,6 +103,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                                     setData('area_parameter_id', parameter.area_parameter_id);
                                 }}
                                 placeholder={parameter.parameter_description}
+                                autoResize
                             />
                         </div>
                     </div>

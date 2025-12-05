@@ -373,7 +373,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                                     </div>
                                                 </div>
                                                 <div className="mt-4 text-center">
-                                                    <p className="mb-1 text-lg font-semibold text-gray-700">Upload welcome banner</p>
+                                                    <p className="mb-1 text-lg font-semibold text-gray-700">Upload Welcome Banner</p>
                                                     <p className="text-sm text-gray-500">PNG, JPG up to 5MB</p>
                                                 </div>
                                                 <div className="mt-2 flex gap-2">

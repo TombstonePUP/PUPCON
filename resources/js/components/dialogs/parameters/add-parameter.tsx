@@ -51,10 +51,10 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
     const addParameter = (e: React.FormEvent) => {
         e.preventDefault();
         post(route('manage.area.add.parameter', {
-                program_id: program.program_id,
-                level_id: program.levels[0]?.accreditation_level_id,
-                area_id: area_id,
-            }), {
+            program_id: program.program_id,
+            level_id: program.levels[0]?.accreditation_level_id,
+            area_id: area_id,
+        }), {
             onSuccess: () => {
                 reset();
                 onClose();
@@ -86,8 +86,8 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                             />
                         </div>
                         <div className="flex-1">
-                           <Label className="mb-2 block text-sm font-medium text-gray-700">Description <span className="text-red-500">*</span>
-                           </Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description <span className="text-red-500">*</span>
+                            </Label>
                             <Textarea
                                 id="parameter_description"
                                 required
@@ -97,8 +97,7 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                                 onChange={(e) => setData('parameter_description', e.target.value)}
                                 disabled={processing}
                                 placeholder="Dissemination and Accessibility"
-                                className='h-20'
-
+                                autoResize
                             />
                         </div>
                     </div>
