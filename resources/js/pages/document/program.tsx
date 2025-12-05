@@ -18,7 +18,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgram, ProgramAreas } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { BookOpen, Download, EditIcon, MoreVertical, Plus, Trash2 } from 'lucide-react';
+import { Archive, BookOpen, Download, EditIcon, MoreVertical, Plus, Trash2 } from 'lucide-react';
 
 export interface ProgramProps {
     program: PerProgram;
@@ -267,6 +267,9 @@ export default function Programs({ program }: ProgramProps) {
                                                                         Assigned
                                                                     </Badge>
                                                                 )}
+                                                                {item.archive && (
+                                                                    <Badge className="bg-[#7f1414] text-white">Archive</Badge>
+                                                                )}
                                                             </div>
                                                             {/* <div className="flex justify-start mt-2 gap-4 text-xs text-gray-500">
                                                                 <div className="flex items-center gap-1">
@@ -300,6 +303,7 @@ export default function Programs({ program }: ProgramProps) {
                                                         <DropdownMenuContent align="end">
                                                             {(role === 'Admin' || role === 'Coordinator') &&
                                                                 selected_level.is_active &&
+                                                                item.archive === false &&
                                                                 selected_level.remarks === 'Ongoing Survey' && (
                                                                     <DropdownMenuItem
                                                                         onClick={() => {
@@ -325,17 +329,18 @@ export default function Programs({ program }: ProgramProps) {
                                                             </DropdownMenuItem>
                                                             {(role === 'Admin' || role === 'Coordinator') &&
                                                                 selected_level.is_active &&
+                                                                item.archive === false &&
                                                                 selected_level.remarks === 'Ongoing Survey' && (
                                                                     <>
                                                                         <DropdownMenuSeparator />
                                                                         <DropdownMenuItem
-                                                                            className="text-red-600 hover:bg-red-50 hover:text-red-600"
+                                                                            // className="text-red-600 hover:bg-red-50 hover:text-red-600"
                                                                             onClick={() => {
                                                                                 setTimeout(() => deleteArea(item), 50);
                                                                             }}
                                                                         >
-                                                                            <Trash2 className="mr-2 h-4 w-4" />
-                                                                            Delete
+                                                                            <Archive className="mr-2 h-4 w-4" />
+                                                                            Archive
                                                                         </DropdownMenuItem>
                                                                     </>
                                                                 )}

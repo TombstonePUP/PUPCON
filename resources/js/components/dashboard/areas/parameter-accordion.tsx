@@ -23,7 +23,7 @@ interface ParamDialogParams {
 }
 
 interface ParameterAccordionProps {
-    area_id?: number;
+    area: Area;
     program: Program;
     areaParameters?: AreaParameters[];
     parameterOutlineCategories?: ParameterOutlineCategory[];
@@ -32,15 +32,8 @@ interface ParameterAccordionProps {
     resolveParamDialog: (params: ParamDialogParams) => void;
 }
 
-interface AreaFilesProps {
-    program: Program;
-    area: Area;
-    parameterOutlineCategories?: ParameterOutlineCategory[];
-    areaFormsCategories?: AreaFormCategory[];
-}
-
 export default function ParameterAccordion({
-    area_id,
+    area,
     program,
     areaParameters,
     parameterOutlineCategories,
@@ -51,7 +44,7 @@ export default function ParameterAccordion({
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
     const canShowActions =
-        (role === 'Admin' || role === 'Coordinator') && program.levels[0]?.is_active && program.levels[0]?.remarks === 'Ongoing Survey';
+        (role === 'Admin' || role === 'Coordinator') && program.levels[0]?.is_active && program.levels[0]?.remarks === 'Ongoing Survey' && !area.archive === true;
     return (
         <>
             <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
@@ -110,7 +103,7 @@ export default function ParameterAccordion({
                                                     <RecursiveOutlineForm
                                                         outlines={sortedOutlines}
                                                         program={program}
-                                                        area_id={area_id}
+                                                        area={area}
                                                         outlineCategory={parameterOutlineCategories}
                                                         resolveDocDialog={resolveDocDialog}
                                                         resolveBenchDialog={resolveBenchDialog}
