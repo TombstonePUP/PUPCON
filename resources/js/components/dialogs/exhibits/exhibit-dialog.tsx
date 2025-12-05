@@ -143,7 +143,7 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                             <Input
                                 type="text"
                                 required
-                                placeholder="e.g., Student Handbooks"
+                                placeholder="e.g., Student Handbook"
                                 value={data.exhibit_name}
                                 onChange={(e) => setData({ ...data, exhibit_name: e.target.value })}
                                 disabled={processing}

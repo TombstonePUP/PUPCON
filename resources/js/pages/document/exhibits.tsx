@@ -177,18 +177,18 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                             })}
                         </div>
                     ) : (
-                        <div className="flex w-full flex-1 items-center justify-center rounded-lg border border-gray-200 bg-white py-16">
-                            <div className="flex max-w-md flex-col items-center gap-4 text-center">
-                                <div className="rounded-full bg-gray-100 p-6">
-                                    <FolderOpen className="h-16 w-16 text-gray-400" />
-                                </div>
-                                <div className="space-y-2">
-                                    <h3 className="text-xl font-semibold text-gray-900">No Exhibits Yet</h3>
-                                    <p className="text-sm text-gray-500">
-                                        Get started by creating your first exhibit. Click the "Add New Exhibit" button to begin.
-                                    </p>
-                                </div>
-                                <Button variant="noborder" className="mt-4" onClick={() => setTimeout(() => openDialog('exhibit', 'add'), 50)}>
+                        <div className="flex w-full flex-1 items-center justify-center">
+                            <div className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
+                                <FolderOpen className="mb-4 h-16 w-16 text-gray-400" />
+
+                                <h3 className="mb-2 text-lg font-semibold text-gray-900">No Exhibits Found</h3>
+                                <p className="text-sm text-gray-500">There are no exhibits yet. Create your first exhibit to get started.</p>
+
+                                <Button
+                                    variant="noborder"
+                                    className="mt-4"
+                                    onClick={() => setTimeout(() => openDialog('exhibit', 'add'), 50)}
+                                >
                                     <Plus className="mr-2 h-4 w-4" />
                                     Add New Exhibit
                                 </Button>
