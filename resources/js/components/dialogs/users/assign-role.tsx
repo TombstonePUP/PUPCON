@@ -132,10 +132,7 @@ export function AssignRole({ user, programRoles, roles, onClose }: AssignRoleDia
                         data.assigned_role === roles.find((r) => r.role_name === 'Accreditor')?.role_id) && (
                             <div className="bg-secondary/10 rounded-lg border p-6">
                                 <Label className="text-base font-medium text-gray-900">
-                                    Assign Programs & Areas{' '}
-                                    <Badge className="ml-2 transition-colors duration-200" variant="secondary">
-                                        required
-                                    </Badge>
+                                    Assign Programs & Areas <span className="text-red-500">*</span>
                                 </Label>
 
                                 <div className="mt-4 flex max-h-60 flex-col space-y-4 overflow-y-auto pr-2">
