@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  font-family: "Poppins", sans-serif;
+}
+.error-page .content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.error-page .construction-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: #f9fafb;
+  border: 2px dashed #d1d5db;
+  text-align: center;
+  height: 50vh;
+  width: 60vw;
+  transition: transform 0.2s ease;
+  /* Optional hover effect */
+}
+.error-page .icon {
+  width: 5rem;
+  height: 5rem;
+  color: #9ca3af;
+  margin-bottom: 1.5rem;
+}
+.error-page .icon svg {
+  width: 100%;
+  height: 100%;
+}
+.error-page .title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+.error-page .description {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+.error-page .btn-back {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  background: #b91c1c;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s ease;
+  margin-top: 1.5rem;
+}
+.error-page .btn-back:hover {
+  background: rgb(149.5633802817, 22.6366197183, 22.6366197183);
+}
+
+/*# sourceMappingURL=error-main.css.map */
