@@ -64,8 +64,8 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective, next
                             value={data.description}
                             onChange={(e) => setData({ ...data, description: e.target.value })}
                             placeholder="Describe the learning objective..."
-                            minHeight={80}
                             required
+                            autoResize
                         />
                     </div>
 

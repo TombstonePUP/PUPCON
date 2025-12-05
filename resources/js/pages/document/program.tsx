@@ -364,7 +364,7 @@ export default function Programs({ program }: ProgramProps) {
                                             <button
                                                 type="button"
                                                 onClick={addArea}
-                                                className="group flex min-h-[100px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600"
+                                                className="group flex min-h-[100px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600 cursor-pointer"
                                             >
                                                 <Plus className="h-6 w-6" />
                                                 <span className="mt-2 text-sm font-medium">Add New Area</span>
