@@ -121,8 +121,8 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                 </div>
                             </label>
                         ) : (
-                            <div className="group relative">
-                                <img src={data.previewUrl} alt="Preview" className="h-80 w-full rounded-lg border border-gray-200 object-cover" />
+                            <div className="group relative w-[50%]">
+                                <img src={data.previewUrl} alt="Preview" className=" h-full w-full rounded-lg border border-gray-200 object-cover transition-all" />
                                 <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-lg bg-black/40 opacity-0 transition group-hover:opacity-100">
                                     <input id="area-replace-image" type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
                                     <Button

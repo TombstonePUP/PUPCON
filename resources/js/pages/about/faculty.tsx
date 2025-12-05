@@ -40,8 +40,8 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
                                 {page?.title || 'Our Faculty & Staff'}
                             </div>
                             <h2 className="mb-4 text-4xl font-bold text-gray-900">
-                                Meet the Minds Behind
-                                <span className="text-[#7f1414]"> Our Success</span>
+                                {page?.subtitle || "Meet the Minds Behind"}
+                             
                             </h2>
                             <p className="text-lg leading-relaxed text-gray-600">
                                 {page?.description || 'Our dedicated faculty and staff are the backbone of our institution, committed to fostering a nurturing and dynamic learning environment. With a wealth of knowledge and experience, they inspire and guide our students towards academic excellence and personal growth.'}

@@ -1,7 +1,7 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import { CampusDirectors, CampusGallery, ContentPages } from '@/types/content';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePoll } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 // import 'swiper/css';
 // import 'swiper/css/effect-coverflow';
@@ -31,7 +31,9 @@ export default function History({ page, directors, gallery }: HistoryProps) {
         { label: 'PUP Hymn', href: 'hymn' },
     ];
 
-    console.log(directors);
+    // console.log(directors);
+    usePoll(5000);
+
 
     return (
         <>

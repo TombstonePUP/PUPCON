@@ -4,7 +4,7 @@ import SectionFooter from '@/components/ui/section-footer';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/text-area';
 import { CampusDirectors, CampusGallery, ContentPages } from '@/types/content';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePoll } from '@inertiajs/react';
 import { Edit2, Trash2 } from 'lucide-react';
 import React, { useEffect } from 'react';
 import InputError from '../input-error';

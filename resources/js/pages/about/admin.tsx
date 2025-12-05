@@ -2,9 +2,11 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import FacultyCard from '@/components/ui/facultyCard';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePoll } from '@inertiajs/react';
 import { Administration, ContentPages } from '@/types/content';
 import { Construction } from 'lucide-react';
+import { motion } from 'framer-motion';
+
 
 interface AdministrationPageProps {
     officials: Administration[];
@@ -71,7 +73,7 @@ export default function AdministrationPage({ officials, page }: AdministrationPa
 
     const campus_officials = officials.filter((o) => o.type === 'Campus');
     const university_officials = officials.filter((o) => o.type === 'University');
-
+    // usePoll(5000);
     return (
         <>
             <Head title="Administration - PUP San Juan" />
@@ -125,6 +127,28 @@ export default function AdministrationPage({ officials, page }: AdministrationPa
 
                         {/* Main Content */}
                         <main className="lg:w-3/4 flex-1 space-y-12 overflow-auto max-h-[80vh] scroll-smooth hide-scrollbar">
+
+
+                            {/* Hero Section */}
+                            <section>
+                                <motion.h1
+                                    className="mb-4 text-3xl font-bold text-[#7f1414]"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                >
+                                    {page?.title}
+                                </motion.h1>
+                                <motion.p
+                                    className="mb-6 leading-relaxed text-gray-700"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                >
+                                    {page?.subtitle}
+                                </motion.p>
+
+                            </section>
                             <section id="university" className="space-y-6">
                                 <div className="card-fx rounded-xl border border-[#7f1414]/25 bg-white p-8 duration-300 hover:border-[#7f1414]">
                                     <h2 className="mb-3 text-3xl font-bold text-[#7f1414]">University Officials</h2>

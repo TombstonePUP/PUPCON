@@ -2,7 +2,7 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/
 import useFacebookFeed from '@/hooks/useFacebookFeed';
 import Layout from '@/layouts/landing-layout';
 import { CampusGallery, ContentPages } from '@/types/content';
-import { Head } from '@inertiajs/react';
+import { Head, usePoll } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight, Image as ImageIconComponent, MapPin, Play, X } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -149,6 +149,8 @@ const SafeImage = React.memo(
         const placeholderBaseClass = 'h-full w-full flex items-center justify-center bg-gray-100 rounded-inherit';
 
         const outerClassName = `relative overflow-hidden ${className || ''}`;
+
+        // usePoll(5000);
 
         return (
             <div ref={imgRef} className={outerClassName}>
@@ -560,9 +562,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                                                 <HomeCardTitle className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
                                                     {card.title}
                                                 </HomeCardTitle>
-                                                <div className="my-2 h-[1px] w-full overflow-hidden bg-gray-200">
-                                                    <div className="h-full w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 group-hover:scale-x-100"></div>
-                                                </div>
+                                                <div className="h-px w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 **ease-in-out** group-hover:scale-x-100 my-2"></div>
                                                 <HomeCardDescription className="mb-2 line-clamp-3 min-h-[3.75rem] flex-1 text-xs text-gray-600 sm:text-sm">
                                                     {card.desc}
                                                 </HomeCardDescription>
