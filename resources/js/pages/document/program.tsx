@@ -376,20 +376,22 @@ export default function Programs({ program }: ProgramProps) {
                             <div className="rounded-lg border border-gray-200 bg-white p-4">
                                 <div className="mb-3 text-sm font-semibold text-gray-900">Status</div>
                                 <div
-                                    className={`rounded-lg p-2 ${selected_level?.remarks?.toLowerCase().includes('passed')
+                                    className={`rounded-lg p-2 ${
+                                        selected_level?.remarks?.toLowerCase().includes('passed')
                                             ? 'bg-green-100'
                                             : selected_level?.remarks?.toLowerCase().includes('failed')
-                                                ? 'bg-red-100'
-                                                : 'bg-yellow-100'
-                                        }`}
+                                              ? 'bg-red-100'
+                                              : 'bg-yellow-100'
+                                    }`}
                                 >
                                     <div
-                                        className={`text-center text-xs font-medium ${selected_level?.remarks?.toLowerCase().includes('passed')
+                                        className={`text-center text-xs font-medium ${
+                                            selected_level?.remarks?.toLowerCase().includes('passed')
                                                 ? 'text-green-800'
                                                 : selected_level?.remarks?.toLowerCase().includes('failed')
-                                                    ? 'text-red-800'
-                                                    : 'text-yellow-800'
-                                            }`}
+                                                  ? 'text-red-800'
+                                                  : 'text-yellow-800'
+                                        }`}
                                     >
                                         {selected_level?.remarks}
                                     </div>
@@ -403,21 +405,24 @@ export default function Programs({ program }: ProgramProps) {
                             </div>
 
                             {/* Quick Links */}
-                            <div className="rounded-lg border border-gray-200 bg-white p-4">
-                                <h3 className="mb-4 text-sm font-semibold text-gray-900">Quick Links</h3>
-                                <nav className="space-y-1">
-                                    {sections.map((section) => (
-                                        <button
-                                            key={section.id}
-                                            onClick={() => scrollToSection(section.ref, section.id)}
-                                            className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                            {(role === 'Admin' || role === 'Coordinator') && (
+                                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                                    <h3 className="mb-4 text-sm font-semibold text-gray-900">Quick Links</h3>
+                                    <nav className="space-y-1">
+                                        {sections.map((section) => (
+                                            <button
+                                                key={section.id}
+                                                onClick={() => scrollToSection(section.ref, section.id)}
+                                                className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
+                                                    activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
                                                 }`}
-                                        >
-                                            {section.label}
-                                        </button>
-                                    ))}
-                                </nav>
-                            </div>
+                                            >
+                                                {section.label}
+                                            </button>
+                                        ))}
+                                    </nav>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
