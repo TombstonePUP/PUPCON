@@ -72,6 +72,7 @@ export function DirectorsDialog({...props }: DirectorsDialogProps) {
                                 : 'Fill out the details below to add a new director.'}
                         </DialogDescription>
                     </DialogHeader>
+                    <form onSubmit={handleSubmit}>
                     <div className="max-h-[70vh] overflow-y-auto pr-2">
                         <div>
                             <Label className="mb-2 block text-sm font-medium text-gray-700">President's Photo</Label>
@@ -145,6 +146,7 @@ export function DirectorsDialog({...props }: DirectorsDialogProps) {
                                 value={data.name}
                                 onChange={(e) => setData({ ...data, name: e.target.value })}
                                 autoFocus
+                                required
                             />
                         </div>
                         <div>
@@ -153,6 +155,7 @@ export function DirectorsDialog({...props }: DirectorsDialogProps) {
                                 placeholder="e.g., 1988-1992"
                                 value={data.term_start_date}
                                 onChange={(e) => setData({ ...data, term_start_date: e.target.value })}
+                                required
                             />
                         </div>
                         <div>
@@ -171,6 +174,7 @@ export function DirectorsDialog({...props }: DirectorsDialogProps) {
                                 onChange={(e) => setData({ ...data, description: e.target.value })}
                                 autoResize
                                 minHeight={100}
+                                required
                             />
                         </div>
                     </div>
@@ -180,10 +184,11 @@ export function DirectorsDialog({...props }: DirectorsDialogProps) {
                                 Cancel
                             </Button>
                         </DialogClose>
-                        <Button variant="noborder" onClick={handleSubmit}>
+                        <Button variant="noborder" type="submit">
                             {type === 'edit' ? 'Save Changes' : 'Add Director'}
                         </Button>
                     </DialogFooter>
+                    </form>
                 </DialogContent>
             </Dialog>
         </>

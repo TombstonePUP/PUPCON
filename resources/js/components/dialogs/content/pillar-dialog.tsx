@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Pillars } from "@/types/content";
-import { useState } from "react";
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Pillars } from '@/types/content';
+import { useState } from 'react';
 
 interface PillarDialogProps {
     type?: 'edit' | 'add';
@@ -21,7 +21,7 @@ export default function PillarDialog({ ...props }: PillarDialogProps) {
     const handleSubmit = () => {
         onSave(data);
         onClose();
-    }
+    };
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
@@ -29,31 +29,32 @@ export default function PillarDialog({ ...props }: PillarDialogProps) {
                 <DialogHeader>
                     <DialogTitle className="text-lg font-medium text-gray-900">{type === 'edit' ? 'Edit Pillar' : 'Add Pillar'}</DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">
-                        {type === 'edit'
-                            ? 'Make changes to the pillar details below.'
-                            : 'Fill out the details below to add a new pillar.'}
+                        {type === 'edit' ? 'Make changes to the pillar details below.' : 'Fill out the details below to add a new pillar.'}
                     </DialogDescription>
                 </DialogHeader>
-                <div className="mt-1">
-                    <label className="mb-1 block text-sm font-medium text-gray-700">Pillar Title</label>
-                    <Input
-                        placeholder="e.g., Teaching and Learning"
-                        value={data.pillar_title}
-                        onChange={(e) => setData({ ...data, pillar_title: e.target.value })}
-                        autoFocus
-                    />
-                    <p className="mt-2 text-xs text-gray-500">This will be added as a new Pillar.</p>
-                </div>
-                <DialogFooter className="flex justify-end space-x-2">
-                    <DialogClose asChild>
-                        <Button variant="outline" onClick={onClose}>
-                            Cancel
+                <form onSubmit={handleSubmit}>
+                    <div className="mt-1">
+                        <label className="mb-1 block text-sm font-medium text-gray-700">Pillar Title</label>
+                        <Input
+                            placeholder="e.g., Teaching and Learning"
+                            value={data.pillar_title}
+                            onChange={(e) => setData({ ...data, pillar_title: e.target.value })}
+                            required
+                            autoFocus
+                        />
+                        <p className="mt-2 text-xs text-gray-500">This will be added as a new Pillar.</p>
+                    </div>
+                    <DialogFooter className="flex justify-end space-x-2">
+                        <DialogClose asChild>
+                            <Button variant="outline" onClick={onClose}>
+                                Cancel
+                            </Button>
+                        </DialogClose>
+                        <Button variant="noborder" type="submit">
+                            {type === 'edit' ? 'Save Changes' : 'Add Pillar'}
                         </Button>
-                    </DialogClose>
-                    <Button variant="noborder" onClick={handleSubmit}>
-                        {type === 'edit' ? 'Save Changes' : 'Add Pillar'}
-                    </Button>
-                </DialogFooter>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );

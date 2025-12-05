@@ -41,62 +41,68 @@ export default function CampusGoalDialog({ ...props }: CampusGoalDialogProps) {
                                 : 'Fill out the details below to add a new campus goal.'}
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="mt-6 grid max-h-[70vh] grid-cols-1 gap-6 overflow-y-auto pr-2 md:grid-cols-2">
-                        <div className="space-y-6">
-                            <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">Title (English)</label>
-                                <Input
-                                    placeholder="e.g., Academic Excellence"
-                                    value={data.goal_title_eng}
-                                    onChange={(e) => setData({ ...data, goal_title_eng: e.target.value })}
-                                    autoFocus
-                                />
+                    <form onSubmit={handleSubmit}>
+                        <div className="mt-6 grid max-h-[70vh] grid-cols-1 gap-6 overflow-y-auto pr-2 md:grid-cols-2">
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700">Title (English)</label>
+                                    <Input
+                                        placeholder="e.g., Academic Excellence"
+                                        value={data.goal_title_eng}
+                                        onChange={(e) => setData({ ...data, goal_title_eng: e.target.value })}
+                                        autoFocus
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700">Description (English)</label>
+                                    <Textarea
+                                        placeholder="Enter English description..."
+                                        value={data.goal_desc_eng}
+                                        onChange={(e) => setData({ ...data, goal_desc_eng: e.target.value })}
+                                        autoResize
+                                        required
+                                        minHeight={150}
+                                        maxHeight={300}
+                                    />
+                                </div>
                             </div>
-                            <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">Description (English)</label>
-                                <Textarea
-                                    placeholder="Enter English description..."
-                                    value={data.goal_desc_eng}
-                                    onChange={(e) => setData({ ...data, goal_desc_eng: e.target.value })}
-                                    autoResize
-                                    minHeight={150}
-                                    maxHeight={300}
-                                />
-                            </div>
-                        </div>
 
-                        <div className="space-y-6">
-                            <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">Title (Filipino)</label>
-                                <Input
-                                    placeholder="e.g., Kahusayang Pang-Akademiko"
-                                    value={data.goal_title_fil}
-                                    onChange={(e) => setData({ ...data, goal_title_fil: e.target.value })}
-                                />
-                            </div>
-                            <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">Description (Filipino)</label>
-                                <Textarea
-                                    placeholder="Enter Filipino description..."
-                                    value={data.goal_desc_fil}
-                                    onChange={(e) => setData({ ...data, goal_desc_fil: e.target.value })}
-                                    autoResize
-                                    minHeight={150}
-                                    maxHeight={300}
-                                />
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700">Title (Filipino)</label>
+                                    <Input
+                                        placeholder="e.g., Kahusayang Pang-Akademiko"
+                                        value={data.goal_title_fil}
+                                        onChange={(e) => setData({ ...data, goal_title_fil: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700">Description (Filipino)</label>
+                                    <Textarea
+                                        placeholder="Enter Filipino description..."
+                                        value={data.goal_desc_fil}
+                                        onChange={(e) => setData({ ...data, goal_desc_fil: e.target.value })}
+                                        autoResize
+                                        required
+                                        minHeight={150}
+                                        maxHeight={300}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <DialogFooter className="mt-6 flex justify-end space-x-2">
-                        <DialogClose asChild>
-                            <Button variant="outline" onClick={onClose}>
-                                Cancel
+                        <DialogFooter className="mt-6 flex justify-end space-x-2">
+                            <DialogClose asChild>
+                                <Button variant="outline" onClick={onClose}>
+                                    Cancel
+                                </Button>
+                            </DialogClose>
+                            <Button variant="noborder" type="submit">
+                                {type === 'edit' ? 'Save Changes' : 'Add Campus Goal'}
                             </Button>
-                        </DialogClose>
-                        <Button variant="noborder" onClick={handleSubmit}>
-                            {type === 'edit' ? 'Save Changes' : 'Add Campus Goal'}
-                        </Button>
-                    </DialogFooter>
+                        </DialogFooter>
+                    </form>
                 </DialogContent>
             </Dialog>
         </>

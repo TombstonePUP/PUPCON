@@ -85,109 +85,120 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                                 : 'Update the details of the task force official below.'}
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1">
-                        <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Photo</Label>
-                            {!data.previewUrl ? (
-                                <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
-                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <svg
-                                            className="mb-4 h-8 w-8 text-gray-500"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 20 16"
-                                        >
-                                            <path
-                                                stroke="currentColor"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                                            />
-                                        </svg>
-                                        <p className="text-sm text-gray-500">
-                                            <span className="font-semibold">Click to upload</span> or drag and drop
-                                        </p>
-                                        <p className="text-xs text-gray-500">JPG, PNG, JPEG</p>
-                                    </div>
-                                    <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
-                                </Label>
-                            ) : (
-                                <div className="group relative">
-                                    <img src={data.previewUrl} alt="Preview" className="h-48 w-full rounded-lg border border-gray-200 object-cover" />
-                                    <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-lg bg-black/40 opacity-0 transition group-hover:opacity-100">
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            className="hidden"
-                                            id="replace-official-image"
-                                            onChange={handleImageChange} // reuse your same handler
+                    <form onSubmit={handleSubmit}>
+                        <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1">
+                            <div>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Photo</Label>
+                                {!data.previewUrl ? (
+                                    <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                            <svg
+                                                className="mb-4 h-8 w-8 text-gray-500"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 20 16"
+                                            >
+                                                <path
+                                                    stroke="currentColor"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                                />
+                                            </svg>
+                                            <p className="text-sm text-gray-500">
+                                                <span className="font-semibold">Click to upload</span> or drag and drop
+                                            </p>
+                                            <p className="text-xs text-gray-500">JPG, PNG, JPEG</p>
+                                        </div>
+                                        <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+                                    </Label>
+                                ) : (
+                                    <div className="group relative">
+                                        <img
+                                            src={data.previewUrl}
+                                            alt="Preview"
+                                            className="h-48 w-full rounded-lg border border-gray-200 object-cover"
                                         />
+                                        <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-lg bg-black/40 opacity-0 transition group-hover:opacity-100">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                id="replace-official-image"
+                                                onChange={handleImageChange} // reuse your same handler
+                                            />
 
-                                        {/* Replace image button */}
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            className="h-12 w-12 rounded-full bg-white p-0 transition-transform duration-200 hover:scale-110 hover:bg-red-50"
-                                            size="lg"
-                                            onClick={() => document.getElementById('replace-official-image')?.click()}
-                                        >
-                                            <Edit2 className="h-5 w-5 text-red-600" />
-                                        </Button>
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            className="h-12 w-12 rounded-full bg-white p-0 transition-transform duration-200 hover:scale-110 hover:bg-red-50"
-                                            size="lg"
-                                            onClick={() =>
-                                                setData({
-                                                    ...data,
-                                                    profile_image: null,
-                                                    previewUrl: null,
-                                                })
-                                            }
-                                        >
-                                            <Trash2 className="h-5 w-5 text-red-600" />
-                                        </Button>
+                                            {/* Replace image button */}
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="h-12 w-12 rounded-full bg-white p-0 transition-transform duration-200 hover:scale-110 hover:bg-red-50"
+                                                size="lg"
+                                                onClick={() => document.getElementById('replace-official-image')?.click()}
+                                            >
+                                                <Edit2 className="h-5 w-5 text-red-600" />
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="h-12 w-12 rounded-full bg-white p-0 transition-transform duration-200 hover:scale-110 hover:bg-red-50"
+                                                size="lg"
+                                                onClick={() =>
+                                                    setData({
+                                                        ...data,
+                                                        profile_image: null,
+                                                        previewUrl: null,
+                                                    })
+                                                }
+                                            >
+                                                <Trash2 className="h-5 w-5 text-red-600" />
+                                            </Button>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
+                            <div>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">First Name</Label>
+                                <Input
+                                    placeholder="Enter first name"
+                                    value={data.first_name}
+                                    onChange={(e) => setData((prev) => ({ ...prev, first_name: e.target.value }))}
+                                    autoFocus
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Last Name</Label>
+                                <Input
+                                    placeholder="Enter last name"
+                                    value={data.last_name}
+                                    onChange={(e) => setData((prev) => ({ ...prev, last_name: e.target.value }))}
+                                    autoFocus
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Position</Label>
+                                <Input
+                                    placeholder="e.g., Overall Chairman"
+                                    value={data.official_position}
+                                    onChange={(e) => setData((prev) => ({ ...prev, official_position: e.target.value }))}
+                                    required
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">First Name</Label>
-                            <Input
-                                placeholder="Enter first name"
-                                value={data.first_name}
-                                onChange={(e) => setData((prev) => ({ ...prev, first_name: e.target.value }))}
-                                autoFocus
-                            />
-                        </div>
-                        <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Last Name</Label>
-                            <Input
-                                placeholder="Enter last name"
-                                value={data.last_name}
-                                onChange={(e) => setData((prev) => ({ ...prev, last_name: e.target.value }))}
-                                autoFocus
-                            />
-                        </div>
-                        <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Position</Label>
-                            <Input
-                                placeholder="e.g., Overall Chairman"
-                                value={data.official_position}
-                                onChange={(e) => setData((prev) => ({ ...prev, official_position: e.target.value }))}
-                            />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline" onClick={onClose}>
-                                Cancel
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button variant="outline" onClick={onClose}>
+                                    Cancel
+                                </Button>
+                            </DialogClose>
+                            <Button type="submit" variant="noborder">
+                                {action === 'edit' ? 'Save Changes' : 'Add Official'}
                             </Button>
-                        </DialogClose>
-                        <Button onClick={handleSubmit}>{action === 'edit' ? 'Save Changes' : 'Add Official'}</Button>
-                    </DialogFooter>
+                        </DialogFooter>
+                    </form>
                 </DialogContent>
             </Dialog>
         </>

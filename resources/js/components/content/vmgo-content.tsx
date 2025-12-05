@@ -269,7 +269,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                 />
                 {pillar_errors.length > 0 && (
                     <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
-                        <h4 className="mb-2 font-semibold text-red-700">Gallery Section Errors</h4>
+                        <h4 className="mb-2 font-semibold text-red-700">Pillar Sections</h4>
                         <ul className="ml-6 list-disc text-sm text-red-600">
                             {pillar_errors.map((error, index) => (
                                 <li key={index}>{error}</li>

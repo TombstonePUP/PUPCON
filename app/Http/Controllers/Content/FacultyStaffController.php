@@ -29,7 +29,7 @@ class FacultyStaffController extends Controller
             'faculties.*.middle_name' => ['nullable', 'string', 'max:255'],
             'faculties.*.last_name' => ['required', 'string', 'max:255'],
             'faculties.*.personnel_type' => ['required', 'string', 'max:255'],
-            'faculties.*.status' => ['nullable', 'string', 'max:255'],
+            'faculties.*.status' => ['required', 'string', 'max:255'],
             'faculties.*.program_id' => ['nullable', 'integer'],
             'faculties.*.program_coordinator' => ['required', 'boolean'],
             'faculties.*.faculty_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:20480'],
@@ -47,6 +47,7 @@ class FacultyStaffController extends Controller
             'faculties.*.faculty_image.image' => 'The faculty/staff image must be an image file.',
             'faculties.*.faculty_image.mimes' => 'The faculty/staff image must be a file of type: jpeg, png, jpg.',
             'faculties.*.faculty_image.max' => 'The faculty/staff image may not be greater than 20MB.',
+            'faculties.*.status.required' => 'The faculty/staff status is required.',
         ]);
 
         if ($validator->fails()) {

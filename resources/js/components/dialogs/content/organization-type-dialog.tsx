@@ -35,27 +35,30 @@ export function OrganizationTypeDialog({ ...props }: OrganizationTypeDialogProps
                             : 'Fill out the details below to add a new organization type.'}
                     </DialogDescription>
                 </DialogHeader>
-                <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
-                    <div className="mt-6">
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Type Name</Label>
-                        <Input
-                            placeholder="e.g., Academic Organizations"
-                            value={data.type_name}
-                            onChange={(e) => setData({ ...data, type_name: e.target.value })}
-                            autoFocus
-                        />
+                <form onSubmit={handleSubmit}>
+                    <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
+                        <div className="mt-6">
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Type Name</Label>
+                            <Input
+                                placeholder="e.g., Academic Organizations"
+                                value={data.type_name}
+                                onChange={(e) => setData({ ...data, type_name: e.target.value })}
+                                required
+                                autoFocus
+                            />
+                        </div>
                     </div>
-                </div>
-                <DialogFooter className="mt-6 flex justify-end space-x-2">
-                    <DialogClose asChild>
-                        <Button variant="outline" onClick={onClose}>
-                            Cancel
+                    <DialogFooter className="mt-6 flex justify-end space-x-2">
+                        <DialogClose asChild>
+                            <Button variant="outline" onClick={onClose}>
+                                Cancel
+                            </Button>
+                        </DialogClose>
+                        <Button variant="noborder" type="submit">
+                            {type === 'edit' ? 'Save Changes' : 'Add Type'}
                         </Button>
-                    </DialogClose>
-                    <Button variant="noborder" onClick={handleSubmit}>
-                        {type === 'edit' ? 'Save Changes' : 'Add Type'}
-                    </Button>
-                </DialogFooter>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );

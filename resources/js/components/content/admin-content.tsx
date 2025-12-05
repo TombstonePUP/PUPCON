@@ -370,6 +370,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                                             {selectedOfficial.first_name} {selectedOfficial.middle_name ? selectedOfficial.middle_name[0] + ' ' : ''}
                                             {selectedOfficial.last_name} {selectedOfficial.suffix ? ', ' + selectedOfficial.suffix : ''}
                                         </h4>
+                                        <p className="text-sm font-normal text-red-700">{selectedOfficial.type} Official</p>
                                         <p className="text-sm font-normal text-red-700">{selectedOfficial.position}</p>
                                     </div>
                                     {selectedOfficialErrors.length > 0 && (
