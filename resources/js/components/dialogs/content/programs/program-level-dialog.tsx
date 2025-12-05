@@ -1,7 +1,6 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PerProgramUnderSurvey } from '@/types';
@@ -49,7 +48,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
         });
     };
 
-    const programList = programs.filter((p) => !p.under_survey && p.is_active);
+    const programList = programs.filter((p) => !p.under_survey && p.is_active && (p.latest_level?.level ?? -1) < 4);
 
     /* const newLevels = [
         { value: '0', label: 'Preliminary' },
@@ -86,7 +85,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                                 {programList.map((program) => (
                                     <SelectItem value={String(program.program_id)}>
                                         {program.degree_type.match(/\b[A-Z]/g)}
-                                        { }
+                                        {}
                                         {' in '}
                                         {program.program_name}
                                     </SelectItem>

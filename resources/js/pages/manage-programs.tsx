@@ -73,7 +73,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         }
     };
 
-    const underSurvey = filteredPrograms.filter((p) => p.under_survey === true);
+    const underSurvey = filteredPrograms.filter((p) => p.under_survey === true && (p.latest_level?.level ?? -1) <= 4);
 
     const handleAddProgram = () => {
         setSelectedProgramId(null);
