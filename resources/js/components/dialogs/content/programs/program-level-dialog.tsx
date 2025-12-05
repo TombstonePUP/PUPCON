@@ -1,12 +1,12 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PerProgramUnderSurvey } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import { Input } from '@/components/ui/input';
 
 interface ProgramLevelDialogProps {
     programs: PerProgramUnderSurvey[];
@@ -51,8 +51,16 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
     };
     console.log(programs);
 
-    const programList = programs.filter((p) => !p.under_survey && p.is_active && ((p.latest_level?.level ?? -1) < 4 || p.latest_level?.remarks === 'Passed'));
+    /* const programList = programs.filter(
+        (p) => !p.under_survey && p.is_active && ((p.latest_level?.level ?? -1) < 4 || p.latest_level?.remarks === 'Passed'),
+    ); */
 
+    const programList = programs.filter((p) => {
+        const level = p.latest_level?.level ?? -1;
+        const passed = (p.latest_level?.remarks ?? '').toLowerCase() === 'passed';
+
+        return !p.under_survey && p.is_active && (level < 4 || passed);
+    });
     const newLevels = [
         { value: '0', label: 'Preliminary' },
         { value: '1', label: 'Level 1' },
@@ -85,29 +93,16 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                                 <SelectValue placeholder="Select a program" />
                             </SelectTrigger>
                             <SelectContent>
-                                {programList.map((program) => (
-                                    <SelectItem value={String(program.program_id)}>
-                                        {program.degree_type.match(/\b[A-Z]/g)}
-                                        { }
-                                        {' in '}
-                                        {program.program_name}
-                                    </SelectItem>
-                                ))}
-
                                 {programList.length > 0 ? (
                                     programList.map((program) => (
-                                        <SelectItem
-                                            key={program.program_id}
-                                            value={String(program.program_id)}
-                                            className='capitalize'
-                                        >
+                                        <SelectItem key={program.program_id} value={String(program.program_id)} className="capitalize">
                                             {program.degree_type.match(/\b[A-Z]/g)?.join('')}
                                             {' in '}
                                             {program.program_name}
                                         </SelectItem>
                                     ))
                                 ) : (
-                                    <div className='text-sm py-2 pl-4 text-gray-500'>No programs available</div>
+                                    <div className="py-2 pl-4 text-sm text-gray-500">No programs available</div>
                                 )}
                             </SelectContent>
                         </Select>
