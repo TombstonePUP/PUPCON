@@ -172,7 +172,7 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                                             <HelpCircleIcon className="h-auto w-4 text-red-800" />
                                         </span>
                                     </TooltipTrigger>
-                                    <TooltipContent>Enable this switch to allow uploading multiple files in this category.</TooltipContent>
+                                    <TooltipContent className='text-center'>Enable this switch to allow uploading multiple files in this category.</TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
                         </div>

@@ -8,8 +8,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/text-area';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
 import { useForm } from '@inertiajs/react';
+import { HelpCircleIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface BenchmarkProps {
@@ -134,9 +136,19 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                                 />
                                 <Label
                                     htmlFor="is-container-mode"
-                                    className="block text-sm leading-none font-medium text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    className="flex gap-2 text-sm leading-none font-medium text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
                                     Benchmark Container
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <span className="flex cursor-default items-center gap-1 italic">
+                                                    <HelpCircleIcon className="h-auto w-4 text-red-800" />
+                                                </span>
+                                            </TooltipTrigger>
+                                            <TooltipContent className='text-center'>Enable this switch to make it just a container or parent benchmark. (This will disable the upload button)</TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </Label>
                             </div>
                             <InputError message={errors.is_container} className="mt-2" />
@@ -153,7 +165,7 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                         </DialogFooter>
                     </form>
                 </div>
-            </DialogContent>
-        </Dialog>
+            </DialogContent >
+        </Dialog >
     );
 }
