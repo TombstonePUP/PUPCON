@@ -23,6 +23,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { FilesOverview } from '@/types';
 import React from 'react';
 import DocumentRequestActions from '../request-table-actions';
+import { usePage } from '@inertiajs/react';
 
 interface DialogProps {
     type: 'aprove' | 'reject' | 'revert' | null;
@@ -39,6 +40,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = React.useState('');
     const [tab, setTab] = React.useState<'Content' | 'Users' | 'Files'>('Files');
+    const { auth } = usePage().props;
+    const role = auth.user.roles.role_name;
 
     const filteredData = React.useMemo(() => {
         if (tab === 'Content') {
@@ -90,28 +93,32 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                     </TabsTrigger>
 
 
-                    <TabsTrigger
-                        value="Users"
-                        onClick={() => setTab('Users')}
-                        className="h-full flex-1 rounded-md border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
-                    >
-                        Users
-                        <Badge className="ml-2 transition-colors duration-200" variant="secondary">
-                            {data.filter((d) => d.type === 'Users').length}
-                        </Badge>
-                    </TabsTrigger>
+                    {(role === 'Admin' || role === 'Coordinator') && (
+                        <TabsTrigger
+                            value="Users"
+                            onClick={() => setTab('Users')}
+                            className="h-full flex-1 rounded-md border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                        >
+                            Users
+                            <Badge className="ml-2 transition-colors duration-200" variant="secondary">
+                                {data.filter((d) => d.type === 'Users').length}
+                            </Badge>
+                        </TabsTrigger>
+                    )}
 
 
-                    <TabsTrigger
-                        value="Content"
-                        onClick={() => setTab('Content')}
-                        className="h-full flex-1 rounded-md border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
-                    >
-                        Content
-                        <Badge className="ml-2 transition-colors duration-200" variant="secondary">
-                            {data.filter((d) => d.type === 'Content').length}
-                        </Badge>
-                    </TabsTrigger>
+                    {(role === 'Admin' || role === 'Coordinator') && (
+                        <TabsTrigger
+                            value="Content"
+                            onClick={() => setTab('Content')}
+                            className="h-full flex-1 rounded-md border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                        >
+                            Content
+                            <Badge className="ml-2 transition-colors duration-200" variant="secondary">
+                                {data.filter((d) => d.type === 'Content').length}
+                            </Badge>
+                        </TabsTrigger>
+                    )}
                 </TabsList>
                 <div className="ml-auto">
                     <DataTableViewOptions table={table} />

@@ -81,12 +81,17 @@ class AreaParameterController extends Controller
      */
     public function destroy(Request $request, AreaParameters $areaParameters): RedirectResponse
     {
-        $parameter = $areaParameters->find($request->parameter_id)->delete();
+        $parameter = $areaParameters->find($request->parameter_id);
+
+        $name = $parameter->parameter_name;
+        $description = $parameter->parameter_description;
+
+        $parameter->delete();
 
         $user = Auth::user();
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'description' => 'Deleted Area Parameter: ' . $parameter->parameter_name . $parameter->parameter_description,
+            'description' => 'Deleted Area Parameter: ' . $name . $description,
             'activity' => 'Delete',
             'type' => 'Content',
             'activity_date' => now(),

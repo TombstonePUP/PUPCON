@@ -105,7 +105,7 @@ class AreaParameterOutlinesController extends Controller
 
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'activity' => 'Create Benchmark',
+            'activity' => 'Create',
             'description' => "Created benchmark: {$parameterOutline->outline_description}",
             'type' => 'Content',
             'activity_date' => now(),
