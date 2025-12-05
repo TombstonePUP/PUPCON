@@ -72,7 +72,7 @@ export default function GalleryDialog({ type, onClose, onSave, gallery }: Galler
                                         </div>
                                     </div>
                                     <div className="mt-4 text-center">
-                                        <p className="mb-1 text-lg font-semibold text-gray-700">Upload welcome banner</p>
+                                        <p className="mb-1 text-lg font-semibold text-gray-700">Upload Image</p>
                                         <p className="text-sm text-gray-500">PNG, JPG up to 5MB</p>
                                     </div>
                                     <div className="mt-2 flex gap-2">
@@ -114,13 +114,14 @@ export default function GalleryDialog({ type, onClose, onSave, gallery }: Galler
                         )}
                     </div>
                     <div>
-                        <Label>Caption</Label>
+                        <Label>Caption <span className="text-red-500">*</span></Label>
                         <Input
                             className="mt-2"
                             type="text"
                             value={data.caption}
                             onChange={(e) => setData({ ...data, caption: e.target.value })}
                             placeholder="Image caption"
+                            required
                         />
                     </div>
                     <DialogFooter>

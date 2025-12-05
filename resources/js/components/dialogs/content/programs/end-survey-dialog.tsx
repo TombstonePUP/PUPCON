@@ -47,7 +47,7 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div className="space-y-2">
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Programs Under Survey</Label>
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">Programs Under Survey <span className="text-red-500">*</span></Label>
                         <Select
                             value={selectedProgramId ? String(selectedProgramId) : ''}
                             onValueChange={(value) => {
@@ -94,7 +94,7 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Remarks</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Remarks <span className="text-red-500">*</span></Label>
                             <Select value={data.remarks} onValueChange={(value) => setData('remarks', value)} disabled={processing}>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select Remarks" />

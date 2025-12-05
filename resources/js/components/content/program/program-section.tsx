@@ -468,7 +468,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                         </div>
                         <div className="flex min-h-[300px] rounded-lg border border-gray-200">
                             <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-4">
-                                <h4 className="mb-3 text-xs text-gray-500">Select an Objective</h4>
+                                <h4 className="mb-3 text-xs text-gray-500">Select an Objective </h4>
                                 <div className="max-h-[250px] space-y-1 overflow-y-auto">
                                     {objectives?.length === 0 ? (
                                         <div className="flex h-[100px] items-center justify-center">

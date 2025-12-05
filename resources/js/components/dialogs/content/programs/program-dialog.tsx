@@ -68,7 +68,7 @@ export default function ProgramDialog({ ...props }: ProgramDialogProps) {
                 </DialogHeader>
                 <div className="flex flex-col gap-4">
                     <div className="space-y-2">
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Degree Type</Label>
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">Degree Type <span className="text-red-500">*</span></Label>
                         <Select
                             value={data.degree_type}
                             onValueChange={(value) => setData("degree_type", value)}
@@ -88,7 +88,7 @@ export default function ProgramDialog({ ...props }: ProgramDialogProps) {
                         <InputError message={errors.degree_type} />
                     </div>
                     <div className="space-y-2">
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Program Name</Label>
+                        <Label className="mb-2 block text-sm font-medium text-gray-700">Program Name <span className="text-red-500">*</span></Label>
                         <Input
                             type="text"
                             className="w-full"

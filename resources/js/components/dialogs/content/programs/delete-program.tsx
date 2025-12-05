@@ -42,7 +42,7 @@ export default function DeleteProgram({ program, onClose }: DeleteProgramProps) 
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md">
-                <form onSubmit={handleDelete}>
+                <form onSubmit={handleDelete} className='flex flex-col gap-4'>
                     <DialogHeader>
                         <DialogTitle className="text-lg font-medium text-gray-900">Archive Program</DialogTitle>
                         <DialogDescription className="text-sm text-gray-500">Are you sure you want to archive?</DialogDescription>
@@ -55,7 +55,7 @@ export default function DeleteProgram({ program, onClose }: DeleteProgramProps) 
                             </p>
                         </div>
                         <div className="mt-4">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Type the program name to confirm:</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Type the program name to confirm <span className="text-red-500">*</span></Label>
                             <Input
                                 type="text"
                                 className="w-full rounded border px-2 py-1 text-sm"

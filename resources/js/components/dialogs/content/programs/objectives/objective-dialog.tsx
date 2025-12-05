@@ -57,7 +57,7 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective, next
                     </div>
 
                     <div>
-                        <Label>Description</Label>
+                        <Label>Description <span className="text-red-500">*</span></Label>
                         <Textarea
                             className="mt-2"
                             // required
@@ -65,6 +65,7 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective, next
                             onChange={(e) => setData({ ...data, description: e.target.value })}
                             placeholder="Describe the learning objective..."
                             minHeight={80}
+                            required
                         />
                     </div>
 

@@ -153,26 +153,48 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                         <div className="flex flex-col gap-4">
                             <div></div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Number (numeric numbers only)</Label>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Number <span className="text-red-500">*</span>
+                                </Label>
                                 <Input
                                     type="number"
                                     value={data.area_number}
-                                    onChange={(e) => setData('area_number', e.target.value)}
+                                    onChange={(e) => {
+                                        let value = e.target.value;
+
+                                        // Only allow digits
+                                        if (!/^\d*$/.test(value)) return;
+
+                                        // Convert to number
+                                        const num = Number(value);
+
+                                        // Prevent 0 or negative
+                                        if (num <= 0 && value !== "") return;
+
+                                        setData('area_number', value);
+                                    }}
                                     placeholder="e.g. 1, 2, or 3"
                                     disabled={processing}
-                                    min="1"
-                                    step="1"
+                                    className="no-spinner"
                                     onKeyDown={(e) => {
-                                        // Prevent decimal point, minus sign, and 'e' (scientific notation)
-                                        if (e.key === '.' || e.key === '-' || e.key === 'e' || e.key === 'E') {
+                                        // Block invalid characters
+                                        if (['-', '.', 'e', 'E', '+'].includes(e.key)) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                    onPaste={(e) => {
+                                        const pasted = e.clipboardData.getData('text');
+
+                                        // Block paste if not a positive integer > 0
+                                        if (!/^[1-9]\d*$/.test(pasted)) {
                                             e.preventDefault();
                                         }
                                     }}
                                 />
+
                                 <InputError message={errors.area_number} className="mt-1" />
                             </div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name</Label>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name <span className="text-red-500">*</span></Label>
                                 <Input
                                     type="text"
                                     value={data.area_name}
@@ -183,7 +205,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                 <InputError message={errors.area_name} className="mt-1" />
                             </div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Description</Label>
+                                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Description <span className="text-red-500">*</span></Label>
                                 <Textarea
                                     value={data.area_description}
                                     onChange={(e) => setData('area_description', e.target.value)}
