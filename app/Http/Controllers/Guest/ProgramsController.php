@@ -41,7 +41,11 @@ class ProgramsController extends Controller
     {
         $program = Programs::findOrFail($program_id)->load([
             'Levels' => function ($query) {
-                $query->with('Areas')->where('is_active', true)->where('remarks', 'Ongoing Survey')->orderBy('survey_date', 'desc');
+                $query->with([
+                    'Areas' => function ($q) {
+                        $q->where('archive', false)->orderBy('area_number', 'asc');
+                    },
+                ])->where('is_active', true)->where('remarks', 'Ongoing Survey')->orderBy('survey_date', 'desc');
             },
             'FacultyStaff',
             'Objectives',
