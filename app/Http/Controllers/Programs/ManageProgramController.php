@@ -101,6 +101,7 @@ class ManageProgramController extends Controller
         // Check if program with same name and degree type already exists
         $existingProgram = Programs::where('program_name', 'ILIKE', $validated['program_name'])
             ->where('degree_type', $validated['degree_type'])
+            ->where('is_active', true)
             ->first();
 
         if ($existingProgram) {
