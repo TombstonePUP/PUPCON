@@ -21,7 +21,7 @@ use App\Http\Controllers\Programs\LevelsController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Exhibits\ExhibitFilesController;
-use App\Http\Controllers\Exhibits\ExhibitOulinesFileController;
+use App\Http\Controllers\Exhibits\ExhibitOutlinesFileController;
 use App\Http\Controllers\Files\AreaFormsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         Route::delete('exhibits/{exhibit_id}/delete', 'destroy')->name('exhibits.delete');
     });
 
-    Route::controller(ExhibitOulinesFileController::class)->group(function () {
+    Route::controller(ExhibitOutlinesFileController::class)->group(function () {
         Route::post('exhibit-outline/upload', 'upload')->name('exhibit.outline.file.upload');
         Route::get('exhibit-outline/{exhibit_file_id}/download', 'download')->name('exhibit.outline.file.download');
         Route::delete('exhibit-outline/{outline_id}/delete', 'destroy')->name('exhibit.outline.file.delete');

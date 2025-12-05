@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
-class ExhibitOulinesFileController extends Controller
+class ExhibitOutlinesFileController extends Controller
 {
     /**
      * Store a newly created resource in storage.
@@ -109,6 +109,12 @@ class ExhibitOulinesFileController extends Controller
             }
         }
 
+
+        // <-- Add a fallback for updates without file change
+        if (!$activityLog->activity) {
+            $activityLog->activity = $outline ? 'Update' : 'Upload';
+        }
+
         if (!empty($exhibit_file->file_path)) {
             $exhibit_file->uploaded_by = $user->user_id;
             $exhibit_file->uploaded_at = now();
@@ -142,7 +148,6 @@ class ExhibitOulinesFileController extends Controller
                 Storage::disk('public')->delete($exhibit_file->file_path);
                 $exhibit_file->delete();
             }
-            $outline->delete();
 
             ActivityLog::create([
                 'user_id' => $user->user_id,
@@ -151,6 +156,8 @@ class ExhibitOulinesFileController extends Controller
                 'type' => 'Files',
                 'activity_date' => now(),
             ]);
+
+            $outline->delete();
 
             return redirect()->back()
                 ->with('type', 'success')
