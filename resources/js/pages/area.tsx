@@ -84,9 +84,13 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                     )}
                 </div>
                 <div className="flex justify-center">
-                    <p className="w-[68%] rounded-[1vw] border border-[#7f1414]/25 bg-white px-[3vw] py-[1.5vw] text-justify indent-[2vw] transition duration-300 hover:border-[#7f1414]">
-                        {area.area_description || 'No area description available.'}
-                    </p>
+                    <div className="w-[68%] overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white transition duration-300 hover:border-[#7f1414]">
+                        <div className="border-l-4 border-[#7f1414] p-6">
+                            <p className="text-justify indent-8 leading-relaxed text-gray-700">
+                                {area.area_description || 'No area description available.'}
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Forms Section */}
@@ -105,14 +109,14 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                 {area.area_forms?.map((area_form) => (
                                     <div
                                         key={area_form.area_form_id}
-                                        className="group relative flex flex-col overflow-hidden rounded-[1vw] border border-[#7f1414]/25 bg-white transition-all duration-300 hover:border-[#7f1414]"
+                                        className="group relative flex flex-col overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white transition-all duration-300 hover:border-[#7f1414]"
                                     >
                                         {/* Icon Header with Background */}
-                                        <div className="relative flex items-center justify-center bg-gradient-to-br from-[#7f1414]/5 to-[#7f1414]/10 py-[3vw] transition-colors duration-300 group-hover:from-[#7f1414]/10 group-hover:to-[#7f1414]/15">
-                                            <div className="absolute top-0 right-0 h-20 w-20 translate-x-8 -translate-y-8 rounded-full bg-[#7f1414]/5"></div>
-                                            <div className="absolute bottom-0 left-0 h-16 w-16 -translate-x-6 translate-y-6 rounded-full bg-[#7f1414]/5"></div>
+                                        <div className="relative flex items-center justify-center bg-gradient-to-br from-[#7f1414]/5 to-[#7f1414]/10 py-6 transition-colors duration-300 group-hover:from-[#7f1414]/10 group-hover:to-[#7f1414]/15">
+                                            <div className="absolute top-0 right-0 h-16 w-16 translate-x-6 -translate-y-6 rounded-full bg-[#7f1414]/5"></div>
+                                            <div className="absolute bottom-0 left-0 h-12 w-12 -translate-x-4 translate-y-4 rounded-full bg-[#7f1414]/5"></div>
                                             <svg
-                                                className="relative z-10 h-[5vw] w-[5vw] text-[#7f1414] transition-transform duration-300 group-hover:scale-110"
+                                                className="relative z-10 h-12 w-12 text-[#7f1414] transition-transform duration-300 group-hover:scale-110"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -126,13 +130,14 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                             </svg>
                                         </div>
 
-                                        {/* Content Section - flex-1 to fill space */}
-                                        <div className="flex flex-1 flex-col items-center justify-between p-[2vw] text-center">
-                                            <div className="flex flex-col items-center">
-                                                <h3 className="mb-[0.5vw] line-clamp-2 min-h-[2.4vw] text-[1.2vw] leading-tight font-bold text-[#7f1414] transition-colors duration-300 group-hover:text-[#a01818]">
+                                        {/* Content Section */}
+                                        <div className="flex flex-1 flex-col items-center justify-between p-5 text-center">
+                                            <div className="flex w-full flex-col items-center">
+                                                <h3 className="mb-2 line-clamp-2 min-h-[3rem] text-base leading-snug font-bold text-[#7f1414] transition-colors duration-300 group-hover:text-[#a01818]">
                                                     {area_form.area_form_category.category_name}
                                                 </h3>
-                                                <p className="mb-[1.5vw] line-clamp-1 text-[0.85vw] leading-relaxed text-gray-600">
+                                                <p className="mb-4 line-clamp-1 text-sm leading-relaxed text-gray-600">
+                                                    {area.area_numeral?.trim() ? `Area ${area.area_numeral}` : `Area ${area.area_number}`} •{' '}
                                                     {program.program_name}
                                                 </p>
                                             </div>
@@ -140,15 +145,15 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                             {/* View Button */}
                                             <button
                                                 onClick={() => openViewer(`${area_form.file_path}`, `${area_form.area_form_category.category_name}`)}
-                                                className="group/btn relative overflow-hidden rounded-full bg-[#7f1414] px-[2vw] py-[0.6vw] transition-all duration-300 hover:bg-[#a01818]"
+                                                className="group/btn relative overflow-hidden rounded-full bg-[#7f1414] px-6 py-2 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#a01818]"
                                             >
-                                                <span className="relative z-10 text-[0.85vw] font-semibold text-white">View Document</span>
+                                                <span className="relative z-10">View Document</span>
                                                 <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full"></div>
                                             </button>
                                         </div>
 
                                         {/* Bottom Accent Line */}
-                                        <div className="h-[0.3vw] w-full bg-gradient-to-r from-transparent via-[#7f1414] to-transparent opacity-50 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                        <div className="h-1 w-full bg-gradient-to-r from-transparent via-[#7f1414] to-transparent opacity-50 transition-opacity duration-300 group-hover:opacity-100"></div>
                                     </div>
                                 ))}
                             </div>
