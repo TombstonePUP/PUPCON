@@ -7,6 +7,10 @@ import { AreaProgress } from '@/components/charts/area-progress-list';
 import { DataTable } from '@/components/charts/data-table';
 import { OverallProgress } from '@/components/charts/overall-progress';
 import { UploadFrequency } from '@/components/charts/upload-frequency';
+import GuideTour from "@/pages/test/GuideTour";
+
+
+
 
 import { type ActivityLogs, type DocumentStatistics, type FrequencyUploads, type OverallUploads } from '@/types/dashboard';
 
@@ -46,7 +50,7 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
                         </div>
                     </div>
                 </div>
-{/* 
+                {/* 
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <div className="mb-2 rounded-lg border border-gray-200 bg-white p-6"></div>
                     <div className="mb-2 rounded-lg border border-gray-200 bg-white p-6"></div>
@@ -54,12 +58,16 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
                     <div className="mb-2 rounded-lg border border-gray-200 bg-white p-6"></div>
 
                 </div> */}
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <UploadFrequency data={frequencyUploads} />
-                    <OverallProgress data={overallUploads} />
-                    <AreaProgress data={documentStatistics} />
+                <div id="stats-card" className="grid auto-rows-min gap-4 md:grid-cols-3">
+
+                    <div id="stats-card-left">
+                        <UploadFrequency data={frequencyUploads} /></div>
+                    <div id="stats-card-center">
+                        <OverallProgress data={overallUploads} /></div>
+                    <div id="stats-card-right">  <AreaProgress data={documentStatistics} /></div>
                 </div>
-                <div className="border-sidebar-border/70 dark:border-sidebar-border relative flex-1 rounded-xl border p-4 md:min-h-md">
+                <GuideTour />
+                <div id='stat-table' className="border-sidebar-border/70 dark:border-sidebar-border relative flex-1 rounded-xl border p-4 md:min-h-md">
                     <DataTable columns={columns} data={activityLogs} />
                     {/* <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" /> */}
                 </div>

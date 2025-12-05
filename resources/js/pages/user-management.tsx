@@ -8,6 +8,8 @@ import { AssignablePrograms, AssignableRoles, type UserRecords } from '@/types/u
 import { Head } from '@inertiajs/react';
 import { User2, User2Icon } from 'lucide-react';
 import { useState } from 'react';
+import GuideTour from "@/pages/test/GuideTour";
+
 
 interface UsersProps {
     userRecords: UserRecords[];
@@ -48,7 +50,9 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
     };
 
     return (
+        
         <>
+           <GuideTour />
             <AppLayout breadcrumbs={breadcrumbs}>
                 <Head title="User Management" />
                 <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
@@ -85,7 +89,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                         </div>
                     </div>
 
-                    <div className="flex gap-6">
+                    <div className="flex gap-6" id='user-table'>
                         <div className="animate-in fade-in-0 w-full rounded-lg border bg-white p-4 duration-500">
                             <UsersDataTable columns={columns} data={userRecords} />
                         </div>
