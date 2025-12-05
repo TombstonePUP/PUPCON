@@ -99,7 +99,7 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
                                         // backgroundColor: `${program.color}/15`,
                                     }}
                                 >
-                                    <Circle className="h-0.5 w-0.5" fill={program.color} strokeWidth={0} />
+                                    <Circle className={`h-0.5 w-0.5 bg-${program.color}-500 rounded-full`} strokeWidth={0} />
                                     {program.program_name}
                                 </Badge>
                             ))
@@ -127,7 +127,7 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
                                     variant="outline"
                                     className="items-center bg-gray-100 rounded-md border-none px-5 py-0.5 text-xs font-medium text-gray-700 hover:bg-gray-200"
                                 >
-                                    <Circle className="h-0.5 w-0.5" fill={area?.levels.programs.color} strokeWidth={0} />
+                                    <Circle className={`h-0.5 w-0.5 bg-${area?.levels.programs.color}-500 rounded-full`} strokeWidth={0} />
 
                                     Area {area.area_number}
                                 </Badge>
