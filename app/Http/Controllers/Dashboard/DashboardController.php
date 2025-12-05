@@ -72,6 +72,7 @@ class DashboardController extends Controller
                     'al.activity_date'
                 )
                 ->where('al.type', 'ILIKE', 'Files')
+                ->where('al.user_id', $user->user_id) 
                 ->orderBy('al.activity_date', 'desc')
                 ->get();
             $activityLogs->transform(function ($activityLog) {
