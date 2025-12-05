@@ -97,10 +97,7 @@ export function AssignRole({ user, programRoles, roles, onClose }: AssignRoleDia
                     {/* Assign Role */}
                     <div>
                         <Label className="text-base font-medium text-gray-900">
-                            Assign Role{' '}
-                            <Badge className="ml-2 transition-colors duration-200" variant="secondary">
-                                required
-                            </Badge>
+                            Assign Role <span className="text-red-500">*</span>
                         </Label>
 
                         <RadioGroup

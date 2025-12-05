@@ -215,10 +215,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                         <TabsContent value="access" className="space-y-8">
                             <div>
                                 <Label className="text-base font-medium text-gray-900">
-                                    Assign Role{' '}
-                                    <Badge className="ml-2 transition-colors duration-200" variant="secondary">
-                                        required
-                                    </Badge>
+                                    Assign Role <span className="text-red-500">*</span>
                                 </Label>
                                 <RadioGroup
                                     onValueChange={(value) => setData('assigned_role', Number(value))}
