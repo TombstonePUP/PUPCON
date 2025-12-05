@@ -11,6 +11,7 @@ use App\Models\ParameterOutlines;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -39,22 +40,45 @@ class DashboardController extends Controller
      */
     public function activityLog(): Collection
     {
-        $activityLogs = ActivityLog::from('activity_log as al')
-            ->join('users as u', 'al.user_id', '=', 'u.user_id')
-            ->select(
-                'al.activity_log_id',
-                DB::raw("concat(u.first_name, ' ', u.last_name) as full_name"),
-                'al.description',
-                'al.activity',
-                'al.type',
-                'al.activity_date'
-            )
-            ->orderBy('al.activity_date', 'desc')
-            ->get();
-        $activityLogs->transform(function ($activityLog) {
-            $activityLog->activity_date = Carbon::parse($activityLog->activity_date)->format('M d,Y');
-            return $activityLog;
-        });
+        $user = Auth::user();
+        $role = $user->Roles->role_name;
+        if ($role == 'Coordinator' || $role == 'Admin') {
+            $activityLogs = ActivityLog::from('activity_log as al')
+                ->join('users as u', 'al.user_id', '=', 'u.user_id')
+                ->select(
+                    'al.activity_log_id',
+                    DB::raw("concat(u.first_name, ' ', u.last_name) as full_name"),
+                    'al.description',
+                    'al.activity',
+                    'al.type',
+                    'al.activity_date'
+                )
+                ->orderBy('al.activity_date', 'desc')
+                ->get();
+            $activityLogs->transform(function ($activityLog) {
+                $activityLog->activity_date = Carbon::parse($activityLog->activity_date)->format('M d,Y');
+                return $activityLog;
+            });
+        }
+        if ($role == 'Chairman') {
+            $activityLogs = ActivityLog::from('activity_log as al')
+                ->join('users as u', 'al.user_id', '=', 'u.user_id')
+                ->select(
+                    'al.activity_log_id',
+                    DB::raw("concat(u.first_name, ' ', u.last_name) as full_name"),
+                    'al.description',
+                    'al.activity',
+                    'al.type',
+                    'al.activity_date'
+                )
+                ->where('al.type', 'ILIKE', 'Files')
+                ->orderBy('al.activity_date', 'desc')
+                ->get();
+            $activityLogs->transform(function ($activityLog) {
+                $activityLog->activity_date = Carbon::parse($activityLog->activity_date)->format('M d,Y');
+                return $activityLog;
+            });
+        }
         return $activityLogs;
     }
 
