@@ -113,7 +113,8 @@ php artisan storage:link
 
 # 4️⃣ Database setup
 php artisan migrate
-php artisan db:seed
+php artisan db:seed --class=UserSeeder
+php artisan db:seed --class=PagesSeeder
 
 # 5️⃣ Start servers
 composer run dev
