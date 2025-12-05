@@ -375,7 +375,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                 </div>
 
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-gray-700">Director's Name</label>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700">Director's Name <span className="text-red-500">*</span></label>
                                     <Input
                                         placeholder="Enter director's name..."
                                         value={data.page.director_name}
@@ -393,7 +393,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                     <InputError message={errors['page.director_name']} className="mt-2" />
                                 </div>
                                 <div>
-                                    <label className="mb-2 mt-6 block text-sm font-medium text-gray-700">Director's Message</label>
+                                    <label className="mb-2 mt-6 block text-sm font-medium text-gray-700">Director's Message <span className="text-red-500">*</span></label>
                                     <Textarea
                                         placeholder="Enter your message..."
                                         autoResize
