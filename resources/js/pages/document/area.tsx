@@ -123,13 +123,13 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                                         <div className="w-full rounded-lg border border-gray-200 bg-white p-4">
                                             <h3 className="mb-4 text-sm font-semibold text-gray-900">Area Actions</h3>
                                             <div className="flex flex-col gap-2">
+                                                <Button variant="outline" onClick={() => openDialog('parameter', 'import')}>
+                                                    <LucideImport className="ml-1 h-4 w-4" />
+                                                    Import Template
+                                                </Button>
                                                 <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
                                                     <PlusCircleIcon className="ml-1 h-4 w-4" />
                                                     Add Parameter
-                                                </Button>
-                                                <Button className="border-none" onClick={() => openDialog('parameter', 'import')}>
-                                                    <LucideImport className="ml-1 h-4 w-4" />
-                                                    Import template
                                                 </Button>
                                             </div>
                                         </div>
