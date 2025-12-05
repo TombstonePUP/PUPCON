@@ -166,6 +166,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                             onChange={(e) => setData('first_name', e.target.value)}
                                             disabled={processing}
                                             placeholder="e.g., Jane"
+                                            required
                                         />
                                         <InputError message={errors.first_name} />
                                     </div>
@@ -181,6 +182,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                             onChange={(e) => setData('last_name', e.target.value)}
                                             disabled={processing}
                                             placeholder="e.g., Doe"
+                                            required
                                         />
                                         <InputError message={errors.last_name} />
                                     </div>
@@ -198,6 +200,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                         onChange={(e) => setData('email', e.target.value)}
                                         disabled={processing}
                                         placeholder="e.g., jane.doe@example.com"
+                                        required
                                     />
                                     <InputError message={errors.email} />
                                 </div>

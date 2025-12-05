@@ -182,7 +182,7 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
                         onClick={handleAddGallery}
                         className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
                     >
-                        <Plus className="mr-2 h-4 w-4" /> <p className="truncate">Add New Photo</p>
+                        <Plus className="mr-2 h-4 w-4" /> <p className="truncate">Add New Image</p>
                     </Button>
                 </div>
             </div>
@@ -192,8 +192,8 @@ export default function WelcomeCarouselSection({ ...props }: WelcomeCarouselProp
                 {!selectedGallery ? (
                     <div className="flex h-full flex-col items-center justify-center text-center text-gray-500">
                         <X className="mb-2 h-8 w-8" />
-                        <p className="font-medium">No Photo Selected</p>
-                        <p className="text-sm">Select a photo on the left or click "Add New Photo" to start.</p>
+                        <p className="font-medium">No Image Selected</p>
+                        <p className="text-sm">Select an image on the left or click "Add New Image" to start.</p>
                     </div>
                 ) : (
                     <div className="space-y-6">
