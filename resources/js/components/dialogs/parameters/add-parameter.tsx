@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/text-area';
 import { Program } from '@/types';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
@@ -65,7 +66,7 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-lg font-medium text-gray-900">Add Parameter</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">Create a New Parameter</DialogDescription>
+                    <DialogDescription className="text-sm text-gray-500">Create a new parameter</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={addParameter} className="flex flex-col gap-4">
                     <div className="flex gap-4">
@@ -87,16 +88,16 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                         <div className="flex-1">
                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description <span className="text-red-500">*</span>
                            </Label>
-                            <Input
+                            <Textarea
                                 id="parameter_description"
-                                type="text"
                                 required
                                 autoFocus
                                 tabIndex={2}
                                 value={data.parameter_description}
                                 onChange={(e) => setData('parameter_description', e.target.value)}
                                 disabled={processing}
-                                placeholder="Enter description"
+                                placeholder="Dissemination and Accessibility"
+                                className='h-20'
 
                             />
                         </div>
