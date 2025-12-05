@@ -208,7 +208,7 @@ class HistoryController extends Controller
             $galleryImagePath = null;
             $galleryImageName = null;
             if (isset($galleryData['image'])) {
-                $galleryImageName = 'history-gallery-' . $galleryData['description'] . '.' . $galleryData['image']->getClientOriginalExtension();
+                $galleryImageName = 'history-gallery-' . uniqid() . '-' .  $galleryData['description'] . '.' . $galleryData['image']->getClientOriginalExtension();
                 $galleryImagePath = 'history-page/gallery/' . $galleryImageName;
                 $galleryData['image']->storeAs('history-page/gallery', $galleryImageName, 'public');
             }
