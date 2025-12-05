@@ -89,14 +89,23 @@ class ManageProgramController extends Controller
             [
                 'program_name' => ['required', 'string', 'max:255'],
                 'degree_type' => ['required', 'string', 'max:100'],
+                'color' => ['required', 'string' ],
             ],
             [
                 'program_name.required' => 'The program name field is required.',
                 'degree_type.required' => 'The degree type field is required.',
+                'color.required' => 'The color field is required.',
             ]
         );
 
         $user = Auth::user();
+
+        $color = Programs::where('color', $validated['color'])->first();
+        if ($color) {
+            return back()->withErrors([
+                'color' => 'The selected color is already in use. Please choose a different color.'
+            ]);
+        }
 
         // Check if program with same name and degree type already exists
         $existingProgram = Programs::where('program_name', 'ILIKE', $validated['program_name'])
@@ -113,6 +122,7 @@ class ManageProgramController extends Controller
         $program = Programs::create([
             'program_name' => $validated['program_name'],
             'degree_type' => $validated['degree_type'],
+            'color' => $validated['color'],
         ]);
 
         ActivityLog::create([
@@ -137,12 +147,23 @@ class ManageProgramController extends Controller
             [
                 'program_name' => ['required', 'string', 'max:255'],
                 'degree_type' => ['required', 'string', 'max:100'],
+                'color' => ['required', 'string' ],
             ],
             [
                 'program_name.required' => 'The program name field is required.',
                 'degree_type.required' => 'The degree type field is required.',
+                'color.required' => 'The color field is required.',
             ]
         );
+
+        $color = Programs::where('color', $validated['color'])
+            ->where('program_id', '!=', $program->program_id)
+            ->first();
+        if ($color) {
+            return back()->withErrors([
+                'color' => 'The selected color is already in use. Please choose a different color.'
+            ]);
+        }
 
         $user = Auth::user();
 
@@ -263,6 +284,7 @@ class ManageProgramController extends Controller
             $program->update([
                 'program_name' => $validated['program_name'],
                 'degree_type' => $validated['degree_type'],
+                'color' => $validated['color'],
             ]);
         });
 

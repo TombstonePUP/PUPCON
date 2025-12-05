@@ -365,6 +365,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                     <ProgramDialog
                         type={dialogAction}
                         program={dialogAction === 'edit' ? selectedProgram : null}
+                        programs={programs}
                         onClose={() => setDialogOpen(false)}
                     />
                 )}
