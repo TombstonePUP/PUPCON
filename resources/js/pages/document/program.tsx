@@ -183,8 +183,10 @@ export default function Programs({ program }: ProgramProps) {
                                 <BookOpen className="h-6 w-6 text-white" />
                             </div>
                             <div className="ml-2 flex-1">
-                                <h1 className="text-xl font-semibold text-gray-900">
-                                    {program.degree_type} in {program.program_name}
+                                <h1 className="text-xl font-semibold flex text-gray-900 ">
+                                    <span>{program.degree_type}</span>
+                                    <span className="mx-1">in</span>
+                                    <span className="capitalize ">{program.program_name}</span>
                                 </h1>
                                 <p className="text-sm text-gray-500">Manage program information, objectives, and assessment areas</p>
                             </div>

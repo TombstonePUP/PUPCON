@@ -33,25 +33,27 @@ export default function DeleteAreaDialog({ area, program, level, onClose }: Dele
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Delete Area?</DialogTitle>
+                    <DialogTitle className="text-lg font-medium text-gray-900">Archive Area</DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">
-                        This will permanently remove this area. This action cannot be undone.
+                        This action will permanently archive the selected area. This action cannot be undone.
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="my-0 rounded-md border border-red-100 bg-red-50 p-4">
-                    <p className="text-sm text-red-800">
-                        <span className="mb-1 block font-semibold text-red-900">Warning: Irreversible Action!</span>
-                        This action will permanently delete the area and all associated document (if any). This action cannot be undone.
+                <div className="my-6 rounded-md border border-yellow-100 bg-yellow-50 p-4">
+                    <p className="text-sm text-yellow-800">
+                        <span className="mb-1 block font-semibold text-yellow-900">Note: Important Action!</span>
+                        The area will be hidden from active listings, all data will be preserved, and accreditation history will
+                        remain intact.
                     </p>
                 </div>
+
                 <DialogFooter className="gap-2">
                     <DialogClose asChild>
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <form onSubmit={deleteArea}>
                         <Button variant="noborder" type="submit">
-                            Remove
+                            Archive
                         </Button>
                     </form>
                 </DialogFooter>

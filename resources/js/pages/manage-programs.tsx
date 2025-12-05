@@ -207,8 +207,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                                     <span className="capitalize">{program.program_name}</span>
                                 </div>
 
-
-
                                 <div className="flex items-center gap-4 text-xs text-gray-500">
                                     <div className="flex items-center gap-1">
                                         <Folders className="h-3 w-3" />
