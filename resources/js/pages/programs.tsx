@@ -48,7 +48,10 @@ export default function Programs({ programs }: ProgramsProps) {
                                                     {/* Program Image */}
                                                     <div className="relative h-64 overflow-hidden md:h-auto md:w-1/3">
                                                         <img
-                                                            src={program.program_image_path ?? '/images/default-program.jpg'}
+                                                            src={
+                                                                program.program_image_path ||
+                                                                'https://placehold.co/600x400/7f1414/white?text=No+Image'
+                                                            }
                                                             alt={program.program_image_name ?? 'Default Program Image'}
                                                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                                         />
