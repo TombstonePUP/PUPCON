@@ -172,7 +172,7 @@ export default function Programs({ program }: ProgramProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`${program.program_name} - Program Management`} />
+            <Head title={`${program.program_name?.trim().replace(/\b\w/g, (c) => c.toUpperCase())} - Program Management`} />
             <div className="flex flex-col gap-6 p-6">
                 {/* Header Section (unchanged) */}
                 <div className="rounded-lg border border-gray-200 bg-white p-6">
@@ -381,22 +381,20 @@ export default function Programs({ program }: ProgramProps) {
                             <div className="rounded-lg border border-gray-200 bg-white p-4">
                                 <div className="mb-3 text-sm font-semibold text-gray-900">Status</div>
                                 <div
-                                    className={`rounded-lg p-2 ${
-                                        selected_level?.remarks?.toLowerCase().includes('passed')
-                                            ? 'bg-green-100'
-                                            : selected_level?.remarks?.toLowerCase().includes('failed')
-                                              ? 'bg-red-100'
-                                              : 'bg-yellow-100'
-                                    }`}
+                                    className={`rounded-lg p-2 ${selected_level?.remarks?.toLowerCase().includes('passed')
+                                        ? 'bg-green-100'
+                                        : selected_level?.remarks?.toLowerCase().includes('failed')
+                                            ? 'bg-red-100'
+                                            : 'bg-yellow-100'
+                                        }`}
                                 >
                                     <div
-                                        className={`text-center text-xs font-medium ${
-                                            selected_level?.remarks?.toLowerCase().includes('passed')
-                                                ? 'text-green-800'
-                                                : selected_level?.remarks?.toLowerCase().includes('failed')
-                                                  ? 'text-red-800'
-                                                  : 'text-yellow-800'
-                                        }`}
+                                        className={`text-center text-xs font-medium ${selected_level?.remarks?.toLowerCase().includes('passed')
+                                            ? 'text-green-800'
+                                            : selected_level?.remarks?.toLowerCase().includes('failed')
+                                                ? 'text-red-800'
+                                                : 'text-yellow-800'
+                                            }`}
                                     >
                                         {selected_level?.remarks}
                                     </div>
@@ -418,9 +416,8 @@ export default function Programs({ program }: ProgramProps) {
                                             <button
                                                 key={section.id}
                                                 onClick={() => scrollToSection(section.ref, section.id)}
-                                                className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${
-                                                    activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                                                }`}
+                                                className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
+                                                    }`}
                                             >
                                                 {section.label}
                                             </button>

@@ -50,8 +50,15 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
                         <div className="w-full rounded-lg border p-6 text-left">
                             <h3 className="mb-2 text-xs font-semibold tracking-wide text-gray-600 uppercase">How to use</h3>
                             <ol className="list-inside list-decimal space-y-1 text-sm text-slate-600">
-                                <li>
-                                    <span className="font-medium text-slate-900">Download</span> the CSV template.
+                                <li ><a
+                                        href={route('manage.area.download.template', {
+                                            program_id: program.program_id,
+                                            level_id: program.levels[0]?.accreditation_level_id,
+                                            area_id: area_id,
+                                        })}
+                                        className="underline font-medium text-[#7f1414]"
+                                        download
+                                    >Download</a> the CSV template.
                                 </li>
                                 <li>
                                     Open in <span className="font-medium text-slate-900">Excel</span> or Google Sheets.

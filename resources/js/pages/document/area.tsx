@@ -65,7 +65,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
     return (
         <>
             <AppLayout breadcrumbs={breadcrumbs}>
-                <Head title={`${area.area_name} - ${program.program_name}`} />
+                <Head title={`${area.area_name} - ${program.program_name?.trim().replace(/\b\w/g, (c) => c.toUpperCase())}`} />
                 <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
                     {/* Header Section */}
                     <div id="top" className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
@@ -76,7 +76,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                                 </div>
                                 <div className="ml-2">
                                     <h1 className="text-xl font-semibold text-gray-900">{area.area_name}</h1>
-                                    <p className="text-sm text-gray-500">{program.program_name}</p>
+                                    <p className="text-sm text-gray-500 capitalize">{program.program_name}</p>
                                 </div>
                             </div>
                             {area.archive &&
