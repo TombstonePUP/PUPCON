@@ -132,7 +132,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Facility Name</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Facility Name <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="e.g., Library"
                                 value={data.facility_name}
@@ -142,7 +142,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description <span className="text-red-500">*</span></Label>
                             <Textarea
                                 placeholder="Enter a description for the facility..."
                                 value={data.description}

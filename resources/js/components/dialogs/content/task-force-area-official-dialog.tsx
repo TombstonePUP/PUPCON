@@ -164,7 +164,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="space-y-4">
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="e.g., Area I: Vision, Mission..."
                                         value={data.area_name}
@@ -174,7 +174,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Chairman First Name</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Chairman First Name <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="Enter first name..."
                                         value={data.first_name}
@@ -183,7 +183,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Chairman Last Name</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Chairman Last Name <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="Enter last name..."
                                         value={data.last_name}

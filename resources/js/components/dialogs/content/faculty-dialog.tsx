@@ -175,7 +175,7 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                 )}
 
                                 <div>
-                                    <Label className="mb-2 block w-full text-sm font-medium text-gray-700">First Name</Label>
+                                    <Label className="mb-2 block w-full text-sm font-medium text-gray-700">First Name <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="Enter First Name"
                                         value={data.first_name}
@@ -199,7 +199,7 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
 
                             <div className="mb-0 flex w-[50%] flex-col gap-4 pb-0">
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Last Name</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Last Name <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="Enter Last Name"
                                         value={data.last_name}
@@ -210,7 +210,7 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                 </div>
 
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Member Type</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Member Type <span className="text-red-500">*</span></Label>
                                     <Select
                                         value={data.personnel_type || ''}
                                         onValueChange={(value) => setData((prev) => ({ ...prev, personnel_type: value }))}
@@ -229,7 +229,7 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                     </Select>
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Employment Status</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Employment Status <span className="text-red-500">*</span></Label>
                                     <Select
                                         value={data.status || ''}
                                         onValueChange={(value) => setData({ ...data, status: value })}

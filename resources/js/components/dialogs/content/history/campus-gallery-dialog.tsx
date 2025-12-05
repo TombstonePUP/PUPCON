@@ -167,7 +167,7 @@ export function CampusGalleryDialog(props: CampusGalleryDialogProps) {
                                 Caption <span className="text-red-500">*</span>
                             </Label>
                             <Input
-                                placeholder="Enter Gallery Description/Caption"
+                                placeholder="Enter gallery description / caption"
                                 value={data.description}
                                 onChange={(e) =>
                                     setData({ ...data, description: e.target.value })

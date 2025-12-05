@@ -150,7 +150,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     <h3 className="mb-4 text-base font-semibold text-gray-900">Vision & Mission</h3>
                     <div className="grid gap-6 md:grid-cols-2">
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-gray-700">Vision</label>
+                            <label className="mb-2 block text-sm font-medium text-gray-700">Vision <span className="text-red-500">*</span></label>
                             <Textarea
                                 placeholder="Enter vision..."
                                 autoResize
@@ -171,7 +171,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                             <InputError message={errors['vmgo.vision']} className="mt-2" />
                         </div>
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-gray-700">Mission</label>
+                            <label className="mb-2 block text-sm font-medium text-gray-700">Mission <span className="text-red-500">*</span></label>
                             <Textarea
                                 placeholder="Enter mission..."
                                 autoResize

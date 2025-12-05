@@ -142,7 +142,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">First Name</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">First Name <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="e.g., Juan"
                                 value={data.first_name}
@@ -161,7 +161,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Last Name</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Last Name <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="e.g., Dela Cruz"
                                 value={data.last_name}
@@ -180,7 +180,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Official Type</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Official Type <span className="text-red-500">*</span></Label>
                             <Select value={data.type ? String(data.type) : ''} onValueChange={(value) => setData({ ...data, type: value })} required>
                                 <SelectTrigger className="w-full" tabIndex={3}>
                                     <SelectValue placeholder="Select Official" />
@@ -199,7 +199,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Position</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Position <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="e.g., President"
                                 value={data.position}
