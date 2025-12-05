@@ -40,7 +40,7 @@ interface BenchDialogParams {
 interface OutlineProps {
     outlines: ParameterOutlines[];
     program: Program;
-    area_id: number;
+    area: Area;
     resolveDocDialog: (params: DocDialogParams) => void;
     resolveBenchDialog: (params: BenchDialogParams) => void;
 }
@@ -154,12 +154,15 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
 
             <ul>
                 {outlines.map((outline) => (
-                    <li className='flex flex-col gap-1 pl-[1vw]' key={outline.parameter_outline_id}>
+                    <li className="flex flex-col gap-1 pl-[1vw]" key={outline.parameter_outline_id}>
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center">
                                 {/* Outline label */}
                                 {!outline.container ? (
-                                    <a className={`cursor-pointer text-${outline.area_files ? "[#7f1414] underline hover:text-red-700" : "gray-600"}`} onClick={() => handleViewPDF(outline)}>
+                                    <a
+                                        className={`cursor-pointer text-${outline.area_files ? '[#7f1414] underline hover:text-red-700' : 'gray-600'}`}
+                                        onClick={() => handleViewPDF(outline)}
+                                    >
                                         {outline.initial}.{outline.outline_number}. {outline.outline_description}
                                     </a>
                                 ) : (
@@ -204,7 +207,7 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
     );
 }
 
-export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDialog, resolveBenchDialog }: OutlineProps) {
+export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog, resolveBenchDialog }: OutlineProps) {
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
 
@@ -239,11 +242,11 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
         const url = route('manage.area.download.file', {
             program_name: program.program_link,
             level_id: program.levels[0]?.accreditation_level_id,
-            area_id: area_id,
+            area_id: area.area_id,
             outline_id: outline.parameter_outline_id,
         });
         const link = document.createElement('a');
-        link.href = url
+        link.href = url;
         link.setAttribute('download', '');
         document.body.appendChild(link);
         link.click();
@@ -254,7 +257,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
         <>
             <ul className="flex flex-col gap-2 pl-[1vw]">
                 {outlines.map((outline) => (
-                    <li  className='flex flex-col gap-1'  key={outline.parameter_outline_id}>
+                    <li className="flex flex-col gap-1" key={outline.parameter_outline_id}>
                         <ContextMenu>
                             <ContextMenuTrigger className="flex flex-row items-center gap-2">
                                 {outline.container ? (
@@ -297,15 +300,17 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
                                 {!outline.container && (
                                     <>
                                         <ContextMenuLabel>Document</ContextMenuLabel>
-                                        <ContextMenuItem
-                                            className="justify-left flex cursor-pointer flex-row items-center gap-2"
-                                            onSelect={() => {
-                                                setTimeout(() => resolveDocDialog({ type: 'upload', benchmark: outline }), 50);
-                                            }}
-                                        >
-                                            <FileUp className="inline-block h-4 w-4" />
-                                            {outline.area_files ? 'Update' : 'Upload'}
-                                        </ContextMenuItem>
+                                        {!area.archive && (
+                                            <ContextMenuItem
+                                                className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                                onSelect={() => {
+                                                    setTimeout(() => resolveDocDialog({ type: 'upload', benchmark: outline }), 50);
+                                                }}
+                                            >
+                                                <FileUp className="inline-block h-4 w-4" />
+                                                {outline.area_files ? 'Update' : 'Upload'}
+                                            </ContextMenuItem>
+                                        )}
                                         {outline.area_files?.file_status?.status_name === 'Rejected' && (
                                             <ContextMenuItem
                                                 className="justify-left flex cursor-pointer flex-row items-center gap-2"
@@ -321,31 +326,33 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
                                             <>
                                                 <ContextMenuItem
                                                     className="justify-left flex cursor-pointer flex-row items-center gap-2"
-                                                    onSelect={() => { download(outline) }}
+                                                    onSelect={() => {
+                                                        download(outline);
+                                                    }}
                                                 >
                                                     <DownloadIcon className="inline-block h-4 w-4" />
                                                     Download
                                                 </ContextMenuItem>
-                                                <ContextMenuItem
-                                                    variant="destructive"
-                                                    className="justify-left flex cursor-pointer flex-row items-center gap-2"
-                                                    onSelect={() => {
-                                                        setTimeout(() => resolveDocDialog({ type: 'delete', benchmark: outline }), 50);
-                                                    }}
-                                                >
-                                                    <Trash2Icon className="inline-block h-4 w-4" />
-                                                    Delete
-                                                </ContextMenuItem>
+                                                {!area.archive && (
+                                                    <ContextMenuItem
+                                                        variant="destructive"
+                                                        className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                                        onSelect={() => {
+                                                            setTimeout(() => resolveDocDialog({ type: 'delete', benchmark: outline }), 50);
+                                                        }}
+                                                    >
+                                                        <Trash2Icon className="inline-block h-4 w-4" />
+                                                        Delete
+                                                    </ContextMenuItem>
+                                                )}
                                             </>
                                         )}
                                     </>
                                 )}
 
-                                {role !== 'Chairman' && role !== 'Accreditor' && (
+                                {role !== 'Chairman' && role !== 'Accreditor' && !area.archive && (
                                     <>
-                                        {!outline.container && (
-                                            <ContextMenuSeparator />
-                                        )}
+                                        {!outline.container && <ContextMenuSeparator />}
                                         <ContextMenuLabel>Benchmark</ContextMenuLabel>
                                         <ContextMenuItem
                                             className="justify-left flex cursor-pointer flex-row items-center gap-2"
@@ -374,7 +381,7 @@ export function RecursiveOutlineForm({ outlines, program, area_id, resolveDocDia
                             <RecursiveOutlineForm
                                 outlines={outline.children}
                                 program={program}
-                                area_id={area_id}
+                                area={area}
                                 resolveDocDialog={resolveDocDialog}
                                 resolveBenchDialog={resolveBenchDialog}
                             />

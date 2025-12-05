@@ -300,6 +300,18 @@ class ManageProgramController extends Controller
         $programName = $program->program_name;
         $program->update(['is_active' => false]);
 
+        $program->load([
+            'Levels.Areas',
+        ]);
+
+        $program->Levels->each(function ($level) {
+            $level->Areas->each(function ($area) {
+                $area->update(['is_active' => false]);
+            });
+
+            $level->update(['is_active' => false]);
+        });
+
         ActivityLog::create([
             'user_id' => $user->user_id,
             'description' => 'Archived program: ' . $program->degree_type . ' ' . $program->program_name,

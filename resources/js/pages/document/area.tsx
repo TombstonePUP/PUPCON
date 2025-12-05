@@ -4,6 +4,7 @@ import { RenderAreaFormDialog } from '@/components/dialogs/area-forms/area-forms
 import { RenderBenchmarkDialog } from '@/components/dialogs/benchmarks/benchmark-dialog-renderer';
 import { RenderDocumentDialog } from '@/components/dialogs/documents/document-dialog-renderer';
 import { RenderParameterDialog } from '@/components/dialogs/parameters/parameter-dialog-renderer';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { Area, AreaFormCategory, AreaForms, AreaParameters, BreadcrumbItem, ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
@@ -61,8 +62,6 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
         },
     ];
 
-    console.log(program);
-
     return (
         <>
             <AppLayout breadcrumbs={breadcrumbs}>
@@ -80,6 +79,9 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                                     <p className="text-sm text-gray-500">{program.program_name}</p>
                                 </div>
                             </div>
+                            {area.archive &&
+                                <Badge className="bg-[#7f1414] px-3 py-1 text-white">Archive</Badge>
+                            }
                         </div>
                     </div>
 
@@ -88,7 +90,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                             <div>
                                 <AreaCards
                                     program={program}
-                                    area_id={area?.area_id}
+                                    area={area}
                                     forms={area?.area_forms}
                                     resolveFormDialog={(d) => openDialog('area-form', d.type, d.form, undefined, undefined, undefined)}
                                 />
@@ -96,7 +98,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
 
                             <div className="flex w-full gap-6">
                                 <ParameterAccordion
-                                    area_id={area?.area_id}
+                                    area={area}
                                     program={program}
                                     areaParameters={[...(area?.area_parameters ?? [])].sort((a, b) =>
                                         a.parameter_name.localeCompare(b.parameter_name),
@@ -115,7 +117,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                         {area.area_parameters.length > 0 &&
                             (role === 'Admin' || role === 'Coordinator') &&
                             program.levels[0]?.remarks === 'Ongoing Survey' &&
-                            program.levels[0]?.is_active && (
+                            program.levels[0]?.is_active || !area.archive === true && (
                                 <div className="w-64 shrink-0">
                                     <div className="sticky top-6 space-y-4">
                                         <div className="w-full rounded-lg border border-gray-200 bg-white p-4">

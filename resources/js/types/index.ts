@@ -160,7 +160,10 @@ export interface ProgramAreas {
     area_description: string;
     area_image_name: string;
     area_image_path: string;
-    area_numeral: string;
+    area_numeral?: string;
+    archive: boolean;
+    areaParameters?: AreaParameters[];
+    areaForms?: AreaForms[];
     levels?: AccreditationLevels[];
     [key: string]: unknown;
 }
@@ -185,7 +188,7 @@ export interface Area {
     area_image_path: string;
     area_number: string;
     area_numeral?: string;
-    // program?: Program;
+    archive: boolean;
     areaParameters?: AreaParameters[];
     areaForms?: AreaForms[];
     levels?: AccreditationLevels;

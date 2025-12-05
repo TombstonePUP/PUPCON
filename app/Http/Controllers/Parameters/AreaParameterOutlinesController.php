@@ -32,7 +32,7 @@ class AreaParameterOutlinesController extends Controller
             ])
             ->firstOrFail();
         $program->program_link = Str::slug($program->program_name, '_');
-        $area = Areas::select('area_id', 'area_name', 'area_number', 'accreditation_level_id')
+        $area = Areas::select('area_id', 'area_name', 'area_number', 'accreditation_level_id', 'archive')
             ->where('area_id', $area_id)
             ->where('accreditation_level_id', $level_id)
             ->with([

@@ -47,8 +47,9 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
             },
         });
     };
+    console.log(programs);
 
-    const programList = programs.filter((p) => !p.under_survey && p.is_active && (p.latest_level?.level ?? -1) < 4);
+    const programList = programs.filter((p) => !p.under_survey && p.is_active && (p.latest_level?.level ?? -1) < 4 && p.latest_level?.remarks === 'Passed');
 
     /* const newLevels = [
         { value: '0', label: 'Preliminary' },

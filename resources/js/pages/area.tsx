@@ -214,7 +214,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                         )}
                     </Accordion>
 
-                    {user?.roles?.role_name === 'Accreditor' && (
+                    {/*user?.roles?.role_name === 'Accreditor' && (
                         <div className="w-[68%] text-end">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -235,7 +235,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>
-                    )}
+                    )*/}
                 </div>
                 <div className="h-10"></div>
                 <DocumentViewer open={viewerOpen} onOpenChange={setViewerOpen} fileUrl={viewerFile.url} title={viewerFile.title} />

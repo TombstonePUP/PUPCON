@@ -45,11 +45,11 @@ class ManageAreasController extends Controller
 
         // $program = Str::of($request->program_name)->replace('_', ' ')->title();
         $program = Programs::with([
-                'Levels' => function ($query) use ($request) {
-                    $query->where('accreditation_level_id', $request->level_id);
-                },
-                'Levels.Areas',
-            ])
+            'Levels' => function ($query) use ($request) {
+                $query->where('accreditation_level_id', $request->level_id);
+            },
+            'Levels.Areas',
+        ])
             ->findOrFail($request->program_id);
 
         $level = $program->Levels->first();
@@ -104,6 +104,7 @@ class ManageAreasController extends Controller
                 'area_number' => ['required', 'integer'],
                 'area_description' => ['required', 'string'],
                 'area_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
+                'previewUrl' => ['nullable', 'string'],
             ],
             [
                 'area_id.required' => 'The area ID is required.',
@@ -192,12 +193,6 @@ class ManageAreasController extends Controller
             $validated['area_image']->storeAs($path, $areaImageName, 'public');
             $area->area_image_name = $areaImageName;
             $area->area_image_path = $areaImagePath;
-        } else {
-            if ($disk->exists($area->area_image_path)) {
-                $disk->delete($area->area_image_path);
-            }
-            $area->area_image_name = null;
-            $area->area_image_path = null;
         }
         $area->save();
 
@@ -219,29 +214,12 @@ class ManageAreasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Areas $areas)
+    public function destroy(Areas $areas, Request $request)
     {
         $area = $areas->find(request()->area_id);
 
         if ($area) {
-            AreaFiles::query()
-                ->whereHas('ParameterOutlines.AreaParameter.Areas', fn($q) => $q->where('area_id', $area->area_id))
-                ->cursor()
-                ->each(function ($file) {
-                    Storage::disk('public')->delete($file->file_path);
-                    $file->delete();
-                });
-
-            AreaForms::query()
-                ->where('area_id', $area->area_id)
-                ->cursor()
-                ->each(function ($form) {
-                    Storage::disk('public')->delete($form->file_path);
-                    $form->delete();
-                });
-            $area->area_image_path && Storage::disk('public')->delete($area->area_image_path);
-            $areaName = $area->area_name;
-            $area->delete();
+            $area->update(['archive' => true]);
         } else {
             return redirect()->back()
                 ->with('type', 'error')
@@ -252,7 +230,7 @@ class ManageAreasController extends Controller
         $user = Auth::user();
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'description' => 'Archived Area "' . $areaName . '"' . 'From ' . $request->program_name . ' - level_' . $request->level_id,
+            'description' => 'Archived Area "' . $area->area_name . '"' . 'From ' . $request->program_name . ' - level_' . $area->Levels->first()->level,
             'activity' => 'Archive',
             'type' => 'Content',
             'activity_date' => now(),
@@ -260,7 +238,7 @@ class ManageAreasController extends Controller
 
         return redirect()->back()
             ->with('type', 'success')
-            ->with('title', 'Area Deleted')
-            ->with('message', 'Area "' . $areaName . '" has been deleted successfully.');
+            ->with('title', 'Area Archived')
+            ->with('message', 'Area "' . $area->area_name . '" has been archived successfully.');
     }
 }
