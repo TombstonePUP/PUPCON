@@ -21,7 +21,9 @@
 {{-- Footer --}}
 <x-slot:footer>
 <x-mail::footer>
-© {{ date('Y') }} {{ config('app.name') }}. {{ __('All rights reserved.') }}
+<p style="margin: 0; font-size: 11px; color: #b0adc5;">
+    This is an automated message from PUPCON. Please do not reply to this email.
+</p>
 </x-mail::footer>
 </x-slot:footer>
 </x-mail::layout>
