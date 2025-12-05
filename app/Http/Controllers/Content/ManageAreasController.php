@@ -132,12 +132,13 @@ class ManageAreasController extends Controller
             ->where('accreditation_level_id', $request->level_id)
             ->firstOrFail();
 
+        $level_name = $level->level === 0 ? 'psv' : 'level_' . $level->level;
         // Get area
         $area = $level->Areas()
             ->where('area_id', $validated['area_id'])
             ->firstOrFail();
 
-        $base_path = Str::slug($program->program_name, '_') . '/level_' . $program->Levels->first()->level;
+        $base_path = Str::slug($program->program_name, '_') . '/' . $level_name;
 
         $old_folder = Str::slug($area->area_name, '_');
         $new_folder = Str::slug($validated['area_name'], '_');
