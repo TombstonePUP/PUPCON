@@ -211,7 +211,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                     </div>
                     {/* Gallery Pane */}
                     <h3 className="mb-4 text-base font-semibold text-gray-900">
-                        Campus Image Gallery
+                        Campus Image Gallery {" "}
                         {galleryErrorCount > 0 && (
                             <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
                                 {galleryErrorCount}
