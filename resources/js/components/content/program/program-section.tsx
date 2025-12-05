@@ -344,10 +344,10 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
 
     return (
         <>
-            <div id="overview" ref={overviewRef} className="scroll-mt-20 rounded-lg border border-gray-200 bg-white">
+            <div   className="rounded-lg border border-gray-200 bg-white">
                 <div className="p-8">
                     {/* --- Program Overview --- */}
-                    <div className="">
+                    <div id="overview" ref={overviewRef} className='scroll-mt-20'>
                         <div className="mb-6">
                             <h2 className="text-lg font-semibold text-gray-900">Program Overview</h2>
                             <p className="text-sm text-gray-600">Manage program banner and description</p>

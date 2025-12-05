@@ -52,6 +52,7 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective, next
                             // required
                             value={data.title}                               // ← switched to value
                             onChange={(e) => setData({ ...data, title: e.target.value })}
+                            disabled
                         />
                     </div>
 
