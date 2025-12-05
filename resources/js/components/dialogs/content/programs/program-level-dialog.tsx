@@ -91,8 +91,8 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                                         {program.program_name}
                                     </SelectItem>
                                 ))} */}
-                                
-                                  {programList.length > 0 ? (
+
+                                {programList.length > 0 ? (
                                     programList.map((program) => (
                                         <SelectItem
                                             key={program.program_id}
@@ -104,7 +104,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                                         </SelectItem>
                                     ))
                                 ) : (
-                                    <SelectItem value='' disabled>No programs available</SelectItem>
+                                    <div className='text-sm py-2 pl-4 text-gray-500'>No programs available</div>
                                 )}
                             </SelectContent>
                         </Select>
