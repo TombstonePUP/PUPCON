@@ -28,7 +28,7 @@ class HistoryViewController extends Controller
             return $director;
         });
 
-        $gallery = CampusGallery::all();
+        $gallery = CampusGallery::where('carousel', false)->get();
         $gallery = $gallery->map(function ($item) {
             $item->image_path = $item->image_path ? Storage::url($item->image_path) : null;
             return $item;

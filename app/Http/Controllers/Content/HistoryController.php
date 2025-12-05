@@ -11,6 +11,7 @@ use App\Models\ContentPages;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class HistoryController extends Controller
 {
