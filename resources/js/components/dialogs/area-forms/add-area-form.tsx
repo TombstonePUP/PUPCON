@@ -87,7 +87,7 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                 <form className="flex flex-col gap-6" onSubmit={addAreaForm}>
                     <div className="flex flex-col gap-6">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Form Category</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Form Category <span className="text-red-500">*</span></Label>
                             <Select
                                 value={data.area_form_category_id?.toString() || ''}
                                 onValueChange={(value) => setData('area_form_category_id', Number(value))}

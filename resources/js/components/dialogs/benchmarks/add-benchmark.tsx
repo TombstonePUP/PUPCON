@@ -73,7 +73,7 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                 <div className="flex flex-col gap-4">
                     <form className="flex flex-col gap-6" onSubmit={addBenchmark}>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Number</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Number <span className="text-red-500">*</span></Label>
                             <Input
                                 id="benchmark_number"
                                 type="text"
@@ -87,7 +87,7 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                             <InputError message={errors.benchmark_number} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Description</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Description <span className="text-red-500">*</span></Label>
                             <Textarea
                                 id="benchmark_description"
                                 value={data.benchmark_description}
@@ -100,7 +100,7 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                             <InputError message={errors.benchmark_description} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Category</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Benchmark Category <span className="text-red-500">*</span></Label>
                             <Select
                                 value={data.benchmark_category ? String(data.benchmark_category) : ''}
                                 onValueChange={(value) => setData('benchmark_category', value)}

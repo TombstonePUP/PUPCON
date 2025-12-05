@@ -72,15 +72,15 @@ export default function AreaCards({ program, area, forms, resolveFormDialog }: A
                         className="group bg-card relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg border p-6 transition-all duration-300 hover:border-red-800"
                         onClick={() => resolveFormDialog({ type: 'view', form: card })}
                     >
-                        <div className="flex flex-grow items-center gap-6 overflow-hidden">
+                        <div className="flex items-center gap-6 w-full">
                             <div className="rounded-lg bg-gray-100 p-2">
                                 <StatusIcon form={card} />
                             </div>
-                            <div>
-                                <h1 className="text-card-foreground flex-grow truncate text-base font-semibold">
+                            <div className='truncate'>
+                                <h1 className="w-full text-card-foreground truncate text-base font-semibold">
                                     {(card.area_form_category as AreaFormCategory | undefined)?.category_name}
                                 </h1>
-                                <h1 className="font-base flex-grow truncate text-sm text-gray-700">Area form</h1>
+                                <h1 className="font-base truncate text-sm text-gray-700">Area form</h1>
                             </div>
                         </div>
                         <DropdownMenu>

@@ -85,7 +85,8 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
                             />
                         </div>
                         <div className="flex-1">
-                           <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
+                           <Label className="mb-2 block text-sm font-medium text-gray-700">Description <span className="text-red-500">*</span>
+                           </Label>
                             <Input
                                 id="parameter_description"
                                 type="text"

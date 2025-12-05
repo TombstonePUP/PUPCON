@@ -53,13 +53,13 @@ export default function ParameterAccordion({
                         <AccordionItem value={`item-${parameter.area_parameter_id}`} className="group" key={parameter.area_parameter_id}>
                             <AccordionTrigger className="flex flex-row items-center justify-between group-hover:cursor-pointer">
                                 <div className="flex h-full w-full flex-row items-center">
-                                    <h1 className="font-bold text-[#7f1414] group-hover:text-[#a01818]">
+                                    <h1 className="font-semibold text-md text-[#7f1414] group-hover:text-[#a01818] truncate">
                                         {/*parameter.parameter_name != ' '
                                             ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
                                             : parameter.parameter_name*/}
                                         {parameter.parameter_name ? `Parameter ${parameter.parameter_name}` : ''}
                                     </h1>
-                                    <p className="flex-1 text-center">{parameter.parameter_description}</p>
+                                    <p className="flex-1 text-md text-center truncate">{parameter.parameter_description}</p>
                                 </div>
                                 {canShowActions && (
                                     <div className="flex justify-center gap-3">
@@ -97,7 +97,7 @@ export default function ParameterAccordion({
                                         return (
                                             <>
                                                 <div className="rounded bg-[#f4f4f4] p-[2vw]">
-                                                    <h1 className="mb-2.5 text-[1vw] font-bold">
+                                                    <h1 className="mb-2.5 text-[1vw] font-semibold">
                                                         {category.category_name == 'No Category' ? '' : category.category_name}
                                                     </h1>
                                                     <RecursiveOutlineForm

@@ -157,7 +157,7 @@ export function AssignRole({ user, programRoles, roles, onClose }: AssignRoleDia
 
                                                     <Label
                                                         htmlFor={`program-${program.program_id}`}
-                                                        className="cursor-pointer text-sm font-medium"
+                                                        className="cursor-pointer text-sm font-medium capitalize"
                                                     >
                                                         {program.program_name}
                                                     </Label>
