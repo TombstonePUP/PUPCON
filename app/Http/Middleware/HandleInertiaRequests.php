@@ -50,7 +50,9 @@ class HandleInertiaRequests extends Middleware
         $outlines = ParameterOutlines::select('*')
             ->with([
                 'AreaParameter',
-                'AreaParameter.Areas',
+                'AreaParameter.Areas' => function ($areaQuery) {
+                    $areaQuery->where('archive', false);
+                },
                 'AreaParameter.Areas.Levels' => function ($programQuery) {
                     $programQuery->where('is_active', true)
                         ->orderBy('survey_date', 'desc')

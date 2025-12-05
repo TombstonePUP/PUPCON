@@ -6,7 +6,7 @@ import Layout from '@/layouts/landing-layout';
 import type { Area, ParameterOutlineCategory, PerProgram } from '@/types';
 import { Head, usePage, usePoll } from '@inertiajs/react';
 import { Construction } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface AreaProps {
     program: PerProgram;
@@ -44,6 +44,29 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
         const regex = new RegExp(`(${searchKeyword})`, 'gi');
         return text.replace(regex, '<mark class="bg-yellow-200">$1</mark>');
     }
+
+    const [openItem, setOpenItem] = useState<string | undefined>(undefined);
+    /* const searchParams = new URLSearchParams(window.location.search);*/
+    // const id = searchParams.get('parameter_id');
+    const parameterId = searchParams.get('parameter');
+
+    const parameterRef = useRef({});
+
+    const parameterIndexMap = Object.fromEntries(area.area_parameters.map((p, i) => [p.area_parameter_id, i]));
+
+    useEffect(() => {
+        if (!parameterId) return;
+
+        const accordValue = `parameter-${parameterId}`;
+        setOpenItem(accordValue);
+
+        setTimeout(() => {
+            const target = parameterRef.current[parameterId];
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 150);
+    }, [parameterId]);
 
     return (
         <>
@@ -98,13 +121,12 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                     <div className="w-[68%]">
                         {area.area_forms?.length > 0 ? (
                             <div
-                                className={`grid gap-[2vw] ${
-                                    area.area_forms.length === 1
-                                        ? 'grid-cols-1 md:mx-auto md:max-w-md'
-                                        : area.area_forms.length === 2
-                                          ? 'grid-cols-1 md:grid-cols-2'
-                                          : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-                                }`}
+                                className={`grid gap-[2vw] ${area.area_forms.length === 1
+                                    ? 'grid-cols-1 md:mx-auto md:max-w-md'
+                                    : area.area_forms.length === 2
+                                        ? 'grid-cols-1 md:grid-cols-2'
+                                        : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+                                    }`}
                             >
                                 {area.area_forms?.map((area_form) => (
                                     <div
@@ -169,7 +191,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 <div className="flex w-full flex-col items-center justify-center gap-4 py-2">
                     <div className="w-[68%]">
                         {area.area_parameters?.length > 0 ? (
-                            <Accordion type="single" collapsible className="flex flex-col gap-[1vw]">
+                            <Accordion type="single" collapsible className="flex flex-col gap-[1vw]" value={openItem} onValueChange={setOpenItem}>
                                 {[...area.area_parameters]
                                     .sort((a, b) => {
                                         if (a.parameter_name?.trim().toUpperCase() === 'A') return -1;
@@ -177,86 +199,93 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                         return a.parameter_name?.localeCompare(b.parameter_name || '') || 0;
                                     })
                                     .map((parameter, index) => (
-                                        <AccordionItem className="group bg-white transition duration-300" value={`parameter-${index}`} key={index}>
-                                            <AccordionTrigger className="my-1 flex flex-row justify-between group-hover:cursor-pointer">
-                                                <div className="flex w-full flex-row justify-between">
-                                                    <h1 className="font-bold text-[#7f1414] group-hover:text-[#a01818]">
-                                                        {parameter.parameter_name != ' '
-                                                            ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
-                                                            : parameter.parameter_name}
-                                                    </h1>
-                                                    <p>{parameter.parameter_description}</p>
-                                                </div>
-                                            </AccordionTrigger>
-                                            <AccordionContent>
-                                                {categories.some((category) => {
-                                                    const outlines =
-                                                        parameter.parameter_outlines?.filter(
-                                                            (outline) =>
-                                                                outline.parameter_outline_category_id === category.parameter_outline_category_id,
-                                                        ) || [];
-                                                    return outlines.length > 0;
-                                                }) ? (
-                                                    categories.map((category) => {
+                                        <div ref={(el) => (parameterRef.current[parameter.parameter_id] = el)}>
+                                            <AccordionItem
+                                                className="group bg-white transition duration-300"
+                                                value={`parameter-${parameter.parameter_id}`}
+                                                key={parameter.parameter_id}
+                                            >
+                                                <AccordionTrigger className="my-1 flex flex-row justify-between group-hover:cursor-pointer">
+                                                    <div className="flex w-full flex-row justify-between">
+                                                        <h1 className="font-bold text-[#7f1414] group-hover:text-[#a01818]">
+                                                            {parameter.parameter_name != ' '
+                                                                ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
+                                                                : parameter.parameter_name}
+                                                        </h1>
+                                                        <p>{parameter.parameter_description}</p>
+                                                    </div>
+                                                </AccordionTrigger>
+                                                <AccordionContent>
+                                                    {categories.some((category) => {
                                                         const outlines =
                                                             parameter.parameter_outlines?.filter(
                                                                 (outline) =>
                                                                     outline.parameter_outline_category_id === category.parameter_outline_category_id,
                                                             ) || [];
-                                                        if (outlines.length === 0) return null;
-                                                        outlines.map(
-                                                            (outline) =>
+                                                        return outlines.length > 0;
+                                                    }) ? (
+                                                        categories.map((category) => {
+                                                            const outlines =
+                                                                parameter.parameter_outlines?.filter(
+                                                                    (outline) =>
+                                                                        outline.parameter_outline_category_id ===
+                                                                        category.parameter_outline_category_id,
+                                                                ) || [];
+                                                            if (outlines.length === 0) return null;
+                                                            outlines.map(
+                                                                (outline) =>
                                                                 (outline.initial =
                                                                     category.category_name == 'No Category'
                                                                         ? parameter.parameter_name == ' '
                                                                             ? ''
                                                                             : parameter.parameter_name.toUpperCase().match(/^[A-Za-z]/)
                                                                         : category.category_name.match(/^[A-Za-z]/)),
-                                                        );
+                                                            );
 
-                                                        const sortedOutlines = buildOutlineTree({ outlines });
+                                                            const sortedOutlines = buildOutlineTree({ outlines });
 
-                                                        return (
-                                                            <div
-                                                                key={category.parameter_outline_category_id}
-                                                                className="rounded bg-[#D9D9D9]/25 p-[2vw]"
-                                                            >
-                                                                <h1 className="font-bold">
-                                                                    {category.category_name == 'No Category' ? '' : category.category_name}
-                                                                </h1>
-                                                                <RecursiveOutline
-                                                                    outlines={sortedOutlines}
-                                                                    highlightKeyword={searchKeyword}
-                                                                    highlightFn={highlight}
-                                                                />
+                                                            return (
+                                                                <div
+                                                                    key={category.parameter_outline_category_id}
+                                                                    className="rounded bg-[#D9D9D9]/25 p-[2vw]"
+                                                                >
+                                                                    <h1 className="font-bold">
+                                                                        {category.category_name == 'No Category' ? '' : category.category_name}
+                                                                    </h1>
+                                                                    <RecursiveOutline
+                                                                        outlines={sortedOutlines}
+                                                                        highlightKeyword={searchKeyword}
+                                                                        highlightFn={highlight}
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <div className="rounded bg-[#D9D9D9]/25 p-[2vw] text-center">
+                                                            <div className="flex flex-col items-center gap-2">
+                                                                <svg
+                                                                    className="h-8 w-8 text-gray-400"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    viewBox="0 0 24 24"
+                                                                >
+                                                                    <path
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                        strokeWidth="2"
+                                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                                    />
+                                                                </svg>
+                                                                <p className="font-medium text-gray-500">No outline available for this parameter</p>
+                                                                <p className="text-sm text-gray-400">
+                                                                    Content will be added during the accreditation process
+                                                                </p>
                                                             </div>
-                                                        );
-                                                    })
-                                                ) : (
-                                                    <div className="rounded bg-[#D9D9D9]/25 p-[2vw] text-center">
-                                                        <div className="flex flex-col items-center gap-2">
-                                                            <svg
-                                                                className="h-8 w-8 text-gray-400"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                viewBox="0 0 24 24"
-                                                            >
-                                                                <path
-                                                                    strokeLinecap="round"
-                                                                    strokeLinejoin="round"
-                                                                    strokeWidth="2"
-                                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                                />
-                                                            </svg>
-                                                            <p className="font-medium text-gray-500">No outline available for this parameter</p>
-                                                            <p className="text-sm text-gray-400">
-                                                                Content will be added during the accreditation process
-                                                            </p>
                                                         </div>
-                                                    </div>
-                                                )}
-                                            </AccordionContent>
-                                        </AccordionItem>
+                                                    )}
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                        </div>
                                     ))}
                             </Accordion>
                         ) : (

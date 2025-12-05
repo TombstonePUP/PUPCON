@@ -155,11 +155,12 @@ export default function Layout({ children, footerText }: LayoutProps) {
                 ?.map((o: any) => ({
                     outline: o.outline_description,
                     outlineId: o.parameter_outline_id,
+                    parameterId: o.area_parameter_id,
                     program: o.area_parameter?.areas?.levels?.programs?.program_name,
                     area: o.area_parameter?.areas?.area_name,
                     parameter: o.area_parameter?.parameter_name,
                     level: o.area_parameter?.areas?.levels?.level,
-                    program_link: o.area_parameter?.areas?.levels?.programs?.program_link,
+                    program_id: o.area_parameter?.areas?.levels?.programs?.program_id,
                     area_id: o.area_parameter?.areas?.area_id,
                 })) || [];
 
@@ -293,15 +294,13 @@ export default function Layout({ children, footerText }: LayoutProps) {
     };
 
     const redirectLink = (outline: any) => {
-        const programLink = outline.program_link;
+        const program_id = outline.program_id;
         const areaId = outline.area_id;
         const outlineId = outline.outlineId;
+        const parameterId = outline.parameterId;
 
         router.visit(
-            route('programs.areas.show', {
-                program_name: programLink,
-                area_id: areaId,
-            }),
+            `/programs/${program_id}/${areaId}?parameter=${parameterId}#outline-${outlineId}`,
             {
                 preserveScroll: true,
                 only: [],

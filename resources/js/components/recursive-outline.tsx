@@ -24,7 +24,7 @@ import {
     MessageSquareText,
     Trash2Icon,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface DocDialogParams {
     type: 'view' | 'upload' | 'delete' | 'rejected';
@@ -154,7 +154,7 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
 
             <ul>
                 {outlines.map((outline) => (
-                    <li className="flex flex-col gap-1 pl-[1vw]" key={outline.parameter_outline_id}>
+                    <li className="flex flex-col gap-1 pl-[1vw]" key={`outline-${outline.parameter_outline_id}`}>
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center">
                                 {/* Outline label */}
