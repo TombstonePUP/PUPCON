@@ -139,7 +139,7 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                             <InputError message={errors.image} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Exhibit Title</Label>
+                            <Label className="mb-2 block text-sm font-medium text-gray-700">Exhibit Title  <span className="text-red-500">*</span></Label>
                             <Input
                                 type="text"
                                 required
