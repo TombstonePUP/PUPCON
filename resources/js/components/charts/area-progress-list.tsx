@@ -2,7 +2,6 @@
 
 import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts"
-
 import { type DocumentStatistics } from "@/types"
 
 import {
@@ -45,12 +44,13 @@ const chartConfig = {
 export function AreaProgress({ data }: DocumentStatisticsProps) {
     return (
         <Card>
-            <CardHeader className="border-b">
-                <CardTitle>Document Statistics - Bar Chart</CardTitle>
-                {/* <CardDescription>Overall Document Statuses</CardDescription> */}
+            <CardHeader className="">
+                <CardTitle>Document Approval Status</CardTitle>
+                <CardDescription>Overall Document Statuses</CardDescription>
             </CardHeader>
-            <CardContent >
-                <ChartContainer config={chartConfig}>
+            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+                <ChartContainer config={chartConfig} 
+                className="mx-auto aspect-square min-h-[150px]">
                     <BarChart
                         accessibilityLayer
                         data={data}
@@ -97,7 +97,7 @@ export function AreaProgress({ data }: DocumentStatisticsProps) {
                 <div className="flex gap-2 font-medium leading-none">
                     Showing all documents
                 </div>
-                <div className="leading-none text-muted-foreground">
+                <div className="leading-snug text-muted-foreground">
                     Document uploads, approvals, pending, and rejections
                 </div>
             </CardFooter>

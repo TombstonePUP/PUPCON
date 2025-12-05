@@ -64,14 +64,14 @@ export function OverallProgress({ data = [] }: OverallProgressProps) {
 
     return (
         <Card className="flex flex-col">
-            <CardHeader className="items-center pb-0 border-b">
+            <CardHeader className="items-center pb-0">
                 <CardTitle>Document Uploads</CardTitle>
-                {/* <CardDescription>Document Uploaded and Outline with no Documents</CardDescription> */}
+                <CardDescription>Uploaded and Outline with no Documents</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 pb-0">
+            <CardContent className="px-2 pt-4 sm:px-6 ">
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[250px]"
+                    className="mx-auto aspect-square min-h-[150px]"
                 >
                     <PieChart>
                         <ChartTooltip
@@ -85,7 +85,7 @@ export function OverallProgress({ data = [] }: OverallProgressProps) {
                             dataKey="value"
                             nameKey="name"
                             innerRadius={60}
-                            strokeWidth={5}
+                            strokeWidth={10}
                         >
                             {pieData.map((entry, index) => (
                                 <Cell
@@ -125,12 +125,12 @@ export function OverallProgress({ data = [] }: OverallProgressProps) {
                     </PieChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col gap-2 text-sm">
-                <div className="flex items-center gap-2 font-medium leading-none">
-                    Document Upload Progress
+           <CardFooter className="flex-col items-start gap-2 text-sm ">
+                <div className="flex gap-2 font-medium leading-none">
+                    Showing averall progress
                 </div>
-                <div className="leading-none text-muted-foreground">
-                    Area and Exhibit Document Uploads and Documents to be uploaded
+                <div className="leading-snug text-muted-foreground">
+                 Total count of documents currently uploaded
                 </div>
             </CardFooter>
         </Card>

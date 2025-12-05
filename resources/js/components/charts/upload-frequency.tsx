@@ -8,6 +8,8 @@ import { type FrequencyUploads } from "@/types"
 import {
     Card,
     CardContent,
+    CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -58,34 +60,17 @@ export function UploadFrequency({ data }: ProgressChartProps) {
 
     return (
         <Card>
-            <CardHeader className="flex items-center gap-2 space-y-0 border-b sm:flex-row">
+            <CardHeader className="flex items-center gap-2 space-y-0  sm:flex-row">
                 <div className="grid flex-1 gap-1 text-center sm:text-left">
-                    <CardTitle>File Activity Frequency</CardTitle>
+                    <CardTitle>Document Acitivty Trend</CardTitle>
+                    <CardDescription>Frequency of document uploads over the period.</CardDescription>
                 </div>
-                <Select value={timeRange} onValueChange={setTimeRange}>
-                    <SelectTrigger
-                        className="w-[160px] rounded-lg sm:ml-auto"
-                        aria-label="Select a value"
-                    >
-                        <SelectValue placeholder="Last 3 months" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                        <SelectItem value="90d" className="rounded-lg">
-                            Last 3 months
-                        </SelectItem>
-                        <SelectItem value="30d" className="rounded-lg">
-                            Last 30 days
-                        </SelectItem>
-                        <SelectItem value="7d" className="rounded-lg">
-                            Last 7 days
-                        </SelectItem>
-                    </SelectContent>
-                </Select>
+
             </CardHeader>
             <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
                 <ChartContainer
                     config={chartConfig}
-                    className="aspect-auto h-[275px] w-full"
+                    className="aspect-square w-full max-w-auto"
                 >
                     <defs>
                         <clipPath id="clip">
@@ -152,7 +137,28 @@ export function UploadFrequency({ data }: ProgressChartProps) {
                         {/* <ChartLegend content={<ChartLegendContent />} /> */}
                     </AreaChart>
                 </ChartContainer>
+
             </CardContent>
+            <CardFooter className="">
+                <Select value={timeRange} onValueChange={setTimeRange}>
+                    <SelectTrigger
+                        className="w-auto rounded-lg sm:ml-auto"
+                        aria-label="Select a value"
+                    >
+                        <SelectValue placeholder="Last 3 months" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                        <SelectItem value="90d" className="rounded-lg">
+                            Last 3 months
+                        </SelectItem>
+                        <SelectItem value="30d" className="rounded-lg">
+                            Last 30 days
+                        </SelectItem>
+                        <SelectItem value="7d" className="rounded-lg">
+                            Last 7 days
+                        </SelectItem>
+                    </SelectContent>
+                </Select></CardFooter>
         </Card>
     )
 }

@@ -69,7 +69,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     });
 
     return (
-        <Tabs defaultValue="Users" className="w-full space-y-4">
+        <Tabs defaultValue="Files" className="w-full space-y-4">
             <div className="flex items-center gap-3">
                 <Input
                     placeholder="Search..."
@@ -78,6 +78,18 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                     className="h-8 max-w-sm"
                 />
                 <TabsList className="inline-flex h-8 rounded-md border border-gray-300 bg-white p-0.5">
+                    <TabsTrigger
+                        value="Files"
+                        onClick={() => setTab('Files')}
+                        className="h-full flex-1 rounded-md border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
+                    >
+                        Files
+                        <Badge className="ml-2 transition-colors duration-200" variant="secondary">
+                            {data.filter((d) => d.type === 'Files').length}
+                        </Badge>
+                    </TabsTrigger>
+
+
                     <TabsTrigger
                         value="Users"
                         onClick={() => setTab('Users')}
@@ -89,16 +101,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                         </Badge>
                     </TabsTrigger>
 
-                    <TabsTrigger
-                        value="Files"
-                        onClick={() => setTab('Files')}
-                        className="h-full flex-1 rounded-md border-0 bg-transparent px-6 text-gray-300 transition-all duration-200 ease-out hover:text-gray-500 data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=inactive]:cursor-pointer"
-                    >
-                        Files
-                        <Badge className="ml-2 transition-colors duration-200" variant="secondary">
-                            {data.filter((d) => d.type === 'Files').length}
-                        </Badge>
-                    </TabsTrigger>
+
                     <TabsTrigger
                         value="Content"
                         onClick={() => setTab('Content')}
@@ -145,7 +148,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                                             return (
                                                 <TableCell
                                                     key={cell.id}
-                                                    className={`px-4 py-3.5 ${cellClasses} ${index === 0 ? 'pl-6' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-6' : ''}`}
+                                                    className={`px-4 py-3.5 w-xs ${cellClasses} ${index === 0 ? 'pl-6' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-6' : ''}`}
                                                 >
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
@@ -155,10 +158,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} className="text-muted-foreground h-32 h-full text-center">
-                                        <div className='h-16 flex items-center justify-center'>
-                                            No results.
-                                        </div>
+                                    <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center">
+                                        No results.
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -286,9 +287,7 @@ export function UsersDataTable<TData, TValue>({ columns, data }: DataTableProps<
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="text-muted-foreground h-32 h-full text-center">
-                                        <div className='h-16 flex items-center justify-center'>
-                                            No Users.
-                                        </div>
+                                        No results.
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -445,9 +444,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data, resolve
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="text-muted-foreground h-32 text-center">
-                                        <div className='h-16 flex items-center justify-center'>
-                                            No results.
-                                        </div>
+                                        No results.
                                     </TableCell>
                                 </TableRow>
                             )}
