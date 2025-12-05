@@ -95,6 +95,8 @@ class LevelsController extends Controller
             'is_active' => $validated['is_active'],
         ]);
 
+        $level->Areas()->update(['archive' => true]);
+
         ActivityLog::create([
             'user_id' => $user->user_id,
             'description' => 'Updated level: ' . ($level->level === 0 ? 'Preliminary Survey' : 'Level ' . $level->level) .

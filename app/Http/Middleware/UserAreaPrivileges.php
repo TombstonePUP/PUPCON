@@ -24,7 +24,10 @@ class UserAreaPrivileges
         } elseif ($userRole === 'Chairman') {
             $userAreaRole = $request->user()->Areas;
             $level = Areas::where('area_id', $request->area_id)->first()->Levels->is_active;
-            if ($userAreaRole->firstWhere('area_id', $request->area_id) || !$level) {
+            $activeArea = Areas::where('area_id', $request->area_id)->first()->is_active;
+            if ($userAreaRole->firstWhere('area_id', $request->area_id) && $level) {
+                return $next($request);
+            } elseif (!$activeArea && !$level) {
                 return $next($request);
             }
         }

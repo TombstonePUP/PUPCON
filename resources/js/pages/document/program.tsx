@@ -241,7 +241,7 @@ export default function Programs({ program }: ProgramProps) {
                                     {selected_level?.areas && selected_level?.areas.length > 0 ? (
                                         selected_level?.areas.map((item) => {
                                             const isAssigned =
-                                                role !== 'Admin' && role !== 'Coordinator'
+                                                role !== 'Admin' && role !== 'Coordinator' && selected_level.is_active === true
                                                     ? assignedAreas.find((area: ProgramAreas) => area.area_id === item.area_id)
                                                     : true;
                                             return (
@@ -262,7 +262,7 @@ export default function Programs({ program }: ProgramProps) {
                                                             <div className="flex items-start justify-between">
                                                                 <p className="mt-1 text-sm text-gray-600">{item.area_name}</p>
                                                                 {/* Badge (top-right) */}
-                                                                {role !== 'Admin' && role !== 'Coordinator' && (
+                                                                {role !== 'Admin' && role !== 'Coordinator' && selected_level.is_active && (
                                                                     <Badge variant="outline" className="border-0 bg-green-100 text-green-800">
                                                                         Assigned
                                                                     </Badge>

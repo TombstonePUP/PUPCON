@@ -307,7 +307,7 @@ class ManageProgramController extends Controller
 
         $program->Levels->each(function ($level) {
             $level->Areas->each(function ($area) {
-                $area->update(['is_active' => false]);
+                $area->update(['archive' => true]);
             });
 
             $level->update(['is_active' => false]);
