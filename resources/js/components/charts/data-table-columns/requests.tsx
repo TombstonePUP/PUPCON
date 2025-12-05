@@ -38,11 +38,11 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                     checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
                     onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                     aria-label="Select all"
-                    className='cursor-pointer hover:border-red-400 transition-colors border-gray-700'
+                    className='cursor-pointer hover:border-gray-400 transition-colors border-gray-700'
                 />
             ),
             cell: ({ row }) => (
-                <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" className='cursor-pointer hover:border-red-400 transition-colors border-gray-300 mr-4' />
+                <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" className='cursor-pointer hover:border-gray-400 transition-colors border-gray-300 mr-4' />
             ),
             enableSorting: false,
             enableHiding: false,
