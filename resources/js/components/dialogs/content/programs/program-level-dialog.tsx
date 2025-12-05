@@ -82,14 +82,20 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                                 <SelectValue placeholder="Select a program" />
                             </SelectTrigger>
                             <SelectContent>
-                                {programList.map((program) => (
-                                    <SelectItem value={String(program.program_id)}>
-                                        {program.degree_type.match(/\b[A-Z]/g)}
-                                        {}
-                                        {' in '}
-                                        {program.program_name}
-                                    </SelectItem>
-                                ))}
+                                {programList.length > 0 ? (
+                                    programList.map((program) => (
+                                        <SelectItem
+                                            key={program.program_id}
+                                            value={String(program.program_id)}
+                                        >
+                                            {program.degree_type.match(/\b[A-Z]/g)?.join('')}
+                                            {' in '}
+                                            {program.program_name}
+                                        </SelectItem>
+                                    ))
+                                ) : (
+                                    <SelectItem disabled>No programs available</SelectItem>
+                                )}
                             </SelectContent>
                         </Select>
                         <InputError message={errors.program_name} />
