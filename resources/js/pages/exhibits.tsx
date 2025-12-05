@@ -53,20 +53,13 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
         }
     };
 
-    const EmptyState = ({
-        title,
-        description,
-    }: {
-        title: string;
-        description: string;
-    }) => (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-16 text-center w-full">
+    const EmptyState = ({ title, description }: { title: string; description: string }) => (
+        <div className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-16 text-center">
             <Construction className="mb-6 h-16 w-16 text-gray-400" />
             <h3 className="mb-2 text-xl font-semibold text-gray-900">{title}</h3>
-            <p className="text-sm text-gray-500 max-w-md">{description}</p>
+            <p className="max-w-md text-sm text-gray-500">{description}</p>
         </div>
     );
-
 
     return (
         <>
@@ -87,7 +80,10 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                     {exhibits.length > 0 ? (
                         <div className="grid w-[75%] grid-cols-2 gap-4 py-12 lg:grid-cols-3 xl:grid-cols-5">
                             {exhibits.map((exhibit, index) => {
-                                const hasFiles = exhibit.exhibit_outlines && exhibit.exhibit_outlines.length > 0;
+
+                                const hasFiles = exhibit.exhibit_outlines?.some((outline) => outline.exhibit_files?.file_path) ?? false;
+
+                            
 
                                 return (
                                     <div
@@ -106,10 +102,11 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                                 }
                                             }
                                         }}
-                                        className={`group relative overflow-hidden rounded-xl border-2 bg-white transition-all duration-300 ${hasFiles
-                                            ? 'cursor-pointer border-gray-200 hover:-translate-y-1 hover:border-[#7f1414]'
-                                            : 'border-gray-300 grayscale'
-                                            }`}
+                                        className={`group relative overflow-hidden rounded-xl border-2 bg-white transition-all duration-300 ${
+                                            hasFiles
+                                                ? 'cursor-pointer border-gray-200 hover:-translate-y-1 hover:border-[#7f1414]'
+                                                : 'border-gray-300 grayscale'
+                                        }`}
                                         style={{
                                             animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`,
                                         }}
@@ -130,8 +127,9 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                                 <img
                                                     src={exhibit.image_path || '/images/placeholder.png'}
                                                     alt={exhibit.exhibit_name}
-                                                    className={`max-h-28 max-w-28 rounded-lg object-contain transition-all duration-300 ${hasFiles ? 'group-hover:scale-105' : 'grayscale'
-                                                        }`}
+                                                    className={`max-h-28 max-w-28 rounded-lg object-contain transition-all duration-300 ${
+                                                        hasFiles ? 'group-hover:scale-105' : 'grayscale'
+                                                    }`}
                                                 />
                                             </div>
                                         </div>
@@ -139,8 +137,9 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                         {/* Content Section */}
                                         <div className="relative z-20 p-4">
                                             <h3
-                                                className={`mb-2 line-clamp-2 text-center text-base font-bold transition-colors duration-300 ${hasFiles ? 'text-gray-900 group-hover:text-[#7f1414]' : 'text-gray-600'
-                                                    }`}
+                                                className={`mb-2 line-clamp-2 text-center text-base font-bold transition-colors duration-300 ${
+                                                    hasFiles ? 'text-gray-900 group-hover:text-[#7f1414]' : 'text-gray-600'
+                                                }`}
                                             >
                                                 {exhibit.exhibit_name}
                                             </h3>
@@ -183,10 +182,11 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                             <div key={exhibit.exhibit_outline_id} className="ml-4">
                                                 <h3
                                                     onClick={() => handleClick(exhibit)}
-                                                    className={`text-sm ${exhibit.outline_description !== undefined
-                                                        ? 'cursor-pointer text-[#7f1414] underline hover:text-[#a01c1c]'
-                                                        : ''
-                                                        }`}
+                                                    className={`text-sm ${
+                                                        exhibit.outline_description !== undefined
+                                                            ? 'cursor-pointer text-[#7f1414] underline hover:text-[#a01c1c]'
+                                                            : ''
+                                                    }`}
                                                 >
                                                     {exhibit.outline_description}
                                                 </h3>
