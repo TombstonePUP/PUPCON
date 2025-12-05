@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { PerProgramUnderSurvey } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import { Input } from '@/components/ui/input';
 
 interface ProgramLevelDialogProps {
     programs: PerProgramUnderSurvey[];
@@ -25,6 +26,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
     const level = selectedProgram?.latest_level?.level;
     const { data, setData, post, reset, processing, errors } = useForm<ProgramLevelForm>({
         program_name: '',
+        new_level: '',
     });
 
     useEffect(() => {
@@ -51,13 +53,13 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
 
     const programList = programs.filter((p) => !p.under_survey && p.is_active && ((p.latest_level?.level ?? -1) < 4 || p.latest_level?.remarks === 'Passed'));
 
-    /* const newLevels = [
+    const newLevels = [
         { value: '0', label: 'Preliminary' },
         { value: '1', label: 'Level 1' },
         { value: '2', label: 'Level 2' },
         { value: '3', label: 'Level 3' },
         { value: '4', label: 'Level 4' },
-    ].filter((l) => Number(l.value) >= (level ?? 0)); */
+    ].filter((l) => Number(l.value) >= (level ?? 0));
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
@@ -83,14 +85,14 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                                 <SelectValue placeholder="Select a program" />
                             </SelectTrigger>
                             <SelectContent>
-                                {/* {programList.map((program) => (
+                                {programList.map((program) => (
                                     <SelectItem value={String(program.program_id)}>
                                         {program.degree_type.match(/\b[A-Z]/g)}
                                         { }
                                         {' in '}
                                         {program.program_name}
                                     </SelectItem>
-                                ))} */}
+                                ))}
 
                                 {programList.length > 0 ? (
                                     programList.map((program) => (
@@ -111,7 +113,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                         </Select>
                         <InputError message={errors.program_name} />
                     </div>
-                    {/* <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label className="mb-2 block text-sm font-medium text-gray-700">Current Status</Label>
                             <div className="flex h-10 w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3">
@@ -138,7 +140,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                             </Select>
                         </div>
                         <InputError message={errors.new_level} />
-                    </div> */}
+                    </div>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button variant="outline" onClick={onClose} disabled={processing}>
