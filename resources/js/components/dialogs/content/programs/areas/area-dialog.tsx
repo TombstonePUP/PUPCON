@@ -158,7 +158,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                     type="number"
                                     value={data.area_number}
                                     onChange={(e) => setData('area_number', e.target.value)}
-                                    placeholder="e.g., 1, 2, 3"
+                                    placeholder="e.g. 1, 2, or 3"
                                     disabled={processing}
                                     min="1"
                                     step="1"
