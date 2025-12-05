@@ -30,7 +30,7 @@ class UserController extends Controller
                         ->where('is_active', true);
                 },
                 'Levels.Areas' => function ($query) {
-                    $query->select('area_id', 'area_number', 'area_name', 'accreditation_level_id');
+                    $query->select('area_id', 'area_number', 'area_name', 'accreditation_level_id')->where('archive', false);
                 },
             ])
             ->get();

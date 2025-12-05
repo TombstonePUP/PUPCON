@@ -18,7 +18,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgram, ProgramAreas } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Archive, BookOpen, Download, EditIcon, MoreVertical, Plus, Trash2 } from 'lucide-react';
+import { Archive, BookOpen, Download, EditIcon, MoreVertical, Plus } from 'lucide-react';
 
 export interface ProgramProps {
     program: PerProgram;
@@ -170,6 +170,11 @@ export default function Programs({ program }: ProgramProps) {
         </div>
     );
 
+    const areas =
+        role === 'Admin' || role === 'Coordinator'
+            ? selected_level?.areas || []
+            : selected_level?.areas?.filter((area) => area.archive === false) || [];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`${program.program_name?.trim().replace(/\b\w/g, (c) => c.toUpperCase())} - Program Management`} />
@@ -183,10 +188,10 @@ export default function Programs({ program }: ProgramProps) {
                                 <BookOpen className="h-6 w-6 text-white" />
                             </div>
                             <div className="ml-2 flex-1">
-                                <h1 className="text-xl font-semibold flex text-gray-900 ">
+                                <h1 className="flex text-xl font-semibold text-gray-900">
                                     <span>{program.degree_type}</span>
                                     <span className="mx-1">in</span>
-                                    <span className="capitalize ">{program.program_name}</span>
+                                    <span className="capitalize">{program.program_name}</span>
                                 </h1>
                                 <p className="text-sm text-gray-500">Manage program information, objectives, and assessment areas</p>
                             </div>
@@ -241,7 +246,7 @@ export default function Programs({ program }: ProgramProps) {
 
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     {selected_level?.areas && selected_level?.areas.length > 0 ? (
-                                        selected_level?.areas.map((item) => {
+                                        areas?.map((item) => {
                                             const isAssigned =
                                                 role !== 'Admin' && role !== 'Coordinator' && selected_level.is_active === true
                                                     ? assignedAreas.find((area: ProgramAreas) => area.area_id === item.area_id)
@@ -366,7 +371,7 @@ export default function Programs({ program }: ProgramProps) {
                                             <button
                                                 type="button"
                                                 onClick={addArea}
-                                                className="group flex min-h-[100px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600 cursor-pointer"
+                                                className="group flex min-h-[100px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-5 text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-600"
                                             >
                                                 <Plus className="h-6 w-6" />
                                                 <span className="mt-2 text-sm font-medium">Add New Area</span>
