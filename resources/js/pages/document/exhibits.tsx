@@ -106,7 +106,11 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                                                     <div className="flex items-center text-sm text-gray-500">
                                                         <Folder className="h-4 w-4 shrink-0" />
                                                         <span className="ml-2 truncate text-xs text-gray-400">
-                                                            {exhibit.exhibit_outlines?.length || 0} file/s
+                                                            {//exhibit.exhibit_outlines?.length || 0
+                                                                exhibit.container
+                                                                    ? exhibit.exhibit_outlines?.length || 0
+                                                                    : exhibit.exhibit_outlines[0]?.exhibit_files ? exhibit.exhibit_outlines.length : 0
+                                                            } file/s
                                                         </span>
                                                     </div>
                                                 </div>
