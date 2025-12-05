@@ -133,7 +133,7 @@ class ProgramContentController extends Controller
             $imagePath = null;
             if (isset($galleryItem['image'])) {
                 $caption = Str::slug($galleryItem['caption'], '_');
-                $imageName = 'gallery_' . $caption . '.' . $galleryItem['image']->getClientOriginalExtension();
+                $imageName = 'gallery_' . $caption . uniqid() . '.' . $galleryItem['image']->getClientOriginalExtension();
                 $imagePath = 'documents/' . $degree_type . '_' . $program_name . '/assets/gallery/' . $imageName;
                 if (Storage::disk('public')->exists($imagePath)) {
                     Storage::disk('public')->delete($imagePath);
