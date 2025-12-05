@@ -270,7 +270,7 @@ export default function Programs({ program }: ProgramProps) {
                                                                     </Badge>
                                                                 )}
                                                                 {item.archive && (
-                                                                    <Badge className="bg-[#7f1414] text-white">Archive</Badge>
+                                                                    <Badge className="bg-[#7f1414] text-white hover:bg-[#9f1f1f]">Archived</Badge>
                                                                 )}
                                                             </div>
                                                             {/* <div className="flex justify-start mt-2 gap-4 text-xs text-gray-500">
