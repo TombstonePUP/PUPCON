@@ -1,5 +1,4 @@
 import InputError from '@/components/input-error';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -7,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PerProgramUnderSurvey } from '@/types';
 import { useForm } from '@inertiajs/react';
+import { Check } from 'lucide-react';
 
 interface ProgramDialogProps {
     program?: PerProgramUnderSurvey;
@@ -100,6 +100,7 @@ export default function ProgramDialog({ ...props }: ProgramDialogProps) {
         neutral: 'bg-neutral-500',
         stone: 'bg-stone-500',
     };
+
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md">
@@ -146,19 +147,31 @@ export default function ProgramDialog({ ...props }: ProgramDialogProps) {
                             <Label className="mb-2 block text-sm font-medium text-gray-700">
                                 Color <span className="text-red-500">*</span>
                             </Label>
-                            <Select value={data.color} onValueChange={(value) => setData('color', value)} disabled={processing}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select color" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {availableColors.map((color) => (
-                                        <SelectItem key={color} value={color} className="flex items-center">
-                                            <Badge className={`${colorClasses[color]} h-4 w-2 rounded-full border border-gray-200`}>&nbsp;</Badge>
-                                            <span className='ml-3'>{color.charAt(0).toUpperCase() + color.slice(1)}</span>
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <div className="grid grid-cols-6 gap-2 sm:grid-cols-8">
+                                {availableColors.map((color) => (
+                                    <button
+                                        key={color}
+                                        type="button"
+                                        onClick={() => setData('color', color)}
+                                        disabled={processing}
+                                        className={`relative h-10 w-10 rounded-lg transition-all hover:scale-110 focus:ring-2 focus:ring-[#7f1414] focus:ring-offset-2 focus:outline-none ${
+                                            colorClasses[color]
+                                        } ${data.color === color ? 'ring-2 ring-[#7f1414] ring-offset-2' : ''}`}
+                                        title={color.charAt(0).toUpperCase() + color.slice(1)}
+                                    >
+                                        {data.color === color && (
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <Check className="h-5 w-5 text-white drop-shadow-md" />
+                                            </div>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                            {data.color && (
+                                <p className="text-xs text-gray-500">
+                                    Selected: <span className="font-medium capitalize">{data.color}</span>
+                                </p>
+                            )}
                             <InputError message={errors.color} />
                         </div>
                     </div>
