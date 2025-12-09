@@ -2,7 +2,7 @@ import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import type { ProgramsUnderSurvey } from '@/types';
 import { Head, Link, usePage, usePoll } from '@inertiajs/react';
-import { Construction } from 'lucide-react';
+import { Construction, ImageOff } from 'lucide-react';
 
 interface ProgramsProps {
     programs: ProgramsUnderSurvey[];
@@ -47,14 +47,17 @@ export default function Programs({ programs }: ProgramsProps) {
                                                 <div className="md:flex">
                                                     {/* Program Image */}
                                                     <div className="relative h-64 overflow-hidden md:h-auto md:w-1/3">
-                                                        <img
-                                                            src={
-                                                                program.program_image_path ||
-                                                                'https://placehold.co/600x400/7f1414/white?text=No+Image'
-                                                            }
-                                                            alt={program.program_image_name ?? 'Default Program Image'}
-                                                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                                        />
+                                                        {program.program_image_path ? (
+                                                            <img
+                                                                src={program.program_image_path}
+                                                                alt={program.program_image_name ?? 'Program Image'}
+                                                                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                                            />
+                                                        ) : (
+                                                            <div className="flex h-full w-full items-center justify-center bg-gray-100">
+                                                                <ImageOff className="h-12 w-12 text-gray-300" />
+                                                            </div>
+                                                        )}
                                                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                                                     </div>
 
@@ -80,7 +83,7 @@ export default function Programs({ programs }: ProgramsProps) {
                                                         )}
 
                                                         <div className="flex items-end justify-end">
-                                                            <p className="w-fit rounded-full border border-[#7f1414]/40 bg-[#7f1414]/20 px-4 py-1 text-right text-sm font-semibold text-[#7f1414]">
+                                                            <p className="w-fit rounded-full border border-[#7f1414]/40 px-4 py-1 text-right text-sm font-semibold text-[#7f1414]">
                                                                 {program.active_levels.level === 0
                                                                     ? 'Preliminary Survey Visit'
                                                                     : `Accreditation Level ${program.active_levels.level}`}
