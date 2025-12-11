@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'node:path';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
-import os from 'os'; 
+import os from 'os';
 
 function getLocalIp() {
     const interfaces = os.networkInterfaces();
@@ -15,7 +15,7 @@ function getLocalIp() {
             }
         }
     }
-    return '127.0.0.1'; 
+    return '127.0.0.1';
 }
 
 const LAN_IP = getLocalIp();
@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => ({
             input: ['resources/scss/app.scss', 'resources/js/app.tsx'],
             ssr: 'resources/js/ssr.jsx',
             refresh: true,
+            buildDirectory: 'build',
         }),
         react(),
         tailwindcss(),
@@ -33,10 +34,10 @@ export default defineConfig(({ mode }) => ({
     esbuild: {
         jsx: 'automatic',
     },
-    build: {
-        outDir: 'public/build',
+    /* build: {
+        outDir: 'build',
         manifest: true,
-    },
+    }, */
     resolve: {
         alias: {
             // eslint-disable-next-line no-undef
@@ -51,12 +52,12 @@ export default defineConfig(({ mode }) => ({
             origin: [
                 'http://localhost:8000',
                 'http://127.0.0.1:8000',
-                `http://${LAN_IP}:8000`, 
+                `http://${LAN_IP}:8000`,
             ],
             credentials: true,
         },
         hmr: {
-            host: LAN_IP, 
+            host: LAN_IP,
         },
     },
 }));
