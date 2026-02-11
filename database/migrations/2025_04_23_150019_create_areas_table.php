@@ -50,7 +50,7 @@ return new class extends Migration
                 ->on('parameter_outline_category')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('outline_number');
-            $table->string('outline_description')->nullable();
+            $table->text('outline_description')->nullable();
             $table->float('item_rating')->default(false);
             /* $table->float('system_implementation_outcome_mean')->default(false);
             $table->float('')->default(false); */
@@ -96,7 +96,7 @@ return new class extends Migration
 
         Schema::create('exhibits', function (Blueprint $table) {
             $table->id(column: 'exhibit_id')->autoIncrement()->primary();
-            $table->string('exhibit_name');
+            $table->text('exhibit_name');
             $table->text('image_name')->nullable();
             $table->text('image_path')->nullable();
             $table->boolean('container')->default(false);
