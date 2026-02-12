@@ -22,7 +22,7 @@ class WelcomeController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'page' => ['required', 'array'],
+                'page' => ['nullable', 'array'],
                 'page.page' => ['required', 'string'],
                 'page.content_page_id' => ['nullable', 'integer'],
                 'page.director_name' => ['required', 'string'],
