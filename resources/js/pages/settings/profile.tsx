@@ -23,7 +23,8 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
     const { auth } = usePage<SharedData>().props;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        name: auth.user.name,
+        first_name: auth.user.first_name ?? '',
+        last_name: auth.user.last_name ?? '',
         email: auth.user.email,
     });
 
@@ -44,49 +45,47 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                     <HeadingSmall title="Profile information" description="Update your name and email address" />
 
                     <form onSubmit={submit} className="space-y-6">
+
+                        {/* First Name */}
                         <div className="grid gap-2">
-                            <Label htmlFor="name">Last Name</Label>
+                            <Label htmlFor="first_name">First Name</Label>
 
                             <Input
-                                id="name"
-                                className="mt-1 block w-full"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
+                                id="first_name"
+                                value={data.first_name}
+                                onChange={(e) => setData('first_name', e.target.value)}
                                 required
-                                autoComplete="name"
-                                placeholder="Last name"
-                            />
-
-                            <InputError className="mt-2" message={errors.name} />
-                        </div>
-                        
-                        <div className="grid gap-2">
-                            <Label htmlFor="name">First Name</Label>
-
-                            <Input
-                                id="name"
-                                className="mt-1 block w-full"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                required
-                                autoComplete="name"
                                 placeholder="First name"
                             />
 
-                            <InputError className="mt-2" message={errors.name} />
+                            <InputError className="mt-2" message={errors.first_name} />
                         </div>
 
+                        {/* Last Name */}
+                        <div className="grid gap-2">
+                            <Label htmlFor="last_name">Last Name</Label>
+
+                            <Input
+                                id="last_name"
+                                value={data.last_name}
+                                onChange={(e) => setData('last_name', e.target.value)}
+                                required
+                                placeholder="Last name"
+                            />
+
+                            <InputError className="mt-2" message={errors.last_name} />
+                        </div>
+
+                        {/* Email */}
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email address</Label>
 
                             <Input
                                 id="email"
                                 type="email"
-                                className="mt-1 block w-full"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
                                 required
-                                autoComplete="username"
                                 placeholder="Email address"
                             />
 
@@ -101,7 +100,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                         href={route('verification.send')}
                                         method="post"
                                         as="button"
-                                        className="hover:decoration-current! text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out dark:decoration-neutral-500"
+                                        className="underline underline-offset-4"
                                     >
                                         Click here to resend the verification email.
                                     </Link>
@@ -116,7 +115,9 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                         )}
 
                         <div className="flex items-center gap-4">
-                            <Button variant={'noborder'} disabled={processing}>Save</Button>
+                            <Button variant="noborder" disabled={processing}>
+                                Save
+                            </Button>
 
                             <Transition
                                 show={recentlySuccessful}
@@ -128,6 +129,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 <p className="text-sm text-neutral-600">Saved</p>
                             </Transition>
                         </div>
+
                     </form>
                 </div>
 
