@@ -16,11 +16,11 @@ const sidebarNavItems: NavItem[] = [
         url: '/settings/password',
         icon: null,
     },
-    {
-        title: 'Archive',
-        url: '/settings/archive',
-        icon: null,
-    },
+    // {
+    //     title: 'Archive',
+    //     url: '/settings/archive',
+    //     icon: null,
+    // },
 ];
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
