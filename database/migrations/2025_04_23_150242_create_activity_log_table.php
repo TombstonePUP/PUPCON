@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('activity_log', function (Blueprint $table) {
             $table->id(column: 'activity_log_id')->autoIncrement()->primary();
             $table->foreignId('user_id')->references('user_id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('description');
+            $table->text('description');
             $table->string('activity');
             $table->string('type');
             $table->timestamp('activity_date');
