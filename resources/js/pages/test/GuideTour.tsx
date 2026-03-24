@@ -57,7 +57,7 @@ const GuideTour = () => {
 
               tour.addStep({
                 id: "d3",
-                title: "Document Acitivty Trend",
+                title: "Document Activity Trend",
                 text: "A line graph timeline where you can track the frequency of document uploads.",
                 attachTo: { element: "#stats-card-left", on: "right" },
                 buttons: [
@@ -70,7 +70,7 @@ const GuideTour = () => {
 
                tour.addStep({
                 id: "d4",
-                title: "Document Acitivty Trend",
+                title: "Document Activity Trend",
                 text: "A line graph timeline where you can track the frequency of document uploads.",
                 attachTo: { element: "#stats-card-center", on: "right" },
                 buttons: [
@@ -83,7 +83,7 @@ const GuideTour = () => {
 
                tour.addStep({
                 id: "d5",
-                title: "Document Acitivty Trend",
+                title: "Document Activity Trend",
                 text: "A line graph timeline where you can track the frequency of document uploads.",
                 attachTo: { element: "#stats-card-right", on: "right" },
                 buttons: [
@@ -96,7 +96,7 @@ const GuideTour = () => {
 
                tour.addStep({
                 id: "d6",
-                title: "Document Acitivty Trend",
+                title: "Document Activity Trend",
                 text: "A line graph timeline where you can track the frequency of document uploads.",
                 attachTo: { element: "#stat-table", on: "right" },
                 buttons: [

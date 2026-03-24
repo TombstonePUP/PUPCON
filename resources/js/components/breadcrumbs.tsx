@@ -15,10 +15,10 @@ export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: BreadcrumbItemType[]
                                 <Fragment key={index}>
                                     <BreadcrumbItem>
                                         {isLast ? (
-                                            <BreadcrumbPage className='capitalize'>{item.title}</BreadcrumbPage>
+                                            <BreadcrumbPage className='capitalize font-bold '>{item.title}</BreadcrumbPage>
                                         ) : (
                                             <BreadcrumbLink asChild>
-                                                <Link className='capitalize' href={item.href}>{item.title}</Link>
+                                                <Link className='capitalize font-bold text-muted-foreground' href={item.href}>{item.title}</Link>
                                             </BreadcrumbLink>
                                         )}
                                     </BreadcrumbItem>

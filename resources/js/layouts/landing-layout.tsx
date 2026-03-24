@@ -314,7 +314,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
     };
 
     return (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen flex-col font-poppins">
             {/* Header */}
             <motion.header
                 className={cn(

@@ -33,7 +33,9 @@ export default function AppSidebarLayout({ children, breadcrumbs = [] }: { child
             <AppSidebar />
             <AppContent variant="sidebar">
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
-                {children}
+                <main className='px-20'>
+                    {children}
+                </main>
                 <Toaster position="top-right" expand={false} />
             </AppContent>
         </AppShell>

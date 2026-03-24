@@ -281,3 +281,14 @@ export interface FilesOverview {
     file_status: string;
     rejection_reason: string;
 }
+
+export type OverallUploads = {
+    document_type: string
+    documents: number
+    outlines?: number
+}
+
+export interface FrequencyUploads {
+    activity_date: string
+    activity: number
+}

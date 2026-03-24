@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
 @import 'tailwindcss';
-/* @import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"; */
 
 @plugin 'tailwindcss-animate';
 
@@ -8,118 +11,166 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans:
-        'Montserrat';
+  --font-poppins: 'Poppins', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
 
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
-
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
-
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
-
-    --color-destructive: var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
-
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
-
-    --color-chart-1: var(--chart-1);
-    --color-chart-2: var(--chart-2);
-    --color-chart-3: var(--chart-3);
-    --color-chart-4: var(--chart-4);
-    --color-chart-5: var(--chart-5);
-
-    --color-sidebar: var(--sidebar);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
 
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
-    }
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
-    --chart-1: 0 100% 25.9%;
-    --chart-2: 0 80% 35%;
-    --chart-3: 0 60% 45%;
-    --chart-4: 0 40% 55%;
-    --chart-5: 0 20% 65%;
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.87 0 0);
+  /* ── Base Layers ── */
+  --background: oklch(0.985 0 0);        /* main canvas */
+  --foreground: oklch(0.22 0 0);
+
+  --card: oklch(0.995 0 0);              /* top surface */
+  --card-foreground: oklch(0.22 0 0);
+
+  --popover: oklch(0.995 0 0);
+  --popover-foreground: oklch(0.22 0 0);
+
+  /* ── Brand ── */
+  --primary: oklch(0.35 0.12 18);        /* maroon */
+  --primary-foreground: oklch(0.98 0 0);
+
+  /* ── UI Surfaces ── */
+  --secondary: oklch(0.945 0 0);
+  --secondary-foreground: oklch(0.26 0 0);
+
+  --muted: oklch(0.935 0 0);
+  --muted-foreground: oklch(0.48 0 0);   /* better readability */
+
+  --accent: oklch(0.945 0 0);
+  --accent-foreground: oklch(0.26 0 0);
+
+  /* ── States ── */
+  --destructive: oklch(0.48 0.18 18);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  /* ── Borders / Inputs ── */
+  --border: oklch(0.87 0 0);             /* slightly stronger */
+  --input: oklch(0.89 0 0);
+  --ring: oklch(0.55 0.1 18);
+
+  /* ── Chart (unchanged, correct) ── */
+  --chart-1: oklch(0.35 0.12 18);
+  --chart-2: oklch(0.44 0.14 18);
+  --chart-3: oklch(0.54 0.14 18);
+  --chart-4: oklch(0.66 0.12 18);
+  --chart-5: oklch(0.78 0.08 18);
+
+  --radius: 0.625rem;
+
+  /* ── Sidebar (distinct but light) ── */
+  --sidebar: oklch(0.982 0 0);           /* slightly below card */
+  --sidebar-foreground: oklch(0.22 0 0);
+
+  --sidebar-primary: oklch(0.35 0.12 18);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+
+  --sidebar-accent: oklch(0.965 0 0);    /* hover */
+  --sidebar-accent-foreground: oklch(0.22 0 0);
+
+  --sidebar-border: oklch(0.885 0 0);
+  --sidebar-ring: oklch(0.55 0.1 18);
 }
+/* .dark {
+  --background: oklch(0.13 0 0);
+  --foreground: oklch(0.91 0.018 50);
+
+  --card: oklch(0.16 0 0);
+  --card-foreground: oklch(0.91 0.018 50);
+
+  --popover: oklch(0.16 0 0);
+  --popover-foreground: oklch(0.91 0.018 50);
+
+  --primary: oklch(0.6 0.18 18);
+  --primary-foreground: oklch(0.97 0.008 55);
+
+  --secondary: oklch(0.21 0 0);
+  --secondary-foreground: oklch(0.88 0.018 50);
+
+  --muted: oklch(0.19 0 0);
+  --muted-foreground: oklch(0.62 0.04 40);
+
+  --accent: oklch(0.21 0 0);
+  --accent-foreground: oklch(0.88 0.018 50);
+
+  --destructive: oklch(0.62 0.2 18);
+  --destructive-foreground: oklch(0.97 0.008 55);
+
+  --border: oklch(0.25 0 0);
+  --input: oklch(0.25 0 0);
+  --ring: oklch(0.5 0.12 18);
+
+  --chart-1: oklch(0.62 0.2 18);
+  --chart-2: oklch(0.68 0.18 18);
+  --chart-3: oklch(0.74 0.15 18);
+  --chart-4: oklch(0.80 0.11 18);
+  --chart-5: oklch(0.86 0.07 18);
+
+  --sidebar: oklch(0.10 0 0);
+  --sidebar-foreground: oklch(0.91 0.018 50);
+  --sidebar-primary: oklch(0.6 0.18 18);
+  --sidebar-primary-foreground: oklch(0.97 0.008 55);
+  --sidebar-accent: oklch(0.19 0 0);
+  --sidebar-accent-foreground: oklch(0.88 0.018 50);
+  --sidebar-border: oklch(0.22 0 0);
+  --sidebar-ring: oklch(0.5 0.12 18);
+} */
 
 @layer base {
-    * {
-        @apply border-border;
-    }
+  * {
+    @apply border-border;
+  }
 
-    body {
-        @apply bg-background text-foreground;
-    }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

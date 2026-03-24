@@ -29,15 +29,15 @@ const chartConfig = {
     },
     Approved: {
         label: "Approved",
-        color: "hsl(var(--chart-1))"
+        color: "var(--chart-1)",
     },
     Pending: {
         label: "Pending",
-        color: "hsl(var(--chart-2))",
+        color: "var(--chart-2)",
     },
     Rejected: {
         label: "Rejected",
-        color: "hsl(var(--chart-3))",
+        color: "var(--chart-3)",
     },
 } satisfies ChartConfig
 

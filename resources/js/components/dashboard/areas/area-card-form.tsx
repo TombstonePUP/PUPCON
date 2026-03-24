@@ -69,7 +69,7 @@ export default function AreaCards({ program, area, forms, resolveFormDialog }: A
                 return (
                     <div
                         key={card.area_form_id}
-                        className="group bg-card relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg border p-6 transition-all duration-300 hover:border-red-800"
+                        className="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg border p-6 transition-all duration-300 hover:border-red-800"
                         onClick={() => resolveFormDialog({ type: 'view', form: card })}
                     >
                         <div className="flex items-center gap-6 w-full">
@@ -180,7 +180,7 @@ export default function AreaCards({ program, area, forms, resolveFormDialog }: A
                 !area.archive && (
                     <Button
                         variant="outline"
-                        className="border-muted-foreground/40 bg-card text-muted-foreground/80 hover:border-muted-foreground/80 hover:bg-muted/50 hover:text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-colors"
+                        className="border-muted-foreground/40 text-muted-foreground/80 hover:border-muted-foreground/80 hover:bg-muted/50 hover:text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-colors"
                         onClick={() => resolveFormDialog({ type: 'add' })}
                     >
                         <Plus className="h-8 w-8" />
