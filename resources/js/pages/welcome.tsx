@@ -761,7 +761,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
               </div>
 
               <div className="mt-auto text-left">
-                <p className="font-semibold">{page?.director_name || 'Campus Director'}</p>
+                <p className="font-semibold">{page?.director_name || 'Cecilia Reyes-Alagon'}</p>
                 <p className="text-sm opacity-90">Campus Director</p>
               </div>
             </div>
