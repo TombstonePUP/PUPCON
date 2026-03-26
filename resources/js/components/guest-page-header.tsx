@@ -66,10 +66,10 @@ export default function PageHeader({ title, breadcrumbs, quickLinks, className }
         <div className={`lg:sticky top-0 z-30 w-full bg-white py-4 shadow-md ${className || ''}`}>
             <div className="mx-auto flex w-[75%] max-w-7xl items-center justify-between text-[#7f1414]">
                 {/* Title */}
-                {title && <h1 className="text-lg font-semibold tracking-tight">{title}</h1>}
+                {title && <h1 className="text-sm font-semibold tracking-tight">{title}</h1>}
 
                 {/* Breadcrumbs */}
-                <nav className="hidden lg:flex items-center text-sm">
+                <nav className="hidden lg:flex items-center text-xs">
                     {breadcrumbs.map((crumb, idx) => {
                         const isLast = idx === breadcrumbs.length - 1;
                         return (
