@@ -725,7 +725,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
             <p className="text-sm sm:text-base text-gray-600">A word of inspiration from our campus leadership.</p>
           </div>
 
-          <div className="mx-auto flex w-[80%] max-w-6xl flex-col gap-2 lg:flex-row lg:items-stretch">
+          <div className="mx-auto flex w-[80%] max-w-5xl flex-col gap-2 lg:flex-row lg:items-stretch">
             {/* Director's Image */}
             <div
               ref={directorImageRef}
@@ -773,7 +773,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
           ref={accreditorSectionRef}
           className={`my-10 flex w-full items-center justify-center transition-all duration-500 ease-out ${isAccreditorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
         >
-          <div className="flex w-[80%] max-w-6xl flex-col gap-12 rounded-xl border border-[#201e1e31] bg-white p-15 lg:flex-row">
+          <div className="flex w-[80%] max-w-5xl flex-col gap-12 rounded-xl border border-[#201e1e31] bg-white p-10 lg:flex-row">
             {/* Left Column (Text) */}
             <div
               ref={accreditorContentRef}
