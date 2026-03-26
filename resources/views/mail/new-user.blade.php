@@ -32,6 +32,7 @@
         .header {
             background-color: #7f1414; /* Your Brand Color */
             padding: 24px 32px;
+            padding-left: 32px;
             border-radius: 8px 8px 0 0;
         }
         .header h1 {
@@ -155,7 +156,7 @@
                     <tr>
                         <td align="left" class="card">
                             
-                            <p class."greeting" style="font-size: 24px; font-weight: bold; color: #1e293b; margin-bottom: 20px; font-family: Arial, sans-serif;">
+                            <p class="greeting" style="font-size: 24px; font-weight: bold; color: #1e293b; margin-bottom: 20px; font-family: Arial, sans-serif;">
                                 Greetings, {{ $name }}!
                             </p>
                             
