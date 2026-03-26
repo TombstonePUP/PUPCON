@@ -76,7 +76,7 @@
   --popover-foreground: oklch(0.22 0 0);
 
   /* ── Brand ── */
-  --primary: oklch(0.35 0.12 18);        /* maroon */
+  --primary: oklch(38.7% 0.141 27);        /* maroon */
   --primary-foreground: oklch(0.98 0 0);
 
   /* ── UI Surfaces ── */
