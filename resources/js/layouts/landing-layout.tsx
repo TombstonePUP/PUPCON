@@ -761,7 +761,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                 ></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#7f1414]/90 via-[#7f1414]/70 to-[#7f1414]/80"></div>
 
-                <div className="relative z-10 mx-auto flex h-full w-[90%] max-w-7xl flex-col items-center justify-center space-y-4">
+                <div className="relative z-10 mx-auto flex h-full max-w-6xl flex-col items-center justify-center space-y-4">
                     <div className="grid w-full grid-cols-1 gap-12 text-center md:grid-cols-2 lg:grid-cols-4 lg:text-left">
                         <div className="space-y-4">
                             <img src="/images/pupcon-logo-white.png" alt="PUP Logo" className="mx-auto w-28 lg:mx-0" />

@@ -496,7 +496,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
           <div
             className={`flex flex-col items-center px-4 text-center transition-all duration-500 ease-out ${isNewsSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
           >
-            <h2 className="text-xl font-bold text-gray-900 sm:text-2xl mb-1">What's New on Campus</h2>
+            <h2 className="text-xl sm:text-3xl font-bold text-gray-900 mb-1">What's New on Campus</h2>
             <p className="text-sm text-gray-600 sm:text-base">Catch up on events, announcements, and campus highlights.</p>
           </div>
 
@@ -640,7 +640,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
 
               {/* Content */}
               <div className="p-6 sm:p-8">
-                <h2 className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl">{selectedNewsItem.title}</h2>
+                <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-3xl">{selectedNewsItem.title}</h2>
 
                 <p className="mb-6 leading-relaxed text-gray-700 sm:text-lg">{selectedNewsItem.desc}</p>
 
@@ -700,7 +700,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
               ref={avpContentRef}
               className={`flex w-full flex-col justify-center px-4 text-center transition-all delay-100 duration-500 ease-out sm:px-0 lg:w-[50%] lg:text-left ${isAvpContentInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
             >
-              <h2 className="mb-3 text-xl font-bold text-primary sm:mb-4 sm:text-2xl lg:text-[2rem]">
+              <h2 className="mb-3 text-xl font-bold text-primary sm:mb-4 sm:text-3xl lg:text-[2rem]">
                 Campus Audio-Visual Presentation
               </h2>
               <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">{page?.video_title || 'Campus Audio-Visual Presentation'}</p>
@@ -721,11 +721,11 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
           className={`my-12 bg-white transition-all duration-500 ease-out space-y-7 ${isDirectorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
         >
           <div className="mx-auto max-w-4xl text-center">
-            <h2 className="text-xl font-bold text-gray-900 sm:text-2xl mb-1">Message from the Campus Director</h2>
-            <p className="text-sm text-gray-600 sm:text-base">A word of inspiration from our campus leadership.</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Message from the Campus Director</h2>
+            <p className="text-sm sm:text-base text-gray-600">A word of inspiration from our campus leadership.</p>
           </div>
 
-          <div className="mx-auto flex max-w-4xl flex-col gap-2 lg:flex-row lg:items-stretch">
+          <div className="mx-auto flex w-[80%] max-w-6xl flex-col gap-2 lg:flex-row lg:items-stretch">
             {/* Director's Image */}
             <div
               ref={directorImageRef}
@@ -752,7 +752,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                 />
               </div>
 
-              <div className="scrollbar-thin scrollbar-thumb-white/20 max-h-[120px] overflow-y-auto pr-2">
+              <div className="scrollbar-thin scrollbar-thumb-white/20 min-h-[140px] overflow-y-auto pr-2">
                 <p className="text-left leading-relaxed">
                   {
                   page?.director_message || 
@@ -806,7 +806,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
             {/* Right Column (Cards) */}
             <div
               ref={accreditorCardsRef}
-              className={`flex flex-1 flex-col gap-4 transition-all duration-500 ease-out md:flex-row ${isAccreditorCardsInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
+              className={`flex  flex-1 flex-col gap-4 transition-all duration-500 ease-out md:flex-row ${isAccreditorCardsInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
             >
               {[
                 {
@@ -872,24 +872,24 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
         {/* Campus Map Section with Animations */}
         <section
           ref={mapSectionRef}
-          className={`relative flex min-h-[80vh] w-full items-center justify-center py-16 transition-all duration-500 ease-out ${isMapSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+          className={`relative flex w-full items-center justify-center py-16 transition-all duration-500 ease-out ${isMapSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
         >
           <div
             className="absolute inset-0 bg-cover bg-center opacity-30 grayscale"
             style={{ backgroundImage: "url('/images/homepage-slides/street-sj.png')" }}
           ></div>
           <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
-          <div className="relative z-10 flex max-w-6xl flex-col items-center justify-center gap-16 lg:flex-row">
+          <div className="relative z-10 flex max-w-6xl w-[80%] flex-col items-center justify-center gap-16 lg:flex-row">
             <div
               ref={mapContentRef}
               className={`order-2 flex w-full flex-col justify-center text-center transition-all duration-500 ease-out lg:order-1 lg:w-[50%] lg:text-left ${isMapContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
             >
-              <h2 className="mb-4 text-[2.5vw] font-bold text-primary lg:text-[2rem]">Explore Our Campus</h2>
-              <p className="mb-4 text-[1.15rem] leading-relaxed text-gray-700">
+              <h2 className="text-xl sm:text-3xl mb-4 font-bold text-primary ">Explore Our Campus</h2>
+              <p className="text-sm sm:text-base mb-4 leading-relaxed text-gray-700">
                 Our strategically located campus is designed to inspire learning and innovation. Tap the map to explore buildings,
                 facilities, and more.
               </p>
-              <p className="mb-8 text-[0.95rem] text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">
+              <p className="text-sm sm:text-base mb-8 text-gray-600 italic sm:mb-8">
                 PUP San Juan, Pinaglabanan St., San Juan City
               </p>
 
