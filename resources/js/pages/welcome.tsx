@@ -3,7 +3,7 @@ import useFacebookFeed from '@/hooks/useFacebookFeed';
 import Layout from '@/layouts/landing-layout';
 import { CampusGallery, ContentPages } from '@/types/content';
 import { Head, usePoll } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, Image as ImageIconComponent, MapPin, Play, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Image as ImageIconComponent, MapPin, Play, SquareArrowDownRight, SquareArrowOutUpRight, SquareArrowUpRight, X } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
@@ -240,15 +240,13 @@ const ActionButton = React.memo(
     return (
       <Component
         href={href}
-        className="inline-flex transform-none items-center justify-center gap-2 rounded-full border-2 border-primary bg-primary px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-[#6b1111] active:scale-95 sm:gap-3 sm:px-6 sm:py-4 sm:text-base md:px-8"
+        className="inline-flex transform-none items-center justify-center gap-2 rounded-full border-2 border-primary bg-primary px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-primary/95 hover:scale-101 active:scale-95 sm:gap-3 sm:px-6 sm:py-4 sm:text-base md:px-8"
         {...externalProps}
         {...props}
       >
         {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5" />}
         <span className="whitespace-nowrap">{children}</span>
-        <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
+        <SquareArrowOutUpRight className="h-4 w-4 sm:h-5 transition duration-200 sm:w-5 " />
       </Component>
     );
   },
@@ -472,7 +470,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
       <Layout>
         <div
           ref={heroRef}
-          className={`relative h-[70vw] w-full overflow-hidden transition-opacity duration-500 lg:h-[60vh] ${isHeroInView ? 'opacity-100' : 'opacity-0'}`}
+          className={`relative h-[70vw] w-full overflow-hidden transition-opacity duration-500 lg:h-[30vw] ${isHeroInView ? 'opacity-100' : 'opacity-0'}`}
         >
           <SimpleCarousel images={carousel_paths} />
 
@@ -486,7 +484,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                 }`}
             >
               <SafeImage src="/images/pupsj_motto.png" alt="Logo" className="w-[70vw] object-cover lg:w-[29vw]" priority />
-              <h2 className="mb-3 text-base italic lg:mb-0 lg:text-xl opacity-60">Years of academic excellence and service</h2>
+              <h2 className="mb-3 text-base italic lg:mb-0 sm:text-xl opacity-60">Years of academic excellence and service</h2>
             </div>
           </div>
         </div>
@@ -496,24 +494,24 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
           <div
             className={`flex flex-col items-center px-4 text-center transition-all duration-500 ease-out ${isNewsSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
           >
-            <h2 className="text-xl sm:text-3xl font-bold text-gray-900 mb-1">What's New on Campus</h2>
-            <p className="text-sm text-gray-600 sm:text-base">Catch up on events, announcements, and campus highlights.</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 font-montserrat tracking-tight">What's New on Campus</h2>
+            <p className="text-sm text-gray-600">Catch up on events, announcements, and campus highlights.</p>
           </div>
 
           {/* News Cards - Responsive Grid */}
-          <div ref={newsCardsRef} className="w-full max-w-6xl">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 md:gap-8 lg:grid-cols-4 px-8 md:px-0">
+          <div ref={newsCardsRef} className="w-full max-w-6xl grid place-items-center">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 md:gap-8 lg:grid-cols-2 xl:grid-cols-4 xl:px-0 w-[70%] xl:w-full">
               {currentPosts.map((card, i) => (
                 <div
                   key={`${newsPage}-${i}`}
-                  className={`transition-all duration-500 ease-out ${isNewsCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                  className={`transition-all duration-300 ease-out ${isNewsCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                   style={{ transitionDelay: `${i * 100}ms` }}
                 >
                   <div
-                    className="h-full cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:!scale-102"
+                    className="h-full cursor-pointer transition-all duration-200"
                     onClick={() => handleOpenNewsDialog(card)}
                   >
-                    <HomeCard className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-200 hover:border-primary hover:shadow-lg md:w-fit">
+                    <HomeCard className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-200">
                       <div className="h-40 w-full overflow-hidden sm:h-48">
                         <SafeImage
                           src={card.img}
@@ -562,7 +560,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                   disabled={newsPage === 0}
                   className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === 0
                     ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
-                    : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-primary hover:bg-gray-50 hover:text-primary'
+                    : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:bg-gray-50 hover:text-primary'
                     }`}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -588,7 +586,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                   disabled={newsPage === totalPages - 1}
                   className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === totalPages - 1
                     ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
-                    : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:border-primary hover:bg-gray-50 hover:text-primary'
+                    : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:bg-gray-50 hover:text-primary'
                     }`}
                 >
                   <span>Next</span>
@@ -640,7 +638,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
 
               {/* Content */}
               <div className="p-6 sm:p-8">
-                <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-3xl">{selectedNewsItem.title}</h2>
+                <h2 className="mb-4 text-3xl font-bold text-gray-900">{selectedNewsItem.title}</h2>
 
                 <p className="mb-6 leading-relaxed text-gray-700 sm:text-lg">{selectedNewsItem.desc}</p>
 
@@ -684,7 +682,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
               ref={avpVideoRef}
               className={`flex w-full justify-center transition-all duration-500 ease-out lg:w-[50%] ${isAvpVideoInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
             >
-              <div className="relative h-[250px] w-full overflow-hidden rounded-xl transition-transform duration-300 hover:scale-102 sm:h-[350px] sm:rounded-2xl md:h-[400px]">
+              <div className="relative h-[250px] w-full overflow-hidden rounded-xl transition-transform duration-300 sm:h-[350px] sm:rounded-2xl md:h-[400px]">
                 <iframe
                   className="h-full w-full"
                   src={page?.video_link || 'https://www.youtube.com/embed/9ypv1kOj7CU?autoplay=0'}
@@ -700,10 +698,10 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
               ref={avpContentRef}
               className={`flex w-full flex-col justify-center px-4 text-center transition-all delay-100 duration-500 ease-out sm:px-0 lg:w-[50%] lg:text-left ${isAvpContentInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
             >
-              <h2 className="mb-3 text-xl font-bold text-primary sm:mb-4 sm:text-3xl lg:text-[2rem]">
+              <h2 className="mb-3 text-xl sm:text-3xl font-bold text-primary sm:mb-4  font-montserrat tracking-tight">
                 Campus Audio-Visual Presentation
               </h2>
-              <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">{page?.video_title || 'Campus Audio-Visual Presentation'}</p>
+              <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">{page?.video_title || 'PUP San Juan Campus AVP 2025'}</p>
               <p className="mb-6 text-sm text-gray-600 italic sm:mb-8 sm:text-base lg:text-[0.95rem]">{page?.video_description || 'Discover the excellence of our campus through this audio-visual presentation.'}</p>
 
               <div className="flex justify-center lg:justify-start">
@@ -721,7 +719,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
           className={`my-12 bg-white transition-all duration-500 ease-out space-y-7 ${isDirectorSectionInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
         >
           <div className="mx-auto max-w-4xl text-center">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Message from the Campus Director</h2>
+            <h2 className="text-xl sm:text-3xl font-bold text-gray-900 mb-1 font-montserrat tracking-tight">Message from the Campus Director</h2>
             <p className="text-sm sm:text-base text-gray-600">A word of inspiration from our campus leadership.</p>
           </div>
 
@@ -742,7 +740,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
             {/* Director's Message */}
             <div
               ref={directorMsgRef}
-              className={`flex flex-1 flex-col gap-4 rounded-xl border-2 border-primary bg-primary p-8 text-white transition-all delay-100 duration-500 ease-out hover:scale-101 hover:border-[#a71d1d] ${isDirectorMsgInView ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+              className={`flex flex-1 flex-col gap-4 rounded-xl border-2 border-primary bg-primary p-8 text-white transition-all delay-100 duration-500 ease-out hover:border-[#a71d1d] ${isDirectorMsgInView ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#a83232]/80">
                 <SafeImage
@@ -779,14 +777,14 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
               ref={accreditorContentRef}
               className={`flex flex-1 flex-col justify-center gap-6 transition-all duration-500 ease-out ${isAccreditorContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
             >
-              <h2 className="text-3xl font-bold text-gray-900">
+              <h2 className="text-3xl font-bold text-gray-900 font-montserrat tracking-tight">
                 Welcome{' '}
                 {user?.roles?.role_name === 'Accreditor' && user.first_name && user.last_name
                   ? user.first_name + ' ' + user.last_name
                   : 'Accreditors'}
                 !
               </h2>
-              <p className="leading-relaxed text-gray-700">
+              <p className="leading-relaxed text-gray-700 text-sm">
                 It is our honor to host you, esteemed accreditors, and we deeply appreciate your role in our continued success.
               </p>
 
@@ -794,7 +792,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                 {['March 2025', 'Level II AACCUP Survey Visit'].map((tag, index) => (
                   <span
                     key={tag}
-                    className={`rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-primary transition-all duration-300 hover:scale-105 ${isAccreditorContentInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+                    className={`rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-primary transition-all duration-300 hover:scale-102 ${isAccreditorContentInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
                     style={{ transitionDelay: `${200 + index * 100}ms` }}
                   >
                     {tag}
@@ -853,7 +851,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                 <a
                   key={card.title}
                   href="#"
-                  className={`flex flex-1 flex-col items-start gap-10 rounded-xl bg-primary p-6 text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-102 hover:bg-[#a83232] active:scale-98 ${isAccreditorCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                  className={`flex flex-1 flex-col items-start gap-10 rounded-xl bg-primary p-6 text-white transition-all duration-300 hover:bg-primary/95 active:scale-98 ${isAccreditorCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                   style={{ transitionDelay: `${200 + index * 100}ms` }}
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 transition-all duration-200 group-hover:scale-110 group-hover:rotate-6">
@@ -884,12 +882,12 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
               ref={mapContentRef}
               className={`order-2 flex w-full flex-col justify-center text-center transition-all duration-500 ease-out lg:order-1 lg:w-[50%] lg:text-left ${isMapContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
             >
-              <h2 className="text-xl sm:text-3xl mb-4 font-bold text-primary ">Explore Our Campus</h2>
-              <p className="text-sm sm:text-base mb-4 leading-relaxed text-gray-700">
+              <h2 className="text-xl sm:text-2xl mb-4 font-bold text-primary font-montserrat tracking-tight">Explore Our Campus</h2>
+              <p className="text-sm mb-4 leading-relaxed text-gray-700">
                 Our strategically located campus is designed to inspire learning and innovation. Tap the map to explore buildings,
                 facilities, and more.
               </p>
-              <p className="text-sm sm:text-base mb-8 text-gray-600 italic sm:mb-8">
+              <p className="text-sm mb-8 text-gray-600 italic sm:mb-8">
                 PUP San Juan, Pinaglabanan St., San Juan City
               </p>
 

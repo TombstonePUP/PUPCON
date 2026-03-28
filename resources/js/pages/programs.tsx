@@ -93,7 +93,7 @@ export default function Programs({ programs }: ProgramsProps) {
 
                             {/* Description */}
                             <p className="mb-6 line-clamp-3 text-sm leading-relaxed text-gray-500">
-                              {program.program_description}
+                              {program.program_description || 'No description available for this program.'}
                             </p>
 
                             {/* Bottom row: level pill + arrow */}

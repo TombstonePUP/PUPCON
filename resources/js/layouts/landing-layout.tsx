@@ -324,7 +324,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
           y: scrollDir === 'down' ? '-100%' : '0%',
         }}
         transition={{
-          duration: 0.3,
+          duration: 0.1,
           ease: 'easeInOut',
         }}
       >
@@ -390,13 +390,13 @@ export default function Layout({ children, footerText }: LayoutProps) {
             {/* Enhanced Search Button */}
             <motion.button
               onClick={() => setSearchOpen(true)}
-              className="relative flex items-center justify-center rounded-full bg-white/10 p-2 text-white ring-1 ring-white/20 hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none"
+              className="relative flex items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/20 hover:bg-white/20 hover:ring-white/40 focus:ring-2 focus:ring-white/60 focus:outline-none transition-all duration-200"
               title="Search"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.2 }}
             >
-              <Search className="h-5 w-5" />
+              <Search className="size-[1.25vw] m-[0.5vw]" />
             </motion.button>
 
             {user?.roles?.role_name === 'Accreditor' && (
