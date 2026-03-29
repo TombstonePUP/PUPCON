@@ -33,7 +33,7 @@ export default function AppSidebarLayout({ children, breadcrumbs = [] }: { child
             <AppSidebar />
             <AppContent variant="sidebar">
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
-                <main className='px-20'>
+                <main className='px-8 py-6'>
                     {children}
                 </main>
                 <Toaster position="top-right" expand={false} />

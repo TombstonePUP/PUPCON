@@ -66,17 +66,20 @@
 
 :root {
   /* ── Base Layers ── */
-  --background: oklch(0.985 0 0);        /* main canvas */
+  --background: oklch(0.99 0 0);
+  /* main canvas */
   --foreground: oklch(0.22 0 0);
 
-  --card: oklch(0.995 0 0);              /* top surface */
+  --card: oklch(0.995 0 0);
+  /* top surface */
   --card-foreground: oklch(0.22 0 0);
 
   --popover: oklch(0.995 0 0);
   --popover-foreground: oklch(0.22 0 0);
 
   /* ── Brand ── */
-  --primary: oklch(38.7% 0.141 27);        /* maroon */
+  --primary: oklch(38.7% 0.141 27);
+  /* maroon */
   --primary-foreground: oklch(0.98 0 0);
 
   /* ── UI Surfaces ── */
@@ -84,17 +87,19 @@
   --secondary-foreground: oklch(0.26 0 0);
 
   --muted: oklch(0.935 0 0);
-  --muted-foreground: oklch(0.48 0 0);   /* better readability */
+  --muted-foreground: oklch(0.48 0 0);
+  /* better readability */
 
   --accent: oklch(0.945 0 0);
   --accent-foreground: oklch(0.26 0 0);
 
   /* ── States ── */
-  --destructive: oklch(0.48 0.18 18);
+  --destructive: oklch(0.55 0.22 27);
   --destructive-foreground: oklch(0.98 0 0);
 
   /* ── Borders / Inputs ── */
-  --border: oklch(0.87 0 0);             /* slightly stronger */
+  --border: oklch(0.87 0 0);
+  /* slightly stronger */
   --input: oklch(0.89 0 0);
   --ring: oklch(0.55 0.1 18);
 
@@ -108,18 +113,21 @@
   --radius: 0.625rem;
 
   /* ── Sidebar (distinct but light) ── */
-  --sidebar: oklch(0.982 0 0);           /* slightly below card */
+  --sidebar: oklch(0.982 0 0);
+  /* slightly below card */
   --sidebar-foreground: oklch(0.22 0 0);
 
   --sidebar-primary: oklch(0.35 0.12 18);
   --sidebar-primary-foreground: oklch(0.98 0 0);
 
-  --sidebar-accent: oklch(0.965 0 0);    /* hover */
+  --sidebar-accent: oklch(0.965 0 0);
+  /* hover */
   --sidebar-accent-foreground: oklch(0.22 0 0);
 
   --sidebar-border: oklch(0.885 0 0);
   --sidebar-ring: oklch(0.55 0.1 18);
 }
+
 /* .dark {
   --background: oklch(0.13 0 0);
   --foreground: oklch(0.91 0.018 50);
