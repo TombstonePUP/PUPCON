@@ -705,7 +705,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
                             {item.label}
                           </Link>
 
-                          {item.dropdown?.length > 0 && (
+                          {/* {item.dropdown?.length > 0 && (
                             <button onClick={() => toggleDropdown(item.label)} className="p-2">
                               <ChevronDown
                                 className={cn(
@@ -714,15 +714,14 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                 )}
                               />
                             </button>
-                          )}
+                          )} */}
                         </div>
 
                         {/* Dropdown */}
                         {item.dropdown?.length > 0 && (
                           <div
                             className={cn(
-                              'overflow-hidden bg-white text-[#7f1414] transition-all duration-300',
-                              isOpen ? 'max-h-96' : 'max-h-0',
+                              'overflow-hidden bg-white text-[#7f1414] transition-all duration-300max-h-96',
                             )}
                           >
                             <ul className="flex flex-col">
@@ -733,8 +732,8 @@ export default function Layout({ children, footerText }: LayoutProps) {
                                     className="flex items-center gap-2 px-6 py-3 text-sm transition-colors hover:bg-[#7f1414] hover:text-white"
                                     preserveScroll
                                   >
-                                    {drop.icon && <span className="flex-shrink-0 text-lg">{drop.icon}</span>}
-                                    <span>{drop.label}</span>
+                                    {/* {drop.icon && <span className="flex-shrink-0 text-lg">{drop.icon}</span>} */}
+                                    <span className='pl-10'>{drop.label}</span>
                                   </Link>
                                 </li>
                               ))}

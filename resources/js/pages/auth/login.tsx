@@ -1,14 +1,15 @@
 import { Head, useForm } from '@inertiajs/react';
-import { ImageIcon, LoaderCircle } from 'lucide-react';
-import React, { FormEventHandler, useEffect, useRef, useState } from 'react';
+import { LoaderCircle } from 'lucide-react';
+import { FormEventHandler, useEffect, useId, useState } from 'react';
 
 import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface LoginForm {
     email: string;
@@ -16,249 +17,199 @@ interface LoginForm {
     remember: boolean;
 }
 
-interface LoginProps {
+interface LoginPageProps {
     status?: string;
     canResetPassword: boolean;
 }
 
-interface LandingProps {
-    carouselImages: string[];
+// ─── Field ────────────────────────────────────────────────────────────────────
+// Co-locates Label + Input + InputError. Generates stable IDs with useId()
+// so label/input/error are always correctly associated — no manual id props.
+
+interface FieldProps {
+    label: string;
+    error?: string;
+    required?: boolean;
+    /** Optional node rendered to the right of the label (e.g. "Forgot password?" link) */
+    aside?: React.ReactNode;
+    children: (a11y: {
+        id: string;
+        'aria-invalid'?: true;
+        'aria-describedby'?: string;
+    }) => React.ReactNode;
 }
 
-interface LoginPageProps extends LoginProps, LandingProps {}
+function Field({ label, error, required = false, aside, children }: FieldProps) {
+    const id = useId();
+    const errorId = `${id}-error`;
 
-export default function Login({ status, canResetPassword, carouselImages = [] }: LoginPageProps) {
+    const a11y = {
+        id,
+        ...(error ? { 'aria-invalid': true as const, 'aria-describedby': errorId } : {}),
+    };
+
+    return (
+        <div className="grid gap-2">
+            <div className="flex items-center">
+                <Label htmlFor={id}>
+                    {label}
+                    {/* {required && <span className="text-destructive ml-0.5" aria-hidden="true">*</span>} */}
+                </Label>
+                {aside && <span className="ml-auto">{aside}</span>}
+            </div>
+
+            {children(a11y)}
+
+            {error && <InputError id={errorId} message={error} />}
+        </div>
+    );
+}
+
+// ─── Login Page ───────────────────────────────────────────────────────────────
+
+export default function Login({ status, canResetPassword }: LoginPageProps) {
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm<LoginForm>({
         email: '',
         password: '',
         remember: false,
     });
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
-    };
-    const [attemptSeconds, setAttemptSeconds] = useState<number | null>(null);
+    // ── Lockout countdown ──────────────────────────────────────────────────
+
+    const [lockoutSeconds, setLockoutSeconds] = useState<number | null>(null);
+
     useEffect(() => {
-        if (errors.email) {
-            const match = errors.email.match(/(\d+)\s*seconds?/i);
-            if (match) {
-                const seconds = parseInt(match[1], 10);
-                setAttemptSeconds(seconds);
-            }
-        }
+        if (!errors.email) return;
+        const match = errors.email.match(/(\d+)\s*seconds?/i);
+        if (match) setLockoutSeconds(parseInt(match[1], 10));
     }, [errors.email]);
 
     useEffect(() => {
-        if (attemptSeconds === null) return;
+        if (lockoutSeconds === null) return;
 
-        if (attemptSeconds <= 0) {
-            setAttemptSeconds(null);
-            clearErrors('email'); // <-- remove the lockout error
+        if (lockoutSeconds <= 0) {
+            setLockoutSeconds(null);
+            clearErrors('email');
             return;
         }
 
-        const interval = setInterval(() => {
-            setAttemptSeconds((s) => (s !== null ? s - 1 : null));
+        const timer = setInterval(() => {
+            setLockoutSeconds((prev) => (prev !== null ? prev - 1 : null));
         }, 1000);
 
-        return () => clearInterval(interval);
-    }, [attemptSeconds]);
+        return () => clearInterval(timer);
+    }, [lockoutSeconds, clearErrors]);
 
-    const isLocked = attemptSeconds !== null && attemptSeconds > 0;
+    const isLocked = (lockoutSeconds ?? 0) > 0;
+    const isSubmitting = processing || isLocked;
 
-    const images = carouselImages;
+    // ── Submit ─────────────────────────────────────────────────────────────
 
-    const SimpleCarousel = React.memo(({ images }: { images: string[] }) => {
-        const [current, setCurrent] = useState(0);
+    const handleSubmit: FormEventHandler = (e) => {
+        e.preventDefault();
+        post(route('login'), { onFinish: () => reset('password') });
+    };
 
-        useEffect(() => {
-            if (!images || images.length === 0) return;
+    // ── Derived messages ───────────────────────────────────────────────────
 
-            images.forEach((src, index) => {
-                if (index > 0) {
-                    const img = new Image();
-                    img.src = src;
-                }
-            });
+    const emailError = isLocked
+        ? `Too many attempts. Try again in ${lockoutSeconds} second${lockoutSeconds !== 1 ? 's' : ''}.`
+        : errors.email;
 
-            const interval = setInterval(() => {
-                setCurrent((prev) => (prev + 1) % images.length);
-            }, 4000);
-
-            return () => clearInterval(interval);
-        }, [images]);
-
-        if (!images || images.length === 0) {
-            return (
-                <div className="absolute inset-0 z-[-1] flex items-center justify-center bg-gray-200">
-                    <p>No images for carousel</p>
-                </div>
-            );
-        }
-
-        const SafeImage = React.memo(
-            ({
-                src,
-                alt,
-                className,
-                priority = false,
-                placeholderType = 'image',
-            }: {
-                src: string;
-                alt: string;
-                className: string;
-                priority?: boolean;
-                placeholderType?: 'image' | 'logo';
-            }) => {
-                const [isLoaded, setIsLoaded] = useState(false);
-                const [hasError, setHasError] = useState(false);
-                const [shouldLoad, setShouldLoad] = useState(priority);
-                const imgRef = useRef<HTMLDivElement>(null);
-
-                useEffect(() => {
-                    if (!shouldLoad) {
-                        const observer = new IntersectionObserver(
-                            ([entry]) => {
-                                if (entry.isIntersecting) {
-                                    setShouldLoad(true);
-                                    observer.disconnect();
-                                }
-                            },
-                            { rootMargin: '100px' },
-                        );
-                        if (imgRef.current) observer.observe(imgRef.current);
-                        return () => observer.disconnect();
-                    }
-                }, [shouldLoad]);
-
-                const handleInternalError = () => {
-                    setHasError(true);
-                };
-
-                const placeholderBaseClass = 'h-full w-full flex items-center justify-center bg-gray-100 rounded-inherit';
-
-                const outerClassName = `relative overflow-hidden ${className || ''}`;
-
-                return (
-                    <div ref={imgRef} className={outerClassName}>
-                        {hasError ? (
-                            <div className={placeholderBaseClass}>
-                                {placeholderType === 'logo' ? (
-                                    <span className="text-lg font-semibold text-[#7f1414]">PUP</span>
-                                ) : (
-                                    <ImageIcon className="h-15 w-15 text-gray-300" />
-                                )}
-                            </div>
-                        ) : shouldLoad ? (
-                            <>
-                                {!isLoaded && <div className="absolute inset-0 animate-pulse bg-gray-200" />}
-                                <img
-                                    src={src}
-                                    alt={alt}
-                                    className={`h-full w-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-                                    onLoad={() => setIsLoaded(true)}
-                                    onError={handleInternalError}
-                                    loading={priority ? 'eager' : 'lazy'}
-                                />
-                            </>
-                        ) : (
-                            <div className="h-full w-full animate-pulse bg-gray-200" />
-                        )}
-                    </div>
-                );
-            },
-        );
-
-        return (
-            <div className="absolute inset-0">
-                {images.map((src, index) => (
-                    <div
-                        key={src || index}
-                        className={`absolute inset-0 transition-opacity duration-1000 ${index === current ? 'opacity-100' : 'opacity-0'}`}
-                    >
-                        <SafeImage src={src} alt={`Slide ${index + 1}`} className="h-full w-full" priority={index === 0} />
-                    </div>
-                ))}
-            </div>
-        );
-    });
+    // ──────────────────────────────────────────────────────────────────────
 
     return (
-        <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
+        <AuthLayout
+            title="Log in to your account"
+            description="Enter your email and password below to log in"
+        >
             <Head title="Log in" />
-            {/* <SimpleCarousel images={images} /> */}
-            <form className="flex flex-col gap-6" onSubmit={submit}>
+
+            <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
                 <div className="grid gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="email"
-                            value={data.email}
-                            onChange={(e) => setData('email', e.target.value)}
-                            placeholder="email@example.com"
-                        />
-                        <InputError
-                            message={attemptSeconds !== null ? `Too many attempts. Please try again in ${attemptSeconds} seconds.` : errors.email}
-                        />
-                    </div>
 
-                    <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Password</Label>
-                            {canResetPassword && (
-                                <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
+                    <Field label="Email address" error={emailError} required>
+                        {(a11y) => (
+                            <Input
+                                {...a11y}
+                                type="email"
+                                autoFocus
+                                tabIndex={1}
+                                autoComplete="email"
+                                placeholder="email@example.com"
+                                value={data.email}
+                                onChange={(e) => setData('email', e.target.value)}
+                            />
+                        )}
+                    </Field>
+
+                    <Field
+                        label="Password"
+                        error={errors.password}
+                        required
+                        aside={
+                            canResetPassword && (
+                                <a
+                                    href={route('password.request')}
+                                    className="text-sm underline-offset-4 hover:underline"
+                                    tabIndex={5}
+                                >
                                     Forgot password?
-                                </TextLink>
-                            )}
-                        </div>
-                        <Input
-                            id="password"
-                            type="password"
-                            required
-                            tabIndex={2}
-                            autoComplete="current-password"
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            placeholder="Password"
-                        />
-                        <InputError message={errors.password} />
-                    </div>
+                                </a>
+                            )
+                        }
+                    >
+                        {(a11y) => (
+                            <Input
+                                {...a11y}
+                                type="password"
+                                tabIndex={2}
+                                autoComplete="current-password"
+                                placeholder="Password"
+                                value={data.password}
+                                onChange={(e) => setData('password', e.target.value)}
+                            />
+                        )}
+                    </Field>
 
-                    <div className="flex items-center space-x-3">
-                        <Checkbox id="remember" name="remember" tabIndex={3} />
-                        <Label htmlFor="remember">Remember me</Label>
+                    <div className="flex items-center gap-3">
+                        <Checkbox
+                            id="remember"
+                            name="remember"
+                            tabIndex={3}
+                            className="rounded"
+                            checked={data.remember}
+                            onCheckedChange={(checked) => setData('remember', checked === true)}
+                        />
+                        <Label htmlFor="remember" className="cursor-pointer font-normal">
+                            Remember me
+                        </Label>
                     </div>
 
                     <Button
                         type="submit"
                         className="mt-4 w-full"
                         tabIndex={4}
-                        disabled={processing || isLocked} // <── prevent login while locked
+                        disabled={isSubmitting}
                     >
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Log in
+                        {processing && (
+                            <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+                        )}
+                        {processing
+                            ? 'Logging in…'
+                            : isLocked
+                              ? `Locked (${lockoutSeconds}s)`
+                              : 'Log in'}
                     </Button>
-                </div>
 
-                {/* <div className="text-muted-foreground text-center text-sm">
-                    Don't have an account?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
-                        Sign up
-                    </TextLink>
-                </div> */}
+                </div>
             </form>
 
-            {status && <div className="my-2 text-center text-sm font-medium text-green-600">{status}</div>}
-
-            
+            {status && (
+                <p role="status" className="my-2 text-center text-sm font-medium text-green-600">
+                    {status}
+                </p>
+            )}
         </AuthLayout>
     );
 }
