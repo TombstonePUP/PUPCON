@@ -9,45 +9,26 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary / default button
         default:
-          "border border-transparent bg-[#7f1414] text-white hover:bg-[#9b1818]",
-
-        // Same style but no border
+          "border border-transparent bg-primary text-primary-foreground hover:bg-primary/90",
         noborder:
-          "bg-[#7f1414] text-white hover:bg-[#9b1818]",
-
-        // Danger / destructive button
+          "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
-          "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600",
-
-        // Minimal outline button
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive",
         outline:
-          "border border-gray-300 bg-white text-gray-800 hover:bg-gray-100 hover:text-black",
-
-        // Subtle gray secondary
+          "border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "bg-gray-100 text-gray-900 hover:bg-gray-200 hover:text-black",
-
-        // Transparent button, ideal for toolbars
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
-          "bg-transparent text-gray-700 hover:bg-gray-100 hover:text-gray-900",
-
-        // Text link style button
+          "bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground",
         link:
-          "text-[#7f1414] underline-offset-4 hover:underline hover:text-[#9b1818]",
-
-        // White button with brand hover
+          "text-primary underline-offset-4 hover:underline",
         reverse:
-          "border border-[#7f1414] bg-white text-[#7f1414] hover:bg-[#7f1414] hover:text-white",
-
-        // Dark theme button
+          "border border-primary bg-background text-primary hover:bg-primary hover:text-primary-foreground",
         black:
-          "bg-black text-white hover:bg-[#222222]",
-
-        // Neutral background button
+          "bg-foreground text-background hover:bg-foreground/85",
         none:
-          "bg-transparent text-gray-700 hover:bg-gray-100 hover:text-[#7f1414]",
+          "bg-transparent text-foreground hover:bg-accent hover:text-primary",
       },
       size: {
         default: "h-9 px-4 py-2",

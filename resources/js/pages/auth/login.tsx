@@ -12,14 +12,14 @@ import AuthLayout from '@/layouts/auth-layout';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface LoginForm {
-    email: string;
-    password: string;
-    remember: boolean;
+  email: string;
+  password: string;
+  remember: boolean;
 }
 
 interface LoginPageProps {
-    status?: string;
-    canResetPassword: boolean;
+  status?: string;
+  canResetPassword: boolean;
 }
 
 // ─── Field ────────────────────────────────────────────────────────────────────
@@ -27,189 +27,185 @@ interface LoginPageProps {
 // so label/input/error are always correctly associated — no manual id props.
 
 interface FieldProps {
-    label: string;
-    error?: string;
-    required?: boolean;
-    /** Optional node rendered to the right of the label (e.g. "Forgot password?" link) */
-    aside?: React.ReactNode;
-    children: (a11y: {
-        id: string;
-        'aria-invalid'?: true;
-        'aria-describedby'?: string;
-    }) => React.ReactNode;
+  label: string;
+  error?: string;
+  required?: boolean;
+  /** Optional node rendered to the right of the label (e.g. "Forgot password?" link) */
+  aside?: React.ReactNode;
+  children: (a11y: {
+    id: string;
+    'aria-invalid'?: true;
+    'aria-describedby'?: string;
+  }) => React.ReactNode;
 }
 
 function Field({ label, error, required = false, aside, children }: FieldProps) {
-    const id = useId();
-    const errorId = `${id}-error`;
+  const id = useId();
+  const errorId = `${id}-error`;
 
-    const a11y = {
-        id,
-        ...(error ? { 'aria-invalid': true as const, 'aria-describedby': errorId } : {}),
-    };
+  const a11y = {
+    id,
+    ...(error ? { 'aria-invalid': true as const, 'aria-describedby': errorId } : {}),
+  };
 
-    return (
-        <div className="grid gap-2">
-            <div className="flex items-center">
-                <Label htmlFor={id}>
-                    {label}
-                    {/* {required && <span className="text-destructive ml-0.5" aria-hidden="true">*</span>} */}
-                </Label>
-                {aside && <span className="ml-auto">{aside}</span>}
-            </div>
+  return (
+    <div className="grid gap-2">
+      <div className="flex items-center">
+        <Label className='text-black' htmlFor={id}>
+          {label}
+          {/* {required && <span className="text-destructive ml-0.5" aria-hidden="true">*</span>} */}
+        </Label>
+        {aside && <span className="ml-auto">{aside}</span>}
+      </div>
 
-            {children(a11y)}
+      {children(a11y)}
 
-            {error && <InputError id={errorId} message={error} />}
-        </div>
-    );
+      {error && <InputError id={errorId} message={error} />}
+    </div>
+  );
 }
 
 // ─── Login Page ───────────────────────────────────────────────────────────────
 
 export default function Login({ status, canResetPassword }: LoginPageProps) {
-    const { data, setData, post, processing, errors, reset, clearErrors } = useForm<LoginForm>({
-        email: '',
-        password: '',
-        remember: false,
-    });
+  const { data, setData, post, processing, errors, reset, clearErrors } = useForm<LoginForm>({
+    email: '',
+    password: '',
+    remember: false,
+  });
 
-    // ── Lockout countdown ──────────────────────────────────────────────────
+  // ── Lockout countdown ──────────────────────────────────────────────────
 
-    const [lockoutSeconds, setLockoutSeconds] = useState<number | null>(null);
+  const [lockoutSeconds, setLockoutSeconds] = useState<number | null>(null);
 
-    useEffect(() => {
-        if (!errors.email) return;
-        const match = errors.email.match(/(\d+)\s*seconds?/i);
-        if (match) setLockoutSeconds(parseInt(match[1], 10));
-    }, [errors.email]);
+  useEffect(() => {
+    if (!errors.email) return;
+    const match = errors.email.match(/(\d+)\s*seconds?/i);
+    if (match) setLockoutSeconds(parseInt(match[1], 10));
+  }, [errors.email]);
 
-    useEffect(() => {
-        if (lockoutSeconds === null) return;
+  useEffect(() => {
+    if (lockoutSeconds === null) return;
 
-        if (lockoutSeconds <= 0) {
-            setLockoutSeconds(null);
-            clearErrors('email');
-            return;
-        }
+    if (lockoutSeconds <= 0) {
+      setLockoutSeconds(null);
+      clearErrors('email');
+      return;
+    }
 
-        const timer = setInterval(() => {
-            setLockoutSeconds((prev) => (prev !== null ? prev - 1 : null));
-        }, 1000);
+    const timer = setInterval(() => {
+      setLockoutSeconds((prev) => (prev !== null ? prev - 1 : null));
+    }, 1000);
 
-        return () => clearInterval(timer);
-    }, [lockoutSeconds, clearErrors]);
+    return () => clearInterval(timer);
+  }, [lockoutSeconds, clearErrors]);
 
-    const isLocked = (lockoutSeconds ?? 0) > 0;
-    const isSubmitting = processing || isLocked;
+  const isLocked = (lockoutSeconds ?? 0) > 0;
+  const isSubmitting = processing || isLocked;
 
-    // ── Submit ─────────────────────────────────────────────────────────────
+  // ── Submit ─────────────────────────────────────────────────────────────
 
-    const handleSubmit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post(route('login'), { onFinish: () => reset('password') });
-    };
+  const handleSubmit: FormEventHandler = (e) => {
+    e.preventDefault();
+    post(route('login'), { onFinish: () => reset('password') });
+  };
 
-    // ── Derived messages ───────────────────────────────────────────────────
+  // ── Derived messages ───────────────────────────────────────────────────
 
-    const emailError = isLocked
-        ? `Too many attempts. Try again in ${lockoutSeconds} second${lockoutSeconds !== 1 ? 's' : ''}.`
-        : errors.email;
+  const emailError = isLocked
+    ? `Too many attempts. Try again in ${lockoutSeconds} second${lockoutSeconds !== 1 ? 's' : ''}.`
+    : errors.email;
 
-    // ──────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────────────────────
 
-    return (
-        <AuthLayout
-            title="Log in to your account"
-            description="Enter your email and password below to log in"
-        >
-            <Head title="Log in" />
+  return (
+    <AuthLayout
+      title="Log in to your account"
+      description="Enter your email and password below to log in"
+    >
+      <Head title="Log in" />
 
-            <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
-                <div className="grid gap-6">
-
-                    <Field label="Email address" error={emailError} required>
-                        {(a11y) => (
-                            <Input
-                                {...a11y}
-                                type="email"
-                                autoFocus
-                                tabIndex={1}
-                                autoComplete="email"
-                                placeholder="email@example.com"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
-                            />
-                        )}
-                    </Field>
-
-                    <Field
-                        label="Password"
-                        error={errors.password}
-                        required
-                        aside={
-                            canResetPassword && (
-                                <a
-                                    href={route('password.request')}
-                                    className="text-sm underline-offset-4 hover:underline"
-                                    tabIndex={5}
-                                >
-                                    Forgot password?
-                                </a>
-                            )
-                        }
-                    >
-                        {(a11y) => (
-                            <Input
-                                {...a11y}
-                                type="password"
-                                tabIndex={2}
-                                autoComplete="current-password"
-                                placeholder="Password"
-                                value={data.password}
-                                onChange={(e) => setData('password', e.target.value)}
-                            />
-                        )}
-                    </Field>
-
-                    <div className="flex items-center gap-3">
-                        <Checkbox
-                            id="remember"
-                            name="remember"
-                            tabIndex={3}
-                            className="rounded"
-                            checked={data.remember}
-                            onCheckedChange={(checked) => setData('remember', checked === true)}
-                        />
-                        <Label htmlFor="remember" className="cursor-pointer font-normal">
-                            Remember me
-                        </Label>
-                    </div>
-
-                    <Button
-                        type="submit"
-                        className="mt-4 w-full"
-                        tabIndex={4}
-                        disabled={isSubmitting}
-                    >
-                        {processing && (
-                            <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
-                        )}
-                        {processing
-                            ? 'Logging in…'
-                            : isLocked
-                              ? `Locked (${lockoutSeconds}s)`
-                              : 'Log in'}
-                    </Button>
-
-                </div>
-            </form>
-
-            {status && (
-                <p role="status" className="my-2 text-center text-sm font-medium text-green-600">
-                    {status}
-                </p>
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
+        <div className="grid gap-6">
+          <Field label="Email address" error={emailError} required>
+            {(a11y) => (
+              <Input
+                {...a11y}
+                type="email"
+                autoFocus
+                tabIndex={1}
+                autoComplete="email"
+                placeholder="email@example.com"
+                value={data.email}
+                onChange={(e) => setData('email', e.target.value)}
+              />
             )}
-        </AuthLayout>
-    );
+          </Field>
+          <Field
+            label="Password"
+            error={errors.password}
+            required
+            aside={
+              canResetPassword && (
+                <a
+
+                  href={route('password.request')}
+                  className="text-sm text-[#7a7a7a] underline-offset-4 hover:underline"
+                  tabIndex={5}
+                >
+                  Forgot password?
+                </a>
+              )
+            }
+          >
+            {(a11y) => (
+              <Input
+                {...a11y}
+                type="password"
+                tabIndex={2}
+                autoComplete="current-password"
+                placeholder="Password"
+                value={data.password}
+                onChange={(e) => setData('password', e.target.value)}
+              />
+            )}
+          </Field>
+          <div className="flex items-center gap-3">
+            <Checkbox
+              id="remember"
+              name="remember"
+              tabIndex={3}
+              className="rounded"
+              checked={data.remember}
+              onCheckedChange={(checked) => setData('remember', checked === true)}
+            />
+            <Label htmlFor="remember" className="cursor-pointer font-normal text-[#383838]">
+              Remember me
+            </Label>
+          </div>
+          <Button
+            type="submit"
+            className="mt-4 w-full bg-[#7f1414] text-white hover:bg-[#9b1818]"
+            tabIndex={4}
+            disabled={isSubmitting}
+          >
+            {processing && (
+              <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+            )}
+            {processing
+              ? 'Logging in…'
+              : isLocked
+                ? `Locked (${lockoutSeconds}s)`
+                : 'Log in'}
+          </Button>
+        </div>
+      </form>
+
+      {status && (
+        <p role="status" className="my-2 text-center text-sm font-medium text-[#16a34a]">
+          {status}
+        </p>
+      )}
+    </AuthLayout>
+  );
 }

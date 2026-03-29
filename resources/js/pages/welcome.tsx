@@ -157,7 +157,7 @@ const SafeImage = React.memo(
         {hasError ? (
           <div className={placeholderBaseClass}>
             {placeholderType === 'logo' ? (
-              <span className="text-lg font-semibold text-primary">PUP</span>
+              <span className="text-lg font-semibold text-[#7f1414]">PUP</span>
             ) : (
               <ImageIconComponent className="h-15 w-15 text-gray-300" />
             )}
@@ -240,7 +240,7 @@ const ActionButton = React.memo(
     return (
       <Component
         href={href}
-        className="inline-flex transform-none items-center justify-center gap-2 rounded-full border-2 border-primary bg-primary px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-primary/95 hover:scale-101 active:scale-95 sm:gap-3 sm:px-6 sm:py-4 sm:text-base md:px-8"
+        className="inline-flex transform-none items-center justify-center gap-2 rounded-full border-2 border-[#7f1414] bg-[#7f1414] px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#7f1414]/95 hover:scale-101 active:scale-95 sm:gap-3 sm:px-6 sm:py-4 sm:text-base md:px-8"
         {...externalProps}
         {...props}
       >
@@ -521,16 +521,16 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                         />
                       </div>
                       <CardHeader className="flex flex-1 flex-col p-3 sm:p-4">
-                        <HomeCardTitle className="line-clamp-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-primary sm:text-base">
+                        <HomeCardTitle className="line-clamp-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-[#7f1414] sm:text-base">
                           {card.title}
                         </HomeCardTitle>
-                        <div className="h-px w-full origin-left scale-x-0 bg-primary transition-transform duration-300 **ease-in-out** group-hover:scale-x-100 my-2"></div>
+                        <div className="h-px w-full origin-left scale-x-0 bg-[#7f1414] transition-transform duration-300 **ease-in-out** group-hover:scale-x-100 my-2"></div>
                         <HomeCardDescription className="mb-2 line-clamp-3 min-h-[3.75rem] flex-1 text-xs text-gray-600 sm:text-sm">
                           {card.desc}
                         </HomeCardDescription>
 
                         {/* Learn More Text */}
-                        <div className="flex items-center gap-1 text-xs font-medium text-primary transition-all duration-200 group-hover:gap-2">
+                        <div className="flex items-center gap-1 text-xs font-medium text-[#7f1414] transition-all duration-200 group-hover:gap-2">
                           <span>Learn more</span>
                           <svg
                             className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1"
@@ -560,7 +560,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                   disabled={newsPage === 0}
                   className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === 0
                     ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
-                    : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:bg-gray-50 hover:text-primary'
+                    : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:bg-gray-50 hover:text-[#7f1414]'
                     }`}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -573,7 +573,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                     <button
                       key={index}
                       onClick={() => setNewsPage(index)}
-                      className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${index === newsPage ? 'w-8 bg-primary' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                      className={`h-2 rounded-full transition-all duration-200 hover:scale-125 active:scale-90 ${index === newsPage ? 'w-8 bg-[#7f1414]' : 'w-2 bg-gray-300 hover:bg-gray-400'
                         }`}
                       aria-label={`Go to page ${index + 1}`}
                     />
@@ -586,7 +586,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                   disabled={newsPage === totalPages - 1}
                   className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 ${newsPage === totalPages - 1
                     ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
-                    : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:bg-gray-50 hover:text-primary'
+                    : 'border-gray-300 bg-white text-gray-700 hover:scale-102 hover:bg-gray-50 hover:text-[#7f1414]'
                     }`}
                 >
                   <span>Next</span>
@@ -623,7 +623,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                 className="absolute top-6 right-6 z-10 rounded-full bg-white/80 p-2 transition-all duration-150 hover:scale-105 hover:bg-white active:scale-90"
                 aria-label="Close"
               >
-                <X className="h-5 w-5 text-gray-400 hover:text-primary" />
+                <X className="h-5 w-5 text-gray-400 hover:text-[#7f1414]" />
               </button>
 
               {/* Image */}
@@ -647,7 +647,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                   href={selectedNewsItem.source}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mb-4 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-primary hover:bg-gray-50 hover:text-primary active:scale-95"
+                  className="mb-4 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-[#7f1414] hover:bg-gray-50 hover:text-[#7f1414] active:scale-95"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -698,7 +698,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
               ref={avpContentRef}
               className={`flex w-full flex-col justify-center px-4 text-center transition-all delay-100 duration-500 ease-out sm:px-0 lg:w-[50%] lg:text-left ${isAvpContentInView ? 'translate-x-0 opacity-100' : 'translate-x-5 opacity-0'}`}
             >
-              <h2 className="mb-3 text-xl sm:text-3xl font-bold text-primary sm:mb-4  font-montserrat tracking-tight">
+              <h2 className="mb-3 text-xl sm:text-3xl font-bold text-[#7f1414] sm:mb-4  font-montserrat tracking-tight">
                 Campus Audio-Visual Presentation
               </h2>
               <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg lg:text-[1.15rem]">{page?.video_title || 'PUP San Juan Campus AVP 2025'}</p>
@@ -734,13 +734,13 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                 alt={page?.director_name || 'Campus Director'}
                 className="h-full w-full rounded-xl" // Converted
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#7f1414]/20 to-transparent" />
             </div>
 
             {/* Director's Message */}
             <div
               ref={directorMsgRef}
-              className={`flex flex-1 flex-col gap-4 rounded-xl border-2 border-primary bg-primary p-8 text-white transition-all delay-100 duration-500 ease-out hover:border-[#a71d1d] ${isDirectorMsgInView ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+              className={`flex flex-1 flex-col gap-4 rounded-xl border-2 border-[#7f1414] bg-[#7f1414] p-8 text-white transition-all delay-100 duration-500 ease-out hover:border-[#a71d1d] ${isDirectorMsgInView ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#a83232]/80">
                 <SafeImage
@@ -792,7 +792,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                 {['March 2025', 'Level II AACCUP Survey Visit'].map((tag, index) => (
                   <span
                     key={tag}
-                    className={`rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-primary transition-all duration-300 hover:scale-102 ${isAccreditorContentInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+                    className={`rounded-sm border border-[#201e1e31] px-8 py-2 text-sm font-medium text-[#7f1414] transition-all duration-300 hover:scale-102 ${isAccreditorContentInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
                     style={{ transitionDelay: `${200 + index * 100}ms` }}
                   >
                     {tag}
@@ -851,7 +851,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                 <a
                   key={card.title}
                   href="#"
-                  className={`flex flex-1 flex-col items-start gap-10 rounded-xl bg-primary p-6 text-white transition-all duration-300 hover:bg-primary/95 active:scale-98 ${isAccreditorCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                  className={`flex flex-1 flex-col items-start gap-10 rounded-xl bg-[#7f1414] p-6 text-white transition-all duration-300 hover:bg-[#7f1414]/95 active:scale-98 ${isAccreditorCardsInView ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
                   style={{ transitionDelay: `${200 + index * 100}ms` }}
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 transition-all duration-200 group-hover:scale-110 group-hover:rotate-6">
@@ -882,7 +882,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
               ref={mapContentRef}
               className={`order-2 flex w-full flex-col justify-center text-center transition-all duration-500 ease-out lg:order-1 lg:w-[50%] lg:text-left ${isMapContentInView ? 'translate-x-0 opacity-100' : '-translate-x-5 opacity-0'}`}
             >
-              <h2 className="text-xl sm:text-2xl mb-4 font-bold text-primary font-montserrat tracking-tight">Explore Our Campus</h2>
+              <h2 className="text-xl sm:text-2xl mb-4 font-bold text-[#7f1414] font-montserrat tracking-tight">Explore Our Campus</h2>
               <p className="text-sm mb-4 leading-relaxed text-gray-700">
                 Our strategically located campus is designed to inspire learning and innovation. Tap the map to explore buildings,
                 facilities, and more.
@@ -918,7 +918,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
         {/* Show loading state */}
         {fbLoading && (
           <div className="py-8 text-center">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#7f1414] border-r-transparent"></div>
             <p className="mt-2 text-gray-600">Loading latest updates...</p>
           </div>
         )}

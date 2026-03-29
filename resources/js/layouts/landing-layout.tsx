@@ -335,7 +335,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
               <img className="mt-1 size-[10vw] lg:size-[2.9vw]" src="/images/pupsj-logo.png" alt="pupsj logo" />
               <div>
                 <h1 className="text-[4vw] font-bold text-[#7f1414] lg:text-[1.4vw]">San Juan Campus</h1>
-                <p className="mt-[-6px] text-[2.5vw] lg:text-[0.75vw]">Polytechnic University of the Philippines</p>
+                <p className="text-black mt-[-6px] text-[2.5vw] lg:text-[0.75vw]">Polytechnic University of the Philippines</p>
               </div>
             </div>
           </div>
@@ -453,11 +453,11 @@ export default function Layout({ children, footerText }: LayoutProps) {
               <div className="flex items-center justify-between border-b border-gray-200/50 bg-white/80 px-6 py-5 backdrop-blur-sm">
                 <div className="flex items-center gap-3">
                   <div
-                    className="rounded-lg bg-primary p-2 "
+                    className="rounded-lg bg-[#7f1414] p-2 "
                   >
                     <Search className="h-5 w-5 text-white" />
                   </div>
-                  <h2 className="ml-3 bg-primary bg-clip-text text-xl font-bold text-transparent">
+                  <h2 className="ml-3 bg-[#7f1414] bg-clip-text text-xl font-bold text-transparent">
                     Mabuhay!
                   </h2>
                 </div>

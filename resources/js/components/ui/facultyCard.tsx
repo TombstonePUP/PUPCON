@@ -13,14 +13,16 @@ interface Props {
   faculty: Faculty;
   isLoading?: boolean;
   index?: number;
+  className?: string;
 }
 
-export default function FacultyCard({ faculty, isLoading = false }: Props) {
+export default function FacultyCard({ faculty, isLoading = false, className }: Props) {
   const [imgLoaded, setImgLoaded] = useState(false);
 
   if (isLoading) {
     return (
-      <div className="group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5">
+      <div className={`group relative w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 ${className || ''}`}>
+
         <div className="flex flex-col space-y-3">
           <div className="aspect-square w-full animate-pulse rounded-xl bg-gray-300" />
           <div className="mx-auto h-5 w-3/4 animate-pulse rounded bg-gray-300" />
@@ -31,7 +33,7 @@ export default function FacultyCard({ faculty, isLoading = false }: Props) {
   }
 
   return (
-    <div className="group relative w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414]">
+    <div className={`group relative w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 transition-all duration-500 hover:scale-[1.02] hover:border-[#7f1414] ${className}`}>
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] opacity-60 group-hover:opacity-0" />
 
       <div className="flex flex-col space-y-3">
@@ -46,9 +48,8 @@ export default function FacultyCard({ faculty, isLoading = false }: Props) {
             <img
               src={faculty.photo}
               alt={faculty.name}
-              className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${
-                imgLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
+              className={`h-full w-full object-cover transition-all duration-200 group-hover:scale-110 ${imgLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
               onLoad={() => setImgLoaded(true)}
               onError={(e) => {
                 const t = e.target as HTMLImageElement;
