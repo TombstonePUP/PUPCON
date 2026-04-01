@@ -8,22 +8,19 @@ import { DataTable } from '@/components/charts/data-table';
 import { OverallProgress } from '@/components/charts/overall-progress';
 import { UploadFrequency } from '@/components/charts/upload-frequency';
 import GuideTour from "@/pages/test/GuideTour";
-
-
-
-
 import { type ActivityLogs, type DocumentStatistics, type FrequencyUploads, type OverallUploads } from '@/types/dashboard';
-
 import { columns } from '@/components/charts/data-table-columns/logs';
 import { ChartArea, File, FileIcon, User2, User2Icon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { DocumentsAnalytics } from '@/components/charts/document-analyst';
+import { documentDummyStatistics, frequencyDummyUploads, overallDummyUploads } from '@/data/dummy-data';
 
-interface DashboardProps {
-  activityLogs: ActivityLogs[];
-  frequencyUploads: FrequencyUploads[];
-  documentStatistics: DocumentStatistics[];
-  overallUploads: OverallUploads[];
-}
+// interface DashboardProps {
+//   activityLogs: ActivityLogs[];
+//   frequencyUploads: FrequencyUploads[];
+//   documentStatistics: DocumentStatistics[];
+//   overallUploads: OverallUploads[];
+// }
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -52,17 +49,11 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
           <div className='h-2 border-t-1 bg-white'>
           </div>
         </Card> */}
-        <div id="stats-card-left">
-          <UploadFrequency data={frequencyUploads} />
-        </div>
-        <div id="stats-card" className="grid auto-rows-min gap-4 md:grid-cols-3">
-
-          <div id="stats-card-center">
-            <OverallProgress data={overallUploads} />
-          </div>
-          <div id="stats-card-right">  <AreaProgress data={documentStatistics} />
-          </div>
-        </div>
+        <DocumentsAnalytics
+          frequencyUploads={frequencyDummyUploads}
+          overallUploads={overallDummyUploads}
+          documentStatistics={documentDummyStatistics}
+        />
         <GuideTour />
         <div id='stat-table' className="border-sidebar-border/70 dark:border-sidebar-border relative flex-1 rounded-xl border p-4 md:min-h-md">
           <DataTable columns={columns} data={activityLogs} />

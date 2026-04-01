@@ -67,12 +67,12 @@
     @apply border-border;
     transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
   }
-  
+
 }
 
 :root {
   /* ── Base Layers ── */
-  --background: oklch(0.99 0 0);
+  --background: oklch(0.98 0 0);
   /* main canvas */
   --foreground: oklch(0.22 0 0);
 
@@ -119,7 +119,7 @@
   --radius: 0.625rem;
 
   /* ── Sidebar (distinct but light) ── */
-  --sidebar: oklch(0.982 0 0);
+  --sidebar: oklch(0.99 0 0);
   /* slightly below card */
   --sidebar-foreground: oklch(0.22 0 0);
 
@@ -136,7 +136,7 @@
 
 .dark {
   --background: oklch(0.13 0 0);
-  --foreground: oklch(0.91 0.018 50);
+  --foreground: oklch(97.913% 0.00011 271.152);
 
   --card: oklch(0.16 0 0);
   --card-foreground: oklch(0.91 0.018 50);

@@ -29,14 +29,14 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 
 interface LayoutProps {
   children: ReactNode;
-  footerText?: string;
+  className?: string;
 }
 
 function isActive(path: string) {
   return window.location.pathname.startsWith(path);
 }
 
-export default function Layout({ children, footerText }: LayoutProps) {
+export default function Layout({ children, className  }: LayoutProps) {
   const { guest } = usePage<GuestNavigation>().props;
   const { auth } = usePage<Auth>().props;
   const user = auth.user;
@@ -751,7 +751,7 @@ export default function Layout({ children, footerText }: LayoutProps) {
       </AnimatePresence>
 
       {/* Main */}
-      <main className="flex-1">{children}</main>
+      <main className={cn('flex-1', className)}>{children}</main>
 
       {/* Footer */}
       <footer className="relative min-h-[500px] bg-[#7f1414] py-10 pt-20 text-white lg:pt-0">

@@ -209,7 +209,7 @@ export default function Programs({ program }: PerProgramProps) {
   return (
     <>
       <Head title={`${program.degree_type} in ${program.program_name}`} />
-      <Layout>
+      <Layout className="flex justify-center flex-col items-center">
         <PageHeader
           className="hidden lg:block"
           title=""
@@ -257,7 +257,7 @@ export default function Programs({ program }: PerProgramProps) {
             </div>
           </div>
 
-          <div className="relative z-10 mx-auto flex w-[80%] flex-col items-center justify-between gap-10 px-8 py-16 md:flex-row">
+          <div className="relative z-10 mx-auto flex w-[80%] max-w-5xl flex-col items-center justify-between gap-10 px-8 py-16 md:flex-row">
             <div className="animate-fade-in-up flex flex-col items-center text-white md:items-start">
               <div className="mb-4">
                 <span className="inline-block items-center gap-1.5 rounded-md bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide text-[#7f1414] uppercase">
@@ -327,7 +327,7 @@ export default function Programs({ program }: PerProgramProps) {
           </div>
         </section>
 
-        <div className="mb-10 flex flex-col items-center gap-20">
+        <div className="mb-10 flex flex-col items-center gap-20 max-w-5xl w-full">
           {/* --- Overview --- */}
           <div
             ref={overviewRef}

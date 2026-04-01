@@ -12,16 +12,14 @@ import {
     SidebarMenuSubItem,
     useSidebar,
 } from '@/components/ui/sidebar';
-import { Link, router } from '@inertiajs/react';
-import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { Link, router, usePage } from '@inertiajs/react';
 import { ChevronRight, type LucideIcon } from 'lucide-react';
-import { Badge } from './ui/badge';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 export function NavMain({
     label,
     items,
 }: {
+    label?: string;
     items: {
         title: string;
         url: string;
@@ -36,7 +34,11 @@ export function NavMain({
         }[];
     }[];
 }) {
-    const { state } = useSidebar(); // Get the sidebar state
+    const { state } = useSidebar();
+    const { url: currentUrl } = usePage();
+
+    const isActive = (url: string) => currentUrl.startsWith(url);
+    const hasActiveChild = (subItems?: { url: string }[]) => subItems?.some((s) => isActive(s.url)) ?? false;
 
     return (
         <SidebarGroup>
@@ -44,13 +46,19 @@ export function NavMain({
             <SidebarMenu>
                 {items.map((item) =>
                     item.collapsible ? (
-                        <Collapsible key={item.title} asChild defaultOpen={item.isActive} className="group/collapsible">
+                        <Collapsible
+                            key={item.title}
+                            asChild
+                            defaultOpen={item.isActive || hasActiveChild(item.items)}
+                            className="group/collapsible"
+                        >
                             <SidebarMenuItem>
                                 <div className="flex w-full">
                                     <SidebarMenuButton
                                         tooltip={item.title}
                                         asChild
                                         onClick={() => router.get(item.url)}
+                                        isActive={isActive(item.url)}
                                         className="flex-1 hover:cursor-pointer"
                                     >
                                         <div className="flex items-center">
@@ -58,7 +66,7 @@ export function NavMain({
                                             <span>{item.title}</span>
                                         </div>
                                     </SidebarMenuButton>
-                                    {/* Only show chevron when sidebar is expanded */}
+
                                     {state === 'expanded' && (
                                         <CollapsibleTrigger asChild>
                                             <button className="px-2 hover:cursor-pointer">
@@ -67,27 +75,17 @@ export function NavMain({
                                         </CollapsibleTrigger>
                                     )}
                                 </div>
+
                                 <CollapsibleContent>
                                     <SidebarMenuSub className="mr-0 pr-0">
                                         {item.items?.map((subItem) => (
                                             <SidebarMenuSubItem key={subItem.title}>
-                                                <SidebarMenuSubButton asChild>
-                                                    <Link href={subItem.url} className="flex justify-between hover:cursor-pointer capitalize ">
+                                                <SidebarMenuSubButton asChild isActive={isActive(subItem.url)}>
+                                                    <Link
+                                                        href={subItem.url}
+                                                        className="flex justify-between hover:cursor-pointer capitalize"
+                                                    >
                                                         <span className="truncate">{subItem.title}</span>
-                                                        {/* {subItem.badge !== undefined && (
-                                                            <TooltipProvider>
-                                                                <Tooltip>
-                                                                    <TooltipTrigger asChild>
-                                                                        <Badge className="justify-center rounded border-none bg-[#7f1414]/50 text-white hover:bg-[#7f1414] rounded-full">
-                                                                            {subItem.badge}
-                                                                        </Badge>
-                                                                    </TooltipTrigger>
-                                                                    <TooltipContent>
-                                                                        <p>Missing Uploads</p>
-                                                                    </TooltipContent>
-                                                                </Tooltip>
-                                                            </TooltipProvider>
-                                                        )} */}
                                                     </Link>
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
@@ -98,32 +96,17 @@ export function NavMain({
                         </Collapsible>
                     ) : (
                         <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton tooltip={item.title} asChild className="hover:cursor-pointer">
-                                <Link href={item.url} className="flex w-full items-center justify-between hover:cursor-pointer">
+                            <SidebarMenuButton
+                                tooltip={item.title}
+                                asChild
+                                isActive={isActive(item.url)}
+                                className="hover:cursor-pointer"
+                            >
+                                <Link href={item.url} className="flex w-full items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         {item.icon && <item.icon className="size-4" />}
                                         <span className="sidebar-label truncate">{item.title}</span>
                                     </div>
-
-                                    {/* {item.badge !== undefined  && (
-                                        <span className="sidebar-badge">
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <Badge
-                                                            variant="outline"
-                                                            className="justify-center rounded border-none bg-[#7f1414]/50 text-white hover:bg-[#7f1414] rounded-full"
-                                                        >
-                                                            {item.badge}
-                                                        </Badge>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        <p>Pending Uploads</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
-                                        </span>
-                                    )} */}
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
