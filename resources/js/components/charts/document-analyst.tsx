@@ -71,9 +71,9 @@ function AnalyticsCard({
 
 /** Small pill-style days filter */
 const TIME_OPTIONS = [
+  { label: "3D", value: "3d" },
   { label: "7D", value: "7d" },
   { label: "30D", value: "30d" },
-  { label: "90D", value: "90d" },
 ];
 
 function TimeFilter({
@@ -102,10 +102,16 @@ function TimeFilter({
 }
 
 function filterByRange(data: FrequencyUploads[], range: string): FrequencyUploads[] {
-  const days = range === "7d" ? 7 : range === "30d" ? 30 : 90;
+  const days =
+    range === "3d" ? 3 :
+      range === "7d" ? 7 :
+        range === "30d" ? 30 :
+          90;
+
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
   cutoff.setHours(0, 0, 0, 0);
+
   return data.filter((item) => new Date(item.activity_date) >= cutoff);
 }
 
@@ -197,7 +203,14 @@ export function DocumentsAnalytics({
       <div className="md:col-span-2 xl:col-span-1">
         <AnalyticsCard
           title="Document Activity Trend"
-          description={`Uploads by type — last ${timeRange === "7d" ? "7 days" : timeRange === "30d" ? "30 days" : "3 months"}`}
+          description={`Uploads by type — last ${timeRange === "3d"
+              ? "3 days"
+              : timeRange === "7d"
+                ? "7 days"
+                : timeRange === "30d"
+                  ? "30 days"
+                  : "3 months"
+            }`}
           filter={<TimeFilter value={timeRange} onChange={setTimeRange} />}
           contentClassName="px-2 py-4 sm:px-6 sm:py-6"
         >
