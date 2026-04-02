@@ -208,7 +208,7 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
 
                 <div className="mb-10 grid grid-cols-1 gap-6">
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Title</label>
                         <Input
                             type="text"
                             placeholder="Enter history page title..."
@@ -218,7 +218,7 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
                         <InputError message={errors['page.title']} className="mt-2" />
                     </div>
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Subtitle / Description</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Subtitle / Description</label>
                         <Textarea
                             placeholder="Enter history page subtitle or description..."
                             value={data.page.description}
@@ -231,9 +231,9 @@ const HistoryContentSection: React.FC = ({ ...props }: HistoryContentSectionProp
                 </div>
 
                 <div className="mb-8">
-                    <h3 className="mb-2 text-sm font-medium text-gray-700">Banner</h3>
+                    <h3 className="mb-2 text-sm font-medium text-foreground">Banner</h3>
                     {!data.page.previewUrl ? (
-                        <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                        <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                 <svg className="mb-4 h-8 w-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                     <path

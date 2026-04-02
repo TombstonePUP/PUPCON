@@ -71,9 +71,9 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                 <div className="space-y-6">
                     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Exhibit Image</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Exhibit Image</Label>
                             {!data.previewUrl ? (
-                                <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
                                             className="mb-4 h-8 w-8 text-gray-500"
@@ -139,7 +139,7 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                             <InputError message={errors.image} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Exhibit Title  <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Exhibit Title  <span className="text-red-500">*</span></Label>
                             <Input
                                 type="text"
                                 required

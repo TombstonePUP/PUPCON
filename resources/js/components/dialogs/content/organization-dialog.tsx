@@ -43,7 +43,7 @@ export function OrganizationDialog({ ...props }: OrganizationDialogProps) {
                 <form onSubmit={handleSubmit}>
                     <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Organization Name</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Organization Name</Label>
                             <Input
                                 placeholder="Enter organization name"
                                 value={data.organization_name}
@@ -52,7 +52,7 @@ export function OrganizationDialog({ ...props }: OrganizationDialogProps) {
                             />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Affiliation</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Affiliation</Label>
                             <Input
                                 placeholder="e.g., BS Information Technology"
                                 value={data.affiliation}

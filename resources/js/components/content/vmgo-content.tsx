@@ -108,7 +108,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     <h3 className="mb-4 text-base font-semibold text-gray-900">Page Content</h3>
                     <div className="grid gap-6 md:grid-cols-1">
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
+                            <label className="mb-2 block text-sm font-medium text-foreground">Title</label>
                             <Input
                                 type="text"
                                 value={data.page.title}
@@ -124,7 +124,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                             <InputError message={errors['page.title']} className="mt-2" />
                         </div>
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-gray-700">Description</label>
+                            <label className="mb-2 block text-sm font-medium text-foreground">Description</label>
                             <Textarea
                                 placeholder="Enter your page description..."
                                 autoResize
@@ -150,7 +150,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     <h3 className="mb-4 text-base font-semibold text-gray-900">Vision & Mission</h3>
                     <div className="grid gap-6 md:grid-cols-2">
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-gray-700">Vision <span className="text-red-500">*</span></label>
+                            <label className="mb-2 block text-sm font-medium text-foreground">Vision <span className="text-red-500">*</span></label>
                             <Textarea
                                 placeholder="Enter vision..."
                                 autoResize
@@ -171,7 +171,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                             <InputError message={errors['vmgo.vision']} className="mt-2" />
                         </div>
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-gray-700">Mission <span className="text-red-500">*</span></label>
+                            <label className="mb-2 block text-sm font-medium text-foreground">Mission <span className="text-red-500">*</span></label>
                             <Textarea
                                 placeholder="Enter mission..."
                                 autoResize
@@ -202,7 +202,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                         <div className="grid gap-6 md:grid-cols-2">
                             <div className="space-y-6">
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-gray-700">YouTube Link</label>
+                                    <label className="mb-2 block text-sm font-medium text-foreground">YouTube Link</label>
                                     <Input
                                         placeholder="https://www.youtube.com/watch?v=..."
                                         value={data.page.video_link || ''}
@@ -220,7 +220,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                     <InputError message={errors['page.video_link']} className="mt-2" />
                                 </div>
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-gray-700">Video Title</label>
+                                    <label className="mb-2 block text-sm font-medium text-foreground">Video Title</label>
                                     <Input
                                         placeholder="Enter video title..."
                                         value={data.page.video_title || ''}
@@ -239,7 +239,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                 </div>
                             </div>
                             <div className="flex flex-col">
-                                <label className="mb-2 block text-sm font-medium text-gray-700">Video Description</label>
+                                <label className="mb-2 block text-sm font-medium text-foreground">Video Description</label>
                                 <Textarea
                                     className="flex-1"
                                     placeholder="Enter video description..."

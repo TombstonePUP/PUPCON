@@ -153,7 +153,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
             <div className="flex flex-col gap-4">
               <div></div>
               <div>
-                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Number <span className="text-red-500">*</span>
+                <Label className="mb-2 block text-sm font-medium text-foreground">Area Number <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   type="number"
@@ -194,7 +194,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                 <InputError message={errors.area_number} className="mt-1" />
               </div>
               <div>
-                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name <span className="text-red-500">*</span></Label>
+                <Label className="mb-2 block text-sm font-medium text-foreground">Area Name <span className="text-red-500">*</span></Label>
                 <Input
                   type="text"
                   value={data.area_name}
@@ -205,7 +205,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                 <InputError message={errors.area_name} className="mt-1" />
               </div>
               <div>
-                <Label className="mb-2 block text-sm font-medium text-gray-700">Area Description <span className="text-red-500">*</span></Label>
+                <Label className="mb-2 block text-sm font-medium text-foreground">Area Description <span className="text-red-500">*</span></Label>
                 <Textarea
                   value={data.area_description}
                   onChange={(e) => setData('area_description', e.target.value)}

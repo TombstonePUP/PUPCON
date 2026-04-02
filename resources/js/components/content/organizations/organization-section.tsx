@@ -275,7 +275,7 @@ const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
                             <div className="mt-6">
                                 <Button
                                     onClick={handleAddOrg}
-                                    className="flex cursor-pointer items-center rounded-md border border-gray-300 bg-white px-8 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+                                    className="flex cursor-pointer items-center rounded-md border border-gray-300 bg-white px-8 py-2 text-sm font-medium text-foreground transition hover:bg-gray-100"
                                 >
                                     <Plus className="h-4 w-4" />
                                     New Organization

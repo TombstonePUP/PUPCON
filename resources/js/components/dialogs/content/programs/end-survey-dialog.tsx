@@ -47,7 +47,7 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div className="space-y-2">
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Programs Under Survey <span className="text-red-500">*</span></Label>
+                        <Label className="mb-2 block text-sm font-medium text-foreground">Programs Under Survey <span className="text-red-500">*</span></Label>
                         <Select
                             value={selectedProgramId ? String(selectedProgramId) : ''}
                             onValueChange={(value) => {
@@ -99,7 +99,7 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Current Status</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Current Status</Label>
                             <div className="flex h-10 w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3">
                                 <Input
                                     disabled
@@ -109,7 +109,7 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Remarks <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Remarks <span className="text-red-500">*</span></Label>
                             <Select value={data.remarks} onValueChange={(value) => setData('remarks', value)} disabled={processing}>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select Remarks" />

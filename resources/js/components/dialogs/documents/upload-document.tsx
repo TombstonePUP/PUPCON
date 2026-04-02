@@ -102,7 +102,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                         <div className="flex flex-col w-full items-center justify-center">
                             {!data.document ? (
                                 <label
-                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${processing ? 'pointer-events-none opacity-70' : 'cursor-pointer'
+                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${processing ? 'pointer-events-none opacity-70' : 'cursor-pointer'
                                         }`}
                                 >
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -139,7 +139,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                                 </label>
                             ) : (
                                 <div
-                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${processing ? 'pointer-events-none opacity-70' : ''
+                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${processing ? 'pointer-events-none opacity-70' : ''
                                         }`}
                                 >
                                     <span className="text-sm font-semibold text-gray-700">{data.document.name}</span>

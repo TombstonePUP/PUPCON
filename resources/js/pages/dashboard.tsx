@@ -48,12 +48,11 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
   const activeFrequency = USE_DUMMY ? frequencyDummyUploads : frequencyUploads;
   const activeStatistics = USE_DUMMY ? documentDummyStatistics : documentStatistics;
   const activeUploads = USE_DUMMY ? overallDummyUploads : overallUploads;
-  const activeLogs = USE_DUMMY ? activityDummyLogs : activityLogs;
 
   const approved = activeStatistics.find(d => d.file_status === 'Approved')?.documents ?? 0;
   const pending = activeStatistics.find(d => d.file_status === 'Pending')?.documents ?? 0;
   const rejected = activeStatistics.find(d => d.file_status === 'Rejected')?.documents ?? 0;
-  const totalUsers = activeLogs.filter(l => l.type === 'Users').length;
+  const totalUsers = activityLogs.filter(l => l.type === 'Users').length;
 
   const statConfig = [
     {
@@ -132,14 +131,16 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
             </Card>
           ))}
         </div>
+
         <DocumentsAnalytics
           frequencyUploads={activeFrequency}
           overallUploads={activeUploads}
           documentStatistics={activeStatistics}
         />
+
         <GuideTour />
         <div id="stat-table">
-          <DataTable columns={columns} data={activeLogs} />
+          <DataTable columns={columns} data={activityLogs} />
         </div>
       </div>
     </AppLayout>

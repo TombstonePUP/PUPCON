@@ -82,7 +82,7 @@ const OtherServicesSection: React.FC = ({...props}: OtherServicesProps) => {
 
                         <div className="mb-10 grid grid-cols-1 gap-6">
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Title</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">Title</Label>
                                 <Input
                                     type="text"
                                     placeholder="Enter page title..."
@@ -99,7 +99,7 @@ const OtherServicesSection: React.FC = ({...props}: OtherServicesProps) => {
                                 <InputError message={errors['page.title']} className="mt-2" />
                             </div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Subtitle / Description</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">Subtitle / Description</Label>
                                 <Textarea
                                     placeholder="Enter page subtitle..."
                                     disabled={processing}

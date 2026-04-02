@@ -82,7 +82,7 @@ export default function DocumentExhibitDialog({ type, exhibit, onClose }: Docume
                 <div className="space-y-2">
                     {!data.file ? (
                         <label
-                            className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
+                            className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
                                 }`}
                         >
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -119,7 +119,7 @@ export default function DocumentExhibitDialog({ type, exhibit, onClose }: Docume
                         </label>
                     ) : (
                         <div
-                            className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : ''
+                            className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : ''
                                 }`}
                         >
                             <span className="text-sm font-semibold text-gray-700">{data.file.name}</span>

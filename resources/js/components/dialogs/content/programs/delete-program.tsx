@@ -57,7 +57,7 @@ export default function DeleteProgram({ program, onClose }: DeleteProgramProps) 
                             </p>
                         </div>
                         <div className="mt-4">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Type the program name to confirm <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Type the program name to confirm <span className="text-red-500">*</span></Label>
                             <Input
                                 type="text"
                                 className="w-full rounded border px-2 py-1 text-sm"

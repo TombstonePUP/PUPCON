@@ -66,7 +66,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                     <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div>
                             {!data.previewUrl ? (
-                                <label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                <label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
                                             className="mb-4 h-8 w-8 text-gray-500"
@@ -132,7 +132,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Facility Name <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Facility Name <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="e.g., Library"
                                 value={data.facility_name}
@@ -142,7 +142,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Description <span className="text-red-500">*</span></Label>
                             <Textarea
                                 placeholder="Enter a description for the facility..."
                                 value={data.description}

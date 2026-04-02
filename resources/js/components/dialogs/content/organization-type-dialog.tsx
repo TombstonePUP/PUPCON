@@ -38,7 +38,7 @@ export function OrganizationTypeDialog({ ...props }: OrganizationTypeDialogProps
                 <form onSubmit={handleSubmit}>
                     <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div className="mt-6">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Type Name <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Type Name <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="e.g., Academic Organizations"
                                 value={data.type_name}

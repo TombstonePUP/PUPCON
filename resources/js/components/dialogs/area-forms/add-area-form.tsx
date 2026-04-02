@@ -87,7 +87,7 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                 <form className="flex flex-col gap-6" onSubmit={addAreaForm}>
                     <div className="flex flex-col gap-6">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Form Category <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Form Category <span className="text-red-500">*</span></Label>
                             <Select
                                 value={data.area_form_category_id?.toString() || ''}
                                 onValueChange={(value) => setData('area_form_category_id', Number(value))}
@@ -109,10 +109,10 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                             <InputError message={errors.area_form_category_id} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Upload Document</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Upload Document</Label>
                             <div className="flex w-full items-center justify-center">
                                 {!data.document ? (
-                                    <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                    <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
                                                 className="mb-4 h-8 w-8 text-gray-500"

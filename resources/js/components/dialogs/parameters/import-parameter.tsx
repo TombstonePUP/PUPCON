@@ -71,7 +71,7 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
                         </div>
                         <div className="mt-4 flex w-full flex-col items-center justify-center">
                             {!data.document ? (
-                                <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
                                             className="mb-4 h-8 w-8 text-gray-500"
@@ -104,7 +104,7 @@ export default function ImportParameter({ program, area_id, onClose }: ImportPar
                                     />
                                 </label>
                             ) : (
-                                <div className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                <div className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                     <span className="text-sm font-semibold text-gray-700">{data.document.name}</span>
                                     <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => setData('document', null)}>
                                         Remove File

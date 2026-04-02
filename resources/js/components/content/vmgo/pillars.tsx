@@ -283,7 +283,7 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                                                     className={`overflow-hidden transition-all duration-300 ease-in-out ${selectedPillarItemId === item.item_id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} `}
                                                 >
                                                     <div className="rounded-md border border-gray-200 bg-white p-6">
-                                                        <label className="mb-2 block text-sm font-medium text-gray-700">Edit Item Description</label>
+                                                        <label className="mb-2 block text-sm font-medium text-foreground">Edit Item Description</label>
                                                         <Textarea
                                                             placeholder="Enter item description..."
                                                             value={data.item_description}
@@ -296,7 +296,7 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                                                             <button
                                                                 type="button"
                                                                 onClick={() => setSelectedPillarItemId(null)}
-                                                                className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                                                className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-foreground hover:bg-gray-50"
                                                             >
                                                                 Cancel
                                                             </button>
@@ -323,7 +323,7 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                                         className={`overflow-hidden transition-all duration-300 ease-in-out ${addingNewItem ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} `}
                                     >
                                         <div className="rounded-md border border-gray-200 bg-white p-6">
-                                            <label className="mb-2 block text-sm font-medium text-gray-700">New Item Description</label>
+                                            <label className="mb-2 block text-sm font-medium text-foreground">New Item Description</label>
                                             <Textarea
                                                 placeholder="Enter item description..."
                                                 value={data.item_description}
@@ -336,7 +336,7 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                                                 <Button
                                                     type="button"
                                                     onClick={() => setAddingNewItem(false)}
-                                                    className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                                    className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-foreground hover:bg-gray-50"
                                                 >
                                                     Cancel
                                                 </Button>
@@ -358,7 +358,7 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                                     >
                                         <Button
                                             onClick={handleAddPillarItem}
-                                            className="flex cursor-pointer items-center rounded-md border border-gray-300 bg-white px-8 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+                                            className="flex cursor-pointer items-center rounded-md border border-gray-300 bg-white px-8 py-2 text-sm font-medium text-foreground transition hover:bg-gray-100"
                                         >
                                             <Plus className="h-4 w-4" /> Add New Item
                                         </Button>

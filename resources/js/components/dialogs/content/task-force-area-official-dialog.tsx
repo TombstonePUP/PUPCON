@@ -164,7 +164,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="space-y-4">
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Area Name <span className="text-red-500">*</span></Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Area Name <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="e.g., Area I: Vision, Mission..."
                                         value={data.area_name}
@@ -174,7 +174,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Chairman First Name <span className="text-red-500">*</span></Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Chairman First Name <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="Enter first name..."
                                         value={data.first_name}
@@ -183,7 +183,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Chairman Last Name <span className="text-red-500">*</span></Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Chairman Last Name <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="Enter last name..."
                                         value={data.last_name}
@@ -192,9 +192,9 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Chairman Photo</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Chairman Photo</Label>
                                     {!data.previewUrl ? (
-                                        <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                        <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                 <svg
                                                     className="mb-4 h-8 w-8 text-gray-500"
@@ -266,7 +266,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
 
                             <div className="flex flex-col space-y-4">
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Co-Chairmen (Optional)</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Co-Chairmen (Optional)</Label>
                                     <Textarea
                                         placeholder="Enter one co-chairman name per line..."
                                         value={coChairmenText}
@@ -277,7 +277,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                                 </div>
 
                                 <div className="flex-1">
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Members (Optional)</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Members (Optional)</Label>
                                     <Textarea
                                         placeholder="Enter one member name per line..."
                                         value={membersText}

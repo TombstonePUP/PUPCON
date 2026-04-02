@@ -113,7 +113,7 @@ export default function ProgramDialog({ ...props }: ProgramDialogProps) {
                 <form onSubmit={handleSubmit} className="mt-4 space-y-6">
                     <div className="flex flex-col gap-4">
                         <div className="space-y-2">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">
+                            <Label className="mb-2 block text-sm font-medium text-foreground">
                                 Degree Type <span className="text-red-500">*</span>
                             </Label>
                             <Select value={data.degree_type} onValueChange={(value) => setData('degree_type', value)} disabled={processing}>
@@ -129,7 +129,7 @@ export default function ProgramDialog({ ...props }: ProgramDialogProps) {
                             <InputError message={errors.degree_type} />
                         </div>
                         <div className="space-y-2">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">
+                            <Label className="mb-2 block text-sm font-medium text-foreground">
                                 Program Name <span className="text-red-500">*</span>
                             </Label>
                             <Input
@@ -144,7 +144,7 @@ export default function ProgramDialog({ ...props }: ProgramDialogProps) {
                             <InputError message={errors.program_name} />
                         </div>
                         <div className="space-y-2">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">
+                            <Label className="mb-2 block text-sm font-medium text-foreground">
                                 Color <span className="text-red-500">*</span>
                             </Label>
                             <div className="grid grid-cols-6 gap-2 sm:grid-cols-8">

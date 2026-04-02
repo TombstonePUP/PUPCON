@@ -30,7 +30,7 @@ const SectionFooter: React.FC<SectionFooterProps> = ({
                 {onPreview && (
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+                            <Button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-foreground transition hover:bg-gray-100">
                                 <Eye className="h-4 w-4 text-gray-600" />
                                 View
                             </Button>
@@ -55,7 +55,7 @@ const SectionFooter: React.FC<SectionFooterProps> = ({
 
                             <div className="flex justify-end gap-3">
                                 <DialogClose asChild>
-                                    <Button className="cursor-pointer rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
+                                    <Button className="cursor-pointer rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-foreground transition hover:bg-gray-100">
                                         Cancel
                                     </Button>
                                 </DialogClose>

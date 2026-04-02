@@ -104,7 +104,7 @@ export default function RejectRequest({ file, onClose }: RejectRequestProps) {
                 </DialogHeader>
                 <form onSubmit={rejectDocument}>
                     <div className="mb-2">
-                        <Label className="mb-2 block text-sm font-medium text-gray-700">Rejection Comments</Label>
+                        <Label className="mb-2 block text-sm font-medium text-foreground">Rejection Comments</Label>
                         <Textarea
                             autoResize
                             id="rejection_reason"

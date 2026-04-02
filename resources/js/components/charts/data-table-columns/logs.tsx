@@ -9,13 +9,15 @@ import { ArrowUpDown } from 'lucide-react';
 
 export const columns: ColumnDef<ActivityLogs>[] = [
   {
-    accessorKey: 'type',
-    filterFn: 'includesString', // or 'arrIncludesSome' for multi-select faceted
-    enableHiding: false,        // prevent user from toggling it
-    meta: { hidden: true },     // optional: for custom rendering logic
-    cell: () => null,           // render nothing — effectively hidden visually
+    accessorKey: 'type',        // ← was 'log_type'
     header: () => null,
-    size: 0,
+    cell: () => null,
+    enableHiding: false,
+    enableGlobalFilter: false,
+    filterFn: (row, id, value: string[]) => {
+      const rowValue = (row.getValue(id) as string)?.toLowerCase();
+      return value.map((v) => v.toLowerCase()).includes(rowValue);
+    },
   },
   {
     accessorKey: 'full_name',

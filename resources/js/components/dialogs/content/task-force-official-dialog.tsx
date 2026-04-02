@@ -88,9 +88,9 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                     <form onSubmit={handleSubmit}>
                         <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1">
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Photo</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">Photo</Label>
                                 {!data.previewUrl ? (
-                                    <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                    <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
                                                 className="mb-4 h-8 w-8 text-gray-500"
@@ -159,7 +159,7 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                                 )}
                             </div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">First Name</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">First Name</Label>
                                 <Input
                                     placeholder="Enter first name"
                                     value={data.first_name}
@@ -169,7 +169,7 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                                 />
                             </div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Last Name</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">Last Name</Label>
                                 <Input
                                     placeholder="Enter last name"
                                     value={data.last_name}
@@ -179,7 +179,7 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                                 />
                             </div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Position</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">Position</Label>
                                 <Input
                                     placeholder="e.g., Overall Chairman"
                                     value={data.official_position}

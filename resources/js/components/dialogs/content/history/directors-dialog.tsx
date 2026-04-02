@@ -75,9 +75,9 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                     <form onSubmit={handleSubmit}>
                         <div className="max-h-[70vh] overflow-y-auto pr-2">
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">President's Photo</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">President's Photo</Label>
                                 {!data.previewUrl ? (
-                                    <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                    <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg className="mb-4 h-8 w-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                                 <path
@@ -140,7 +140,7 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                             </div>
                             <div className="space-y-4 mt-2">
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Name <span className="text-red-500">*</span></Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Name <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="Enter president's full name"
                                         value={data.name}
@@ -150,7 +150,7 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Year Started <span className="text-red-500">*</span></Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Year Started <span className="text-red-500">*</span></Label>
                                     <Input
                                         placeholder="e.g., 1988-1992"
                                         value={data.term_start_date}
@@ -159,7 +159,7 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Year Ended</Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Year Ended</Label>
                                     <Input
                                         placeholder="e.g., 1988-1992"
                                         value={data.term_end_date}
@@ -167,7 +167,7 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-gray-700">Description / Details <span className="text-red-500">*</span></Label>
+                                    <Label className="mb-2 block text-sm font-medium text-foreground">Description / Details <span className="text-red-500">*</span></Label>
                                     <Textarea
                                         placeholder="Enter details about their term..."
                                         value={data.description}

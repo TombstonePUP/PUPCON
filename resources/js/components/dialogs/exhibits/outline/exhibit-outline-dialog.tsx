@@ -128,10 +128,10 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="m-0">
                     <div className="flex w-full flex-col items-center justify-center">
-                        <Label className="mb-2 w-full text-left text-sm font-medium text-gray-700">Upload PDF File</Label>
+                        <Label className="mb-2 w-full text-left text-sm font-medium text-foreground">Upload PDF File</Label>
                         {!data.file ? (
                             <label
-                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
+                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
                                     }`}
                             >
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -168,7 +168,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                             </label>
                         ) : (
                             <div
-                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : ''
+                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : ''
                                     }`}
                             >
                                 <span className="text-sm font-semibold text-gray-700">{data.file.name}</span>
@@ -188,7 +188,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                     </div>
                     <div className="grid w-full gap-4 py-4">
                         <div className="space-y-2">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Category</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Category</Label>
 
                             <input
                                 type="text"
@@ -206,7 +206,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
 
                     <div>
                         <div>
-                            <Label htmlFor="outline_description" className="mb-2 block text-sm font-medium text-gray-700">
+                            <Label htmlFor="outline_description" className="mb-2 block text-sm font-medium text-foreground">
                                 Outline Description
                             </Label>
                             <input

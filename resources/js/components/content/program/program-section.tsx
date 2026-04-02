@@ -354,7 +354,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                         </div>
                         <div className="space-y-6">
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Program Image</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">Program Image</Label>
                                 <div className="mt-5 flex flex-col gap-3">
                                     {!data.previewUrl ? (
                                         <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70">
@@ -430,7 +430,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                 </div>
                             </div>
                             <div>
-                                <Label htmlFor="program_description" className="mb-2 block text-sm font-medium text-gray-700">
+                                <Label htmlFor="program_description" className="mb-2 block text-sm font-medium text-foreground">
                                     Program Description
                                 </Label>
                                 <Textarea

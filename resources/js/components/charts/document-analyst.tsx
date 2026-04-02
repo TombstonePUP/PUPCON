@@ -56,7 +56,7 @@ function AnalyticsCard({
   contentClassName?: string;
 }) {
   return (
-    <Card>
+    <Card className="h-full">
       <div className="flex items-center justify-between bg-muted/50 py-4 px-6 rounded-t-lg border-b">
         <div>
           <p className="text-sm font-semibold text-foreground">{title}</p>
@@ -102,13 +102,13 @@ function TimeFilter({
 }
 
 function filterByRange(data: FrequencyUploads[], range: string): FrequencyUploads[] {
-    const days = range === "3d" ? 3 : range === "7d" ? 7 : 30;
+  const days = range === "3d" ? 3 : range === "7d" ? 7 : 30;
 
-    const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - days);
-    cutoff.setHours(0, 0, 0, 0);
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+  cutoff.setHours(0, 0, 0, 0);
 
-    return data.filter((item) => new Date(item.activity_date) >= cutoff);
+  return data.filter((item) => new Date(item.activity_date) >= cutoff);
 }
 
 // ---------------------------------------------------------------------------
@@ -196,12 +196,12 @@ export function DocumentsAnalytics({
     <div className="grid grid-cols-2 gap-4">
 
       {/* 1 ─ Upload Frequency (area) — spans full width on xl, 2 cols on md */}
-      <div className="md:col-span-2 xl:col-span-1">
+      <div className="col-span-2 xl:col-span-1">
         <AnalyticsCard
           title="Document Activity Trend"
           description={`Overall upload frequency — last ${timeRange === "3d" ? "3 days" :
-              timeRange === "7d" ? "7 days" :
-                "30 days"
+            timeRange === "7d" ? "7 days" :
+              "30 days"
             }`}
           filter={<TimeFilter value={timeRange} onChange={setTimeRange} />}
           contentClassName="px-2 py-4 sm:px-6 sm:py-6"
@@ -259,66 +259,68 @@ export function DocumentsAnalytics({
       </div>
 
       {/* 2 ─ Overall Progress (pie / donut) */}
-      <AnalyticsCard
-        title="Document Uploads"
-        description="Uploaded vs outlines with no documents"
-        contentClassName="px-2 py-4 sm:px-6"
-      >
-        {loading ? (
-          <ChartSkeleton height={220} />
-        ) : (
-          <ChartContainer
-            config={pieChartConfig}
-            className="mx-auto aspect-square min-h-[150px] max-h-[220px]"
-          >
-            <PieChart>
-              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel indicator="line" />} />
-              <Pie data={pieData}
-                dataKey="value"
-                nameKey="name"
-                innerRadius={50}
-                outerRadius={100}
-                strokeWidth={10}
-                startAngle={180}
-                endAngle={0}
-                cy={140}>
-                {pieData.map((entry, i) => (
-                  <Cell key={`cell-${i}`} fill={entry.fill ?? "var(--muted)"} />
-                ))}
-                <Label
-                  content={({ viewBox }) => {
-                    if (!viewBox) return null;
-                    const { cx, cy } = viewBox as PolarViewBox;
-                    return (
-                      <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
-                        <tspan x={cx} y={cy} className="fill-foreground text-3xl font-bold">
-                          {pieTotal.toLocaleString()}
-                        </tspan>
-                        <tspan x={cx} y={(cy || 0) + 24} className="fill-muted-foreground text-xs">
-                          Documents
-                        </tspan>
-                      </text>
-                    );
-                  }}
+      <div className="col-span-2 xl:col-span-1">
+        <AnalyticsCard
+          title="Document Uploads"
+          description="Uploaded vs outlines with no documents"
+          contentClassName="px-2 py-4 sm:px-6"
+        >
+          {loading ? (
+            <ChartSkeleton height={220} />
+          ) : (
+            <ChartContainer
+              config={pieChartConfig}
+              className="mx-auto aspect-square min-h-[150px] max-h-[220px]"
+            >
+              <PieChart>
+                <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel indicator="line" />} />
+                <Pie data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={50}
+                  outerRadius={100}
+                  strokeWidth={10}
+                  startAngle={180}
+                  endAngle={0}
+                  cy={140}>
+                  {pieData.map((entry, i) => (
+                    <Cell key={`cell-${i}`} fill={entry.fill ?? "var(--muted)"} />
+                  ))}
+                  <Label
+                    content={({ viewBox }) => {
+                      if (!viewBox) return null;
+                      const { cx, cy } = viewBox as PolarViewBox;
+                      return (
+                        <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
+                          <tspan x={cx} y={cy} className="fill-foreground text-3xl font-bold">
+                            {pieTotal.toLocaleString()}
+                          </tspan>
+                          <tspan x={cx} y={(cy || 0) + 24} className="fill-muted-foreground text-xs">
+                            Documents
+                          </tspan>
+                        </text>
+                      );
+                    }}
+                  />
+                </Pie>
+                <ChartLegend
+                  content={() => (
+                    <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-1">
+                      {pieData.map((entry) => (
+                        <span key={entry.name} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
+                          {entry.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 />
-              </Pie>
-              <ChartLegend
-                content={() => (
-                  <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-1">
-                    {pieData.map((entry) => (
-                      <span key={entry.name} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
-                        {entry.name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              />
-            </PieChart>
+              </PieChart>
 
-          </ChartContainer>
-        )}
-      </AnalyticsCard>
+            </ChartContainer>
+          )}
+        </AnalyticsCard>
+      </div>
 
       {/* 3 ─ Document Approval Status (horizontal bar) */}
       {/* <AnalyticsCard

@@ -76,7 +76,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                     <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div>
                             {!data.previewUrl ? (
-                                <label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                <label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
                                             className="mb-4 h-8 w-8 text-gray-500"
@@ -142,7 +142,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">First Name <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">First Name <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="e.g., Juan"
                                 value={data.first_name}
@@ -152,7 +152,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Middle Name</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Middle Name</Label>
                             <Input
                                 placeholder="e.g., Santos"
                                 value={data.middle_name}
@@ -161,7 +161,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Last Name <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Last Name <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="e.g., Dela Cruz"
                                 value={data.last_name}
@@ -171,7 +171,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Suffix</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Suffix</Label>
                             <Input
                                 placeholder="e.g., Sr., Jr., III"
                                 value={data.suffix}
@@ -180,7 +180,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Official Type <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Official Type <span className="text-red-500">*</span></Label>
                             <Select value={data.type ? String(data.type) : ''} onValueChange={(value) => setData({ ...data, type: value })} required>
                                 <SelectTrigger className="w-full" tabIndex={3}>
                                     <SelectValue placeholder="Select Official" />
@@ -199,7 +199,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Position <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Position <span className="text-red-500">*</span></Label>
                             <Input
                                 placeholder="e.g., President"
                                 value={data.position}

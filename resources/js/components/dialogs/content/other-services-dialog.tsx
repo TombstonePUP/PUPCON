@@ -39,7 +39,7 @@ export default function ServicesDialog({ ...props }: ServicesDialogProps) {
                     </DialogHeader>
                     <div className="mt-6 max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Title</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Title</Label>
                             <Input
                                 placeholder="e.g., University Student Portal"
                                 value={data.service_name}
@@ -48,7 +48,7 @@ export default function ServicesDialog({ ...props }: ServicesDialogProps) {
                             />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Description</Label>
                             <Textarea
                                 placeholder="Enter a brief description..."
                                 value={data.description}
@@ -58,7 +58,7 @@ export default function ServicesDialog({ ...props }: ServicesDialogProps) {
                             />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">URL (Link)</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">URL (Link)</Label>
                             <Input
                                 placeholder="https://studentportal.example.com"
                                 value={data.service_link}

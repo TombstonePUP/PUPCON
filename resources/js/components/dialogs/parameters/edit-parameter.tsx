@@ -75,7 +75,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                 <form onSubmit={editParameter} className="flex flex-col gap-4">
                     <div className="flex gap-4 flex-col">
                         <div className="w-1/4">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Parameter</Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Parameter</Label>
                             <Input
                                 id="parameter_name"
                                 type="text"
@@ -92,7 +92,7 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
                             />
                         </div>
                         <div className="flex-1">
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">Description <span className="text-red-500">*</span></Label>
+                            <Label className="mb-2 block text-sm font-medium text-foreground">Description <span className="text-red-500">*</span></Label>
                             <Textarea
                                 id="parameter_description"
                                 autoFocus

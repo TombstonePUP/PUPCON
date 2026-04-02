@@ -110,7 +110,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                 {/* Title & Subtitle */}
                 <div className="mb-10 grid gap-6 md:grid-cols-2">
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Title</label>
                         <Input
                             type="text"
                             value={data.page.title}
@@ -126,7 +126,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                         <InputError message={errors['page.title']} className="mt-2" />
                     </div>
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Subtitle</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Subtitle</label>
                         <Input
                             type="text"
                             value={data.page.subtitle}
@@ -145,7 +145,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
 
                 {/* Banner Upload */}
                 <div className="mb-8">
-                    <h3 className="mb-2 text-sm font-medium text-gray-700">Welcome Banner</h3>
+                    <h3 className="mb-2 text-sm font-medium text-foreground">Welcome Banner</h3>
 
                     <div className="mt-5 flex flex-col gap-3">
                         {!data.page.previewUrl ? (
@@ -227,7 +227,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                 {/* Contact Info */}
                 <div className="grid gap-6 md:grid-cols-2">
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Address</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Address</label>
                         <Input
                             type="text"
                             value={data.page.address}
@@ -243,7 +243,7 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
                         <InputError message={errors['page.address']} className="mt-2" />
                     </div>
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Phone number</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Phone number</label>
                         <Input
                             type="text"
                             value={data.page.phone_number}

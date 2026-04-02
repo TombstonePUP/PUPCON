@@ -235,7 +235,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                 </div>
                 <div className="mb-10 grid gap-6 md:grid-cols-2">
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Title</label>
                         <Input
                             type="text"
                             placeholder="Enter page title..."
@@ -253,7 +253,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
                         <InputError message={errors['page.title']} className="mt-2" />
                     </div>
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Subtitle</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Subtitle</label>
                         <Input
                             type="text"
                             placeholder="Enter page subtitle..."

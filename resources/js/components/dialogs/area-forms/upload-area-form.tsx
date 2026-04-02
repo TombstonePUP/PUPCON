@@ -84,7 +84,7 @@ export function UploadAreaForm({ program, form, area_id, onClose }: UploadAreaFo
                         <div>
                             <div className="flex flex-col w-full items-center justify-center">
                                 {!data.document ? (
-                                    <Label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+                                    <Label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
                                                 className="mb-4 h-8 w-8 text-gray-500"

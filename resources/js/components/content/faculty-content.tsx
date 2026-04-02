@@ -233,7 +233,7 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
                     {/* Left Column: Title & Subtitle */}
                     <div className="space-y-6">
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
+                            <label className="mb-2 block text-sm font-medium text-foreground">Title</label>
                             <Input
                                 type="text"
                                 placeholder="Enter page title..."
@@ -251,7 +251,7 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
                             <InputError message={errors['page.title']} className="mt-2" />
                         </div>
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-gray-700">Subtitle</label>
+                            <label className="mb-2 block text-sm font-medium text-foreground">Subtitle</label>
                             <Textarea
                                 placeholder="Enter page subtitle..."
                                 value={data.page?.subtitle}
@@ -275,7 +275,7 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
                     <div className="flex flex-col rounded-lg border border-gray-200 bg-gray-50/50 p-6">
                         <div className="flex flex-1 flex-col space-y-6">
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Author</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">Author</Label>
                                 <Input
                                     type="text"
                                     placeholder="Enter author's name and title..."
@@ -293,7 +293,7 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
                                 <InputError message={errors['page.author']} className="mt-2" />
                             </div>
                             <div className="flex-1">
-                                <Label className="mb-2 block text-sm font-medium text-gray-700">Quote Text</Label>
+                                <Label className="mb-2 block text-sm font-medium text-foreground">Quote Text</Label>
                                 <Textarea
                                     placeholder="Enter quote..."
                                     value={data.page?.quote}

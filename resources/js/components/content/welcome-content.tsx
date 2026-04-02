@@ -233,7 +233,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                             <div className="grid gap-6 md:grid-cols-2">
                                 <div className="space-y-6">
                                     <div>
-                                        <label className="mb-2 block text-sm font-medium text-gray-700">YouTube Link</label>
+                                        <label className="mb-2 block text-sm font-medium text-foreground">YouTube Link</label>
                                         <Input
                                             placeholder="https://www.youtube.com/watch?v=..."
                                             value={data.page.video_link || ''}
@@ -251,7 +251,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                         <InputError message={errors['page.video_link']} className="mt-2" />
                                     </div>
                                     <div>
-                                        <label className="mb-2 block text-sm font-medium text-gray-700">Video Title</label>
+                                        <label className="mb-2 block text-sm font-medium text-foreground">Video Title</label>
                                         <Input
                                             placeholder="Enter video title..."
                                             value={data.page.video_title || ''}
@@ -270,7 +270,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                     </div>
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="mb-2 block text-sm font-medium text-gray-700">Video Description</label>
+                                    <label className="mb-2 block text-sm font-medium text-foreground">Video Description</label>
                                     <Textarea
                                         autoResize
                                         className="flex-1"
@@ -302,7 +302,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                         <div className="mb-8">
                             <div>
                                 <div className="mt-5 mb-6 flex flex-col gap-3">
-                                    <h3 className="text-sm font-medium text-gray-700">Director's Image</h3>
+                                    <h3 className="text-sm font-medium text-foreground">Director's Image</h3>
 
                                     {!data.page.previewUrl ? (
                                         <Label className="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70">
@@ -375,7 +375,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                 </div>
 
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-gray-700">Director's Name <span className="text-red-500">*</span></label>
+                                    <label className="mb-2 block text-sm font-medium text-foreground">Director's Name <span className="text-red-500">*</span></label>
                                     <Input
                                         placeholder="Enter director's name..."
                                         value={data.page.director_name}
@@ -393,7 +393,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                     <InputError message={errors['page.director_name']} className="mt-2" />
                                 </div>
                                 <div>
-                                    <label className="mb-2 mt-6 block text-sm font-medium text-gray-700">Director's Message <span className="text-red-500">*</span></label>
+                                    <label className="mb-2 mt-6 block text-sm font-medium text-foreground">Director's Message <span className="text-red-500">*</span></label>
                                     <Textarea
                                         placeholder="Enter your message..."
                                         autoResize
@@ -423,11 +423,11 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                     </div>
 
                     <div>
-                        {/* <Label className="mb-2 block text-sm font-medium text-gray-700">Upload Document</Label> */}
+                        {/* <Label className="mb-2 block text-sm font-medium text-foreground">Upload Document</Label> */}
                         <div className="flex w-full items-center justify-center">
                             {!data.page.file_previewUrl ? (
                                 <label
-                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
+                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
                                         }`}
                                 >
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -455,7 +455,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                 </label>
                             ) : (
                                 <div
-                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 ${isUploading ? 'pointer-events-none opacity-70' : ''
+                                    className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : ''
                                         }`}
                                 >
                                     <span className="text-sm font-semibold text-gray-700">Certificate of Authenticity</span>

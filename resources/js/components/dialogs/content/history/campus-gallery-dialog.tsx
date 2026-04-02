@@ -74,14 +74,14 @@ export function CampusGalleryDialog(props: CampusGalleryDialogProps) {
                     <div className="max-h-[70vh] overflow-y-auto flex flex-col gap-4">
                         {/* Upload */}
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">
+                            <Label className="mb-2 block text-sm font-medium text-foreground">
                                 Gallery Photo  <span className="text-red-500">*</span>
                             </Label>
 
                             {!data.previewUrl ? (
                                 <Label
                                     htmlFor="upload-image"
-                                    className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
+                                    className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80"
                                 >
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
@@ -163,7 +163,7 @@ export function CampusGalleryDialog(props: CampusGalleryDialogProps) {
 
                         {/* Caption */}
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-gray-700">
+                            <Label className="mb-2 block text-sm font-medium text-foreground">
                                 Caption <span className="text-red-500">*</span>
                             </Label>
                             <Input

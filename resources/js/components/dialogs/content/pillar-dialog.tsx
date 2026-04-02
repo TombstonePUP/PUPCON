@@ -34,7 +34,7 @@ export default function PillarDialog({ ...props }: PillarDialogProps) {
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="mt-1">
-                        <label className="mb-1 block text-sm font-medium text-gray-700">Pillar Title <span className="text-red-500">*</span></label>
+                        <label className="mb-1 block text-sm font-medium text-foreground">Pillar Title <span className="text-red-500">*</span></label>
                         <Input
                             placeholder="e.g., Teaching and Learning"
                             value={data.pillar_title}

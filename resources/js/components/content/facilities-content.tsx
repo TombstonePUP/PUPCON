@@ -208,7 +208,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                 </div>
                 <div className="mb-10 grid grid-cols-1 gap-6">
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Title</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Title</label>
                         <Input
                             type="text"
                             placeholder="Enter page title..."
@@ -226,7 +226,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                         <InputError message={errors['page.title']} className="mt-2" />
                     </div>
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700">Subtitle / Description</label>
+                        <label className="mb-2 block text-sm font-medium text-foreground">Subtitle / Description</label>
                         <Textarea
                             placeholder="Enter page subtitle..."
                             value={data.page?.description}
