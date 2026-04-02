@@ -30,8 +30,8 @@ export default function ExhibitOutlineDialogRenderer({ type, outline, exhibit, o
                     <DialogContent className="">
                         <DialogHeader className="flex flex-row items-start text-left">
                             <div className="">
-                                <DialogTitle className="text-lg font-medium text-gray-900">No Document Available</DialogTitle>
-                                <DialogDescription className="text-sm text-gray-500">
+                                <DialogTitle className="text-lg font-medium text-foreground">No Document Available</DialogTitle>
+                                <DialogDescription className="text-sm text-muted-foreground">
                                     {outline?.outline_description}
                                 </DialogDescription>
                             </div>

@@ -28,11 +28,11 @@ export function DisableUser({ user, onClose }: DisableUserDialogProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">
+                    <DialogTitle className="text-lg font-medium text-foreground">
                         {/* <User className="h-5 w-5 text-[#7f1414]" /> */}
                         Disable User
                     </DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">Are you sure you want to disable this user?</DialogDescription>
+                    <DialogDescription className="text-sm text-muted-foreground">Are you sure you want to disable this user?</DialogDescription>
                 </DialogHeader>
 
                 <div className="my-0 rounded-md border border-red-100 bg-red-50 p-4">

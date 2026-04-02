@@ -22,7 +22,7 @@ const EmptyState = ({
     <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
         <Icon className="mb-4 h-16 w-16 text-gray-400" />
         <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="text-sm text-gray-500">{description}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
     </div>
 );
 
@@ -136,7 +136,7 @@ export default function About({ page, programs, facilities, org_types }: AboutPa
                             </div>
                         ) : (
                             <div className="rounded-xl border border-gray-200 bg-gray-50 p-8 text-center">
-                                <p className="text-sm text-gray-500">No organizations listed under this category yet.</p>
+                                <p className="text-sm text-muted-foreground">No organizations listed under this category yet.</p>
                             </div>
                         )}
                     </section>

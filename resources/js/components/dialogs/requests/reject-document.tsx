@@ -99,8 +99,8 @@ export default function RejectRequest({ file, onClose }: RejectRequestProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Reject Document</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">{file.length === 0 ? formattedAreaName : 'Comments for Rejecting Files'}</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-foreground">Reject Document</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">{file.length === 0 ? formattedAreaName : 'Comments for Rejecting Files'}</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={rejectDocument}>
                     <div className="mb-2">

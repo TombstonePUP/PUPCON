@@ -105,7 +105,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                         </div>
                         <div>
                             <p className="mb-1 text-lg font-semibold text-gray-700">{uploadText}</p>
-                            <p className="text-sm text-gray-500">{sizeText}</p>
+                            <p className="text-sm text-muted-foreground">{sizeText}</p>
                         </div>
                         <div className="mt-2 flex gap-2">
                             <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-400">PNG</span>
@@ -180,7 +180,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                                 </div>
                                 <div>
                                     <p className="mb-2 text-base font-medium text-gray-700">Drag and drop your image here</p>
-                                    <p className="text-sm text-gray-500">or</p>
+                                    <p className="text-sm text-muted-foreground">or</p>
                                 </div>
                                 <Button onClick={triggerFileInput} className="bg-[#7f1414] px-6 py-2 font-medium transition-all duration-200">
                                     Browse Files

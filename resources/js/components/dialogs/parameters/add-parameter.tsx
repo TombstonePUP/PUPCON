@@ -65,8 +65,8 @@ export function AddParameter({ program, area_id, onClose }: AddParameterProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Add Parameter</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">Create a new parameter</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-foreground">Add Parameter</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">Create a new parameter</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={addParameter} className="flex flex-col gap-4">
                     <div className="flex gap-4 flex-col">

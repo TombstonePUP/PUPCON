@@ -31,10 +31,10 @@ export function OrganizationDialog({ ...props }: OrganizationDialogProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">
+                    <DialogTitle className="text-lg font-medium text-foreground">
                         {type === 'edit' ? 'Edit Organization' : 'Add Organization'}
                     </DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
+                    <DialogDescription className="text-sm text-muted-foreground">
                         {type === 'edit'
                             ? 'Make changes to the organization details below.'
                             : 'Fill out the details below to add a new organization.'}

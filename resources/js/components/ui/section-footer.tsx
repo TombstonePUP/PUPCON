@@ -40,8 +40,8 @@ const SectionFooter: React.FC<SectionFooterProps> = ({
 
                         <DialogContent className="sm:max-w-md">
                             <DialogHeader>
-                                <DialogTitle className="text-lg font-medium text-gray-900">View Content</DialogTitle>
-                                <DialogDescription className="text-sm text-gray-500">
+                                <DialogTitle className="text-lg font-medium text-foreground">View Content</DialogTitle>
+                                <DialogDescription className="text-sm text-muted-foreground">
                                     {previewDescription}
                                 </DialogDescription>
                             </DialogHeader>

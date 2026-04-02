@@ -42,8 +42,8 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">End a Program Survey</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">Select a program to end its current survey.</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-foreground">End a Program Survey</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">Select a program to end its current survey.</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div className="space-y-2">

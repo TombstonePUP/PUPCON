@@ -28,10 +28,10 @@ export default function DeleteExhibit({ exhibit, onClose }: DeleteExhibitProps) 
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">
+                    <DialogTitle className="text-lg font-medium text-foreground">
                         Delete Exhibit
                     </DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
+                    <DialogDescription className="text-sm text-muted-foreground">
                         Are you sure you want to delete the exhibit "{exhibit?.exhibit_name}"?
                         The Files associated with this exhibit will be deleted permanently.
                     </DialogDescription>

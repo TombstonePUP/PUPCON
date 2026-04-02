@@ -117,7 +117,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                         {isArchived ? <Archive className="h-8 w-8 text-gray-400" /> : <NotebookIcon className="h-8 w-8 text-gray-400" />}
                     </div>
                     <h3 className="mb-1 text-lg font-semibold text-gray-900">{isArchived ? 'No Archived Programs' : 'No Active Programs'}</h3>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                         {isArchived ? 'All programs are currently active.' : 'Get started by adding a new program.'}
                     </p>
                 </div>
@@ -234,7 +234,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                             </div>
                             <div className="ml-2">
                                 <h1 className="text-xl font-semibold text-gray-900">Programs</h1>
-                                <p className="line-clamp-1 text-sm text-gray-500">Manage academic programs for PUP San Juan.</p>
+                                <p className="line-clamp-1 text-sm text-muted-foreground">Manage academic programs for PUP San Juan.</p>
                             </div>
                         </div>
                     </div>
@@ -334,8 +334,8 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                 <Dialog open={startLevelConfirmOpen} onOpenChange={setStartLevelConfirmOpen}>
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
-                            <DialogTitle className="mb-4 text-lg font-medium text-gray-900">No Levels Found</DialogTitle>
-                            <DialogDescription className="text-sm text-gray-500">
+                            <DialogTitle className="mb-4 text-lg font-medium text-foreground">No Levels Found</DialogTitle>
+                            <DialogDescription className="text-sm text-muted-foreground">
                                 {programToStart?.is_active
                                     ? `The program "${programToStart?.degree_type} in ${programToStart?.program_name}" has no accreditation levels yet. Do you
                                 want to start one now?`

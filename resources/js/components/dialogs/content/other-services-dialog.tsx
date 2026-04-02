@@ -32,8 +32,8 @@ export default function ServicesDialog({ ...props }: ServicesDialogProps) {
             <Dialog open={true} onOpenChange={onClose}>
                 <DialogContent className="sm:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle className="text-lg font-medium text-gray-900">{type === 'edit' ? 'Edit Service' : 'Add Service'}</DialogTitle>
-                        <DialogDescription className="text-sm text-gray-500">
+                        <DialogTitle className="text-lg font-medium text-foreground">{type === 'edit' ? 'Edit Service' : 'Add Service'}</DialogTitle>
+                        <DialogDescription className="text-sm text-muted-foreground">
                             {type === 'edit' ? 'Make changes to the service details below.' : 'Fill out the details below to add a new service.'}
                         </DialogDescription>
                     </DialogHeader>

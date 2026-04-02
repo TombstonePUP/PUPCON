@@ -40,7 +40,7 @@ export default function DeleteExhibitOutlineDialog({ outline, onClose, onDelete 
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Delete Exhibit Outline</DialogTitle>
-                    <DialogDescription className="mt-4 mb-6 text-sm text-gray-500">
+                    <DialogDescription className="mt-4 mb-6 text-sm text-muted-foreground">
                         Are you sure you want to delete the outline "{outline.outline_description}"? This action will aslo remove the associated file
                         from the system and cannot be undone.
                     </DialogDescription>

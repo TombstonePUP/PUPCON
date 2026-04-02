@@ -232,13 +232,13 @@ export default function PillarsSection({ ...props }: PillarSectionProps) {
                             </div>
                         ) : (
                             <>
-                                <h4 className="mb-1 truncate text-lg font-medium text-gray-900">{selectedPillar.pillar_title}</h4>
+                                <h4 className="mb-1 truncate text-lg font-medium text-foreground">{selectedPillar.pillar_title}</h4>
                                 <p className="mb-6 truncate text-xs font-normal text-gray-600">List of the Pillar Items</p>
 
                                 {/* List of Items */}
                                 <div className="max-h-[250px] space-y-4 overflow-y-auto pr-2">
                                     {selectedPillar.pillar_items?.length === 0 && (
-                                        <p className="text-sm text-gray-500 italic">No items have been added to this pillar yet.</p>
+                                        <p className="text-sm text-muted-foreground italic">No items have been added to this pillar yet.</p>
                                     )}
 
                                     {selectedPillar.pillar_items?.map((item, index) => {

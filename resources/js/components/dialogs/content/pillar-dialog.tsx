@@ -27,8 +27,8 @@ export default function PillarDialog({ ...props }: PillarDialogProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">{type === 'edit' ? 'Edit Pillar' : 'Add Pillar'}</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
+                    <DialogTitle className="text-lg font-medium text-foreground">{type === 'edit' ? 'Edit Pillar' : 'Add Pillar'}</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">
                         {type === 'edit' ? 'Make changes to the pillar details below.' : 'Fill out the details below to add a new pillar.'}
                     </DialogDescription>
                 </DialogHeader>

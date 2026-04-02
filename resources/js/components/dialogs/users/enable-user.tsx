@@ -6,54 +6,53 @@ import { UserRecords } from '@/types/user-management';
 import { useForm } from '@inertiajs/react';
 
 interface EnableUserDialogProps {
-    user: UserRecords;
-    onClose: () => void;
+  user: UserRecords;
+  onClose: () => void;
 }
 
 export function EnableUser({ user, onClose }: EnableUserDialogProps) {
-    const { data, patch, reset } = useForm<{ user_id: number }>({
-        user_id: user.user_id,
+  const { data, patch, reset } = useForm<{ user_id: number }>({
+    user_id: user.user_id,
+  });
+
+  const enableUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    patch(route('users.enable'), {
+      onSuccess: () => {
+        reset();
+        onClose();
+      },
     });
+  };
 
-    const enableUser = (e: React.FormEvent) => {
-        e.preventDefault();
-        patch(route('users.enable'), {
-            onSuccess: () => {
-                reset();
-                onClose();
-            },
-        });
-    };
+  return (
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="text-lg font-medium text-foreground">
+            {/* <User className="h-5 w-5 text-[#7f1414]" /> */}
+            Enable User
+          </DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">Are you sure you want to enable this user?</DialogDescription>
+        </DialogHeader>
 
-    return (
-        <Dialog open={true} onOpenChange={onClose}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">
-                        {/* <User className="h-5 w-5 text-[#7f1414]" /> */}
-                        Enable User
-                    </DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">Are you sure you want to enable this user?</DialogDescription>
-                </DialogHeader>
+        <div className="mt-12 rounded-md border border-info/30 bg-info/10 text-info-foreground p-4">
+          <p className="text-sm">
+            This action will enable the user account. The user will be able to access the system again.
+          </p>
+        </div>
 
-                <div className="my-0 rounded-md border border-blue-100 bg-blue-50 p-4">
-                    <p className="text-sm text-blue-800">
-                       
-                        This action will enable the user account. The user will be able to access the system again.
-                    </p>
-                </div>
-
-                <DialogFooter className="space-x-2">
-                    <DialogClose asChild>
-                        <Button variant="outline" tabIndex={1}>
-                            Cancel
-                        </Button>
-                    </DialogClose>
-                    <Button variant="noborder" tabIndex={2} onClick={enableUser}>
-                        Enable
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    );
+        <DialogFooter className="space-x-2">
+          <DialogClose asChild>
+            <Button variant="outline" tabIndex={1}>
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button variant="noborder" tabIndex={2} onClick={enableUser}>
+            Enable
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }

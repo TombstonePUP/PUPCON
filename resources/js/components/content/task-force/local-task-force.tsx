@@ -405,7 +405,7 @@ export default function LocalTaskForceContentSection({ ...props }: LocalTaskForc
                             <div>
                                 <h5 className="mb-2 text-sm font-semibold text-gray-700">Members</h5>
                                 {membersList?.length === 0 ? (
-                                    <p className="text-sm text-gray-500 italic">No members added to this area.</p>
+                                    <p className="text-sm text-muted-foreground italic">No members added to this area.</p>
                                 ) : (
                                     <ul className="list-inside list-disc space-y-1">
                                         {membersList?.map((member) => (

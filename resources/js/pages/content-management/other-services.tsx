@@ -69,7 +69,7 @@ const OtherServicesSection: React.FC = ({...props}: OtherServicesProps) => {
                         </div>
                         <div className="ml-2">
                             <h1 className="text-xl font-semibold text-gray-900">Other Services</h1>
-                            <p className="text-sm text-gray-500">Manage all content related to the "Other services" page and its sub-sections.</p>
+                            <p className="text-sm text-muted-foreground">Manage all content related to the "Other services" page and its sub-sections.</p>
                         </div>
                     </div>
                 </div>

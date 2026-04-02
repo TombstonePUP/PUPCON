@@ -105,8 +105,8 @@ export default function ProgramDialog({ ...props }: ProgramDialogProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">{type === 'edit' ? 'Edit Program' : 'Add New Program'}</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
+                    <DialogTitle className="text-lg font-medium text-foreground">{type === 'edit' ? 'Edit Program' : 'Add New Program'}</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">
                         {type === 'edit' ? 'Make changes to the program details below.' : 'Fill out the details below to add a new program.'}
                     </DialogDescription>
                 </DialogHeader>

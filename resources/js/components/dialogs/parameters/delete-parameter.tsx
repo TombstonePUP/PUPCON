@@ -32,8 +32,8 @@ export function DeleteParameter({ parameter, program, area_id, onClose }: Delete
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900 mb-5">Are you sure?</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">This action cannot be undone. This will permanently delete the Parameter</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-foreground mb-5">Are you sure?</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">This action cannot be undone. This will permanently delete the Parameter</DialogDescription>
                 </DialogHeader>
 
                 <div className="my-0 rounded-md border border-red-100 bg-red-50 p-4">

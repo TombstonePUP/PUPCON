@@ -68,7 +68,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({ open, onOpenChan
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className={`!max-w-none ${dialogSize} flex flex-col gap-0 bg-slate-50 p-0 [&>button]:hidden border-none`}>
-                <DialogHeader className="rounded-t-lg text-lg font-medium text-gray-900 bg-gradient-to-r from-[#7f1414] to-[#d9133a] text-white">
+                <DialogHeader className="rounded-t-lg text-lg font-medium text-foreground bg-gradient-to-r from-[#7f1414] to-[#d9133a] text-white">
                     <div className="flex items-center justify-between gap-0 p-4 pl-6">
                         <div>
                             <DialogTitle className="flex-1 truncate text-lg font-semibold">{title || 'Document Viewer'}</DialogTitle>

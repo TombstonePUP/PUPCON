@@ -395,7 +395,7 @@ export default function ArchiveComponent() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900 text-sm">Archived Documents</h3>
+                      <h3 className="font-medium text-foreground text-sm">Archived Documents</h3>
                       <p className="text-xs text-gray-500">Manage archived documents and files</p>
                     </div>
                     <Button variant="outline" size="sm" onClick={() => handleSelectAll(archivedItems.documents)}>
@@ -420,7 +420,7 @@ export default function ArchiveComponent() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
-                            <h4 className="font-medium text-gray-900 truncate text-sm">{doc.title}</h4>
+                            <h4 className="font-medium text-foreground truncate text-sm">{doc.title}</h4>
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                               <Button variant="outline" size="sm" className="h-6 w-6 p-0 bg-transparent">
                                 <Eye className="h-3 w-3" />
@@ -456,7 +456,7 @@ export default function ArchiveComponent() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900 text-sm">Archived Programs</h3>
+                      <h3 className="font-medium text-foreground text-sm">Archived Programs</h3>
                       <p className="text-xs text-gray-500">Manage archived academic programs</p>
                     </div>
                     <Button variant="outline" size="sm" onClick={() => handleSelectAll(archivedItems.programs)}>
@@ -481,7 +481,7 @@ export default function ArchiveComponent() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
-                            <h4 className="font-medium text-gray-900 truncate text-sm">{program.name}</h4>
+                            <h4 className="font-medium text-foreground truncate text-sm">{program.name}</h4>
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                               <Button variant="outline" size="sm" className="h-6 w-6 p-0 bg-transparent">
                                 <Eye className="h-3 w-3" />
@@ -513,7 +513,7 @@ export default function ArchiveComponent() {
               {activeTab === "exhibits" && (
                 <div className="text-center py-6">
                   <ImageIcon className="h-10 w-10 text-gray-400 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1 text-sm">Archived Exhibits</h3>
+                  <h3 className="font-medium text-foreground mb-1 text-sm">Archived Exhibits</h3>
                   <p className="text-gray-500 text-xs">{getItemCount("exhibits")} exhibits archived</p>
                 </div>
               )}
@@ -521,7 +521,7 @@ export default function ArchiveComponent() {
               {activeTab === "users" && (
                 <div className="text-center py-6">
                   <Users className="h-10 w-10 text-gray-400 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1 text-sm">Archived Users</h3>
+                  <h3 className="font-medium text-foreground mb-1 text-sm">Archived Users</h3>
                   <p className="text-gray-500 text-xs">{getItemCount("users")} users archived</p>
                 </div>
               )}
@@ -529,7 +529,7 @@ export default function ArchiveComponent() {
               {activeTab === "areas" && (
                 <div className="text-center py-6">
                   <Archive className="h-10 w-10 text-gray-400 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1 text-sm">Archived Areas</h3>
+                  <h3 className="font-medium text-foreground mb-1 text-sm">Archived Areas</h3>
                   <p className="text-gray-500 text-xs">{getItemCount("areas")} areas archived</p>
                 </div>
               )}
@@ -540,7 +540,7 @@ export default function ArchiveComponent() {
           <div className="bg-white border rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="font-medium text-gray-900 text-sm">Archive Settings</h3>
+                <h3 className="font-medium text-foreground text-sm">Archive Settings</h3>
                 <p className="text-xs text-gray-500">Configure retention and notification settings</p>
               </div>
               <Button variant="default" size="sm">
@@ -550,7 +550,7 @@ export default function ArchiveComponent() {
             <div className="grid grid-cols-2 gap-3">
               <div className="flex items-center justify-between p-2 border rounded-lg">
                 <div>
-                  <h4 className="font-medium text-gray-900 text-xs">Auto-delete after</h4>
+                  <h4 className="font-medium text-foreground text-xs">Auto-delete after</h4>
                   <p className="text-xs text-gray-500">Auto delete archived items</p>
                 </div>
                 <Select defaultValue="never">
@@ -567,7 +567,7 @@ export default function ArchiveComponent() {
               </div>
               <div className="flex items-center justify-between p-2 border rounded-lg">
                 <div>
-                  <h4 className="font-medium text-gray-900 text-xs">Email notifications</h4>
+                  <h4 className="font-medium text-foreground text-xs">Email notifications</h4>
                   <p className="text-xs text-gray-500">Notify on archive actions</p>
                 </div>
                 <input

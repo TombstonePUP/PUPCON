@@ -64,7 +64,7 @@ export default function Requests({ files }: DocumentRequests) {
                         </div>
                         <div className="ml-2">
                             <h1 className="text-xl font-semibold text-gray-900">Document Request</h1>
-                            <p className="text-sm text-gray-500">Manage all document request submissions.</p>
+                            <p className="text-sm text-muted-foreground">Manage all document request submissions.</p>
                         </div>
                     </div>
                 </div>

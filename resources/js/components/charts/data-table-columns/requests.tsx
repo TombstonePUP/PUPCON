@@ -126,7 +126,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                             )} */}
                         </div>
 
-                        <div className={`truncate text-sm text-gray-500 capitalize ${subjectPart === 'exhibits' ? 'hidden' : ''}`}>{subjectPart}</div>
+                        <div className={`truncate text-sm text-muted-foreground capitalize ${subjectPart === 'exhibits' ? 'hidden' : ''}`}>{subjectPart}</div>
 
                         {/* <div className="text-xs text-gray-400 mt-1 italic">
             {finalPathName}
@@ -214,7 +214,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                 }
 
                 return (
-                    <div className="text-center">
+                    <div>
                         <Badge className={`rounded-full px-3 py-0.5 text-xs font-medium capitalize hover:bg-gray-100 ${variantColor}`}>
                             {statusText}
                         </Badge>
@@ -250,8 +250,8 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle className="text-lg font-medium text-gray-900">Rejection Comments</DialogTitle>
-                                <DialogDescription className="text-sm text-gray-500">Comments for rejected document</DialogDescription>
+                                <DialogTitle className="text-lg font-medium text-foreground">Rejection Comments</DialogTitle>
+                                <DialogDescription className="text-sm text-muted-foreground">Comments for rejected document</DialogDescription>
                             </DialogHeader>
                             <div>
                                 <Textarea className="min-h-[100px] text-black" disabled autoResize>

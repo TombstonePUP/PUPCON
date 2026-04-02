@@ -220,10 +220,10 @@ const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
                         </div>
                     ) : (
                         <>
-                            <h4 className="mb-6 truncate text-lg font-medium text-gray-900">{selectedOrgType.type_name}</h4>
+                            <h4 className="mb-6 truncate text-lg font-medium text-foreground">{selectedOrgType.type_name}</h4>
                             <div className="max-h-[300px] space-y-3 overflow-y-auto pr-2">
                                 {!selectedOrgType?.organizations?.length ? (
-                                    <p className="text-sm text-gray-500 italic">No organizations added to this type yet.</p>
+                                    <p className="text-sm text-muted-foreground italic">No organizations added to this type yet.</p>
                                 ) : (
                                     selectedOrgType?.organizations?.map((org, orgIndex) => {
                                         const hasErrors =
@@ -239,7 +239,7 @@ const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
                                                 >
                                                     <div className="flex items-center gap-2">
                                                         <div>
-                                                            <span className="block text-sm font-medium text-gray-900">{org.organization_name}</span>
+                                                            <span className="block text-sm font-medium text-foreground">{org.organization_name}</span>
                                                             <span className="text-xs text-gray-500">{org.affiliation}</span>
                                                         </div>
 

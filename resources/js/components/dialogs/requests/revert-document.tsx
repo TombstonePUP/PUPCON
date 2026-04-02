@@ -52,8 +52,8 @@ export default function RevertRequest({ file, onClose }: RevertRequestProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Reset Status</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">Reset document status to pending</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-foreground">Reset Status</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">Reset document status to pending</DialogDescription>
                 </DialogHeader>
                 <div className="my-0 rounded-md border border-yellow-100 bg-yellow-50 p-4">
                     <p className="text-sm text-yellow-800">

@@ -598,7 +598,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
             {/* Page Counter */}
             {totalPages > 1 && (
               <p
-                className={`mt-4 text-center text-sm text-gray-500 transition-opacity delay-500 duration-500 ${isNewsPaginationInView ? 'opacity-100' : 'opacity-0'}`}
+                className={`mt-4 text-center text-sm text-muted-foreground transition-opacity delay-500 duration-500 ${isNewsPaginationInView ? 'opacity-100' : 'opacity-0'}`}
               >
                 Showing {newsPage * POSTS_PER_PAGE + 1} - {Math.min((newsPage + 1) * POSTS_PER_PAGE, newsCards.length)} of{' '}
                 {newsCards.length} posts

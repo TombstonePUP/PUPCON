@@ -14,7 +14,7 @@ const EmptyState = ({ title, description }: { title: string; description: string
     <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
         <Construction className="mb-4 h-16 w-16 text-gray-400" />
         <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="text-sm text-gray-500">{description}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
     </div>
 );
 
@@ -191,7 +191,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                         ))
                                     ) : (
                                         <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-center">
-                                            <p className="text-sm text-gray-500">No goals defined for this pillar yet.</p>
+                                            <p className="text-sm text-muted-foreground">No goals defined for this pillar yet.</p>
                                         </div>
                                     )}
                                 </div>

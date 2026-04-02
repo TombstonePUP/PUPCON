@@ -21,7 +21,7 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
     return [
         {
             accessorKey: 'name',
-            header: () => <div className="text-left font-medium">Name</div>,
+            header: () => <div className="text-left font-medium text-muted-foreground">Name</div>,
             cell: ({ row }) => {
                 const firstName = row.original.first_name;
                 const lastName = row.original.last_name;
@@ -29,14 +29,14 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
 
                 return (
                     <div className="flex items-center gap-3 py-1">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-600">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground shrink-0">
                             <User className="h-4 w-4" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="font-medium text-gray-900">
+                            <span className="font-medium text-foreground">
                                 {firstName} {lastName}
                             </span>
-                            <span className="text-sm text-gray-500">{email}</span>
+                            <span className="text-sm text-muted-foreground">{email}</span>
                         </div>
                     </div>
                 );
@@ -46,21 +46,18 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
         {
             accessorFn: (row) => row.roles?.role_name,
             accessorKey: 'role_name',
-            header: () => <div className="text-center font-medium">Role</div>,
+            header: () => <div className="font-medium text-muted-foreground">Role</div>,
             cell: ({ row }) => {
                 const roleName = row.getValue('role_name') as string;
 
                 return (
-                    <div className="text-center">
+                    <div>
                         {roleName ? (
-                            <Badge
-                                variant="secondary"
-                                className="rounded-md bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700 hover:bg-gray-200"
-                            >
+                            <Badge variant="secondary" className="rounded-md text-xs font-medium">
                                 {roleName}
                             </Badge>
                         ) : (
-                            <span className="text-sm text-gray-400 italic">Unassigned</span>
+                            <span className="text-sm text-muted-foreground italic">Unassigned</span>
                         )}
                     </div>
                 );
@@ -68,7 +65,7 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
         },
         {
             accessorKey: 'programs',
-            header: () => <div className="text-center font-medium">Programs</div>,
+            header: () => <div className="font-medium text-muted-foreground">Programs</div>,
             cell: ({ row }) => {
                 const role = row.original.roles?.role_name || '';
                 let programs =
@@ -82,29 +79,23 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
                         };
                     }) || [];
 
-                programs = programs.filter((program, index, self) => index === self.findIndex((p) => p.program_name === program.program_name));
+                programs = programs.filter(
+                    (program, index, self) => index === self.findIndex((p) => p.program_name === program.program_name),
+                );
 
                 const isFullPrivilege = role === 'Coordinator' || role === 'Admin';
 
                 return (
-                    <div className="flex w-full flex-wrap items-center justify-center gap-1.5 text-center">
+                    <div className="flex w-full flex-wrap gap-1.5">
                         {programs.length > 0 ? (
                             programs.map((program) => (
-                                <Badge
-                                    key={program.program_name}
-                                    variant="secondary"
-                                    className={`rounded-md bg-gray-100 px-5 py-0.5 text-xs font-medium text-gray-700 hover:bg-gray-200 ${program.color}`}
-                                    style={{
-                                        // borderColor: program.color,
-                                        // backgroundColor: `${program.color}/15`,
-                                    }}
-                                >
-                                    <Circle className={`h-0.5 w-0.5 bg-${program.color}-500 rounded-full`} strokeWidth={0} />
+                                <Badge key={program.program_name} variant="secondary" className="rounded-md text-xs font-medium gap-1.5">
+                                    <Circle className="h-2 w-2 fill-current" />
                                     {program.program_name}
                                 </Badge>
                             ))
                         ) : (
-                            <span className="w-full text-center text-sm text-gray-400">{isFullPrivilege ? 'All Programs' : 'None'}</span>
+                            <span className="text-sm text-muted-foreground">{isFullPrivilege ? 'All Programs' : 'None'}</span>
                         )}
                     </div>
                 );
@@ -112,7 +103,7 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
         },
         {
             accessorKey: 'areas',
-            header: () => <div className="text-center font-medium">Areas</div>,
+            header: () => <div className="text-center font-medium text-muted-foreground">Areas</div>,
             cell: ({ row }) => {
                 const areas = row.original.areas || [];
                 const role = row.original.roles?.role_name || '';
@@ -122,18 +113,13 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
                     <div className="flex w-full min-w-3xs flex-wrap justify-center gap-2">
                         {areas.length > 0 ? (
                             areas.map((area, idx) => (
-                                <Badge
-                                    key={idx}
-                                    variant="outline"
-                                    className="items-center bg-gray-100 rounded-md border-none px-5 py-0.5 text-xs font-medium text-gray-700 hover:bg-gray-200"
-                                >
-                                    <Circle className={`h-0.5 w-0.5 bg-${area?.levels.programs.color}-500 rounded-full`} strokeWidth={0} />
-
+                                <Badge key={idx} variant="outline" className="rounded-md text-xs font-medium gap-1.5">
+                                    <Circle className="h-2 w-2 fill-current" />
                                     Area {area.area_number}
                                 </Badge>
                             ))
                         ) : (
-                            <span className="text-sm text-gray-400">{isFullPrivilege ? 'All Areas' : 'None'}</span>
+                            <span className="text-sm text-muted-foreground">{isFullPrivilege ? 'All Areas' : 'None'}</span>
                         )}
                     </div>
                 );
@@ -141,7 +127,7 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
         },
         {
             id: 'actions',
-            header: () => <div className="text-right font-medium">Actions</div>,
+            header: () => <div className="text-right font-medium text-muted-foreground">Actions</div>,
             cell: ({ row }) => (
                 <div className="flex justify-end">
                     <UserTableActions user={row.original} resolveDialog={resolveDialog} />

@@ -33,8 +33,8 @@ export default function DeleteAreaDialog({ area, program, level, onClose }: Dele
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Archive Area</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
+                    <DialogTitle className="text-lg font-medium text-foreground">Archive Area</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">
                         This action will permanently archive the selected area. This action cannot be undone.
                     </DialogDescription>
                 </DialogHeader>

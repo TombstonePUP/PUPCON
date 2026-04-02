@@ -152,7 +152,7 @@ export default function ServicesSection({...props}: OtherServicesSectionProps) {
                                 </div>
                                 {/* <div>
                                     <h5 className="mb-1 text-sm font-semibold text-gray-700">Icon Name</h5>
-                                    <p className="font-mono text-sm text-gray-500">{selectedService.icon_name || 'Not set'}</p>
+                                    <p className="font-mono text-sm text-muted-foreground">{selectedService.icon_name || 'Not set'}</p>
                                 </div> */}
                             </div>
                         )}

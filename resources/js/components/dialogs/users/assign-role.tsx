@@ -88,15 +88,15 @@ export function AssignRole({ user, programRoles, roles, onClose }: AssignRoleDia
             <DialogContent className="sm:max-w-xl">
                 <form onSubmit={assignUserRole} className="space-y-8">
                     <DialogHeader className="mb-4">
-                        <DialogTitle className="text-lg font-medium text-gray-900">Edit & Change Roles</DialogTitle>
-                        <DialogDescription className="text-sm text-gray-500">
+                        <DialogTitle className="text-lg font-medium text-foreground">Edit & Change Roles</DialogTitle>
+                        <DialogDescription className="text-sm text-muted-foreground">
                             Change roles assigned to the user
                         </DialogDescription>
                     </DialogHeader>
 
                     {/* Assign Role */}
                     <div>
-                        <Label className="text-base font-medium text-gray-900">
+                        <Label className="text-base font-medium text-foreground">
                             Assign Role <span className="text-red-500">*</span>
                         </Label>
 
@@ -128,7 +128,7 @@ export function AssignRole({ user, programRoles, roles, onClose }: AssignRoleDia
                     {(data.assigned_role === roles.find((r) => r.role_name === 'Chairman')?.role_id ||
                         data.assigned_role === roles.find((r) => r.role_name === 'Accreditor')?.role_id) && (
                             <div className="bg-secondary/10 rounded-lg border p-6">
-                                <Label className="text-base font-medium text-gray-900">
+                                <Label className="text-base font-medium text-foreground">
                                     Assign Programs & Areas <span className="text-red-500">*</span>
                                 </Label>
 
@@ -189,7 +189,7 @@ export function AssignRole({ user, programRoles, roles, onClose }: AssignRoleDia
                                                                     );
                                                                 })
                                                             ) : (
-                                                                <p className="col-span-3 text-sm text-gray-500 italic">
+                                                                <p className="col-span-3 text-sm text-muted-foreground italic">
                                                                     No areas available for this program.
                                                                 </p>
                                                             )}

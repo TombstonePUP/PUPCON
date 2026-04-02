@@ -42,8 +42,8 @@ export function DeleteAreaFormFile({ form, program, area_id, onClose }: DeleteAr
             <DialogContent>
                 <DialogHeader className="flex flex-row items-start text-left">
                     <div className="">
-                        <DialogTitle className="text-lg font-medium text-gray-900">Delete Document</DialogTitle>
-                        <DialogDescription className="text-sm text-gray-500">Are you sure you want to delete this document?</DialogDescription>
+                        <DialogTitle className="text-lg font-medium text-foreground">Delete Document</DialogTitle>
+                        <DialogDescription className="text-sm text-muted-foreground">Are you sure you want to delete this document?</DialogDescription>
                     </div>
                 </DialogHeader>
 

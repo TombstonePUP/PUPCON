@@ -193,7 +193,7 @@ export default function Programs({ program }: ProgramProps) {
                                     <span className="mx-1">in</span>
                                     <span className="capitalize">{program.program_name}</span>
                                 </h1>
-                                <p className="text-sm text-gray-500">Manage program information, objectives, and assessment areas</p>
+                                <p className="text-sm text-muted-foreground">Manage program information, objectives, and assessment areas</p>
                             </div>
                         </div>
                     </div>
@@ -290,7 +290,7 @@ export default function Programs({ program }: ProgramProps) {
                                                             <h4 className="text-base font-semibold text-gray-600">Area {item.area_numeral}</h4>
 
                                                             <div className="flex items-start justify-between">
-                                                                <p className="mt-1 text-sm text-gray-500">{item.area_name}</p>
+                                                                <p className="mt-1 text-sm text-muted-foreground">{item.area_name}</p>
                                                                 <Badge variant="outline" className="border-0 bg-gray-100 text-gray-700">
                                                                     Not Assigned
                                                                 </Badge>
@@ -359,7 +359,7 @@ export default function Programs({ program }: ProgramProps) {
                                     ) : (
                                         <div className="col-span-1 md:col-span-2">
                                             <div className="flex min-h-[120px] items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6">
-                                                <p className="text-center text-sm text-gray-500">No areas added yet for this level.</p>
+                                                <p className="text-center text-sm text-muted-foreground">No areas added yet for this level.</p>
                                             </div>
                                         </div>
                                     )}

@@ -340,7 +340,7 @@ export default function Ratings() {
                         </div>
                         <div className="ml-2">
                             <h1 className="text-xl font-semibold text-gray-900">Results & Ratings</h1>
-                            <p className="text-sm text-gray-500">View all program results and ratings</p>
+                            <p className="text-sm text-muted-foreground">View all program results and ratings</p>
                         </div>
                     </div>
                 </div>

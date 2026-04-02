@@ -76,7 +76,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                                 </div>
                                 <div className="ml-2">
                                     <h1 className="text-xl font-semibold text-gray-900">{area.area_name}</h1>
-                                    <p className="text-sm text-gray-500 capitalize">{program.program_name}</p>
+                                    <p className="text-sm text-muted-foreground capitalize">{program.program_name}</p>
                                 </div>
                             </div>
                             {area.archive &&

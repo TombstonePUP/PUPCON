@@ -54,7 +54,7 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                             </div>
                             <div className="ml-2">
                                 <h1 className="text-xl font-semibold text-gray-900">Exhibits</h1>
-                                <p className="text-sm text-gray-500">Manage all content related to the Exhibit page and its documents.</p>
+                                <p className="text-sm text-muted-foreground">Manage all content related to the Exhibit page and its documents.</p>
                             </div>
                         </div>
                     </div>
@@ -103,7 +103,7 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
 
                                                 <div className="flex min-w-0 flex-1 flex-col">
                                                     <h3 className="truncate text-base font-semibold text-gray-900">{exhibit.exhibit_name}</h3>
-                                                    <div className="flex items-center text-sm text-gray-500">
+                                                    <div className="flex items-center text-sm text-muted-foreground">
                                                         <Folder className="h-4 w-4 shrink-0" />
                                                         <span className="ml-2 truncate text-xs text-gray-400">
                                                             {//exhibit.exhibit_outlines?.length || 0
@@ -182,7 +182,7 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
                                 <FolderOpen className="mb-4 h-16 w-16 text-gray-400" />
 
                                 <h3 className="mb-2 text-lg font-semibold text-gray-900">No Exhibits Found</h3>
-                                <p className="text-sm text-gray-500">There are no exhibits yet. Create your first exhibit to get started.</p>
+                                <p className="text-sm text-muted-foreground">There are no exhibits yet. Create your first exhibit to get started.</p>
 
                                 <Button
                                     variant="noborder"

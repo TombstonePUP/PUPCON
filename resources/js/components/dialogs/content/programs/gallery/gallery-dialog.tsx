@@ -73,7 +73,7 @@ export default function GalleryDialog({ type, onClose, onSave, gallery }: Galler
                                     </div>
                                     <div className="mt-4 text-center">
                                         <p className="mb-1 text-lg font-semibold text-gray-700">Upload Image</p>
-                                        <p className="text-sm text-gray-500">PNG, JPG up to 5MB</p>
+                                        <p className="text-sm text-muted-foreground">PNG, JPG up to 5MB</p>
                                     </div>
                                     <div className="mt-2 flex gap-2">
                                         <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-400">PNG</span>

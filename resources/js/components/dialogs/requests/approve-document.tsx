@@ -51,8 +51,8 @@ export default function ApproveRequest({ file, onClose }: ApproveRequestProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Approve Document</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
+                    <DialogTitle className="text-lg font-medium text-foreground">Approve Document</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">
                         Confirm approval of {file.length === 1 ? 'this document' : `${file.length} documents`}
                     </DialogDescription>
                 </DialogHeader>

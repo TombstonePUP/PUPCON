@@ -65,8 +65,8 @@ export function EditParameter({ parameter, program, area_id, onClose }: EditPara
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Edit Parameter</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
+                    <DialogTitle className="text-lg font-medium text-foreground">Edit Parameter</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">
                         {parameter.parameter_name != ' '
                             ? `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
                             : parameter.parameter_name}

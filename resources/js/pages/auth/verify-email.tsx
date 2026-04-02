@@ -82,7 +82,7 @@ export default function VerifyEmail() {
 
                 {/* Secondary actions */}
                 <div className="mt-4 flex flex-row-center justify-center space-between gap-4">
-                    <TextLink href={route('logout')} method="post" className="block text-sm text-gray-500 hover:underline">
+                    <TextLink href={route('logout')} method="post" className="block text-sm text-muted-foreground hover:underline">
                         Log out
                     </TextLink>
 

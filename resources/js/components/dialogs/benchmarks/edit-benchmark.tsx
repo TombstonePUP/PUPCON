@@ -65,8 +65,8 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Edit Benchmark</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">
+                    <DialogTitle className="text-lg font-medium text-foreground">Edit Benchmark</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">
                         {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                     </DialogDescription>
                 </DialogHeader>

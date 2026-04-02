@@ -374,7 +374,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                                 </div>
                                                 <div className="mt-4 text-center">
                                                     <p className="mb-1 text-lg font-semibold text-gray-700">Upload Welcome Banner</p>
-                                                    <p className="text-sm text-gray-500">PNG, JPG up to 5MB</p>
+                                                    <p className="text-sm text-muted-foreground">PNG, JPG up to 5MB</p>
                                                 </div>
                                                 <div className="mt-2 flex gap-2">
                                                     <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-400">PNG</span>
@@ -472,7 +472,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                 <div className="max-h-[250px] space-y-1 overflow-y-auto">
                                     {objectives?.length === 0 ? (
                                         <div className="flex h-[100px] items-center justify-center">
-                                            <p className="text-center text-sm text-gray-500">No objectives added.</p>
+                                            <p className="text-center text-sm text-muted-foreground">No objectives added.</p>
                                         </div>
                                     ) : (
                                         objectives?.map((objective, index) => (
@@ -572,7 +572,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                                 <div className="max-h-[250px] space-y-1 overflow-y-auto">
                                     {galleryItems?.length === 0 ? (
                                         <div className="flex h-[100px] items-center justify-center">
-                                            <p className="text-center text-sm text-gray-500">No images added.</p>
+                                            <p className="text-center text-sm text-muted-foreground">No images added.</p>
                                         </div>
                                     ) : (
                                         galleryItems?.map((item, index) => (

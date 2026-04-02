@@ -41,7 +41,7 @@ export function DeleteBenchmark({ outline, program, area_id, onClose }: DeleteBe
             <DialogContent>
                 <DialogHeader className="flex flex-row items-start text-left">
                     <div className="">
-                        <DialogTitle className="text-lg font-medium text-gray-900">Delete Benchmark</DialogTitle>
+                        <DialogTitle className="text-lg font-medium text-foreground">Delete Benchmark</DialogTitle>
                         <DialogDescription>Are you sure you want to delete this benchmark?</DialogDescription>
                     </div>
                 </DialogHeader>

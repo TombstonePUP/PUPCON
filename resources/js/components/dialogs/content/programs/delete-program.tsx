@@ -44,8 +44,8 @@ export default function DeleteProgram({ program, onClose }: DeleteProgramProps) 
             <DialogContent className="sm:max-w-md">
                 <form onSubmit={handleDelete} className='flex flex-col gap-4'>
                     <DialogHeader>
-                        <DialogTitle className="text-lg font-medium text-gray-900">Archive Program</DialogTitle>
-                        <DialogDescription className="text-sm text-gray-500">
+                        <DialogTitle className="text-lg font-medium text-foreground">Archive Program</DialogTitle>
+                        <DialogDescription className="text-sm text-muted-foreground">
                             This action will permanently archive the selected program. This action cannot be undone.
                         </DialogDescription>
 

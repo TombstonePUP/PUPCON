@@ -37,10 +37,10 @@ export function RenderAreaFormDialog({ type, forms, form, categories, program, a
                     <DialogContent>
                         <DialogHeader className="flex flex-row items-start text-left">
                             <div>
-                                <DialogTitle className="text-lg font-medium text-gray-900">
+                                <DialogTitle className="text-lg font-medium text-foreground">
                                     No Document Available
                                 </DialogTitle>
-                                <DialogDescription className="text-sm text-gray-500">
+                                <DialogDescription className="text-sm text-muted-foreground">
                                     {form?.area_form_category?.category_name}
                                 </DialogDescription>
                             </div>

@@ -73,8 +73,8 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-gray-900">Start a survey</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">Start a new accreditation level for an existing program.</DialogDescription>
+                    <DialogTitle className="text-lg font-medium text-foreground">Start a survey</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">Start a new accreditation level for an existing program.</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div className="space-y-2">
@@ -102,7 +102,7 @@ export default function ProgramLevelDialog({ programs, onClose, selected_program
                                         </SelectItem>
                                     ))
                                 ) : (
-                                    <div className="py-2 pl-4 text-sm text-gray-500">No programs available</div>
+                                    <div className="py-2 pl-4 text-sm text-muted-foreground">No programs available</div>
                                 )}
                             </SelectContent>
                         </Select>

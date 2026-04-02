@@ -18,7 +18,7 @@ export default function Programs({ programs }: ProgramsProps) {
     <div className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-16 text-center">
       <Construction className="mb-6 h-16 w-16 text-gray-400" />
       <h3 className="mb-2 text-xl font-semibold text-gray-900">{title}</h3>
-      <p className="max-w-md text-sm text-gray-500">{description}</p>
+      <p className="max-w-md text-sm text-muted-foreground">{description}</p>
     </div>
   );
 

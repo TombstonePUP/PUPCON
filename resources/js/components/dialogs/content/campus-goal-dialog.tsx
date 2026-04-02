@@ -32,10 +32,10 @@ export default function CampusGoalDialog({ ...props }: CampusGoalDialogProps) {
             <Dialog open={true} onOpenChange={onClose}>
                 <DialogContent className="sm:max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle className="text-lg font-medium text-gray-900">
+                        <DialogTitle className="text-lg font-medium text-foreground">
                             {type === 'edit' ? 'Edit Campus Goal' : 'Add Campus Goal'}
                         </DialogTitle>
-                        <DialogDescription className="text-sm text-gray-500">
+                        <DialogDescription className="text-sm text-muted-foreground">
                             {type === 'edit'
                                 ? 'Make changes to the campus goal details below.'
                                 : 'Fill out the details below to add a new campus goal.'}
