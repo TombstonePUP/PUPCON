@@ -197,9 +197,9 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                             </h3>
 
                             <div className="space-y-2">
-                                <Label>
+                                {/* <Label>
                                     Assign Role <span className="text-red-500">*</span>
-                                </Label>
+                                </Label> */}
                                 <RadioGroup
                                     onValueChange={(value) =>
                                         setData('assigned_role', Number(value))
@@ -236,10 +236,10 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                             {/* ── Programs & Areas (conditional) ── */}
                             {showProgramAreas && (
                                 <div className="rounded-lg border bg-secondary/10 p-4 space-y-3">
-                                    <Label>
+                                    {/* <Label>
                                         Assign Programs &amp; Areas{' '}
                                         <span className="text-red-500">*</span>
-                                    </Label>
+                                    </Label> */}
 
                                     <div className="max-h-56 overflow-y-auto space-y-4 pr-1">
                                         {programRoles.map((program) => {
