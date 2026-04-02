@@ -193,7 +193,7 @@ export function DocumentsAnalytics({
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-2 gap-4">
 
       {/* 1 ─ Upload Frequency (area) — spans full width on xl, 2 cols on md */}
       <div className="md:col-span-2 xl:col-span-1">
@@ -321,7 +321,7 @@ export function DocumentsAnalytics({
       </AnalyticsCard>
 
       {/* 3 ─ Document Approval Status (horizontal bar) */}
-      <AnalyticsCard
+      {/* <AnalyticsCard
         title="Document Approval Status"
         description="Overall document approval, pending, and rejections"
         contentClassName="px-2 py-4 sm:px-6 sm:py-6"
@@ -354,7 +354,6 @@ export function DocumentsAnalytics({
                 cursor={false}
                 content={<ChartTooltipContent hideLabel indicator="line" />}
               />
-              {/* <ChartLegend content={<ChartLegendContent />} /> */}
               <Bar dataKey="documents" layout="vertical" radius={5}>
                 {documentStatistics.map((entry) => (
                   <Cell
@@ -366,7 +365,7 @@ export function DocumentsAnalytics({
             </BarChart>
           </ChartContainer>
         )}
-      </AnalyticsCard>
+      </AnalyticsCard> */}
 
     </div>
   );
