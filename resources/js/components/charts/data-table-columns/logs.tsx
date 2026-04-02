@@ -54,17 +54,19 @@ export const columns: ColumnDef<ActivityLogs>[] = [
     cell: ({ row }) => {
       const status = row.getValue('activity') as string;
 
-      const variantMap: Record<string, string> = {
-        Upload: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
-        Revert: 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800',
-        Reject: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
+      const variantMap: Record<string, 'success' | 'warning' | 'destructive' | 'secondary'> = {
+        upload: 'success',
+        approve: 'success',
+        revert: 'warning',
+        update: 'warning',
+        reject: 'destructive',
       };
 
-      const variantColor = variantMap[status] ?? 'bg-muted text-muted-foreground border-border';
+      const variant = variantMap[status?.toLowerCase()] ?? 'secondary';
 
       return (
         <div className="flex justify-center">
-          <Badge className={`rounded-full px-3 py-0.5 text-xs font-medium capitalize border ${variantColor}`}>
+          <Badge variant={variant} className="rounded-full px-3 py-0.5 capitalize">
             {status}
           </Badge>
         </div>

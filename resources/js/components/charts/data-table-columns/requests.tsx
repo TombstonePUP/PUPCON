@@ -29,6 +29,16 @@ interface DocumentRecordProps {
   resolveDialog: ({ type, file }: DialogProps) => void;
 }
 
+const getAcronym = (text: string) => {
+  const ignore = ['of', 'and', 'the', 'in'];
+  return text
+    .split(' ')
+    .filter(word => !ignore.includes(word.toLowerCase()))
+    .map(word => word[0])
+    .join('')
+    .toUpperCase();
+};
+
 export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): ColumnDef<FilesOverview>[] {
   return [
     {
@@ -58,16 +68,13 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
     {
       accessorKey: 'file_type',
       header: ({ column }) => (
-        <div className="flex items-center">
-          <div className="text-muted-foreground">Benchmark Type</div>
-          <Button
-            className="ml-2 text-left"
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          >
-            <ArrowUpDown className="h-4" />
-          </Button>
-        </div>
+        <Button
+          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          <div>Benchmark Type</div>
+          <ArrowUpDown className="h-4" />
+        </Button>
       ),
       cell: ({ row }) => {
         usePoll(5000);
@@ -122,16 +129,16 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
         }
 
         return (
-          <div className="w-xs text-left">
+          <div className="text-left ml-4">
             <div className="mb-0 flex items-center justify-between text-sm">
               <div className="font-md mr-2 grow truncate capitalize text-foreground">
                 {segmentPart === 'N/A' ? subjectPart : segmentPart}
               </div>
             </div>
             <div
-              className={`truncate text-sm capitalize text-muted-foreground ${subjectPart === 'exhibits' ? 'hidden' : ''}`}
+              className={`truncate text-xs text-muted-foreground ${subjectPart === 'exhibits' ? 'hidden' : ''}`}
             >
-              {subjectPart}
+              {getAcronym(subjectPart)}
             </div>
           </div>
         );
@@ -141,16 +148,14 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
     {
       accessorKey: 'outline',
       header: ({ column }) => (
-        <div className="flex items-center">
-          <div className="text-muted-foreground">Benchmark Name</div>
-          <Button
-            className="ml-2 text-left"
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          >
-            <ArrowUpDown className="h-4" />
-          </Button>
-        </div>
+        <Button
+          className="ml-2 text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          <div>Benchmark Name</div>
+          <ArrowUpDown className="h-4" />
+        </Button>
       ),
       cell: ({ row }) => {
         const [dialogOpen, setDialogOpen] = useState(false);
@@ -168,7 +173,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
 
         return (
           <>
-            <div className="text-left">
+            <div className="text-left ml-6">
               <div
                 onClick={() => setDialogOpen(true)}
                 className="max-w-sm cursor-pointer truncate text-foreground underline transition-colors hover:text-primary"
@@ -189,36 +194,23 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
     },
     {
       accessorKey: 'file_status',
-      header: () => <div className="text-center text-muted-foreground">Status</div>,
+      header: () => <div className="text-muted-foreground">Status</div>,
       cell: ({ row }) => {
         const status = row.getValue('file_status') as string;
-        let variantColor: string;
-        let statusText = status;
 
-        switch (status.toLowerCase()) {
-          case 'approved':
-            variantColor =
-              'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800';
-            break;
-          case 'pending':
-          case 'in review':
-            variantColor =
-              'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800';
-            break;
-          case 'rejected':
-            variantColor =
-              'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800';
-            break;
-          default:
-            variantColor = 'bg-muted text-muted-foreground border-border';
-            statusText = 'Unknown';
-        }
+        const variantMap: Record<string, 'success' | 'warning' | 'destructive' | 'secondary'> = {
+          approved: 'success',
+          pending: 'warning',
+          'in review': 'warning',
+          rejected: 'destructive',
+        };
+
+        const variant = variantMap[status?.toLowerCase()] ?? 'secondary';
+        const statusText = variant === 'secondary' ? 'Unknown' : status;
 
         return (
           <div>
-            <Badge
-              className={`rounded-full px-3 py-0.5 text-xs font-medium capitalize hover:opacity-80 ${variantColor}`}
-            >
+            <Badge variant={variant} className="rounded-full px-3 py-0.5 capitalize">
               {statusText}
             </Badge>
           </div>
@@ -293,13 +285,13 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
     {
       accessorKey: 'uploaded_at',
       header: ({ column }) => (
-        <div className="flex items-center">
-          <div className="text-muted-foreground">Date Uploaded</div>
+        <div>
           <Button
-            className="ml-2 text-left"
+            className="ml-2 text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
+            <div>Date Uploaded</div>
             <ArrowUpDown className="h-4" />
           </Button>
         </div>
@@ -313,7 +305,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
           hour: '2-digit',
           minute: '2-digit',
         });
-        return <div className="text-left text-muted-foreground">{formattedDate}</div>;
+        return <div className="text-left ml-6">{formattedDate}</div>;
       },
       enableGlobalFilter: false,
     },
