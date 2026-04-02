@@ -102,17 +102,13 @@ function TimeFilter({
 }
 
 function filterByRange(data: FrequencyUploads[], range: string): FrequencyUploads[] {
-  const days =
-    range === "3d" ? 3 :
-      range === "7d" ? 7 :
-        range === "30d" ? 30 :
-          90;
+    const days = range === "3d" ? 3 : range === "7d" ? 7 : 30;
 
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - days);
-  cutoff.setHours(0, 0, 0, 0);
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
+    cutoff.setHours(0, 0, 0, 0);
 
-  return data.filter((item) => new Date(item.activity_date) >= cutoff);
+    return data.filter((item) => new Date(item.activity_date) >= cutoff);
 }
 
 // ---------------------------------------------------------------------------
@@ -168,7 +164,7 @@ export function DocumentsAnalytics({
   documentStatistics,
   loading,
 }: DocumentsAnalyticsProps) {
-  const [timeRange, setTimeRange] = useState("90d");
+  const [timeRange, setTimeRange] = useState("7d");
 
   // --- Area chart data ---
   const filteredFrequency = useMemo(
@@ -203,13 +199,9 @@ export function DocumentsAnalytics({
       <div className="md:col-span-2 xl:col-span-1">
         <AnalyticsCard
           title="Document Activity Trend"
-          description={`Overall upload frequency — last ${timeRange === "3d"
-              ? "3 days"
-              : timeRange === "7d"
-                ? "7 days"
-                : timeRange === "30d"
-                  ? "30 days"
-                  : "3 months"
+          description={`Overall upload frequency — last ${timeRange === "3d" ? "3 days" :
+              timeRange === "7d" ? "7 days" :
+                "30 days"
             }`}
           filter={<TimeFilter value={timeRange} onChange={setTimeRange} />}
           contentClassName="px-2 py-4 sm:px-6 sm:py-6"

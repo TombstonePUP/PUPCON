@@ -1,45 +1,97 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-
-// charts components
 import { DataTable } from '@/components/charts/data-table';
 import GuideTour from "@/pages/test/GuideTour";
 import { type ActivityLogs, type DocumentStatistics, type FrequencyUploads, type OverallUploads } from '@/types/dashboard';
 import { columns } from '@/components/charts/data-table-columns/logs';
-import { ChartArea, File, FileIcon, User2, User2Icon } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DocumentsAnalytics } from '@/components/charts/document-analyst';
-import { documentDummyStatistics, frequencyDummyUploads, overallDummyUploads } from '@/data/dummy-data';
+import { activityDummyLogs, documentDummyStatistics, frequencyDummyUploads, overallDummyUploads } from '@/data/dummy-data';
+import { FileCheck2, FileClock, FileX2, Users } from 'lucide-react';
 
-// interface DashboardProps {
-//   activityLogs: ActivityLogs[];
-//   frequencyUploads: FrequencyUploads[];
-//   documentStatistics: DocumentStatistics[];
-//   overallUploads: OverallUploads[];
-// }
+const USE_DUMMY = true; // ← toggle this
+
+interface DashboardProps {
+  activityLogs: ActivityLogs[];
+  frequencyUploads: FrequencyUploads[];
+  documentStatistics: DocumentStatistics[];
+  overallUploads: OverallUploads[];
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
-  {
-    title: 'Analytics',
-    href: '/dashboard',
-  },
+  { title: 'Analytics', href: '/dashboard' },
 ];
 
 export default function Dashboard({ frequencyUploads, documentStatistics, overallUploads, activityLogs }: DashboardProps) {
-  console.log('activityLogs:', activityLogs);
+
+  const activeFrequency = USE_DUMMY ? frequencyDummyUploads : frequencyUploads;
+  const activeStatistics = USE_DUMMY ? documentDummyStatistics : documentStatistics;
+  const activeUploads = USE_DUMMY ? overallDummyUploads : overallUploads;
+  const activeLogs = USE_DUMMY ? activityDummyLogs : activityLogs;
+
+  const approved = activeStatistics.find(d => d.file_status === 'Approved')?.documents ?? 0;
+  const pending = activeStatistics.find(d => d.file_status === 'Pending')?.documents ?? 0;
+  const rejected = activeStatistics.find(d => d.file_status === 'Rejected')?.documents ?? 0;
+  const totalUsers = activeLogs.filter(l => l.type === 'Users').length;
+
+  const statConfig = [
+    {
+      label: 'Approved Documents',
+      value: approved,
+      desc: 'Total documents approved',
+      icon: FileCheck2,
+      iconClass: 'text-green-600 dark:text-green-400',
+    },
+    {
+      label: 'Pending Documents',
+      value: pending,
+      desc: 'Awaiting review or approval',
+      icon: FileClock,
+      iconClass: 'text-yellow-600 dark:text-yellow-400',
+    },
+    {
+      label: 'Rejected Documents',
+      value: rejected,
+      desc: 'Documents that were rejected',
+      icon: FileX2,
+      iconClass: 'text-destructive',
+    },
+    {
+      label: 'User Activities',
+      value: totalUsers,
+      desc: 'User-related activity logs',
+      icon: Users,
+      iconClass: 'text-muted-foreground',
+    },
+  ];
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Dashboard" />
       <div className="flex flex-1 flex-col gap-4 rounded-xl p-6">
+        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+          {statConfig.map(({ label, icon: Icon, value, desc, iconClass }) => (
+            <Card key={label}>
+              <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b rounded-t-lg">
+                <CardTitle className="text-sm text-foreground">{label}</CardTitle>
+                <Icon className={`size-12 absolute -bottom-6 right-6 bg-muted/50 rounded-full p-3 border backdrop-blur-lg ${iconClass}`} />
+              </CardHeader>
+              <CardContent className="pt-3">
+                <div className="text-2xl font-bold">{value}</div>
+                <p className="text-xs text-muted-foreground">{desc}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
         <DocumentsAnalytics
-          frequencyUploads={frequencyDummyUploads}
-          overallUploads={overallDummyUploads}
-          documentStatistics={documentDummyStatistics}
+          frequencyUploads={activeFrequency}
+          overallUploads={activeUploads}
+          documentStatistics={activeStatistics}
         />
         <GuideTour />
-        <div id='stat-table' >
-          <DataTable columns={columns} data={activityLogs} />
+        <div id="stat-table">
+          <DataTable columns={columns} data={activeLogs} />
         </div>
       </div>
     </AppLayout>
