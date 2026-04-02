@@ -1,5 +1,5 @@
 import { UsersDataTable } from '@/components/charts/data-table';
-import { getUserColumns } from '@/components/charts/data-table-columns/users';
+import { getUserColumns, getUserFilterOptions } from '@/components/charts/data-table-columns/users';
 import { RenderUserDialog } from '@/components/dialogs/users/user-dialog-renderer';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
@@ -36,11 +36,13 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
     user?: UserRecords;
   }>({ type: null });
 
-  const columns = getUserColumns({
-    programRoles,
-    roles,
-    resolveDialog: ({ type, user }: DialogProps) => openDialog(type, user),
-  });
+  const resolveDialog = ({ type, user }: DialogProps) => {
+    setDialog({ type, user });
+  };
+
+  const columns = getUserColumns({ programRoles, roles, resolveDialog });
+  const { roleOptions, programOptions } = getUserFilterOptions(roles, programRoles);
+
 
   const openDialog = (type: 'add' | 'assign' | 'disable' | 'enable', user?: UserRecords) => {
     setDialog({ type, user });
@@ -50,8 +52,8 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
     setDialog({ type: null });
   };
 
-  return (
 
+  return (
     <>
       <GuideTour />
       <AppLayout breadcrumbs={breadcrumbs}>
@@ -59,15 +61,10 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
         <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
           {/* Header Section */}
           <div className="flex gap-6">
-            <div className="flex-1">
-              <PageTitle
-                title="User Management"
-                description="Manage all user related information and access rights."
-              />
-            </div>
-
-            <div className="w-64 shrink-0 sticky top-6 space-y-4">
-              <ActionCard title="Management Actions">
+            <PageTitle
+              title="User Management"
+              description="Manage all user related information and access rights."
+              actions={
                 <Button
                   onClick={() => openDialog('add')}
                   className="w-full flex items-center gap-2 bg-[#7f1414] text-white hover:bg-[#7f1414]/90"
@@ -75,12 +72,17 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                   <User2 className="h-4 w-4" />
                   Add User
                 </Button>
-              </ActionCard>
-            </div>
+              }
+            />
           </div>
 
           <div id='user-table'>
-            <UsersDataTable columns={columns} data={userRecords} />
+            <UsersDataTable
+              columns={columns}
+              data={userRecords}
+              roleOptions={roleOptions}
+              programOptions={programOptions}
+            />
           </div>
         </div>
         <RenderUserDialog type={dialog.type} user={dialog.user} program={programRoles} roles={roles} onClose={closeDialog} />

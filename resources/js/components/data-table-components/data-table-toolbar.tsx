@@ -39,7 +39,7 @@ export function DataTableToolbar<TData>({
 
   return (
 
-    <div className="flex items-center justify-between gap-2 mb-2">
+    <div className="flex items-center justify-between gap-2 mb-2 w-full">
       <div className="flex gap-y-2 sm:flex-row sm:items-center sm:space-x-2 py-2">
         {searchKey ? (
           <Input

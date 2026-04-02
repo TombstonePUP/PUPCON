@@ -8,50 +8,52 @@ import { AssignablePrograms, AssignableRoles, UserRecords } from "@/types/user-m
 
 
 interface UserDialogProps {
-    type: "add" | "assign" | "disable" | "enable" | null
-    user?: UserRecords;
-    program?: AssignablePrograms[];
-    roles?: AssignableRoles[];
-    onClose: () => void;
+  type: "add" | "assign" | "disable" | "enable" | null
+  user?: UserRecords;
+  program?: AssignablePrograms[];
+  roles?: AssignableRoles[];
+  onClose: () => void;
 }
 
 export function RenderUserDialog({ type, user, program, roles, onClose }: UserDialogProps) {
-    switch(type) {
-        case 'add':
-            return (
-                <AddUser
-                    programRoles={program}
-                    roles={roles}
-                    onClose={onClose}
-                />
-            );
-        case 'assign':
-            return (
-                <AssignRole
-                    user={user}
-                    programRoles={program}
-                    roles={roles}
-                    onClose={onClose}
-                />
-            );
-        case 'disable':
-            return (
-                <DisableUser
-                    user={user}
-                    onClose={onClose}
-                />
-            );
-        case 'enable':
-            return (
-                <EnableUser
-                    user={user}
-                    onClose={onClose}
-                />
-            );
-        case null:
-            break;
-        default:
-            return null;
-    }
+  switch (type) {
+    case 'add':
+      return (
+        <AddUser
+          programRoles={program ?? []}
+          roles={roles ?? []}
+          onClose={onClose}
+        />
+      );
+    case 'assign':
+      return user ? (
+        <AssignRole
+          user={user}
+          programRoles={program ?? []}
+          roles={roles ?? []}
+          onClose={onClose}
+        />
+      ) : null;
+
+    case 'disable':
+      return user ? (
+        <DisableUser
+          user={user}
+          onClose={onClose}
+        />
+      ) : null;
+
+    case 'enable':
+      return user ? (
+        <EnableUser
+          user={user}
+          onClose={onClose}
+        />
+      ) : null;
+    case null:
+      break;
+    default:
+      return null;
+  }
 }
 
