@@ -203,7 +203,7 @@ export function DocumentsAnalytics({
       <div className="md:col-span-2 xl:col-span-1">
         <AnalyticsCard
           title="Document Activity Trend"
-          description={`Uploads by type — last ${timeRange === "3d"
+          description={`Overall upload frequency — last ${timeRange === "3d"
               ? "3 days"
               : timeRange === "7d"
                 ? "7 days"
@@ -219,7 +219,7 @@ export function DocumentsAnalytics({
           ) : (
             <ChartContainer
               config={areaChartConfig}
-              className="w-full max-h-[240px] min-h-[200px]"
+              className="w-full max-h-[240px] min-h-[210px]"
             >
               <AreaChart data={filteredFrequency}>
                 <defs>

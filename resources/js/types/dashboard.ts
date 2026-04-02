@@ -3,26 +3,22 @@ export interface ActivityLogs {
     full_name: string;
     description: string;
     activity: string;
-    type: string;
+    type: 'Document' | 'Users' | 'Content';
     activity_date: string;
-    [key: string]: unknown;
 }
 
 export interface FrequencyUploads {
     activity_date: string;
     activity: number;
-    [key: string]: unknown;
 }
 
 export interface DocumentStatistics {
-    file_status: string;
+    file_status: 'Pending' | 'Approved' | 'Rejected';
     documents: number;
-    [key: string]: unknown;
 }
 
 export interface OverallUploads {
     document_type: string;
     outlines: number;
     documents: number;
-    [key: string]: unknown;
 }
