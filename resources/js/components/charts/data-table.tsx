@@ -261,9 +261,7 @@ export function ActivityLogDataTable<TData, TValue>({ columns, data }: DataTable
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    type: false,
-  });
+
 
   const table = useReactTable({
     data,
@@ -275,9 +273,8 @@ export function ActivityLogDataTable<TData, TValue>({ columns, data }: DataTable
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: 'includesString',
-    state: { sorting, columnFilters, globalFilter, columnVisibility },
+    state: { sorting, columnFilters, globalFilter },
   });
 
   return (

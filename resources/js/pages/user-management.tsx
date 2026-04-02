@@ -6,7 +6,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { AssignablePrograms, AssignableRoles, type UserRecords } from '@/types/user-management';
 import { Head } from '@inertiajs/react';
-import { User2, User2Icon } from 'lucide-react';
+import { SquareUserIcon, User2, User2Icon } from 'lucide-react';
 import { useState } from 'react';
 import GuideTour from "@/pages/test/GuideTour";
 import { ActionCard, PageTitle } from '@/components/page-header';
@@ -62,6 +62,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
           {/* Header Section */}
           <div className="flex gap-6">
             <PageTitle
+              icon={<SquareUserIcon className="size-5" />}
               title="User Management"
               description="Manage all user related information and access rights."
               actions={

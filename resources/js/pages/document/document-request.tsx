@@ -60,6 +60,7 @@ export default function Requests({ files }: DocumentRequests) {
         {/* Header Section */}
 
         <PageTitle
+        icon={<Boxes className="size-5" />}
           title="Document Request"
           description="Manage all document request submissions."
         />
