@@ -238,8 +238,8 @@ export default function Programs({ program }: ProgramProps) {
                     { preserveScroll: true, preserveState: true },
                   )}
                 >
+                  <Download className="h-4 w-4" />
                   Export
-                  <Download className="ml-2 h-4 w-4" />
                 </Button>
               </div>
 

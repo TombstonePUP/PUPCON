@@ -82,7 +82,7 @@
 
 :root {
   /* ── Base Layers ── */
-  --background: oklch(0.98 0 0);
+  --background: oklch(0.96 0 0);
   /* main canvas */
   --foreground: oklch(0.22 0 0);
 
@@ -129,7 +129,7 @@
   --radius: 0.625rem;
 
   /* ── Sidebar (distinct but light) ── */
-  --sidebar: oklch(0.99 0 0);
+  --sidebar: oklch(0.97 0 0);
   /* slightly below card */
   --sidebar-foreground: oklch(0.22 0 0);
 

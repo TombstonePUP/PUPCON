@@ -25,7 +25,7 @@ export function EmptyState({ icon: Icon = MousePointerClick, title, description 
       <div className="rounded-full bg-muted p-4">
         <Icon className="h-6 w-6 text-muted-foreground" />
       </div>
-      <p className="text-sm font-medium text-foreground">{title}</p>
+      <p className="text-sm font-medium text-foreground/80">{title}</p>
       {description && (
         <p className="text-xs text-muted-foreground">{description}</p>
       )}
@@ -447,37 +447,40 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
               <p className="text-sm text-muted-foreground">Define learning outcomes and goals</p>
             </div>
             <div className="flex min-h-[300px] rounded-lg border border-border">
-              <div className="w-1/3 border-r border-border bg-muted/30 p-4">
+              <div className="flex w-1/3 flex-col border-r border-border bg-muted/30 p-4">
                 <h4 className="mb-3 text-xs text-muted-foreground">Select an Objective</h4>
-                <div className="max-h-[250px] space-y-1 overflow-y-auto">
+                <div className="overflow-y-auto space-y-1 max-h-[250px]">
                   {objectives?.length === 0 ? (
                     <div className="h-[200px]">
-                      <EmptyState
-                        icon={ClipboardList}
-                        title="No objectives added"
-                      />
+                      <EmptyState icon={ClipboardList} title="No objectives added" />
                     </div>
                   ) : (
                     objectives?.map((objective, index) => (
                       <div
                         key={objective.program_objective_id}
                         onClick={() => setSelectedObjectiveId(objective.program_objective_id)}
-                        className={`group flex cursor-pointer items-center justify-between rounded-md px-3 py-2 transition-colors ${objective.program_objective_id === selectedObjectiveId
-                          ? 'bg-primary/10 text-primary'
-                          : 'text-foreground hover:bg-primary/5'
+                        className={`group flex cursor-pointer items-center justify-between rounded-md border px-3 py-2 transition-colors ${objective.program_objective_id === selectedObjectiveId
+                          ? 'border-primary/30 bg-primary/10 text-primary/95'
+                          : 'border-border bg-background text-foreground hover:border-primary/20 hover:bg-primary/5'
                           }`}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex min-w-0 items-center gap-2">
                           <span className="truncate text-sm">{objective.objective_title}</span>
                           {(errors[`objectives.${index}.title`] || errors[`objectives.${index}.description`]) && (
-                            <CircleAlert className="inline-block h-4 w-4 text-destructive" />
+                            <CircleAlert className="inline-block h-4 w-4 shrink-0 text-destructive" />
                           )}
                         </div>
-                        <div className="flex items-center space-x-0.5 opacity-0 group-hover:opacity-100">
-                          <ActionButton onClick={(e) => { e.stopPropagation(); editObjective(objective); }} className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-foreground">
+                        <div className="flex shrink-0 items-center space-x-0.5 opacity-0 group-hover:opacity-100">
+                          <ActionButton
+                            onClick={(e) => { e.stopPropagation(); editObjective(objective); }}
+                            className="cursor-pointer rounded-md hover:bg-muted hover:text-foreground"
+                          >
                             <EditIcon className="h-4 w-4" />
                           </ActionButton>
-                          <ActionButton onClick={(e) => { e.stopPropagation(); deleteObjective(objective.program_objective_id); }} className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-destructive">
+                          <ActionButton
+                            onClick={(e) => { e.stopPropagation(); deleteObjective(objective.program_objective_id); }}
+                            className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-destructive"
+                          >
                             <Trash2 className="h-4 w-4" />
                           </ActionButton>
                         </div>
@@ -485,25 +488,28 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                     ))
                   )}
                 </div>
-                <div className="mt-auto border-t border-border pt-4">
-                  <Button onClick={() => addObjective()} variant="default" className="w-full">
+                <div className="mt-4 border-t border-border pt-4">
+                  <Button onClick={() => addObjective()} variant="default" className="w-full text-xs">
                     <FilePlus2 className="h-4 w-4" />
-                    <span className='hidden xl:inline'>Add Objective</span>
+                    <span className="hidden xl:inline">Add Objective</span>
                   </Button>
                 </div>
               </div>
+
               <div className="w-2/3 p-6">
                 {selectedObjective ? (
-                  <div className="flex h-full flex-col justify-between space-y-4">
-                    <div className="space-y-4">
+                  <div className="flex h-full flex-col justify-between gap-4">
+                    <div className="space-y-3">
                       <h4 className="break-words text-lg font-semibold text-foreground">{selectedObjective.objective_title}</h4>
                       <Separator />
-                      <h5 className="mb-2 text-sm font-semibold text-foreground">Description</h5>
-                      <p className="whitespace-pre-wrap text-sm text-muted-foreground">{selectedObjective.objective_description}</p>
+                      <div className="rounded-md border border-border bg-muted/30 p-3">
+                        <p className="mb-1 text-xs font-medium text-muted-foreground">Description</p>
+                        <p className="whitespace-pre-wrap text-sm text-foreground">{selectedObjective.objective_description}</p>
+                      </div>
                     </div>
                     {selectedObjectiveErrors.length > 0 && (
-                      <div className="mt-4 rounded-md border border-destructive/20 bg-destructive/10 p-4">
-                        <h4 className="mb-2 text-sm font-semibold text-destructive">Errors in this Objective</h4>
+                      <div className="rounded-md border border-destructive/20 bg-destructive/10 p-4">
+                        <h4 className="mb-2 text-sm font-semibold text-destructive">Errors in this objective</h4>
                         <ul className="list-disc space-y-1 pl-5 text-sm text-destructive">
                           {selectedObjectiveErrors.map((msg, i) => <li key={i}>{msg}</li>)}
                         </ul>
@@ -537,9 +543,9 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
               <p className="text-sm text-muted-foreground">Showcase program facilities and activities</p>
             </div>
             <div className="flex min-h-[300px] rounded-lg border border-border">
-              <div className="w-1/3 border-r border-border bg-muted/30 p-4">
+              <div className="w-1/3 border-r border-border bg-muted/30 p-4 flex flex-col">
                 <h4 className="mb-3 text-xs text-muted-foreground">Select an Image</h4>
-                <div className="max-h-[250px] space-y-1 overflow-y-auto">
+                <div className="overflow-y-auto space-y-1">
                   {galleryItems?.length === 0 ? (
                     <div className="h-[200px]">
                       <EmptyState icon={Images} title="No images added" />
@@ -549,22 +555,28 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                       <div
                         key={item.program_gallery_id}
                         onClick={() => setSelectedGalleryId(item.program_gallery_id)}
-                        className={`group flex cursor-pointer items-center justify-between rounded-md px-3 py-2 transition-colors ${item.program_gallery_id === selectedGalleryId
-                          ? 'bg-primary/10 text-primary'
-                          : 'text-foreground hover:bg-primary/5'
+                        className={`group flex cursor-pointer items-center justify-between rounded-md border px-3 py-2 transition-colors ${item.program_gallery_id === selectedGalleryId
+                            ? 'border-primary/30 bg-primary/10 text-primary/95'
+                            : 'border-border bg-background text-foreground hover:border-primary/20 hover:bg-primary/5'
                           }`}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex min-w-0 items-center gap-2">
                           <span className="truncate text-sm">{item.caption}</span>
                           {(errors[`gallery.${index}.image`] || errors[`gallery.${index}.caption`]) && (
-                            <CircleAlert className="inline-block h-4 w-4 text-destructive" />
+                            <CircleAlert className="inline-block h-4 w-4 shrink-0 text-destructive" />
                           )}
                         </div>
-                        <div className="flex items-center space-x-0.5 opacity-0 group-hover:opacity-100">
-                          <ActionButton onClick={(e) => { e.stopPropagation(); editGallery(item); }} className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-foreground">
+                        <div className="flex shrink-0 items-center space-x-0.5 opacity-0 group-hover:opacity-100">
+                          <ActionButton
+                            onClick={(e) => { e.stopPropagation(); editGallery(item); }}
+                            className="cursor-pointer rounded-md hover:bg-muted hover:text-foreground"
+                          >
                             <EditIcon className="h-4 w-4" />
                           </ActionButton>
-                          <ActionButton onClick={(e) => { e.stopPropagation(); deleteGallery(item.program_gallery_id); }} className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-destructive">
+                          <ActionButton
+                            onClick={(e) => { e.stopPropagation(); deleteGallery(item.program_gallery_id); }}
+                            className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-destructive"
+                          >
                             <Trash2 className="h-4 w-4" />
                           </ActionButton>
                         </div>
@@ -573,23 +585,25 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                   )}
                 </div>
                 <div className="mt-4 border-t border-border pt-4">
-                  <Button onClick={addGallery} variant="default" className="w-full">
-                    <ImagePlus className="h-4 w-4" /> 
-                    <span className='hidden xl:inline'>Add Image</span>
+                  <Button onClick={addGallery} variant="default" className="w-full text-xs">
+                    <ImagePlus className="h-4 w-4" />
+                    <span className="hidden xl:inline">Add Image</span>
                   </Button>
                 </div>
               </div>
               <div className="w-2/3 p-6">
                 {selectedGalleryItem ? (
-                  <div className="flex h-full flex-col justify-between space-y-4">
-                    <div className="space-y-4">
+                  <div className="flex h-full flex-col justify-between gap-4">
+                    <div className="space-y-3">
                       <ImageDisplay url={selectedGalleryItem.image_path} alt={selectedGalleryItem.image_name} />
-                      <h5 className="mb-2 text-sm font-semibold text-foreground">Caption</h5>
-                      <p className="text-sm text-muted-foreground">{selectedGalleryItem.caption}</p>
+                      <div className="rounded-md border border-border bg-muted/30 p-3">
+                        <p className="mb-1 text-xs font-medium text-muted-foreground">Caption</p>
+                        <p className="text-sm text-foreground">{selectedGalleryItem.caption}</p>
+                      </div>
                     </div>
                     {selectedGalleryErrors.length > 0 && (
-                      <div className="mt-4 rounded-md border border-destructive/20 bg-destructive/10 p-4">
-                        <h4 className="mb-2 text-sm font-semibold text-destructive">Errors in this Image</h4>
+                      <div className="rounded-md border border-destructive/20 bg-destructive/10 p-4">
+                        <h4 className="mb-2 text-sm font-semibold text-destructive">Errors in this image</h4>
                         <ul className="list-disc space-y-1 pl-5 text-sm text-destructive">
                           {selectedGalleryErrors.map((msg, i) => <li key={i}>{msg}</li>)}
                         </ul>
