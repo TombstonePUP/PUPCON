@@ -5,7 +5,7 @@ body,
 body *:not(html):not(style):not(br):not(tr):not(code) {
     box-sizing: border-box;
     font-family:
-        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+        'Inter', 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     position: relative;
 }
 
@@ -139,10 +139,11 @@ img {
     -premailer-cellspacing: 0;
     -premailer-width: 570px;
     background-color: #ffffff;
-    border-color: #e8e5ef;
-    border-radius: 8px;
+    border-color: #e2e8f0;
+    border-radius: 12px;
     border-width: 1px;
-    box-shadow: 0 2px 8px rgba(127, 20, 20, 0.08);
+    border-style: solid;
+    box-shadow: none;
     margin: 0 auto;
     padding: 0;
     width: 570px;
@@ -231,7 +232,7 @@ img {
 
 .button {
     -webkit-text-size-adjust: none;
-    border-radius: 6px;
+    border-radius: 8px;
     color: #fff;
     display: inline-block;
     overflow: hidden;
