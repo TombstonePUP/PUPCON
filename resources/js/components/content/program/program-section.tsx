@@ -356,7 +356,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
             <div className="space-y-6">
               <div>
                 <Label className="mb-2 block text-sm font-medium text-foreground">Program Image</Label>
-                <div className="mt-5 flex flex-col gap-3">
+                <div className="mt-4 flex flex-col gap-3">
                   {!data.previewUrl ? (
                     <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-muted/30 p-12 text-center transition-all duration-300 hover:border-primary/70">
                       <input type="file" className="hidden" accept="image/*" disabled={processing} onChange={handleImageChange} />
@@ -365,7 +365,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                           <Upload className="h-6 w-6 text-muted-foreground" />
                         </div>
                         <div className="mt-4 text-center">
-                          <p className="mb-1 text-lg font-semibold text-foreground">Upload Welcome Banner</p>
+                          <p className="mb-2 text-lg font-semibold text-foreground">Upload Welcome Banner</p>
                           <p className="text-sm text-muted-foreground">PNG, JPG up to 5MB</p>
                         </div>
                         <div className="mt-2 flex gap-2">
@@ -439,7 +439,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                       <div
                         key={objective.program_objective_id}
                         onClick={() => setSelectedObjectiveId(objective.program_objective_id)}
-                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${objective.program_objective_id === selectedObjectiveId
+                        className={`group flex cursor-pointer items-center justify-between rounded-md px-3 py-2 transition-colors ${objective.program_objective_id === selectedObjectiveId
                             ? 'bg-primary/10 text-primary'
                             : 'text-foreground hover:bg-primary/5'
                           }`}
@@ -464,7 +464,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                 </div>
                 <div className="mt-4 border-t border-border pt-4">
                   <Button onClick={() => addObjective()} variant="default" className="w-full">
-                    <Plus className="mr-2 h-4 w-4" /> Add Objective
+                    <Plus className="h-4 w-4" /> Add Objective
                   </Button>
                 </div>
               </div>
@@ -472,10 +472,10 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                 {selectedObjective ? (
                   <div className="flex h-full flex-col justify-between space-y-4">
                     <div className="space-y-4">
-                      <h4 className="text-lg font-semibold break-words text-foreground">{selectedObjective.objective_title}</h4>
+                      <h4 className="break-words text-lg font-semibold text-foreground">{selectedObjective.objective_title}</h4>
                       <Separator />
                       <h5 className="mb-2 text-sm font-semibold text-foreground">Description</h5>
-                      <p className="text-sm whitespace-pre-wrap text-muted-foreground">{selectedObjective.objective_description}</p>
+                      <p className="whitespace-pre-wrap text-sm text-muted-foreground">{selectedObjective.objective_description}</p>
                     </div>
                     {selectedObjectiveErrors.length > 0 && (
                       <div className="mt-4 rounded-md border border-destructive/20 bg-destructive/10 p-4">
@@ -524,7 +524,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                       <div
                         key={item.program_gallery_id}
                         onClick={() => setSelectedGalleryId(item.program_gallery_id)}
-                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${item.program_gallery_id === selectedGalleryId
+                        className={`group flex cursor-pointer items-center justify-between rounded-md px-3 py-2 transition-colors ${item.program_gallery_id === selectedGalleryId
                             ? 'bg-primary/10 text-primary'
                             : 'text-foreground hover:bg-primary/5'
                           }`}
@@ -549,7 +549,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                 </div>
                 <div className="mt-4 border-t border-border pt-4">
                   <Button onClick={addGallery} variant="default" className="w-full">
-                    <Plus className="mr-2 h-4 w-4" /> Add Image
+                    <Plus className="h-4 w-4" /> Add Image
                   </Button>
                 </div>
               </div>
@@ -558,7 +558,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                   <div className="flex h-full flex-col justify-between space-y-4">
                     <div className="space-y-4">
                       <ImageDisplay url={selectedGalleryItem.image_path} alt={selectedGalleryItem.image_name} />
-                      <h5 className="mb-1 text-sm font-semibold text-foreground">Caption</h5>
+                      <h5 className="mb-2 text-sm font-semibold text-foreground">Caption</h5>
                       <p className="text-sm text-muted-foreground">{selectedGalleryItem.caption}</p>
                     </div>
                     {selectedGalleryErrors.length > 0 && (

@@ -291,12 +291,12 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
         <div className="mt-5">
           {role === 'Admin' || role === 'Coordinator' ? (
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-4 text-xs">
-                <TabsTrigger value="active" className="flex items-center gap-2">
+              <TabsList className="mb-2">
+                <TabsTrigger value="active" className="flex items-center gap-2 text-xs">
                   <NotebookIcon className="h-4 w-4" />
                   Active ({activePrograms.length})
                 </TabsTrigger>
-                <TabsTrigger value="archived" className="flex items-center gap-2">
+                <TabsTrigger value="archived" className="flex items-center gap-2 text-xs">
                   <Archive className="h-4 w-4" />
                   Archived ({archivedPrograms.length})
                 </TabsTrigger>

@@ -137,38 +137,37 @@ export default function Programs({ program }: ProgramProps) {
 
   // ---  Level Selector ---
   const levelSelectorControls = (
-    <div className="flex flex-row gap-2">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Badge variant="outline" className="w-full cursor-pointer justify-center text-muted-foreground">
-            {selected_level?.level === 0 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + selected_level?.level}
-          </Badge>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>Select Level</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup value={selected_level?.accreditation_level_id?.toString()}>
-            {program.levels?.map((level) => (
-              <DropdownMenuRadioItem
-                key={level.accreditation_level_id}
-                value={level.accreditation_level_id.toString()}
-                onClick={() =>
-                  router.visit(
-                    route('manage.program', {
-                      program_id: program.program_id,
-                      level_id: level.accreditation_level_id,
-                    }),
-                  )
-                }
-              >
-                {level.level === 0 ? 'Preliminary Survey Visit' : 'Level ' + level.level}{' '}
-                {level.survey_date && `- (${new Date(level.survey_date).getFullYear()})`}
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Badge variant="secondary" className="w-full cursor-pointer justify-center">
+          {selected_level?.level === 0 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + selected_level?.level}
+        </Badge>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel className="text-xs">Select Level</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup value={selected_level?.accreditation_level_id?.toString()}>
+          {program.levels?.map((level) => (
+            <DropdownMenuRadioItem
+              className="text-xs"
+              key={level.accreditation_level_id}
+              value={level.accreditation_level_id.toString()}
+              onClick={() =>
+                router.visit(
+                  route('manage.program', {
+                    program_id: program.program_id,
+                    level_id: level.accreditation_level_id,
+                  }),
+                )
+              }
+            >
+              {level.level === 0 ? 'Preliminary Survey Visit' : 'Level ' + level.level}
+              {level.survey_date && ` - (${new Date(level.survey_date).getFullYear()})`}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 
   const areas =
@@ -191,6 +190,19 @@ export default function Programs({ program }: ProgramProps) {
             </>
           }
           description='Manage program information, objectives, and assessment areas.'
+          actions={
+            <Badge
+              variant={
+                selected_level?.remarks?.toLowerCase().includes('passed')
+                  ? 'success'
+                  : selected_level?.remarks?.toLowerCase().includes('failed')
+                    ? 'destructive'
+                    : 'warning'
+              }
+            >
+              {selected_level?.remarks}
+            </Badge>
+          }
         />
 
         {/* Main Content */}
@@ -343,31 +355,15 @@ export default function Programs({ program }: ProgramProps) {
           <div className="w-64 shrink-0">
             <div className="sticky top-6 space-y-4">
 
-              {/* Status */}
-              <div className="rounded-lg border border-border bg-card p-4">
-                <div className="mb-3 text-sm font-semibold text-foreground">Status</div>
-                <div
-                  className={`rounded-lg p-2 text-center text-xs font-medium ${selected_level?.remarks?.toLowerCase().includes('passed')
-                    ? 'bg-success text-success-foreground'
-                    : selected_level?.remarks?.toLowerCase().includes('failed')
-                      ? 'bg-destructive/10 text-destructive'
-                      : 'bg-warning text-warning-foreground'
-                    }`}
-                >
-                  {selected_level?.remarks}
-                </div>
-              </div>
-
               {/* Level Selector */}
               <div className="rounded-lg border border-border bg-card p-4">
                 <h3 className="mb-3 text-sm font-semibold text-foreground">Accreditation Level</h3>
                 {levelSelectorControls}
               </div>
 
-              {/* Quick Links */}
               {(role === 'Admin' || role === 'Coordinator') && (
-                <div className="rounded-lg border border-border bg-card p-4">
-                  <h3 className="mb-4 text-sm font-semibold text-foreground">Quick Links</h3>
+                <div className="rounded-lg border border-border bg-card p-4 text-xs">
+                  <h3 className="mb-4 text-sm font-semibold text-foreground">On this page</h3>
                   <nav className="space-y-1">
                     {sections.map((section) => (
                       <button
