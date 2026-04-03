@@ -47,11 +47,11 @@ export default function ParameterAccordion({
     (role === 'Admin' || role === 'Coordinator') && program.levels[0]?.is_active && program.levels[0]?.remarks === 'Ongoing Survey' && !area.archive === true;
   return (
     <>
-      <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw] bg-muted/50">
+      <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
         {areaParameters?.length > 0 ? (
           areaParameters?.map((parameter) => (
-            <AccordionItem value={`item-${parameter.area_parameter_id}`} className="group" key={parameter.area_parameter_id}>
-              <AccordionTrigger className="flex flex-row items-center justify-between group-hover:cursor-pointer">
+            <AccordionItem value={`item-${parameter.area_parameter_id}`} className="group bg-muted/50" key={parameter.area_parameter_id}>
+              <AccordionTrigger className="flex flex-row items-center justify-between group-hover:cursor-pointer ">
                 <div className="flex h-full w-full flex-row items-center">
                   <h1 className="font-semibold text-md text-[#7f1414] group-hover:text-[#a01818] truncate">
                     {/*parameter.parameter_name != ' '
