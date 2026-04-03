@@ -28,8 +28,11 @@ class AreaFilesController extends Controller
     {
         $validated = $request->validate(
             [
-                'outline_id' => 'nullable|exists:parameter_outlines,parameter_outline_id',
-                'document' => 'required|file|mimes:pdf'
+                'outline_id' => 'required|integer|exists:parameter_outlines,parameter_outline_id',
+                'document' => 'required|file|mimes:pdf|max:10240',
+                'program_id' => 'required|integer|exists:programs,program_id',
+                'level_id' => 'required|integer|exists:accreditation_levels,accreditation_level_id',
+                'area_id' => 'required|integer|exists:areas,area_id',
             ],
             [
                 'outline_id.exists' => 'The selected outline does not exist.',
