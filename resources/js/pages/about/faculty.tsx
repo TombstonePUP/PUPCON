@@ -20,7 +20,6 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
         </div>
     );
 
-    console.log(faculties);
     return (
         <Layout>
             <Head title="Faculty and Staffs" />
