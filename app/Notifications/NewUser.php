@@ -36,7 +36,7 @@ class NewUser extends Notification
     {
         return (new MailMessage)
             ->subject('PUPCON Account Creation')
-            ->markdown('mail.new-user',
+            ->view('mail.new-user',
                 [
                     'email' => $this->email,
                     'name' => $this->name,
