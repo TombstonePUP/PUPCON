@@ -43,6 +43,7 @@ class SecurityHeaders
         $csp .= "font-src 'self' https://fonts.gstatic.com " . $viteDevServer . "; ";
         $csp .= "img-src 'self' data: blob: " . $viteDevServer . "; ";
         $csp .= "connect-src " . $connectSources . "; ";
+        $csp .= "frame-src 'self' https://www.google.com https://*.google.com; ";
         $csp .= "frame-ancestors 'self'; ";
         $csp .= "object-src 'none';";
         

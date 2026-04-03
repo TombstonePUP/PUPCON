@@ -3,6 +3,8 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { LogOut } from 'lucide-react';
 import { ReactNode, useEffect, useState } from 'react';
+import GuideTour from '@/components/tour/guide-tour';
+import { TourProvider } from '@/components/tour/tour-context';
 
 interface AccreditorLayoutProps {
     children: ReactNode;
@@ -42,13 +44,15 @@ export default function AccreditorLayout({ children }: AccreditorLayoutProps) {
         router.post('/logout');
     };
 
-    const navigation = [
+    const navigation: { label: string; href: string }[] = [
         // { label: 'Profile', href: '/accreditor/profile' },
     ];
 
     return (
-        <div className="flex min-h-screen flex-col">
-            {/* Header */}
+        <TourProvider>
+            <div className="flex min-h-screen flex-col">
+                <GuideTour />
+                {/* Header */}
             <motion.header
                 className={cn('sticky top-0 z-50 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm flex justify-between items-center')}
                 animate={{
@@ -59,7 +63,7 @@ export default function AccreditorLayout({ children }: AccreditorLayoutProps) {
                     ease: 'easeInOut',
                 }}
             >
-                <Link href="/" className="flex items-center" preserveScroll>
+                <Link href="/" className="flex items-center" preserveScroll={false}>
                     {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
                     <div className='bg-[#d2b539] h-18 w-164 rounded-br-full'>
                         <div className='ml-3 h-full bg-white rounded-br-full mr-3 flex justify-end gap-4 pr-20 pb-2 items-center'>
@@ -138,5 +142,6 @@ export default function AccreditorLayout({ children }: AccreditorLayoutProps) {
                 </div>
             </footer>
         </div>
+        </TourProvider>
     );
 }
