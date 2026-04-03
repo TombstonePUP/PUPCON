@@ -69,7 +69,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
       accessorKey: 'file_type',
       header: ({ column }) => (
         <Button
-          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground"
+          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <div>Benchmark Type</div>
@@ -129,7 +129,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
         }
 
         return (
-          <div className="text-left ml-4">
+          <div className="text-left">
             <div className="mb-0 flex items-center justify-between text-sm">
               <div className="font-md mr-2 grow truncate capitalize text-foreground">
                 {segmentPart === 'N/A' ? subjectPart : segmentPart}
@@ -149,7 +149,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
       accessorKey: 'outline',
       header: ({ column }) => (
         <Button
-          className="ml-2 text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground"
+          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
@@ -173,7 +173,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
 
         return (
           <>
-            <div className="text-left ml-6">
+            <div className="text-left">
               <div
                 onClick={() => setDialogOpen(true)}
                 className="max-w-sm cursor-pointer truncate text-foreground underline transition-colors hover:text-primary"
@@ -287,7 +287,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
       header: ({ column }) => (
         <div>
           <Button
-            className="ml-2 text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground"
+            className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
@@ -305,7 +305,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
           hour: '2-digit',
           minute: '2-digit',
         });
-        return <div className="text-left ml-6">{formattedDate}</div>;
+        return <div className="text-left">{formattedDate}</div>;
       },
       enableGlobalFilter: false,
     },

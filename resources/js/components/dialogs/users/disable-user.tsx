@@ -35,9 +35,9 @@ export function DisableUser({ user, onClose }: DisableUserDialogProps) {
                     <DialogDescription className="text-sm text-muted-foreground">Are you sure you want to disable this user?</DialogDescription>
                 </DialogHeader>
 
-                <div className="my-0 rounded-md border border-red-100 bg-red-50 p-4">
-                    <p className="text-sm text-red-800">
-                        <span className="mb-1 block font-semibold text-red-900">Note: Important Action!</span>
+                <div className="my-0 rounded-md border border-destructive bg-destructive p-4">
+                    <p className="text-sm text-destructive-foreground">
+                        <span className="mb-1 block font-semibold text-destructive-foreground">Note: Important Action!</span>
                         This action only disables the user account. The user data will still be stored in the database.
                     </p>
                 </div>

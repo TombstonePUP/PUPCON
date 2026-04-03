@@ -39,9 +39,9 @@ export default function DeleteAreaDialog({ area, program, level, onClose }: Dele
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="my-6 rounded-md border border-yellow-100 bg-yellow-50 p-4">
-                    <p className="text-sm text-yellow-800">
-                        <span className="mb-1 block font-semibold text-yellow-900">Note: Important Action!</span>
+                <div className="my-4 rounded-md border border-warning-border bg-warning p-4">
+              <p className="text-sm text-warning-foreground">
+                <span className="mb-1 block font-semibold text-warning-foreground">Note: Important Action!</span>
                         The area will be hidden from active listings, all data will be preserved, and accreditation history will
                         remain intact.
                     </p>

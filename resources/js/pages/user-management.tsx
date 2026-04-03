@@ -6,7 +6,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { AssignablePrograms, AssignableRoles, type UserRecords } from '@/types/user-management';
 import { Head } from '@inertiajs/react';
-import { SquareUserIcon, User2, User2Icon } from 'lucide-react';
+import { SquareUserIcon, User2, User2Icon, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import GuideTour from "@/pages/test/GuideTour";
 import { ActionCard, PageTitle } from '@/components/page-header';
@@ -70,8 +70,8 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
                   onClick={() => openDialog('add')}
                   className="w-full flex items-center gap-2 bg-[#7f1414] text-white hover:bg-[#7f1414]/90"
                 >
-                  <User2 className="h-4 w-4" />
-                  Add User
+                  <UserPlus className="h-4 w-4" />
+                   <span className="hidden xl:inline">Add User</span>
                 </Button>
               }
             />
