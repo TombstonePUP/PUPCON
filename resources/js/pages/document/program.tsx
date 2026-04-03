@@ -18,7 +18,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgram, ProgramAreas } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Archive, BookOpen, Download, EditIcon, MoreVertical, Plus } from 'lucide-react';
+import { Archive, BookOpen, ChevronDown, Download, EditIcon, MoreVertical, Plus } from 'lucide-react';
 import { PageTitle } from '@/components/page-header';
 
 export interface ProgramProps {
@@ -139,9 +139,13 @@ export default function Programs({ program }: ProgramProps) {
   const levelSelectorControls = (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Badge variant="secondary" className="w-full cursor-pointer justify-center">
-          {selected_level?.level === 0 ? 'Preliminary Survey Visit' : 'Accreditation Level ' + selected_level?.level}
-        </Badge>
+        <Button variant="outline" size="sm" className="gap-2">
+          <span className="text-muted-foreground text-xs">Level</span>
+          <span className="font-medium text-foreground text-xs xl:inline hidden">
+            {selected_level?.level === 0 ? 'Preliminary' : `Accreditation ${selected_level?.level}`}
+          </span>
+          <ChevronDown className="size-3.5 text-muted-foreground" />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel className="text-xs">Select Level</DropdownMenuLabel>
@@ -181,207 +185,197 @@ export default function Programs({ program }: ProgramProps) {
       <div className="flex flex-col gap-6 p-6">
         <PageTitle
           title={
-            <>
-              <h1 className="flex text-xl font-semibold">
-                <span>{program.degree_type}</span>
-                <span className="mx-1">in</span>
-                <span className="capitalize">{program.program_name}</span>
-              </h1>
-            </>
+            <span className="capitalize">
+              {program.degree_type} in {program.program_name}
+            </span>
           }
-          description='Manage program information, objectives, and assessment areas.'
+          description="Manage program information, objectives, and assessment areas."
           actions={
-            <Badge
-              variant={
-                selected_level?.remarks?.toLowerCase().includes('passed')
-                  ? 'success'
-                  : selected_level?.remarks?.toLowerCase().includes('failed')
-                    ? 'destructive'
-                    : 'warning'
-              }
-            >
-              {selected_level?.remarks}
-            </Badge>
+            <div className="flex flex-col items-end gap-2">
+              <Badge
+                variant={
+                  selected_level?.remarks?.toLowerCase().includes('passed')
+                    ? 'success'
+                    : selected_level?.remarks?.toLowerCase().includes('failed')
+                      ? 'destructive'
+                      : 'warning'
+                }
+              >
+                {selected_level?.remarks}
+              </Badge>
+              {levelSelectorControls}
+            </div>
           }
         />
 
         {/* Main Content */}
         <div className="flex gap-6">
-          <div className="flex-1">
-            <div className="space-y-6">
-              {(role === 'Admin' || role === 'Coordinator') && (
-                <ProgramSection program={program} overviewRef={overviewRef} objectivesRef={objectivesRef} galleryRef={galleryRef} />
-              )}
+          <div className="flex flex-col space-y-6 w-full">
+            {(role === 'Admin' || role === 'Coordinator') && (
+              <ProgramSection program={program} overviewRef={overviewRef} objectivesRef={objectivesRef} galleryRef={galleryRef} />
+            )}
 
-              <div id="areas" ref={areasRef} className="scroll-mt-20 rounded-lg border border-border bg-card p-8">
-                <div className="mb-6 flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">Program Areas</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Configure assessment areas for{' '}
-                      <span className="font-medium text-foreground">
-                        {selected_level?.level === 0 ? 'Preliminary Survey Visit' : 'Level ' + selected_level?.level}
-                      </span>
-                    </p>
-                  </div>
-                  <Button
-                    className="border-none"
-                    size="sm"
-                    onClick={() => router.get(
-                      route('manage.program.download', {
-                        program_id: program.program_id,
-                        level_id: selected_level?.accreditation_level_id,
-                      }),
-                      {},
-                      { preserveScroll: true, preserveState: true },
-                    )}
-                  >
-                    Export
-                    <Download className="ml-2 h-4 w-4" />
-                  </Button>
+            <div id="areas" ref={areasRef} className="scroll-mt-20 rounded-lg border border-border p-8">
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">Program Areas</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Configure assessment areas for{' '}
+                    <span className="font-medium text-foreground">
+                      {selected_level?.level === 0 ? 'Preliminary Survey Visit' : 'Level ' + selected_level?.level}
+                    </span>
+                  </p>
                 </div>
-
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {selected_level?.areas && selected_level?.areas.length > 0 ? (
-                    areas?.map((item) => {
-                      const isAssigned =
-                        role !== 'Admin' && role !== 'Coordinator' && selected_level.is_active === true
-                          ? assignedAreas.find((area: ProgramAreas) => area.area_id === item.area_id)
-                          : true;
-                      return (
-                        <div
-                          key={item.area_id}
-                          className="group relative flex flex-col rounded-xl border border-border bg-card transition-all duration-150 hover:border-border/60"
-                        >
-                          {isAssigned ? (
-                            <Link
-                              href={route('manage.area', {
-                                program_id: program.program_id,
-                                level_id: selected_level.accreditation_level_id,
-                                area_id: item.area_id,
-                              })}
-                              className="block p-6"
-                            >
-                              <h4 className="text-base font-semibold text-foreground">Area {item.area_numeral}</h4>
-                              <div className="flex items-start justify-between">
-                                <p className="mt-1 text-sm text-muted-foreground">{item.area_name}</p>
-                                {role !== 'Admin' && role !== 'Coordinator' && selected_level.is_active && (
-                                  <Badge variant="success">Assigned</Badge>
-                                )}
-                                {item.archive && <Badge variant="destructive">Archived</Badge>}
-                              </div>
-                            </Link>
-                          ) : (
-                            <div className="block cursor-not-allowed p-6">
-                              <h4 className="text-base font-semibold text-muted-foreground">Area {item.area_numeral}</h4>
-                              <div className="flex items-start justify-between">
-                                <p className="mt-1 text-sm text-muted-foreground">{item.area_name}</p>
-                                <Badge variant="secondary">Not Assigned</Badge>
-                              </div>
-                            </div>
-                          )}
-
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="absolute top-3 right-3 h-8 w-8 rounded-full p-0 hover:bg-muted">
-                                <MoreVertical className="h-4 w-4 text-muted-foreground" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              {(role === 'Admin' || role === 'Coordinator') &&
-                                selected_level.is_active &&
-                                item.archive === false &&
-                                selected_level.remarks === 'Ongoing Survey' && (
-                                  <DropdownMenuItem onClick={() => setTimeout(() => editArea(item), 50)}>
-                                    <EditIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                                    Edit
-                                  </DropdownMenuItem>
-                                )}
-                              <DropdownMenuItem asChild>
-                                <a
-                                  href={route('manage.area.download', {
-                                    program_id: program.program_id,
-                                    level_id: selected_level.accreditation_level_id,
-                                    area_id: item.area_id,
-                                  })}
-                                  className="flex w-full">
-                                  <Download className="mr-2 h-4 w-4 text-muted-foreground" />
-                                  Export
-                                </a>
-                              </DropdownMenuItem>
-                              {(role === 'Admin' || role === 'Coordinator') &&
-                                selected_level.is_active &&
-                                item.archive === false &&
-                                selected_level.remarks === 'Ongoing Survey' && (
-                                  <>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => setTimeout(() => deleteArea(item), 50)}>
-                                      <Archive className="mr-2 h-4 w-4" />
-                                      Archive
-                                    </DropdownMenuItem>
-                                  </>
-                                )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div className="col-span-1 md:col-span-2">
-                      <div className="flex min-h-[120px] items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 p-6">
-                        <p className="text-center text-sm text-muted-foreground">No areas added yet for this level.</p>
-                      </div>
-                    </div>
+                <Button
+                  className="border-none"
+                  size="sm"
+                  onClick={() => router.get(
+                    route('manage.program.download', {
+                      program_id: program.program_id,
+                      level_id: selected_level?.accreditation_level_id,
+                    }),
+                    {},
+                    { preserveScroll: true, preserveState: true },
                   )}
+                >
+                  Export
+                  <Download className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
 
-                  {(role === 'Admin' || role === 'Coordinator') &&
-                    selected_level?.is_active &&
-                    selected_level?.remarks === 'Ongoing Survey' && (
-                      <button
-                        type="button"
-                        onClick={addArea}
-                        className="group flex min-h-[100px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border p-5 text-muted-foreground transition-colors hover:border-border/60 hover:bg-muted/30 hover:text-foreground"
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {selected_level?.areas && selected_level?.areas.length > 0 ? (
+                  areas?.map((item) => {
+                    const isAssigned =
+                      role !== 'Admin' && role !== 'Coordinator' && selected_level.is_active === true
+                        ? assignedAreas.find((area: ProgramAreas) => area.area_id === item.area_id)
+                        : true;
+                    return (
+                      <div
+                        key={item.area_id}
+                        className="group relative flex flex-col rounded-xl border border-border bg-card transition-all duration-150 hover:border-border/60"
                       >
-                        <Plus className="h-6 w-6" />
-                        <span className="mt-2 text-sm font-medium">Add New Area</span>
-                      </button>
-                    )}
-                </div>
+                        {isAssigned ? (
+                          <Link
+                            href={route('manage.area', {
+                              program_id: program.program_id,
+                              level_id: selected_level.accreditation_level_id,
+                              area_id: item.area_id,
+                            })}
+                            className="block p-6"
+                          >
+                            <h4 className="text-base font-semibold text-foreground">Area {item.area_numeral}</h4>
+                            <div className="flex items-start justify-between">
+                              <p className="mt-1 text-sm text-muted-foreground">{item.area_name}</p>
+                              {role !== 'Admin' && role !== 'Coordinator' && selected_level.is_active && (
+                                <Badge variant="success">Assigned</Badge>
+                              )}
+                              {item.archive && <Badge variant="destructive">Archived</Badge>}
+                            </div>
+                          </Link>
+                        ) : (
+                          <div className="block cursor-not-allowed p-6">
+                            <h4 className="text-base font-semibold text-muted-foreground">Area {item.area_numeral}</h4>
+                            <div className="flex items-start justify-between">
+                              <p className="mt-1 text-sm text-muted-foreground">{item.area_name}</p>
+                              <Badge variant="secondary">Not Assigned</Badge>
+                            </div>
+                          </div>
+                        )}
+
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="absolute top-3 right-3 h-8 w-8 rounded-full p-0 hover:bg-muted">
+                              <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            {(role === 'Admin' || role === 'Coordinator') &&
+                              selected_level.is_active &&
+                              item.archive === false &&
+                              selected_level.remarks === 'Ongoing Survey' && (
+                                <DropdownMenuItem onClick={() => setTimeout(() => editArea(item), 50)}>
+                                  <EditIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                                  Edit
+                                </DropdownMenuItem>
+                              )}
+                            <DropdownMenuItem asChild>
+                              <a
+                                href={route('manage.area.download', {
+                                  program_id: program.program_id,
+                                  level_id: selected_level.accreditation_level_id,
+                                  area_id: item.area_id,
+                                })}
+                                className="flex w-full">
+                                <Download className="mr-2 h-4 w-4 text-muted-foreground" />
+                                Export
+                              </a>
+                            </DropdownMenuItem>
+                            {(role === 'Admin' || role === 'Coordinator') &&
+                              selected_level.is_active &&
+                              item.archive === false &&
+                              selected_level.remarks === 'Ongoing Survey' && (
+                                <>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => setTimeout(() => deleteArea(item), 50)}>
+                                    <Archive className="mr-2 h-4 w-4" />
+                                    Archive
+                                  </DropdownMenuItem>
+                                </>
+                              )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="col-span-1 md:col-span-2">
+                    <div className="flex min-h-[120px] items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 p-6">
+                      <p className="text-center text-sm text-muted-foreground">No areas added yet for this level.</p>
+                    </div>
+                  </div>
+                )}
+
+                {(role === 'Admin' || role === 'Coordinator') &&
+                  selected_level?.is_active &&
+                  selected_level?.remarks === 'Ongoing Survey' && (
+                    <button
+                      type="button"
+                      onClick={addArea}
+                      className="group flex min-h-[100px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border p-5 text-muted-foreground transition-colors hover:border-border/60 hover:bg-muted/30 hover:text-foreground"
+                    >
+                      <Plus className="h-6 w-6" />
+                      <span className="mt-2 text-sm font-medium">Add New Area</span>
+                    </button>
+                  )}
               </div>
             </div>
           </div>
 
           {/* Right Sidebar */}
-          <div className="w-64 shrink-0">
-            <div className="sticky top-6 space-y-4">
 
-              {/* Level Selector */}
-              <div className="rounded-lg border border-border bg-card p-4">
-                <h3 className="mb-3 text-sm font-semibold text-foreground">Accreditation Level</h3>
-                {levelSelectorControls}
-              </div>
+          {/* Level Selector */}
 
-              {(role === 'Admin' || role === 'Coordinator') && (
-                <div className="rounded-lg border border-border bg-card p-4 text-xs">
-                  <h3 className="mb-4 text-sm font-semibold text-foreground">On this page</h3>
-                  <nav className="space-y-1">
-                    {sections.map((section) => (
-                      <button
-                        key={section.id}
-                        onClick={() => scrollToSection(section.ref, section.id)}
-                        className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-muted-foreground hover:bg-muted'
-                          }`}
-                      >
-                        {section.label}
-                      </button>
-                    ))}
-                  </nav>
-                </div>
-              )}
+
+          {(role === 'Admin' || role === 'Coordinator') && (
+            <div className="shrink-0 sticky top-6 self-start border rounded-lg p-6 hidden xl:inline">
+              <h2 className="mb-4 font-semibold">On this page</h2>
+              <nav className="space-y-1 ml-2">
+                {sections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => scrollToSection(section.ref, section.id)}
+                    className={`block w-full text-left text-sm px-4 my-4 border-l-2 transition-all duration-150 ${activeSection === section.id
+                      ? 'border-primary'
+                      : 'border-transparent text-muted-foreground font-normal hover:text-foreground hover:border-border'
+                      }`}
+                  >
+                    {section.label}
+                  </button>
+                ))}
+              </nav>
             </div>
-          </div>
+          )}
         </div>
       </div>
 

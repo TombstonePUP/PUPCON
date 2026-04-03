@@ -66,13 +66,15 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
               title="User Management"
               description="Manage all user related information and access rights."
               actions={
-                <Button
-                  onClick={() => openDialog('add')}
-                  className="w-full flex items-center gap-2 bg-[#7f1414] text-white hover:bg-[#7f1414]/90"
-                >
-                  <UserPlus className="h-4 w-4" />
-                   <span className="hidden xl:inline">Add User</span>
-                </Button>
+                <div>
+                  <Button
+                    onClick={() => openDialog('add')}
+                    className="w-full flex items-center gap-2 bg-[#7f1414] text-white hover:bg-[#7f1414]/90"
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    <span className="hidden xl:inline">Add User</span>
+                  </Button>
+                </div>
               }
             />
           </div>

@@ -9,9 +9,29 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/text-area';
 import { PerProgram, ProgramGalleryImages, ProgramObjectives } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { CircleAlert, Edit2, EditIcon, ImageIcon, Plus, Trash2, Upload, X } from 'lucide-react';
+import { CircleAlert, ClipboardList, Edit2, EditIcon, FilePlus2, ImageIcon, ImagePlus, Images, MousePointerClick, Plus, Trash2, Upload, X } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react';
+import { LucideIcon } from 'lucide-react';
 
+type EmptyStateProps = {
+  icon?: LucideIcon;
+  title: string;
+  description?: string;
+};
+
+export function EmptyState({ icon: Icon = MousePointerClick, title, description }: EmptyStateProps) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
+      <div className="rounded-full bg-muted p-4">
+        <Icon className="h-6 w-6 text-muted-foreground" />
+      </div>
+      <p className="text-sm font-medium text-foreground">{title}</p>
+      {description && (
+        <p className="text-xs text-muted-foreground">{description}</p>
+      )}
+    </div>
+  );
+}
 interface ProgramSectionProps {
   program: PerProgram;
   overviewRef: RefObject<HTMLDivElement | null>;
@@ -344,7 +364,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
 
   return (
     <>
-      <div className="rounded-lg border border-border bg-card">
+      <div className="rounded-lg border border-border">
         <div className="p-8">
 
           {/* Program Overview */}
@@ -356,7 +376,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
             <div className="space-y-6">
               <div>
                 <Label className="mb-2 block text-sm font-medium text-foreground">Program Image</Label>
-                <div className="mt-4 flex flex-col gap-3">
+                <div className="flex flex-col gap-3">
                   {!data.previewUrl ? (
                     <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-muted/30 p-12 text-center transition-all duration-300 hover:border-primary/70">
                       <input type="file" className="hidden" accept="image/*" disabled={processing} onChange={handleImageChange} />
@@ -431,8 +451,11 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                 <h4 className="mb-3 text-xs text-muted-foreground">Select an Objective</h4>
                 <div className="max-h-[250px] space-y-1 overflow-y-auto">
                   {objectives?.length === 0 ? (
-                    <div className="flex h-[100px] items-center justify-center">
-                      <p className="text-center text-sm text-muted-foreground">No objectives added.</p>
+                    <div className="h-[200px]">
+                      <EmptyState
+                        icon={ClipboardList}
+                        title="No objectives added"
+                      />
                     </div>
                   ) : (
                     objectives?.map((objective, index) => (
@@ -440,8 +463,8 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                         key={objective.program_objective_id}
                         onClick={() => setSelectedObjectiveId(objective.program_objective_id)}
                         className={`group flex cursor-pointer items-center justify-between rounded-md px-3 py-2 transition-colors ${objective.program_objective_id === selectedObjectiveId
-                            ? 'bg-primary/10 text-primary'
-                            : 'text-foreground hover:bg-primary/5'
+                          ? 'bg-primary/10 text-primary'
+                          : 'text-foreground hover:bg-primary/5'
                           }`}
                       >
                         <div className="flex items-center gap-3">
@@ -462,9 +485,10 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                     ))
                   )}
                 </div>
-                <div className="mt-4 border-t border-border pt-4">
+                <div className="mt-auto border-t border-border pt-4">
                   <Button onClick={() => addObjective()} variant="default" className="w-full">
-                    <Plus className="h-4 w-4" /> Add Objective
+                    <FilePlus2 className="h-4 w-4" />
+                    <span className='hidden xl:inline'>Add Objective</span>
                   </Button>
                 </div>
               </div>
@@ -487,10 +511,11 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                     )}
                   </div>
                 ) : (
-                  <div className="flex h-full flex-col items-center justify-center text-center text-muted-foreground">
-                    <X className="mb-2 h-8 w-8" />
-                    <p className="font-medium">No Objective Selected</p>
-                  </div>
+                  <EmptyState
+                    icon={MousePointerClick}
+                    title="No objective selected"
+                    description="Select an objective from the list to view details"
+                  />
                 )}
               </div>
             </div>
@@ -516,8 +541,8 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                 <h4 className="mb-3 text-xs text-muted-foreground">Select an Image</h4>
                 <div className="max-h-[250px] space-y-1 overflow-y-auto">
                   {galleryItems?.length === 0 ? (
-                    <div className="flex h-[100px] items-center justify-center">
-                      <p className="text-center text-sm text-muted-foreground">No images added.</p>
+                    <div className="h-[200px]">
+                      <EmptyState icon={Images} title="No images added" />
                     </div>
                   ) : (
                     galleryItems?.map((item, index) => (
@@ -525,8 +550,8 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                         key={item.program_gallery_id}
                         onClick={() => setSelectedGalleryId(item.program_gallery_id)}
                         className={`group flex cursor-pointer items-center justify-between rounded-md px-3 py-2 transition-colors ${item.program_gallery_id === selectedGalleryId
-                            ? 'bg-primary/10 text-primary'
-                            : 'text-foreground hover:bg-primary/5'
+                          ? 'bg-primary/10 text-primary'
+                          : 'text-foreground hover:bg-primary/5'
                           }`}
                       >
                         <div className="flex items-center gap-3">
@@ -549,7 +574,8 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                 </div>
                 <div className="mt-4 border-t border-border pt-4">
                   <Button onClick={addGallery} variant="default" className="w-full">
-                    <Plus className="h-4 w-4" /> Add Image
+                    <ImagePlus className="h-4 w-4" /> 
+                    <span className='hidden xl:inline'>Add Image</span>
                   </Button>
                 </div>
               </div>
@@ -571,10 +597,11 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                     )}
                   </div>
                 ) : (
-                  <div className="flex h-full flex-col items-center justify-center text-center text-muted-foreground">
-                    <X className="mb-2 h-8 w-8" />
-                    <p className="font-medium">No Image Selected</p>
-                  </div>
+                  <EmptyState
+                    icon={MousePointerClick}
+                    title="No image selected"
+                    description="Select an image from the list to preview"
+                  />
                 )}
               </div>
             </div>
