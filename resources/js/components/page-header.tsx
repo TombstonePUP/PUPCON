@@ -1,7 +1,7 @@
 import { LayoutDashboard } from 'lucide-react';
 
 type PageTitleProps = {
-  title: string;
+  title: React.ReactNode;
   description?: string;
   actions?: React.ReactNode;
   icon?: React.ReactNode;

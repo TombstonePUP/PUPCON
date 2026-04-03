@@ -16,8 +16,8 @@ function Separator({
       className={cn(
         "shrink-0 rounded-full",
         orientation === "horizontal"
-          ? "h-[1px] w-full bg-gray-300"
-          : "h-full w-[1px] bg-gray-300",
+          ? "h-[1px] w-full bg-muted"
+          : "h-full w-[1px] bg-muted",
         className
       )}
       {...props}
