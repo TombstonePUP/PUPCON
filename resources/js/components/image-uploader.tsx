@@ -66,40 +66,21 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
-
-    // Draw image
     const scaledW = img.naturalWidth * zoom;
     const scaledH = img.naturalHeight * zoom;
     const baseX = (CANVAS_W - scaledW) / 2 + imageOffset.x;
     const baseY = (CANVAS_H - scaledH) / 2 + imageOffset.y;
 
+    // 1. Clear everything
+    ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+
+    // 2. Draw full image (dimmed background)
+    ctx.save();
+    ctx.globalAlpha = 0.35;
     ctx.drawImage(img, baseX, baseY, scaledW, scaledH);
+    ctx.restore();
 
-    // Dim overlay
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-
-    // Clear crop area
-    ctx.clearRect(cropArea.x, cropArea.y, cropArea.width, cropArea.height);
-    ctx.drawImage(img, baseX, baseY, scaledW, scaledH);
-    ctx.clearRect(0, 0, cropArea.x, CANVAS_H);
-    ctx.clearRect(cropArea.x + cropArea.width, 0, CANVAS_W - cropArea.x - cropArea.width, CANVAS_H);
-    ctx.clearRect(cropArea.x, 0, cropArea.width, cropArea.y);
-    ctx.clearRect(cropArea.x, cropArea.y + cropArea.height, cropArea.width, CANVAS_H - cropArea.y - cropArea.height);
-
-    // Re-draw dim
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    // Top
-    ctx.fillRect(0, 0, CANVAS_W, cropArea.y);
-    // Bottom
-    ctx.fillRect(0, cropArea.y + cropArea.height, CANVAS_W, CANVAS_H - cropArea.y - cropArea.height);
-    // Left
-    ctx.fillRect(0, cropArea.y, cropArea.x, cropArea.height);
-    // Right
-    ctx.fillRect(cropArea.x + cropArea.width, cropArea.y, CANVAS_W - cropArea.x - cropArea.width, cropArea.height);
-
-    // Re-draw image in crop area only
+    // 3. Draw full-resolution image clipped to crop area only
     ctx.save();
     ctx.beginPath();
     ctx.rect(cropArea.x, cropArea.y, cropArea.width, cropArea.height);
@@ -107,12 +88,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     ctx.drawImage(img, baseX, baseY, scaledW, scaledH);
     ctx.restore();
 
-    // Crop border
+    // 4. Crop border
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 2;
     ctx.strokeRect(cropArea.x, cropArea.y, cropArea.width, cropArea.height);
 
-    // Grid lines
+    // 5. Grid lines
     ctx.strokeStyle = 'rgba(255,255,255,0.4)';
     ctx.lineWidth = 0.5;
     for (let i = 1; i < 3; i++) {
@@ -126,7 +107,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       ctx.stroke();
     }
 
-    // Corner handles
+    // 6. Corner handles
     const handleSize = 10;
     ctx.fillStyle = 'white';
     const corners = [
