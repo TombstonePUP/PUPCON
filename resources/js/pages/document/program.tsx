@@ -192,17 +192,19 @@ export default function Programs({ program }: ProgramProps) {
           description="Manage program information, objectives, and assessment areas."
           actions={
             <div className="flex flex-col items-end gap-2">
-              <Badge
-                variant={
-                  selected_level?.remarks?.toLowerCase().includes('passed')
-                    ? 'success'
-                    : selected_level?.remarks?.toLowerCase().includes('failed')
-                      ? 'destructive'
-                      : 'warning'
-                }
-              >
-                {selected_level?.remarks}
-              </Badge>
+              <div className="absolute top-0 right-0 size-24 overflow-hidden rounded-tr-lg">
+                <div
+                  className={`absolute top-6 -right-10 w-36 rotate-45 py-0.5 text-center text-xs font-semibold text-white
+      ${selected_level?.remarks?.toLowerCase().includes('passed')
+                      ? 'bg-green-600'
+                      : selected_level?.remarks?.toLowerCase().includes('failed')
+                        ? 'bg-destructive'
+                        : 'bg-amber-500'
+                    }`}
+                >
+                  {selected_level?.remarks}
+                </div>
+              </div>
               {levelSelectorControls}
             </div>
           }

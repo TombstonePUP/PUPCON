@@ -136,7 +136,7 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                                 />
                                 <Label
                                     htmlFor="is-container-mode"
-                                    className="flex gap-2 text-sm leading-none font-medium text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    className="flex gap-2 text-sm leading-none font-medium text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
                                     Benchmark Container
                                     <TooltipProvider>

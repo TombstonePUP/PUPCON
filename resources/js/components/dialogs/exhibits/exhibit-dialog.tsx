@@ -160,7 +160,7 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                             />
                             <Label
                                 htmlFor="is-container-mode"
-                                className="block text-sm leading-none font-medium text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                className="block text-sm leading-none font-medium text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
                                 Exhibit Container
                             </Label>

@@ -241,7 +241,7 @@ export default function Programs({ program }: PerProgramProps) {
           <div className="absolute top-0 right-0 h-full w-2/3 opacity-40">
             <div className="relative h-full w-full">
               <img
-                src="/images/homepage-slides/1.jpg"
+                src={program.program_image_path || "/images/homepage-slides/1.jpg"}
                 alt="Program Background"
                 className="h-full w-full object-cover"
                 style={{

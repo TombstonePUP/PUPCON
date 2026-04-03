@@ -12,6 +12,7 @@ import { useForm } from '@inertiajs/react';
 import { CircleAlert, ClipboardList, Edit2, EditIcon, FilePlus2, ImageIcon, ImagePlus, Images, MousePointerClick, Plus, Trash2, Upload, X } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react';
 import { LucideIcon } from 'lucide-react';
+import ImageUploader from '@/components/image-uploader';
 
 type EmptyStateProps = {
   icon?: LucideIcon;
@@ -378,23 +379,12 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                 <Label className="mb-2 block text-sm font-medium text-foreground">Program Image</Label>
                 <div className="flex flex-col gap-3">
                   {!data.previewUrl ? (
-                    <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-muted/30 p-12 text-center transition-all duration-300 hover:border-primary/70">
-                      <input type="file" className="hidden" accept="image/*" disabled={processing} onChange={handleImageChange} />
-                      <div className="flex flex-col items-center justify-center gap-4 pt-5 pb-6">
-                        <div className="relative grid h-16 w-16 place-items-center rounded-full border-2 border-dashed border-border transition-transform duration-300 group-hover:scale-105">
-                          <Upload className="h-6 w-6 text-muted-foreground" />
-                        </div>
-                        <div className="mt-4 text-center">
-                          <p className="mb-2 text-lg font-semibold text-foreground">Upload Welcome Banner</p>
-                          <p className="text-sm text-muted-foreground">PNG, JPG up to 5MB</p>
-                        </div>
-                        <div className="mt-2 flex gap-2">
-                          <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">PNG</span>
-                          <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">JPG</span>
-                          <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">Max 5MB</span>
-                        </div>
-                      </div>
-                    </label>
+                    <ImageUploader
+                      onImageChange={(file, previewUrl) => setData({ ...data, banner: file, previewUrl })}
+                      aspectRatio={16 / 9}   // optional — omit for free crop
+                      uploadText="Upload Welcome Banner"
+                      previewHeight="h-48"
+                    />
                   ) : (
                     <div className="group relative">
                       <img src={data.previewUrl} alt="Preview" className="h-80 w-full rounded-lg border border-border object-cover" />
@@ -556,8 +546,8 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                         key={item.program_gallery_id}
                         onClick={() => setSelectedGalleryId(item.program_gallery_id)}
                         className={`group flex cursor-pointer items-center justify-between rounded-md border px-3 py-2 transition-colors ${item.program_gallery_id === selectedGalleryId
-                            ? 'border-primary/30 bg-primary/10 text-primary/95'
-                            : 'border-border bg-background text-foreground hover:border-primary/20 hover:bg-primary/5'
+                          ? 'border-primary/30 bg-primary/10 text-primary/95'
+                          : 'border-border bg-background text-foreground hover:border-primary/20 hover:bg-primary/5'
                           }`}
                       >
                         <div className="flex min-w-0 items-center gap-2">

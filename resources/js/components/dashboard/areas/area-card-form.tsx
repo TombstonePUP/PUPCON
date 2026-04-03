@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AreaFormCategory, AreaForms, Program, ProgramAreas } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { CheckCircle2, CircleDashed, DownloadIcon, Edit, FileUp, FileX, Info, MoreVertical, Plus, Trash2, XCircle } from 'lucide-react';
+import { CheckCircle2, CircleDashed, DownloadIcon, Edit, FilePlus, FileUp, FileX, Info, MoreVertical, Plus, Trash2, XCircle } from 'lucide-react';
 
 interface AreaFormDialogParams {
     type: 'view' | 'upload' | 'add' | 'delete-form' | 'delete' | 'rejected';
@@ -180,10 +180,10 @@ export default function AreaCards({ program, area, forms, resolveFormDialog }: A
                 !area.archive && (
                     <Button
                         variant="outline"
-                        className="border-muted-foreground/40 text-muted-foreground/80 hover:border-muted-foreground/80 hover:bg-muted/50 hover:text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-colors"
+                        className="border-muted-foreground/40 text-muted-foreground/80 hover:border-muted-foreground/80 bg-muted/50 hover:bg-muted/30 hover:text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-colors"
                         onClick={() => resolveFormDialog({ type: 'add' })}
                     >
-                        <Plus className="h-8 w-8" />
+                        <FilePlus className="h-8 w-8" />
                         <p className="text-sm font-medium">Add Form</p>
                     </Button>
                 )}

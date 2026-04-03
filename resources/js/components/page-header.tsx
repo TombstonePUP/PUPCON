@@ -9,7 +9,7 @@ type PageTitleProps = {
 
 export function PageTitle({ title, description, actions, icon = <LayoutDashboard className="size-5" /> }: PageTitleProps) {
   return (
-    <div className="rounded-xl border overflow-hidden w-full">
+    <div className="relative rounded-xl border overflow-hidden w-full">
       <div className="flex items-center justify-between px-7 py-6 gap-6">
         <div className="flex items-center gap-4 min-w-0">
           <div className="shrink-0 flex items-center justify-center size-12 rounded-lg bg-primary text-primary-foreground">

@@ -46,9 +46,9 @@ export function DeleteBenchmark({ outline, program, area_id, onClose }: DeleteBe
                     </div>
                 </DialogHeader>
 
-                <div className="my-0 rounded-md border border-red-100 bg-red-50 p-4">
-                    <p className="text-sm text-red-800">
-                        <span className="mb-1 block font-semibold text-red-900">Warning: Irreversible Action!</span>
+                <div className="my-0 rounded-md border border-destructive/20 bg-destructive/10 p-4">
+  <p className="text-sm text-destructive">
+    <span className="mb-1 block font-semibold text-destructive">Warning: Irreversible Action!</span>
                         This action will permanently delete the benchmark and associated document (if any). This action cannot be undone.
                     </p>
                 </div>
