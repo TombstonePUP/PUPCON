@@ -192,7 +192,7 @@ export default function Programs({ program }: ProgramProps) {
           description="Manage program information, objectives, and assessment areas."
           actions={
             <div className="flex flex-col items-end gap-2">
-              <div className="absolute top-0 right-0 size-24 overflow-hidden rounded-tr-lg">
+              <div className="pointer-events-none  absolute top-0 right-0 w-20 h-24 overflow-hidden rounded-tr-lg">
                 <div
                   className={`absolute top-6 -right-10 w-36 rotate-45 py-0.5 text-center text-xs font-semibold text-white
       ${selected_level?.remarks?.toLowerCase().includes('passed')

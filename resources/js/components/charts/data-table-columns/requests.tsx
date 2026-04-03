@@ -72,7 +72,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
           className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          <div>Benchmark Type</div>
+          Benchmark Type
           <ArrowUpDown className="h-4" />
         </Button>
       ),
