@@ -16,8 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-use Mostafaznv\PdfOptimizer\Laravel\Facade\PdfOptimizer;
+// Compression is handled client-side before upload — no server-side optimizer needed.
 
 
 class AreaFilesController extends Controller
@@ -88,57 +87,8 @@ class AreaFilesController extends Controller
         $category_name = Str::slug($categoryName, '_');
         $filePath = "documents/{$degree_type}_{$program_name}/{$level}/{$area_name}/{$parameter_name}/{$category_name}";
 
-        // Ensure temp directory exists
-        if (!Storage::disk('public')->exists('temp')) {
-            Storage::disk('public')->makeDirectory('temp');
-        }
-
-        // Store original file temporarily
-        $tempFileName = 'temp_' . Str::uuid() . '.pdf';
-        $tempFilePath = "temp/{$tempFileName}";
-        Storage::disk('public')->putFileAs('temp', $file, $tempFileName);
-
-        Log::info('Temp file created: ' . $tempFilePath);
-        Log::info('Temp file size: ' . Storage::disk('public')->size($tempFilePath) . ' bytes');
-
-        // Optimize PDF
-        try {
-            Log::info('Starting PDF optimization...');
-            $customTempPath = str_replace('/', '\\', storage_path('app/public/temp'));
-            putenv('TMP=' . $customTempPath);
-            putenv('TEMP=' . $customTempPath);
-
-            Log::info('Using custom TEMP/TMP path: ' . $customTempPath);
-
-            $result = PdfOptimizer::fromDisk('public')
-                ->open($tempFilePath)
-                ->toDisk('public')
-                ->optimize("{$filePath}/{$fileName}");
-
-            Log::info('Optimization status: ' . ($result->status ? 'SUCCESS' : 'FAILED'));
-            Log::info('Optimization message: ' . $result->message);
-
-            if (Storage::disk('public')->exists("{$filePath}/{$fileName}")) {
-                Log::info('Optimized file created successfully');
-                Log::info('Optimized file size: ' . Storage::disk('public')->size("{$filePath}/{$fileName}") . ' bytes');
-            } else {
-                Log::error('Optimized file NOT found!');
-            }
-
-            // Delete temporary file
-            Storage::disk('public')->delete($tempFilePath);
-            Log::info('Temp file deleted');
-
-            if (!$result->status) {
-                Storage::disk('public')->putFileAs($filePath, $file, $fileName);
-                Log::warning('PDF optimization failed, using original file: ' . $result->message);
-            }
-        } catch (\Exception $e) {
-            Storage::disk('public')->delete($tempFilePath);
-            Storage::disk('public')->putFileAs($filePath, $file, $fileName);
-            Log::error('PDF optimization error: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-        }
+        // PDF is already compressed by the client before upload — store directly.
+        Storage::disk('public')->putFileAs($filePath, $file, $fileName);
 
         $areaFile = $parameterOutlines->AreaFiles()->create([
             'file_name' => $fileName,
@@ -169,7 +119,7 @@ class AreaFilesController extends Controller
         $areaFile = $parameterOutlines->AreaFiles;
 
         if ($areaFile && Storage::disk('public')->exists($areaFile->file_path)) {
-            return Storage::disk('public')->download($areaFile->file_path, $areaFile->file_name);
+            return response()->download(storage_path("app/public/" . $areaFile->file_path), $areaFile->file_name);
         } else {
             return redirect()->back()
                 ->with('type', 'error')
