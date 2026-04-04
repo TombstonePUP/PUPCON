@@ -14,6 +14,8 @@ use App\Http\Middleware\MustUpdatePassword;
 use App\Http\Middleware\UserProgramPrivileges;
 use App\Http\Middleware\UserAreaPrivileges;
 
+use App\Http\Middleware\SecurityHeaders;
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -25,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
+            SecurityHeaders::class,
         ]);
         /* $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,

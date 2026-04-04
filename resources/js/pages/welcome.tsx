@@ -15,7 +15,6 @@ const Link = ({ href, children, ...props }: { href: string; children: React.Reac
 
 const router = {
   visit: (url: string, options: any) => {
-    console.log(`Mock Router: visit "${url}" with options:`, options);
   },
 };
 
@@ -456,8 +455,6 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
   }, []);
 
   const carousel_paths = carousel_images.map((img) => img.image_path);
-  // console.log(carousel_images[0].image_path);
-  // console.log(carousel_images);
 
   return (
     <>
