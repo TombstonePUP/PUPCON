@@ -57,7 +57,7 @@ export default function ParameterAccordion({
   return (
     <>
       <Accordion type="single" collapsible className="flex w-full flex-col gap-4">
-        {areaParameters?.length > 0 ? (
+        {areaParameters && areaParameters.length > 0 ? (
           areaParameters?.map((parameter) => (
             <AccordionItem
               value={`item-${parameter.area_parameter_id}`}
@@ -100,7 +100,7 @@ export default function ParameterAccordion({
                 )}
               </AccordionTrigger>
               <AccordionContent className="p-6 pt-0">
-                {parameter.parameter_outlines?.length > 0 ? (
+                {parameter.parameter_outlines && parameter.parameter_outlines.length > 0 ? (
                   parameterOutlineCategories?.map((category) => {
                     // Optimized filtering without in-place mutation
                     const filteredOutlines = (parameter.parameter_outlines || [])
