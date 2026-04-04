@@ -172,32 +172,33 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
               }
               className={`${canClick ? 'cursor-pointer' : 'cursor-not-allowed'} group`}
             >
-              <div className="relative rounded-xl border border-border bg-card p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-border/80">                {(role === 'Admin' || role === 'Coordinator') && program.is_active && (
-                <div className="absolute top-4 right-4 flex h-18 w-18 gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditProgram(program);
-                    }}
-                  >
-                    <Edit className="h-4 w-4 text-muted-foreground" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteProgram(program);
-                    }}
-                  >
-                    <Archive className="h-4 w-4 text-muted-foreground" />
-                  </Button>
-                </div>
-              )}
+              <div className="relative rounded-xl border border-border bg-card p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-border/80">
+                {(role === 'Admin' || role === 'Coordinator') && program.is_active && (
+                  <div className="absolute top-4 right-4 flex h-18 w-18 gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditProgram(program);
+                      }}
+                    >
+                      <Edit className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteProgram(program);
+                      }}
+                    >
+                      <Archive className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                  </div>
+                )}
                 <div className="mb-3 flex items-start justify-between">
                   <div className="flex flex-wrap gap-1">
                     <Badge variant="destructive">
@@ -220,7 +221,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                   </div>
                 </div>
 
-                <h3 className="mb-2 font-semibold text-foreground transition-colors group-hover:text-[#7f1414] capitalize">
+                <h3 className="mb-2 font-semibold text-foreground transition-colors group-hover:text-primary capitalize">
                   {program.program_name}
                 </h3>
                 <div className="mb-3 flex text-sm text-muted-foreground w-full truncate">

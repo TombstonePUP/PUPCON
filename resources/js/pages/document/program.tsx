@@ -255,7 +255,7 @@ export default function Programs({ program }: ProgramProps) {
                     return (
                       <div
                         key={item.area_id}
-                        className="group relative flex flex-col rounded-xl border border-border bg-card transition-all duration-150 hover:border-border/60"
+                        className="group relative flex flex-col rounded-xl border border-border bg-card transition-all duration-150 hover:border-border/80 transition-all duration-150 hover:-translate-y-0.5"
                       >
                         {isAssigned ? (
                           <Link
@@ -266,7 +266,7 @@ export default function Programs({ program }: ProgramProps) {
                             })}
                             className="block p-6"
                           >
-                            <h4 className="text-base font-semibold text-foreground">Area {item.area_numeral}</h4>
+                            <h4 className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">Area {item.area_numeral}</h4>
                             <div className="flex items-start justify-between">
                               <p className="mt-1 text-sm text-muted-foreground">{item.area_name}</p>
                               {role !== 'Admin' && role !== 'Coordinator' && selected_level.is_active && (
