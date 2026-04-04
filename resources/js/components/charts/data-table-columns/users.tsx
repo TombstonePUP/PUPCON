@@ -21,6 +21,7 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
   return [
     {
       accessorKey: 'name',
+      accessorFn: (row) => `${row.first_name} ${row.last_name} ${row.email}`,
       header: () => <div className="text-left font-medium text-muted-foreground">Name</div>,
       cell: ({ row }) => {
         const firstName = row.original.first_name;
@@ -65,6 +66,7 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
       accessorFn: (row) =>
         row.areas?.map((a) => a.levels.programs?.program_name).filter(Boolean) ?? [],
       accessorKey: 'programs',
+      enableGlobalFilter: true,
       header: () => <div className="font-medium text-muted-foreground">Programs</div>,
       filterFn: (row, id, value: string[]) => {
         const programs = row.getValue(id) as string[];
@@ -107,6 +109,9 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
     },
     {
       accessorKey: 'areas',
+      enableGlobalFilter: true,   
+      accessorFn: (row) =>
+        row.areas?.map((a) => `Area ${a.area_number}`).join(' ') ?? '',
       header: () => <div className="text-center font-medium text-muted-foreground">Areas</div>,
       cell: ({ row }) => {
         const areas = row.original.areas || [];
@@ -131,7 +136,6 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
     },
     {
       id: 'actions',
-      header: () => <div className="text-right font-medium text-muted-foreground">Actions</div>,
       cell: ({ row }) => (
         <div className="flex justify-end">
           <UserTableActions user={row.original} resolveDialog={resolveDialog} />
@@ -142,8 +146,8 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
 }
 
 export function getUserFilterOptions(roles: AssignableRoles[], programRoles: AssignablePrograms[]) {
-    return {
-        roleOptions: roles.map((r) => ({ label: r.role_name, value: r.role_name })),
-        programOptions: programRoles.map((p) => ({ label: p.program_name, value: p.program_name })),
-    };
+  return {
+    roleOptions: roles.map((r) => ({ label: r.role_name, value: r.role_name })),
+    programOptions: programRoles.map((p) => ({ label: p.program_name, value: p.program_name })),
+  };
 }

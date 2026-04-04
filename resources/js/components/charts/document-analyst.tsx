@@ -2,7 +2,7 @@ import * as React from "react";
 import { useMemo, useState } from "react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Label, Pie, PieChart, XAxis, YAxis } from "recharts";
 import { type DocumentStatistics, type FrequencyUploads, type OverallUploads } from "@/types";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   ChartConfig,
@@ -59,7 +59,7 @@ function AnalyticsCard({
     <Card className="h-full">
       <div className="flex items-center justify-between bg-muted/50 py-4 px-6 rounded-t-lg border-b">
         <div>
-          <p className="text-sm font-semibold text-foreground">{title}</p>
+          <CardTitle className="text-sm font-semibold text-foreground">{title}</CardTitle>
           <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
         </div>
         {filter}

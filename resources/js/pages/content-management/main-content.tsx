@@ -28,6 +28,7 @@ import {
   Vmgo,
 } from '@/types/content';
 import { Head } from '@inertiajs/react';
+import TableOfContents from '@/components/table-of-contents';
 
 interface History {
   directors: CampusDirectors[];
@@ -203,23 +204,9 @@ const MainContent = ({ ...props }: MainContentProps) => {
           </div>
 
           {/* Right Sidebar - Quick Links */}
-          <div className="shrink-0 sticky top-6 self-start rounded-lg p-6 hidden xl:inline">
-            <h2 className="mb-4 text-muted-foreground"> On this page</h2>
-            <nav className="space-y-1 ml-2 border-l border-border">
-              {sections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => scrollToSection(section.ref, section.id)}
-                  className={`block w-full text-left text-sm px-4 my-4 border-l-3 transition-all duration-150 ${activeSection === section.id
-                    ? 'border-primary'
-                    : 'border-transparent text-muted-foreground font-normal hover:text-foreground hover:border-border'
-                    }`}
-                >
-                  {section.label}
-                </button>
-              ))}
-            </nav>
-          </div>
+          <TableOfContents
+            sections={sections}
+          />
         </div>
       </div>
     </AppLayout>

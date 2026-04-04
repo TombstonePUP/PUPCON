@@ -11,6 +11,7 @@ import { activityDummyLogs, documentDummyStatistics, frequencyDummyUploads, over
 import { ChartArea, FileCheck2, FileClock, FileX2, Users } from 'lucide-react';
 import { PageTitle } from '@/components/page-header';
 import { useEffect, useState } from 'react';
+import DeadlineCountdown from '@/components/deadline-countdown';
 
 function useLiveDateTime() {
   const [now, setNow] = useState(new Date());
@@ -106,14 +107,12 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Analytics" />
       <div className="flex flex-1 flex-col gap-4 rounded-xl p-6">
+
         <PageTitle
           title={`${getGreeting()}, ${auth.user.first_name}!`}
-          description='Welcome back to the accreditation portal.'
+          description={formattedDate}
           actions={
-            <div className="shrink-0 text-right">
-              <p className="text-sm font-medium text-foreground">{formattedTime}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{formattedDate}</p>
-            </div>
+            <DeadlineCountdown />
           }
         />
 

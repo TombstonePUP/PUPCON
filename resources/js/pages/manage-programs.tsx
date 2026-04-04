@@ -221,9 +221,9 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
                   </div>
                 </div>
 
-                <h3 className="mb-2 font-semibold text-foreground transition-colors group-hover:text-primary capitalize">
+                <CardTitle className="mb-2 font-semibold text-foreground transition-colors group-hover:text-primary capitalize">
                   {program.program_name}
-                </h3>
+                </CardTitle>
                 <div className="mb-3 flex text-sm text-muted-foreground w-full truncate">
                   <span>{program.degree_type}</span>
                   <span className="mx-1">in</span>
@@ -249,6 +249,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
       <Head title="Manage Programs" />
       <div className="flex h-full flex-1 flex-col gap-6 p-6">
         <PageTitle
+          icon={<GraduationCap className="size-5" />}
           title='Programs'
           description='Manage academic programs for PUP San Juan.'
           actions={

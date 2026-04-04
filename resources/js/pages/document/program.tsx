@@ -18,9 +18,10 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgram, ProgramAreas } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Archive, BookOpen, ChevronDown, Download, EditIcon, MoreVertical, Plus } from 'lucide-react';
+import { AlignLeft, Archive, BookOpen, ChevronDown, Download, EditIcon, Menu, MoreVertical, Plus, TableOfContents as TableOfContentsIcon } from 'lucide-react';
 import { PageTitle } from '@/components/page-header';
 import { Card } from '@/components/ui/card';
+import TableOfContents from '@/components/table-of-contents';
 
 export interface ProgramProps {
   program: PerProgram;
@@ -185,8 +186,9 @@ export default function Programs({ program }: ProgramProps) {
       <Head title={`${program.program_name?.trim().replace(/\b\w/g, (c) => c.toUpperCase())} - Program Management`} />
       <div className="flex flex-col gap-6 p-6">
         <PageTitle
+          icon={<BookOpen className="size-5" />}
           title={
-            <span className="capitalize">
+            <span>
               {program.degree_type} in {program.program_name}
             </span>
           }
@@ -196,10 +198,10 @@ export default function Programs({ program }: ProgramProps) {
               <div className="pointer-events-none  absolute top-0 right-0 w-20 h-24 overflow-hidden rounded-tr-lg">
                 <div
                   className={`absolute top-6 -right-10 w-36 rotate-45 py-0.5 text-center text-xs font-semibold text-white ${selected_level?.remarks?.toLowerCase().includes('passed')
-                      ? 'bg-success'
-                      : selected_level?.remarks?.toLowerCase().includes('failed')
-                        ? 'bg-destructive'
-                        : 'bg-warning'
+                    ? 'bg-success'
+                    : selected_level?.remarks?.toLowerCase().includes('failed')
+                      ? 'bg-destructive'
+                      : 'bg-warning'
                     }`}
                 >
                   {selected_level?.remarks}
@@ -355,23 +357,29 @@ export default function Programs({ program }: ProgramProps) {
           </div>
 
           {(role === 'Admin' || role === 'Coordinator') && (
-            <div className="shrink-0 sticky top-6 self-start rounded-lg p-6 hidden xl:inline">
-              <h2 className="mb-4 text-muted-foreground">On this page</h2>
-              <nav className="space-y-1 ml-2 border-l border-border">
-                {sections.map((section) => (
-                  <button
-                    key={section.id}
-                    onClick={() => scrollToSection(section.ref, section.id)}
-                    className={`block w-full text-left text-sm px-4 my-4 border-l-3 transition-all duration-150 ${activeSection === section.id
-                      ? 'border-primary'
-                      : 'border-transparent text-muted-foreground font-normal hover:text-foreground hover:border-border'
-                      }`}
-                  >
-                    {section.label}
-                  </button>
-                ))}
-              </nav>
-            </div>
+            // <div className="shrink-0 sticky top-6 self-start rounded-lg p-6 hidden xl:inline">
+            //   <h2 className="mb-4 text-muted-foreground font-semibold font-montserrat">
+            //     <AlignLeft className="inline-block size-5 ml-1.5 mr-2" />On this page</h2>
+            //   <nav className="space-y-1 ml-2 border-l border-border">
+            //     {sections.map((section) => (
+            //       <button
+            //         key={section.id}
+            //         onClick={() => scrollToSection(section.ref, section.id)}
+            //         className={`block w-full text-left text-sm px-4 my-4 border-l-3 transition-all duration-150 ${activeSection === section.id
+            //           ? 'border-primary'
+            //           : 'border-transparent text-muted-foreground font-normal hover:text-foreground hover:border-border'
+            //           }`}
+            //       >
+            //         {section.label}
+            //       </button>
+            //     ))}
+            //   </nav>
+            // </div>
+
+
+            <TableOfContents
+              sections={sections}
+            />
           )}
         </div>
       </div>

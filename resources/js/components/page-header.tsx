@@ -1,5 +1,5 @@
 import { LayoutDashboard } from 'lucide-react';
-import { Card } from './ui/card';
+import { Card, CardTitle } from './ui/card';
 
 type PageTitleProps = {
   title: React.ReactNode;
@@ -17,7 +17,7 @@ export function PageTitle({ title, description, actions, icon = <LayoutDashboard
             {icon}
           </div>
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold text-foreground">{title}</h1>
+            <CardTitle className="text-2xl">{title}</CardTitle>
             {description && (
               <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
             )}
