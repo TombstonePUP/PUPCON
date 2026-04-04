@@ -109,7 +109,7 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                     <Label className="flex h-36 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
-                                                className="mb-4 h-8 w-8 text-gray-500"
+                                                className="mb-4 h-8 w-8 text-muted-foreground"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 fill="none"
                                                 viewBox="0 0 20 16"

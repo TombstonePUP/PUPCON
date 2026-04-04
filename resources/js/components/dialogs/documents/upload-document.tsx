@@ -107,7 +107,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                                 >
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
-                                            className="mb-4 h-8 w-8 text-gray-500"
+                                            className="mb-4 h-8 w-8 text-muted-foreground"
                                             aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -142,7 +142,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                                     className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${processing ? 'pointer-events-none opacity-70' : ''
                                         }`}
                                 >
-                                    <span className="text-sm font-semibold text-gray-700">{data.document.name}</span>
+                                    <span className="text-sm font-semibold text-foreground">{data.document.name}</span>
                                     <Button
                                         type="button"
                                         variant="outline"

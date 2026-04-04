@@ -354,14 +354,9 @@ export default function Programs({ program }: ProgramProps) {
             </Card>
           </div>
 
-          {/* Right Sidebar */}
-
-          {/* Level Selector */}
-
-
           {(role === 'Admin' || role === 'Coordinator') && (
             <div className="shrink-0 sticky top-6 self-start rounded-lg p-6 hidden xl:inline">
-              <h2 className="mb-4 font-semibold">On this page</h2>
+              <h2 className="mb-4 text-muted-foreground">On this page</h2>
               <nav className="space-y-1 ml-2 border-l border-border">
                 {sections.map((section) => (
                   <button

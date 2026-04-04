@@ -1,21 +1,43 @@
 import { Button } from '@/components/ui/button';
 import { OtherServices } from '@/types/content';
-import { EditIcon, Link, Plus, Trash2, X } from 'lucide-react';
+import { EditIcon, Link, Plus, Trash2, X, MousePointerClick, LibrarySquare } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import OtherServicesDialog from '../dialogs/content/other-services-dialog';
+import { Separator } from '@/components/ui/separator';
+import { LucideIcon } from 'lucide-react';
+
+type EmptyStateProps = {
+    icon?: LucideIcon;
+    title: string;
+    description?: string;
+};
+
+export function EmptyState({ icon: Icon = MousePointerClick, title, description }: EmptyStateProps) {
+    return (
+        <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
+            <div className="rounded-full bg-muted p-4">
+                <Icon className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <p className="text-sm font-medium text-foreground/80">{title}</p>
+            {description && (
+                <p className="text-xs text-muted-foreground">{description}</p>
+            )}
+        </div>
+    );
+}
+
+const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
+    <button className={`p-1 text-muted-foreground transition-colors hover:text-foreground ${className}`} type="button" {...props}>
+        {children}
+    </button>
+);
 
 interface OtherServicesSectionProps {
     services: OtherServices[];
     onUpdateServices: (updatedServices: OtherServices[]) => void;
 }
 
-const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
-    <button className={`p-1 text-gray-400 transition-colors hover:text-red-600 ${className}`} type="button" {...props}>
-        {children}
-    </button>
-);
-
-export default function ServicesSection({...props}: OtherServicesSectionProps) {
+export default function ServicesSection({ ...props }: OtherServicesSectionProps) {
     const { services, onUpdateServices } = props;
     const [servicesList, setServicesList] = useState<OtherServices[]>(services ?? []);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -34,10 +56,10 @@ export default function ServicesSection({...props}: OtherServicesSectionProps) {
         setSelectedServiceId(null);
     };
 
-    const handleEditService = (services: OtherServices) => {
+    const handleEditService = (service: OtherServices) => {
+        setSelectedServiceId(service.service_id);
         setDialogAction('edit');
         setDialogOpen(true);
-        setSelectedServiceId(services.service_id);
     };
 
     const handleSaveService = (service: OtherServices) => {
@@ -68,97 +90,101 @@ export default function ServicesSection({...props}: OtherServicesSectionProps) {
     return (
         <>
             <div className="mb-6">
-                <h3 className="mb-4 text-base font-semibold text-gray-900">Services & Portals</h3>
+                <h3 className="mb-4 text-base font-semibold text-foreground">Services & Portals</h3>
 
-                <div className="flex min-h-[300px] rounded-lg border border-gray-200">
-                    {/* Left Pane: Service List */}
-                    <div className="flex w-2/3 flex-col justify-between border-r border-gray-200 bg-gray-50/50 p-6">
-                        <div className="max-h-[300px] overflow-y-auto pr-2">
-                            <h4 className="mb-3 text-xs text-gray-500">Select a Service</h4>
-                            <div className="grid grid-cols-2 gap-3 space-y-1">
-                                {servicesList?.map((service) => (
+                <div className="flex min-h-[400px] rounded-lg border border-border">
+                    {/* Left Pane: Service List (1/3) */}
+                    <div className="flex w-1/3 flex-col border-r border-border bg-muted/30 p-4">
+                        <h4 className="mb-3 text-xs text-muted-foreground">Select a Service</h4>
+                        <div className="flex-1 overflow-y-auto space-y-1">
+                            {servicesList?.length === 0 ? (
+                                <div className="h-[200px]">
+                                    <EmptyState icon={LibrarySquare} title="No services added" />
+                                </div>
+                            ) : (
+                                servicesList?.map((service) => (
                                     <div
                                         key={service.service_id}
                                         onClick={() => setSelectedServiceId(service.service_id)}
-                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-3 transition-colors ${
-                                            service.service_id === selectedServiceId ? 'bg-[#7f1414]/4' : 'bg-white hover:bg-gray-50'
-                                        }`}
+                                        className={`group flex cursor-pointer items-center justify-between rounded-md border px-3 py-2 transition-colors ${service.service_id === selectedServiceId
+                                            ? 'border-primary/30 bg-primary/10 text-primary/95'
+                                            : 'border-border bg-background text-foreground hover:border-primary/20 hover:bg-primary/5'
+                                            }`}
                                     >
-                                        <div className="flex items-center gap-2 truncate text-sm">
-                                            <Link className="h-4 w-4 flex-shrink-0 text-gray-500" />
-                                            <span className={` ${service.service_id === selectedServiceId ? 'font-normal text-red-900' : 'text-gray-700'}`}>
-                                                {service.service_name}
-                                            </span>
+                                        <div className="flex min-w-0 items-center gap-2">
+                                            <span className="truncate text-sm">{service.service_name}</span>
                                         </div>
-                                        <div className="flex items-center space-x-0.5">
+                                        <div className="flex shrink-0 items-center space-x-0.5 opacity-0 group-hover:opacity-100">
                                             <ActionButton
-                                                onClick={(e) => {
-                                                    handleEditService(service);
-                                                }}
-                                                className="cursor-pointer rounded-md text-gray-400 hover:bg-red-50 hover:text-red-700"
+                                                onClick={(e) => { e.stopPropagation(); handleEditService(service); }}
+                                                className="cursor-pointer rounded-md hover:bg-muted hover:text-foreground"
                                             >
                                                 <EditIcon className="h-4 w-4" />
                                             </ActionButton>
                                             <ActionButton
-                                                onClick={(e) => {
-                                                    handleDeleteService(service.service_id);
-                                                }}
-                                                className="cursor-pointer rounded-md text-gray-400 hover:bg-red-50 hover:text-red-700"
+                                                onClick={(e) => { e.stopPropagation(); handleDeleteService(service.service_id); }}
+                                                className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-destructive"
                                             >
                                                 <Trash2 className="h-4 w-4" />
                                             </ActionButton>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
+                                ))
+                            )}
                         </div>
-                        <div className="mt-4 border-t border-gray-200 pt-4">
-                            <Button
-                                onClick={handleAddService}
-                                className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
-                            >
-                                <Plus className="mr-2 h-4 w-4" /> Add New Service
+                        <div className="mt-4 border-t border-border pt-4">
+                            <Button onClick={handleAddService} variant="default" className="w-full text-xs">
+                                <Plus className="h-4 w-4" />
+                                <span className="hidden xl:inline">Add Service</span>
                             </Button>
                         </div>
                     </div>
 
-                    {/* Right Pane: Service Details */}
-                    <div className="w-1/2 p-6">
-                        {!selectedService ? (
-                            <div className="flex h-full flex-col items-center justify-center text-center text-gray-500">
-                                <X className="mb-2 h-8 w-8" />
-                                <p className="font-medium">No Service Selected</p>
-                                <p className="text-sm">Select a service on the left or click "Add New Service" to start.</p>
+                    {/* Right Pane: Detail View (2/3) */}
+                    <div className="w-2/3 p-6">
+                        {selectedService ? (
+                            <div className="flex h-full flex-col justify-between gap-4">
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <h4 className="break-words text-lg font-semibold text-foreground">{selectedService.service_name}</h4>
+                                        {selectedService.service_link && (
+                                            <a
+                                                href={selectedService.service_link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-primary hover:underline text-xs flex items-center gap-1"
+                                            >
+                                                <Link className="h-3 w-3" />
+                                                Visit Link
+                                            </a>
+                                        )}
+                                    </div>
+                                    <Separator />
+                                    <div className="rounded-md border border-border bg-muted/30 p-4">
+                                        <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Description</p>
+                                        <p className="whitespace-pre-wrap text-sm text-foreground leading-relaxed">
+                                            {selectedService.description || "No description provided."}
+                                        </p>
+                                    </div>
+                                    {selectedService.service_link && (
+                                        <div className="rounded-md border border-border bg-muted/30 p-4">
+                                            <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Service Link</p>
+                                            <code className="text-xs text-primary break-all">{selectedService.service_link}</code>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ) : (
-                            <div className="space-y-4">
-                                <div>
-                                    <h4 className="text-lg font-semibold break-words text-gray-900">{selectedService.service_name}</h4>
-                                </div>
-                                <div>
-                                    <h5 className="mb-1 text-sm font-semibold text-gray-700">Description</h5>
-                                    <p className="text-sm text-gray-700">{selectedService.description}</p>
-                                </div>
-                                <div>
-                                    <h5 className="mb-1 text-sm font-semibold text-gray-700">URL</h5>
-                                    <a
-                                        href={selectedService.service_link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="truncate text-sm break-all text-blue-600 hover:underline"
-                                    >
-                                        {selectedService.service_link}
-                                    </a>
-                                </div>
-                                {/* <div>
-                                    <h5 className="mb-1 text-sm font-semibold text-gray-700">Icon Name</h5>
-                                    <p className="font-mono text-sm text-muted-foreground">{selectedService.icon_name || 'Not set'}</p>
-                                </div> */}
-                            </div>
+                            <EmptyState
+                                icon={MousePointerClick}
+                                title="No service selected"
+                                description="Select a service from the list to view details"
+                            />
                         )}
                     </div>
                 </div>
             </div>
+
             {dialogOpen && (
                 <OtherServicesDialog
                     type={dialogAction}

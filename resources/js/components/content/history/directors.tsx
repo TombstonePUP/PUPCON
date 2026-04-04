@@ -228,7 +228,7 @@ export function DirectorsSection({ ...props }: DirectorsProps) {
                             <Separator className="bg-gray-200" />
 
                             <div>
-                                <h5 className="mb-2 text-sm font-semibold text-gray-700">Details</h5>
+                                <h5 className="mb-2 text-sm font-semibold text-foreground">Details</h5>
                                 <p className="text-sm text-gray-700">{selectedDirector.description}</p>
                             </div>
                             {selectedDirectorErrors.length > 0 && (

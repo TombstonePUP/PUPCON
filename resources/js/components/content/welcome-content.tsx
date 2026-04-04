@@ -308,7 +308,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                         <Label className="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center transition-all duration-300 hover:border-[#7f1414]/70">
                                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                 <svg
-                                                    className="mb-4 h-8 w-8 text-gray-500"
+                                                    className="mb-4 h-8 w-8 text-muted-foreground"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     fill="none"
                                                     viewBox="0 0 20 16"
@@ -432,7 +432,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                 >
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
-                                            className="mb-4 h-8 w-8 text-gray-500"
+                                            className="mb-4 h-8 w-8 text-muted-foreground"
                                             aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -458,7 +458,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                     className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : ''
                                         }`}
                                 >
-                                    <span className="text-sm font-semibold text-gray-700">Certificate of Authenticity</span>
+                                    <span className="text-sm font-semibold text-foreground">Certificate of Authenticity</span>
                                     <div className="flex gap-2">
                                         <Button
                                             type="button"

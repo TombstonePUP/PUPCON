@@ -115,7 +115,7 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                                     <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
-                                                className="mb-4 h-8 w-8 text-gray-500"
+                                                className="mb-4 h-8 w-8 text-muted-foreground"
                                                 aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 fill="none"
@@ -147,7 +147,7 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                                     </label>
                                 ) : (
                                     <div className="flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-50 p-5 text-center">
-                                        <span className="text-sm font-semibold text-gray-700">{data.document.name}</span>
+                                        <span className="text-sm font-semibold text-foreground">{data.document.name}</span>
                                         <Button
                                             type="button"
                                             variant="outline"

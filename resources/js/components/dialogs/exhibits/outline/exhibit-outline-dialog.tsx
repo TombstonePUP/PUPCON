@@ -136,7 +136,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                             >
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg
-                                        className="mb-4 h-8 w-8 text-gray-500"
+                                        className="mb-4 h-8 w-8 text-muted-foreground"
                                         aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
@@ -171,7 +171,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                                 className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : ''
                                     }`}
                             >
-                                <span className="text-sm font-semibold text-gray-700">{data.file.name}</span>
+                                <span className="text-sm font-semibold text-foreground">{data.file.name}</span>
                                 <Button
                                     type="button"
                                     variant="outline"

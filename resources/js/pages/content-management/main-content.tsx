@@ -2,6 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { InfoIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { PageTitle } from '@/components/page-header';
 
 // Section Imports
 import AboutSection from '@/components/content/about-content';
@@ -148,90 +149,82 @@ const MainContent = ({ ...props }: MainContentProps) => {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Campus Information - Content Management" />
-      <div className="flex flex-col gap-4 p-6">
-        {/* Header Section */}
-        <div id="header" className="mb-2 rounded-lg border border-gray-200 bg-white p-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7f1414]">
-              <InfoIcon className="h-6 w-6 text-white" />
-            </div>
-            <div className="ml-2">
-              <h1 className="text-xl font-semibold text-gray-900">Campus Information</h1>
-              <p className="text-sm text-muted-foreground">Manage all content related to the "About" page and its sub-sections.</p>
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col gap-6 p-6">
+        <PageTitle
+          title="Campus Information"
+          description='Manage all content related to the "About" page and its sub-sections.'
+          icon={<InfoIcon className="size-5" />}
+        />
 
         {/* Main Content with Sidebar */}
         <div className="flex gap-6">
           <div className="flex-1">
             <div className="space-y-6">
               {/* Welcome Landing */}
-              <div id="welcome-landing" ref={welcomeLandingRef} className="scroll-mt-6">
+              <div id="welcome-landing" ref={welcomeLandingRef} className="scroll-mt-20">
                 <WelcomeSection welcome_page={welcome_page} gallery={welcome_gallery} />
               </div>
 
               {/* About */}
-              <div id="about" ref={aboutRef} className="scroll-mt-6">
+              <div id="about" ref={aboutRef} className="scroll-mt-20">
                 <AboutSection about_page={about_page} org_types={org_types} />
               </div>
 
               {/* VMGO */}
-              <div id="vmgo" ref={vmgoRef} className="scroll-mt-6">
+              <div id="vmgo" ref={vmgoRef} className="scroll-mt-20">
                 <VmgoSection vmgo_page={vmgo_page} vmgo_data={vmgo_data} />
               </div>
 
               {/* History */}
-              <div id="history" ref={historyRef} className="scroll-mt-6">
+              <div id="history" ref={historyRef} className="scroll-mt-20">
                 <HistorySection history_page={history_page} history={history} />
               </div>
 
               {/* Administration */}
-              <div id="administration" ref={administrationRef} className="scroll-mt-6">
+              <div id="administration" ref={administrationRef} className="scroll-mt-20">
                 <AdministrationSection admin_page={admin_page} officials={officials} />
               </div>
 
               {/* Facilities - */}
-              <div id="facilities" ref={facilitiesRef} className="scroll-mt-6">
+              <div id="facilities" ref={facilitiesRef} className="scroll-mt-20">
                 <FacilitiesSection facility_page={facility_page} facilities={facilities} />
               </div>
 
               {/* Faculty & Staff - */}
-              <div id="faculties" ref={facultiesRef} className="scroll-mt-6">
+              <div id="faculties" ref={facultiesRef} className="scroll-mt-20">
                 <FacultySection faculty_page={faculty_page} faculty_members={faculties} />
               </div>
 
               {/* Local Task Force */}
-              <div id="task-force" ref={localTaskForceRef} className="scroll-mt-6">
+              <div id="task-force" ref={localTaskForceRef} className="scroll-mt-20">
                 <LocalTaskForceSection ltf_page={ltf_page} local_task_force={local_task_force} />
               </div>
             </div>
           </div>
 
           {/* Right Sidebar - Quick Links */}
-          <div className="w-64 shrink-0">
-            <div className="sticky top-6">
-              <div className="rounded-lg border border-gray-200 bg-white p-4">
-                <h3 className="mb-4 text-sm font-semibold text-gray-900">On this page</h3>
-                <nav className="space-y-1">
-                  {sections.map((section) => (
-                    <button
-                      key={section.id}
-                      onClick={() => scrollToSection(section.ref, section.id)}
-                      className={`w-full rounded-md px-3 py-2 text-left text-sm font-medium transition ${activeSection === section.id ? 'bg-[#7f1414] text-white' : 'text-gray-700 hover:bg-gray-100'
-                        }`}
-                    >
-                      {section.label}
-                    </button>
-                  ))}
-                </nav>
-              </div>
-            </div>
+          <div className="shrink-0 sticky top-6 self-start rounded-lg p-6 hidden xl:inline">
+            <h2 className="mb-4 text-muted-foreground"> On this page</h2>
+            <nav className="space-y-1 ml-2 border-l border-border">
+              {sections.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.ref, section.id)}
+                  className={`block w-full text-left text-sm px-4 my-4 border-l-3 transition-all duration-150 ${activeSection === section.id
+                    ? 'border-primary'
+                    : 'border-transparent text-muted-foreground font-normal hover:text-foreground hover:border-border'
+                    }`}
+                >
+                  {section.label}
+                </button>
+              ))}
+            </nav>
           </div>
         </div>
       </div>
     </AppLayout>
   );
 };
+
 
 export default MainContent;

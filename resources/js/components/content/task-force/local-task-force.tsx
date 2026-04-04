@@ -364,7 +364,7 @@ export default function LocalTaskForceContentSection({ ...props }: LocalTaskForc
                     {selectedChairman && (
                         <div className="space-y-6">
                             <div>
-                                <h5 className="mb-2 text-sm font-semibold text-gray-700">Chairman</h5>
+                                <h5 className="mb-2 text-sm font-semibold text-foreground">Chairman</h5>
                                 <div className="mt-2 flex items-center gap-6">
                                     <img
                                         src={selectedChairman.profile_image_path || 'https://placehold.co/100x100/eeeeee/7f1414?text=No+Photo'}
@@ -384,7 +384,7 @@ export default function LocalTaskForceContentSection({ ...props }: LocalTaskForc
                             {/* --- Co-Chairmen List --- */}
                             {coChairmenList?.length > 0 && (
                                 <div>
-                                    <h5 className="mb-2 text-sm font-semibold text-gray-700">Co-chairman</h5>
+                                    <h5 className="mb-2 text-sm font-semibold text-foreground">Co-chairman</h5>
                                     <div className="mt-2 space-y-3">
                                         {coChairmenList?.map((coChair) => (
                                             <div key={coChair.member_id} className="flex items-center gap-4">
@@ -403,7 +403,7 @@ export default function LocalTaskForceContentSection({ ...props }: LocalTaskForc
                             <Separator className="bg-gray-200" />
 
                             <div>
-                                <h5 className="mb-2 text-sm font-semibold text-gray-700">Members</h5>
+                                <h5 className="mb-2 text-sm font-semibold text-foreground">Members</h5>
                                 {membersList?.length === 0 ? (
                                     <p className="text-sm text-muted-foreground italic">No members added to this area.</p>
                                 ) : (

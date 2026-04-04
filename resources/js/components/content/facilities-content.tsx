@@ -338,7 +338,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                                     </div>
                                     <Separator className="bg-gray-200" />
                                     <div>
-                                        <h5 className="mb-2 text-sm font-semibold text-gray-700">Description</h5>
+                                        <h5 className="mb-2 text-sm font-semibold text-foreground">Description</h5>
                                         <p className="text-sm text-gray-700">{selectedFacility.description}</p>
                                     </div>
                                     {selectedFacilityerrors.length > 0 && (

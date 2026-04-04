@@ -216,7 +216,7 @@ export function GallerySection({ ...props }: GalleryProps) {
 
                             {selectedGallery.description && (
                                 <div>
-                                    <h5 className="mb-2 text-sm font-semibold text-gray-700">Caption</h5>
+                                    <h5 className="mb-2 text-sm font-semibold text-foreground">Caption</h5>
                                     <p className="text-sm text-gray-700">{selectedGallery.description}</p>
                                 </div>
                             )}
