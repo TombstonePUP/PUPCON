@@ -204,6 +204,7 @@ export default function Ratings() {
         const program = programs.find((p) => p.id === programId);
         if (!program) return;
 
+        console.log(`Exporting "${program.program_name}" as ${type.toUpperCase()}`);
 
         alert(` Exporting ${program.program_name} as ${type.toUpperCase()}`);
 
@@ -227,6 +228,7 @@ export default function Ratings() {
         const area = programs.flatMap((p) => p.assigned_areas).find((a) => a.id === areaId);
         if (!area) return;
 
+        console.log(`Exporting "${area.area_name}" as ${type.toUpperCase()}`);
         alert(`Exporting ${area.area_name} as ${type.toUpperCase()}`);
 
         setExportAreaDropdown((prev) => ({ ...prev, [areaId]: false }));

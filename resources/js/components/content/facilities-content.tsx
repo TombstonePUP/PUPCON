@@ -263,6 +263,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                             <h4 className="mb-3 text-xs text-gray-500">Select a Facility</h4>
                             <div className="space-y-1">
                                 {facilityList?.map((facility, index) => (
+                                    // console.log('Rendering facility:', facility),
                                     <div
                                         key={facility.facility_id}
                                         onClick={() => {

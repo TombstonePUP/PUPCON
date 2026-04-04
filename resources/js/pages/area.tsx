@@ -3,13 +3,13 @@ import PageHeader from '@/components/guest-page-header';
 import { buildOutlineTree, RecursiveOutline } from '@/components/recursive-outline';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Layout from '@/layouts/landing-layout';
-import type { Area, ParameterOutlineCategory, Program } from '@/types';
+import type { Area, ParameterOutlineCategory, PerProgram } from '@/types';
 import { Head, usePage, usePoll } from '@inertiajs/react';
 import { Construction } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 interface AreaProps {
-  program: Program;
+  program: PerProgram;
   area: Area;
   categories: ParameterOutlineCategory[];
 }
@@ -29,7 +29,8 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
   const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const searchKeyword = searchParams?.get('search') || '';
 
-  const { auth } = usePage<any>().props;
+  const { auth } = usePage<Auth>().props;
+  const user = auth.user;
 
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerFile, setViewerFile] = useState({ url: '', title: '' });
@@ -38,6 +39,12 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
     setViewerFile({ url: fileUrl, title });
     setViewerOpen(true);
   };
+
+  function highlight(text: string) {
+    if (!searchKeyword) return text;
+    const regex = new RegExp(`(${searchKeyword})`, 'gi');
+    return text.replace(regex, '<mark class="bg-yellow-200">$1</mark>');
+  }
 
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
   const parameterId = searchParams?.get('parameter');
@@ -58,8 +65,6 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
     }, 150);
   }, [parameterId]);
 
-  const activeLevel = Array.isArray(program.levels) ? program.levels[0] : program.levels;
-
   return (
     <>
       <Head
@@ -79,7 +84,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
             { label: 'Home', href: '/' },
             { label: 'Programs', href: '/programs' },
             {
-              label: `${program.program_name} - Level ${activeLevel?.level || ''}`,
+              label: `${program.program_name} - Level ${program.levels[0]?.level}`,
               href: '/programs/' + program.program_id,
             },
             { label: area.area_name, href: '#' },
@@ -113,16 +118,16 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
         {/* Forms Section */}
         <div className="flex justify-center py-[2vw]">
           <div className="w-[68%]">
-            {(area as any).area_forms?.length > 0 ? (
+            {area.area_forms?.length > 0 ? (
               <div
-                className={`grid gap-[2vw] ${(area as any).area_forms.length === 1
+                className={`grid gap-[2vw] ${area.area_forms.length === 1
                   ? 'grid-cols-1 md:mx-auto md:max-w-md'
-                  : (area as any).area_forms.length === 2
+                  : area.area_forms.length === 2
                     ? 'grid-cols-1 md:grid-cols-2'
                     : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
                   }`}
               >
-                {(area as any).area_forms?.map((area_form: any) => (
+                {area.area_forms?.map((area_form) => (
                   <div
                     key={area_form.area_form_id}
                     className="group relative flex flex-col overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white transition-all duration-300 hover:border-[#7f1414]"
@@ -182,7 +187,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
 
         <div className="flex w-full flex-col items-center justify-center gap-4 py-2">
           <div className="w-[68%]">
-            {(area as any).area_parameters?.length > 0 ? (
+            {area.area_parameters?.length > 0 ? (
               <Accordion
                 type="single"
                 collapsible
@@ -190,111 +195,111 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 value={openItem}
                 onValueChange={setOpenItem}
               >
-                {[...(area as any).area_parameters]
+                {[...area.area_parameters]
                   .sort((a, b) => {
                     if (a.parameter_name?.trim().toUpperCase() === 'A') return -1;
                     if (b.parameter_name?.trim().toUpperCase() === 'A') return 1;
                     return a.parameter_name?.localeCompare(b.parameter_name || '') || 0;
                   })
-                  .map((parameter: any) => {
+                  .map((parameter) => {
                     const paramKey = parameter.parameter_id ?? parameter.area_parameter_id;
 
-                    const hasOutlines = categories.some((category) => {
-                        const outlines =
-                          parameter.parameter_outlines?.filter(
-                            (outline: any) =>
-                              outline.parameter_outline_category_id ===
-                              category.parameter_outline_category_id,
-                          ) || [];
-                        return outlines.length > 0;
-                    });
-
                     return (
-                        <div
-                            key={`parameter-wrapper-${paramKey}`}
-                            ref={(el) => { parameterRef.current[paramKey] = el; }}
+                      <div
+                        key={paramKey}
+                        ref={(el) => (parameterRef.current[paramKey] = el)}
+                      >
+                        <AccordionItem
+                          className="group bg-white transition duration-300"
+                          value={`parameter-${paramKey}`}
                         >
-                            <AccordionItem
-                                className="group bg-white transition duration-300"
-                                value={`parameter-${paramKey}`}
-                            >
-                                <AccordionTrigger className="my-1 group-hover:cursor-pointer">
-                                    <div className="flex w-full flex-row items-center justify-between pr-4">
-                                        <h1 className="font-bold text-[#7f1414] group-hover:text-[#a01818]">
-                                        {!parameter.parameter_name?.trim()
-                                            ? `${parameter.parameter_description}`
-                                            : `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
-                                        }
-                                        </h1>
-                                        <p className="text-sm text-gray-600 font-medium">
-                                            {parameter.parameter_name?.trim() ? parameter.parameter_description : ''}
-                                        </p>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                    {hasOutlines ? (
-                                        categories.map((category) => {
-                                            const filteredOutlines = (parameter.parameter_outlines || [])
-                                                .filter((o: any) => o.parameter_outline_category_id === category.parameter_outline_category_id)
-                                                .map((o: any) => ({
-                                                    ...o,
-                                                    initial: category.category_name === 'No Category'
-                                                        ? (parameter.parameter_name?.trim() ? parameter.parameter_name.toUpperCase().match(alphaRegex)?.[0] || '' : '')
-                                                        : category.category_name.match(alphaRegex)?.[0] || ''
-                                                }));
+                          <AccordionTrigger className="my-1 group-hover:cursor-pointer">
+                            <div className="flex w-full flex-row items-center justify-between pr-4">
+                              <h1 className="font-bold text-[#7f1414] group-hover:text-[#a01818]">
+                                {!parameter.parameter_name?.trim()
+                                  ? `${parameter.parameter_description}`
+                                  : `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
+                                }
+                              </h1>
+                              <p className="text-sm text-gray-600">
+                                {parameter.parameter_name?.trim() ? parameter.parameter_description : ''}
+                              </p>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            {categories.some((category) => {
+                              const outlines =
+                                parameter.parameter_outlines?.filter(
+                                  (outline) =>
+                                    outline.parameter_outline_category_id ===
+                                    category.parameter_outline_category_id,
+                                ) || [];
+                              return outlines.length > 0;
+                            }) ? (
+                              categories.map((category) => {
+                                const outlines =
+                                  parameter.parameter_outlines?.filter(
+                                    (outline) =>
+                                      outline.parameter_outline_category_id ===
+                                      category.parameter_outline_category_id,
+                                  ) || [];
+                                if (outlines.length === 0) return null;
 
-                                            if (filteredOutlines.length === 0) return null;
+                                outlines.map((outline) => {
+                                  outline.initial =
+                                    category.category_name === 'No Category'
+                                      ? parameter.parameter_name === ' '
+                                        ? ''
+                                        : parameter.parameter_name.toUpperCase().match(alphaRegex)
+                                      : category.category_name.match(alphaRegex);
+                                });
 
-                                            const sortedOutlines = buildOutlineTree({ outlines: filteredOutlines });
+                                const sortedOutlines = buildOutlineTree({ outlines });
 
-                                            return (
-                                                <div
-                                                    key={`category-${category.parameter_outline_category_id}-${paramKey}`}
-                                                    className="rounded bg-[#D9D9D9]/25 p-[2vw] mb-4 last:mb-0"
-                                                >
-                                                    <h1 className="font-bold mb-2">
-                                                        {category.category_name === 'No Category' ? '' : category.category_name}
-                                                    </h1>
-                                                    <RecursiveOutline
-                                                        outlines={sortedOutlines}
-                                                        program={program as any}
-                                                        area={area}
-                                                        resolveDocDialog={(params) => {
-                                                            if (params.type === 'view') {
-                                                                openViewer(params.benchmark.area_files?.file_path || '', params.benchmark.outline_description || '');
-                                                            }
-                                                        }}
-                                                        resolveBenchDialog={() => {}} // Non-form view is read-only
-                                                    />
-                                                </div>
-                                            );
-                                        })
-                                    ) : (
-                                        <div className="rounded bg-[#D9D9D9]/25 p-[2vw] text-center">
-                                            <div className="flex flex-col items-center gap-2">
-                                                <svg
-                                                    className="h-8 w-8 text-gray-400"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                    />
-                                                </svg>
-                                                <p className="font-medium text-gray-500">No outline available for this parameter</p>
-                                                <p className="text-sm text-gray-400">
-                                                    Content will be added during the accreditation process
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </AccordionContent>
-                            </AccordionItem>
-                        </div>
+                                return (
+                                  <div
+                                    key={category.parameter_outline_category_id}
+                                    className="rounded bg-[#D9D9D9]/25 p-[2vw]"
+                                  >
+                                    <h1 className="font-bold">
+                                      {category.category_name === 'No Category'
+                                        ? ''
+                                        : category.category_name}
+                                    </h1>
+                                    <RecursiveOutline
+                                      outlines={sortedOutlines}
+                                      highlightKeyword={searchKeyword}
+                                      highlightFn={highlight}
+                                    />
+                                  </div>
+                                );
+                              })
+                            ) : (
+                              <div className="rounded bg-[#D9D9D9]/25 p-[2vw] text-center">
+                                <div className="flex flex-col items-center gap-2">
+                                  <svg
+                                    className="h-8 w-8 text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                    />
+                                  </svg>
+                                  <p className="font-medium text-gray-500">No outline available for this parameter</p>
+                                  <p className="text-sm text-gray-400">
+                                    Content will be added during the accreditation process
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                          </AccordionContent>
+                        </AccordionItem>
+                      </div>
                     );
                   })}
               </Accordion>

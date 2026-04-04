@@ -125,7 +125,7 @@ export default function Login({ status, canResetPassword }: LoginPageProps) {
     >
       <Head title="Log in" />
 
-      <form className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150" onSubmit={handleSubmit} noValidate>
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
         <div className="grid gap-6">
           <Field label="Email address" error={emailError} required>
             {(a11y) => (
@@ -138,7 +138,6 @@ export default function Login({ status, canResetPassword }: LoginPageProps) {
                 placeholder="email@example.com"
                 value={data.email}
                 onChange={(e) => setData('email', e.target.value)}
-                className="rounded-xl border-gray-200 focus-visible:ring-[#7f1414]"
               />
             )}
           </Field>
@@ -151,7 +150,7 @@ export default function Login({ status, canResetPassword }: LoginPageProps) {
                 <a
 
                   href={route('password.request')}
-                  className="text-xs font-medium text-[#7a7a7a] underline-offset-4 hover:underline hover:text-[#7f1414] transition-colors"
+                  className="text-sm text-[#7a7a7a] underline-offset-4 hover:underline"
                   tabIndex={5}
                 >
                   Forgot password?
@@ -168,7 +167,6 @@ export default function Login({ status, canResetPassword }: LoginPageProps) {
                 placeholder="Password"
                 value={data.password}
                 onChange={(e) => setData('password', e.target.value)}
-                className="rounded-xl border-gray-200 focus-visible:ring-[#7f1414]"
               />
             )}
           </Field>
@@ -177,38 +175,36 @@ export default function Login({ status, canResetPassword }: LoginPageProps) {
               id="remember"
               name="remember"
               tabIndex={3}
-              className="rounded-md border-gray-300 data-[state=checked]:bg-[#7f1414] data-[state=checked]:border-[#7f1414]"
+              className="rounded"
               checked={data.remember}
               onCheckedChange={(checked) => setData('remember', checked === true)}
             />
-            <Label htmlFor="remember" className="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            <Label htmlFor="remember" className="cursor-pointer font-normal text-[#383838]">
               Remember me
             </Label>
           </div>
           <Button
             type="submit"
-            className="mt-4 w-full h-11 rounded-xl bg-[#7f1414] text-white hover:bg-[#9b1818] shadow-none border-none transition-all active:scale-[0.98]"
+            className="mt-4 w-full bg-[#7f1414] text-white hover:bg-[#9b1818]"
             tabIndex={4}
             disabled={isSubmitting}
           >
             {processing && (
-              <LoaderCircle className="h-4 w-4 animate-spin mr-2" aria-hidden="true" />
+              <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
             )}
             {processing
               ? 'Logging in…'
               : isLocked
                 ? `Locked (${lockoutSeconds}s)`
-                : 'Sign In'}
+                : 'Log in'}
           </Button>
         </div>
       </form>
 
       {status && (
-        <div className="mt-4 p-3 rounded-lg bg-green-50 border border-green-100 animate-in fade-in slide-in-from-top-2">
-          <p role="status" className="text-center text-sm font-medium text-green-700">
-            {status}
-          </p>
-        </div>
+        <p role="status" className="my-2 text-center text-sm font-medium text-[#16a34a]">
+          {status}
+        </p>
       )}
     </AuthLayout>
   );

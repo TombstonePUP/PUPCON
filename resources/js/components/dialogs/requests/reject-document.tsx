@@ -54,6 +54,7 @@ export default function RejectRequest({ file, onClose }: RejectRequestProps) {
 
     const rejectDocument = (e: React.FormEvent) => {
         e.preventDefault();
+        console.log(data);
         post(route('rejectDocument'), {
             onSuccess: () => {
                 reset();

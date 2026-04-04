@@ -176,10 +176,12 @@ export default function ArchiveComponent() {
   }
 
   const handleRestore = () => {
+    console.log("Restoring items:", selectedItems)
     setSelectedItems([])
   }
 
   const handlePermanentDelete = () => {
+    console.log("Permanently deleting items:", selectedItems)
     setSelectedItems([])
   }
 

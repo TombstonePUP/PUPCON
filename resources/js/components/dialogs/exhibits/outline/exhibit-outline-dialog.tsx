@@ -88,7 +88,9 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                         exhibit_id: data.exhibit_id,
                     };
 
+                    console.log('outlineToUpdate: ', outlineToUpdate);
                     if (onUpdate) onUpdate(outlineToUpdate);
+                    console.log(data);
                     reset();
                     onClose();
                 },
@@ -109,6 +111,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
             setIsUploading(false);
         }
     };
+    // console.log('test: ' + category);
 
     return (
         <Dialog open={true} onOpenChange={onClose}>

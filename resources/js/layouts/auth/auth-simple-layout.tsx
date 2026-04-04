@@ -1,3 +1,4 @@
+import AppLogoIcon from '@/components/app-logo-icon';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
@@ -9,79 +10,59 @@ interface LoginFormLayoutProps {
   className?: string;
 }
 
-export default function LoginFormLayout({ children, description, className }: LoginFormLayoutProps) {
+export default function LoginFormLayout({ children, title, description, className }: LoginFormLayoutProps) {
   return (
     <div
       className={cn(
-        'flex min-h-svh flex-col items-center justify-center gap-6 p-4 sm:p-6 md:p-10',
-        'bg-[#f4f4f5] bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] relative overflow-hidden',
+        // 👇 Main page container with pattern
+        'flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10',
+        // light gray base + subtle dotted pattern
+        'bg-[#f4f4f4] bg-[radial-gradient(circle,_rgba(0,0,0,0.04)_1px,_transparent_1px)] bg-[length:20px_20px]',
         className
       )}
     >
-      {/* ─── Performance-Safe 2D Animated Background ─────────────────────── */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* Floating Circle 1 */}
-        <div 
-          className="absolute top-[10%] left-[5%] h-64 w-64 rounded-full bg-[#7f1414]/5 blur-3xl animate-[pulse_8s_infinite] transition-transform duration-[10s] hover:scale-110"
-          style={{ willChange: 'transform' }}
-        ></div>
-        
-        {/* Floating Circle 2 */}
-        <div 
-          className="absolute bottom-[15%] right-[5%] h-80 w-80 rounded-full bg-[#7f1414]/5 blur-3xl animate-[pulse_12s_infinite] transition-transform duration-[15s]"
-          style={{ willChange: 'transform' }}
-        ></div>
-
-        {/* Floating Geometric Shape 1 */}
-        <div 
-          className="absolute top-1/4 right-[20%] h-32 w-32 rotate-12 border-2 border-[#7f1414]/10 rounded-3xl animate-[spin_20s_linear_infinite]"
-          style={{ willChange: 'transform' }}
-        ></div>
-
-        {/* Floating Geometric Shape 2 */}
-        <div 
-          className="absolute bottom-1/4 left-[15%] h-48 w-48 -rotate-12 border border-[#7f1414]/10 rounded-full animate-[pulse_10s_ease-in-out_infinite]"
-          style={{ willChange: 'transform' }}
-        ></div>
-      </div>
-
-      {/* ─── Content ──────────────────────────────────────────────────────── */}
-      <div className="w-full h-fit max-w-4xl p-0 relative z-10 animate-in fade-in zoom-in duration-500">
+      <div className="w-full h-fit max-w-4xl p-0">
         <div className="flex flex-col gap-8">
-          <Card className="overflow-hidden p-0 bg-white/90 backdrop-blur-sm border border-gray-200 shadow-none rounded-2xl">
+          {/* <div>
+                        <Link href={route('home')} className="flex flex-col items-center gap-2 font-medium">
+                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
+                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
+                            </div>
+                            <span className="sr-only">{title}</span>
+                        </Link>
+
+                        <div className="space-y-2 text-center"><h1 className="text-xl font-medium">{title}</h1></div>
+                    </div> */}
+
+
+          <Card className="overflow-hidden p-0 bg-[#fefefe] border border-gray-200 shadow-md">
             <CardContent className="grid items-center justify-center p-0 md:grid-cols-2">
-              <div className="flex h-full flex-col p-6 sm:p-10 md:p-15">
-                <div className="grid place-items-center mb-8">
-                  <img 
-                    className="object-contain h-14 sm:h-16 md:h-20 transition-transform duration-300 hover:scale-105" 
-                    src="/images/pupcon-logo.png" 
-                    alt="app logo" 
-                  />
+              <div className="mt-15 flex h-full flex-col p-15">
+                <div className="grid place-items-center">
+                  <img className="object-fit h-18" src="/images/pupcon-logo.png" alt="app logo" />
                 </div>
-                {description && (
-                  <p className="text-muted-foreground pb-8 text-center text-sm font-medium leading-relaxed">
-                    {description}
-                  </p>
-                ) as any}
+                <p
+                  className="text-black pt-5 pb-15 text-center text-sm font-mediumtext-[#7a7a7a] ">
+                  {description}
+                </p>
                 {children}
-                <div className="mt-8 text-center">
+                <div className="mt-2 text-center">
                   <Link
                     href={route('home')}
-                    className="text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-[#7f1414] transition-colors border-b border-transparent hover:border-[#7f1414]"
-                  >
-                    Back to Home Page
+                    className="text-sm font-normal hover:underline text-[#7f1414ad]">
+                    Go to Home Page
                   </Link>
                 </div>
               </div>
-              <div className="relative hidden h-full md:block group overflow-hidden border-l border-gray-100">
-                <img 
-                  src="/images/login-banner.png" 
-                  alt="Login Banner" 
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                />
+              <div className="relative hidden h-full md:block">
+                <img src="/images/login-banner.png" alt="Login Banner" className="h-full w-full object-cover" />
               </div>
             </CardContent>
           </Card>
+
+          {/* <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+                        All Rights Reserved 2025
+                    </div> */}
         </div>
       </div>
     </div>

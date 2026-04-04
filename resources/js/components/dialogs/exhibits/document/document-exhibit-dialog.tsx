@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import { formatBytes, usePdfCompressor } from '@/hooks/use-pdf-compressor';
 import { Exhibits } from '@/types/exhibits';
 import { useForm } from '@inertiajs/react';
-import { CheckCircle2, FileText, Loader2, Upload, X } from 'lucide-react';
-import React, { useState } from 'react';
 import { toast } from 'sonner';
+import { useState } from 'react';
+import React from 'react';
 import InputError from '@/components/input-error';
 
 interface DocumentExhibitDialogProps {
@@ -21,201 +21,142 @@ interface DocumentExhibitForm {
 }
 
 export default function DocumentExhibitDialog({ type, exhibit, onClose }: DocumentExhibitDialogProps) {
-    const { data, setData, post, processing, errors, reset } = useForm<DocumentExhibitForm>({
+    const [isUploading, setIsUploading] = useState(false);
+    const { data, setData, post , processing, errors, reset } = useForm<DocumentExhibitForm>({
         exhibit_id: exhibit.exhibit_id || null,
         file: null,
     });
 
-    const { compress, isCompressing, progress } = usePdfCompressor();
-    const [compressionInfo, setCompressionInfo] = useState<{ savedPercent: number; compressedSize: number } | null>(null);
-
-    const handleFileChange = async (file: File | null) => {
-        if (!file) {
-            setData('file', null);
-            setCompressionInfo(null);
-            return;
-        }
-
-        const result = await compress(file);
-        setData('file', result.file);
-
-        if (!result.skipped && result.savedPercent > 0) {
-            setCompressionInfo({ savedPercent: result.savedPercent, compressedSize: result.compressedSize });
-        }
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('exhibit.file.upload'), {
-            onProgress: (p) => {
-                if (p?.percentage) {
-                    toast.info('Uploading...', {
-                        description: (
-                            <div className="flex w-full items-center gap-1">
-                                <Progress value={p.percentage} className="h-2 w-68" />
-                                <p className="text-right text-xs text-gray-500">{p.percentage}%</p>
-                            </div>
-                        ),
-                        id: 'uploading',
-                    });
+        try {
+            setIsUploading(true);
+            post(route('exhibit.file.upload'),
+                {
+                    onProgress: (progress) => {
+                        if (progress?.percentage) {
+                            toast.info('Uploading...', {
+                                description: (
+                                    <div className="flex w-full items-center gap-1">
+                                        <Progress value={progress.percentage} className="h-2 w-68" />
+                                        <p className="text-right text-xs text-gray-500">{progress.percentage}%</p>
+                                    </div>
+                                ),
+                                id: 'uploading',
+                            });
+                        }
+                    },
+                    onSuccess: () => {
+                        toast.dismiss('uploading');
+                        reset();
+                        setIsUploading(false);
+                        onClose();
+                    },
+                    onError: (errors) => {
+                        toast.dismiss('uploading');
+                        toast.error('Failed to upload document', {
+                            description: errors.document ?? 'There was an error uploading the document.',
+                        });
+                        setIsUploading(false);
+                    },
                 }
-            },
-            onSuccess: () => {
-                toast.dismiss('uploading');
-                reset();
-                setCompressionInfo(null);
-                onClose();
-            },
-            onError: (errors) => {
-                toast.dismiss('uploading');
-                toast.error('Failed to upload document', {
-                    description: errors.file ?? 'There was an error uploading the document.',
-                });
-            },
-        });
+            );
+        } catch (error) {
+            toast.dismiss('uploading');
+            toast.error('Unexpected error occurred', {
+                description: error instanceof Error ? error.message : 'An unexpected error occurred during upload.',
+            });
+            setIsUploading(false);
+        }
     };
 
-    const isBusy = isCompressing || processing;
-
     return (
-        <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="overflow-hidden p-0 sm:max-w-[480px] border border-border shadow-2xl rounded-xl">
-               {/* ── Header ── */}
-               <DialogHeader className="bg-primary px-6 py-4 border-b border-primary/80">
-                    <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-foreground/15 border border-primary-foreground/20">
-                            <Upload className="h-5 w-5 text-primary-foreground" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                            <DialogTitle className="text-base font-bold text-primary-foreground leading-tight">
-                                {type === 'edit' ? 'Update Document' : 'Upload Document'}
-                            </DialogTitle>
-                            <DialogDescription className="mt-0.5 text-xs text-primary-foreground/75 font-medium truncate">
-                                {`For exhibit: "${exhibit.exhibit_name}"`}
-                            </DialogDescription>
-                        </div>
-                        <button
-                            onClick={onClose}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-primary-foreground/90 hover:bg-primary-foreground/15 transition-colors"
-                        >
-                            <X className="h-4 w-4" />
-                        </button>
-                    </div>
+        <Dialog open={true} onOpenChange={onClose}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle className="text-lg font-medium text-foreground">{type === 'edit' ? 'Update Document' : 'Upload Document'}</DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground">
+                        {`Upload a PDF document for the exhibit "${exhibit.exhibit_name}".`}
+                    </DialogDescription>
                 </DialogHeader>
-
-                <form className="flex flex-col" onSubmit={handleSubmit}>
-                    <div className="p-6 space-y-5">
-                        <div className="space-y-3">
-                            {/* ── Drop zone ── */}
-                            {!data.file && !isCompressing && (
-                                <label className={`group relative flex min-h-[160px] w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-muted/30 transition-all hover:bg-muted/50 hover:border-primary/40 ${isBusy ? 'pointer-events-none opacity-60' : 'cursor-pointer'}`}>
-                                    <div className="flex flex-col items-center justify-center text-center p-6">
-                                        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-background border border-border group-hover:bg-primary/5 group-hover:border-primary/20 transition-colors">
-                                            <FileText className="h-6 w-6 text-muted-foreground group-hover:text-primary transition-colors" />
-                                        </div>
-                                        <p className="text-sm font-semibold text-foreground">
-                                            Click to select a document
-                                        </p>
-                                        <p className="mt-1 text-xs text-muted-foreground text-pretty max-w-[240px]">
-                                            Only PDF documents are accepted. Files larger than 500KB will be automatically optimized.
-                                        </p>
-                                    </div>
-                                    <input
-                                        type="file"
-                                        className="hidden"
-                                        accept=".pdf"
-                                        disabled={isBusy}
-                                        onChange={(e) => {
-                                            const file = e.target.files ? e.target.files[0] : null;
-                                            handleFileChange(file);
-                                        }}
-                                    />
-                                </label>
-                            )}
-
-                            {/* ── Compressing ── */}
-                            {isCompressing && (
-                                <div className="flex min-h-[160px] w-full flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 p-6 animate-pulse">
-                                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
-                                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                                    </div>
-                                    <div className="w-full max-w-[200px] space-y-2">
-                                        <div className="flex items-center justify-between text-xs font-bold text-primary tabular-nums">
-                                            <span>Optimising PDF…</span>
-                                            <span>{progress}%</span>
-                                        </div>
-                                        <Progress value={progress} className="h-1.5 bg-primary/20" />
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* ── File ready ── */}
-                            {data.file && !isCompressing && (
-                                <div className="flex min-h-[160px] w-full flex-col items-center justify-center gap-4 rounded-xl border border-border bg-muted/20 p-6">
-                                    <div className="flex items-center gap-3 bg-background border border-border p-3 rounded-lg shadow-sm w-full">
-                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15">
-                                            <FileText className="h-5 w-5 text-primary" />
-                                        </div>
-                                        <div className="min-w-0 flex-1">
-                                            <p className="truncate text-sm font-semibold text-foreground">
-                                                {data.file.name}
-                                            </p>
-                                            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                                                PDF Document • {formatBytes(data.file.size)}
-                                            </p>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            disabled={processing}
-                                            onClick={() => { setData('file', null); setCompressionInfo(null); }}
-                                            className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-destructive/10 hover:text-destructive text-muted-foreground transition-colors"
-                                        >
-                                            <X className="h-4 w-4" />
-                                        </button>
-                                    </div>
-
-                                    {compressionInfo && compressionInfo.savedPercent > 0 && (
-                                        <div className="flex items-center gap-2 rounded-lg bg-green-500/10 border border-green-500/15 px-3 py-2 text-xs font-semibold text-green-700 dark:text-green-400 w-full justify-center">
-                                            <CheckCircle2 className="h-4 w-4 shrink-0" />
-                                            <span>Optimised • {compressionInfo.savedPercent}% smaller</span>
-                                            <span className="text-green-600/50 dark:text-green-400/50 tabular-nums">
-                                                ({formatBytes(compressionInfo.compressedSize)})
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            <InputError message={errors.file} className="px-1" />
-                        </div>
-                    </div>
-
-                    <DialogFooter className="bg-muted/30 border-t border-border p-4 px-6 gap-3">
-                        <DialogClose asChild>
-                            <Button 
-                                type="button" 
-                                variant="outline" 
-                                disabled={isBusy}
-                                className="bg-background"
-                                onClick={onClose}
-                            >
-                                Cancel
-                            </Button>
-                        </DialogClose>
-                        <Button 
-                            type="submit" 
-                            disabled={isBusy || !data.file}
-                            className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px] border-none"
-                            onClick={handleSubmit}
+                <div className="space-y-2">
+                    {!data.file ? (
+                        <label
+                            className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
+                                }`}
                         >
-                            {processing ? (
-                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Uploading…</>
-                            ) : (
-                                type === 'edit' ? 'Update Document' : 'Upload Document'
-                            )}
+                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg
+                                    className="mb-4 h-8 w-8 text-gray-500"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 20 16"
+                                >
+                                    <path
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                    />
+                                </svg>
+                                <p className="text-sm text-muted-foreground">
+                                    <span className="font-semibold">Click to upload</span> or drag and drop
+                                </p>
+                                <p className="text-xs text-gray-500">PDF</p>
+                            </div>
+                            <input
+                                type="file"
+                                className="hidden"
+                                accept=".pdf"
+                                disabled={isUploading || processing}
+                                onChange={(e) => {
+                                    const file = e.target.files ? e.target.files[0] : null;
+                                    setData('file', file);
+                                }}
+                            />
+                        </label>
+                    ) : (
+                        <div
+                            className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : ''
+                                }`}
+                        >
+                            <span className="text-sm font-semibold text-gray-700">{data.file.name}</span>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="mt-2"
+                                disabled={isUploading}
+                                onClick={() => setData('file', null)}
+                            >
+                                Remove File
+                            </Button>
+                        </div>
+                    )}
+                    <InputError message={errors.file} className="mt-2" />
+                </div>
+                <DialogFooter className="mt-2">
+                    <DialogClose asChild>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            id="add-card-dialog-close"
+                            disabled={isUploading || processing}
+                        >
+                            Cancel
                         </Button>
-                    </DialogFooter>
-                </form>
+                    </DialogClose>
+                    <Button
+                        type="submit"
+                        className="border-none"
+                        disabled={isUploading || processing}
+                        onClick={handleSubmit}
+                    >
+                        {type === 'edit' ? 'Update Document' : 'Upload Document'}
+                    </Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );

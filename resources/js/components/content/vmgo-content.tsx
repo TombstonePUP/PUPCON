@@ -85,6 +85,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
     };
 
     const handleSave = () => {
+        console.log('Submitting VMGO Data:', data.pillars);
         post(route('content.vmgo.update'), {
             preserveScroll: true,
             preserveState: true,

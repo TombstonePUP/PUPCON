@@ -98,6 +98,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
                 });
             }
         }
+        console.log('Rebuilt members for role', role, ':', updated);
 
         return updated;
     };
@@ -130,6 +131,8 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
             .split('\n')
             .map((n) => n.trim())
             .filter(Boolean);
+        console.log('Co-Chairmen Names:', coNames);
+        console.log('Member Names:', memberNames);
 
         const newCo = rebuildMembers(oldCo, coNames, 'Co-Chairman', data.local_task_force_id);
         const newMembers = rebuildMembers(oldMembers, memberNames, 'Member', data.local_task_force_id);
@@ -139,6 +142,7 @@ export default function TaskForceAreaOfficialDialog({ ...props }: TaskForceAreaO
             members: [...newCo, ...newMembers],
         };
 
+        console.log('Final Data to Submit:', finalData);
         setData(finalData);
         onSave(finalData);
         onClose();

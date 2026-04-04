@@ -1,5 +1,3 @@
-import GuideTour from '@/components/tour/guide-tour';
-import { TourProvider } from '@/components/tour/tour-context';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { cn } from '@/lib/utils';
 import type { Auth, GuestNavigation } from '@/types';
@@ -316,10 +314,8 @@ export default function Layout({ children, className  }: LayoutProps) {
   };
 
   return (
-    <TourProvider>
-      <div className="flex min-h-screen flex-col font-poppins">
-        <GuideTour />
-        {/* Header */}
+    <div className="flex min-h-screen flex-col font-poppins">
+      {/* Header */}
       <motion.header
         className={cn(
           'sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm',
@@ -332,7 +328,7 @@ export default function Layout({ children, className  }: LayoutProps) {
           ease: 'easeInOut',
         }}
       >
-        <Link href="/" className="flex items-center" preserveScroll={false}>
+        <Link href="/" className="flex items-center" preserveScroll>
           {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
           <div className="h-[14vw] w-[85vw] rounded-br-full bg-[#d2b539] lg:h-[4vw] lg:w-[38vw]">
             <div className="mr-3 ml-3 flex h-full items-center gap-4 rounded-br-full bg-white pb-2 pl-5 lg:justify-end lg:pr-20">
@@ -886,7 +882,6 @@ export default function Layout({ children, className  }: LayoutProps) {
         </motion.button>
       )}
 
-      </div>
-    </TourProvider>
+    </div>
   );
 }

@@ -31,8 +31,56 @@ export interface SharedData {
 }
 
 export interface GuestNavigation {
-    programs: Program[];
+    programs: NavPrograms[];
     outlines?: ParameterOutlines[];
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface NavPrograms {
+    program_id: number;
+    program_name: string;
+    program_link: string;
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+//Redundant
+export interface ProgramsUnderSurvey {
+    program_id: number;
+    program_name: string;
+    degree_type: string;
+    program_description: string;
+    program_image_name: string;
+    program_image_path: string;
+    program_link: string;
+    levels?: AccreditationLevels;
+    active_levels?: AccreditationLevels;
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+//Redundant
+export interface PerProgramUnderSurvey {
+    program_id: number;
+    degree_type: string;
+    program_name: string;
+    program_link: string;
+    program_description: string;
+    under_survey: boolean;
+    program_image_name: string;
+    program_image_path: string;
+    is_active: boolean;
+    color?: string;
+    levels?: AccreditationLevels[];
+    latest_level?: AccreditationLevels;
+    faculty_staff?: FacultyStaff[];
+    objectives: ProgramObjectives[];
+    gallery: ProgramGalleryImages[];
+    [key: string]: unknown;
+}
+
+export interface ProgramPrivilege {
+    program_name: string;
+    program_link: string;
+    latest_level?: AccreditationLevels;
     [key: string]: unknown;
 }
 
@@ -46,41 +94,29 @@ export interface User {
     created_at: string;
     updated_at: string;
     roles?: Roles;
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface Roles {
     role_id: number;
     role_name: string;
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
-export interface Program {
+//Redundant
+export interface PerProgram {
     program_id: number;
     degree_type: string;
     program_name: string;
     program_link: string;
-    program_description?: string;
-    program_image_name?: string;
-    program_image_path?: string;
-    under_survey?: boolean;
-    is_active?: boolean;
-    color?: string;
-    // Handle the ambiguity: allow both single object and array for flexibility during transition
-    // but ideally we should move towards a consistent one.
-    levels?: AccreditationLevels | AccreditationLevels[];
-    active_levels?: AccreditationLevels | AccreditationLevels[];
-    latest_level?: AccreditationLevels;
+    program_description: string;
+    under_survey: boolean;
+    program_image_name: string;
+    program_image_path: string;
+    levels?: AccreditationLevels[];
     faculty_staff?: FacultyStaff[];
     objectives?: ProgramObjectives[];
     gallery?: ProgramGalleryImages[];
-    [key: string]: unknown;
-}
-
-export interface ProgramPrivilege {
-    program_name: string;
-    program_link: string;
-    latest_level?: AccreditationLevels;
     [key: string]: unknown;
 }
 
@@ -115,6 +151,7 @@ export interface AccreditationLevels {
     [key: string]: unknown;
 }
 
+//Redundand
 export interface ProgramAreas {
     area_id: number;
     program_id: number;
@@ -131,6 +168,17 @@ export interface ProgramAreas {
     [key: string]: unknown;
 }
 
+//Redundant
+export interface Program {
+    program_id: number;
+    degree_type: string;
+    program_name: string;
+    program_link: string;
+    levels?: AccreditationLevels;
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+//Redundant
 export interface Area {
     area_id: number;
     program_id: number;
@@ -144,7 +192,7 @@ export interface Area {
     areaParameters?: AreaParameters[];
     areaForms?: AreaForms[];
     levels?: AccreditationLevels;
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface AreaParameters {
@@ -154,7 +202,7 @@ export interface AreaParameters {
     parameter_description: string;
     area?: Area;
     parameter_outlines?: ParameterOutlines[];
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface ParameterOutlines {
@@ -168,7 +216,7 @@ export interface ParameterOutlines {
     area_parameters?: AreaParameters;
     paramter_outline_category?: ParameterOutlineCategory;
     area_files?: AreaFiles;
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface ParameterOutlineCategory {
@@ -176,7 +224,7 @@ export interface ParameterOutlineCategory {
     category_name: string;
     category_description: string;
     parameter_outlines?: ParameterOutlines[];
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface AreaFiles {
@@ -188,7 +236,7 @@ export interface AreaFiles {
     file_rejection_reason: string | null;
     parameter_outlines?: ParameterOutlines;
     file_status?: FileStatus;
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface FileStatus {
@@ -196,7 +244,7 @@ export interface FileStatus {
     status_name: string;
     area_files?: AreaFiles[];
     areaForms?: AreaForms[];
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface AreaForms {
@@ -212,14 +260,14 @@ export interface AreaForms {
     area_form_category?: AreaFormCategory;
     area?: Area;
     file_status?: FileStatus;
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface AreaFormCategory {
     area_form_category_id: number;
     category_name: string;
     areaForms?: AreaForms[];
-    [key: string]: unknown;
+    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface FilesOverview {

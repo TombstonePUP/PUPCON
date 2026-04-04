@@ -8,7 +8,8 @@ import { AssignablePrograms, AssignableRoles, type UserRecords } from '@/types/u
 import { Head } from '@inertiajs/react';
 import { SquareUserIcon, User2, User2Icon, UserPlus } from 'lucide-react';
 import { useState } from 'react';
-import { PageTitle } from '@/components/page-header';
+import GuideTour from "@/pages/test/GuideTour";
+import { ActionCard, PageTitle } from '@/components/page-header';
 
 
 interface UsersProps {
@@ -54,6 +55,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
 
   return (
     <>
+      <GuideTour />
       <AppLayout breadcrumbs={breadcrumbs}>
         <Head title="User Management" />
         <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">

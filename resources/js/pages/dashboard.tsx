@@ -2,6 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { SharedData, User, type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { DataTable } from '@/components/charts/data-table';
+import GuideTour from "@/pages/test/GuideTour";
 import { type ActivityLogs, type DocumentStatistics, type FrequencyUploads, type OverallUploads } from '@/types/dashboard';
 import { columns } from '@/components/charts/data-table-columns/logs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -137,6 +138,7 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
           documentStatistics={activeStatistics}
         />
 
+        <GuideTour />
         <div id="stat-table">
           <DataTable columns={columns} data={activityLogs} />
         </div>
