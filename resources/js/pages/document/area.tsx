@@ -76,7 +76,32 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
             title={area.area_name}
             description={program.program_name}
             actions={
-              area.archive ? <Badge variant="destructive">Archive</Badge> : undefined
+              <>
+
+                {area.archive && (
+                  <div className="pointer-events-none absolute top-0 right-0 w-20 h-24 overflow-hidden rounded-tr-lg">
+                    <div className="absolute top-6 -right-10 w-36 rotate-45 py-0.5 text-center text-xs font-semibold text-white bg-warning">
+                      Archive
+                    </div>
+                  </div>
+                )}
+
+                {area.area_parameters.length > 0 &&
+                  (role === 'Admin' || role === 'Coordinator') &&
+                  program.levels[0]?.remarks === 'Ongoing Survey' &&
+                  program.levels[0]?.is_active && !area.archive === true && (
+                    <div className="flex flex-col gap-2">
+                      <Button variant="outline" onClick={() => openDialog('parameter', 'import')}>
+                        <LucideImport className="h-4 w-4" />
+                        <span className='hidden xl:inline'>Import Template</span>
+                      </Button>
+                      <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
+                        <PlusCircleIcon className="h-4 w-4" />
+                        <span className='hidden xl:inline'>Add Parameter</span>
+                      </Button>
+                    </div>
+                  )}
+              </>
             }
           />
 
@@ -109,7 +134,7 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
             </div>
 
             {/* Right Sidebar - Actions */}
-            {area.area_parameters.length > 0 &&
+            {/* {area.area_parameters.length > 0 &&
               (role === 'Admin' || role === 'Coordinator') &&
               program.levels[0]?.remarks === 'Ongoing Survey' &&
               program.levels[0]?.is_active && !area.archive === true && (
@@ -130,38 +155,46 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
           </div>
         </div>
-      </AppLayout>
-      {dialog.kind === 'area-form' && (
-        <RenderAreaFormDialog
-          type={dialog.action}
-          forms={area?.area_forms}
-          form={dialog.form}
-          categories={areaFormsCategories}
-          program={program}
-          area={area}
-          onClose={closeDialog}
-        />
-      )}
-      {dialog.kind === 'document' && (
-        <RenderDocumentDialog type={dialog.action} benchmark={dialog.benchmark} program={program} area={area} onClose={closeDialog} />
-      )}
-      {dialog.kind === 'benchmark' && (
-        <RenderBenchmarkDialog
-          type={dialog.action}
-          benchmark={dialog.benchmark}
-          parameter={dialog.parameter}
-          benchmark_categories={dialog.benchmark_categories}
-          program={program}
-          area={area}
-          onClose={closeDialog}
-        />
-      )}
-      {dialog.kind === 'parameter' && (
-        <RenderParameterDialog type={dialog.action} parameter={dialog.parameter} program={program} area={area} onClose={closeDialog} />
-      )}
+      </AppLayout >
+      {
+        dialog.kind === 'area-form' && (
+          <RenderAreaFormDialog
+            type={dialog.action}
+            forms={area?.area_forms}
+            form={dialog.form}
+            categories={areaFormsCategories}
+            program={program}
+            area={area}
+            onClose={closeDialog}
+          />
+        )
+      }
+      {
+        dialog.kind === 'document' && (
+          <RenderDocumentDialog type={dialog.action} benchmark={dialog.benchmark} program={program} area={area} onClose={closeDialog} />
+        )
+      }
+      {
+        dialog.kind === 'benchmark' && (
+          <RenderBenchmarkDialog
+            type={dialog.action}
+            benchmark={dialog.benchmark}
+            parameter={dialog.parameter}
+            benchmark_categories={dialog.benchmark_categories}
+            program={program}
+            area={area}
+            onClose={closeDialog}
+          />
+        )
+      }
+      {
+        dialog.kind === 'parameter' && (
+          <RenderParameterDialog type={dialog.action} parameter={dialog.parameter} program={program} area={area} onClose={closeDialog} />
+        )
+      }
     </>
   );
 }

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Area, AreaFormCategory, type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { FolderPlus, PlusCircle } from 'lucide-react';
+import { FolderPlus, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 
 const alphaRegex = new RegExp('^[A-Za-z]');
 
@@ -54,12 +54,12 @@ export default function ParameterAccordion({
 
   return (
     <>
-      <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
+      <Accordion type="single" collapsible className="flex w-full flex-col gap-4">
         {areaParameters?.length > 0 ? (
           areaParameters?.map((parameter) => (
             <AccordionItem
               value={`item-${parameter.area_parameter_id}`}
-              className="group bg-muted/50"
+              className="group bg-card"
               key={parameter.area_parameter_id}
             >
               <AccordionTrigger className="flex flex-row items-center justify-between group-hover:cursor-pointer">
@@ -70,23 +70,26 @@ export default function ParameterAccordion({
                       : `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
                     }
                   </h1>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground hidden lg:inline">
                     {parameter.parameter_name?.trim() ? parameter.parameter_description : ''}
                   </p>
                 </div>
                 {canShowActions && (
                   <div className="flex justify-center gap-3">
                     <Button
-                      className="border-none"
+                      className="border-none text-xs"
                       onClick={() => resolveParamDialog({ type: 'edit', parameter: parameter })}
                     >
-                      Edit
+                      <Pencil className="h-4 w-4" />
+                      <span className="hidden xl:inline">Edit</span>
                     </Button>
                     <Button
                       variant="outline"
+                      className="text-xs"
                       onClick={() => resolveParamDialog({ type: 'delete', parameter: parameter })}
                     >
-                      Remove
+                      <Trash2 className="h-4 w-4" />
+                      <span className="hidden xl:inline">Remove</span>
                     </Button>
                   </div>
                 )}
@@ -140,7 +143,7 @@ export default function ParameterAccordion({
 
                 {canShowActions && (
                   <Button
-                    className="w-fit cursor-pointer"
+                    className="w-fit cursor-pointer text-xs"
                     variant="outline"
                     onClick={() => {
                       setTimeout(() => resolveBenchDialog({ type: 'add', parameter: parameter }), 50);

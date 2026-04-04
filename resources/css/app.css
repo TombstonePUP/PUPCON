@@ -151,9 +151,11 @@
   --success-foreground: oklch(0.35 0.12 142);
   --success-border: oklch(0.88 0.08 142);
 
-  --warning: oklch(0.97 0.07 85);
-  --warning-foreground: oklch(0.40 0.12 85);
-  --warning-border: oklch(0.90 0.10 85);
+  --warning: oklch(0.72 0.17 85);
+  /* solid amber — visible on white */
+  --warning-foreground: oklch(0.98 0 0);
+  /* white text on amber */
+  --warning-border: oklch(0.62 0.18 85);
 }
 
 .dark {
@@ -208,9 +210,11 @@
   --success-foreground: oklch(0.75 0.12 142);
   --success-border: oklch(0.35 0.08 142);
 
-  --warning: oklch(0.25 0.07 85);
-  --warning-foreground: oklch(0.75 0.12 85);
-  --warning-border: oklch(0.35 0.10 85);
+  --warning: oklch(0.68 0.17 85);
+  /* slightly softer for dark bg */
+  --warning-foreground: oklch(0.12 0 0);
+  /* dark text on amber in dark mode */
+  --warning-border: oklch(0.55 0.16 85);
 }
 
 @layer base {
