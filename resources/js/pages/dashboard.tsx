@@ -104,7 +104,7 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Dashboard" />
+      <Head title="Analytics" />
       <div className="flex flex-1 flex-col gap-4 rounded-xl p-6">
         <PageTitle
           title={`${getGreeting()}, ${auth.user.first_name}!`}
