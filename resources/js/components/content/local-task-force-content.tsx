@@ -111,7 +111,6 @@ const LocalTaskForceSection: React.FC = ({ ...props }: LocalTaskForceSectionProp
     };
 
     const handleSubmit = () => {
-        console.log('Submitting Local Task Force Data:', data);
         post(route('content.local_task_force.update'), {
             preserveScroll: true,
             preserveState: true,

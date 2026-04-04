@@ -1,6 +1,8 @@
 'use client';
 
-import { DocumentViewer } from '@/components/dialogs/documents/view-document';
+import { lazy, Suspense, useMemo, useState } from 'react';
+const DocumentViewer = lazy(() => import('@/components/dialogs/documents/view-document').then(m => ({ default: m.DocumentViewer })));
+
 import {
     ContextMenu,
     ContextMenuContent,
@@ -10,7 +12,7 @@ import {
     ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { AreaParameters, Program, type ParameterOutlines } from '@/types';
+import { Area, AreaParameters, Program, type ParameterOutlines } from '@/types';
 import { usePage } from '@inertiajs/react';
 import {
     Circle,
@@ -21,10 +23,10 @@ import {
     DownloadIcon,
     Edit,
     FileUp,
+    Loader2,
     MessageSquareText,
     Trash2Icon,
 } from 'lucide-react';
-import { useRef, useState } from 'react';
 
 interface DocDialogParams {
     type: 'view' | 'upload' | 'delete' | 'rejected';
@@ -110,8 +112,8 @@ export function buildOutlineTree({ outlines }: { outlines: ParameterOutlines[] }
     return tree;
 }
 
-export function RecursiveOutline({ outlines }: OutlineProps) {
-    const { auth } = usePage().props;
+export function RecursiveOutline({ outlines, program, area, resolveDocDialog, resolveBenchDialog }: OutlineProps) {
+    const { auth } = usePage<any>().props;
     const role = auth?.user?.roles?.role_name;
     const isAccreditor = role === 'Accreditor';
 
@@ -119,9 +121,8 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
     const [currentDocumentUrl, setCurrentDocumentUrl] = useState('');
     const [currentDocumentTitle, setCurrentDocumentTitle] = useState('');
     const [ratings, setRatings] = useState<Record<number, number | 'N/A'>>({});
-    const [mean, setMean] = useState<string>('—');
 
-    const handleViewPDF = (outline) => {
+    const handleViewPDF = (outline: ParameterOutlines) => {
         if (outline.area_files?.file_path) {
             setCurrentDocumentUrl(outline.area_files.file_path);
             setCurrentDocumentTitle(`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`);
@@ -130,27 +131,40 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
     };
 
     const handleRatingChange = (outlineId: number, value: string) => {
-        setRatings((prev) => {
-            const newRatings = { ...prev, [outlineId]: value === 'N/A' ? 'N/A' : Number(value) };
-
-            // compute average of numeric ratings
-            const numericValues = Object.values(newRatings).filter((v): v is number => typeof v === 'number' && !isNaN(v));
-
-            const avg = numericValues.length > 0 ? (numericValues.reduce((a, b) => a + b, 0) / numericValues.length).toFixed(2) : '—';
-
-            setMean(avg);
-            return newRatings;
-        });
+        setRatings((prev) => ({
+            ...prev,
+            [outlineId]: value === 'N/A' ? 'N/A' : Number(value)
+        }));
     };
+
+    const meanRating = useMemo(() => {
+        const numericValues = Object.values(ratings).filter((v): v is number => typeof v === 'number' && !isNaN(v));
+        return numericValues.length > 0
+            ? (numericValues.reduce((a, b) => a + b, 0) / numericValues.length).toFixed(2)
+            : '—';
+    }, [ratings]);
 
     return (
         <>
-            <DocumentViewer
-                open={showDocumentViewer}
-                onOpenChange={setShowDocumentViewer}
-                fileUrl={currentDocumentUrl}
-                title={currentDocumentTitle}
-            />
+            <Suspense fallback={
+                showDocumentViewer ? (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+                        <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
+                            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                            </div>
+                            <p className="text-sm font-medium text-muted-foreground">Initialising PDF viewer...</p>
+                        </div>
+                    </div>
+                ) : null
+            }>
+                <DocumentViewer
+                    open={showDocumentViewer}
+                    onOpenChange={setShowDocumentViewer}
+                    fileUrl={currentDocumentUrl}
+                    title={currentDocumentTitle}
+                />
+            </Suspense>
 
             <ul>
                 {outlines.map((outline) => (
@@ -174,7 +188,6 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
                                 {/* Accreditor rating (only for non-container outlines) */}
                                 {isAccreditor && !outline.container && (
                                     <div className="mt-1 ml-6 flex items-center gap-2">
-                                        {/* <label className="text-sm text-gray-600">Rating:</label> */}
                                         <select
                                             className="rounded-md border px-2 py-1 text-xs focus:ring-1 focus:ring-[#7f1414] focus:outline-none"
                                             value={ratings[outline.parameter_outline_id] ?? 'N/A'}
@@ -191,7 +204,15 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
                                 )}
                             </div>
                             {/* Recursive children */}
-                            {outline.children && outline.children.length > 0 && <RecursiveOutline outlines={outline.children} />}
+                            {outline.children && (outline.children as any[]).length > 0 && 
+                                <RecursiveOutline 
+                                    outlines={outline.children as any} 
+                                    program={program} 
+                                    area={area} 
+                                    resolveDocDialog={resolveDocDialog} 
+                                    resolveBenchDialog={resolveBenchDialog} 
+                                /> as any
+                            }
                         </div>
                     </li>
                 ))}
@@ -200,7 +221,7 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
             {/* Mean display (Accreditor only) */}
             {isAccreditor && (
                 <div className="mt-3 text-right text-sm font-semibold text-gray-800">
-                    Mean Rating: <span className="text-[#7f1414]">{mean ?? '—'}</span>
+                    Mean Rating: <span className="text-[#7f1414]">{meanRating}</span>
                 </div>
             )}
         </>
@@ -208,10 +229,10 @@ export function RecursiveOutline({ outlines }: OutlineProps) {
 }
 
 export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog, resolveBenchDialog }: OutlineProps) {
-    const { auth } = usePage().props;
-    const role = auth.user.roles.role_name;
+    const { auth } = usePage<any>().props;
+    const role = auth?.user?.roles?.role_name;
 
-    const FileStatus = ({ outline }) => {
+    const FileStatus = ({ outline }: { outline: ParameterOutlines }) => {
         const status = outline.area_files?.file_status?.status_name;
 
         const renderStatus = (icon: React.ReactNode, color: string, tooltip: string) => (
@@ -239,9 +260,13 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
     };
 
     const download = (outline: ParameterOutlines) => {
+        const levelId = Array.isArray(program.levels) 
+            ? (program.levels as any)[0]?.accreditation_level_id 
+            : (program.levels as any)?.accreditation_level_id;
+            
         const url = route('manage.area.download.file', {
             program_name: program.program_link,
-            level_id: program.levels[0]?.accreditation_level_id,
+            level_id: levelId,
             area_id: area.area_id,
             outline_id: outline.parameter_outline_id,
         });
@@ -274,7 +299,7 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
                                                 </TooltipContent>
                                             </Tooltip>
                                         </TooltipProvider>
-                                        <span className="flex cursor-pointer gap-2 font-medium">
+                                        <span className="flex cursor-pointer gap-2 font-medium text-foreground">
                                             {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                                         </span>
                                     </>
@@ -288,7 +313,7 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
                                                     setTimeout(() => resolveDocDialog({ type: 'view', benchmark: outline }), 50);
                                                 }
                                             }}
-                                            className="cursor-pointer"
+                                            className="cursor-pointer hover:underline decoration-primary"
                                         >
                                             {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                                         </a>
@@ -296,52 +321,52 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
                                 )}
                             </ContextMenuTrigger>
 
-                            <ContextMenuContent className="w-45">
+                            <ContextMenuContent className="w-56">
                                 {!outline.container && (
                                     <>
-                                        <ContextMenuLabel>Document</ContextMenuLabel>
+                                        <ContextMenuLabel>Document Actions</ContextMenuLabel>
                                         {!area.archive && (
                                             <ContextMenuItem
-                                                className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                                className="flex cursor-pointer items-center gap-2"
                                                 onSelect={() => {
                                                     setTimeout(() => resolveDocDialog({ type: 'upload', benchmark: outline }), 50);
                                                 }}
                                             >
-                                                <FileUp className="inline-block h-4 w-4" />
+                                                <FileUp className="h-4 w-4" />
                                                 {outline.area_files ? 'Update' : 'Upload'}
                                             </ContextMenuItem>
                                         )}
                                         {outline.area_files?.file_status?.status_name === 'Rejected' && (
                                             <ContextMenuItem
-                                                className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                                className="flex cursor-pointer items-center gap-2"
                                                 onSelect={() => {
                                                     setTimeout(() => resolveDocDialog({ type: 'rejected', benchmark: outline }), 50);
                                                 }}
                                             >
-                                                <MessageSquareText className="inline-block h-4 w-4" />
+                                                <MessageSquareText className="h-4 w-4" />
                                                 View Comments
                                             </ContextMenuItem>
                                         )}
                                         {outline.area_files && (
                                             <>
                                                 <ContextMenuItem
-                                                    className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                                    className="flex cursor-pointer items-center gap-2"
                                                     onSelect={() => {
                                                         download(outline);
                                                     }}
                                                 >
-                                                    <DownloadIcon className="inline-block h-4 w-4" />
+                                                    <DownloadIcon className="h-4 w-4" />
                                                     Download
                                                 </ContextMenuItem>
                                                 {!area.archive && (
                                                     <ContextMenuItem
                                                         variant="destructive"
-                                                        className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                                        className="flex cursor-pointer items-center gap-2"
                                                         onSelect={() => {
                                                             setTimeout(() => resolveDocDialog({ type: 'delete', benchmark: outline }), 50);
                                                         }}
                                                     >
-                                                        <Trash2Icon className="inline-block h-4 w-4" />
+                                                        <Trash2Icon className="h-4 w-4" />
                                                         Delete
                                                     </ContextMenuItem>
                                                 )}
@@ -353,38 +378,38 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
                                 {role !== 'Chairman' && role !== 'Accreditor' && !area.archive && (
                                     <>
                                         {!outline.container && <ContextMenuSeparator />}
-                                        <ContextMenuLabel>Benchmark</ContextMenuLabel>
+                                        <ContextMenuLabel>Benchmark Setup</ContextMenuLabel>
                                         <ContextMenuItem
-                                            className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                            className="flex cursor-pointer items-center gap-2"
                                             onSelect={() => {
                                                 setTimeout(() => resolveBenchDialog({ type: 'edit', benchmark: outline }), 100);
                                             }}
                                         >
-                                            <Edit className="inline-block h-4 w-4" />
+                                            <Edit className="h-4 w-4" />
                                             Edit
                                         </ContextMenuItem>
                                         <ContextMenuItem
-                                            className="justify-left flex cursor-pointer flex-row items-center gap-2"
+                                            className="flex cursor-pointer items-center gap-2"
                                             variant="destructive"
                                             onSelect={() => {
                                                 setTimeout(() => resolveBenchDialog({ type: 'delete', benchmark: outline }), 50);
                                             }}
                                         >
-                                            <Trash2Icon className="inline-block h-4 w-4" />
+                                            <Trash2Icon className="h-4 w-4" />
                                             Delete
                                         </ContextMenuItem>
                                     </>
                                 )}
                             </ContextMenuContent>
                         </ContextMenu>
-                        {outline.children && outline.children.length > 0 && (
+                        {outline.children && (outline.children as any[]).length > 0 && (
                             <RecursiveOutlineForm
-                                outlines={outline.children}
+                                outlines={outline.children as any}
                                 program={program}
                                 area={area}
                                 resolveDocDialog={resolveDocDialog}
                                 resolveBenchDialog={resolveBenchDialog}
-                            />
+                            /> as any
                         )}
                     </li>
                 ))}

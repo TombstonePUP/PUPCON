@@ -56,7 +56,6 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
 
                 // Get the program immediately
                 const program = programs.find((p) => p.program_id === programId);
-                console.log(program);
 
                 setData({
                   ...data,
