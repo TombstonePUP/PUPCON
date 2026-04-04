@@ -52,14 +52,7 @@ export default defineConfig(({ mode }) => ({
         host: '0.0.0.0',
         port: 5173,
         strictPort: true,
-        cors: {
-            origin: [
-                'http://localhost:8000',
-                'http://127.0.0.1:8000',
-                `http://${LAN_IP}:8000`,
-            ],
-            credentials: true,
-        },
+        cors: true,
         hmr: {
             host: LAN_IP,
         },

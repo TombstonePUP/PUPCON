@@ -4,6 +4,7 @@ import { FacultyStaff } from './content';
 export interface Auth {
     user: User;
     programs: ProgramPrivilege;
+    [key: string]: unknown;
 }
 
 export interface BreadcrumbItem {
