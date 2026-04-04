@@ -1,0 +1,20 @@
+{
+  "entry": [
+    "resources/js/app.tsx", 
+    "resources/js/ssr.jsx", 
+    "resources/scss/app.scss",
+    "resources/js/components/ui/**/*.{ts,tsx}",
+    "resources/js/echo.js"
+  ],
+  "project": ["resources/js/**/*.{js,jsx,ts,tsx}", "resources/scss/**/*.scss", "resources/css/**/*.css"],
+  "ignoreDependencies": [
+    "concurrently",
+    "@inertiajs/core",
+    "zod",
+    "date-fns"
+  ],
+  "rules": {
+    "exports": "off",
+    "types": "off"
+  }
+}

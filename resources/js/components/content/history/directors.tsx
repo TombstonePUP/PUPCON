@@ -106,7 +106,6 @@ export function DirectorsSection({ ...props }: DirectorsProps) {
                 updatedList = [...current, directorForLocalState];
             }
 
-            console.log(updatedList);
             onUpdateDirectors(directorForLocalState, director);
             return updatedList;
         });

@@ -1,8 +1,10 @@
 import { cn } from '@/lib/utils';
 import { Link, router, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import { LogOut } from 'lucide-react';
+import { LogOut, Monitor } from 'lucide-react';
 import { ReactNode, useEffect, useState } from 'react';
+import GuideTour from '@/components/tour/guide-tour';
+import { TourProvider } from '@/components/tour/tour-context';
 
 interface AccreditorLayoutProps {
     children: ReactNode;
@@ -42,13 +44,29 @@ export default function AccreditorLayout({ children }: AccreditorLayoutProps) {
         router.post('/logout');
     };
 
-    const navigation = [
+    const navigation: { label: string; href: string }[] = [
         // { label: 'Profile', href: '/accreditor/profile' },
     ];
 
     return (
-        <div className="flex min-h-screen flex-col">
-            {/* Header */}
+        <TourProvider>
+            {/* Mobile Block */}
+            <div className="flex flex-col items-center justify-center h-screen p-6 text-center bg-[#f4f4f5] lg:hidden">
+                <div className="rounded-2xl bg-white p-8 shadow-sm border border-border max-w-sm">
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#7f1414]/10 mb-4">
+                        <Monitor className="h-7 w-7 text-[#7f1414]" />
+                    </div>
+                    <h2 className="text-xl font-bold text-foreground mb-2">Desktop Required</h2>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                        The Accreditor Dashboard is only available on desktop devices to preserve data component layouts.
+                    </p>
+                </div>
+            </div>
+
+            {/* Desktop View */}
+            <div className="hidden min-h-screen flex-col lg:flex">
+                <GuideTour />
+                {/* Header */}
             <motion.header
                 className={cn('sticky top-0 z-50 bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm flex justify-between items-center')}
                 animate={{
@@ -59,7 +77,7 @@ export default function AccreditorLayout({ children }: AccreditorLayoutProps) {
                     ease: 'easeInOut',
                 }}
             >
-                <Link href="/" className="flex items-center" preserveScroll>
+                <Link href="/" className="flex items-center" preserveScroll={false}>
                     {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
                     <div className='bg-[#d2b539] h-18 w-164 rounded-br-full'>
                         <div className='ml-3 h-full bg-white rounded-br-full mr-3 flex justify-end gap-4 pr-20 pb-2 items-center'>
@@ -138,5 +156,6 @@ export default function AccreditorLayout({ children }: AccreditorLayoutProps) {
                 </div>
             </footer>
         </div>
+        </TourProvider>
     );
 }

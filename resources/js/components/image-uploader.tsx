@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useImageCompressor } from '@/hooks/use-image-compressor';
 import { Check, Crop, RotateCcw, Upload, X, ZoomIn, ZoomOut } from 'lucide-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -42,6 +43,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const imageRef = useRef<HTMLImageElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const rawFileRef = useRef<File | null>(null);
+
+  const { compress } = useImageCompressor();
 
   const CANVAS_W = 600;
   const CANVAS_H = 400;
@@ -125,13 +128,21 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     drawCanvas();
   }, [drawCanvas]);
 
-  const handleFileSelect = (file: File) => {
+  const handleFileSelect = async (file: File) => {
     if (file.size > maxSizeMB * 1024 * 1024) {
       alert(`File size exceeds ${maxSizeMB}MB`);
       return;
     }
-    rawFileRef.current = file;
-    const url = URL.createObjectURL(file);
+
+    // Compress large images before opening the crop tool for better performance
+    let processedFile = file;
+    if (file.size > 1024 * 1024) { // > 1MB
+       const result = await compress(file);
+       processedFile = result.file;
+    }
+
+    rawFileRef.current = processedFile;
+    const url = URL.createObjectURL(processedFile);
     setRawImageUrl(url);
     setZoom(1);
     setImageOffset({ x: 0, y: 0 });
@@ -222,7 +233,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       setPreviewUrl(url);
       onImageChange(croppedFile, url);
       setCropDialogOpen(false);
-    }, 'image/jpeg', 0.95);
+    }, 'image/jpeg', 0.8); // 0.8 quality for final output
   };
 
   const resetCrop = () => {
@@ -287,17 +298,27 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
       {/* Crop Dialog */}
       <Dialog open={cropDialogOpen} onOpenChange={setCropDialogOpen}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Crop className="h-4 w-4" />
-              Crop Image
-            </DialogTitle>
+        <DialogContent className="sm:max-w-2xl overflow-hidden p-0 border border-border shadow-2xl rounded-xl">
+          <DialogHeader className="bg-primary px-6 py-4 border-b border-primary/80">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Crop className="h-4 w-4 text-primary-foreground" />
+                <DialogTitle className="text-base font-bold text-primary-foreground">
+                  Crop Image
+                </DialogTitle>
+              </div>
+              <button 
+                onClick={() => setCropDialogOpen(false)}
+                className="h-8 w-8 flex items-center justify-center rounded-lg text-primary-foreground/90 hover:bg-primary-foreground/15 transition-colors"
+               >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </DialogHeader>
 
-          <div className="flex flex-col gap-4">
+          <div className="p-6 flex flex-col gap-6">
             {/* Canvas */}
-            <div ref={containerRef} className="overflow-hidden rounded-lg border border-border bg-black">
+            <div ref={containerRef} className="overflow-hidden rounded-lg border border-border bg-black shadow-inner">
               <canvas
                 ref={canvasRef}
                 width={CANVAS_W}
@@ -311,35 +332,38 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             </div>
 
             {/* Zoom controls */}
-            <div className="flex items-center gap-3">
-              <ZoomOut className="h-4 w-4 shrink-0 text-muted-foreground" />
-              <input
-                type="range"
-                min={0.1}
-                max={3}
-                step={0.05}
-                value={zoom}
-                onChange={(e) => setZoom(parseFloat(e.target.value))}
-                className="flex-1"
-              />
-              <ZoomIn className="h-4 w-4 shrink-0 text-muted-foreground" />
-              <span className="w-12 text-right text-xs text-muted-foreground">{Math.round(zoom * 100)}%</span>
+            <div className="space-y-4">
+               <div className="flex items-center gap-4">
+                  <ZoomOut className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <input
+                    type="range"
+                    min={0.1}
+                    max={3}
+                    step={0.05}
+                    value={zoom}
+                    onChange={(e) => setZoom(parseFloat(e.target.value))}
+                    className="flex-1 accent-primary"
+                  />
+                  <ZoomIn className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <span className="w-12 text-right text-xs font-bold text-foreground tabular-nums">{Math.round(zoom * 100)}%</span>
+                </div>
+                <p className="text-xs text-muted-foreground flex items-center gap-1.5 bg-muted/50 p-2.5 rounded-lg border border-border">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  Drag the crop area to reposition. Use the slider above to zoom.
+                </p>
             </div>
-
-            <p className="text-xs text-muted-foreground">
-              Drag the crop area to reposition. Use the slider to zoom in/out.
-            </p>
           </div>
 
-          <DialogFooter className="gap-2">
-            <Button type="button" variant="outline" size="sm" onClick={resetCrop}>
+          <DialogFooter className="bg-muted/30 border-t border-border p-4 px-6 gap-3">
+            <Button type="button" variant="outline" size="sm" onClick={resetCrop} className="bg-background">
               <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
               Reset
             </Button>
-            <Button type="button" variant="outline" onClick={() => setCropDialogOpen(false)}>
+            <div className="flex-1" />
+            <Button type="button" variant="outline" onClick={() => setCropDialogOpen(false)} className="bg-background">
               Cancel
             </Button>
-            <Button type="button" onClick={applyCrop}>
+            <Button type="button" onClick={applyCrop} className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <Check className="mr-1.5 h-4 w-4" />
               Apply Crop
             </Button>
