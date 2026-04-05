@@ -127,7 +127,7 @@ export default function Login({ status, canResetPassword }: LoginPageProps) {
 
       <form className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150" onSubmit={handleSubmit} noValidate>
         <div className="grid gap-6">
-          <Field label="Email address" error={emailError} required>
+          <Field label="Email Address" error={emailError} required>
             {(a11y) => (
               <Input
                 {...a11y}
