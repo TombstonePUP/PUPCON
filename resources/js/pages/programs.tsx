@@ -1,7 +1,8 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import type { ProgramsUnderSurvey } from '@/types';
-import { Head, Link, usePage, usePoll } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { useSmartPoll } from '@/hooks/use-smart-poll';
 import { Construction, ImageOff } from 'lucide-react';
 
 interface ProgramsProps {
@@ -12,7 +13,7 @@ export default function Programs({ programs }: ProgramsProps) {
   const { auth } = usePage<Auth>().props;
   const user = auth.user;
 
-  usePoll(5000);
+  useSmartPoll(5000);
 
   const EmptyState = ({ title, description }: { title: string; description: string }) => (
     <div className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-16 text-center">

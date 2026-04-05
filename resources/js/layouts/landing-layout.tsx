@@ -1,3 +1,5 @@
+import GuideTour from '@/components/tour/guide-tour';
+import { TourProvider } from '@/components/tour/tour-context';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { cn } from '@/lib/utils';
 import type { Auth, GuestNavigation } from '@/types';
@@ -37,9 +39,9 @@ function isActive(path: string) {
 }
 
 export default function Layout({ children, className  }: LayoutProps) {
-  const { guest } = usePage<GuestNavigation>().props;
-  const { auth } = usePage<Auth>().props;
-  const user = auth.user;
+  const { guest } = usePage<GuestNavigation>().props as any;
+  const { auth } = usePage<Auth>().props as any;
+  const user = auth?.user;
   const cleanup = useMobileNavigation();
 
   const underSurveyPrograms = (guest as any)?.programs?.length
@@ -124,7 +126,7 @@ export default function Layout({ children, className  }: LayoutProps) {
     {
       label: 'Programs',
       href: '/programs',
-      dropdown: underSurveyPrograms.map((p) => ({
+      dropdown: underSurveyPrograms.map((p: any) => ({
         ...p,
         icon: <BookOpen size={18} />,
       })),
@@ -241,7 +243,7 @@ export default function Layout({ children, className  }: LayoutProps) {
   }, [menuOpen]);
 
   // Framer Motion variants
-  const backdropVariants = {
+  const backdropVariants: any = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -249,7 +251,7 @@ export default function Layout({ children, className  }: LayoutProps) {
     },
   };
 
-  const sidebarVariants = {
+  const sidebarVariants: any = {
     hidden: { x: '100%' },
     visible: {
       x: 0,
@@ -272,7 +274,7 @@ export default function Layout({ children, className  }: LayoutProps) {
     },
   };
 
-  const resultItemVariants = {
+  const resultItemVariants: any = {
     hidden: {
       opacity: 0,
       y: 20,
@@ -289,8 +291,8 @@ export default function Layout({ children, className  }: LayoutProps) {
 
   const [openDropdown, setOpenDropdown] = useState(null);
 
-  const toggleDropdown = (label) => {
-    setOpenDropdown(openDropdown === label ? null : label);
+  const toggleDropdown = (label: string) => {
+    setOpenDropdown(openDropdown === label ? null : (label as any));
   };
 
   const redirectLink = (outline: any) => {
@@ -314,8 +316,10 @@ export default function Layout({ children, className  }: LayoutProps) {
   };
 
   return (
-    <div className="flex min-h-screen flex-col font-poppins">
-      {/* Header */}
+    <TourProvider>
+      <div className="flex min-h-screen flex-col font-poppins">
+        <GuideTour />
+        {/* Header */}
       <motion.header
         className={cn(
           'sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm',
@@ -328,7 +332,7 @@ export default function Layout({ children, className  }: LayoutProps) {
           ease: 'easeInOut',
         }}
       >
-        <Link href="/" className="flex items-center" preserveScroll>
+        <Link href="/" className="flex items-center" preserveScroll={false}>
           {/* <img src="/images/pupsjlogo-text-exotic.png" alt="Logo" className="h-full w-full object-cover" draggable={false} /> */}
           <div className="h-[14vw] w-[85vw] rounded-br-full bg-[#d2b539] lg:h-[4vw] lg:w-[38vw]">
             <div className="mr-3 ml-3 flex h-full items-center gap-4 rounded-br-full bg-white pb-2 pl-5 lg:justify-end lg:pr-20">
@@ -364,7 +368,7 @@ export default function Layout({ children, className  }: LayoutProps) {
                     {item.dropdown?.length > 0 && (
                       <div className="absolute left-0 mt-[1vw] max-h-0 w- max-w-xs overflow-hidden rounded-md bg-white/85 backdrop-blur-lg text-sm opacity-0 transition-all duration-300 ease-out group-hover:max-h-96 group-hover:opacity-100 p-1">
                         <ul className="flex flex-col">
-                          {item.dropdown.map((drop) => (
+                          {item.dropdown.map((drop: any) => (
                             <li key={drop.label} className="border-b border-gray-100 last:border-none">
                               <div className="group/item rounded hover:bg-[#7f1414]/90">
                                 <Link
@@ -725,7 +729,7 @@ export default function Layout({ children, className  }: LayoutProps) {
                             )}
                           >
                             <ul className="flex flex-col">
-                              {item.dropdown.map((drop) => (
+                              {item.dropdown.map((drop: any) => (
                                 <li key={drop.label} className="border-t border-gray-100 last:border-none">
                                   <Link
                                     href={drop.href}
@@ -855,9 +859,9 @@ export default function Layout({ children, className  }: LayoutProps) {
                   </a>
                 </li>
                 <li>
-                  <a href="/" className="flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>
+                  <Link href="/" className="flex items-center gap-2 transition hover:text-yellow-300" preserveScroll>
                     <Home className="h-4 w-4" /> Go to Home Page
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -882,6 +886,7 @@ export default function Layout({ children, className  }: LayoutProps) {
         </motion.button>
       )}
 
-    </div>
+      </div>
+    </TourProvider>
   );
 }

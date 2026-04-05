@@ -10,7 +10,8 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
-import { Head, router, usePage, usePoll } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
+import { useSmartPoll } from '@/hooks/use-smart-poll';
 import { Archive, BookCheck, Edit, FilePlus, Folders, GraduationCap, NotebookIcon, PlusCircleIcon, ScrollText } from 'lucide-react';
 import { PageTitle } from '@/components/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,7 +33,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
   const role = user.roles.role_name;
   const assignedPrograms = auth.programs;
 
-  usePoll(5000);
+  useSmartPoll(5000);
 
   const [activeTab, setActiveTab] = useState('active');
   const [searchTerm, setSearchTerm] = useState('');

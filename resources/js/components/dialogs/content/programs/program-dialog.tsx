@@ -24,7 +24,6 @@ interface ProgramForm {
 
 export default function ProgramDialog({ ...props }: ProgramDialogProps) {
   const { program, type, onClose, programs } = props;
-  console.log('ProgramDialog props:', program);
 
   const { data, setData, post, patch, processing, errors } = useForm<ProgramForm>({
     program_id: program?.program_id || null,

@@ -31,28 +31,6 @@ export default function DocumentRequestActions({ file, resolveDialog }: Document
   const canRevert = files.some((f) => f.file_status !== 'Pending');
   const canReject = files.some((f) => f.file_status !== 'Rejected');
 
-  const { data, setData, post, processing, errors, reset } = useForm<DocumentRequestForm>({
-    file: [],
-  });
-
-  useEffect(() => {
-    setData(
-      'file',
-      files.map((f) => ({
-        file_id: f.file_id,
-        file_type: f.file_type,
-        rejection_reason: '',
-      })),
-    );
-  }, [files, setData]);
-
-  const approveDocument = (e: React.FormEvent) => {
-    e.preventDefault();
-    post(route('approveDocument'), {
-      onSuccess: () => reset(),
-    });
-  };
-
   return (
     <>
       <DropdownMenu>

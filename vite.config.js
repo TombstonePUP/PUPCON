@@ -1,9 +1,13 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 import os from 'os';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 function getLocalIp() {
     const interfaces = os.networkInterfaces();
@@ -40,7 +44,7 @@ export default defineConfig(({ mode }) => ({
     }, */
     resolve: {
         alias: {
-            // eslint-disable-next-line no-undef
+             
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
@@ -48,14 +52,7 @@ export default defineConfig(({ mode }) => ({
         host: '0.0.0.0',
         port: 5173,
         strictPort: true,
-        cors: {
-            origin: [
-                'http://localhost:8000',
-                'http://127.0.0.1:8000',
-                `http://${LAN_IP}:8000`,
-            ],
-            credentials: true,
-        },
+        cors: true,
         hmr: {
             host: LAN_IP,
         },
