@@ -1,5 +1,4 @@
 'use client';
-import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import React, { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -9,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertCircle, FileText, Loader2, Maximize2, Minimize2, Minus, Plus, X } from 'lucide-react';
 
-pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+// Use a versioned CDN worker to match the expected library version
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface DocumentViewerProps {
   open: boolean;

@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => ({
     }, */
     resolve: {
         alias: {
-            // eslint-disable-next-line no-undef
+             
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },

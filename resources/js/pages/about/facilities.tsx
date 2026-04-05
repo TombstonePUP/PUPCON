@@ -2,7 +2,8 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import { ContentPages, Facilities } from '@/types/content';
-import { Head, usePoll } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import { useSmartPoll } from '@/hooks/use-smart-poll';
 import { motion } from 'framer-motion';
 import { AlertCircle, Building2, Construction } from 'lucide-react';
 import { useState } from 'react';
@@ -33,7 +34,7 @@ const DataAlert = ({ message }: { message: string }) => (
 );
 
 export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps) {
-    usePoll(5000);
+    useSmartPoll(5000);
 
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
@@ -48,115 +49,92 @@ export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
             <Layout>
-                <div className="bg-white text-gray-800">
-                    <PageHeader
-                        title="Facilities"
-                        breadcrumbs={[
-                            { label: 'Home', href: '/' },
-                            { label: 'About', href: '/about' },
-                            { label: 'Facilities', href: '/about/facilities' },
-                        ]}
-                    />
+                <PageHeader
+                    title="Campus Facilities"
+                    breadcrumbs={[
+                        { label: 'Home', href: '/' },
+                        { label: 'Facilities', href: '/facilities' },
+                    ]}
+                />
 
-                    <div className="mx-auto w-[75%] px-6 py-12">
-                        {/* Facilities Introduction */}
-                        <section className="mb-12">
-                            {!hasPageData ? (
-                                <DataAlert message="Facilities page content is currently being updated. Please check back later." />
-                            ) : (
-                                <div className="rounded-xl border border-[#7f1414]/25 bg-white p-8 transition-all duration-300 hover:border-[#7f1414] hover:shadow-sm">
-                                    <h1 className="mb-4 text-3xl font-bold text-[#7f1414]">{page?.title || 'Campus Facilities'}</h1>
-                                    <p className="leading-relaxed text-gray-700">
-                                        {page?.description || 'Explore our state-of-the-art facilities designed to support your academic journey.'}
-                                    </p>
+                <div className="mx-auto w-[85%] max-w-7xl px-6 py-12 lg:w-[75%]">
+                    {/* Page Header Section */}
+                    <div className="mb-12">
+                        {hasPageData ? (
+                            <div className="card-fx rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all duration-300 hover:border-[#7f1414]/30 hover:shadow-md">
+                                <div className="mb-4 flex items-center gap-3">
+                                    <div className="rounded-lg bg-[#7f1414]/10 p-2 text-[#7f1414]">
+                                        <Building2 className="h-6 w-6" />
+                                    </div>
+                                    <h2 className="text-3xl font-bold tracking-tight text-gray-900">{page.title}</h2>
                                 </div>
-                            )}
-                        </section>
-
-                        {/* Facilities Grid */}
-                        <section>
-                            {!hasFacilities ? (
-                                <EmptyState
-                                    title="Facilities Information Coming Soon"
-                                    description="Details about our campus facilities are being compiled and will be available here shortly."
-                                    icon={Building2}
-                                />
-                            ) : (
-                                <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                                    {facilities.map((facility, index) => (
-                                        <motion.div
-                                            key={facility.facility_id}
-                                            className="facility-card group relative overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white transition-all duration-500 hover:border-[#7f1414] hover:shadow-lg"
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: index * 0.1 }}
-                                            onMouseEnter={() => setHoveredCard(facility.facility_id)}
-                                            onMouseLeave={() => setHoveredCard(null)}
-                                        >
-                                            {/* Card Front */}
-                                            <div
-                                                className={`card-front transition-all duration-500 ${
-                                                    hoveredCard === facility.facility_id ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
-                                                }`}
-                                            >
-                                                <div className="aspect-[4/3] overflow-hidden">
-                                                    {facility?.image_path ? (
-                                                        <img
-                                                            src={facility.image_path}
-                                                            alt={facility?.image_name || 'Facility Image'}
-                                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                                        />
-                                                    ) : (
-                                                        <div className="flex h-full w-full items-center justify-center bg-gray-100">
-                                                            <Building2 className="h-16 w-16 text-gray-300" />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className="p-6">
-                                                    <h3 className="mb-3 text-2xl font-bold text-[#7f1414] transition-colors group-hover:text-[#a01818]">
-                                                        {facility.facility_name}
-                                                    </h3>
-                                                    <p className="line-clamp-3 text-gray-600">{facility.description}</p>
-                                                </div>
-                                            </div>
-
-                                            {/* Card Back */}
-                                            <div
-                                                className={`card-back absolute inset-0 bg-gradient-to-br from-[#7f1414] to-[#a01818] p-6 text-white transition-all duration-500 ${
-                                                    hoveredCard === facility.facility_id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-                                                }`}
-                                            >
-                                                <div className="flex h-full flex-col">
-                                                    <div className="mb-4 aspect-[4/3] overflow-hidden rounded-lg">
-                                                        {facility.image_path ? (
-                                                            <img
-                                                                src={facility.image_path}
-                                                                alt={facility.image_name || 'Facility Image'}
-                                                                className="h-full w-full object-cover"
-                                                            />
-                                                        ) : (
-                                                            <div className="flex h-full w-full items-center justify-center bg-white/10">
-                                                                <Building2 className="h-16 w-16 text-white/50" />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <h3 className="mb-3 text-xl font-bold">{facility.facility_name}</h3>
-                                                    <p className="mb-4 flex-1 text-sm leading-relaxed opacity-90">{facility.description}</p>
-                                                </div>
-                                            </div>
-
-                                            {/* Hover Indicator */}
-                                            <div className="absolute right-4 bottom-4 rounded-full bg-white/20 p-2 opacity-0 transition-opacity group-hover:opacity-100">
-                                                <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                                </svg>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            )}
-                        </section>
+                                <p className="text-lg leading-relaxed text-gray-600">{page.description}</p>
+                            </div>
+                        ) : (
+                            <DataAlert message="Page introductory content is not available at the moment." />
+                        )}
                     </div>
+
+                    {/* Facilities Grid */}
+                    {!hasFacilities ? (
+                        <EmptyState
+                            title="No Facilities Listed"
+                            description="Campus facilities are currently being updated. Please check back later for the complete list."
+                        />
+                    ) : (
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+                            {facilities.map((facility, index) => (
+                                <motion.div
+                                    key={facility.facility_id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                                    onMouseEnter={() => setHoveredCard(index)}
+                                    onMouseLeave={() => setHoveredCard(null)}
+                                    className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:border-[#7f1414]/40 hover:shadow-xl"
+                                >
+                                    {/* Image Container */}
+                                    <div className="relative h-64 w-full overflow-hidden bg-gray-100">
+                                        <img
+                                            src={facility.image_path || '/images/placeholders/facility.jpg'}
+                                            alt={facility.facility_name}
+                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = 'https://placehold.co/800x600/f3f4f6/7f1414?text=Facility+Image';
+                                            }}
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                        <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                                            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#7f1414]">
+                                                {facility.status || 'Active'}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Content Container */}
+                                    <div className="flex flex-1 flex-col p-6">
+                                        <h3 className="mb-3 text-xl font-bold text-gray-900 transition-colors group-hover:text-[#7f1414]">
+                                            {facility.facility_name}
+                                        </h3>
+                                        <p className="mb-6 line-clamp-3 text-gray-600 transition-colors group-hover:text-gray-700">
+                                            {facility.description}
+                                        </p>
+
+                                        <div className="mt-auto flex items-center justify-between border-t border-gray-50 pt-4">
+                                            <div className="flex items-center gap-2 text-sm font-medium text-gray-400">
+                                                <Building2 className="h-4 w-4" />
+                                                <span>PUP SJ Campus</span>
+                                            </div>
+                                            <div className={`h-2 w-2 rounded-full ${facility.status === 'Under Maintenance' ? 'bg-amber-400' : 'bg-emerald-400'}`}></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Hover Decorative Element */}
+                                    <div className="absolute top-0 right-0 h-16 w-16 -translate-y-full translate-x-full bg-[#7f1414]/10 blur-2xl transition-all duration-500 group-hover:translate-y-0 group-hover:translate-x-0"></div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </Layout>
         </>

@@ -1,7 +1,8 @@
 import PageHeader from '@/components/guest-page-header';
 import Layout from '@/layouts/landing-layout';
 import { ContentPages, OtherServices } from '@/types/content';
-import { Head, usePoll } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import { useSmartPoll } from '@/hooks/use-smart-poll';
 import { Construction, Link } from 'lucide-react';
 
 interface OtherServicesProps {
@@ -10,7 +11,7 @@ interface OtherServicesProps {
 }
 
 export default function Others({ page, others }: OtherServicesProps) {
-    usePoll(5000);
+    useSmartPoll(5000);
 
     const EmptyState = ({
         title,

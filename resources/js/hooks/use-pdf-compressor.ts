@@ -67,28 +67,27 @@ export function usePdfCompressor(): UsePdfCompressorReturn {
     }, []);
 
     const compress = useCallback(
-        (file: File): Promise<CompressionResult> => {
-            return new Promise(async (resolve) => {
-                setState({ isCompressing: true, progress: 0 });
+        async (file: File): Promise<CompressionResult> => {
+            setState({ isCompressing: true, progress: 0 });
 
-                // Read the file as ArrayBuffer
-                let buffer: ArrayBuffer;
-                try {
-                    buffer = await file.arrayBuffer();
-                } catch {
-                    // Can't read the file — hand it back untouched
-                    setState({ isCompressing: false, progress: 0 });
-                    resolve({
-                        file,
-                        originalSize: file.size,
-                        compressedSize: file.size,
-                        skipped: true,
-                        savedBytes: 0,
-                        savedPercent: 0,
-                    });
-                    return;
-                }
+            // Read the file as ArrayBuffer
+            let buffer: ArrayBuffer;
+            try {
+                buffer = await file.arrayBuffer();
+            } catch {
+                // Can't read the file — hand it back untouched
+                setState({ isCompressing: false, progress: 0 });
+                return {
+                    file,
+                    originalSize: file.size,
+                    compressedSize: file.size,
+                    skipped: true,
+                    savedBytes: 0,
+                    savedPercent: 0,
+                };
+            }
 
+            return new Promise((resolve) => {
                 const worker = getWorker();
 
                 worker.onmessage = (event: MessageEvent) => {

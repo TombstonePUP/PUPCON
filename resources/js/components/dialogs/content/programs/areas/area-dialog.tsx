@@ -159,7 +159,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                   type="number"
                   value={data.area_number}
                   onChange={(e) => {
-                    let value = e.target.value;
+                    const value = e.target.value;
 
                     // Only allow digits
                     if (!/^\d*$/.test(value)) return;

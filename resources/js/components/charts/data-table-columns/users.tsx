@@ -130,6 +130,12 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
       },
     },
     {
+      accessorKey: 'is_active',
+      header: () => null,
+      cell: () => null,
+      enableHiding: true,
+    },
+    {
       id: 'actions',
       header: () => <div className="text-right font-medium text-muted-foreground">Actions</div>,
       cell: ({ row }) => (
