@@ -1,0 +1,52 @@
+{
+  description = "PHP, with Reactjs and Postgresql Development Environment";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+  };
+  outputs =
+    {
+      self,
+      nixpkgs,
+    }:
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+    in
+    {
+      devShells.x86_64-linux.default = pkgs.mkShell {
+        buildInputs =
+          with pkgs;
+          let
+            php = pkgs.php84.buildEnv {
+              extraConfig = "
+                upload_max_filesize = 2G
+                post_max_size = 3G
+                memory_limit = 2G
+              ";
+            };
+          in
+          [
+            php
+            nodejs_25
+            typescript-language-server
+            vscode-langservers-extracted
+            vue-language-server
+            vtsls
+            phpactor
+            phpPackages.php-cs-fixer
+            intelephense
+            php.packages.composer
+            phpExtensions.mysqlnd
+            phpExtensions.mysqli
+            phpExtensions.pdo
+            pgadmin4-desktopmode
+          ];
+        shellHook = ''
+          echo "Welcome to the Laravel Development with reactjs and postgresql"
+        '';
+      };
+    };
+}

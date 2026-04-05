@@ -23,24 +23,22 @@ class DownloadPerProgramFilesController extends Controller
         ]);
 
         $program_name = Str::slug($program->program_name, '_');
+        $degree_type = Str::slug($program->degree_type, '_');
         $level = $program->Levels->first();
+        $levelLabel   = $level->level === 0 ? 'psv' : 'level_' . $level->level;
 
-        $areas = $level ? $level->Areas : null;
-        $parameter = $areas ? $areas->flatMap(function ($area) {
-            return $area->AreaParameters;
-        }) : collect();
-        $outlines = $parameter ? $parameter->flatMap(function ($param) {
-            return $param->ParameterOutlines;
-        }) : collect();
-        $forms = $areas ? $areas->flatMap(function ($area) {
-            return $area->AreaForms;
-        }) : collect();
+        if (!$level) {
+            return redirect()->back()
+                ->with('type', 'error')
+                ->with('title', 'Download Failed')
+                ->with('message', 'No accreditation level found for this program.');
+        }
 
-        $folderPath = $program_name . '/level_' . $level->level;
-        $zipFileName = $program_name . '_level_' . $level->levle . '_all_areas.zip';
+        $folderPath = "documents/{$degree_type}_{$program_name}/{$levelLabel}";
+        $zipFileName = "{$program_name}_{$levelLabel}_all_areas.zip";
         $files = Storage::disk('public')->allFiles($folderPath);
 
-        if (!$level || $areas->isEmpty() || $parameter->isEmpty() || $outlines->isEmpty() || $forms->isEmpty() || empty($files)) {
+        if (empty($files)) {
             return redirect()->back()
                 ->with('type', 'error')
                 ->with('title', 'Download Failed')
@@ -58,13 +56,14 @@ class DownloadPerProgramFilesController extends Controller
             }
             $zip->close();
 
-            return response()->download($tempFile, $zipFileName)->deleteFileAfterSend(true);
-        } else {
-            return redirect()->back()
-                ->with('type', 'error')
-                ->with('title', 'Download Failed')
-                ->with('message', 'Could not create ZIP file for download.');
+            return response()
+                ->download($tempFile, $zipFileName)
+                ->deleteFileAfterSend(true);
         }
 
+        return redirect()->back()
+            ->with('type', 'error')
+            ->with('title', 'Download Failed')
+            ->with('message', 'Could not create ZIP file for download.');
     }
 }

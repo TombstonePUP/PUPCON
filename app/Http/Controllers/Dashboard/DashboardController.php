@@ -38,7 +38,7 @@ class DashboardController extends Controller
     /**
      * @return Collection<int,Model>
      */
-    public function activityLog(): Collection
+    private function activityLog(): Collection
     {
         $user = Auth::user();
         $role = $user->Roles->role_name;
@@ -72,7 +72,7 @@ class DashboardController extends Controller
                     'al.activity_date'
                 )
                 ->where('al.type', 'ILIKE', 'Files')
-                ->where('al.user_id', $user->user_id) 
+                ->where('al.user_id', $user->user_id)
                 ->orderBy('al.activity_date', 'desc')
                 ->get();
             $activityLogs->transform(function ($activityLog) {
@@ -86,7 +86,7 @@ class DashboardController extends Controller
     /**
      * @return Collection<int,Model>
      */
-    public function documentUploadFrequency(): Collection
+    private function documentUploadFrequency(): Collection
     {
         $frequency = ActivityLog::selectRaw("
             activity_date::date as activity_date,
@@ -100,7 +100,7 @@ class DashboardController extends Controller
     /**
      * @return Collection<int,Model>
      */
-    public function areaUploads(): Collection
+    private function areaUploads(): Collection
     {
         $areaUploads = FilesOverview::selectRaw("file_status, count(*) as documents")
             ->groupBy("file_status")
@@ -114,7 +114,7 @@ class DashboardController extends Controller
      *
      * @return Collection<int,Model>
      */
-    public function overallUploads(): Collection
+    private function overallUploads(): Collection
     {
         $area_files = ParameterOutlines::from('parameter_outlines AS po')
             ->leftJoin('area_files AS af', 'po.parameter_outline_id', '=', 'af.parameter_outline_id')

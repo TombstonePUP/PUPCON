@@ -117,13 +117,7 @@ class AreaFormsController extends Controller
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
         // $program = $request->program_name;
-        $program = Programs::findOrFail($request->program_id)
-            ->load([
-                'Levels' => function ($query) use ($request) {
-                    $query->where('accreditation_level_id', $request->level_id);
-                },
-            ])
-            ->firstOrFail();
+        $program = Programs::findOrFail($request->program_id);
 
         if ($areaForm->file_path) {
             Storage::disk('public')->delete($areaForm->file_path);

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
-use App\Models\AreaFormCategory;
 use App\Models\AreaForms;
 use App\Models\Programs;
 use App\Models\Areas;
@@ -13,7 +12,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use function Symfony\Component\Clock\now;
 
@@ -119,13 +117,7 @@ class AreaFormFilesController extends Controller
         $areaForm = $areaForms->find($request->form_id);
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        $program = Programs::findOrFail($request->program_id)
-            ->load([
-                'Levels' => function ($query) use ($request) {
-                    $query->where('accreditation_level_id', $request->level_id);
-                },
-            ])
-            ->firstOrFail();
+        $program = Programs::findOrFail($request->program_id);
 
         Storage::disk('public')->delete($areaForm->file_path);
 

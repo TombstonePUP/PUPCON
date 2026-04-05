@@ -4,20 +4,16 @@ namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
-use App\Models\AreaFiles;
-use App\Models\AreaFormCategory;
 use App\Models\AccreditationLevels;
 use App\Models\Areas;
 use App\Models\FileStatus;
-use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
 use App\Models\Programs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-use Mostafaznv\PdfOptimizer\Laravel\Facade\PdfOptimizer;
+use Illuminate\Support\Facades\DB;
 
 
 class AreaFilesController extends Controller
@@ -40,13 +36,11 @@ class AreaFilesController extends Controller
             ]
         );
 
-        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::with
-            ([
-                'Levels' => function ($query) use ($request) {
-                    $query->where('accreditation_level_id', $request->level_id);
-                },
-            ])
+        $program = Programs::with([
+            'Levels' => function ($query) use ($request) {
+                $query->where('accreditation_level_id', $request->level_id);
+            },
+        ])
             ->findOrFail($request->program_id);
         $level = AccreditationLevels::where('accreditation_level_id', $request->level_id)->first();
         $level = $level->level === 0 ? 'psv' : 'level_' . $level->level;
@@ -61,6 +55,7 @@ class AreaFilesController extends Controller
         }
 
         $activityLog = new ActivityLog();
+
         if ($file = $parameterOutlines->AreaFiles) {
             Storage::disk('public')->delete($file->file_path);
             $file->delete();
@@ -88,71 +83,37 @@ class AreaFilesController extends Controller
         $category_name = Str::slug($categoryName, '_');
         $filePath = "documents/{$degree_type}_{$program_name}/{$level}/{$area_name}/{$parameter_name}/{$category_name}";
 
-        // Ensure temp directory exists
-        if (!Storage::disk('public')->exists('temp')) {
-            Storage::disk('public')->makeDirectory('temp');
-        }
 
-        // Store original file temporarily
-        $tempFileName = 'temp_' . Str::uuid() . '.pdf';
-        $tempFilePath = "temp/{$tempFileName}";
-        Storage::disk('public')->putFileAs('temp', $file, $tempFileName);
+        DB::transaction(function () use (
+            $file,
+            $filePath,
+            $fileName,
+            $fileStatus,
+            $user,
+            $parameterOutlines,
+            $activityLog,
+            $program,
+            $area
+        ) {
 
-        Log::info('Temp file created: ' . $tempFilePath);
-        Log::info('Temp file size: ' . Storage::disk('public')->size($tempFilePath) . ' bytes');
+            $file->storeAs($filePath, $fileName, 'public');
 
-        // Optimize PDF
-        try {
-            Log::info('Starting PDF optimization...');
-            $customTempPath = str_replace('/', '\\', storage_path('app/public/temp'));
-            putenv('TMP=' . $customTempPath);
-            putenv('TEMP=' . $customTempPath);
+            $parameterOutlines->AreaFiles()->create([
+                'file_name'      => $fileName,
+                'file_path'      => "{$filePath}/{$fileName}",
+                'file_status_id' => $fileStatus,
+                'uploaded_by'    => $user->user_id,
+                'uploaded_at'    => now(),
+            ]);
 
-            Log::info('Using custom TEMP/TMP path: ' . $customTempPath);
-
-            $result = PdfOptimizer::fromDisk('public')
-                ->open($tempFilePath)
-                ->toDisk('public')
-                ->optimize("{$filePath}/{$fileName}");
-
-            Log::info('Optimization status: ' . ($result->status ? 'SUCCESS' : 'FAILED'));
-            Log::info('Optimization message: ' . $result->message);
-
-            if (Storage::disk('public')->exists("{$filePath}/{$fileName}")) {
-                Log::info('Optimized file created successfully');
-                Log::info('Optimized file size: ' . Storage::disk('public')->size("{$filePath}/{$fileName}") . ' bytes');
-            } else {
-                Log::error('Optimized file NOT found!');
-            }
-
-            // Delete temporary file
-            Storage::disk('public')->delete($tempFilePath);
-            Log::info('Temp file deleted');
-
-            if (!$result->status) {
-                Storage::disk('public')->putFileAs($filePath, $file, $fileName);
-                Log::warning('PDF optimization failed, using original file: ' . $result->message);
-            }
-        } catch (\Exception $e) {
-            Storage::disk('public')->delete($tempFilePath);
-            Storage::disk('public')->putFileAs($filePath, $file, $fileName);
-            Log::error('PDF optimization error: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-        }
-
-        $areaFile = $parameterOutlines->AreaFiles()->create([
-            'file_name' => $fileName,
-            'file_path' => "{$filePath}/{$fileName}",
-            'file_status_id' => $fileStatus,
-            'uploaded_by' => $user->user_id,
-            'uploaded_at' => now(),
-        ]);
-
-        $activityLog->user_id = $user->user_id;
-        $activityLog->description = "{$activityLog->activity} for '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.";
-        $activityLog->type = "Files";
-        $activityLog->activity_date = now();
-        $activityLog->save();
+            $activityLog->user_id      = $user->user_id;
+            $activityLog->description  = "{$activityLog->activity} for
+                '{$parameterOutlines->outline_description}' in
+                {$program->program_name} - {$area->area_name}.";
+            $activityLog->type         = "Files";
+            $activityLog->activity_date = now();
+            $activityLog->save();
+        });
 
         return redirect()->back()
             ->with('type', 'success')
@@ -185,21 +146,19 @@ class AreaFilesController extends Controller
     {
         $parameterOutlines = ParameterOutlines::where('parameter_outline_id', $request->outline_id)->first();
         $areaFile = $parameterOutlines->AreaFiles;
+        $file_name = $areaFile->file_name;
         $user = Auth::user();
-        $area = Areas::where('area_id', $request->area_id)->first();
-        // $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::findOrFail($request->program_id);
 
         if ($areaFile) {
             Storage::disk('public')->delete($areaFile->file_path);
             $areaFile->delete();
-
-            $activityLog = new ActivityLog();
-            $activityLog->activity = "Delete";
-            $activityLog->user_id = $user->user_id;
-            $activityLog->activity_date = now();
-            $activityLog->type = "Files";
-            $activityLog->save();
+            ActivityLog::create([
+                'user_id'       => $user->user_id,
+                'activity'      => 'Delete',
+                'description'   => "Deleted file: {$file_name}", // fixed
+                'type'          => 'Files',
+                'activity_date' => now(),
+            ]);
         }
 
         return redirect()->back()
