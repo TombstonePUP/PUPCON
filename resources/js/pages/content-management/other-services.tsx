@@ -111,78 +111,77 @@ const OtherServicesSection = ({ ...props }: OtherServicesProps) => {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Other Services - Content Management" />
-      <div className="flex flex-col gap-6 p-6">
-        <PageTitle
-          title="Other Services"
-          description='Manage all content related to the "Other services" page and its sub-sections.'
-          icon={<LibrarySquare className="size-5" />}
-        />
+      <PageTitle
+        title="Other Services"
+        description='Manage all content related to the "Other services" page and its sub-sections.'
+        icon={<LibrarySquare className="size-5" />}
+      />
 
-        <div className="flex gap-6">
-          <div className="flex-1">
-            <Card>
-              <div className="p-8">
-                <div id="overview" ref={overviewRef} className="scroll-mt-20">
-                  <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-foreground">Other Services & Portals Page</h2>
-                    <p className="text-sm text-muted-foreground">Configure page content</p>
-                  </div>
-
-                  <div className="mb-10 grid grid-cols-1 gap-6">
-                    <div>
-                      <Label className="mb-2 block text-sm font-medium text-foreground">Title</Label>
-                      <Input
-                        type="text"
-                        placeholder="Enter page title..."
-                        disabled={processing}
-                        value={data.page.title}
-                        onChange={(e) => setData({
-                          ...data,
-                          page: {
-                            ...data.page,
-                            title: e.target.value,
-                          },
-                        })}
-                      />
-                      <InputError message={errors['page.title']} className="mt-2" />
-                    </div>
-                    <div>
-                      <Label className="mb-2 block text-sm font-medium text-foreground">Subtitle / Description</Label>
-                      <Textarea
-                        placeholder="Enter page subtitle..."
-                        disabled={processing}
-                        value={data.page.subtitle}
-                        onChange={(e) => setData({
-                          ...data,
-                          page: {
-                            ...data.page,
-                            subtitle: e.target.value,
-                          },
-                        })}
-                        autoResize
-                        minHeight={100}
-                      />
-                      <InputError message={errors['page.subtitle']} className="mt-2" />
-                    </div>
-                  </div>
+      <div className="flex gap-6">
+        <div className="flex-1">
+          <Card>
+            <div className="p-8">
+              <div id="overview" ref={overviewRef} className="scroll-mt-20">
+                <div className="mb-6">
+                  <h2 className="text-lg font-semibold text-foreground">Other Services & Portals Page</h2>
+                  <p className="text-sm text-muted-foreground">Configure page content</p>
                 </div>
 
-                <Separator className="my-10" />
-
-                <div id="services" ref={servicesRef} className="scroll-mt-20">
-                  <ServicesSection
-                    services={data.other_services}
-                    onUpdateServices={handleUpdateServices}
-                  />
+                <div className="mb-10 grid grid-cols-1 gap-6">
+                  <div>
+                    <Label className="mb-2 block text-sm font-medium text-foreground">Title</Label>
+                    <Input
+                      type="text"
+                      placeholder="Enter page title..."
+                      disabled={processing}
+                      value={data.page.title}
+                      onChange={(e) => setData({
+                        ...data,
+                        page: {
+                          ...data.page,
+                          title: e.target.value,
+                        },
+                      })}
+                    />
+                    <InputError message={errors['page.title']} className="mt-2" />
+                  </div>
+                  <div>
+                    <Label className="mb-2 block text-sm font-medium text-foreground">Subtitle / Description</Label>
+                    <Textarea
+                      placeholder="Enter page subtitle..."
+                      disabled={processing}
+                      value={data.page.subtitle}
+                      onChange={(e) => setData({
+                        ...data,
+                        page: {
+                          ...data.page,
+                          subtitle: e.target.value,
+                        },
+                      })}
+                      autoResize
+                      minHeight={100}
+                    />
+                    <InputError message={errors['page.subtitle']} className="mt-2" />
+                  </div>
                 </div>
               </div>
 
-              <SectionFooter onSave={handleSave} onPreview={handlePreview} />
-            </Card>
-          </div>
+              <Separator className="my-10" />
 
-          {/* Right Sidebar - Quick Links */}
-          {/* <div className="shrink-0 sticky top-6 self-start rounded-lg p-6 hidden xl:inline">
+              <div id="services" ref={servicesRef} className="scroll-mt-20">
+                <ServicesSection
+                  services={data.other_services}
+                  onUpdateServices={handleUpdateServices}
+                />
+              </div>
+            </div>
+
+            <SectionFooter onSave={handleSave} onPreview={handlePreview} />
+          </Card>
+        </div>
+
+        {/* Right Sidebar - Quick Links */}
+        {/* <div className="shrink-0 sticky top-6 self-start rounded-lg p-6 hidden xl:inline">
             <h2 className="mb-4 font-semibold">On this page</h2>
             <nav className="space-y-1 ml-2 border-l border-border">
               {sections.map((section) => (
@@ -199,7 +198,6 @@ const OtherServicesSection = ({ ...props }: OtherServicesProps) => {
               ))}
             </nav>
           </div> */}
-        </div>
       </div>
     </AppLayout>
   );

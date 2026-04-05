@@ -150,64 +150,62 @@ const MainContent = ({ ...props }: MainContentProps) => {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Campus Information - Content Management" />
-      <div className="flex flex-col gap-6 p-6">
-        <PageTitle
-          title="Campus Information"
-          description='Manage all content related to the "About" page and its sub-sections.'
-          icon={<InfoIcon className="size-5" />}
-        />
+      <PageTitle
+        title="Campus Information"
+        description='Manage all content related to the "About" page and its sub-sections.'
+        icon={<InfoIcon className="size-5" />}
+      />
 
-        {/* Main Content with Sidebar */}
-        <div className="flex gap-6">
-          <div className="flex-1">
-            <div className="space-y-6">
-              {/* Welcome Landing */}
-              <div id="welcome-landing" ref={welcomeLandingRef} className="scroll-mt-20">
-                <WelcomeSection welcome_page={welcome_page} gallery={welcome_gallery} />
-              </div>
+      {/* Main Content with Sidebar */}
+      <div className="flex gap-6">
+        <div className="flex-1">
+          <div className="space-y-6">
+            {/* Welcome Landing */}
+            <div id="welcome-landing" ref={welcomeLandingRef} className="scroll-mt-20">
+              <WelcomeSection welcome_page={welcome_page} gallery={welcome_gallery} />
+            </div>
 
-              {/* About */}
-              <div id="about" ref={aboutRef} className="scroll-mt-20">
-                <AboutSection about_page={about_page} org_types={org_types} />
-              </div>
+            {/* About */}
+            <div id="about" ref={aboutRef} className="scroll-mt-20">
+              <AboutSection about_page={about_page} org_types={org_types} />
+            </div>
 
-              {/* VMGO */}
-              <div id="vmgo" ref={vmgoRef} className="scroll-mt-20">
-                <VmgoSection vmgo_page={vmgo_page} vmgo_data={vmgo_data} />
-              </div>
+            {/* VMGO */}
+            <div id="vmgo" ref={vmgoRef} className="scroll-mt-20">
+              <VmgoSection vmgo_page={vmgo_page} vmgo_data={vmgo_data} />
+            </div>
 
-              {/* History */}
-              <div id="history" ref={historyRef} className="scroll-mt-20">
-                <HistorySection history_page={history_page} history={history} />
-              </div>
+            {/* History */}
+            <div id="history" ref={historyRef} className="scroll-mt-20">
+              <HistorySection history_page={history_page} history={history} />
+            </div>
 
-              {/* Administration */}
-              <div id="administration" ref={administrationRef} className="scroll-mt-20">
-                <AdministrationSection admin_page={admin_page} officials={officials} />
-              </div>
+            {/* Administration */}
+            <div id="administration" ref={administrationRef} className="scroll-mt-20">
+              <AdministrationSection admin_page={admin_page} officials={officials} />
+            </div>
 
-              {/* Facilities - */}
-              <div id="facilities" ref={facilitiesRef} className="scroll-mt-20">
-                <FacilitiesSection facility_page={facility_page} facilities={facilities} />
-              </div>
+            {/* Facilities - */}
+            <div id="facilities" ref={facilitiesRef} className="scroll-mt-20">
+              <FacilitiesSection facility_page={facility_page} facilities={facilities} />
+            </div>
 
-              {/* Faculty & Staff - */}
-              <div id="faculties" ref={facultiesRef} className="scroll-mt-20">
-                <FacultySection faculty_page={faculty_page} faculty_members={faculties} />
-              </div>
+            {/* Faculty & Staff - */}
+            <div id="faculties" ref={facultiesRef} className="scroll-mt-20">
+              <FacultySection faculty_page={faculty_page} faculty_members={faculties} />
+            </div>
 
-              {/* Local Task Force */}
-              <div id="task-force" ref={localTaskForceRef} className="scroll-mt-20">
-                <LocalTaskForceSection ltf_page={ltf_page} local_task_force={local_task_force} />
-              </div>
+            {/* Local Task Force */}
+            <div id="task-force" ref={localTaskForceRef} className="scroll-mt-20">
+              <LocalTaskForceSection ltf_page={ltf_page} local_task_force={local_task_force} />
             </div>
           </div>
-
-          {/* Right Sidebar - Quick Links */}
-          <TableOfContents
-            sections={sections}
-          />
         </div>
+
+        {/* Right Sidebar - Quick Links */}
+        <TableOfContents
+          sections={sections}
+        />
       </div>
     </AppLayout>
   );

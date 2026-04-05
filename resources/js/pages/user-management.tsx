@@ -58,35 +58,33 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
       <GuideTour />
       <AppLayout breadcrumbs={breadcrumbs}>
         <Head title="User Management" />
-        <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
-          {/* Header Section */}
-          <div className="flex gap-6">
-            <PageTitle
-              icon={<SquareUserIcon className="size-5" />}
-              title="User Management"
-              description="Manage all user related information and access rights."
-              actions={
-                <div>
-                  <Button
-                    onClick={() => openDialog('add')}
-                    className="w-full flex items-center gap-2 bg-[#7f1414] text-white hover:bg-[#7f1414]/90"
-                  >
-                    <UserPlus className="h-4 w-4" />
-                    <span className="hidden xl:inline">Add User</span>
-                  </Button>
-                </div>
-              }
-            />
-          </div>
+        {/* Header Section */}
+        <div className="flex gap-6">
+          <PageTitle
+            icon={<SquareUserIcon className="size-5" />}
+            title="User Management"
+            description="Manage all user related information and access rights."
+            actions={
+              <div>
+                <Button
+                  onClick={() => openDialog('add')}
+                  className="w-full flex items-center gap-2 bg-[#7f1414] text-white hover:bg-[#7f1414]/90"
+                >
+                  <UserPlus className="h-4 w-4" />
+                  <span className="hidden xl:inline">Add User</span>
+                </Button>
+              </div>
+            }
+          />
+        </div>
 
-          <div id='user-table'>
-            <UsersDataTable
-              columns={columns}
-              data={userRecords}
-              roleOptions={roleOptions}
-              programOptions={programOptions}
-            />
-          </div>
+        <div id='user-table'>
+          <UsersDataTable
+            columns={columns}
+            data={userRecords}
+            roleOptions={roleOptions}
+            programOptions={programOptions}
+          />
         </div>
         <RenderUserDialog type={dialog.type} user={dialog.user} program={programRoles} roles={roles} onClose={closeDialog} />
       </AppLayout>

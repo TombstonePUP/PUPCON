@@ -247,123 +247,121 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Manage Programs" />
-      <div className="flex h-full flex-1 flex-col gap-6 p-6">
-        <PageTitle
-          icon={<GraduationCap className="size-5" />}
-          title='Programs'
-          description='Manage academic programs for PUP San Juan.'
-          actions={
-            (role === 'Admin' || role === 'Coordinator') && (
-              <div className="flex gap-2">
-                <Button variant="noborder" className="flex-1" onClick={handleAddProgram}>
-                  <FilePlus className="h-6 w-6 text-white" />
-                  <span className="hidden xl:inline">Add Program</span>
-                </Button>
-                <Button variant="noborder" className="flex-1" onClick={handleAddLevel}>
-                  <PlusCircleIcon className="h-6 w-6 text-white" />
-                  <span className="hidden xl:inline">Start a Survey</span>
-                </Button>
-                <Button variant="noborder" className="flex-1" onClick={handleEndLevel}>
-                  <BookCheck className="h-6 w-6 text-white" />
-                  <span className="hidden xl:inline">End a Survey</span>
-                </Button>
-              </div>
-            )
-          }
-        />
+      <PageTitle
+        icon={<GraduationCap className="size-5" />}
+        title='Programs'
+        description='Manage academic programs for PUP San Juan.'
+        actions={
+          (role === 'Admin' || role === 'Coordinator') && (
+            <div className="flex gap-2">
+              <Button variant="noborder" className="flex-1" onClick={handleAddProgram}>
+                <FilePlus className="h-6 w-6 text-white" />
+                <span className="hidden xl:inline">Add Program</span>
+              </Button>
+              <Button variant="noborder" className="flex-1" onClick={handleAddLevel}>
+                <PlusCircleIcon className="h-6 w-6 text-white" />
+                <span className="hidden xl:inline">Start a Survey</span>
+              </Button>
+              <Button variant="noborder" className="flex-1" onClick={handleEndLevel}>
+                <BookCheck className="h-6 w-6 text-white" />
+                <span className="hidden xl:inline">End a Survey</span>
+              </Button>
+            </div>
+          )
+        }
+      />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {programStatsConfig.map(({ label, icon: Icon, value, desc, iconClass }) => (
-            <Card key={label}>
-              <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b rounded-t-lg">
-                <CardTitle className="text-sm text-foreground">{label}</CardTitle>
-                <Icon
-                  className={`size-12 absolute -bottom-6 right-6 bg-muted/50 rounded-full p-3 border backdrop-blur-lg ${iconClass}`}
-                />
-              </CardHeader>
-              <CardContent className="pt-3">
-                <div className="text-2xl font-bold">{value}</div>
-                <p className="text-xs text-muted-foreground">{desc}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {programStatsConfig.map(({ label, icon: Icon, value, desc, iconClass }) => (
+          <Card key={label}>
+            <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b rounded-t-lg">
+              <CardTitle className="text-sm text-foreground">{label}</CardTitle>
+              <Icon
+                className={`size-12 absolute -bottom-6 right-6 bg-muted/50 rounded-full p-3 border backdrop-blur-lg ${iconClass}`}
+              />
+            </CardHeader>
+            <CardContent className="pt-3">
+              <div className="text-2xl font-bold">{value}</div>
+              <p className="text-xs text-muted-foreground">{desc}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-        {/* Programs Grid with Tabs for Admin/Coordinator */}
-        <div className="mt-5">
-          {role === 'Admin' || role === 'Coordinator' ? (
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-2">
-                <TabsTrigger value="active" className="flex items-center gap-2 text-xs">
-                  <NotebookIcon className="h-4 w-4" />
-                  Active ({activePrograms.length})
-                </TabsTrigger>
-                <TabsTrigger value="archived" className="flex items-center gap-2 text-xs">
-                  <Archive className="h-4 w-4" />
-                  Archived ({archivedPrograms.length})
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="active">{renderProgramGrid(activePrograms, false)}</TabsContent>
-              <TabsContent value="archived">{renderProgramGrid(archivedPrograms, true)}</TabsContent>
-            </Tabs>
-          ) : (
-            renderProgramGrid(activePrograms, false)
-          )}
-        </div>
-
-        {/* Dialogs */}
-        <Dialog open={startLevelConfirmOpen} onOpenChange={setStartLevelConfirmOpen}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle className="mb-4 text-lg font-medium text-foreground">No Levels Found</DialogTitle>
-              <DialogDescription className="text-sm text-muted-foreground">
-                {programToStart?.is_active
-                  ? `The program "${programToStart?.degree_type} in ${programToStart?.program_name}" has no accreditation levels yet. Do you
-                                want to start one now?`
-                  : `The program "${programToStart?.degree_type} in ${programToStart?.program_name}" is currently archived, there is no accreditation level to access the program.`}
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              {programToStart?.is_active && (
-                <Button
-                  variant="noborder"
-                  onClick={() => {
-                    setStartLevelConfirmOpen(false);
-                    handleAddLevel();
-                  }}
-                >
-                  Start First Level
-                </Button>
-              )}
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {dialogOpen && dialogType === 'program' && dialogAction !== 'delete' && (
-          <ProgramDialog
-            type={dialogAction}
-            program={dialogAction === 'edit' ? selectedProgram : null}
-            programs={programs}
-            onClose={() => setDialogOpen(false)}
-          />
-        )}
-        {dialogOpen && dialogType === 'program' && dialogAction === 'delete' && selectedProgram && (
-          <DeleteProgram program={selectedProgram} onClose={() => setDialogOpen(false)} />
-        )}
-        {dialogOpen && dialogType === 'level' && dialogAction === 'add' && (
-          <ProgramLevelDialog
-            programs={programs}
-            onClose={() => setDialogOpen(false)}
-            selected_program_id={selectedProgramId || undefined}
-          />
-        )}
-        {dialogOpen && dialogType === 'level' && dialogAction === 'end' && (
-          <EndSurveyDialog programs={underSurvey} onClose={() => setDialogOpen(false)} />
+      {/* Programs Grid with Tabs for Admin/Coordinator */}
+      <div className="mt-5">
+        {role === 'Admin' || role === 'Coordinator' ? (
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="mb-2">
+              <TabsTrigger value="active" className="flex items-center gap-2 text-xs">
+                <NotebookIcon className="h-4 w-4" />
+                Active ({activePrograms.length})
+              </TabsTrigger>
+              <TabsTrigger value="archived" className="flex items-center gap-2 text-xs">
+                <Archive className="h-4 w-4" />
+                Archived ({archivedPrograms.length})
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="active">{renderProgramGrid(activePrograms, false)}</TabsContent>
+            <TabsContent value="archived">{renderProgramGrid(archivedPrograms, true)}</TabsContent>
+          </Tabs>
+        ) : (
+          renderProgramGrid(activePrograms, false)
         )}
       </div>
+
+      {/* Dialogs */}
+      <Dialog open={startLevelConfirmOpen} onOpenChange={setStartLevelConfirmOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="mb-4 text-lg font-medium text-foreground">No Levels Found</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              {programToStart?.is_active
+                ? `The program "${programToStart?.degree_type} in ${programToStart?.program_name}" has no accreditation levels yet. Do you
+                                want to start one now?`
+                : `The program "${programToStart?.degree_type} in ${programToStart?.program_name}" is currently archived, there is no accreditation level to access the program.`}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            {programToStart?.is_active && (
+              <Button
+                variant="noborder"
+                onClick={() => {
+                  setStartLevelConfirmOpen(false);
+                  handleAddLevel();
+                }}
+              >
+                Start First Level
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {dialogOpen && dialogType === 'program' && dialogAction !== 'delete' && (
+        <ProgramDialog
+          type={dialogAction}
+          program={dialogAction === 'edit' ? selectedProgram : null}
+          programs={programs}
+          onClose={() => setDialogOpen(false)}
+        />
+      )}
+      {dialogOpen && dialogType === 'program' && dialogAction === 'delete' && selectedProgram && (
+        <DeleteProgram program={selectedProgram} onClose={() => setDialogOpen(false)} />
+      )}
+      {dialogOpen && dialogType === 'level' && dialogAction === 'add' && (
+        <ProgramLevelDialog
+          programs={programs}
+          onClose={() => setDialogOpen(false)}
+          selected_program_id={selectedProgramId || undefined}
+        />
+      )}
+      {dialogOpen && dialogType === 'level' && dialogAction === 'end' && (
+        <EndSurveyDialog programs={underSurvey} onClose={() => setDialogOpen(false)} />
+      )}
     </AppLayout>
   );
 }

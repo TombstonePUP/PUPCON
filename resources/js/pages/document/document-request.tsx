@@ -56,18 +56,16 @@ export default function Requests({ files }: DocumentRequests) {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Requests" />
-      <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
-        {/* Header Section */}
+      {/* Header Section */}
 
-        <PageTitle
+      <PageTitle
         icon={<Boxes className="size-5" />}
-          title="Document Request"
-          description="Manage all document request submissions."
-        />
+        title="Document Request"
+        description="Manage all document request submissions."
+      />
 
-        <div>
-          <DocumentRequestDataTable columns={columns} data={files} resolveDialog={({ type, file }: DialogProps) => openDialog(type, file)} />
-        </div>
+      <div>
+        <DocumentRequestDataTable columns={columns} data={files} resolveDialog={({ type, file }: DialogProps) => openDialog(type, file)} />
       </div>
       <RenderRequestDialog type={dialog.type} file={dialog.file} onClose={closeDialog} />
     </AppLayout>

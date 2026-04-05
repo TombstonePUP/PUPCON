@@ -67,74 +67,66 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
     <>
       <AppLayout breadcrumbs={breadcrumbs}>
         <Head title={`${area.area_name} - ${program.program_name?.trim().replace(/\b\w/g, (c) => c.toUpperCase())}`} />
-        <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-6">
-          {/* Header Section */}
-          <PageTitle
-            icon={
-              <span className="text-2xl font-bold">{area.area_number}</span>
-            }
-            title={area.area_name}
-            description={program.program_name}
-            actions={
-              <>
-
-                {area.archive && (
-                  <div className="pointer-events-none absolute top-0 right-0 w-20 h-24 overflow-hidden rounded-tr-lg">
-                    <div className="absolute top-6 -right-10 w-36 rotate-45 py-0.5 text-center text-xs font-semibold text-white bg-warning">
-                      Archive
-                    </div>
-                  </div>
-                )}
-
-                {area.area_parameters.length > 0 &&
-                  (role === 'Admin' || role === 'Coordinator') &&
-                  program.levels[0]?.remarks === 'Ongoing Survey' &&
-                  program.levels[0]?.is_active && !area.archive === true && (
-                    <div className="flex flex-col gap-2">
-                      <Button variant="outline" onClick={() => openDialog('parameter', 'import')}>
-                        <LucideImport className="h-4 w-4" />
-                        <span className='hidden xl:inline'>Import Template</span>
-                      </Button>
-                      <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
-                        <PlusCircleIcon className="h-4 w-4" />
-                        <span className='hidden xl:inline'>Add Parameter</span>
-                      </Button>
-                    </div>
-                  )}
-              </>
-            }
-          />
-
-          <div className="flex gap-6">
-            <div className="flex w-full flex-col gap-6">
-              <div>
-                <AreaCards
-                  program={program}
-                  area={area}
-                  forms={area?.area_forms}
-                  resolveFormDialog={(d) => openDialog('area-form', d.type, d.form, undefined, undefined, undefined)}
-                />
+        {/* Header Section */}
+        <PageTitle
+          icon={<span className="text-2xl font-bold">{area.area_number}</span>}
+          title={area.area_name}
+          description={program.program_name}
+          indicator={
+            area.archive
+              ? { color: 'bg-warning', tooltip: 'Archive' }
+              : undefined
+          }
+          actions={
+            area.area_parameters.length > 0 &&
+              (role === 'Admin' || role === 'Coordinator') &&
+              program.levels[0]?.remarks === 'Ongoing Survey' &&
+              program.levels[0]?.is_active &&
+              !area.archive ? (
+              <div className="flex flex-col gap-2">
+                <Button variant="outline" onClick={() => openDialog('parameter', 'import')}>
+                  <LucideImport className="h-4 w-4" />
+                  <span className="hidden xl:inline">Import Template</span>
+                </Button>
+                <Button className="border-none" onClick={() => openDialog('parameter', 'add')}>
+                  <PlusCircleIcon className="h-4 w-4" />
+                  <span className="hidden xl:inline">Add Parameter</span>
+                </Button>
               </div>
+            ) : undefined
+          }
+        />
 
-              <div className="flex w-full gap-6">
-                <ParameterAccordion
-                  area={area}
-                  program={program}
-                  areaParameters={[...(area?.area_parameters ?? [])].sort((a, b) =>
-                    a.parameter_name.localeCompare(b.parameter_name),
-                  )}
-                  parameterOutlineCategories={parameterOutlineCategories}
-                  resolveDocDialog={(d) => openDialog('document', d.type, undefined, d.benchmark, undefined, undefined)}
-                  resolveBenchDialog={(d) =>
-                    openDialog('benchmark', d.type, undefined, d.benchmark, parameterOutlineCategories, d.parameter)
-                  }
-                  resolveParamDialog={(d) => openDialog('parameter', d.type, undefined, undefined, undefined, d.parameter)}
-                />
-              </div>
+        <div className="flex gap-6">
+          <div className="flex w-full flex-col gap-6">
+            <div>
+              <AreaCards
+                program={program}
+                area={area}
+                forms={area?.area_forms}
+                resolveFormDialog={(d) => openDialog('area-form', d.type, d.form, undefined, undefined, undefined)}
+              />
             </div>
 
-            {/* Right Sidebar - Actions */}
-            {/* {area.area_parameters.length > 0 &&
+            <div className="flex w-full gap-6">
+              <ParameterAccordion
+                area={area}
+                program={program}
+                areaParameters={[...(area?.area_parameters ?? [])].sort((a, b) =>
+                  a.parameter_name.localeCompare(b.parameter_name),
+                )}
+                parameterOutlineCategories={parameterOutlineCategories}
+                resolveDocDialog={(d) => openDialog('document', d.type, undefined, d.benchmark, undefined, undefined)}
+                resolveBenchDialog={(d) =>
+                  openDialog('benchmark', d.type, undefined, d.benchmark, parameterOutlineCategories, d.parameter)
+                }
+                resolveParamDialog={(d) => openDialog('parameter', d.type, undefined, undefined, undefined, d.parameter)}
+              />
+            </div>
+          </div>
+
+          {/* Right Sidebar - Actions */}
+          {/* {area.area_parameters.length > 0 &&
               (role === 'Admin' || role === 'Coordinator') &&
               program.levels[0]?.remarks === 'Ongoing Survey' &&
               program.levels[0]?.is_active && !area.archive === true && (
@@ -156,7 +148,6 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                   </div>
                 </div>
               )} */}
-          </div>
         </div>
       </AppLayout >
       {

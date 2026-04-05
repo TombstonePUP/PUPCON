@@ -107,11 +107,11 @@ export default function DeadlineCountdown() {
           </Button>
         ) : (
           <button
-            className={`group flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-150 hover:shadow-sm ${isAdmin ? 'cursor-pointer' : 'cursor-default'} ${urgencyClasses[urgency]}`}
+            className={`group flex items-center gap-3 rounded-lg transition-all duration-150 hover:shadow-sm ${isAdmin ? 'cursor-pointer' : 'cursor-default'} ${urgencyClasses[urgency]}`}
           >
             {/* <CalendarClock className="h-4 w-4 shrink-0" /> */}
             <div className="text-left">
-              <p className="text-[10px] font-medium text-muted-foreground text-right font-montserrat">Submission Deadline</p>
+              <p className="text-[10px] font-medium text-muted-foreground text-right">Deadline Countdown</p>
               {timeLeft ? (
                 <div className="flex items-end gap-1">
                   <Unit value={timeLeft.days} label="days" />

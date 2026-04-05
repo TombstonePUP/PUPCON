@@ -106,41 +106,39 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Analytics" />
-      <div className="flex flex-1 flex-col gap-4 rounded-xl p-6">
 
-        <PageTitle
-          title={`${getGreeting()}, ${auth.user.first_name}!`}
-          description={formattedDate}
-          actions={
-            <DeadlineCountdown />
-          }
-        />
+      <PageTitle
+        title={`${getGreeting()}, ${auth.user.first_name}!`}
+        description={formattedDate}
+        actions={
+          <DeadlineCountdown />
+        }
+      />
 
-        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-          {statConfig.map(({ label, icon: Icon, value, desc, iconClass }) => (
-            <Card key={label}>
-              <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b rounded-t-lg">
-                <CardTitle className="text-sm text-foreground">{label}</CardTitle>
-                <Icon className={`size-12 absolute -bottom-6 right-6 bg-muted/50 rounded-full p-3 border backdrop-blur-lg ${iconClass}`} />
-              </CardHeader>
-              <CardContent className="pt-3">
-                <div className="text-2xl font-bold">{value}</div>
-                <p className="text-xs text-muted-foreground">{desc}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        {statConfig.map(({ label, icon: Icon, value, desc, iconClass }) => (
+          <Card key={label}>
+            <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b rounded-t-lg">
+              <CardTitle className="text-sm text-foreground">{label}</CardTitle>
+              <Icon className={`size-12 absolute -bottom-6 right-6 bg-muted/50 rounded-full p-3 border backdrop-blur-lg ${iconClass}`} />
+            </CardHeader>
+            <CardContent className="pt-3">
+              <div className="text-2xl font-bold">{value}</div>
+              <p className="text-xs text-muted-foreground">{desc}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-        <DocumentsAnalytics
-          frequencyUploads={activeFrequency}
-          overallUploads={activeUploads}
-          documentStatistics={activeStatistics}
-        />
+      <DocumentsAnalytics
+        frequencyUploads={activeFrequency}
+        overallUploads={activeUploads}
+        documentStatistics={activeStatistics}
+      />
 
-        <GuideTour />
-        <div id="stat-table">
-          <DataTable columns={columns} data={activityLogs} />
-        </div>
+      <GuideTour />
+      <div id="stat-table">
+        <DataTable columns={columns} data={activityLogs} />
       </div>
     </AppLayout>
   );

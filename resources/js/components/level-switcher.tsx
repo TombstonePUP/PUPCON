@@ -38,7 +38,7 @@ export function LevelSwitcher({
                                         {/* Useranme here */}
                                         PUPCON
                                     </span>
-                                    <span className="truncate text-xs">Version 1.0</span>
+                                    <span className="truncate text-[10px]">Version 1.0</span>
                                     {/* User Role Here */}
                                 </div>
                             </Link>

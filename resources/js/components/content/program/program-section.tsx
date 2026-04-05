@@ -13,7 +13,7 @@ import { CircleAlert, ClipboardList, Edit2, EditIcon, FilePlus2, ImageIcon, Imag
 import { RefObject, useEffect, useState } from 'react';
 import { LucideIcon } from 'lucide-react';
 import ImageUploader from '@/components/image-uploader';
-import { Card } from '@/components/ui/card';
+import { Card, CardTitle } from '@/components/ui/card';
 
 type EmptyStateProps = {
   icon?: LucideIcon;
@@ -372,7 +372,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
           {/* Program Overview */}
           <div id="overview" ref={overviewRef} className="scroll-mt-20">
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-foreground">Program Overview</h2>
+              <CardTitle className="text-lg font-semibold text-foreground">Program Overview</CardTitle>
               <p className="text-sm text-muted-foreground">Manage program banner and description</p>
             </div>
             <div className="space-y-6">
@@ -438,14 +438,14 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
           {/* Program Objectives */}
           <div id="objectives" ref={objectivesRef} className="scroll-mt-20">
             <div className="mb-6">
-              <h2 className="flex items-center gap-3 text-lg font-semibold text-foreground">
+              <CardTitle className="flex items-center gap-3 text-lg font-semibold text-foreground">
                 Program Objectives
                 {objectiveErrorCount > 0 && (
                   <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
                     {objectiveErrorCount}
                   </Badge>
                 )}
-              </h2>
+              </CardTitle>
               <p className="text-sm text-muted-foreground">Define learning outcomes and goals</p>
             </div>
             <div className="flex min-h-[300px] rounded-lg border border-border">
@@ -534,14 +534,14 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
           {/* Gallery */}
           <div id="gallery" ref={galleryRef} className="scroll-mt-20">
             <div className="mb-6">
-              <h2 className="flex items-center gap-3 text-lg font-semibold text-foreground">
+              <CardTitle className="flex items-center gap-3 text-lg font-semibold text-foreground">
                 Gallery of Excellence
                 {galleryErrorCount > 0 && (
                   <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
                     {galleryErrorCount}
                   </Badge>
                 )}
-              </h2>
+              </CardTitle>
               <p className="text-sm text-muted-foreground">Showcase program facilities and activities</p>
             </div>
             <div className="flex min-h-[300px] rounded-lg border border-border">
