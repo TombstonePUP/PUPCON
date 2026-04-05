@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Area, type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { FolderPlus, PlusCircle } from 'lucide-react';
+import { FolderPlus, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 
 const alphaRegex = new RegExp('^[A-Za-z]');
 
@@ -56,49 +56,62 @@ export default function ParameterAccordion({
 
   return (
     <>
-      <Accordion type="single" collapsible className="flex w-full flex-col gap-[1vw]">
-        {areaParameters?.length > 0 ? (
+      <Accordion type="single" collapsible className="flex w-full flex-col gap-4">
+        {areaParameters && areaParameters.length > 0 ? (
           areaParameters?.map((parameter) => (
             <AccordionItem
               value={`item-${parameter.area_parameter_id}`}
               className="group bg-muted/50 rounded-xl overflow-hidden border border-border mb-2"
               key={`param-item-${parameter.area_parameter_id}`}
             >
-              <AccordionTrigger className="flex flex-row items-center justify-between group-hover:cursor-pointer p-4 px-6 hover:no-underline">
-                <div className="flex w-full flex-row items-center justify-between pr-4">
-                  <h1 className="font-bold text-primary group-hover:text-primary/80">
-                    {!parameter.parameter_name?.trim()
-                      ? `${parameter.parameter_description}`
-                      : `Parameter ${parameter.parameter_name.toUpperCase()[0]}`
-                    }
-                  </h1>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                    {parameter.parameter_name?.trim() ? parameter.parameter_description : ''}
-                  </p>
-                </div>
+              <div className="relative">
+                <AccordionTrigger className="flex flex-row items-center justify-between group-hover:cursor-pointer p-4 px-6 hover:no-underline">
+                  <div className="flex w-full flex-row items-center justify-between pr-24">
+                    <h1 className="font-bold text-primary group-hover:text-primary/80">
+                      {parameter.parameter_name?.trim() 
+                        ? `Parameter ${parameter.parameter_name}` 
+                        : parameter.parameter_description
+                      }
+                    </h1>
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                      {parameter.parameter_name?.trim() ? parameter.parameter_description : ''}
+                    </p>
+                  </div>
+                </AccordionTrigger>
+                
                 {canShowActions && (
-                  <div className="flex justify-center gap-3" onClick={(e) => e.stopPropagation()}>
+                  <div className="absolute right-14 top-1/2 -translate-y-1/2 flex justify-center gap-3 z-10">
                     <Button
                       size="sm"
                       variant="ghost"
                       className="h-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
-                      onClick={() => resolveParamDialog({ type: 'edit', parameter: parameter })}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        resolveParamDialog({ type: 'edit', parameter: parameter });
+                      }}
                     >
-                      Edit
+                      <Pencil className="h-4 w-4" />
+                      <span className="hidden xl:inline">Edit</span>
                     </Button>
                     <Button
                       size="sm"
                       variant="ghost"
                       className="h-8 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors"
-                      onClick={() => resolveParamDialog({ type: 'delete', parameter: parameter })}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        resolveParamDialog({ type: 'delete', parameter: parameter });
+                      }}
                     >
-                      Remove
+                      <Trash2 className="h-4 w-4" />
+                      <span className="hidden xl:inline">Remove</span>
                     </Button>
                   </div>
                 )}
-              </AccordionTrigger>
+              </div>
               <AccordionContent className="p-6 pt-0">
-                {parameter.parameter_outlines?.length > 0 ? (
+                {parameter.parameter_outlines && parameter.parameter_outlines.length > 0 ? (
                   parameterOutlineCategories?.map((category) => {
                     // Optimized filtering without in-place mutation
                     const filteredOutlines = (parameter.parameter_outlines || [])

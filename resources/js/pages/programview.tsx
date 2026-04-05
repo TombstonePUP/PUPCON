@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Layout from '@/layouts/landing-layout';
 import { PerProgramUnderSurvey } from '@/types';
-import { Head, router, usePage, usePoll, useRemember } from '@inertiajs/react';
+import { Head, router, usePage, useRemember } from '@inertiajs/react';
+import { useSmartPoll } from '@/hooks/use-smart-poll';
 import {
   AlertCircle,
   BookOpen,
@@ -148,8 +149,27 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
 
 FacultyCard.displayName = 'FacultyCard';
 
+const FacultyCardWrapper = ({ f, i, facultyLoading }: { f: any; i: number; facultyLoading: boolean }) => {
+  const [cardRef, cardInView] = useInView(0.2);
+  return (
+    <FacultyCard
+      ref={cardRef as any}
+      faculty={{
+        name: [f.first_name, f.middle_name, f.last_name].filter(Boolean).join(' '),
+        photo:
+          f.image_path ||
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
+        position: f.program_coordinator ? 'Program Head' : `${f.status} `,
+      }}
+      isLoading={facultyLoading}
+      inView={cardInView}
+      index={i}
+    />
+  );
+};
+
 export default function Programs({ program }: PerProgramProps) {
-  usePoll(5000);
+  useSmartPoll(5000);
 
   const [level, setLevel] = useRemember(program.levels[0]?.level, 'level');
   const [loading, setLoading] = useState(false);
@@ -425,27 +445,14 @@ export default function Programs({ program }: PerProgramProps) {
               />
             ) : (
               <div className="flex flex-wrap justify-center gap-6">
-                {program.faculty_staff?.map((f, i) => {
-                  const [cardRef, cardInView] = useInView(0.2);
-                  return (
-                    <FacultyCard
-                      key={f.faculty_staff_id}
-                      ref={cardRef}
-                      faculty={{
-                        name: [f.first_name, f.middle_name, f.last_name].filter(Boolean).join(' '),
-                        photo:
-                          f.image_path ||
-                          `https://ui-avatars.com/api/?name=${encodeURIComponent(f.first_name)}&background=7f1414&color=fff&size=400&format=svg`,
-                        position: f.program_coordinator ? 'Program Head' : `${f.status} `,
-
-                      }}
-                      isLoading={facultyLoading}
-                      inView={cardInView}
-                      index={i}
-                    />
-
-                  );
-                })}
+                {program.faculty_staff?.map((f, i) => (
+                  <FacultyCardWrapper
+                    key={f.faculty_staff_id}
+                    f={f}
+                    i={i}
+                    facultyLoading={facultyLoading}
+                  />
+                ))}
               </div>
             )}
           </div>

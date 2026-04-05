@@ -4,7 +4,8 @@ import { buildOutlineTree, RecursiveOutline } from '@/components/recursive-outli
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Layout from '@/layouts/landing-layout';
 import type { Area, ParameterOutlineCategory, Program } from '@/types';
-import { Head, usePage, usePoll } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
+import { useSmartPoll } from '@/hooks/use-smart-poll';
 import { Construction } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -25,7 +26,7 @@ const EmptyState = ({ title, description }: { title: string; description: string
 const alphaRegex = new RegExp('^[A-Za-z]');
 
 export default function AreaPage({ program, area, categories }: AreaProps) {
-  usePoll(5000);
+  useSmartPoll(5000);
   const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const searchKeyword = searchParams?.get('search') || '';
 

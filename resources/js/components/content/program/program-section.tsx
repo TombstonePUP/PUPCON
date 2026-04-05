@@ -13,6 +13,7 @@ import { CircleAlert, ClipboardList, Edit2, EditIcon, FilePlus2, ImageIcon, Imag
 import { RefObject, useEffect, useState } from 'react';
 import { LucideIcon } from 'lucide-react';
 import ImageUploader from '@/components/image-uploader';
+import { Card } from '@/components/ui/card';
 
 type EmptyStateProps = {
   icon?: LucideIcon;
@@ -364,7 +365,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
 
   return (
     <>
-      <div className="rounded-lg border border-border">
+      <Card>
         <div className="p-8">
 
           {/* Program Overview */}
@@ -622,7 +623,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
           </div>
         </div>
         <SectionFooter onSave={onSave} onPreview={program.under_survey ? preview : null} />
-      </div>
+      </Card>
       {dialogType === 'objective' && dialogOpen && (
         <ObjectiveDialog
           type={action}

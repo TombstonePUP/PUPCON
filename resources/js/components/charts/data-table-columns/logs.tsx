@@ -36,7 +36,7 @@ export const columns: ColumnDef<ActivityLogs>[] = [
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="block max-w-sm truncate cursor-default text-sm text-muted-foreground capitalize">
+            <span className="block truncate cursor-default text-sm text-muted-foreground capitalize">
               {row.getValue('description')}
             </span>
           </TooltipTrigger>
@@ -78,8 +78,7 @@ export const columns: ColumnDef<ActivityLogs>[] = [
     accessorKey: 'activity_date',
     header: ({ column }) => (
       <Button
-        variant="ghost"
-        className="px-0 text-muted-foreground"
+          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0"
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         Date

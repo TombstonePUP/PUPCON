@@ -20,6 +20,7 @@ import type { BreadcrumbItem, PerProgram, ProgramAreas } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Archive, BookOpen, ChevronDown, Download, EditIcon, MoreVertical, Plus } from 'lucide-react';
 import { PageTitle } from '@/components/page-header';
+import { Card } from '@/components/ui/card';
 
 export interface ProgramProps {
   program: PerProgram;
@@ -192,14 +193,13 @@ export default function Programs({ program }: ProgramProps) {
           description="Manage program information, objectives, and assessment areas."
           actions={
             <div className="flex flex-col items-end gap-2">
-              <div className="absolute top-0 right-0 size-24 overflow-hidden rounded-tr-lg">
+              <div className="pointer-events-none  absolute top-0 right-0 w-20 h-24 overflow-hidden rounded-tr-lg">
                 <div
-                  className={`absolute top-6 -right-10 w-36 rotate-45 py-0.5 text-center text-xs font-semibold text-white
-      ${selected_level?.remarks?.toLowerCase().includes('passed')
-                      ? 'bg-green-600'
+                  className={`absolute top-6 -right-10 w-36 rotate-45 py-0.5 text-center text-xs font-semibold text-white ${selected_level?.remarks?.toLowerCase().includes('passed')
+                      ? 'bg-success'
                       : selected_level?.remarks?.toLowerCase().includes('failed')
                         ? 'bg-destructive'
-                        : 'bg-amber-500'
+                        : 'bg-warning'
                     }`}
                 >
                   {selected_level?.remarks}
@@ -217,7 +217,7 @@ export default function Programs({ program }: ProgramProps) {
               <ProgramSection program={program} overviewRef={overviewRef} objectivesRef={objectivesRef} galleryRef={galleryRef} />
             )}
 
-            <div id="areas" ref={areasRef} className="scroll-mt-20 rounded-lg border border-border p-8">
+            <Card id="areas" ref={areasRef} className="scroll-mt-20 p-8">
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-foreground">Program Areas</h3>
@@ -255,7 +255,7 @@ export default function Programs({ program }: ProgramProps) {
                     return (
                       <div
                         key={item.area_id}
-                        className="group relative flex flex-col rounded-xl border border-border bg-card transition-all duration-150 hover:border-border/60"
+                        className="group relative flex flex-col rounded-xl border border-border bg-muted/30 transition-all duration-150 hover:border-border/80 transition-all duration-150 hover:-translate-y-0.5"
                       >
                         {isAssigned ? (
                           <Link
@@ -266,7 +266,7 @@ export default function Programs({ program }: ProgramProps) {
                             })}
                             className="block p-6"
                           >
-                            <h4 className="text-base font-semibold text-foreground">Area {item.area_numeral}</h4>
+                            <h4 className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">Area {item.area_numeral}</h4>
                             <div className="flex items-start justify-between">
                               <p className="mt-1 text-sm text-muted-foreground">{item.area_name}</p>
                               {role !== 'Admin' && role !== 'Coordinator' && selected_level.is_active && (
@@ -351,7 +351,7 @@ export default function Programs({ program }: ProgramProps) {
                     </button>
                   )}
               </div>
-            </div>
+            </Card>
           </div>
 
           {/* Right Sidebar */}
@@ -360,14 +360,14 @@ export default function Programs({ program }: ProgramProps) {
 
 
           {(role === 'Admin' || role === 'Coordinator') && (
-            <div className="shrink-0 sticky top-6 self-start border rounded-lg p-6 hidden xl:inline">
+            <div className="shrink-0 sticky top-6 self-start rounded-lg p-6 hidden xl:inline">
               <h2 className="mb-4 font-semibold">On this page</h2>
-              <nav className="space-y-1 ml-2">
+              <nav className="space-y-1 ml-2 border-l border-border">
                 {sections.map((section) => (
                   <button
                     key={section.id}
                     onClick={() => scrollToSection(section.ref, section.id)}
-                    className={`block w-full text-left text-sm px-4 my-4 border-l-2 transition-all duration-150 ${activeSection === section.id
+                    className={`block w-full text-left text-sm px-4 my-4 border-l-3 transition-all duration-150 ${activeSection === section.id
                       ? 'border-primary'
                       : 'border-transparent text-muted-foreground font-normal hover:text-foreground hover:border-border'
                       }`}
