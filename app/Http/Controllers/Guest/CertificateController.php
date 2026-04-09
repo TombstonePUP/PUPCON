@@ -19,7 +19,7 @@ class CertificateController extends Controller
             $certificate->certificate_of_authenticity = $certificate->certificate_of_authenticity ? Storage::url($certificate->certificate_of_authenticity) : null;
         }
 
-        return inertia('certificate', [
+        return inertia('guest/certificate', [
             'certificate' => $certificate,
         ]);
     }

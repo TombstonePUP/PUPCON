@@ -6,7 +6,7 @@ import { FormEventHandler } from 'react';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp';
-import AuthLayout from '@/layouts/auth-layout';
+import AuthLayout from '@/layouts/auth/auth-layout';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 
 export default function VerifyEmail() {
@@ -99,4 +99,3 @@ export default function VerifyEmail() {
         </AuthLayout>
     );
 }
-

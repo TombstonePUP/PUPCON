@@ -14,7 +14,7 @@ import {
     AlertCircle,
 } from "lucide-react";
 import { DocumentViewer } from "@/components/dialogs/documents/view-document";
-import AccreditorLayout from '@/layouts/accreditor-layout';
+import AccreditorLayout from '@/layouts/accreditor/layout';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import {
     Select,

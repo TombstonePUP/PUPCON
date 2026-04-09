@@ -33,7 +33,7 @@ class ExhibitsController extends Controller
             return $exhibit;
         });
 
-        return inertia('exhibits', [
+        return inertia('guest/exhibits', [
             'exhibits' => $exhibits,
         ]);
     }

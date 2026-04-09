@@ -16,10 +16,10 @@ Route::middleware('auth')->group(function () {
     Route::put('settings/password', [PasswordController::class, 'update'])->name('password.update');
 
     Route::get('settings/archive', function () {
-        return Inertia::render('settings/archive');
+        return Inertia::render('admin/settings/archive');
     })->name('archive');
 
     Route::get('settings/appearance', function () {
-        return Inertia::render('settings/appearance');
+        return Inertia::render('admin/settings/appearance');
     })->name('appearance');
 });

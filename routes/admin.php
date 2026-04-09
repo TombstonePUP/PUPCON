@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     });
 
     Route::get('ratings', function () {
-        return Inertia::render('document/ratings');
+        return Inertia::render('admin/documents/ratings');
     })->name('ratings');
 
     Route::get('other-services', [OtherServicesController::class, 'index'])->name('other-services');

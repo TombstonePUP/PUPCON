@@ -18,7 +18,7 @@ class OtherServicesViewController extends Controller
         $page = ContentPages::where('page', 'Other Services')->first();
         $others = OtherServices::all();
 
-        return inertia('others', [
+        return inertia('guest/others', [
             'page' => $page,
             'others' => $others,
         ]);

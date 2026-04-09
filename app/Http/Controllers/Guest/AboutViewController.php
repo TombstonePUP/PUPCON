@@ -26,7 +26,7 @@ class AboutViewController extends Controller
         $facilities = Facilities::count();
 
         $org_types = OrganizationTypes::with('Organizations')->get();
-        return inertia('about/about', [
+        return inertia('guest/about/index', [
             'page' => $page,
             'programs' => $programs,
             'facilities' => $facilities,
