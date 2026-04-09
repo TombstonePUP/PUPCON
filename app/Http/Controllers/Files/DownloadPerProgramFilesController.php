@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Programs;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use ZipArchive;
 
 class DownloadPerProgramFilesController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @return RedirectResponse|BinaryFileResponse
      */
     public function __invoke(Request $request)
     {

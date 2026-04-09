@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +44,12 @@ class AuthenticatedSessionController extends Controller
 
         $userRole = $request->user()->Roles->role_name;
 
+        ActivityLogService::authenticationLog(
+            userId: $request->user()->user_id,
+            activity: ActivityLogAction::Login,
+            description: "Account Authenticated Successfully",
+        );
+
         return $userRole === 'Accreditor'
             ? redirect()->intended(route('programs.index', absolute: false))
             : redirect()->intended(route('dashboard', absolute: false));
@@ -52,6 +60,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        ActivityLogService::authenticationLog(
+            userId: $request->user()->user_id,
+            activity: ActivityLogAction::Logout,
+            description: "Account Logged out",
+        );
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

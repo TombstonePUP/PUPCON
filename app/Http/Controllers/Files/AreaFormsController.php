@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Files;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\AreaFormCategory;
@@ -9,11 +10,11 @@ use App\Models\AreaForms;
 use App\Models\Programs;
 use App\Models\Areas;
 use App\Models\FileStatus;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use function Symfony\Component\Clock\now;
 
@@ -116,27 +117,25 @@ class AreaFormsController extends Controller
         $areaForm = $areaForms->find($request->form_id);
         $user = Auth::user();
         $area = Areas::where('area_id', $request->area_id)->first();
-        // $program = $request->program_name;
         $program = Programs::findOrFail($request->program_id);
 
         if ($areaForm->file_path) {
+            $file_name = $areaForm->file_name;
+            $description = "Deleted area form file {$file_name} for '{$area->area_name}' in program '{$program->program_name}'.";
             Storage::disk('public')->delete($areaForm->file_path);
-            $activityLog = new ActivityLog();
-            $activityLog->user_id = $user->user_id;
-            $activityLog->description = "Deleted area form file for '{$area->area_name}' in program '{$program->program_name}'.";
-            $activityLog->activity = "Delete Document";
-            $activityLog->type = "Files";
-            $activityLog->activity_date = now();
-            $activityLog->save();
+            ActivityLogService::fileManagementLog(
+                activity: ActivityLogAction::Delete,
+                userId: $user->user_id,
+                description: $description,
+            );
         }
 
-        $activityLog = new ActivityLog();
-        $activityLog->user_id = $user->user_id;
-        $activityLog->description = "Deleted area form for '{$area->area_name}' in program '{$program->program_name}'.";
-        $activityLog->activity = "Delete";
-        $activityLog->type = "Files";
-        $activityLog->activity_date = now();
-        $activityLog->save();
+        $description = "Deleted area form for '{$area->area_name}' in program '{$program->program_name}'.";
+        ActivityLogService::contentManagementLog(
+            activity: ActivityLogAction::Delete,
+            userId: $user->user_id,
+            description: $description,
+        );
 
         $areaForm->delete();
 

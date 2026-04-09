@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\ContentPages;
 use App\Models\Facilities;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +15,10 @@ use Illuminate\Support\Facades\Auth;
 
 class FacilitiesController extends Controller
 {
-    public function __invoke(Request $request)
+    /**
+     * @return RedirectResponse
+     */
+    public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'page' => ['required', 'array'],
@@ -63,13 +68,11 @@ class FacilitiesController extends Controller
             ]);
         }
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Facilities Content Page',
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated Facilities Content Page',
+        );
 
         $facility_id = [];
 
@@ -113,13 +116,11 @@ class FacilitiesController extends Controller
                 ]);
                 $facility_id[] = $facility->facility_id;
 
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated Facility: ' . $facility->facility_name,
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated Facility: ' . $facility->facility_name,
+                );
 
             } else {
                 $facility = Facilities::create([
@@ -130,14 +131,11 @@ class FacilitiesController extends Controller
                 ]);
                 $facility_id[] = $facility->facility_id;
 
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Created Facility: ' . $facility->facility_name,
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
-
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Created Facility: ' . $facility->facility_name,
+                );
             }
         }
 

@@ -2,22 +2,26 @@
 
 namespace App\Http\Controllers\Files;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\AreaFiles;
 use App\Models\AreaForms;
 use App\Models\ExhibitFiles;
 use App\Models\FileStatus;
 use App\Models\FilesOverview;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Response;
 
 class DocumentRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @return Response
      */
     public function index()
     {
@@ -45,8 +49,9 @@ class DocumentRequestController extends Controller
 
     /**
      * Approve the specified resource in storage.
+     * @return RedirectResponse
      */
-    public function approve(Request $request)
+    public function appreve(Request $request)
     {
         $validated = $request->validate([
             'file' => ['required', 'array'],
@@ -54,44 +59,17 @@ class DocumentRequestController extends Controller
             'file.*.file_type' => ['required', 'string'],
         ]);
 
-        $status_id = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
-        $user = Auth::user();
-
-        foreach ($validated['file'] as $fileData) {
-            $file = null;
-            if ($fileData['file_type'] === 'exhibits') {
-                $file = ExhibitFiles::findOrFail($fileData['file_id']);
-            } elseif (preg_match('/area-forms/i', $fileData['file_type'])) {
-                $file = AreaForms::findOrFail($fileData['file_id']);
-            } elseif (preg_match('/area/i', $fileData['file_type'])) {
-                $file = AreaFiles::findOrFail($fileData['file_id']);
-            }
-
-            if (!$file) {
-                continue;
-            }
-
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'activity' => 'Approve',
-                'description' => "Approved file: {$file->file_name}",
-                'type' => 'Files',
-                'activity_date' => now(),
-            ]);
-
-            $file->file_status_id = $status_id;
-            $file->file_rejection_reason = '';
-            $file->save();
-        }
+        $this->updateFileStatus($validated['file'], 'Pending', ActivityLogAction::Approve);
 
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Success')
-            ->with('message', 'File Approved Successfully');
+            ->with('message', 'File/s Approved Successfully');
     }
 
     /**
      * Reject the specified resource in storage.
+     * @return RedirectResponse
      */
     public function reject(Request $request)
     {
@@ -103,44 +81,24 @@ class DocumentRequestController extends Controller
         ]);
 
 
-        $user = Auth::user();
-        $status_id = FileStatus::where('status_name', 'Rejected')->first()->file_status_id;
-
         foreach ($validated['file'] as $fileData) {
-            $file = null;
-            if ($fileData['file_type'] === 'exhibits') {
-                $file = ExhibitFiles::findOrFail($fileData['file_id']);
-            } elseif (preg_match('/area-forms/i', $fileData['file_type'])) {
-                $file = AreaForms::findOrFail($fileData['file_id']);
-            } elseif (preg_match('/area/i', $fileData['file_type'])) {
-                $file = AreaFiles::findOrFail($fileData['file_id']);
-            }
-
-            if (!$file) {
-                continue;
-            }
-
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'activity' => 'Reject',
-                'description' => "Rejected file: {$file->file_name}. Reason: {$fileData['rejection_reason']}",
-                'type' => 'Files',
-                'activity_date' => now(),
-            ]);
-
-            $file->file_status_id = $status_id;
-            $file->file_rejection_reason = $fileData['rejection_reason'];
-            $file->save();
+            $this->updateFileStatus(
+                [$fileData],
+                'Rejected',
+                ActivityLogAction::Reject,
+                $fileData['rejection_reason']
+            );
         }
 
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Success')
-            ->with('message', 'File Rejected Successfully');
+            ->with('message', 'File/s Rejected Successfully');
     }
 
     /**
      * Revert the specified resource in storage.
+     * @return RedirectResponse
      */
     public function revert(Request $request)
     {
@@ -150,40 +108,51 @@ class DocumentRequestController extends Controller
             'file.*.file_type' => ['required', 'string'],
         ]);
 
-
-        $status_id = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
-        $user = Auth::user();
-
-        foreach ($validated['file'] as $fileData) {
-            $file = null;
-            if ($fileData['file_type'] === 'exhibits') {
-                $file = ExhibitFiles::findOrFail($fileData['file_id']);
-            } elseif (preg_match('/area-forms/i', $fileData['file_type'])) {
-                $file = AreaForms::findOrFail($fileData['file_id']);
-            } elseif (preg_match('/area/i', $fileData['file_type'])) {
-                $file = AreaFiles::findOrFail($fileData['file_id']);
-            }
-
-            if (!$file) {
-                continue;
-            }
-
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'activity' => 'Revert',
-                'description' => "Reverted file to pending status: {$file->file_name}",
-                'type' => 'Files',
-                'activity_date' => now(),
-            ]);
-
-            $file->file_status_id = $status_id;
-            $file->file_rejection_reason = '';
-            $file->save();
-        }
+        $this->updateFileStatus($validated['file'], 'Pending', ActivityLogAction::Revert);
 
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Success')
-            ->with('message', 'File Reverted Successfully');
+            ->with('message', 'File/s Reverted Successfully');
+    }
+
+    private function resolveFileModel(string $fileType, int $fileId): AreaFiles|AreaForms|ExhibitFiles|null
+    {
+        return match (true) {
+            $fileType === 'exhibits' => ExhibitFiles::findOrFail($fileId),
+            str_contains($fileType, 'area-forms') => AreaForms::findOrFail($fileId),
+            str_contains($fileType, 'area') => AreaFiles::findOrFail($fileId),
+            default => null,
+        };
+    }
+
+    /**
+     * @param array<int,mixed> $files
+     */
+    private function updateFileStatus(
+        array $files,
+        string $status_name,
+        ActivityLogAction $activity,
+        ?string $rejectionReason = null
+    ): void {
+        $status_id = FileStatus::where('status_name', $status_name)->first()->file_status_id;
+        $user = Auth::user();
+
+        foreach ($files as $fileData) {
+            $file = $this->resolveFileModel($fileData['file_type'], $fileData['file_id']);
+
+            if (!$file) continue;
+
+            $file->file_status_id = $status_id;
+            $file->file_rejection_reason = $rejectionReason ?? '';
+            $file->save();
+
+            ActivityLogService::fileManagementLog(
+                activity: $activity,
+                description: "{$activity->value} file: {$file->file_name}",
+                // . ($rejectionReason ? ". Reason: {$rejectionReason}" : "")
+                userId: $user->user_id
+            );
+        }
     }
 }

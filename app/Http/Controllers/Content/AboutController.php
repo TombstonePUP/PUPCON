@@ -2,19 +2,24 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use App\Models\OrganizationTypes;
 use App\Models\Organizations;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 class AboutController extends Controller
 {
-    public function __invoke(Request $request)
+    /**
+     * @return RedirectResponse
+     */
+    public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'page' => ['nullable', 'array'],
@@ -91,13 +96,11 @@ class AboutController extends Controller
             ]);
         }
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated About Page Content',
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated About Page Content',
+        );
 
         $type_ids = [];
         $organization_ids = [];
@@ -122,13 +125,11 @@ class AboutController extends Controller
                     $organization->type_id = $type->type_id;
                     $organization->save();
 
-                    ActivityLog::create([
-                        'user_id' => $user->user_id,
-                        'description' => 'Updated Organization: ' . $organization->organization_name,
-                        'activity' => 'Update',
-                        'type' => 'Content',
-                        'activity_date' => now(),
-                    ]);
+                    ActivityLogService::contentManagementLog(
+                        userId: $user->user_id,
+                        activity: ActivityLogAction::Update,
+                        description: 'Updated Organization: ' . $organization->organization_name,
+                    );
 
                 } else {
                     $organization = Organizations::create([
@@ -137,13 +138,11 @@ class AboutController extends Controller
                         'type_id' => $type->type_id,
                     ]);
 
-                    ActivityLog::create([
-                        'user_id' => $user->user_id,
-                        'description' => 'Created Organization: ' . $organization->organization_name,
-                        'activity' => 'Create',
-                        'type' => 'Content',
-                        'activity_date' => now(),
-                    ]);
+                    ActivityLogService::contentManagementLog(
+                        userId: $user->user_id,
+                        activity: ActivityLogAction::Create,
+                        description: 'Created Organization: ' . $organization->organization_name,
+                    );
                 }
                 $organization_ids[] = $organization->organization_id;
             }

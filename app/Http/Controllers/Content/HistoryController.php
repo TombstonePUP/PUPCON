@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\CampusDirectors;
 use App\Models\CampusGallery;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\ContentPages;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -15,6 +17,9 @@ use Illuminate\Support\Facades\Auth;
 
 class HistoryController extends Controller
 {
+    /**
+     * @return RedirectResponse
+     */
     public function __invoke(Request $request)
     {
         $validator = Validator::make(
@@ -104,7 +109,6 @@ class HistoryController extends Controller
             $validated['page']['banner']->storeAs('history-page', $bannerName, 'public');
             $page->image_name = $bannerName;
             $page->image_path = $bannerPath;
-
         } elseif (empty($validated['page']['previewUrl']) && $page && $page->image_path) {
             if (Storage::disk('public')->exists($page->image_path)) {
                 Storage::disk('public')->delete($page->image_path);
@@ -128,13 +132,11 @@ class HistoryController extends Controller
             ]);
         }
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated History Page Content',
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated History Page Content',
+        );
 
         $director_ids = [];
         $gallery_ids = [];
@@ -177,13 +179,11 @@ class HistoryController extends Controller
                     'profile_image_path' => $profileImagePath,
                 ]);
                 $director_ids[] = $director->director_id;
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated Campus Director: ' . $directorData['name'],
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated Campus Director: ' . $directorData['name'],
+                );
             } else {
                 $director = CampusDirectors::create([
                     'name' => $directorData['name'],
@@ -194,13 +194,11 @@ class HistoryController extends Controller
                     'profile_image_path' => $profileImagePath,
                 ]);
                 $director_ids[] = $director->director_id;
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Added Campus Director: ' . $directorData['name'],
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Added Campus Director: ' . $directorData['name'],
+                );
             }
         }
 
@@ -220,13 +218,12 @@ class HistoryController extends Controller
                     'description' => $galleryData['description'] ?? null,
                 ]);
                 $gallery_ids[] = $gallery->gallery_id;
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated Campus Gallery Image: ' . $galleryData['description'],
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated Campus Gallery Image: ' . $galleryData['description'],
+                );
             } else {
                 $gallery = CampusGallery::create([
                     'image_name' => $galleryImageName,
@@ -234,13 +231,11 @@ class HistoryController extends Controller
                     'description' => $galleryData['description'] ?? null,
                 ]);
                 $gallery_ids[] = $gallery->gallery_id;
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Added Campus Gallery Image: ' . $galleryData['description'],
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Added Campus Gallery Image: ' . $galleryData['description'],
+                );
             }
         };
 
@@ -250,13 +245,11 @@ class HistoryController extends Controller
             if ($director->profile_image_path && Storage::disk('public')->exists($director->profile_image_path)) {
                 Storage::disk('public')->delete($director->profile_image_path);
             }
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'description' => 'Deleted Campus Director: ' . $director->name,
-                'activity' => 'Delete',
-                'type' => 'Content',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: 'Deleted Campus Director: ' . $director->name,
+            );
         }
 
         $galleryToDelete = CampusGallery::where('carousel', false)
@@ -266,13 +259,11 @@ class HistoryController extends Controller
             if ($gallery->image_path && Storage::disk('public')->exists($gallery->image_path)) {
                 Storage::disk('public')->delete($gallery->image_path);
             }
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'description' => 'Deleted Campus Gallery Image: ' . $gallery->description,
-                'activity' => 'Delete',
-                'type' => 'Content',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: 'Deleted Campus Gallery Image: ' . $gallery->description,
+            );
         }
 
         CampusDirectors::whereNotIn('director_id', $director_ids)->delete();

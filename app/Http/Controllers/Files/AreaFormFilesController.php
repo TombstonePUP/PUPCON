@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Files;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\AreaForms;
 use App\Models\Programs;
 use App\Models\Areas;
 use App\Models\FileStatus;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use function Symfony\Component\Clock\now;
+use Illuminate\Support\Facades\DB;
 
 class AreaFormFilesController extends Controller
 {
@@ -54,38 +56,52 @@ class AreaFormFilesController extends Controller
         }
 
         $areaForm = $areaForms->find($request->form_id);
-        $category = $areaForm->AreaFormCategory->category_name;
 
-        $activityLog = new ActivityLog();
         if ($file = $areaForm->file_path) {
             Storage::disk('public')->delete($file);
-            $activityLog->activity = "Update";
+            $activity = ActivityLogAction::Update;
         } else {
-            $activityLog->activity = "Upload";
+            $activity = ActivityLogAction::Upload;
         }
+
+        $file = $validated['document'];
+        $category = $areaForm->AreaFormCategory->category_name;
 
         $category = Str::slug($category, '_');
         $program_name = Str::slug($program->program_name, '_');
         $degree_type = Str::slug($program->degree_type, '_');
         $area_name = Str::slug($area->area_name, '_');
-        $formFileName = "{$category}.{$validated['document']->getClientOriginalExtension()}";
+        $formFileName = "{$category}.{$file->getClientOriginalExtension()}";
         $formFilePath = "documents/{$degree_type}_{$program_name}/{$level}/{$area_name}/area_forms";
-        $request->file('document')->storeAs($formFilePath, $formFileName, 'public');
 
-        $formFilePath = "{$formFilePath}/{$formFileName}";
-        $areaForm->file_name = $formFileName;
-        $areaForm->file_path = $formFilePath;
-        $areaForm->uploaded_by = $user->user_id;
-        $areaForm->uploaded_at = now();
-        $areaForm->file_status_id = $status;
+        DB::transaction(function () use (
+            $activity,
+            $user,
+            $program,
+            $area,
+            $formFileName,
+            $formFilePath,
+            $areaForm,
+            $status,
+            $file
+        ) {
+            $file->storeAs($formFilePath, $formFileName, 'public');
 
-        $activityLog->user_id = $user->user_id;
-        $activityLog->activity_date = now();
-        $activityLog->description = "{$activityLog->activity} for '{$area->area_name}' in program '{$program->program_name}'.";
-        $activityLog->type = "Files";
-        $activityLog->save();
-        $areaForm->save();
+            $formFilePath = "{$formFilePath}/{$formFileName}";
+            $areaForm->file_name = $formFileName;
+            $areaForm->file_path = $formFilePath;
+            $areaForm->uploaded_by = $user->user_id;
+            $areaForm->uploaded_at = now();
+            $areaForm->file_status_id = $status;
 
+            $activity_description =  "{$activity} for '{$area->area_name}' in program '{$program->program_name}'.";
+
+            ActivityLogService::fileManagementLog(
+                activity: $activity,
+                userId: $user->user_id,
+                description: $activity_description
+            );
+        });
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'File Uploaded')

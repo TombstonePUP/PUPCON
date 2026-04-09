@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Parameters;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\AccreditationLevels;
 use App\Models\ActivityLog;
@@ -10,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Programs;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -171,13 +173,12 @@ class AreaParameterController extends Controller
         $parameter->delete();
 
         $user = Auth::user();
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Deleted Area Parameter: ' . $name . $description,
-            'activity' => 'Delete',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Delete,
+            description: 'Deleted Area Parameter: ' . $name . $description
+        );
 
         return redirect()->back()
             ->with('type', 'success')

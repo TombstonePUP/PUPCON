@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Exhibits;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\Exhibits;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\FileStatus;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +17,7 @@ class ExhibitFilesController extends Controller
 {
     /**
      * Store a newly created resource in storage.
+     * @return RedirectResponse
      */
     public function __invoke(Request $request)
     {
@@ -43,14 +46,12 @@ class ExhibitFilesController extends Controller
 
         $existing_file = $outline->ExhibitFiles()->first();
 
-        $activityLog = new ActivityLog();
-
         if ($existing_file && Storage::disk('public')->exists($existing_file->file_path)) {
             Storage::disk('public')->delete($existing_file->file_path);
             $existing_file->delete();
-            $activityLog->activity = 'Update';
+            $activity = ActivityLogAction::Update;
         } else {
-            $activityLog->activity = 'Upload';
+            $activity = ActivityLogAction::Upload;
         }
 
         $uploadedFile = $validated['file'];
@@ -64,11 +65,11 @@ class ExhibitFilesController extends Controller
             'uploaded_at' => now(),
         ]);
 
-        $activityLog->user_id = $user->user_id;
-        $activityLog->description = "{$activityLog->activity}d exhibit file for '{$exhibit->exhibit_name}'.";
-        $activityLog->type = 'Files';
-        $activityLog->activity_date = now();
-        $activityLog->save();
+        ActivityLogService::fileManagementLog(
+            userId: $user->user_id,
+            activity: $activity,
+            description: "{$activity}d exhibit file for '{$exhibit->exhibit_name}'.",
+        );
 
         return redirect()->back()
             ->with('type', 'success')

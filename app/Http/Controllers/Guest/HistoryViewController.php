@@ -8,11 +8,13 @@ use App\Models\ContentPages;
 use App\Models\CampusDirectors;
 use App\Models\CampusGallery;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class HistoryViewController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @return Response
      */
     public function __invoke(Request $request)
     {

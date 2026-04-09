@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Exhibits;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\Exhibits;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ManageExhibitsController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @return Response
      */
     public function index()
     {
@@ -49,6 +53,7 @@ class ManageExhibitsController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -97,16 +102,13 @@ class ManageExhibitsController extends Controller
             }
         }
 
-        //  Log activity
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'activity' => $isUpdate ? 'Update' : 'Create',
-            'description' => ($isUpdate
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: $isUpdate ? ActivityLogAction::Update : ActivityLogAction::Create,
+            description: ($isUpdate
                 ? "Updated exhibit '{$exhibit->exhibit_name}'."
                 : "Created exhibit '{$exhibit->exhibit_name}'."),
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -118,6 +120,7 @@ class ManageExhibitsController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @return RedirectResponse
      */
     public function destroy(Request $request)
     {
@@ -135,18 +138,21 @@ class ManageExhibitsController extends Controller
                             Storage::disk('public')->delete($outline->ExhibitFiles->file_path);
                         }
                         $outline->ExhibitFiles->delete();
+                        ActivityLogService::fileManagementLog(
+                            userId: $user->user_id,
+                            activity: ActivityLogAction::Delete,
+                            description: "Deleted exhibit file/s '{$exhibit->exhibit_name}'.",
+                        );
                     }
                     $outline->delete();
                 }
             }
 
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'activity' => 'Delete',
-                'description' => "Deleted exhibit '{$exhibit->exhibit_name}'.",
-                'type' => 'Content',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: "Deleted exhibit '{$exhibit->exhibit_name}'.",
+            );
 
             return redirect()->back()
                 ->with('type', 'success')

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Programs;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\Programs;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,6 +13,7 @@ class LevelsController extends Controller
 {
     /**
      * Store a newly created resource in storage.
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -22,15 +24,6 @@ class LevelsController extends Controller
 
         $min = $level ?? 0;
         $max = $level !== null ? $level + 1 : 0;
-
-        /* $level = $program->levels()
-            ->where('remarks', 'passed')
-            ->orderBy('level', 'desc')
-            ->first(); */
-
-        /* $level = isset($program->latestlevel->level)
-            ? $program->latestlevel->level
-            : null; */
 
         $user = Auth::user();
 
@@ -58,7 +51,6 @@ class LevelsController extends Controller
         $program = $program->Levels()->create([
             'program_id' => $program->program_id,
             'level' => $validated['new_level'],
-            // 'level' => $level === null ? 0 : $level + 1,
             'survey_date' => now(),
             'remarks' => 'Ongoing Survey',
             'is_active' => true,
@@ -82,6 +74,7 @@ class LevelsController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @return RedirectResponse
      */
     public function update(Request $request, Programs $programs)
     {

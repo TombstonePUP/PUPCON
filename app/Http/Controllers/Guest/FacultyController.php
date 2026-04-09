@@ -7,9 +7,13 @@ use App\Models\FacultyStaff;
 use Inertia\Inertia;
 use App\Models\ContentPages;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class FacultyController extends Controller
 {
+    /**
+     * @return Response
+     */
     public function index()
     {
         $faculties = FacultyStaff::all();

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Parameters;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
-use App\Models\AreaParameters;
 use App\Models\Programs;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -94,13 +94,14 @@ class ImportParametersController extends Controller
                         ]
                     );
                     $parameters[$row['parameter']] = $parameter->area_parameter_id;
-                    ActivityLog::create([
-                        'user_id' => $user->user_id,
-                        'activity' => 'Import Parameter',
-                        'description' => "Imported parameter '{$row['parameter']}' for area '{$area->area_name}' in program '{$program->program_name}'-'{$program->Levels->level}'.",
-                        'type' => 'Content',
-                        'activity_date' => now(),
-                    ]);
+                    ActivityLogService::contentManagementLog(
+                        userId: $user->user_id,
+                        activity: ActivityLogAction::Import,
+                        description: "Imported parameter
+                            '{$row['parameter']}' for area
+                            '{$area->area_name}' in program
+                            '{$program->program_name}'-'{$program->Levels->level}'.",
+                    );
                 }
 
                 if ($section === 'benchmarks') {
@@ -121,13 +122,15 @@ class ImportParametersController extends Controller
                                 'container' => filter_var($row['benchmark_container'], FILTER_VALIDATE_BOOLEAN),
                             ]
                         );
-                        ActivityLog::create([
-                            'user_id' => $user->user_id,
-                            'activity' => 'Import Benchmark',
-                            'description' => "Imported benchmark '{$row['benchmark_number']}' for parameter '{$row['parameter']}' in area '{$area->area_name}' in program '{$program->program_name}'-'{$program->Levels->level}'.",
-                            'type' => 'Content',
-                            'activity_date' => now(),
-                        ]);
+                        ActivityLogService::contentManagementLog(
+                            userId: $user->user_id,
+                            activity: ActivityLogAction::Import,
+                            description: "Imported benchmark
+                                '{$row['benchmark_number']}' for parameter
+                                '{$row['parameter']}' in area
+                                '{$area->area_name}' in program
+                                '{$program->program_name}'-'{$program->Levels->level}'.",
+                        );
                     }
                 }
             }

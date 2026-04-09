@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\ContentPages;
 use App\Models\LocalTaskForce;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use App\Models\ActivityLog;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 
 class LocalTaskForceController extends Controller
 {
+    /**
+     * @return RedirectResponse
+     */
     public function __invoke(Request $request)
     {
         $validator = Validator::make(
@@ -96,13 +101,11 @@ class LocalTaskForceController extends Controller
             ]);
         }
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Local Task Force Content Page',
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated Local Task Force Content Page',
+        );
 
         $task_force_ids = [];
         foreach ($validated['chairmen'] as $chairmanData) {
@@ -146,13 +149,11 @@ class LocalTaskForceController extends Controller
                     'profile_image_path' => $profileImagePath,
                 ]);
                 $task_force_ids[] = $chairman->local_task_force_id;
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
+                );
             } else {
                 $chairman = LocalTaskForce::create([
                     'area_name' => $chairmanData['area_name'] ?? null,
@@ -164,13 +165,11 @@ class LocalTaskForceController extends Controller
                     'profile_image_path' => $profileImagePath,
                 ]);
                 $task_force_ids[] = $chairman->local_task_force_id;
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Created Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Created Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
+                );
             }
 
             // handle members
@@ -203,13 +202,11 @@ class LocalTaskForceController extends Controller
                 Storage::disk('public')->delete($chairman->profile_image_path);
             }
 
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'description' => 'Deleted Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
-                'activity' => 'Delete',
-                'type' => 'Content',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: 'Deleted Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
+            );
 
             $chairman->delete();
         }

@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Guest\ProgramsController;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
 use App\Traits\AreaNumeralFormat;
 use App\Traits\ProgramLinkFormats;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class AreasController extends Controller
 {
@@ -18,6 +17,7 @@ class AreasController extends Controller
     use AreaNumeralFormat;
     /**
      * Handle the incoming request.
+     * @return Response
      */
     public function __invoke(string $program_id, string $area_id)
     {

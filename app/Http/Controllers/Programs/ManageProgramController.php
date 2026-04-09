@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Programs;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\AreaForms;
 use App\Models\Areas;
 use App\Models\AreaFiles;
 use App\Models\ProgramGallery;
 use App\Models\Programs;
+use App\Services\ActivityLogService;
 use App\Traits\ProgramLinkFormats;
 use App\Traits\AreaNumeralFormat;
 use Illuminate\Support\Str;
@@ -125,13 +126,11 @@ class ManageProgramController extends Controller
             'color' => $validated['color'],
         ]);
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Created a new program: ' . $program->program_name,
-            'activity' => 'Create',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Create,
+            description: 'Created a new program: ' . $program->program_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -288,13 +287,11 @@ class ManageProgramController extends Controller
             ]);
         });
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated program: ' . $program->program_name,
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated program: ' . $program->program_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -335,13 +332,11 @@ class ManageProgramController extends Controller
             $level->update(['is_active' => false]);
         });
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Archived program: ' . $program->degree_type . ' ' . $program->program_name,
-            'activity' => 'Archive',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Archive,
+            description: 'Archived program: ' . $program->degree_type . ' ' . $program->program_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')

@@ -9,11 +9,13 @@ use App\Models\OrganizationTypes;
 use App\Models\Programs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class AboutViewController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @return Response
      */
     public function __invoke(Request $request)
     {

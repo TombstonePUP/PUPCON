@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Exhibits;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\ExhibitOutlines;
 use App\Models\ExhibitFiles;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ActivityLog;
 use App\Models\FileStatus;
 use App\Models\Exhibits;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -59,7 +60,6 @@ class ExhibitOutlinesFileController extends Controller
         $file_path = 'exhibits/' . $exhibit_name . '/' . $category_slug . '/' . $file_name;
 
         $new_file_upload = isset($validated['file']);
-        $activityLog = new ActivityLog();
 
         if (!$outline) {
             $outline = ExhibitOutlines::create([
@@ -80,7 +80,7 @@ class ExhibitOutlinesFileController extends Controller
             }
 
             $validated['file']->storeAs('exhibits/' . $exhibit_name . '/' . $category_slug, $file_name, 'public');
-            $activityLog->activity = $existing_file ? 'Update' : 'Upload';
+            $activity = $existing_file ? ActivityLogAction::Update : ActivityLogAction::Upload;
         }
 
         if ($existing_file) {
@@ -98,7 +98,7 @@ class ExhibitOutlinesFileController extends Controller
                 if (Storage::disk('public')->move($old_file_path, $file_path)) {
                     $exhibit_file->file_name = $file_name;
                     $exhibit_file->file_path = $file_path;
-                    $activityLog->activity = 'Update';
+                    $activity = ActivityLogAction::Update;
                 } else {
                     $exhibit_file->file_name = $existing_file->file_name;
                     $exhibit_file->file_path = $old_file_path;
@@ -111,8 +111,8 @@ class ExhibitOutlinesFileController extends Controller
 
 
         // <-- Add a fallback for updates without file change
-        if (!$activityLog->activity) {
-            $activityLog->activity = $outline ? 'Update' : 'Upload';
+        if (!$activity) {
+            $activity = $outline ? ActivityLogAction::Update : ActivityLogAction::Upload;
         }
 
         if (!empty($exhibit_file->file_path)) {
@@ -122,11 +122,11 @@ class ExhibitOutlinesFileController extends Controller
             $exhibit_file->save();
         }
 
-        $activityLog->user_id = $user->user_id;
-        $activityLog->description = "{$activityLog->activity}d exhibit outline for '{$exhibit->exhibit_name}'.";
-        $activityLog->type = 'Files';
-        $activityLog->activity_date = now();
-        $activityLog->save();
+        ActivityLogService::fileManagementLog(
+            userId: $user->user_id,
+            activity: $activity,
+            description: "{$activityLog->activity}d exhibit outline for '{$exhibit->exhibit_name}'.",
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -149,13 +149,11 @@ class ExhibitOutlinesFileController extends Controller
                 $exhibit_file->delete();
             }
 
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'description' => 'Deleted Exhibit Outline: ' . $outline->outline_description,
-                'activity' => 'Delete',
-                'type' => 'Files',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::fileManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: 'Deleted Exhibit Outline: ' . $outline->outline_description,
+            );
 
             $outline->delete();
 

@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\AreaFiles;
 use App\Models\Areas;
 use App\Models\Programs;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use App\Models\AreaForms;
 use Illuminate\Support\Facades\Auth;
 
 class ManageAreasController extends Controller
 {
     /**
      * Store a newly created resource in storage.
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -78,13 +80,14 @@ class ManageAreasController extends Controller
         }
         $area->save();
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Created Area "' . $area->area_name . '" in ' . $program->program_name . ' - ' . Str::title(str_replace('_', ' ', $level_name)),
-            'activity' => 'Create',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Create,
+            description: 'Created Area "'
+                . $area->area_name . '" in '
+                . $program->program_name . ' - '
+                . Str::title(str_replace('_', ' ', $level_name)),
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -94,6 +97,7 @@ class ManageAreasController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @return RedirectResponse
      */
     public function update(Request $request)
     {
@@ -198,13 +202,13 @@ class ManageAreasController extends Controller
         $area->save();
 
         $user = Auth::user();
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Area "' . $area->area_name . '" in ' . $program->program_name . ' - level_' . $level->level,
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated Area "'
+                . $area->area_name . '" in '
+                . $program->program_name . ' - level_' . $level->level,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -214,6 +218,7 @@ class ManageAreasController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @return RedirectResponse
      */
     public function destroy(Areas $areas, Request $request)
     {
@@ -229,13 +234,14 @@ class ManageAreasController extends Controller
         }
 
         $user = Auth::user();
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Archived Area "' . $area->area_name . '"' . 'From ' . $request->program_name . ' - level_' . $area->Levels->first()->level,
-            'activity' => 'Archive',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Archive,
+            description: 'Archived Area "'
+                . $area->area_name . '"'
+                . 'From ' . $request->program_name
+                . ' - level_' . $area->Levels->first()->level,
+        );
 
         return redirect()->back()
             ->with('type', 'success')

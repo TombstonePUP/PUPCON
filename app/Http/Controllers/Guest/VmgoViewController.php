@@ -9,11 +9,13 @@ use App\Models\Pillars;
 use App\Models\Vmgo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class VmgoViewController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @return Response
      */
     public function __invoke(Request $request)
     {

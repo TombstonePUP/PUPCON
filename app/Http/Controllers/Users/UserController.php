@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserRequest;
-use App\Models\ActivityLog;
 use App\Models\Programs;
 use App\Models\Roles;
 use App\Models\User;
 use App\Notifications\NewUser;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,14 +104,13 @@ class UserController extends Controller
             $user->notify(new NewUser($user->email, $name, $password));
         }
 
-        $userAct = Auth::user();
-        ActivityLog::create([
-            'user_id' => $userAct->user_id,
-            'description' => 'Created New User: ' . $user->first_name . ' ' . $user->last_name,
-            'activity' => 'Create',
-            'type' => 'Users',
-            'activity_date' => now(),
-        ]);
+        $authUser = Auth::user();
+
+        ActivityLogService::userManagementLog(
+            userId: $authUser->user_id,
+            activity: ActivityLogAction::UserCreated,
+            description: 'Created New User: ' . $user->first_name . ' ' . $user->last_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -143,15 +143,13 @@ class UserController extends Controller
             $user->Areas()->sync($validated['assigned_areas']);
         }
 
-        $userAct = Auth::user();
+        $authUser = Auth::user();
 
-        ActivityLog::create([
-            'user_id' => $userAct->user_id,
-            'description' => 'Updated User Privileges: ' . $user->first_name . ' ' . $user->last_name,
-            'activity' => 'Update',
-            'type' => 'Users',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::userManagementLog(
+            userId: $authUser->user_id,
+            activity: ActivityLogAction::RoleChanged,
+            description: 'Updated User Privileges: ' . $user->first_name . ' ' . $user->last_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -169,15 +167,13 @@ class UserController extends Controller
         $user->updated_at = now();
         $user->save();
 
-        $userAct = Auth::user();
+        $authUser = Auth::user();
 
-        ActivityLog::create([
-            'user_id' => $userAct->user_id,
-            'description' => 'Disabled User: ' . $user->first_name . ' ' . $user->last_name,
-            'activity' => 'Disable',
-            'type' => 'Users',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::userManagementLog(
+            userId: $authUser->user_id,
+            activity: ActivityLogAction::UserUpdated,
+            description: 'Disabled User: ' . $user->first_name . ' ' . $user->last_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -195,15 +191,13 @@ class UserController extends Controller
         $user->updated_at = now();
         $user->save();
 
-        $userAct = Auth::user();
+        $authUser = Auth::user();
 
-        ActivityLog::create([
-            'user_id' => $userAct->user_id,
-            'description' => 'Enabled User: ' . $user->first_name . ' ' . $user->last_name,
-            'activity' => 'Enable',
-            'type' => 'Users',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::userManagementLog(
+            userId: $authUser->user_id,
+            activity: ActivityLogAction::UserUpdated,
+            description: 'Enabled User: ' . $user->first_name . ' ' . $user->last_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')

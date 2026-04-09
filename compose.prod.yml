@@ -13,7 +13,7 @@ services:
       - '8080:80'
     depends_on:
       php-fpm:
-        condition: service_healthy  # Wait for php-fpm health check
+        condition: service_healthy
 
   php-fpm:
     build:
@@ -33,9 +33,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-    # The 'depends_on' attribute with 'condition: service_healthy' ensures that
-    # this service will not start until the 'postgres' service passes its health check.
-    # This prevents the application from trying to connect to the database before it's ready.
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,12 +51,6 @@ services:
       - postgres-data-production:/var/lib/postgresql/data
     networks:
       - production
-    # Health check for PostgreSQL
-    # -----------------------------------------------------------
-    # Health checks allow Docker to determine if a service is operational.
-    # The 'pg_isready' command checks if PostgreSQL is ready to accept connections.
-    # This prevents dependent services from starting before the database is ready.
-    # -----------------------------------------------------------
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 10s

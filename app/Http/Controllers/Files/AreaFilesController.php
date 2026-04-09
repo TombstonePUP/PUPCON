@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Files;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\AccreditationLevels;
 use App\Models\Areas;
 use App\Models\FileStatus;
 use App\Models\ParameterOutlines;
 use App\Models\Programs;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -20,6 +22,7 @@ class AreaFilesController extends Controller
 {
     /**
      * Store a newly created resource in storage.
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -54,14 +57,12 @@ class AreaFilesController extends Controller
             $fileStatus = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
         }
 
-        $activityLog = new ActivityLog();
-
         if ($file = $parameterOutlines->AreaFiles) {
             Storage::disk('public')->delete($file->file_path);
             $file->delete();
-            $activityLog->activity = 'Update';
+            $activity = ActivityLogAction::Update;
         } else {
-            $activityLog->activity = 'Upload';
+            $activity = ActivityLogAction::Upload;
         }
 
         $categoryName = $parameterOutlines->parameterOutlineCategory->category_name;
@@ -85,13 +86,13 @@ class AreaFilesController extends Controller
 
 
         DB::transaction(function () use (
+            $activity,
             $file,
             $filePath,
             $fileName,
             $fileStatus,
             $user,
             $parameterOutlines,
-            $activityLog,
             $program,
             $area
         ) {
@@ -106,13 +107,15 @@ class AreaFilesController extends Controller
                 'uploaded_at'    => now(),
             ]);
 
-            $activityLog->user_id      = $user->user_id;
-            $activityLog->description  = "{$activityLog->activity} for
+            $activity_description = "{$activity->activity} for
                 '{$parameterOutlines->outline_description}' in
                 {$program->program_name} - {$area->area_name}.";
-            $activityLog->type         = "Files";
-            $activityLog->activity_date = now();
-            $activityLog->save();
+
+            ActivityLogService::fileManagementLog(
+                activity: $activity,
+                userId: $user->user_id,
+                description: $activity_description,
+            );
         });
 
         return redirect()->back()
@@ -123,8 +126,9 @@ class AreaFilesController extends Controller
 
     /**
      * Download the specified resource from storage.
+     * @return RedirectResponse
      */
-    public function download(Request $request)
+    public function download(Request $request): RedirectResponse
     {
         $parameterOutlines = ParameterOutlines::where('parameter_outline_id', $request->outline_id)->first();
         $areaFile = $parameterOutlines->AreaFiles;
@@ -141,6 +145,7 @@ class AreaFilesController extends Controller
 
     /**
      * Destroy the specified resource from storage.
+     * @return RedirectResponse
      */
     public function destroy(Request $request)
     {
@@ -152,13 +157,12 @@ class AreaFilesController extends Controller
         if ($areaFile) {
             Storage::disk('public')->delete($areaFile->file_path);
             $areaFile->delete();
-            ActivityLog::create([
-                'user_id'       => $user->user_id,
-                'activity'      => 'Delete',
-                'description'   => "Deleted file: {$file_name}", // fixed
-                'type'          => 'Files',
-                'activity_date' => now(),
-            ]);
+            $description = "Deleted file: {$file_name}";
+            ActivityLogService::fileManagementLog(
+                activity: ActivityLogAction::Delete,
+                userId: $user->user_id,
+                description: $description,
+            );
         }
 
         return redirect()->back()

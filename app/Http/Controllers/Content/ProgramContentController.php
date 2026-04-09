@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\Programs;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use App\Models\ActivityLog;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 
 class ProgramContentController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @return RedirectResponse
      */
     public function __invoke(Request $request)
     {
-        // dd($request->all());
         $validator = Validator::make(
             $request->all(),
             [
@@ -159,13 +161,11 @@ class ProgramContentController extends Controller
             ->whereNotIn('program_gallery_id', $gallery_ids)
             ->delete();
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Program Content: ' . $program->program_name,
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated Program Content: ' . $program->program_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')

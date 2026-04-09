@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Parameters;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Benchmarks\BenchmarkRequest;
-use App\Models\ActivityLog;
 use App\Models\Areas;
 use App\Models\AreaFormCategory;
 use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
 use App\Models\Programs;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,13 +104,11 @@ class AreaParameterOutlinesController extends Controller
 
         $user = Auth::user();
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'activity' => 'Create',
-            'description' => "Created benchmark: {$parameterOutline->outline_description}",
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Create,
+            description: "Created benchmark: {$parameterOutline->outline_description}",
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -159,13 +158,11 @@ class AreaParameterOutlinesController extends Controller
         $parameterOutline->save();
 
         $user = Auth::user();
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'activity' => 'Update Benchmark',
-            'description' => "Updated benchmark: {$parameterOutline->outline_description}",
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: "Updated benchmark: {$parameterOutline->outline_description}",
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -190,23 +187,24 @@ class AreaParameterOutlinesController extends Controller
         if ($file = $parameterOutlines->AreaFiles) {
             Storage::disk('public')->delete($file->file_path);
             $file->delete();
-            $activityLog = new ActivityLog();
-            $activityLog->user_id = $user->user_id;
-            $activityLog->description = "Deleted document for benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.";
-            $activityLog->activity = "Delete Document";
-            $activityLog->type = "Files";
-            $activityLog->activity_date = now();
-            $activityLog->save();
             $message = "The benchmark and its associated document have been deleted.";
+            ActivityLogService::fileManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: "Deleted document for benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.",
+            );
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: "Deleted benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.",
+            );
         } else {
             $message = "The benchmark has been deleted.";
-            $activityLog = new ActivityLog();
-            $activityLog->user_id = $user->user_id;
-            $activityLog->description = "Deleted benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.";
-            $activityLog->activity = "Delete";
-            $activityLog->type = "Content";
-            $activityLog->activity_date = now();
-            $activityLog->save();
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: "Deleted benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.",
+            );
         }
 
         $parameterOutlines->delete();

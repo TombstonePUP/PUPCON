@@ -18,14 +18,16 @@ use App\Models\Pillars;
 use App\Models\UniversityAdministration;
 use App\Models\Vmgo;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class ContentController extends Controller
 {
     /**
      * Handle the incoming request.
      * This will load all data for the "About" page.
+     * @return Response
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): Response
     {
         $orgTypes = OrganizationTypes::orderBy('type_name')
             ->with(['organizations' => function ($query) {

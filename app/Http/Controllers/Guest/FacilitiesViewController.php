@@ -7,11 +7,13 @@ use App\Models\ContentPages;
 use App\Models\Facilities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class FacilitiesViewController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @return Response
      */
     public function __invoke(Request $request)
     {

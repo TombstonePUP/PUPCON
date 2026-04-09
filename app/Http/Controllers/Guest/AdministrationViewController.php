@@ -7,11 +7,13 @@ use App\Models\UniversityAdministration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentPages;
+use Inertia\Response;
 
 class AdministrationViewController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @return Response
      */
     public function __invoke(Request $request)
     {

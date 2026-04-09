@@ -31,10 +31,14 @@
           [
             php
             nodejs_25
-            typescript-language-server
-            vscode-langservers-extracted
+            prettier
+            eslint
+            eslint_d
+            prettierd
             vue-language-server
             vtsls
+            typescript-language-server
+            vscode-langservers-extracted
             phpactor
             phpPackages.php-cs-fixer
             intelephense

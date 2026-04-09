@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Files;
 use App\Http\Controllers\Controller;
 use App\Models\Areas;
 use App\Models\Programs;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use ZipArchive;
 use Illuminate\Support\Str;
 
@@ -14,8 +16,9 @@ class DownloadPerAreaFilesController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @return RedirectResponse|BinaryFileResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse|BinaryFileResponse
     {
         $area = Areas::findOrFail($request->area_id);
         $program = Programs::findOrFail($request->program_id)->load([

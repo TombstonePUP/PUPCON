@@ -7,11 +7,13 @@ use App\Models\CampusGallery;
 use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class WelcomeViewController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @return Response
      */
     public function __invoke(Request $request)
     {

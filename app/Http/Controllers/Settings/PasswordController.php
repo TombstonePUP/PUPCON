@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
+use App\Services\ActivityLogService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,6 +39,12 @@ class PasswordController extends Controller
         $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);
+
+        ActivityLogService::authenticationLog(
+            userId: $request->user()->user_id,
+            activity: ActivityLogAction::UpdatePassword,
+            description: "Updated Password of {$request->user()->first_name} {$request->user()->last_name}",
+        );
 
         return back();
     }
