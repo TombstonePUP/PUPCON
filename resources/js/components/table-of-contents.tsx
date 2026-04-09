@@ -60,8 +60,8 @@ export default function TableOfContents({ sections }: TableOfContentsProps) {
   }, [sections, scrollLock]);
 
   return (
-    <div className="sticky top-6 hidden shrink-0 self-start rounded-lg p-6 xl:inline">
-      <h2 className="mb-4 font-semibold text-muted-foreground font-montserrat">
+    <div className="sticky top-6 hidden shrink-0 self-start rounded-lg xl:inline">
+      <h2 className="mb-4 font-montserrat font-semibold text-muted-foreground">
         <AlignLeft className="mr-2 ml-1.5 inline-block size-5" />
         On this page
       </h2>

@@ -8,7 +8,12 @@ import { useEffect, useState } from 'react';
 const STORAGE_KEY = 'document_submission_deadline';
 
 function getTimeLeft(deadline: Date) {
+  // helper at the top of the component
   const now = new Date();
+  const minDate = now.toISOString().slice(0, 16);
+  const maxDate = new Date(now.getFullYear() + 2, now.getMonth(), now.getDate())
+    .toISOString()
+    .slice(0, 16);
   const diff = deadline.getTime() - now.getTime();
   if (diff <= 0) return null;
 
@@ -25,24 +30,27 @@ export default function DeadlineCountdown() {
   const [timeLeft, setTimeLeft] = useState<ReturnType<typeof getTimeLeft>>(null);
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const { auth } = usePage<SharedData>().props;
   const isAdmin = auth?.user?.roles?.role_name.toLowerCase() === 'admin';
 
-  // Load from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const date = new Date(stored);
-      if (date > new Date()) {
-        setDeadline(date);
-        setInputValue(date.toISOString().slice(0, 16));
-      } else {
-        localStorage.removeItem(STORAGE_KEY);
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const date = new Date(stored);
+        if (date > new Date()) {
+          setDeadline(date);
+          setInputValue(date.toISOString().slice(0, 16));
+        } else {
+          localStorage.removeItem(STORAGE_KEY);
+        }
       }
+    } catch (e) {
+      console.error('Failed to load deadline from storage:', e);
     }
   }, []);
 
-  // Countdown tick
   useEffect(() => {
     if (!deadline) return;
     const tick = () => setTimeLeft(getTimeLeft(deadline));
@@ -52,19 +60,47 @@ export default function DeadlineCountdown() {
   }, [deadline]);
 
   const handleSave = () => {
-    if (!inputValue) return;
-    const date = new Date(inputValue);
-    if (isNaN(date.getTime()) || date <= new Date()) return;
-    setDeadline(date);
-    localStorage.setItem(STORAGE_KEY, date.toISOString());
-    setOpen(false);
+    setError(null);
+
+    try {
+      if (!inputValue) {
+        setError('Please select a date and time.');
+        return;
+      }
+
+      const date = new Date(inputValue);
+      const twoYearsFromNow = new Date();
+      twoYearsFromNow.setFullYear(twoYearsFromNow.getFullYear() + 2);
+      
+      if (isNaN(date.getTime()) || date > twoYearsFromNow) {
+        setError('Invalid date. Please try again.');
+        return;
+      }
+
+      if (date <= new Date()) {
+        setError('Deadline must be a future date and time.');
+        return;
+      }
+
+      setDeadline(date);
+      localStorage.setItem(STORAGE_KEY, date.toISOString());
+      setOpen(false);
+    } catch (e) {
+      console.error('Failed to save deadline:', e);
+      setError('Something went wrong. Please try again.');
+    }
   };
 
   const handleClear = () => {
-    setDeadline(null);
-    setTimeLeft(null);
-    setInputValue('');
-    localStorage.removeItem(STORAGE_KEY);
+    try {
+      setDeadline(null);
+      setTimeLeft(null);
+      setInputValue('');
+      setError(null);
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
+      console.error('Failed to clear deadline:', e);
+    }
   };
 
   const urgency =
@@ -76,7 +112,7 @@ export default function DeadlineCountdown() {
   const urgencyClasses = {
     expired: 'text-destructive',
     critical: 'text-destructive',
-    warning: 'text-warning-foreground',
+    warning: 'text-yellow-600',
     normal: 'text-foreground',
   };
 
@@ -94,22 +130,28 @@ export default function DeadlineCountdown() {
   );
 
   return (
-    <Popover open={isAdmin ? open : false} onOpenChange={isAdmin ? setOpen : undefined}>
+    <Popover
+      open={open}
+      onOpenChange={(val) => {
+        if (!isAdmin) return;
+        setOpen(val);
+        if (!val) setError(null);
+      }}
+    >
       <PopoverTrigger asChild>
-        {!deadline ? (
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2 text-muted-foreground"
-          >
-            <CalendarClock className="h-4 w-4" />
-            Set Submission Deadline
-          </Button>
-        ) : (
-          <button
-            className={`group flex items-center gap-3 rounded-lg transition-all duration-150 hover:shadow-sm ${isAdmin ? 'cursor-pointer' : 'cursor-default'} ${urgencyClasses[urgency]}`}
-          >
-            {/* <CalendarClock className="h-4 w-4 shrink-0" /> */}
+        <button
+          type="button"
+          className={`flex items-center gap-2 rounded-lg transition-all duration-150 ${isAdmin ? 'cursor-pointer' : 'cursor-default'
+            } ${urgencyClasses[urgency]}`}
+        >
+          {!deadline ? (
+            isAdmin && (
+              <span className="flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground shadow-xs hover:bg-accent">
+                <CalendarClock className="h-4 w-4" />
+                Set Submission Deadline
+              </span>
+            )
+          ) : (
             <div className="text-left">
               <p className="text-[10px] font-medium text-muted-foreground text-right">Deadline Countdown</p>
               {timeLeft ? (
@@ -126,8 +168,8 @@ export default function DeadlineCountdown() {
                 <p className="text-sm font-semibold text-destructive">Deadline passed</p>
               )}
             </div>
-          </button>
-        )}
+          )}
+        </button>
       </PopoverTrigger>
 
       <PopoverContent className="w-72 p-4" align="end">
@@ -137,19 +179,40 @@ export default function DeadlineCountdown() {
             <p className="text-xs text-muted-foreground">Set the target date and time</p>
           </div>
           {deadline && (
-            <button onClick={handleClear} className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive">
+            <button
+              type="button"
+              onClick={handleClear}
+              className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive"
+            >
               <X className="h-4 w-4" />
             </button>
           )}
         </div>
+
         <input
           type="datetime-local"
           value={inputValue}
           min={new Date().toISOString().slice(0, 16)}
-          onChange={(e) => setInputValue(e.target.value)}
-          className="mb-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            setError(null);
+          }}
+          className={`mb-1 w-full rounded-md border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring ${error ? 'border-destructive' : 'border-border'
+            }`}
         />
-        <Button className="w-full" size="sm" onClick={handleSave} disabled={!inputValue}>
+
+        {/* Error field */}
+        {error && (
+          <p className="mb-3 text-xs text-destructive">{error}</p>
+        )}
+        {!error && <div className="mb-3" />}
+
+        <Button
+          type="button"
+          className="w-full"
+          size="sm"
+          onClick={handleSave}
+        >
           {deadline ? 'Update Deadline' : 'Set Deadline'}
         </Button>
       </PopoverContent>

@@ -10,7 +10,16 @@ import { usePage } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from 'next-themes';
 
-export default function AppSidebarLayout({ children, breadcrumbs = [] }: { children: React.ReactNode; breadcrumbs?: BreadcrumbItem[] }) {
+
+export default function AppSidebarLayout({
+  children,
+  breadcrumbs = [],
+  className,
+}: {
+  children: React.ReactNode;
+  breadcrumbs?: BreadcrumbItem[];
+  className?: string;
+}) {
   const { flash } = usePage().props;
 
   useEffect(() => {
@@ -35,7 +44,7 @@ export default function AppSidebarLayout({ children, breadcrumbs = [] }: { child
         <AppSidebar />
         <AppContent variant="sidebar">
           <AppSidebarHeader breadcrumbs={breadcrumbs} />
-          <main className='flex flex-1 flex-col gap-4 px-20 py-10 gap-8'>
+          <main className={cn('flex flex-1 flex-col gap-4 px-20 py-10 gap-8', className)}>
             {children}
           </main>
           <Toaster position="top-right" expand={false} />

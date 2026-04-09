@@ -490,7 +490,7 @@ export default function AccreditorDashboard() {
                                                     </button>
 
                                                     {expandedAreas[area.id] && (
-                                                        <div className="border-t border-gray-200 bg-white p-4 rounded-b-lg">
+                                                        <div className="border-t border-gray-200 bg-white p-4 ">
                                                             {area.parameters.map((param) => (
                                                                 <div
                                                                     key={param.id}

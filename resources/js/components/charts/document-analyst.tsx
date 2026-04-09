@@ -57,7 +57,7 @@ function AnalyticsCard({
 }) {
   return (
     <Card className="h-full">
-      <div className="flex items-center justify-between bg-muted/50 py-4 px-6 rounded-t-lg border-b">
+      <div className="flex items-center justify-between bg-muted/50 py-4 px-6  border-b">
         <div>
           <CardTitle className="text-sm font-semibold text-foreground">{title}</CardTitle>
           <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
@@ -193,10 +193,10 @@ export function DocumentsAnalytics({
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-3 gap-4">
 
       {/* 1 ─ Upload Frequency (area) — spans full width on xl, 2 cols on md */}
-      <div className="col-span-2 xl:col-span-1">
+      <div className="col-span-2 xl:col-span-2">
         <AnalyticsCard
           title="Document Activity Trend"
           description={`Overall upload frequency — last ${timeRange === "3d" ? "3 days" :
@@ -321,54 +321,6 @@ export function DocumentsAnalytics({
           )}
         </AnalyticsCard>
       </div>
-
-      {/* 3 ─ Document Approval Status (horizontal bar) */}
-      {/* <AnalyticsCard
-        title="Document Approval Status"
-        description="Overall document approval, pending, and rejections"
-        contentClassName="px-2 py-4 sm:px-6 sm:py-6"
-      >
-        {loading ? (
-          <ChartSkeleton height={220} />
-        ) : (
-          <ChartContainer
-            config={barChartConfig}
-            className="mx-auto aspect-square min-h-[150px] max-h-[220px]"
-          >
-            <BarChart
-              accessibilityLayer
-              data={documentStatistics}
-              layout="vertical"
-              margin={{ left: 20 }}
-            >
-              <YAxis
-                dataKey="file_status"
-                type="category"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) =>
-                  barChartConfig[value as keyof typeof barChartConfig]?.label ?? value
-                }
-              />
-              <XAxis dataKey="documents" type="number" hide />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel indicator="line" />}
-              />
-              <Bar dataKey="documents" layout="vertical" radius={5}>
-                {documentStatistics.map((entry) => (
-                  <Cell
-                    key={entry.file_status}
-                    fill={barChartConfig[entry.file_status as keyof typeof barChartConfig]?.color}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ChartContainer>
-        )}
-      </AnalyticsCard> */}
-
     </div>
   );
 }

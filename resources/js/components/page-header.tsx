@@ -23,8 +23,8 @@ export function PageTitle({
   indicator,
 }: PageTitleProps) {
   return (
-    <Card className="relative w-full border-0 rounded-none bg-transparent">
-      <div className="flex items-center justify-between gap-6">
+    <Card className="relative w-full">
+      <div className="flex items-center justify-between gap-6 px-7 py-6">
         <div className="flex items-center gap-4 min-w-0">
           <div className="shrink-0 flex items-center justify-center size-12 rounded-lg bg-primary text-primary-foreground">
             {icon}
@@ -59,7 +59,7 @@ export function PageTitle({
         </div>
         {actions && <>{actions}</>}
       </div>
-      {/* <div className="px-7 flex items-center min-h-6"></div> */}
+      <div className="px-7 border-t bg-muted/50 flex items-center min-h-6"></div>
     </Card>
   );
 }

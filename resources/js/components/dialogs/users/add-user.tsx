@@ -138,7 +138,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                             </Collapsible.Trigger>
 
                             <Collapsible.Content className="overflow-hidden data-[state=open]:animate-none">
-                                <div className="space-y-4 rounded-b-lg border border-t-0 px-4 py-4">
+                                <div className="space-y-4  border border-t-0 px-4 py-4">
                                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                         <div className="space-y-2">
                                             <Label htmlFor="first_name">

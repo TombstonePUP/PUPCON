@@ -12,6 +12,7 @@ import { ChartArea, FileCheck2, FileClock, FileX2, Users } from 'lucide-react';
 import { PageTitle } from '@/components/page-header';
 import { useEffect, useState } from 'react';
 import DeadlineCountdown from '@/components/deadline-countdown';
+import { ActivityFeed } from '@/components/activity-feed';
 
 function useLiveDateTime() {
   const [now, setNow] = useState(new Date());
@@ -57,28 +58,28 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
 
   const statConfig = [
     {
-      label: 'Approved Documents',
+      label: 'Approved',
       value: approved,
       desc: 'Total documents approved',
       icon: FileCheck2,
       iconClass: 'text-green-600 dark:text-green-400',
     },
     {
-      label: 'Pending Documents',
+      label: 'Pending',
       value: pending,
       desc: 'Awaiting review or approval',
       icon: FileClock,
       iconClass: 'text-yellow-600 dark:text-yellow-400',
     },
     {
-      label: 'Rejected Documents',
+      label: 'Rejected',
       value: rejected,
       desc: 'Documents that were rejected',
       icon: FileX2,
       iconClass: 'text-destructive',
     },
     {
-      label: 'User Activities',
+      label: 'Logs',
       value: totalUsers,
       desc: 'User-related activity logs',
       icon: Users,
@@ -95,18 +96,11 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
     day: 'numeric',
   });
 
-  const formattedTime = now.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    // second: '2-digit',
-  });
-
   const { auth } = usePage<SharedData>().props;
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Analytics" />
-
       <PageTitle
         title={`${getGreeting()}, ${auth.user.first_name}!`}
         description={formattedDate}
@@ -118,7 +112,7 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         {statConfig.map(({ label, icon: Icon, value, desc, iconClass }) => (
           <Card key={label}>
-            <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b rounded-t-lg">
+            <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b ">
               <CardTitle className="text-sm text-foreground">{label}</CardTitle>
               <Icon className={`size-12 absolute -bottom-6 right-6 bg-muted/50 rounded-full p-3 border backdrop-blur-lg ${iconClass}`} />
             </CardHeader>
@@ -140,6 +134,8 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
       <div id="stat-table">
         <DataTable columns={columns} data={activityLogs} />
       </div>
+
+      {/* <ActivityFeed logs={activityLogs} /> */}
     </AppLayout>
   );
 }

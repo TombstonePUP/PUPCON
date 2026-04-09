@@ -14,26 +14,9 @@ import { RefObject, useEffect, useState } from 'react';
 import { LucideIcon } from 'lucide-react';
 import ImageUploader from '@/components/image-uploader';
 import { Card, CardTitle } from '@/components/ui/card';
+import { MasterDetailPanel } from '@/components/master-detail-panel';
 
-type EmptyStateProps = {
-  icon?: LucideIcon;
-  title: string;
-  description?: string;
-};
 
-export function EmptyState({ icon: Icon = MousePointerClick, title, description }: EmptyStateProps) {
-  return (
-    <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-      <div className="rounded-full bg-muted p-4">
-        <Icon className="h-6 w-6 text-muted-foreground" />
-      </div>
-      <p className="text-sm font-medium text-foreground/80">{title}</p>
-      {description && (
-        <p className="text-xs text-muted-foreground">{description}</p>
-      )}
-    </div>
-  );
-}
 interface ProgramSectionProps {
   program: PerProgram;
   overviewRef: RefObject<HTMLDivElement | null>;
@@ -61,12 +44,6 @@ interface ProgramForm {
   objectives: ObjectiveForm[];
   gallery: GalleryForm[];
 }
-
-const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
-  <button className={`p-1 text-muted-foreground transition-colors hover:text-foreground ${className}`} type="button" {...props}>
-    {children}
-  </button>
-);
 
 const ImageDisplay: React.FC<{ url: string | null; alt: string }> = ({ url, alt }) => {
   const [hasError, setHasError] = useState(false);
@@ -96,7 +73,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState<'objective' | 'gallery' | null>(null);
-  const [action, setAction] = useState<'add' | 'edit' | 'delete' | null>(null);
+  const [action, setAction] = useState<'add' | 'edit' | undefined>(undefined);
 
   const [selectedObjectiveId, setSelectedObjectiveId] = useState<number | null>();
   const [selectedGalleryId, setSelectedGalleryId] = useState<number | null>();
@@ -437,69 +414,29 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
 
           {/* Program Objectives */}
           <div id="objectives" ref={objectivesRef} className="scroll-mt-20">
-            <div className="mb-6">
-              <CardTitle className="flex items-center gap-3 text-lg font-semibold text-foreground">
-                Program Objectives
-                {objectiveErrorCount > 0 && (
-                  <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
-                    {objectiveErrorCount}
-                  </Badge>
-                )}
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">Define learning outcomes and goals</p>
-            </div>
-            <div className="flex min-h-[300px] rounded-lg border border-border">
-              <div className="flex w-1/3 flex-col border-r border-border bg-muted/30 p-4">
-                <h4 className="mb-3 text-xs text-muted-foreground">Select an Objective</h4>
-                <div className="overflow-y-auto space-y-1 max-h-[250px]">
-                  {objectives?.length === 0 ? (
-                    <div className="h-[200px]">
-                      <EmptyState icon={ClipboardList} title="No objectives added" />
-                    </div>
-                  ) : (
-                    objectives?.map((objective, index) => (
-                      <div
-                        key={objective.program_objective_id}
-                        onClick={() => setSelectedObjectiveId(objective.program_objective_id)}
-                        className={`group flex cursor-pointer items-center justify-between rounded-md border px-3 py-2 transition-colors ${objective.program_objective_id === selectedObjectiveId
-                          ? 'border-primary/30 bg-primary/10 text-primary/95'
-                          : 'border-border bg-background text-foreground hover:border-primary/20 hover:bg-primary/5'
-                          }`}
-                      >
-                        <div className="flex min-w-0 items-center gap-2">
-                          <span className="truncate text-sm">{objective.objective_title}</span>
-                          {(errors[`objectives.${index}.title`] || errors[`objectives.${index}.description`]) && (
-                            <CircleAlert className="inline-block h-4 w-4 shrink-0 text-destructive" />
-                          )}
-                        </div>
-                        <div className="flex shrink-0 items-center space-x-0.5 opacity-0 group-hover:opacity-100">
-                          <ActionButton
-                            onClick={(e) => { e.stopPropagation(); editObjective(objective); }}
-                            className="cursor-pointer rounded-md hover:bg-muted hover:text-foreground"
-                          >
-                            <EditIcon className="h-4 w-4" />
-                          </ActionButton>
-                          <ActionButton
-                            onClick={(e) => { e.stopPropagation(); deleteObjective(objective.program_objective_id); }}
-                            className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </ActionButton>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-                <div className="mt-4 border-t border-border pt-4">
-                  <Button onClick={() => addObjective()} variant="default" className="w-full text-xs">
-                    <FilePlus2 className="h-4 w-4" />
-                    <span className="hidden xl:inline">Add Objective</span>
-                  </Button>
-                </div>
-              </div>
-
-              <div className="w-2/3 p-6">
-                {selectedObjective ? (
+            <MasterDetailPanel
+              title="Program Objectives"
+              description="Define learning outcomes and goals"
+              errorCount={objectiveErrorCount}
+              items={objectives.map((obj, index) => ({
+                id: obj.program_objective_id,
+                label: obj.objective_title,
+                hasError: !!(errors[`objectives.${index}.title`] || errors[`objectives.${index}.description`]),
+              }))}
+              selectedId={selectedObjectiveId ?? null}
+              onSelect={(id) => setSelectedObjectiveId(id as number)}
+              onAdd={addObjective}
+              onEdit={(id) => editObjective(objectives.find((o) => o.program_objective_id === id)!)}
+              onDelete={(id) => deleteObjective(id as number)}
+              emptyListIcon={ClipboardList}
+              emptyListTitle="No objectives added"
+              addIcon={FilePlus2}
+              addLabel="Add Objective"
+              emptyDetailIcon={MousePointerClick}
+              emptyDetailTitle="No objective selected"
+              emptyDetailDescription="Select an objective from the list to view details"
+              detail={
+                selectedObjective ? (
                   <div className="flex h-full flex-col justify-between gap-4">
                     <div className="space-y-3">
                       <h4 className="break-words text-lg font-semibold text-foreground">{selectedObjective.objective_title}</h4>
@@ -518,83 +455,38 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                       </div>
                     )}
                   </div>
-                ) : (
-                  <EmptyState
-                    icon={MousePointerClick}
-                    title="No objective selected"
-                    description="Select an objective from the list to view details"
-                  />
-                )}
-              </div>
-            </div>
+                ) : null
+              }
+            />
           </div>
 
           <Separator className="my-10" />
 
           {/* Gallery */}
           <div id="gallery" ref={galleryRef} className="scroll-mt-20">
-            <div className="mb-6">
-              <CardTitle className="flex items-center gap-3 text-lg font-semibold text-foreground">
-                Gallery of Excellence
-                {galleryErrorCount > 0 && (
-                  <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
-                    {galleryErrorCount}
-                  </Badge>
-                )}
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">Showcase program facilities and activities</p>
-            </div>
-            <div className="flex min-h-[300px] rounded-lg border border-border">
-              <div className="w-1/3 border-r border-border bg-muted/30 p-4 flex flex-col">
-                <h4 className="mb-3 text-xs text-muted-foreground">Select an Image</h4>
-                <div className="overflow-y-auto space-y-1">
-                  {galleryItems?.length === 0 ? (
-                    <div className="h-[200px]">
-                      <EmptyState icon={Images} title="No images added" />
-                    </div>
-                  ) : (
-                    galleryItems?.map((item, index) => (
-                      <div
-                        key={item.program_gallery_id}
-                        onClick={() => setSelectedGalleryId(item.program_gallery_id)}
-                        className={`group flex cursor-pointer items-center justify-between rounded-md border px-3 py-2 transition-colors ${item.program_gallery_id === selectedGalleryId
-                          ? 'border-primary/30 bg-primary/10 text-primary/95'
-                          : 'border-border bg-background text-foreground hover:border-primary/20 hover:bg-primary/5'
-                          }`}
-                      >
-                        <div className="flex min-w-0 items-center gap-2">
-                          <span className="truncate text-sm">{item.caption}</span>
-                          {(errors[`gallery.${index}.image`] || errors[`gallery.${index}.caption`]) && (
-                            <CircleAlert className="inline-block h-4 w-4 shrink-0 text-destructive" />
-                          )}
-                        </div>
-                        <div className="flex shrink-0 items-center space-x-0.5 opacity-0 group-hover:opacity-100">
-                          <ActionButton
-                            onClick={(e) => { e.stopPropagation(); editGallery(item); }}
-                            className="cursor-pointer rounded-md hover:bg-muted hover:text-foreground"
-                          >
-                            <EditIcon className="h-4 w-4" />
-                          </ActionButton>
-                          <ActionButton
-                            onClick={(e) => { e.stopPropagation(); deleteGallery(item.program_gallery_id); }}
-                            className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </ActionButton>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-                <div className="mt-4 border-t border-border pt-4">
-                  <Button onClick={addGallery} variant="default" className="w-full text-xs">
-                    <ImagePlus className="h-4 w-4" />
-                    <span className="hidden xl:inline">Add Image</span>
-                  </Button>
-                </div>
-              </div>
-              <div className="w-2/3 p-6">
-                {selectedGalleryItem ? (
+            <MasterDetailPanel
+              title="Gallery of Excellence"
+              description="Showcase program facilities and activities"
+              errorCount={galleryErrorCount}
+              items={galleryItems.map((item, index) => ({
+                id: item.program_gallery_id,
+                label: item.caption,
+                hasError: !!(errors[`gallery.${index}.image`] || errors[`gallery.${index}.caption`]),
+              }))}
+              selectedId={selectedGalleryId ?? null}
+              onSelect={(id) => setSelectedGalleryId(id as number)}
+              onAdd={addGallery}
+              onEdit={(id) => editGallery(galleryItems.find((g) => g.program_gallery_id === id)!)}
+              onDelete={(id) => deleteGallery(id as number)}
+              emptyListIcon={Images}
+              emptyListTitle="No images added"
+              addIcon={ImagePlus}
+              addLabel="Add Image"
+              emptyDetailIcon={MousePointerClick}
+              emptyDetailTitle="No image selected"
+              emptyDetailDescription="Select an image from the list to preview"
+              detail={
+                selectedGalleryItem ? (
                   <div className="flex h-full flex-col justify-between gap-4">
                     <div className="space-y-3">
                       <ImageDisplay url={selectedGalleryItem.image_path} alt={selectedGalleryItem.image_name} />
@@ -612,16 +504,11 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
                       </div>
                     )}
                   </div>
-                ) : (
-                  <EmptyState
-                    icon={MousePointerClick}
-                    title="No image selected"
-                    description="Select an image from the list to preview"
-                  />
-                )}
-              </div>
-            </div>
+                ) : null
+              }
+            />
           </div>
+
         </div>
         <SectionFooter onSave={onSave} onPreview={program.under_survey ? preview : null} />
       </Card>

@@ -502,7 +502,7 @@ export default function Ratings() {
                         </button>
 
                         {expandedAreas[area.id] && (
-                          <div className="rounded-b-lg border-t border-gray-200 bg-white p-4">
+                          <div className=" border-t border-gray-200 bg-white p-4">
                             {area.parameters.map((param) => (
                               <div key={param.id} className="mb-3 rounded-lg border border-gray-200">
                                 <button

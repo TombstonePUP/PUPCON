@@ -14,6 +14,7 @@ import { Label } from '../ui/label';
 import { Progress } from '../ui/progress';
 import WelcomeCarouselSection from './welcome/welcome-carousel';
 import { Badge } from '../ui/badge';
+import { Card } from '../ui/card';
 
 interface WelcomeContentSectionProps {
   welcome_page: ContentPages;
@@ -155,7 +156,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
 
   return (
     <>
-      <div className="scroll-mt-6 rounded-lg border border-border bg-card">
+      <Card className="scroll-mt-6">
         <div className="p-8">
           <div className="mb-6">
             <h2 className="text-lg font-semibold text-foreground">Welcome Page</h2>
@@ -315,7 +316,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
           </div>
         </div>
         <SectionFooter onSave={handleSave} onPreview={handlePreview} />
-      </div>
+      </Card>
       <DocumentViewer open={isViewerOpen} onOpenChange={setIsViewerOpen} fileUrl={viewerFileUrl || ''} title="Certificate of Authenticity" />
     </>
   );

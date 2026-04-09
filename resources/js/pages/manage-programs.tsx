@@ -274,7 +274,7 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {programStatsConfig.map(({ label, icon: Icon, value, desc, iconClass }) => (
           <Card key={label}>
-            <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b rounded-t-lg">
+            <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b ">
               <CardTitle className="text-sm text-foreground">{label}</CardTitle>
               <Icon
                 className={`size-12 absolute -bottom-6 right-6 bg-muted/50 rounded-full p-3 border backdrop-blur-lg ${iconClass}`}
