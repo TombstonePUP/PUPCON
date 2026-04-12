@@ -158,20 +158,20 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
     <>
       <Card className="scroll-mt-6">
         <div className="p-8">
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <h2 className="text-lg font-semibold text-foreground">Welcome Page</h2>
             <p className="text-sm text-muted-foreground">Configure welcome page content</p>
-          </div>
+          </div> */}
 
           {/* Gallery Pane */}
-          <h3 className="mb-4 flex items-center gap-3 text-base font-semibold text-foreground">
+          {/* <h3 className="mb-4 flex items-center gap-3 text-base font-semibold text-foreground">
             Campus Image Gallery
             {galleryErrorCount > 0 && (
               <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
                 {galleryErrorCount}
               </Badge>
             )}
-          </h3>
+          </h3> */}
           <WelcomeCarouselSection gallery={gallery} onUpdate={handleUpdateGallery} onDelete={handleDeleteGallery} errors={errors} />
 
           <Separator className="my-10" />

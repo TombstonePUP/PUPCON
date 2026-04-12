@@ -60,8 +60,8 @@ export default function TableOfContents({ sections }: TableOfContentsProps) {
   }, [sections, scrollLock]);
 
   return (
-    <div className="sticky top-6 hidden shrink-0 self-start rounded-lg xl:inline">
-      <h2 className="mb-4 font-montserrat font-semibold text-muted-foreground">
+    <div className="text-sm sticky top-10 hidden shrink-0 self-start rounded-lg xl:inline">
+      <h2 className="mb-4">
         <AlignLeft className="mr-2 ml-1.5 inline-block size-5" />
         On this page
       </h2>
@@ -70,7 +70,7 @@ export default function TableOfContents({ sections }: TableOfContentsProps) {
           <button
             key={section.id}
             onClick={() => scrollToSection(section.ref, section.id)}
-            className={`my-4 block w-full border-l-3 px-4 text-left text-sm transition-all duration-150 ${activeSection === section.id
+            className={`my-4 block w-full border-l-3 px-4 text-left transition-all duration-150 ${activeSection === section.id
                 ? 'border-primary'
                 : 'border-transparent font-normal text-muted-foreground hover:border-border hover:text-foreground'
               }`}
