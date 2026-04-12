@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { SharedData, User, type BreadcrumbItem } from '@/types';
+import { SharedData, type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { DataTable } from '@/components/charts/data-table';
 import GuideTour from "@/pages/test/GuideTour";
@@ -8,11 +8,12 @@ import { columns } from '@/components/charts/data-table-columns/logs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DocumentsAnalytics } from '@/components/charts/document-analyst';
 import { activityDummyLogs, documentDummyStatistics, frequencyDummyUploads, overallDummyUploads } from '@/data/dummy-data';
-import { ChartArea, FileCheck2, FileClock, FileX2, Users } from 'lucide-react';
+import { Calendar, Clock, FileCheck2, FileClock, FileX2, Minus, TrendingDown, TrendingUp, Users } from 'lucide-react';
 import { PageTitle } from '@/components/page-header';
 import { useEffect, useState } from 'react';
 import DeadlineCountdown from '@/components/deadline-countdown';
-import { ActivityFeed } from '@/components/activity-feed';
+import { Separator } from '@/components/ui/separator';
+import { subDays } from 'date-fns';
 
 function useLiveDateTime() {
   const [now, setNow] = useState(new Date());
@@ -25,7 +26,20 @@ function useLiveDateTime() {
   return now;
 }
 
-const USE_DUMMY = true; // ← toggle this
+function TrendBadge({ trend, label }: { trend: number; label: string }) {
+  const isPositive = label !== 'Rejected' ? trend > 0 : trend < 0;
+  const isUp = trend > 0;
+
+  return (
+    <span className={`text-xs flex items-center gap-0.5 font-medium ${isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+      }`}>
+      {isUp ? <TrendingUp className="size-3" /> : <TrendingDown className="size-3" />}
+      {isUp ? '+' : ''}{trend}
+    </span>
+  );
+}
+
+const USE_DUMMY = false;
 
 interface DashboardProps {
   activityLogs: ActivityLogs[];
@@ -46,15 +60,21 @@ function getGreeting(): string {
 }
 
 export default function Dashboard({ frequencyUploads, documentStatistics, overallUploads, activityLogs }: DashboardProps) {
-
   const activeFrequency = USE_DUMMY ? frequencyDummyUploads : frequencyUploads;
   const activeStatistics = USE_DUMMY ? documentDummyStatistics : documentStatistics;
   const activeUploads = USE_DUMMY ? overallDummyUploads : overallUploads;
+  const activeLogs = USE_DUMMY ? activityDummyLogs : activityLogs;
 
   const approved = activeStatistics.find(d => d.file_status === 'Approved')?.documents ?? 0;
   const pending = activeStatistics.find(d => d.file_status === 'Pending')?.documents ?? 0;
   const rejected = activeStatistics.find(d => d.file_status === 'Rejected')?.documents ?? 0;
-  const totalUsers = activityLogs.filter(l => l.type === 'Users').length;
+  const totalUsers = activeLogs.filter(l => l.type === 'Users').length;
+
+  const last7Days = activeLogs.filter(l => new Date(l.activity_date) >= subDays(new Date(), 7));
+  const last7Approved = last7Days.filter(l => l.action === 'Approved').length;
+  const last7Pending = last7Days.filter(l => l.action === 'Pending').length;
+  const last7Rejected = last7Days.filter(l => l.action === 'Rejected').length;
+  const last7Users = last7Days.filter(l => l.type === 'Users').length;
 
   const statConfig = [
     {
@@ -63,6 +83,7 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
       desc: 'Total documents approved',
       icon: FileCheck2,
       iconClass: 'text-green-600 dark:text-green-400',
+      trend: last7Approved,
     },
     {
       label: 'Pending',
@@ -70,6 +91,7 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
       desc: 'Awaiting review or approval',
       icon: FileClock,
       iconClass: 'text-yellow-600 dark:text-yellow-400',
+      trend: last7Pending,
     },
     {
       label: 'Rejected',
@@ -77,6 +99,7 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
       desc: 'Documents that were rejected',
       icon: FileX2,
       iconClass: 'text-destructive',
+      trend: last7Rejected,
     },
     {
       label: 'Logs',
@@ -84,10 +107,18 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
       desc: 'User-related activity logs',
       icon: Users,
       iconClass: 'text-muted-foreground',
+      trend: last7Users,
     },
   ];
 
   const now = useLiveDateTime();
+
+  const formattedTime = now.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
 
   const formattedDate = now.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -103,21 +134,37 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
       <Head title="Analytics" />
       <PageTitle
         title={`${getGreeting()}, ${auth.user.first_name}!`}
-        description={formattedDate}
+        description="Here's an overview of your document activities and statistics."
         actions={
-          <DeadlineCountdown />
+          <div className="flex items-center gap-5">
+            <div className="hidden lg:flex flex-col gap-0 items-end">
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Calendar className="h-3 w-3 shrink-0" />
+                <span>{formattedDate}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Clock className="h-3 w-3 shrink-0" />
+                <span className="tabular-nums">{formattedTime}</span>
+              </div>
+            </div>
+            <Separator orientation="vertical" className="hidden lg:block h-10" />
+            <DeadlineCountdown />
+          </div>
         }
       />
 
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        {statConfig.map(({ label, icon: Icon, value, desc, iconClass }) => (
+        {statConfig.map(({ label, icon: Icon, value, desc, iconClass, trend }) => (
           <Card key={label}>
-            <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b ">
-              <CardTitle className="text-sm text-foreground">{label}</CardTitle>
+            <CardHeader className="relative flex flex-row items-center justify-between py-4 pb-3 space-y-0 bg-muted/50 border-b">
+              <CardTitle className="text-foreground text-sm">{label}</CardTitle>
               <Icon className={`size-12 absolute -bottom-6 right-6 bg-muted/50 rounded-full p-3 border backdrop-blur-lg ${iconClass}`} />
             </CardHeader>
-            <CardContent className="pt-3">
-              <div className="text-2xl font-bold">{value}</div>
+            <CardContent className="pt-3 space-y-1">
+              <div className="flex items-baseline gap-2">
+                <div className="text-2xl font-bold">{value}</div>
+                {trend !== 0 && <TrendBadge trend={trend} label={label} />}
+              </div>
               <p className="text-xs text-muted-foreground">{desc}</p>
             </CardContent>
           </Card>
@@ -132,10 +179,8 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
 
       <GuideTour />
       <div id="stat-table">
-        <DataTable columns={columns} data={activityLogs} />
+        <DataTable columns={columns} data={activeLogs} />
       </div>
-
-      {/* <ActivityFeed logs={activityLogs} /> */}
     </AppLayout>
   );
 }

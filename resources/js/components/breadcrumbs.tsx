@@ -13,9 +13,9 @@ export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: BreadcrumbItemType[]
               const isLast = index === breadcrumbs.length - 1;
               return (
                 <Fragment key={index}>
-                  <BreadcrumbItem>
+                  <BreadcrumbItem className='text-sm'>
                     {isLast ? (
-                      <BreadcrumbPage className='capitalize font-semibold'>{item.title}</BreadcrumbPage>
+                      <BreadcrumbPage className='capitalize font-semibold text-muted-foreground'>{item.title}</BreadcrumbPage>
                     ) : (
                       <BreadcrumbLink asChild>
                         <Link className='capitalize' href={item.href}>{item.title}</Link>

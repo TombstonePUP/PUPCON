@@ -127,13 +127,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <LevelSwitcher teams={data.teams} />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className='mt-4'>
         <NavMain label="Accreditation" items={accre} />
         {(role === 'Admin' || role === 'Coordinator') &&
           <NavMain label="Content Management" items={content} />
         }
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className='mb-2'>
         <NavUser />
       </SidebarFooter>
       {/* <SidebarRail /> */}

@@ -31,7 +31,7 @@ export function PageTitle({
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <CardTitle className="text-2xl">{title}</CardTitle>
+              <CardTitle className="text-xl font-semibold leading-tight tracking-tight text-foreground">{title}</CardTitle>
               {indicator && (
                 <TooltipProvider>
                   <Tooltip>

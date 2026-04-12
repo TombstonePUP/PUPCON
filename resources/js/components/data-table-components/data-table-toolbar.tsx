@@ -61,19 +61,7 @@ export function DataTableToolbar<TData>({
           />
         )}
 
-        {isFiltered && (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              table.resetColumnFilters();
-              table.setGlobalFilter("");
-            }}
-            className="h-8 px-2 lg:px-3"
-          >
-            Reset
-            <X className="ms-2 h-4 w-4" />
-          </Button>
-        )}
+       
 
       </div>
       <div className="flex gap-2">
@@ -91,6 +79,19 @@ export function DataTableToolbar<TData>({
             );
           })}
         </div>
+         {isFiltered && (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              table.resetColumnFilters();
+              table.setGlobalFilter("");
+            }}
+            className="h-8 px-2 lg:px-3"
+          >
+            Reset
+            <X className="ms-2 h-4 w-4" />
+          </Button>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className=" hidden h-8 lg:flex bg-card">

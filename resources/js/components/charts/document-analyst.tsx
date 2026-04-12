@@ -59,8 +59,8 @@ function AnalyticsCard({
     <Card className="h-full">
       <div className="flex items-center justify-between bg-muted/50 py-4 px-6  border-b">
         <div>
-          <CardTitle className="text-sm font-semibold text-foreground">{title}</CardTitle>
-          <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
+          <CardTitle className="font-semibold text-foreground">{title}</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">{description}</p>
         </div>
         {filter}
       </div>

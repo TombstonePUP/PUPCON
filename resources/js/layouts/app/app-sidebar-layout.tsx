@@ -44,7 +44,7 @@ export default function AppSidebarLayout({
         <AppSidebar />
         <AppContent variant="sidebar">
           <AppSidebarHeader breadcrumbs={breadcrumbs} />
-          <main className={cn('flex flex-1 flex-col gap-4 px-20 py-10 gap-8', className)}>
+          <main className={cn('flex flex-1 flex-col gap-4 px-20 py-10 gap-6', className)}>
             {children}
           </main>
           <Toaster position="top-right" expand={false} />

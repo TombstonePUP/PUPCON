@@ -78,7 +78,7 @@ export const columns: ColumnDef<ActivityLogs>[] = [
     accessorKey: 'activity_date',
     header: ({ column }) => (
       <Button
-          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0"
+          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0 text-sm"
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         Date

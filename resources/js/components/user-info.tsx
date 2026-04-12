@@ -18,7 +18,7 @@ export function UserInfo({ user, showEmail = false, showRole = false }: { user: 
                     {showEmail && <span className="text-muted-foreground truncate text-xs">{user.email}</span>}
                 </div>
 
-                <div>{showRole && user.roles.role_name}</div>
+                <div className='text-muted-foreground'>{showRole && user.roles.role_name}</div>
             </div>
         </>
     );

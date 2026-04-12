@@ -74,7 +74,7 @@ export function NavMain({
                   {state === 'expanded' && (
                     <CollapsibleTrigger asChild>
                       <button className="px-2 hover:cursor-pointer">
-                        <ChevronRight className="size-5 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        <ChevronRight className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </button>
                     </CollapsibleTrigger>
                   )}

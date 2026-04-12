@@ -69,7 +69,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
       accessorKey: 'file_type',
       header: ({ column }) => (
         <Button
-          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0"
+          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0 text-sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Benchmark Type
@@ -149,7 +149,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
       accessorKey: 'outline',
       header: ({ column }) => (
         <Button
-          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0"
+          className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0 text-sm"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
@@ -287,11 +287,11 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
       header: ({ column }) => (
         <div>
           <Button
-            className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0"
+            className="text-left text-muted-foreground bg-transparent hover:bg-transparent hover:text-foreground p-0 text-sm"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            <div>Date Uploaded</div>
+            Date Uploaded
             <ArrowUpDown className="h-4" />
           </Button>
         </div>
