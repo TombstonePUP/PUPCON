@@ -1,20 +1,17 @@
 import GalleryDialog from '@/components/dialogs/content/programs/gallery/gallery-dialog';
 import ObjectiveDialog from '@/components/dialogs/content/programs/objectives/objective-dialog';
+import ImageUpload from '@/components/image-upload';
 import InputError from '@/components/input-error';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { MasterDetailPanel } from '@/components/master-detail-panel';
+import { Card, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import SectionFooter from '@/components/ui/section-footer';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/text-area';
 import { PerProgram, ProgramGalleryImages, ProgramObjectives } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { CircleAlert, ClipboardList, Edit2, EditIcon, FilePlus2, ImageIcon, ImagePlus, Images, MousePointerClick, Plus, Trash2, Upload, X } from 'lucide-react';
+import { ClipboardList, FilePlus2, ImageIcon, ImagePlus, Images, MousePointerClick } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react';
-import { LucideIcon } from 'lucide-react';
-import ImageUploader from '@/components/image-uploader';
-import { Card, CardTitle } from '@/components/ui/card';
-import { MasterDetailPanel } from '@/components/master-detail-panel';
 
 
 interface ProgramSectionProps {
@@ -355,41 +352,22 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
             <div className="space-y-6">
               <div>
                 <Label className="mb-2 block text-sm font-medium text-foreground">Program Image</Label>
-                <div className="flex flex-col gap-3">
-                  {!data.previewUrl ? (
-                    <label className="group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-muted/30 p-12 text-center transition-all duration-300 hover:border-primary/70">
-                      <input type="file" className="hidden" accept="image/*" disabled={processing} onChange={handleImageChange} />
-                      <div className="flex flex-col items-center justify-center gap-4 pt-5 pb-6">
-                        <div className="relative grid h-16 w-16 place-items-center rounded-full border-2 border-dashed border-border transition-transform duration-300 group-hover:scale-105">
-                          <Upload className="h-6 w-6 text-muted-foreground" />
-                        </div>
-                        <div className="mt-4 text-center">
-                          <p className="mb-2 text-lg font-semibold text-foreground">Upload Welcome Banner</p>
-                          <p className="text-sm text-muted-foreground">PNG, JPG up to 5MB</p>
-                        </div>
-                        <div className="mt-2 flex gap-2">
-                          <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">PNG</span>
-                          <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">JPG</span>
-                          <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">Max 5MB</span>
-                        </div>
-                      </div>
-                    </label>
-                  ) : (
-                    <div className="group relative">
-                      <img src={data.previewUrl} alt="Preview" className="h-80 w-full rounded-lg border border-border object-cover" />
-                      <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-lg bg-black/40 opacity-0 transition group-hover:opacity-100">
-                        <input id="replace-image" type="file" accept="image/*" className="hidden" disabled={processing} onChange={handleImageChange} />
-                        <Button type="button" variant="outline" className="h-12 w-12 rounded-full bg-card p-0" onClick={() => document.getElementById('replace-image')?.click()}>
-                          <Edit2 className="h-5 w-5 text-destructive" />
-                        </Button>
-                        <Button type="button" variant="outline" className="h-12 w-12 rounded-full bg-card p-0" onClick={() => setData({ ...data, banner: null, previewUrl: null })}>
-                          <Trash2 className="h-5 w-5 text-destructive" />
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                  <InputError message={errors.banner} />
-                </div>
+                <ImageUpload
+                  value={data.banner}
+                  previewUrl={data.previewUrl}
+                  onChange={(file, url) => {
+                    setData((prev) => ({ ...prev, banner: file, previewUrl: url }));
+                  }}
+                  onRemove={() => {
+                    setData((prev) => ({ ...prev, banner: null, previewUrl: null }));
+                  }}
+                  label="Upload Welcome Banner"
+                  aspectRatio={16 / 9}
+                  disabled={processing}
+                  error={errors.banner}
+                  inputId="program-banner"
+                />
+
               </div>
               <div>
                 <Label htmlFor="program_description" className="mb-2 block text-sm font-medium text-foreground">
