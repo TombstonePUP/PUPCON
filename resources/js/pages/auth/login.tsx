@@ -138,7 +138,7 @@ export default function Login({ status, canResetPassword }: LoginPageProps) {
                 placeholder="email@example.com"
                 value={data.email}
                 onChange={(e) => setData('email', e.target.value)}
-                className='text-black'
+                className='text-black border-[#7a7a7a]'
               />
             )}
           </Field>
@@ -150,7 +150,7 @@ export default function Login({ status, canResetPassword }: LoginPageProps) {
               canResetPassword && (
                 <a
                   href={route('password.request')}
-                  className="text-sm text-[#7a7a7a] underline-offset-4 hover:underline"
+                  className="text-xs text-[#7a7a7a] underline-offset-4 hover:underline"
                   tabIndex={5}
                 >
                   Forgot password?
@@ -167,7 +167,7 @@ export default function Login({ status, canResetPassword }: LoginPageProps) {
                 placeholder="Password"
                 value={data.password}
                 onChange={(e) => setData('password', e.target.value)}
-                className='text-black'
+                className='text-black border-[#7a7a7a]'
               />
             )}
           </Field>

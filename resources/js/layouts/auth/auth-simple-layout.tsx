@@ -1,4 +1,3 @@
-import AppLogoIcon from '@/components/app-logo-icon';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
@@ -17,7 +16,7 @@ export default function LoginFormLayout({ children, title, description, classNam
         // 👇 Main page container with pattern
         'flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10',
         // light gray base + subtle dotted pattern
-        'bg-[#f4f4f4] bg-[radial-gradient(circle,_rgba(0,0,0,0.04)_1px,_transparent_1px)] bg-[length:20px_20px]',
+        'bg-[#f8f9f9] bg-[radial-gradient(circle,_rgba(0,0,0,0.04)_1px,_transparent_1px)] bg-[length:20px_20px]',
         className
       )}
     >
@@ -35,7 +34,7 @@ export default function LoginFormLayout({ children, title, description, classNam
                     </div> */}
 
 
-          <Card className="overflow-hidden p-0 bg-[#fefefe] border border-gray-200 shadow-md">
+          <Card className="overflow-hidden p-0 bg-[#fefefe] border-0 border-gray-200 shadow-lg">
             <CardContent className="grid items-center justify-center p-0 md:grid-cols-2">
               <div className="mt-15 flex h-full flex-col p-15">
                 <div className="grid place-items-center">
