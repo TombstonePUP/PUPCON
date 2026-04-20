@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   BookOpen,
   Building,
-  ChevronDown,
   ChevronRight,
   ChevronUp,
   ExternalLink,
@@ -23,7 +22,7 @@ import {
   Search,
   ShieldCheck,
   Users,
-  X,
+  X
 } from 'lucide-react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 
@@ -36,7 +35,7 @@ function isActive(path: string) {
   return window.location.pathname.startsWith(path);
 }
 
-export default function Layout({ children, className  }: LayoutProps) {
+export default function Layout({ children, className }: LayoutProps) {
   const { guest } = usePage<GuestNavigation>().props;
   const { auth } = usePage<Auth>().props;
   const user = auth.user;
@@ -351,7 +350,7 @@ export default function Layout({ children, className  }: LayoutProps) {
                     <Link
                       href={item.href}
                       className={cn(
-                        'relative px-3 py-2 transition-colors duration-300',
+                        'relative px-3 py-2 transition-colors duration-300 text-xs',
                         isActive(item.href) && 'text-white',
                         'hover:text-white',
                       )}
@@ -372,7 +371,7 @@ export default function Layout({ children, className  }: LayoutProps) {
                                   className="flex items-center gap-2 px-2 py-3 text-[#7f1414] transition-colors group-hover/item:text-white text-xs pr-8"
                                   preserveScroll
                                 >
-                                  <span className="text-[0.85vw] transition-transform duration-300 group-hover/item:translate-x-1">
+                                  <span className="text-xs transition-transform duration-300 group-hover/item:translate-x-1">
                                     {drop.label}
                                   </span>
                                 </Link>

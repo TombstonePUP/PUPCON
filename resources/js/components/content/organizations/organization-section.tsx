@@ -1,219 +1,262 @@
-import { OrganizationDialog } from '@/components/dialogs/content/organization-dialog';
-import { OrganizationTypeDialog } from '@/components/dialogs/content/organization-type-dialog';
-import { Badge } from '@/components/ui/badge';
+import PillarDialog from '@/components/dialogs/content/pillar-dialog';
+import { MasterDetailPanel } from '@/components/master-detail-panel';
 import { Button } from '@/components/ui/button';
-import { Organizations, OrganizationTypes } from '@/types/content';
-import { CircleAlert, EditIcon, Plus, Trash2, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Textarea } from '@/components/ui/text-area';
+import { PillarItems, Pillars } from '@/types/content';
+import { CircleAlert, EditIcon, FolderPlus, ListPlus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
-interface OrganizationsSectionProps {
-  org_types: OrganizationTypes[];
-  onUpdateOrgTypes: (org_type: OrganizationTypes[]) => void;
-  errors?: Record<string, string>;
+interface PillarSectionProps {
+    pillars?: Pillars[]; // ← make optional
+    updatePillars: (updatedPillars: Pillars[]) => void;
+    errors?: Record<string, string>;
 }
 
 const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
-  <button className={`p-1 text-muted-foreground transition-colors hover:text-foreground ${className}`} type="button" {...props}>
-    {children}
-  </button>
+    <button className={`text-muted-foreground hover:text-foreground p-1 transition-colors ${className}`} type="button" {...props}>
+        {children}
+    </button>
 );
 
-const OrganizationsSection = ({ ...props }: OrganizationsSectionProps) => {
-  const { org_types, onUpdateOrgTypes, errors } = props;
-  const [orgTypes, setOrgTypes] = useState<OrganizationTypes[]>(org_types ?? []);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogType, setDialogType] = useState<'org_type' | 'org'>('org_type');
-  const [dialogAction, setDialogAction] = useState<'add' | 'edit'>('add');
-  const [selectedOrgTypeId, setSelectedOrgTypeId] = useState<number | null>(null);
-  const [selectedOrgId, setSelectedOrgId] = useState<number | null>(null);
-  const selectedOrgType = orgTypes.find((t) => t.type_id === selectedOrgTypeId) ?? null;
-  const selectedOrg = selectedOrgType?.organizations?.find((o) => o.organization_id === selectedOrgId) ?? null;
+export default function PillarsSection({ pillars, updatePillars, errors = {} }: PillarSectionProps) {
+    const [pillarList, setPillarList] = useState<Pillars[]>(pillars ?? []);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [action, setAction] = useState<'add' | 'edit'>('add');
+    const [selectedPillarId, setSelectedPillarId] = useState<number | null>(null);
+    const [selectedPillarItemId, setSelectedPillarItemId] = useState<number | null>(null);
 
-  useEffect(() => { setOrgTypes(org_types ?? []); }, [org_types]);
+    const selectedPillar = pillarList?.find((p) => p.pillar_id === selectedPillarId) ?? null;
+    const selectedPillarItem = selectedPillar?.pillar_items?.find((i) => i.item_id === selectedPillarItemId) ?? null;
 
-  const handleAddOrgType = () => { setDialogType('org_type'); setDialogAction('add'); setDialogOpen(true); setSelectedOrgTypeId(null); };
-  const handleEditOrgType = (type: OrganizationTypes) => { setDialogType('org_type'); setDialogAction('edit'); setDialogOpen(true); setSelectedOrgTypeId(type.type_id); };
+    const [addingNewItem, setAddingNewItem] = useState(false);
+    const [editingItem, setEditingItem] = useState(false);
+    const [data, setData] = useState<PillarItems>({ item_id: 0, pillar_id: 0, item_description: '' });
 
-  const handleSaveOrgType = (orgType: OrganizationTypes) => {
-    setOrgTypes((prevTypes) => {
-      let updatedTypes: OrganizationTypes[];
-      if (dialogAction === 'edit' && selectedOrgTypeId !== null) {
-        updatedTypes = prevTypes.map((type) => (type.type_id === selectedOrgTypeId ? { ...type, ...orgType } : type));
-      } else {
-        const newType: OrganizationTypes = { type_id: orgType.type_id || Date.now(), type_name: orgType.type_name, organizations: [] };
-        updatedTypes = [...prevTypes, newType];
-        setSelectedOrgTypeId(newType.type_id);
-      }
-      onUpdateOrgTypes(updatedTypes);
-      return updatedTypes;
-    });
-  };
+    const handleAddPillar = () => {
+        setAction('add');
+        setDialogOpen(true);
+        setSelectedPillarId(null);
+    };
 
-  const handleDeleteOrgType = (id: number) => {
-    setOrgTypes((prevTypes) => {
-      const updatedTypes = prevTypes.filter((type) => type.type_id !== id);
-      if (selectedOrgTypeId === id) setSelectedOrgTypeId(null);
-      onUpdateOrgTypes(updatedTypes);
-      return updatedTypes;
-    });
-  };
+    const handleEditPillar = (id: number | string) => {
+        setAction('edit');
+        setDialogOpen(true);
+        setSelectedPillarId(Number(id));
+    };
 
-  const handleAddOrg = () => { setDialogType('org'); setDialogAction('add'); setDialogOpen(true); setSelectedOrgId(null); };
-  const handleEditOrg = (org: Organizations) => { setDialogType('org'); setDialogAction('edit'); setDialogOpen(true); setSelectedOrgId(org.organization_id); };
+    const handleDeletePillar = (id: number | string) => {
+        setPillarList((prev) => {
+            const updated = prev.filter((p) => p.pillar_id !== id);
+            updatePillars(updated);
+            if (selectedPillarId === id) setSelectedPillarId(null);
+            return updated;
+        });
+    };
 
-  const handleSaveOrg = (org: Organizations) => {
-    setOrgTypes((prev) => {
-      const updated = prev.map((type) => {
-        if (type.type_id !== selectedOrgTypeId) return type;
-        let updatedOrgs: Organizations[];
-        if (dialogAction === 'edit' && selectedOrg) {
-          updatedOrgs = type.organizations?.map((o) => (o.organization_id === selectedOrg.organization_id ? { ...o, ...org } : o));
-        } else {
-          const newOrg: Organizations = { organization_id: Date.now(), type_id: type.type_id, organization_name: org.organization_name!, affiliation: org.affiliation || '' };
-          updatedOrgs = [...(type.organizations ?? []), newOrg];
-        }
-        return { ...type, organizations: updatedOrgs };
-      });
-      onUpdateOrgTypes(updated);
-      return updated;
-    });
-  };
+    const handleSavePillar = (pillarData: Pillars) => {
+        setPillarList((prev) => {
+            let updated: Pillars[];
+            if (action === 'edit' && selectedPillarId !== null) {
+                updated = prev.map((p) => (p.pillar_id === selectedPillarId ? { ...p, ...pillarData } : p));
+            } else {
+                const newPillar: Pillars = { pillar_id: pillarData.pillar_id, pillar_title: pillarData.pillar_title, pillar_items: [] };
+                updated = [...prev, newPillar];
+                setSelectedPillarId(newPillar.pillar_id);
+            }
+            updatePillars(updated);
+            return updated;
+        });
+    };
 
-  const handleDeleteOrg = (id: number) => {
-    setOrgTypes((prevTypes) => {
-      const updatedTypes = prevTypes.map((type) =>
-        type.type_id === selectedOrgTypeId ? { ...type, organizations: type.organizations?.filter((org) => org.organization_id !== id) } : type,
-      );
-      onUpdateOrgTypes(updatedTypes);
-      return updatedTypes;
-    });
-  };
+    const handleAddPillarItem = () => {
+        setAddingNewItem(true);
+        setSelectedPillarItemId(null);
+        setData({ item_id: Date.now(), pillar_id: selectedPillar?.pillar_id ?? 0, item_description: '' });
+    };
 
-  const orgErrorCount = Object.keys(errors).filter((key) => key.startsWith('org_types.')).length;
+    const handleEditPillarItem = (item: PillarItems) => {
+        setEditingItem(true);
+        setSelectedPillarItemId(item.item_id);
+        setData({ item_id: item.item_id, pillar_id: item.pillar_id, item_description: item.item_description });
+    };
 
-  const getOrgErrors = (typeIndex: number, orgIndex: number) => {
-    if (!errors) return [];
-    return Object.keys(errors).filter((key) => key.startsWith(`org_types.${typeIndex}.organizations.${orgIndex}.`));
-  };
+    const handleDeletePillarItem = (pillarId: number, itemId: number) => {
+        setPillarList((prev) => {
+            const updated = prev.map((p) =>
+                p.pillar_id === pillarId ? { ...p, pillar_items: p.pillar_items?.filter((i) => i.item_id !== itemId) ?? [] } : p,
+            );
+            updatePillars(updated);
+            return updated;
+        });
+    };
 
-  return (
-    <>
-      <div className="mb-6">
-        <h2 className="flex items-center gap-3 text-lg font-semibold text-foreground">
-          Campus Organizations
-          {orgErrorCount > 0 && (
-            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
-              {orgErrorCount}
-            </Badge>
-          )}
-        </h2>
-        <p className="text-sm text-muted-foreground">Manage academic and non-academic organizations</p>
-      </div>
+    const handleSavePillarItem = () => {
+        if (!selectedPillar) return;
+        setPillarList((prev) => {
+            const updated = prev.map((p) => {
+                if (p.pillar_id !== selectedPillar.pillar_id) return p;
+                let items = p.pillar_items ? [...p.pillar_items] : [];
+                if (editingItem && selectedPillarItemId !== null) {
+                    items = items.map((i) => (i.item_id === selectedPillarItemId ? { ...i, ...data } : i));
+                } else {
+                    items.push({ ...data });
+                }
+                return { ...p, pillar_items: items };
+            });
+            updatePillars(updated);
+            return updated;
+        });
+        setEditingItem(false);
+        setAddingNewItem(false);
+        setSelectedPillarItemId(null);
+        setData({ item_id: 0, pillar_id: selectedPillar.pillar_id, item_description: '' });
+    };
 
-      <div className="flex min-h-[400px] rounded-lg border border-border">
-        {/* Left Pane */}
-        <div className="w-1/3 border-r border-border bg-muted/30 p-4 flex flex-col">
-          <h4 className="mb-3 text-xs text-muted-foreground">Select an Organization Type</h4>
-          <div className="space-y-1 overflow-y-auto flex-1">
-            {orgTypes.map((type, index) => (
-              <div
-                key={type.type_id}
-                onClick={() => setSelectedOrgTypeId(type.type_id)}
-                className={`group flex cursor-pointer items-center justify-between rounded-md border px-3 py-2 transition-colors ${type.type_id === selectedOrgTypeId
-                    ? 'border-primary/30 bg-primary/10 text-primary/95'
-                    : 'border-border bg-background text-foreground hover:border-primary/20 hover:bg-primary/5'
-                  }`}
-              >
-                <div className="flex min-w-0 items-center gap-2">
-                  <span className="truncate text-sm">{type.type_name}</span>
-                  {Object.keys(errors).some((key) => key.startsWith(`org_types.${index}.`)) && (
-                    <CircleAlert className="inline-block h-4 w-4 shrink-0 text-destructive" />
-                  )}
-                </div>
-                <div className={`flex shrink-0 items-center space-x-0.5 transition-opacity ${type.type_id === selectedOrgTypeId ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                  <ActionButton onClick={() => handleEditOrgType(type)} className="cursor-pointer rounded-md hover:bg-muted hover:text-foreground">
-                    <EditIcon className="h-4 w-4" />
-                  </ActionButton>
-                  <ActionButton onClick={() => handleDeleteOrgType(type.type_id)} className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-destructive">
-                    <Trash2 className="h-4 w-4" />
-                  </ActionButton>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 border-t border-border pt-4">
-            <Button onClick={handleAddOrgType} variant="default" className="w-full text-xs">
-              <Plus className="h-4 w-4" />
-              <span className="hidden xl:inline">Add New Type</span>
-            </Button>
-          </div>
-        </div>
+    const pillarErrorCount = Object.keys(errors).filter((k) => k.startsWith('pillars.')).length;
 
-        {/* Right Pane */}
-        <div className="w-2/3 p-6">
-          {!selectedOrgType ? (
-            <div className="flex h-full flex-col items-center justify-center text-center">
-              <div className="rounded-full bg-muted p-4">
-                <X className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <p className="mt-2 text-sm font-medium text-foreground/80">No Type Selected</p>
-              <p className="text-xs text-muted-foreground">Select a type on the left or add a new one.</p>
-            </div>
-          ) : (
-            <>
-              <h4 className="mb-6 truncate text-lg font-medium text-foreground">{selectedOrgType.type_name}</h4>
-              <div className="max-h-[300px] space-y-2 overflow-y-auto pr-2">
-                {!selectedOrgType?.organizations?.length ? (
-                  <p className="text-sm italic text-muted-foreground">No organizations added to this type yet.</p>
-                ) : (
-                  selectedOrgType?.organizations?.map((org, orgIndex) => {
-                    const hasErrors = getOrgErrors(orgTypes.findIndex((t) => t.type_id === selectedOrgTypeId), orgIndex).length > 0;
-                    return (
-                      <div key={org.organization_id}>
-                        <div className="group flex items-start justify-between rounded-md border border-border bg-background p-3 px-6 transition-all hover:border-destructive/20">
-                          <div className="flex items-center gap-2">
-                            <div>
-                              <span className="block text-sm font-medium text-foreground">{org.organization_name}</span>
-                              <span className="text-xs text-muted-foreground">{org.affiliation}</span>
-                            </div>
-                            {hasErrors && <CircleAlert className="h-4 w-4 text-destructive" />}
-                          </div>
-                          <div className="flex shrink-0 items-center space-x-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-                            <ActionButton onClick={() => handleEditOrg(org)} className="cursor-pointer rounded-md hover:bg-muted hover:text-foreground">
-                              <EditIcon className="h-4 w-4" />
-                            </ActionButton>
-                            <ActionButton onClick={() => handleDeleteOrg(org.organization_id)} className="cursor-pointer rounded-md hover:bg-destructive/10 hover:text-destructive">
-                              <Trash2 className="h-4 w-4" />
-                            </ActionButton>
-                          </div>
-                        </div>
-                        {getOrgErrors(orgTypes.findIndex((t) => t.type_id === selectedOrgTypeId), orgIndex).map((errorKey) => (
-                          <p key={errorKey} className="mt-1 text-xs text-destructive">{errors[errorKey]}</p>
-                        ))}
-                      </div>
-                    );
-                  })
+    const getPillarErrors = (pillarIndex: number, itemIndex: number) =>
+        Object.keys(errors).filter((k) => k.startsWith(`pillars.${pillarIndex}.pillar_items.${itemIndex}.`));
+
+    const selectedPillarIndex = pillarList.findIndex((p) => p.pillar_id === selectedPillarId);
+
+    const listItems = pillarList.map((pillar, index) => ({
+        id: pillar.pillar_id,
+        label: pillar.pillar_title,
+        hasError: Object.keys(errors).some((k) => k.startsWith(`pillars.${index}.`)),
+    }));
+
+    const detail = selectedPillar ? (
+        <>
+            <h4 className="text-foreground mb-1 truncate text-lg font-medium">{selectedPillar.pillar_title}</h4>
+            <p className="text-muted-foreground mb-6 text-xs">List of Pillar Items</p>
+
+            <div className="max-h-[250px] space-y-4 overflow-y-auto pr-2">
+                {!selectedPillar.pillar_items?.length && (
+                    <p className="text-muted-foreground text-sm italic">No items have been added to this pillar yet.</p>
                 )}
-              </div>
-              <div className="mt-6">
-                <Button onClick={handleAddOrg} variant="outline" className="text-xs">
-                  <Plus className="h-4 w-4" />
-                  New Organization
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+                {selectedPillar.pillar_items?.map((item, itemIndex) => {
+                    const hasErrors = getPillarErrors(selectedPillarIndex, itemIndex).length > 0;
+                    return (
+                        <div key={item.item_id}>
+                            <div
+                                className={`group border-border bg-background hover:border-destructive/20 flex cursor-pointer items-center justify-between rounded-md border p-2 transition-all ${selectedPillarItemId === item.item_id ? 'hidden' : 'flex'}`}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <span className="text-foreground flex-1 px-2 text-sm">{item.item_description}</span>
+                                    {hasErrors && <CircleAlert className="text-destructive h-4 w-4" />}
+                                </div>
+                                <div className="flex items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
+                                    <ActionButton onClick={() => handleEditPillarItem(item)} className="hover:bg-muted rounded-md">
+                                        <EditIcon className="h-4 w-4" />
+                                    </ActionButton>
+                                    <ActionButton
+                                        onClick={() => handleDeletePillarItem(selectedPillar.pillar_id, item.item_id)}
+                                        className="hover:bg-destructive/10 hover:text-destructive rounded-md"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </ActionButton>
+                                </div>
+                            </div>
 
-      {dialogOpen && dialogType === 'org_type' && (
-        <OrganizationTypeDialog type={dialogAction} orgType={selectedOrgType} onClose={() => setDialogOpen(false)} onSave={handleSaveOrgType} />
-      )}
-      {dialogOpen && dialogType === 'org' && (
-        <OrganizationDialog type={dialogAction} org={selectedOrg} selectedOrgType={selectedOrgType!} onClose={() => setDialogOpen(false)} onSave={handleSaveOrg} />
-      )}
-    </>
-  );
-};
+                            {getPillarErrors(selectedPillarIndex, itemIndex).map((errorKey) => (
+                                <p key={errorKey} className="text-destructive mt-1 text-xs">
+                                    {errors[errorKey]}
+                                </p>
+                            ))}
 
-export default OrganizationsSection;
+                            {/* Inline edit form */}
+                            <div
+                                className={`overflow-hidden transition-all duration-300 ease-in-out ${selectedPillarItemId === item.item_id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}
+                            >
+                                <div className="border-border bg-background rounded-md border p-6">
+                                    <label className="text-foreground mb-2 block text-sm font-medium">Edit Item Description</label>
+                                    <Textarea
+                                        placeholder="Enter item description..."
+                                        value={data.item_description}
+                                        onChange={(e) => setData({ ...data, item_description: e.target.value })}
+                                        autoFocus
+                                        autoResize
+                                        minHeight={80}
+                                    />
+                                    <div className="mt-4 flex justify-end gap-3">
+                                        <Button type="button" variant="outline" onClick={() => setSelectedPillarItemId(null)}>
+                                            Cancel
+                                        </Button>
+                                        <Button type="button" onClick={handleSavePillarItem}>
+                                            Save Changes
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Inline add form */}
+            <div className="mt-6">
+                <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${addingNewItem ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}
+                >
+                    <div className="border-border bg-background rounded-md border p-6">
+                        <label className="text-foreground mb-2 block text-sm font-medium">New Item Description</label>
+                        <Textarea
+                            placeholder="Enter item description..."
+                            value={data.item_description}
+                            onChange={(e) => setData({ ...data, item_description: e.target.value })}
+                            autoFocus
+                            autoResize
+                            minHeight={80}
+                        />
+                        <div className="mt-4 flex justify-end gap-3">
+                            <Button type="button" variant="outline" onClick={() => setAddingNewItem(false)}>
+                                Cancel
+                            </Button>
+                            <Button type="button" onClick={handleSavePillarItem}>
+                                Save Item
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={`transition-all duration-300 ${addingNewItem ? 'invisible max-h-0 opacity-0' : 'max-h-[100px] opacity-100'}`}>
+                    <Button type="button" variant="outline" className="text-xs" onClick={handleAddPillarItem}>
+                        <ListPlus className="h-4 w-4" />
+                        Add New Item
+                    </Button>
+                </div>
+            </div>
+        </>
+    ) : null;
+
+    return (
+        <>
+            <MasterDetailPanel
+                title="University Strategic Goals"
+                errorCount={pillarErrorCount}
+                items={listItems}
+                selectedId={selectedPillarId}
+                onSelect={(id) => setSelectedPillarId(Number(id))}
+                onAdd={handleAddPillar}
+                onEdit={handleEditPillar}
+                onDelete={handleDeletePillar}
+                emptyListIcon={FolderPlus}
+                emptyListTitle="No pillars yet"
+                addIcon={FolderPlus}
+                addLabel="Add New Pillar"
+                detail={detail}
+                emptyDetailTitle="No Pillar Selected"
+                emptyDetailDescription='Select a pillar on the left or click "Add New Pillar" to start.'
+            />
+
+            {dialogOpen && (
+                <PillarDialog
+                    type={action}
+                    pillar={action === 'edit' ? selectedPillar : null}
+                    onClose={() => setDialogOpen(false)}
+                    onSave={handleSavePillar}
+                />
+            )}
+        </>
+    );
+}
