@@ -1,26 +1,27 @@
 import { FacilitiesDialog } from '@/components/dialogs/content/facilities-dialog';
-import { Button } from '@/components/ui/button';
+import { MasterDetailPanel } from '@/components/master-detail-panel';
 import { Input } from '@/components/ui/input';
 import SectionFooter from '@/components/ui/section-footer';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/text-area';
 import { ContentPages, Facilities } from '@/types/content';
 import { useForm } from '@inertiajs/react';
-import { CircleAlert, EditIcon, ImageIcon, Plus, Trash2, X } from 'lucide-react';
+import { Building2, ImageIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import InputError from '../input-error';
-import { Badge } from '../ui/badge';
 
 interface FacilitiesProps {
     facility_page: ContentPages;
     facilities: Facilities[];
 }
+
 interface PageForm {
     content_page_id?: number;
     page: string;
     title: string;
     description: string;
 }
+
 interface FacilityForm {
     facility_id?: number;
     facility_name: string;
@@ -28,16 +29,11 @@ interface FacilityForm {
     facility_image?: File | null;
     previewUrl?: string | null;
 }
+
 interface FacilitiesForm {
     page?: PageForm;
     facilities?: FacilityForm[];
 }
-
-const ActionButton: React.FC<React.ComponentProps<'button'>> = ({ children, className, ...props }) => (
-    <button className={`p-1 text-gray-400 transition-colors hover:text-red-600 ${className}`} type="button" {...props}>
-        {children}
-    </button>
-);
 
 const FacilityPhoto: React.FC<{ url: string | null; alt: string }> = ({ url, alt }) => {
     const [hasError, setHasError] = useState(false);
@@ -48,8 +44,8 @@ const FacilityPhoto: React.FC<{ url: string | null; alt: string }> = ({ url, alt
 
     if (!url || hasError) {
         return (
-            <div className="animate-in fade-in-0 flex h-64 w-full flex-col items-center justify-center rounded-md border border-gray-200 bg-gray-100 text-gray-500">
-                <ImageIcon className="h-12 w-12 text-gray-400" />
+            <div className="animate-in fade-in-0 border-border bg-muted text-muted-foreground flex h-64 w-full flex-col items-center justify-center rounded-md border">
+                <ImageIcon className="h-12 w-12" />
                 <span className="mt-2 text-sm">No Image Available</span>
             </div>
         );
@@ -59,7 +55,7 @@ const FacilityPhoto: React.FC<{ url: string | null; alt: string }> = ({ url, alt
         <img
             src={url}
             alt={alt}
-            className="animate-in fade-in-0 h-64 w-full rounded-md border border-gray-200 bg-gray-100 object-cover"
+            className="animate-in fade-in-0 border-border bg-muted h-64 w-full rounded-md border object-cover"
             onError={() => setHasError(true)}
         />
     );
@@ -70,10 +66,9 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
     const [facilityList, setFacilityList] = useState<Facilities[]>(facilities ?? []);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogType, setDialogType] = useState<'add' | 'edit'>('add');
-
     const [selectedFacilityId, setSelectedFacilityId] = useState<number | null>(null);
 
-    const { data, setData, post, processing, errors, reset } = useForm<FacilitiesForm>({
+    const { data, setData, post, errors } = useForm<FacilitiesForm>({
         page: {
             content_page_id: facility_page?.content_page_id,
             title: facility_page?.title,
@@ -101,7 +96,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
             .map(([, msg]) => msg);
     };
 
-    const selectedFacilityerrors = getSelectedFacilityErrors();
+    const selectedFacilityErrors = getSelectedFacilityErrors();
 
     const facilitiesErrorCount = errors ? Object.keys(errors).filter((key) => key.startsWith('facilities.')).length : 0;
 
@@ -151,31 +146,29 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
             const current = prev ?? [];
             const existingIndex = current.findIndex((f) => f.facility_id === formData.facility_id);
             let updatedList;
-            let facilityForLocalState: Facilities; // Object for display (facilityList)
+            let facilityForLocalState: Facilities;
 
-            // Local State Update
             facilityForLocalState = {
                 facility_id: formData.facility_id ?? 0,
                 facility_name: formData.facility_name,
                 description: formData.description,
-                image_path: formData.previewUrl || null, // <- Use the previewUrl here for local display
+                image_path: formData.previewUrl || null,
             };
 
             if (existingIndex !== -1) {
                 updatedList = current.map((f) => (f.facility_id === facilityForLocalState.facility_id ? facilityForLocalState : f));
             } else {
                 const newId = Math.max(0, ...current.map((f) => f.facility_id || 0)) + 1;
-                facilityForLocalState.facility_id = newId; // Assign new ID to the local object
+                facilityForLocalState.facility_id = newId;
                 updatedList = [...current, facilityForLocalState];
             }
 
-            // Data Syncing
             setData((prevData) => {
                 const facilityForForm: FacilityForm = {
-                    facility_id: facilityForLocalState.facility_id, // Use the assigned ID
+                    facility_id: facilityForLocalState.facility_id,
                     facility_name: formData.facility_name,
                     description: formData.description,
-                    facility_image: formData.facility_image, // <- Use the actual File object here
+                    facility_image: formData.facility_image,
                 };
 
                 let formFacilities;
@@ -198,21 +191,66 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
             return updatedList;
         });
     };
-    return (
-        <div className="scroll-mt-6 rounded-lg border border-gray-200 bg-white">
-            <div className="p-8">
-                {/* --- Page Title/Description inputs (No changes) --- */}
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-900">Facilities Page</h2>
-                    <p className="text-sm text-gray-600">Configure page content</p>
+
+    // Derived list items for MasterDetailPanel
+    const listItems = facilityList.map((facility, index) => ({
+        id: facility.facility_id,
+        label: facility.facility_name,
+        hasError: !!(
+            errors[`facilities.${index}.facility_name`] ||
+            errors[`facilities.${index}.description`] ||
+            errors[`facilities.${index}.facility_image`]
+        ),
+    }));
+
+    // Detail panel content
+    const detail = selectedFacility ? (
+        <div className="space-y-6">
+            <div className="border-border overflow-hidden rounded-lg border">
+                <FacilityPhoto url={selectedFacility.image_path} alt={selectedFacility.image_name} />
+            </div>
+
+            <div>
+                <h4 className="text-foreground text-lg font-semibold break-words">{selectedFacility.facility_name}</h4>
+            </div>
+
+            <Separator />
+
+            <div>
+                <h5 className="text-foreground mb-2 text-sm font-semibold">Description</h5>
+                <p className="text-muted-foreground text-sm">{selectedFacility.description}</p>
+            </div>
+
+            {selectedFacilityErrors.length > 0 && (
+                <div className="border-destructive/40 bg-destructive/10 rounded-md border p-4">
+                    <h4 className="text-destructive mb-2 text-sm font-semibold">Errors in this facility</h4>
+                    <ul className="text-destructive list-disc space-y-1 pl-5 text-sm">
+                        {selectedFacilityErrors.map((msg, i) => (
+                            <li key={i}>{msg}</li>
+                        ))}
+                    </ul>
                 </div>
+            )}
+        </div>
+    ) : null;
+
+    return (
+        <div className="border-border bg-background scroll-mt-6 rounded-lg border">
+            <div className="p-8">
+                {/* Page header */}
+                <div className="mb-6">
+                    <h2 className="text-foreground text-lg font-semibold">Facilities Page</h2>
+                    <p className="text-muted-foreground text-sm">Configure page content</p>
+                </div>
+
+                {/* Page title / description inputs */}
                 <div className="mb-10 grid grid-cols-1 gap-6">
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-foreground">Title</label>
+                        <label className="text-foreground mb-2 block text-sm font-medium">Title</label>
                         <Input
                             type="text"
                             placeholder="Enter page title..."
-                            value={data.page.title}
+                            value={data.page?.title}
                             onChange={(e) =>
                                 setData({
                                     ...data,
@@ -226,7 +264,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                         <InputError message={errors['page.title']} className="mt-2" />
                     </div>
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-foreground">Subtitle / Description</label>
+                        <label className="text-foreground mb-2 block text-sm font-medium">Subtitle / Description</label>
                         <Textarea
                             placeholder="Enter page subtitle..."
                             value={data.page?.description}
@@ -246,119 +284,34 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
                     </div>
                 </div>
 
-                <Separator className="my-10 bg-gray-200" />
+                <Separator className="my-10" />
 
-                {/* --- Campus Facilities Section --- */}
-                <div className="mb-6">
-                    <h3 className="mb-4 text-base font-semibold text-gray-900">
-                        Campus Facilities
-                        {facilitiesErrorCount > 0 && (
-                            <Badge variant="destructive" className="rounded-full border-none px-1.75 py-0.5 text-sm font-medium">
-                                {facilitiesErrorCount}
-                            </Badge>
-                        )}
-                    </h3>
-                    <div className="flex min-h-[400px] rounded-lg border border-gray-200">
-                        <div className="w-1/3 border-r border-gray-200 bg-gray-50/50 p-6">
-                            <h4 className="mb-3 text-xs text-gray-500">Select a Facility</h4>
-                            <div className="space-y-1">
-                                {facilityList?.map((facility, index) => (
-                                    // console.log('Rendering facility:', facility),
-                                    <div
-                                        key={facility.facility_id}
-                                        onClick={() => {
-                                            setSelectedFacilityId(facility.facility_id);
-                                        }}
-                                        className={`group flex cursor-pointer items-center justify-between rounded-md p-2 px-4 transition-colors ${facility.facility_id === selectedFacility?.facility_id
-                                            ? 'bg-[#7f1414]/4'
-                                            : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
-                                    >
-                                        <div className="truncate text-sm">
-                                            <span
-                                                className={` ${facility.facility_id === selectedFacility?.facility_id ? 'font-normal text-red-900' : 'text-gray-700'}`}
-                                            >
-                                                {facility.facility_name}
-                                            </span>
-                                            {(errors[`facilities.${index}.facility_name`] ||
-                                                errors[`facilities.${index}.description`] ||
-                                                errors[`facilities.${index}.facility_image`]) && (
-                                                    <CircleAlert className="inline-block h-4 w-4 text-red-600" />
-                                                )}
-                                        </div>
-                                        <div
-                                            className={`flex items-center space-x-0.5 transition-opacity ${facility.facility_id === selectedFacility?.facility_id
-                                                ? 'opacity-100'
-                                                : 'opacity-0 group-hover:opacity-100'
-                                                }`}
-                                        >
-                                            <ActionButton
-                                                onClick={() => {
-                                                    handleEditClick(facility);
-                                                }}
-                                                className="cursor-pointer rounded-md text-gray-200 hover:bg-red-50 hover:text-gray-700"
-                                            >
-                                                <EditIcon className="h-4 w-4" />
-                                            </ActionButton>
-                                            <ActionButton
-                                                onClick={() => handleDelete(facility.facility_id)}
-                                                className="cursor-pointer rounded-md text-gray-200 hover:bg-red-50 hover:text-red-700"
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </ActionButton>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="mt-4 border-t border-gray-200 pt-4">
-                                <Button
-                                    onClick={handleAddClick}
-                                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#7f1414] px-5 py-2 text-sm font-medium text-white transition"
-                                >
-                                    <Plus className="mr-2 h-4 w-4" /> <p className="truncate">Add New Facility</p>
-                                </Button>
-                            </div>
-                        </div>
-
-                        {/* Right Pane: Facility Details */}
-                        <div className="w-2/3 p-6">
-                            {!selectedFacility ? (
-                                <div className="flex h-full flex-col items-center justify-center text-center text-gray-500">
-                                    <X className="mb-2 h-8 w-8" />
-                                    <p className="font-medium">No Facility Selected</p>
-                                    <p className="text-sm">Select a facility on the left or click "Add New Facility" to start.</p>
-                                </div>
-                            ) : (
-                                <div className="space-y-6">
-                                    <div className="overflow-hidden rounded-lg border border-gray-100">
-                                        <FacilityPhoto url={selectedFacility.image_path} alt={selectedFacility.image_name} />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-lg font-semibold break-words text-gray-900">{selectedFacility.facility_name}</h4>
-                                    </div>
-                                    <Separator className="bg-gray-200" />
-                                    <div>
-                                        <h5 className="mb-2 text-sm font-semibold text-foreground">Description</h5>
-                                        <p className="text-sm text-gray-700">{selectedFacility.description}</p>
-                                    </div>
-                                    {selectedFacilityerrors.length > 0 && (
-                                        <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
-                                            <h4 className="mb-2 text-sm font-semibold text-red-600">Errors in this Gallery</h4>
-                                            <ul className="list-disc space-y-1 pl-5 text-sm text-red-600">
-                                                {selectedFacilityerrors.map((msg, i) => (
-                                                    <li key={i}>{msg}</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                {/* Facilities master-detail panel */}
+                <MasterDetailPanel
+                    title="Campus Facilities"
+                    description="Manage and preview each campus facility."
+                    errorCount={facilitiesErrorCount}
+                    items={listItems}
+                    selectedId={selectedFacilityId}
+                    onSelect={(id) => setSelectedFacilityId(Number(id))}
+                    onAdd={handleAddClick}
+                    onEdit={(id) => {
+                        const facility = facilityList.find((f) => f.facility_id === Number(id));
+                        if (facility) handleEditClick(facility);
+                    }}
+                    onDelete={(id) => handleDelete(Number(id))}
+                    emptyListIcon={Building2}
+                    emptyListTitle="No facilities yet"
+                    addIcon={Building2}
+                    addLabel="Add New Facility"
+                    detail={detail}
+                    emptyDetailTitle="No Facility Selected"
+                    emptyDetailDescription='Select a facility on the left or click "Add New Facility" to start.'
+                />
             </div>
 
             <SectionFooter onSave={handleSubmit} onPreview={handlePreview} />
+
             {dialogOpen && (
                 <FacilitiesDialog type={dialogType} facility={selectedFacility} onClose={() => setDialogOpen(false)} onSave={handleSave} />
             )}
