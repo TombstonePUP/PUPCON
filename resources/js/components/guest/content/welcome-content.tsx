@@ -204,34 +204,33 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
 
                     {/* Director Section */}
                     <div className="mb-6">
-                        <div className="mb-8">
-                            <div className="mt-5 mb-6 flex flex-col gap-3">
-                                <h3 className="text-foreground text-sm font-medium">Director's Image</h3>
-                                <ImageUpload
-                                    value={data.page.director_image}
-                                    previewUrl={data.page.previewUrl ?? null}
-                                    onChange={(file, url) =>
-                                        setData((prev) => ({
-                                            ...prev,
-                                            page: { ...prev.page, director_image: file, previewUrl: url },
-                                        }))
-                                    }
-                                    onRemove={() =>
-                                        setData((prev) => ({
-                                            ...prev,
-                                            page: { ...prev.page, director_image: null, previewUrl: null },
-                                        }))
-                                    }
-                                    label="Upload Director's Image"
-                                    aspectRatio={1}
-                                    disabled={processing}
-                                    error={errors['page.director_image']}
-                                    inputId="director-image"
-                                />
-                            </div>
-
-                            <div className="flex gap-4 space-y-6">
-                                <div className="flex-1">
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <div className="space-y-6">
+                                <div className="flex flex-col gap-3">
+                                    <h3 className="text-foreground text-sm font-medium">Director's Image</h3>
+                                    <ImageUpload
+                                        value={data.page.director_image}
+                                        previewUrl={data.page.previewUrl ?? null}
+                                        onChange={(file, url) =>
+                                            setData((prev) => ({
+                                                ...prev,
+                                                page: { ...prev.page, director_image: file, previewUrl: url },
+                                            }))
+                                        }
+                                        onRemove={() =>
+                                            setData((prev) => ({
+                                                ...prev,
+                                                page: { ...prev.page, director_image: null, previewUrl: null },
+                                            }))
+                                        }
+                                        label="Upload Director's Image"
+                                        aspectRatio={4 / 6}
+                                        disabled={processing}
+                                        error={errors['page.director_image']}
+                                        inputId="director-image"
+                                    />
+                                </div>
+                                <div>
                                     <label className="text-foreground mb-2 block text-sm font-medium">
                                         Director's Name <span className="text-destructive">*</span>
                                     </label>
@@ -243,22 +242,22 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                                     />
                                     <InputError message={errors['page.director_name']} className="mt-2" />
                                 </div>
-                                <div className="flex-2">
-                                    <label className="text-foreground mb-2 block text-sm font-medium">
-                                        Director's Message <span className="text-destructive">*</span>
-                                    </label>
-                                    <Textarea
-                                        placeholder="Enter your message..."
-                                        autoResize
-                                        minHeight={100}
-                                        maxHeight={250}
-                                        value={data.page.director_message}
-                                        onChange={(e) => setData({ ...data, page: { ...data.page, director_message: e.target.value } })}
-                                        disabled={processing}
-                                        className="w-full"
-                                    />
-                                    <InputError message={errors['page.director_message']} className="mt-2" />
-                                </div>
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="text-foreground mb-2 block text-sm font-medium">
+                                    Director's Message <span className="text-destructive">*</span>
+                                </label>
+                                <Textarea
+                                    placeholder="Enter your message..."
+                                    autoResize
+                                    minHeight={100}
+                                    maxHeight={250}
+                                    value={data.page.director_message}
+                                    onChange={(e) => setData({ ...data, page: { ...data.page, director_message: e.target.value } })}
+                                    disabled={processing}
+                                    className="w-full flex-1"
+                                />
+                                <InputError message={errors['page.director_message']} className="mt-2" />
                             </div>
                         </div>
                     </div>
