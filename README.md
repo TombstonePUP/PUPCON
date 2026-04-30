@@ -15,12 +15,19 @@
 
 ---
 
+> [!IMPORTANT]
+> **Living Document Rule**
+> This file must be kept up to date. Any feature addition, command change, environment variable change, or setup change must be reflected here immediately.
+
 ## 📋 Table of Contents
 
 - [🎯 Overview](#-overview)
 - [✨ Features](#-features)
+- [📂 Project Structure](#-project-structure)
 - [🛠️ Tech Stack](#️-tech-stack)
 - [🚀 Installation](#-installation)
+- [💻 Dev Commands](#-dev-commands)
+- [⚙️ Environment Variables](#️-environment-variables)
 - [🔐 cURL & OpenSSL Configuration](#-curl--openssl-configuration)
 - [📄 Ghostscript PDF Optimizer Setup](#-ghostscript-pdf-optimizer-setup)
 - [👥 Team](#-team)
@@ -64,6 +71,23 @@
 - 🌙 **Dark/Light mode** toggle
 - 📊 **Interactive dashboard** with analytics
 - 🔔 **Real-time notifications**
+
+---
+
+## 📂 Project Structure
+
+```text
+├── app/                  # Backend models and controllers
+├── config/               # Application configuration files
+├── database/             # Migrations and seeders
+├── public/               # Public assets
+├── resources/
+│   ├── css/              # Tailwind CSS v4 design tokens
+│   └── js/               # React components, pages, and layouts
+├── routes/               # Web, auth, and feature route files
+├── package.json          # Node dependencies and scripts
+└── vite.config.js        # Vite build configuration
+```
 
 ---
 
@@ -129,6 +153,34 @@ composer run dev
 | 👨‍💼 **Accreditor** | `janedoe@accreditor.com` | `accreditor@123` |
 
 🎉 **App running at** [http://localhost:8000](http://localhost:8000)
+
+---
+
+## 💻 Dev Commands
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts Vite for frontend HMR and Laravel server concurrently |
+| `npm run build` | Builds the production bundle |
+| `npm run format` | Runs Prettier to format frontend code |
+| `php artisan serve` | Starts the PHP development server |
+| `php artisan migrate` | Runs database migrations |
+
+---
+
+## ⚙️ Environment Variables
+
+| Variable | Description | Required |
+| :--- | :--- | :--- |
+| `APP_NAME` | The name of the application | Yes |
+| `APP_ENV` | Environment (e.g., local, production) | Yes |
+| `APP_KEY` | Laravel application key | Yes |
+| `APP_DEBUG` | Enable/disable debug mode | Yes |
+| `APP_URL` | The base URL of the application | Yes |
+| `DB_CONNECTION` | Database type (e.g., sqlite, mysql, pgsql) | Yes |
+| `DB_DATABASE` | Database name or path | Yes |
+| `MAIL_MAILER` | Mail driver (e.g., smtp) | Optional |
+| `PDF_OPTIMIZER_BIN_PATH` | Path to Ghostscript executable | Optional |
 
 ---
 
@@ -690,3 +742,5 @@ The application uses the following Ghostscript settings for PDF optimization:
 [![⬆️ Back to Top](https://img.shields.io/badge/⬆️-Back_to_Top-blue?style=flat-square)](#-pupcon)
 
 </div>
+
+<!-- last updated: 2026-04-30 -->
