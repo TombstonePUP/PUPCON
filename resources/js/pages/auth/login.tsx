@@ -49,7 +49,11 @@ function Field({ label, error, required = false, aside, children }: FieldProps) 
             <div className="flex items-center">
                 <Label className="text-black" htmlFor={id}>
                     {label}
-                    {/* {required && <span className="text-destructive ml-0.5" aria-hidden="true">*</span>} */}
+                    {required && (
+                        <span className="ml-0.5 text-destructive" aria-hidden="true">
+                            *
+                        </span>
+                    )}
                 </Label>
                 {aside && <span className="ml-auto">{aside}</span>}
             </div>

@@ -40,7 +40,7 @@ export default function Programs({ program }: ProgramProps) {
         { title: program.program_name, href: `/manage-program/${program.program_id}` },
     ];
 
-    const [activeSection, setActiveSection] = useState(role === 'Admin' || role === 'Coordinator' ? 'overview' : 'areas');
+    const [, setActiveSection] = useState(role === 'Admin' || role === 'Coordinator' ? 'overview' : 'areas');
     const overviewRef = useRef<HTMLDivElement>(null);
     const objectivesRef = useRef<HTMLDivElement>(null);
     const galleryRef = useRef<HTMLDivElement>(null);
@@ -57,27 +57,7 @@ export default function Programs({ program }: ProgramProps) {
     );
     const sections = allSections.filter((section) => section.roles.includes(role));
 
-    const [scrollLock, setScrollLock] = useState(false);
-    const scrollToSection = (ref, sectionId) => {
-        setScrollLock(true);
-        setActiveSection(sectionId);
 
-        if (ref.current) {
-            ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        // Unlock when scroll really stops
-        let timeout;
-        const handleScrollEnd = () => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                setScrollLock(false);
-                window.removeEventListener('scroll', handleScrollEnd);
-            }, 150); // only unlock after scrolling stops for 150ms
-        };
-
-        window.addEventListener('scroll', handleScrollEnd);
-    };
 
     useEffect(() => {
         const observerOptions = {
@@ -87,8 +67,6 @@ export default function Programs({ program }: ProgramProps) {
         };
 
         const observer = new IntersectionObserver((entries) => {
-            if (scrollLock) return; // do nothing if user clicked a link
-
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     setActiveSection(entry.target.id);
@@ -101,7 +79,7 @@ export default function Programs({ program }: ProgramProps) {
         return () => {
             sections.filter((section) => section.ref?.current !== null).forEach((section) => observer.unobserve(section.ref.current));
         };
-    }, [sections, scrollLock]);
+    }, [sections]);
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogAction, setDialogAction] = useState<'add' | 'edit' | 'delete' | null>(null);
@@ -125,17 +103,7 @@ export default function Programs({ program }: ProgramProps) {
         setDialogOpen(true);
     };
 
-    const getBadgeColor = (remarks?: string) => {
-        switch (remarks?.toLowerCase()) {
-            case 'passed':
-                return 'bg-green-100 text-green-800';
-            case 'failed':
-                return 'bg-red-100 text-red-800';
-            case 'ongoing':
-            default:
-                return 'bg-yellow-100 text-yellow-800';
-        }
-    };
+
 
     // ---  Level Selector ---
     const levelSelectorControls = (

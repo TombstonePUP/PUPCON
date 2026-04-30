@@ -1,3 +1,4 @@
+import { FacultyStaff } from '@/types/content';
 import PageHeader from '@/components/guest-page-header';
 import ImageRow from '@/components/imagerow';
 import { AreaCard } from '@/components/ui/area-card';
@@ -5,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useSmartPoll } from '@/hooks/use-smart-poll';
 import Layout from '@/layouts/landing-layout';
-import { PerProgramUnderSurvey } from '@/types';
+import { Auth, PerProgramUnderSurvey } from '@/types';
 import { Head, router, usePage, useRemember } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -51,7 +52,7 @@ const useInView = (threshold = 0.1) => {
 };
 
 // Fallback Empty State Component
-const EmptyState = ({ title, description, icon: Icon = Construction }: { title: string; description: string; icon?: any }) => (
+const EmptyState = ({ title, description, icon: Icon = Construction }: { title: string; description: string; icon?: React.ElementType }) => (
     <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
         <Icon className="mb-4 h-16 w-16 text-gray-400" />
         <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
@@ -77,7 +78,7 @@ interface FacultyCardProps {
     index: number;
 }
 
-const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isLoading, inView, index }, ref) => {
+const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isLoading, inView }, ref) => {
     const [imgLoaded, setImgLoaded] = useState(false);
 
     if (isLoading) {
@@ -148,13 +149,11 @@ const FacultyCard = forwardRef<HTMLDivElement, FacultyCardProps>(({ faculty, isL
     );
 });
 
-FacultyCard.displayName = 'FacultyCard';
-
-const FacultyCardWrapper = ({ f, i, facultyLoading }: { f: any; i: number; facultyLoading: boolean }) => {
+const FacultyCardWrapper = ({ f, facultyLoading }: { f: FacultyStaff; facultyLoading: boolean }) => {
     const [cardRef, cardInView] = useInView(0.2);
     return (
         <FacultyCard
-            ref={cardRef as any}
+            ref={cardRef as React.Ref<HTMLDivElement>}
             faculty={{
                 name: [f.first_name, f.middle_name, f.last_name].filter(Boolean).join(' '),
                 photo:
@@ -164,7 +163,6 @@ const FacultyCardWrapper = ({ f, i, facultyLoading }: { f: any; i: number; facul
             }}
             isLoading={facultyLoading}
             inView={cardInView}
-            index={i}
         />
     );
 };
@@ -173,7 +171,6 @@ export default function Programs({ program }: PerProgramProps) {
     useSmartPoll(5000);
 
     const [level, setLevel] = useRemember(program.levels[0]?.level, 'level');
-    const [loading, setLoading] = useState(false);
     const [overviewImageLoading, setOverviewImageLoading] = useState(true);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [facultyLoading, setFacultyLoading] = useState(true);
@@ -215,7 +212,7 @@ export default function Programs({ program }: PerProgramProps) {
         { icon: <GraduationCap className="h-6 w-6" />, label: 'Years', value: '4' },
     ];
 
-    const SectionHeader = ({ title, subtitle, icon: Icon, props }: { title: string; subtitle: string; icon?: any; props?: string }) => (
+    const SectionHeader = ({ title, subtitle }: { title: string; subtitle: string }) => (
         <div className="relative mb-12">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#7f1414]/5 via-[#7f1414]/10 to-[#7f1414]/5" />
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#7f1414] via-[#9a1a1a] to-[#7f1414] px-8 py-10 text-center text-white">
@@ -414,7 +411,7 @@ export default function Programs({ program }: PerProgramProps) {
                             />
                         ) : (
                             <div className="flex flex-wrap justify-center gap-8">
-                                {program.objectives.map((objective, index) => (
+                                {program.objectives.map((objective) => (
                                     <div
                                         key={objective.program_objective_id}
                                         className={`border-black-90 group relative flex w-full max-w-2xs flex-col justify-start gap-4 overflow-hidden rounded-2xl border-1 p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:border-[#7f1414] ${
@@ -451,8 +448,8 @@ export default function Programs({ program }: PerProgramProps) {
                             />
                         ) : (
                             <div className="flex flex-wrap justify-center gap-6">
-                                {program.faculty_staff?.map((f, i) => (
-                                    <FacultyCardWrapper key={f.faculty_staff_id} f={f} i={i} facultyLoading={facultyLoading} />
+                                {program.faculty_staff?.map((f) => (
+                                    <FacultyCardWrapper key={f.faculty_staff_id} f={f} facultyLoading={facultyLoading} />
                                 ))}
                             </div>
                         )}
@@ -525,7 +522,7 @@ export default function Programs({ program }: PerProgramProps) {
                                     program.levels[0].areas
                                         .slice()
                                         .sort((a, b) => (Number(a.area_number) || 0) - (Number(b.area_number) || 0))
-                                        .map((area, index) => (
+                                        .map((area) => (
                                             <div
                                                 key={area.area_id}
                                                 className={`transition-all duration-500 ${

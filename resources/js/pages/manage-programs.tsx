@@ -36,8 +36,6 @@ export default function ManagePrograms({ programs }: ProgramsProps) {
     useSmartPoll(5000);
 
     const [activeTab, setActiveTab] = useState('active');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filterDegree, setFilterDegree] = useState<string>('all');
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogType, setDialogType] = useState<'program' | 'level' | null>(null);

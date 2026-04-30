@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem, PerProgramUnderSurvey } from '@/types';
+import type { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { AlertCircle, Check, ChevronDown, ChevronRight, Download, FileChartColumnIncreasing, FileSpreadsheet, FileText } from 'lucide-react';
 import React, { useState } from 'react';
@@ -14,19 +14,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface ProgramsProps {
-    programs: PerProgramUnderSurvey[];
-}
+
 
 export default function Ratings() {
     const [expandedAreas, setExpandedAreas] = useState({});
     const [expandedParameters, setExpandedParameters] = useState({});
     const [viewerOpen, setViewerOpen] = useState(false);
     const [viewerFile, setViewerFile] = useState({ url: '', title: '' });
-    const [exportDropdown, setExportDropdown] = useState({});
-    const [exportAreaDropdown, setExportAreaDropdown] = useState({});
-    const [ratings, setRatings] = useState({});
-    const [means, setMeans] = useState({});
+    const [means] = useState({});
     const [selectedLevels, setSelectedLevels] = useState({});
 
     const programs = [
@@ -168,15 +163,7 @@ export default function Ratings() {
         },
     ];
 
-    const computeParentMean = (areaId, paramId, children) => {
-        const childRatings = children.map((child) => parseFloat(ratings[`${areaId}-${paramId}-${child.id}`])).filter((v) => !isNaN(v));
 
-        if (childRatings.length === 0) return '—';
-
-        const avg = childRatings.reduce((sum, val) => sum + val, 0) / childRatings.length;
-
-        return avg.toFixed(2);
-    };
 
     // Helpers
     const openViewer = (fileUrl, title) => {
@@ -187,41 +174,11 @@ export default function Ratings() {
     const toggleArea = (areaId) => setExpandedAreas((prev) => ({ ...prev, [areaId]: !prev[areaId] }));
     const toggleParameter = (paramId) => setExpandedParameters((prev) => ({ ...prev, [paramId]: !prev[paramId] }));
 
-    // Toggle Export Dropdown per program
-    const toggleExport = (programId) => {
-        setExportDropdown((prev) => {
-            const updated = {};
-            Object.keys(prev).forEach((key) => {
-                updated[key] = false; // close all other dropdowns
-            });
-            updated[programId] = !prev[programId]; // toggle the clicked one
-            return updated;
-        });
-    };
 
-    // Handle Export Actions (Excel/PDF)
-    const handleExport = (programId, type) => {
-        const program = programs.find((p) => p.id === programId);
-        if (!program) return;
 
-        console.log(`Exporting "${program.program_name}" as ${type.toUpperCase()}`);
 
-        alert(` Exporting ${program.program_name} as ${type.toUpperCase()}`);
 
-        setExportDropdown((prev) => ({ ...prev, [programId]: false }));
-    };
 
-    // Toggle Export Dropdown per area
-    const toggleAreaExport = (areaId) => {
-        setExportAreaDropdown((prev) => {
-            const updated = {};
-            Object.keys(prev).forEach((key) => {
-                updated[key] = false; // close all other dropdowns
-            });
-            updated[areaId] = !prev[areaId]; // toggle clicked area
-            return updated;
-        });
-    };
 
     // Handle Export Actions for areas
     const handleAreaExport = (areaId, type) => {
@@ -242,7 +199,9 @@ export default function Ratings() {
             exportButtons.forEach((btn) => {
                 if (btn.contains(event.target)) clickedInside = true;
             });
-            if (!clickedInside) setExportDropdown({});
+            if (!clickedInside) {
+                // setExportDropdown({}); // removed as unused
+            }
         };
         document.addEventListener('click', handleClickOutside);
         return () => document.removeEventListener('click', handleClickOutside);
@@ -303,30 +262,7 @@ export default function Ratings() {
         }
     };
 
-    const handleRatingChange = (key, value) => {
-        setRatings((prev) => {
-            const newRatings = { ...prev, [key]: value };
-            const [areaId, paramId] = key.split('-').slice(0, 2);
-            const paramKey = `${areaId}-${paramId}`;
-            const paramRatings = Object.entries(newRatings)
-                .filter(([k]) => k.startsWith(paramKey))
-                .map(([, v]) => v)
-                .filter((v) => v !== 'N/A' && v !== '' && !isNaN(v))
-                .map(Number);
-            const paramMean = paramRatings.length > 0 ? (paramRatings.reduce((a, b) => a + b, 0) / paramRatings.length).toFixed(2) : '—';
-            setMeans((prevMeans) => {
-                const updated = { ...prevMeans, [paramKey]: paramMean };
-                const areaMeans = Object.entries(updated)
-                    .filter(([k]) => k.startsWith(areaId + '-'))
-                    .map(([, v]) => parseFloat(v))
-                    .filter((v) => !isNaN(v));
-                const areaMean = areaMeans.length > 0 ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2) : '—';
-                updated[areaId] = areaMean;
-                return updated;
-            });
-            return newRatings;
-        });
-    };
+
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

@@ -61,8 +61,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const MainContent = ({ ...props }: MainContentProps) => {
-    const [activeSection, setActiveSection] = useState('welcome-landing');
-    const [scrollLock, setScrollLock] = useState(false);
     const { pages, officials, facilities, org_types, faculties, history, local_task_force, vmgo_data, welcome_gallery } = props;
 
     const about_page = pages.find((page: ContentPages) => page.page === 'About') ?? null;
@@ -83,23 +81,7 @@ const MainContent = ({ ...props }: MainContentProps) => {
     const localTaskForceRef = useRef(null);
     const welcomeLandingRef = useRef(null);
 
-    // --- THIS SCROLLS TO THE CLICKED SECTION ---
-    const scrollToSection = (ref, sectionId) => {
-        setScrollLock(true); // prevent observer from firing
-        setActiveSection(sectionId); // highlight the clicked section
 
-        if (ref.current) {
-            ref.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
-        }
-
-        // Unlock after scrolling is likely finished
-        setTimeout(() => {
-            setScrollLock(false);
-        }, 600); // you can adjust this
-    };
 
     const sections = useMemo(
         () => [
@@ -115,37 +97,7 @@ const MainContent = ({ ...props }: MainContentProps) => {
         [],
     );
 
-    useEffect(() => {
-        const observerOptions = {
-            root: null,
-            rootMargin: '-40% 0px -40% 0px',
-            threshold: 0,
-        };
 
-        const observer = new IntersectionObserver((entries) => {
-            if (scrollLock) return;
-
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveSection(entry.target.id);
-                }
-            });
-        }, observerOptions);
-
-        sections.forEach((section) => {
-            if (section.ref.current) {
-                observer.observe(section.ref.current);
-            }
-        });
-
-        return () => {
-            sections.forEach((section) => {
-                if (section.ref.current) {
-                    observer.unobserve(section.ref.current);
-                }
-            });
-        };
-    }, [sections, scrollLock]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

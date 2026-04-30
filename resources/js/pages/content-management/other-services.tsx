@@ -12,7 +12,7 @@ import type { BreadcrumbItem } from '@/types';
 import { ContentPages, OtherServices } from '@/types/content';
 import { Head, useForm } from '@inertiajs/react';
 import { LibrarySquare } from 'lucide-react';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
 
 interface OtherServicesProps {
     services_page: ContentPages;
@@ -49,57 +49,7 @@ const OtherServicesPage = ({ ...props }: OtherServicesProps) => {
         })),
     });
 
-    const [activeSection, setActiveSection] = useState('overview');
-    const [scrollLock, setScrollLock] = useState(false);
 
-    const overviewRef = useRef<HTMLDivElement>(null);
-    const servicesRef = useRef<HTMLDivElement>(null);
-
-    const sections = useMemo(
-        () => [
-            { id: 'overview', label: 'Page Overview', ref: overviewRef },
-            { id: 'services', label: 'Services & Portals', ref: servicesRef },
-        ],
-        [],
-    );
-
-    const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>, sectionId: string) => {
-        setScrollLock(true);
-        setActiveSection(sectionId);
-
-        if (ref.current) {
-            ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        setTimeout(() => setScrollLock(false), 600);
-    };
-
-    useEffect(() => {
-        const observerOptions = {
-            root: null,
-            rootMargin: '-40% 0px -40% 0px',
-            threshold: 0,
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            if (scrollLock) return;
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveSection(entry.target.id);
-                }
-            });
-        }, observerOptions);
-
-        sections.forEach((section) => {
-            if (section.ref.current) observer.observe(section.ref.current);
-        });
-
-        return () => {
-            sections.forEach((section) => {
-                if (section.ref.current) observer.unobserve(section.ref.current);
-            });
-        };
-    }, [sections, scrollLock]);
 
     const handleUpdateServices = (updatedServices: OtherServices[]) => {
         setData('other_services', updatedServices);

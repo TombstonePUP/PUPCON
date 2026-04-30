@@ -6,15 +6,13 @@ import { ChevronLeft, ChevronRight, Image as ImageIconComponent, MapPin, Play, S
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // const Head = ({ children }: { children: React.ReactNode }) => <>{/* Mock Head, does nothing */}</>;
-const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: any }) => (
+const Link = ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: unknown }) => (
     <a href={href} {...props}>
         {children}
     </a>
 );
 
-const router = {
-    visit: (url: string, options: any) => {},
-};
+
 
 const usePage = () => ({
     props: {
@@ -229,7 +227,7 @@ const ActionButton = React.memo(
         children: React.ReactNode;
         icon?: React.ElementType;
         external?: boolean;
-        [key: string]: any;
+        [key: string]: unknown;
     }) => {
         const Component = external ? 'a' : Link;
         const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
@@ -250,8 +248,6 @@ const ActionButton = React.memo(
 );
 
 export default function Welcome({ page, carousel_images }: LandingProps) {
-    const [showModal, setShowModal] = useState(false);
-    const [isModalVisible, setIsModalVisible] = useState(false);
     const [isPageReady, setIsPageReady] = useState(false);
 
     const [selectedNewsItem, setSelectedNewsItem] = useState<NewsCard | null>(null);
@@ -260,7 +256,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
 
     const [newsPage, setNewsPage] = useState(0);
 
-    const images = carousel_images;
+
     const {
         props: { auth },
     } = usePage() as { props: { auth: Auth } };
@@ -410,8 +406,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
                 const visited = sessionStorage.getItem('welcomeModalShown');
                 if (!visited) {
                     setTimeout(() => {
-                        setShowModal(true);
-                        setTimeout(() => setIsModalVisible(true), 20);
+                        // showModal logic was here but removed as unused
                         sessionStorage.setItem('welcomeModalShown', 'true');
                     }, 1000);
                 }
@@ -421,22 +416,7 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
         }
     }, [isPageReady]);
 
-    const handleCloseModal = useCallback(() => {
-        setIsModalVisible(false);
-        setTimeout(() => setShowModal(false), 200);
-    }, []);
 
-    const handleSelectType = useCallback((type: string) => {
-        setIsModalVisible(false);
-        setTimeout(() => setShowModal(false), 200);
-
-        if (type === 'faculty' || type === 'accreditor') {
-            router.visit('/login', {
-                method: 'get',
-                data: { role: type },
-            });
-        }
-    }, []);
 
     const handleOpenNewsDialog = (card: NewsCard) => {
         setSelectedNewsItem(card);

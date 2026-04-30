@@ -93,5 +93,7 @@ The application uses **Inertia.js** to render React components.
   - Do not create layout wrappers at the page level if a global layout exists.
 - **Always remember**:
   - Keep components modular and placed in `resources/js/components/`.
+  - Use unified components for shared logic: use `TableOfContents` for scroll-spying on long pages instead of implementing local `IntersectionObserver` logic.
+  - Prioritize global types: Always use and extend types from `resources/js/types/index.ts` (e.g., `PerProgramUnderSurvey`) rather than defining local `any` overrides.
   - Prefix Tailwind arbitrary values only when a specific utility is absent, but prefer the design tokens.
   - Test responsive behaviors—most layouts rely on complex mobile states (like the slide-out menu in `landing-layout.tsx`).

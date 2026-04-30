@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react';
 import laravel from 'laravel-vite-plugin';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import os from 'os';
 import { defineConfig } from 'vite';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,7 +10,7 @@ const __dirname = dirname(__filename);
 
 // Hardcoded LAN IP detection removed to allow Vite/Laravel to handle HMR dynamically
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   plugins: [
     laravel({
       input: ['resources/scss/app.scss', 'resources/js/app.tsx'],

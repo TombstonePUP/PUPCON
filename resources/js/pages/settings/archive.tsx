@@ -158,15 +158,11 @@ export default function ArchiveComponent() {
         return archivedItems[category as keyof typeof archivedItems]?.length || 0;
     };
 
-    const getTotalItems = () => {
-        return Object.values(archivedItems).reduce((total, items) => total + items.length, 0);
-    };
-
     const handleSelectItem = (id: number) => {
         setSelectedItems((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
     };
 
-    const handleSelectAll = (items: any[]) => {
+    const handleSelectAll = (items: { id: number }[]) => {
         const allIds = items.map((item) => item.id);
         setSelectedItems((prev) =>
             allIds.every((id) => prev.includes(id))
