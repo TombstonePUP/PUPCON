@@ -317,7 +317,6 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
   };
 
   const onSave = () => {
-    console.log('Saving program content...', data);
     post(
       route('manage.program.update.content', {
         program_id: program.program_id,

@@ -41,12 +41,11 @@ export default function Layout({ children, className }: LayoutProps) {
     const user = auth.user;
     const cleanup = useMobileNavigation();
 
-    const underSurveyPrograms = (guest as any)?.programs?.length
-        ? (guest as any).programs.map((program: any) => ({
-              label: program.program_name,
-              href: `/programs/${program.program_id}`,
-          }))
-        : [];
+    const programsList = guest.programs ?? [];
+    const underSurveyPrograms = programsList.map((p) => ({
+        label: p.program_name,
+        href: `/programs/${p.program_id}`,
+    }));
 
     const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
     const [searchOpen, setSearchOpen] = useState(false);

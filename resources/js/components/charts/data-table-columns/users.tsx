@@ -135,6 +135,12 @@ export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecor
       },
     },
     {
+      accessorKey: 'is_active',
+      header: () => null,
+      cell: () => null,
+      enableHiding: true,
+    },
+    {
       id: 'actions',
       cell: ({ row }) => (
         <div className="flex justify-end">

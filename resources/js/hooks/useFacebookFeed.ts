@@ -22,7 +22,7 @@ export default function useFacebookFeed(limit = 8) {
             setError(null);
 
             try {
-                const res = await fetch('/api/facebook-feed', { signal: controller.signal });
+                const res = await fetch('/api/updates', { signal: controller.signal });
                 if (!res.ok) throw new Error(`Status ${res.status}`);
                 const data = await res.json();
                 if (!mounted) return;

@@ -11,13 +11,19 @@ declare global {
     const route: typeof routeFn;
 }
 
+import ErrorBoundary from './components/error-boundary';
+
 createInertiaApp({
     title: (title) => `${title}`,
     resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            <ErrorBoundary>
+                <App {...props} />
+            </ErrorBoundary>
+        );
     },
     progress: {
         color: '#daa520',         // Your brand color

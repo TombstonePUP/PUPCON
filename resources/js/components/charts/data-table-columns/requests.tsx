@@ -39,6 +39,40 @@ const getAcronym = (text: string) => {
     .toUpperCase();
 };
 
+const OutlineCell = ({ row }: { row: any }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const origpath = row.original.file_path ?? '';
+
+  const segments = origpath.split('/');
+  const hasNoCategory = segments.includes('no_category');
+
+  const prefix = hasNoCategory
+    ? ''
+    : (origpath
+      .split('/')
+      .pop()
+      ?.match(/^[A-Za-z0-9](?:\.\d+)+\./)?.[0] ?? '');
+
+  return (
+    <>
+      <div className="text-left">
+        <div
+          onClick={() => setDialogOpen(true)}
+          className="max-w-sm cursor-pointer truncate text-foreground underline transition-colors hover:text-primary"
+        >
+          {prefix + ' ' + row.getValue('outline')}
+        </div>
+      </div>
+      <DocumentViewer
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        fileUrl={row.original.file_path}
+        title={row.getValue('outline') as string}
+      />
+    </>
+  );
+};
+
 export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): ColumnDef<FilesOverview>[] {
   return [
     {
@@ -77,7 +111,6 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
         </Button>
       ),
       cell: ({ row }) => {
-        usePoll(5000);
         const filePath = row.original.file_path;
         const pathSegments = filePath.split('/').filter(Boolean);
         let rawSegment = '';
@@ -89,23 +122,17 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
           rawSegment = pathSegments[pathSegments.length - 2];
         }
 
-        const cleanedPath = rawSegment.replace(/_/g, ' ');
-        const finalPathName =
-          cleanedPath.charAt(0).toUpperCase() + cleanedPath.slice(1);
-
         const fileType = row.getValue('file_type') as string;
         const cleanedData = fileType.replace(/-/g, ' ');
 
         let subjectPart = '';
         let segmentPart = '';
-        let levelPart = '';
 
         const regex = /(.*?)\s(Level\s\d)\s(.*)/i;
         const match = cleanedData.match(regex);
 
         if (match) {
           subjectPart = match[1].trim();
-          levelPart = match[2];
           const rawSegmentDetail = match[3];
 
           if (rawSegmentDetail.includes('Area')) {
@@ -125,7 +152,6 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
         } else {
           subjectPart = cleanedData;
           segmentPart = 'N/A';
-          levelPart = '';
         }
 
         return (
@@ -157,39 +183,7 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
           <ArrowUpDown className="h-4" />
         </Button>
       ),
-      cell: ({ row }) => {
-        const [dialogOpen, setDialogOpen] = useState(false);
-        const origpath = row.original.file_path ?? '';
-
-        const segments = origpath.split('/');
-        const hasNoCategory = segments.includes('no_category');
-
-        const prefix = hasNoCategory
-          ? ''
-          : (origpath
-            .split('/')
-            .pop()
-            ?.match(/^[A-Za-z0-9](?:\.\d+)+\./)?.[0] ?? '');
-
-        return (
-          <>
-            <div className="text-left">
-              <div
-                onClick={() => setDialogOpen(true)}
-                className="max-w-sm cursor-pointer truncate text-foreground underline transition-colors hover:text-primary"
-              >
-                {prefix + ' ' + row.getValue('outline')}
-              </div>
-            </div>
-            <DocumentViewer
-              open={dialogOpen}
-              onOpenChange={setDialogOpen}
-              fileUrl={row.original.file_path}
-              title={row.getValue('outline') as string}
-            />
-          </>
-        );
-      },
+      cell: ({ row }) => <OutlineCell row={row} />,
       enableGlobalFilter: true,
     },
     {

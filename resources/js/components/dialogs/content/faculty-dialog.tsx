@@ -52,8 +52,6 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        console.log('Selected file:', file);
-        console.log(data);
         if (file) {
             const previewUrl = URL.createObjectURL(file);
 
@@ -80,12 +78,10 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
     }, [data.previewUrl]);
 
     const handleSubmit = () => {
-        console.log('Submitting faculty data:', data);
         onSave(data);
         onClose();
     };
 
-    console.log('Rendering FacultyDialog with data:', data);
 
     return (
         <Dialog open={true} onOpenChange={onClose}>

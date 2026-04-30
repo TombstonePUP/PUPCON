@@ -38,13 +38,8 @@ export default defineConfig(({ mode }) => ({
   esbuild: {
     jsx: 'automatic',
   },
-  /* build: {
-      outDir: 'build',
-      manifest: true,
-  }, */
   resolve: {
     alias: {
-
       'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
     },
   },
@@ -58,7 +53,7 @@ export default defineConfig(({ mode }) => ({
       interval: 500,
     },
     hmr: {
-      host: 'localhost',
+      host: LAN_IP,
       port: 5173,
       protocol: 'ws',
       clientPort: 5173,
