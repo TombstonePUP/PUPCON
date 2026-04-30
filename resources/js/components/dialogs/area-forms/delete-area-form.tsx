@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { AreaForms, Program } from '@/types';
 import { router } from '@inertiajs/react';
 import { toast } from 'sonner';
@@ -43,14 +42,14 @@ export function DeleteAreaForm({ form, program, area_id, onClose }: DeleteAreaFo
             <DialogContent>
                 <DialogHeader className="flex flex-row items-start text-left">
                     <div className="">
-                        <DialogTitle className="text-lg font-medium text-foreground">Delete Card</DialogTitle>
-                        <DialogDescription className="text-sm text-muted-foreground">Are you sure you want to delete this card?</DialogDescription>
+                        <DialogTitle className="text-foreground text-lg font-medium">Delete Card</DialogTitle>
+                        <DialogDescription className="text-muted-foreground text-sm">Are you sure you want to delete this card?</DialogDescription>
                     </div>
                 </DialogHeader>
-                   <div className="my-0 rounded-md border border-destructive/20 bg-destructive/10 p-4">
-  <p className="text-sm text-destructive">
-    <span className="mb-1 block font-semibold text-destructive">Warning: Irreversible Action!</span>
-                         This action will permanently delete the card with its coressponding document. This action cannot be undone.
+                <div className="border-destructive/20 bg-destructive/10 my-0 rounded-md border p-4">
+                    <p className="text-destructive text-sm">
+                        <span className="text-destructive mb-1 block font-semibold">Warning: Irreversible Action!</span>
+                        This action will permanently delete the card with its coressponding document. This action cannot be undone.
                     </p>
                 </div>
 

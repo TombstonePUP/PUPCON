@@ -53,7 +53,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     </div>
                 </form>
 
-                <div className="text-gray-900 space-x-1 text-center text-sm">
+                <div className="space-x-1 text-center text-sm text-gray-900">
                     <span>Or, return to</span>
                     <TextLink href={route('login')}>log in</TextLink>
                 </div>

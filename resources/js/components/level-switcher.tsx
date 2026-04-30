@@ -8,42 +8,43 @@ import { Link } from '@inertiajs/react';
 import { FilesIcon } from 'lucide-react';
 
 export function LevelSwitcher({
-  teams,
+    teams,
 }: {
-  teams: {
-    name: string;
-    logo: React.ElementType;
-    plan: string;
-  }[];
+    teams: {
+        name: string;
+        logo: React.ElementType;
+        plan: string;
+    }[];
 }) {
-  const { isMobile } = useSidebar();
-  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+    const { isMobile } = useSidebar();
+    const [activeTeam, setActiveTeam] = React.useState(teams[0]);
 
-  if (!activeTeam) {
-    return null;
-  }
+    if (!activeTeam) {
+        return null;
+    }
 
-  return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-default hover:bg-transparent mt-2 active:bg-transparent">
-              <Link href="/" className='flex items-center gap-2 w-full'>
-                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg bg-[#7f1414]">
-                  <FilesIcon className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    PUPCON
-                  </span>
-                  <span className="truncate text-xs">version 1.0</span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
-  );
+    return (
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <SidebarMenuButton
+                            size="lg"
+                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground mt-2 cursor-default hover:bg-transparent active:bg-transparent"
+                        >
+                            <Link href="/" className="flex w-full items-center gap-2">
+                                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg bg-[#7f1414]">
+                                    <FilesIcon className="size-4" />
+                                </div>
+                                <div className="grid flex-1 text-left text-sm leading-tight">
+                                    <span className="truncate font-semibold">PUPCON</span>
+                                    <span className="truncate text-xs">version 1.0</span>
+                                </div>
+                            </Link>
+                        </SidebarMenuButton>
+                    </DropdownMenuTrigger>
+                </DropdownMenu>
+            </SidebarMenuItem>
+        </SidebarMenu>
+    );
 }

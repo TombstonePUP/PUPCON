@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { ParameterOutlines, Program } from '@/types';
+import { ParameterOutlines } from '@/types';
 import { InfoIcon } from 'lucide-react';
 
 interface RejectedDocumentProps {
@@ -21,9 +21,7 @@ export function RejectedDocument({ outline, onClose }: RejectedDocumentProps) {
                     </DialogTitle>
                     <DialogDescription>Comments for rejected document</DialogDescription>
                 </DialogHeader>
-                <Label className="text-muted-foreground text-sm">
-                    {outline.area_files?.file_rejection_reason}
-                </Label>
+                <Label className="text-muted-foreground text-sm">{outline.area_files?.file_rejection_reason}</Label>
                 <DialogFooter className="space-x-2">
                     <DialogClose asChild>
                         <Button variant="outline" tabIndex={1}>

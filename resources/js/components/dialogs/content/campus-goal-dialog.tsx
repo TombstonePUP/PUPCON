@@ -32,10 +32,10 @@ export default function CampusGoalDialog({ ...props }: CampusGoalDialogProps) {
             <Dialog open={true} onOpenChange={onClose}>
                 <DialogContent className="sm:max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle className="text-lg font-medium text-foreground">
+                        <DialogTitle className="text-foreground text-lg font-medium">
                             {type === 'edit' ? 'Edit Campus Goal' : 'Add Campus Goal'}
                         </DialogTitle>
-                        <DialogDescription className="text-sm text-muted-foreground">
+                        <DialogDescription className="text-muted-foreground text-sm">
                             {type === 'edit'
                                 ? 'Make changes to the campus goal details below.'
                                 : 'Fill out the details below to add a new campus goal.'}
@@ -45,7 +45,9 @@ export default function CampusGoalDialog({ ...props }: CampusGoalDialogProps) {
                         <div className="mt-6 grid max-h-[70vh] grid-cols-1 gap-6 overflow-y-auto pr-2 md:grid-cols-2">
                             <div className="space-y-6">
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-foreground">Title (English) <span className="text-red-500">*</span></label>
+                                    <label className="text-foreground mb-2 block text-sm font-medium">
+                                        Title (English) <span className="text-red-500">*</span>
+                                    </label>
                                     <Input
                                         placeholder="e.g., Academic Excellence"
                                         value={data.goal_title_eng}
@@ -55,7 +57,9 @@ export default function CampusGoalDialog({ ...props }: CampusGoalDialogProps) {
                                     />
                                 </div>
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-foreground">Description (English) <span className="text-red-500">*</span></label>
+                                    <label className="text-foreground mb-2 block text-sm font-medium">
+                                        Description (English) <span className="text-red-500">*</span>
+                                    </label>
                                     <Textarea
                                         placeholder="Enter English description..."
                                         value={data.goal_desc_eng}
@@ -70,7 +74,9 @@ export default function CampusGoalDialog({ ...props }: CampusGoalDialogProps) {
 
                             <div className="space-y-6">
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-foreground">Title (Filipino) <span className="text-red-500">*</span></label>
+                                    <label className="text-foreground mb-2 block text-sm font-medium">
+                                        Title (Filipino) <span className="text-red-500">*</span>
+                                    </label>
                                     <Input
                                         placeholder="e.g., Kahusayang Pang-Akademiko"
                                         value={data.goal_title_fil}
@@ -79,7 +85,9 @@ export default function CampusGoalDialog({ ...props }: CampusGoalDialogProps) {
                                     />
                                 </div>
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-foreground">Description (Filipino) <span className="text-red-500">*</span></label>
+                                    <label className="text-foreground mb-2 block text-sm font-medium">
+                                        Description (Filipino) <span className="text-red-500">*</span>
+                                    </label>
                                     <Textarea
                                         placeholder="Enter Filipino description..."
                                         value={data.goal_desc_fil}

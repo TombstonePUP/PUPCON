@@ -96,18 +96,18 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
     };
 
     return (
-        <div className="scroll-mt-6 rounded-lg border border-border bg-card">
+        <div className="border-border bg-card scroll-mt-6 rounded-lg border">
             <div className="p-8">
                 <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-foreground">Vision, Mission, and Goals Page</h2>
-                    <p className="text-sm text-muted-foreground">Configure content</p>
+                    <h2 className="text-foreground text-lg font-semibold">Vision, Mission, and Goals Page</h2>
+                    <p className="text-muted-foreground text-sm">Configure content</p>
                 </div>
 
                 <div className="mb-8">
-                    <h3 className="mb-4 text-base font-semibold text-foreground">Page Content</h3>
+                    <h3 className="text-foreground mb-4 text-base font-semibold">Page Content</h3>
                     <div className="grid gap-6 md:grid-cols-1">
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-foreground">Title</label>
+                            <label className="text-foreground mb-2 block text-sm font-medium">Title</label>
                             <Input
                                 type="text"
                                 value={data.page.title}
@@ -123,7 +123,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                             <InputError message={errors['page.title']} className="mt-2" />
                         </div>
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-foreground">Description</label>
+                            <label className="text-foreground mb-2 block text-sm font-medium">Description</label>
                             <Textarea
                                 placeholder="Enter your page description..."
                                 autoResize
@@ -143,13 +143,15 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     </div>
                 </div>
 
-                <Separator className="my-10 bg-border" />
+                <Separator className="bg-border my-10" />
 
                 <div className="mb-8">
-                    <h3 className="mb-4 text-base font-semibold text-foreground">Vision & Mission</h3>
+                    <h3 className="text-foreground mb-4 text-base font-semibold">Vision & Mission</h3>
                     <div className="grid gap-6 md:grid-cols-2">
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-foreground">Vision <span className="text-red-500">*</span></label>
+                            <label className="text-foreground mb-2 block text-sm font-medium">
+                                Vision <span className="text-red-500">*</span>
+                            </label>
                             <Textarea
                                 placeholder="Enter vision..."
                                 autoResize
@@ -170,7 +172,9 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                             <InputError message={errors['vmgo.vision']} className="mt-2" />
                         </div>
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-foreground">Mission <span className="text-red-500">*</span></label>
+                            <label className="text-foreground mb-2 block text-sm font-medium">
+                                Mission <span className="text-red-500">*</span>
+                            </label>
                             <Textarea
                                 placeholder="Enter mission..."
                                 autoResize
@@ -193,15 +197,15 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     </div>
                 </div>
 
-                <Separator className="my-10 bg-border" />
+                <Separator className="bg-border my-10" />
 
                 <div className="mb-6">
-                    <h3 className="mb-4 text-base font-semibold text-foreground">University Development Plan</h3>
+                    <h3 className="text-foreground mb-4 text-base font-semibold">University Development Plan</h3>
                     <div className="grid gap-6">
                         <div className="grid gap-6 md:grid-cols-2">
                             <div className="space-y-6">
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-foreground">YouTube Link</label>
+                                    <label className="text-foreground mb-2 block text-sm font-medium">YouTube Link</label>
                                     <Input
                                         placeholder="https://www.youtube.com/watch?v=..."
                                         value={data.page.video_link || ''}
@@ -219,7 +223,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                     <InputError message={errors['page.video_link']} className="mt-2" />
                                 </div>
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-foreground">Video Title</label>
+                                    <label className="text-foreground mb-2 block text-sm font-medium">Video Title</label>
                                     <Input
                                         placeholder="Enter video title..."
                                         value={data.page.video_title || ''}
@@ -238,7 +242,7 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                                 </div>
                             </div>
                             <div className="flex flex-col">
-                                <label className="mb-2 block text-sm font-medium text-foreground">Video Description</label>
+                                <label className="text-foreground mb-2 block text-sm font-medium">Video Description</label>
                                 <Textarea
                                     className="flex-1"
                                     placeholder="Enter video description..."
@@ -259,13 +263,9 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                         </div>
                     </div>
                 </div>
-                <Separator className="my-10 bg-border" />
+                <Separator className="bg-border my-10" />
                 {/* --- University Strategic Goals --- */}
-                <PillarsSection
-                    pillars={data.pillars}
-                    updatePillars={handleUpdatePillars}
-                    errors={errors}
-                />
+                <PillarsSection pillars={data.pillars} updatePillars={handleUpdatePillars} errors={errors} />
                 {pillar_errors.length > 0 && (
                     <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
                         <h4 className="mb-2 font-semibold text-red-700">Pillar Sections</h4>
@@ -277,13 +277,9 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                     </div>
                 )}
 
-                <Separator className="my-10 bg-border" />
+                <Separator className="bg-border my-10" />
                 {/* --- University Campus Goals --- */}
-                <CampusGoalsSection
-                    campus_goals={data.campus_goals}
-                    updateCampusGoals={handleUpdateCampusGoals}
-                    errors={errors}
-                />
+                <CampusGoalsSection campus_goals={data.campus_goals} updateCampusGoals={handleUpdateCampusGoals} errors={errors} />
                 {/*campus_goal_errors.length > 0 && (
                     <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4">
                         <h4 className="mb-2 font-semibold text-red-700">Gallery Section Errors</h4>
@@ -294,7 +290,6 @@ const VmgoContentSection: React.FC = ({ ...props }: VmgoContentSectionProps) => 
                         </ul>
                     </div>
                 )*/}
-
             </div>
             <SectionFooter onSave={handleSave} onPreview={handlePreview} />
         </div>

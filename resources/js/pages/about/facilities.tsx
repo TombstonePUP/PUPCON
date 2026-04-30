@@ -1,9 +1,9 @@
 'use client';
 import PageHeader from '@/components/guest-page-header';
+import { useSmartPoll } from '@/hooks/use-smart-poll';
 import Layout from '@/layouts/landing-layout';
 import { ContentPages, Facilities } from '@/types/content';
 import { Head } from '@inertiajs/react';
-import { useSmartPoll } from '@/hooks/use-smart-poll';
 import { motion } from 'framer-motion';
 import { AlertCircle, Building2, Construction } from 'lucide-react';
 import { useState } from 'react';
@@ -18,7 +18,7 @@ const EmptyState = ({ title, description, icon: Icon = Construction }: { title: 
     <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
         <Icon className="mb-4 h-16 w-16 text-gray-400" />
         <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground text-sm">{description}</p>
     </div>
 );
 
@@ -104,8 +104,8 @@ export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps
                                             }}
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                                        <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                                            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#7f1414]">
+                                        <div className="absolute right-4 bottom-4 left-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                                            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold tracking-wider text-[#7f1414] uppercase">
                                                 {facility.status || 'Active'}
                                             </span>
                                         </div>
@@ -125,12 +125,14 @@ export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps
                                                 <Building2 className="h-4 w-4" />
                                                 <span>PUP SJ Campus</span>
                                             </div>
-                                            <div className={`h-2 w-2 rounded-full ${facility.status === 'Under Maintenance' ? 'bg-amber-400' : 'bg-emerald-400'}`}></div>
+                                            <div
+                                                className={`h-2 w-2 rounded-full ${facility.status === 'Under Maintenance' ? 'bg-amber-400' : 'bg-emerald-400'}`}
+                                            ></div>
                                         </div>
                                     </div>
 
                                     {/* Hover Decorative Element */}
-                                    <div className="absolute top-0 right-0 h-16 w-16 -translate-y-full translate-x-full bg-[#7f1414]/10 blur-2xl transition-all duration-500 group-hover:translate-y-0 group-hover:translate-x-0"></div>
+                                    <div className="absolute top-0 right-0 h-16 w-16 translate-x-full -translate-y-full bg-[#7f1414]/10 blur-2xl transition-all duration-500 group-hover:translate-x-0 group-hover:translate-y-0"></div>
                                 </motion.div>
                             ))}
                         </div>

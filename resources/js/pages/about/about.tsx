@@ -10,19 +10,11 @@ interface AboutPageProps {
     org_types: OrganizationTypes[];
 }
 
-const EmptyState = ({
-    title,
-    description,
-    icon: Icon = Construction,
-}: {
-    title: string;
-    description: string;
-    icon?: React.ElementType;
-}) => (
+const EmptyState = ({ title, description, icon: Icon = Construction }: { title: string; description: string; icon?: React.ElementType }) => (
     <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
         <Icon className="mb-4 h-16 w-16 text-gray-400" />
         <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground text-sm">{description}</p>
     </div>
 );
 
@@ -81,11 +73,7 @@ export default function About({ page, programs, facilities, org_types }: AboutPa
                         <div className="flex flex-col gap-6">
                             {page?.image_path ? (
                                 <div className="relative h-64 w-full overflow-hidden rounded-xl">
-                                    <img
-                                        src={page.image_path}
-                                        alt={page.image_name || 'Campus Image'}
-                                        className="h-full w-full object-cover"
-                                    />
+                                    <img src={page.image_path} alt={page.image_name || 'Campus Image'} className="h-full w-full object-cover" />
                                 </div>
                             ) : (
                                 <div className="flex h-64 w-full items-center justify-center rounded-xl bg-gray-100">
@@ -136,7 +124,7 @@ export default function About({ page, programs, facilities, org_types }: AboutPa
                             </div>
                         ) : (
                             <div className="rounded-xl border border-gray-200 bg-gray-50 p-8 text-center">
-                                <p className="text-sm text-muted-foreground">No organizations listed under this category yet.</p>
+                                <p className="text-muted-foreground text-sm">No organizations listed under this category yet.</p>
                             </div>
                         )}
                     </section>

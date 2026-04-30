@@ -57,7 +57,7 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
         <div className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-16 text-center">
             <Construction className="mb-6 h-16 w-16 text-gray-400" />
             <h3 className="mb-2 text-xl font-semibold text-gray-900">{title}</h3>
-            <p className="max-w-md text-sm text-muted-foreground">{description}</p>
+            <p className="text-muted-foreground max-w-md text-sm">{description}</p>
         </div>
     );
 
@@ -80,10 +80,7 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                     {exhibits.length > 0 ? (
                         <div className="grid w-[75%] grid-cols-2 gap-4 py-12 lg:grid-cols-3 xl:grid-cols-5">
                             {exhibits.map((exhibit, index) => {
-
                                 const hasFiles = exhibit.exhibit_outlines?.some((outline) => outline.exhibit_files?.file_path) ?? false;
-
-                            
 
                                 return (
                                     <div
@@ -199,7 +196,7 @@ export default function ExhibitsPage({ exhibits }: ExhibitsProps) {
                                     <div className="rounded-full bg-gray-100 p-4">
                                         <FileX className="h-12 w-12 text-gray-400" />
                                     </div>
-                                    <p className="text-sm text-muted-foreground">No outlines available for this exhibit.</p>
+                                    <p className="text-muted-foreground text-sm">No outlines available for this exhibit.</p>
                                 </div>
                             )}
                         </DialogDescription>

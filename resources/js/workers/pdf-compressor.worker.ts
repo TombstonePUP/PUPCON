@@ -9,8 +9,8 @@
  *  - Files under threshold are passed through untouched
  */
 
-import * as pdfjs from 'pdfjs-dist';
 import { PDFDocument } from 'pdf-lib';
+import * as pdfjs from 'pdfjs-dist';
 
 // ── When running inside a Worker, pdfjs must NOT spawn its own child worker.
 //    Setting an empty string tells pdfjs to run synchronously in this thread.
@@ -21,8 +21,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = '';
 interface CompressRequest {
     type: 'compress';
     buffer: ArrayBuffer;
-    quality: number;          // JPEG quality 0-1
-    scale: number;            // render resolution scale
+    quality: number; // JPEG quality 0-1
+    scale: number; // render resolution scale
     skipThresholdBytes: number;
 }
 
@@ -47,16 +47,9 @@ interface ErrorMessage {
 
 // ── Page rendering ────────────────────────────────────────────────────────────
 
-async function renderPageToJpeg(
-    page: pdfjs.PDFPageProxy,
-    scale: number,
-    quality: number,
-): Promise<Uint8Array> {
+async function renderPageToJpeg(page: pdfjs.PDFPageProxy, scale: number, quality: number): Promise<Uint8Array> {
     const viewport = page.getViewport({ scale });
-    const canvas = new OffscreenCanvas(
-        Math.round(viewport.width),
-        Math.round(viewport.height),
-    );
+    const canvas = new OffscreenCanvas(Math.round(viewport.width), Math.round(viewport.height));
 
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Could not get 2D context from OffscreenCanvas');
@@ -107,10 +100,7 @@ self.onmessage = async (event: MessageEvent<CompressRequest>) => {
 
         for (let batchStart = 1; batchStart <= numPages; batchStart += BATCH_SIZE) {
             const batchEnd = Math.min(batchStart + BATCH_SIZE - 1, numPages);
-            const batchIndices = Array.from(
-                { length: batchEnd - batchStart + 1 },
-                (_, i) => batchStart + i,
-            );
+            const batchIndices = Array.from({ length: batchEnd - batchStart + 1 }, (_, i) => batchStart + i);
 
             const batchResults = await Promise.all(
                 batchIndices.map(async (pageNum) => {
@@ -165,7 +155,6 @@ self.onmessage = async (event: MessageEvent<CompressRequest>) => {
             skipped: false,
         };
         (self as unknown as Worker).postMessage(msg, [compressedBuffer]);
-
     } catch (err) {
         // On any error send back the original buffer so upload still works
         const msg: ErrorMessage = {

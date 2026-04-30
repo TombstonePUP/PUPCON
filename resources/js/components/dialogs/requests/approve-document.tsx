@@ -1,15 +1,7 @@
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { FilesOverview } from "@/types";
-import { useForm } from "@inertiajs/react";
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { FilesOverview } from '@/types';
+import { useForm } from '@inertiajs/react';
 
 interface FileForm {
     file_id: number;
@@ -26,12 +18,8 @@ interface ApproveRequestProps {
 }
 
 export default function ApproveRequest({ file, onClose }: ApproveRequestProps) {
-    const {
-        data,
-        post,
-        reset,
-    } = useForm<DocumentRequestForm>({
-        file: file.map(f => ({
+    const { data, post, reset } = useForm<DocumentRequestForm>({
+        file: file.map((f) => ({
             file_id: f.file_id,
             file_type: f.file_type,
         })),
@@ -43,7 +31,7 @@ export default function ApproveRequest({ file, onClose }: ApproveRequestProps) {
         post(route('approveDocument'), {
             onSuccess: () => {
                 reset();
-            }
+            },
         });
     };
 
@@ -51,8 +39,8 @@ export default function ApproveRequest({ file, onClose }: ApproveRequestProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">Approve Document</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">Approve Document</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         Confirm approval of {file.length === 1 ? 'this document' : `${file.length} documents`}
                     </DialogDescription>
                 </DialogHeader>

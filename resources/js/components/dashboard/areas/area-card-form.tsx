@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AreaFormCategory, AreaForms, Program, ProgramAreas } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { CheckCircle2, CircleDashed, DownloadIcon, Edit, FilePlus, FileUp, FileX, Info, MoreVertical, Plus, Trash2, XCircle } from 'lucide-react';
+import { CheckCircle2, CircleDashed, DownloadIcon, Edit, FilePlus, FileUp, FileX, Info, MoreVertical, Trash2, XCircle } from 'lucide-react';
 
 interface AreaFormDialogParams {
     type: 'view' | 'upload' | 'add' | 'delete-form' | 'delete' | 'rejected';
@@ -72,12 +72,12 @@ export default function AreaCards({ program, area, forms, resolveFormDialog }: A
                         className="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg border p-6 transition-all duration-300 hover:border-red-800"
                         onClick={() => resolveFormDialog({ type: 'view', form: card })}
                     >
-                        <div className="flex items-center gap-6 w-full">
+                        <div className="flex w-full items-center gap-6">
                             <div className="rounded-lg bg-gray-100 p-2">
                                 <StatusIcon form={card} />
                             </div>
-                            <div className='truncate'>
-                                <h1 className="w-full text-card-foreground truncate text-base font-semibold">
+                            <div className="truncate">
+                                <h1 className="text-card-foreground w-full truncate text-base font-semibold">
                                     {(card.area_form_category as AreaFormCategory | undefined)?.category_name}
                                 </h1>
                                 <h1 className="font-base truncate text-sm text-gray-700">Area form</h1>

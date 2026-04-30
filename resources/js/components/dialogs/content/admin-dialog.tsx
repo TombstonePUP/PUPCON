@@ -64,8 +64,8 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="w-full max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">{type === 'edit' ? 'Edit Official' : 'Add Official'}</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">{type === 'edit' ? 'Edit Official' : 'Add Official'}</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         {type === 'edit'
                             ? `Modify the details of "${official?.first_name}${official?.last_name}".`
                             : 'Fill in the details to add a new official.'}
@@ -76,10 +76,10 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                     <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div>
                             {!data.previewUrl ? (
-                                <label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
+                                <label className="border-border bg-muted hover:bg-muted/80 flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
-                                            className="mb-4 h-8 w-8 text-muted-foreground"
+                                            className="text-muted-foreground mb-4 h-8 w-8"
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
                                             viewBox="0 0 20 16"
@@ -92,7 +92,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                                                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                             />
                                         </svg>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             <span className="font-semibold">Click to upload</span> or drag and drop
                                         </p>
                                         <p className="text-xs text-gray-500">JPG, PNG, JPEG</p>
@@ -142,7 +142,9 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">First Name <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                First Name <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 placeholder="e.g., Juan"
                                 value={data.first_name}
@@ -152,7 +154,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Middle Name</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Middle Name</Label>
                             <Input
                                 placeholder="e.g., Santos"
                                 value={data.middle_name}
@@ -161,7 +163,9 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Last Name <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Last Name <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 placeholder="e.g., Dela Cruz"
                                 value={data.last_name}
@@ -171,7 +175,7 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Suffix</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Suffix</Label>
                             <Input
                                 placeholder="e.g., Sr., Jr., III"
                                 value={data.suffix}
@@ -180,7 +184,9 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Official Type <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Official Type <span className="text-red-500">*</span>
+                            </Label>
                             <Select value={data.type ? String(data.type) : ''} onValueChange={(value) => setData({ ...data, type: value })} required>
                                 <SelectTrigger className="w-full" tabIndex={3}>
                                     <SelectValue placeholder="Select Official" />
@@ -199,7 +205,9 @@ export function AdministrationDialog({ official, type, onSave, onClose }: Admini
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Position <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Position <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 placeholder="e.g., President"
                                 value={data.position}

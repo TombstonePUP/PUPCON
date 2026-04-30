@@ -9,7 +9,7 @@ export function UserInfo({ user, showEmail = false, showRole = false }: { user: 
         <>
             <Avatar className="h-8 w-8 overflow-hidden rounded-full">
                 <AvatarImage src={user.avatar} alt={[user.first_name, user.last_name].filter(Boolean).join(' ')} />
-                <AvatarFallback className="rounded-lg bg-muted text-muted-foreground">{getInitials(user.first_name, user.last_name)}</AvatarFallback>
+                <AvatarFallback className="bg-muted text-muted-foreground rounded-lg">{getInitials(user.first_name, user.last_name)}</AvatarFallback>
             </Avatar>
 
             <div className="flex flex-col text-xs">
@@ -18,7 +18,7 @@ export function UserInfo({ user, showEmail = false, showRole = false }: { user: 
                     {showEmail && <span className="text-muted-foreground truncate text-xs">{user.email}</span>}
                 </div>
 
-                <div className='text-muted-foreground'>{showRole && user.roles.role_name}</div>
+                <div className="text-muted-foreground">{showRole && user.roles.role_name}</div>
             </div>
         </>
     );

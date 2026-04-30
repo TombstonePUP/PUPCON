@@ -3,23 +3,15 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { AssignableAreas, AssignablePrograms, AssignableRoles } from '@/types/user-management';
 import { useForm } from '@inertiajs/react';
-import { toast } from 'sonner';
+import { ArrowLeft, CheckCircle2, User2 } from 'lucide-react';
 import { useState } from 'react';
-import { User2, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface AddUserProps {
     programRoles: AssignablePrograms[];
@@ -51,8 +43,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
 
     const chairmanRoleId = roles.find((r) => r.role_name === 'Chairman')?.role_id;
     const accreditorRoleId = roles.find((r) => r.role_name === 'Accreditor')?.role_id;
-    const showProgramAreas =
-        data.assigned_role === chairmanRoleId || data.assigned_role === accreditorRoleId;
+    const showProgramAreas = data.assigned_role === chairmanRoleId || data.assigned_role === accreditorRoleId;
 
     const handleReviewDetails = () => {
         setLocalErrors({});
@@ -102,9 +93,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
             // Also remove areas that belong to this program
             setData(
                 'assigned_areas',
-                data.assigned_areas.filter(
-                    (areaId) => !program.levels?.areas?.some((a) => a.area_id === areaId),
-                ),
+                data.assigned_areas.filter((areaId) => !program.levels?.areas?.some((a) => a.area_id === areaId)),
             );
         }
     };
@@ -122,28 +111,28 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
-            <DialogContent className={`transition-all duration-300 max-h-[90vh] overflow-y-auto ${step === 'form' ? 'sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl' : 'sm:max-w-xl md:max-w-2xl'}`}>
+            <DialogContent
+                className={`max-h-[90vh] overflow-y-auto transition-all duration-300 ${step === 'form' ? 'sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl' : 'sm:max-w-xl md:max-w-2xl'}`}
+            >
                 <form onSubmit={handleSubmit} noValidate>
                     <DialogHeader className="mb-6">
-                        <DialogTitle className="text-lg font-medium text-foreground">
+                        <DialogTitle className="text-foreground text-lg font-medium">
                             {step === 'form' ? 'Add New User' : 'Review User Details'}
                         </DialogTitle>
-                        <DialogDescription className="text-sm text-muted-foreground">
-                            {step === 'form' 
+                        <DialogDescription className="text-muted-foreground text-sm">
+                            {step === 'form'
                                 ? "Fill in the user's details and assign their role and access permissions."
-                                : "Please verify the information below before finalizing user creation."}
+                                : 'Please verify the information below before finalizing user creation.'}
                         </DialogDescription>
                     </DialogHeader>
 
                     {step === 'form' ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start relative">
+                        <div className="relative grid grid-cols-1 items-start gap-6 md:grid-cols-2">
                             {/* ── Left Column: Personal Info & Note ── */}
                             <div className="space-y-6 md:sticky md:top-0">
                                 {/* ── Personal Information ── */}
                                 <section className="space-y-4">
-                                    <h3 className="text-sm font-semibold uppercase tracking-wide text-foreground">
-                                        Personal Information
-                                    </h3>
+                                    <h3 className="text-foreground text-sm font-semibold tracking-wide uppercase">Personal Information</h3>
 
                                     <div className="space-y-4 rounded-lg border px-4 py-4">
                                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -198,10 +187,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
 
                                 {/* ── Info note ── */}
                                 <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-blue-800 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-300">
-                                    <p className="text-sm">
-                                        After the user is created, they will receive an email with their
-                                        login credentials.
-                                    </p>
+                                    <p className="text-sm">After the user is created, they will receive an email with their login credentials.</p>
                                 </div>
                             </div>
 
@@ -209,20 +195,12 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                             <div className="space-y-6">
                                 {/* ── Role Assignment ── */}
                                 <section className="space-y-4">
-                                    <h3 className="text-sm font-semibold uppercase tracking-wide text-foreground">
-                                        Role &amp; Access
-                                    </h3>
+                                    <h3 className="text-foreground text-sm font-semibold tracking-wide uppercase">Role &amp; Access</h3>
 
                                     <div className="space-y-2">
                                         <RadioGroup
-                                            onValueChange={(value) =>
-                                                setData('assigned_role', Number(value))
-                                            }
-                                            value={
-                                                data.assigned_role !== null
-                                                    ? String(data.assigned_role)
-                                                    : undefined
-                                            }
+                                            onValueChange={(value) => setData('assigned_role', Number(value))}
+                                            value={data.assigned_role !== null ? String(data.assigned_role) : undefined}
                                             className="grid grid-cols-2 gap-3"
                                         >
                                             {roles.map((role) => (
@@ -230,15 +208,8 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                                     key={role.role_id}
                                                     className="flex cursor-pointer items-center space-x-2 rounded-lg border px-4 py-3 transition-colors hover:border-[#7f1414] hover:bg-[#7f1414]/5"
                                                 >
-                                                    <RadioGroupItem
-                                                        value={String(role.role_id)}
-                                                        id={`role-${role.role_id}`}
-                                                        disabled={processing}
-                                                    />
-                                                    <Label
-                                                        htmlFor={`role-${role.role_id}`}
-                                                        className="w-full cursor-pointer text-sm font-normal"
-                                                    >
+                                                    <RadioGroupItem value={String(role.role_id)} id={`role-${role.role_id}`} disabled={processing} />
+                                                    <Label htmlFor={`role-${role.role_id}`} className="w-full cursor-pointer text-sm font-normal">
                                                         {role.role_name}
                                                     </Label>
                                                 </div>
@@ -249,12 +220,10 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
 
                                     {/* ── Programs & Areas (conditional) ── */}
                                     {showProgramAreas && (
-                                        <div className="rounded-lg border bg-secondary/10 p-4 space-y-3">
-                                            <div className="max-h-56 overflow-y-auto space-y-4 pr-1">
+                                        <div className="bg-secondary/10 space-y-3 rounded-lg border p-4">
+                                            <div className="max-h-56 space-y-4 overflow-y-auto pr-1">
                                                 {programRoles.map((program) => {
-                                                    const isProgramChecked = data.assigned_programs.includes(
-                                                        program.program_id,
-                                                    );
+                                                    const isProgramChecked = data.assigned_programs.includes(program.program_id);
                                                     return (
                                                         <div key={program.program_id} className="space-y-2">
                                                             <div className="flex items-center space-x-2">
@@ -262,12 +231,7 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                                                     id={`program-${program.program_id}`}
                                                                     checked={isProgramChecked}
                                                                     disabled={processing}
-                                                                    onCheckedChange={(checked) =>
-                                                                        onChangeProgram(
-                                                                            program,
-                                                                            checked as boolean,
-                                                                        )
-                                                                    }
+                                                                    onCheckedChange={(checked) => onChangeProgram(program, checked as boolean)}
                                                                     className="data-[state=checked]:border-[#7f1414] data-[state=checked]:bg-[#7f1414]"
                                                                 />
                                                                 <Label
@@ -279,56 +243,38 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                                             </div>
 
                                                             {isProgramChecked && (
-                                                                <div className="ml-6 border-l pl-4 pt-1">
+                                                                <div className="ml-6 border-l pt-1 pl-4">
                                                                     {(program.levels?.areas?.length ?? 0) > 0 ? (
-                                                                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
-                                                                            {program.levels.areas!.map(
-                                                                                (area) => {
-                                                                                    const isAreaChecked =
-                                                                                        data.assigned_areas.includes(
-                                                                                            area.area_id,
-                                                                                        );
-                                                                                    return (
-                                                                                        <div
-                                                                                            key={area.area_id}
-                                                                                            className="flex items-center space-x-2 rounded-md border px-2 py-2 transition-colors hover:border-[#7f1414] hover:bg-[#7f1414]/5"
+                                                                        <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
+                                                                            {program.levels.areas!.map((area) => {
+                                                                                const isAreaChecked = data.assigned_areas.includes(area.area_id);
+                                                                                return (
+                                                                                    <div
+                                                                                        key={area.area_id}
+                                                                                        className="flex items-center space-x-2 rounded-md border px-2 py-2 transition-colors hover:border-[#7f1414] hover:bg-[#7f1414]/5"
+                                                                                    >
+                                                                                        <Checkbox
+                                                                                            id={`area-${area.area_id}`}
+                                                                                            checked={isAreaChecked}
+                                                                                            disabled={processing}
+                                                                                            onCheckedChange={(checked) =>
+                                                                                                onChangeArea(area, checked as boolean)
+                                                                                            }
+                                                                                            className="data-[state=checked]:border-[#7f1414] data-[state=checked]:bg-[#7f1414]"
+                                                                                        />
+                                                                                        <Label
+                                                                                            htmlFor={`area-${area.area_id}`}
+                                                                                            className="cursor-pointer text-sm font-normal whitespace-nowrap"
                                                                                         >
-                                                                                            <Checkbox
-                                                                                                id={`area-${area.area_id}`}
-                                                                                                checked={
-                                                                                                    isAreaChecked
-                                                                                                }
-                                                                                                disabled={
-                                                                                                    processing
-                                                                                                }
-                                                                                                onCheckedChange={(
-                                                                                                    checked,
-                                                                                                ) =>
-                                                                                                    onChangeArea(
-                                                                                                        area,
-                                                                                                        checked as boolean,
-                                                                                                    )
-                                                                                                }
-                                                                                                className="data-[state=checked]:border-[#7f1414] data-[state=checked]:bg-[#7f1414]"
-                                                                                            />
-                                                                                            <Label
-                                                                                                htmlFor={`area-${area.area_id}`}
-                                                                                                className="cursor-pointer text-sm font-normal whitespace-nowrap"
-                                                                                            >
-                                                                                                Area{' '}
-                                                                                                {
-                                                                                                    area.area_number
-                                                                                                }
-                                                                                            </Label>
-                                                                                        </div>
-                                                                                    );
-                                                                                },
-                                                                            )}
+                                                                                            Area {area.area_number}
+                                                                                        </Label>
+                                                                                    </div>
+                                                                                );
+                                                                            })}
                                                                         </div>
                                                                     ) : (
-                                                                        <p className="text-sm italic text-muted-foreground">
-                                                                            No areas available for this
-                                                                            program.
+                                                                        <p className="text-muted-foreground text-sm italic">
+                                                                            No areas available for this program.
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -347,47 +293,65 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                         </div>
                     ) : (
                         /* ── Step 2: Summary / Receipt ── */
-                        <div className="rounded-xl border border-secondary bg-secondary/5 p-6 animate-in slide-in-from-right-4 duration-300">
-                            <div className="flex border-b border-border/60 pb-5 mb-5 gap-4 items-center">
-                                <div className="flex size-14 rounded-full border border-dashed border-[#7f1414] items-center justify-center text-[#7f1414] bg-[#7f1414]/5 shrink-0">
+                        <div className="border-secondary bg-secondary/5 animate-in slide-in-from-right-4 rounded-xl border p-6 duration-300">
+                            <div className="border-border/60 mb-5 flex items-center gap-4 border-b pb-5">
+                                <div className="flex size-14 shrink-0 items-center justify-center rounded-full border border-dashed border-[#7f1414] bg-[#7f1414]/5 text-[#7f1414]">
                                     <User2 className="size-6" />
                                 </div>
                                 <div>
-                                    <h4 className="text-lg font-bold text-foreground leading-none">{data.first_name} {data.last_name}</h4>
-                                    <p className="text-sm text-muted-foreground mt-1.5">{data.email}</p>
+                                    <h4 className="text-foreground text-lg leading-none font-bold">
+                                        {data.first_name} {data.last_name}
+                                    </h4>
+                                    <p className="text-muted-foreground mt-1.5 text-sm">{data.email}</p>
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-6">
                                 <div>
-                                    <span className="text-[11px] tracking-wider uppercase font-semibold text-muted-foreground">Assigned Role</span>
-                                    <div className="flex items-center gap-2 mt-1.5 font-medium text-foreground text-sm">
+                                    <span className="text-muted-foreground text-[11px] font-semibold tracking-wider uppercase">Assigned Role</span>
+                                    <div className="text-foreground mt-1.5 flex items-center gap-2 text-sm font-medium">
                                         <CheckCircle2 className="size-4 text-green-600" />
-                                        {roles.find(r => r.role_id === data.assigned_role)?.role_name || 'N/A'}
+                                        {roles.find((r) => r.role_id === data.assigned_role)?.role_name || 'N/A'}
                                     </div>
                                 </div>
 
                                 {showProgramAreas && data.assigned_programs.length > 0 && (
-                                     <div>
-                                        <span className="text-[11px] tracking-wider uppercase font-semibold text-muted-foreground">Granted Access Rights</span>
+                                    <div>
+                                        <span className="text-muted-foreground text-[11px] font-semibold tracking-wider uppercase">
+                                            Granted Access Rights
+                                        </span>
                                         <ul className="mt-2.5 space-y-3">
-                                            {programRoles.filter(p => data.assigned_programs.includes(p.program_id)).map(program => (
-                                                <li key={program.program_id} className="text-sm rounded-md border border-border/50 bg-background px-3 py-2.5">
-                                                    <span className="font-semibold text-foreground/90">{program.program_name}</span>
-                                                    <div className="mt-2 flex flex-wrap gap-1.5">
-                                                        {(program.levels?.areas?.filter(a => data.assigned_areas.includes(a.area_id)).length ?? 0) > 0 
-                                                          ? program.levels.areas!.filter(a => data.assigned_areas.includes(a.area_id)).map(a => (
-                                                              <span key={a.area_id} className="inline-flex items-center rounded-md bg-secondary/80 px-2 py-1 text-xs font-medium text-secondary-foreground border border-black/5">
-                                                                Area {a.area_number}
-                                                              </span>
-                                                            ))
-                                                          : <span className="inline-flex items-center rounded-md bg-red-50/50 px-2 py-1 text-xs font-medium text-red-700 border border-red-100">No specific areas assigned</span>
-                                                        }
-                                                    </div>
-                                                </li>
-                                            ))}
+                                            {programRoles
+                                                .filter((p) => data.assigned_programs.includes(p.program_id))
+                                                .map((program) => (
+                                                    <li
+                                                        key={program.program_id}
+                                                        className="border-border/50 bg-background rounded-md border px-3 py-2.5 text-sm"
+                                                    >
+                                                        <span className="text-foreground/90 font-semibold">{program.program_name}</span>
+                                                        <div className="mt-2 flex flex-wrap gap-1.5">
+                                                            {(program.levels?.areas?.filter((a) => data.assigned_areas.includes(a.area_id)).length ??
+                                                                0) > 0 ? (
+                                                                program.levels
+                                                                    .areas!.filter((a) => data.assigned_areas.includes(a.area_id))
+                                                                    .map((a) => (
+                                                                        <span
+                                                                            key={a.area_id}
+                                                                            className="bg-secondary/80 text-secondary-foreground inline-flex items-center rounded-md border border-black/5 px-2 py-1 text-xs font-medium"
+                                                                        >
+                                                                            Area {a.area_number}
+                                                                        </span>
+                                                                    ))
+                                                            ) : (
+                                                                <span className="inline-flex items-center rounded-md border border-red-100 bg-red-50/50 px-2 py-1 text-xs font-medium text-red-700">
+                                                                    No specific areas assigned
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </li>
+                                                ))}
                                         </ul>
-                                     </div>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -406,11 +370,11 @@ export function AddUser({ programRoles, roles, onClose }: AddUserProps) {
                                 </Button>
                             </>
                         ) : (
-                            <div className="w-full flex justify-between gap-3">
+                            <div className="flex w-full justify-between gap-3">
                                 <Button variant="outline" type="button" onClick={() => setStep('form')} disabled={processing}>
-                                    <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                                    <ArrowLeft className="mr-2 h-4 w-4" /> Back
                                 </Button>
-                                <Button type="submit" disabled={processing} className="bg-[#7f1414] hover:bg-[#7f1414]/90 text-white">
+                                <Button type="submit" disabled={processing} className="bg-[#7f1414] text-white hover:bg-[#7f1414]/90">
                                     {processing ? 'Creating...' : 'Confirm & Create User'}
                                 </Button>
                             </div>

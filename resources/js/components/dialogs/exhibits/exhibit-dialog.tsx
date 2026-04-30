@@ -63,20 +63,20 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">{type === 'add' ? 'Add New Exhibit' : 'Edit Exhibit'}</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">{type === 'add' ? 'Add New Exhibit' : 'Edit Exhibit'}</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         {type === 'add' ? 'Fill out the details below to create a new exhibit.' : 'Make changes to the exhibit details below.'}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-6">
                     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Exhibit Image</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Exhibit Image</Label>
                             {!data.previewUrl ? (
-                                <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
+                                <Label className="border-border bg-muted hover:bg-muted/80 flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
-                                            className="mb-4 h-8 w-8 text-muted-foreground"
+                                            className="text-muted-foreground mb-4 h-8 w-8"
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
                                             viewBox="0 0 20 16"
@@ -89,7 +89,7 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                                                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                             />
                                         </svg>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             <span className="font-semibold">Click to upload</span> or drag and drop
                                         </p>
                                         <p className="text-xs text-gray-500">JPG, PNG, JPEG</p>
@@ -139,7 +139,9 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                             <InputError message={errors.image} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Exhibit Title  <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Exhibit Title <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 type="text"
                                 required
@@ -160,7 +162,7 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                             />
                             <Label
                                 htmlFor="is-container-mode"
-                                className="block text-sm leading-none font-medium text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                className="text-foreground block text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
                                 Exhibit Container
                             </Label>
@@ -172,7 +174,9 @@ export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogP
                                             <HelpCircleIcon className="h-auto w-4 text-red-800" />
                                         </span>
                                     </TooltipTrigger>
-                                    <TooltipContent className='text-center'>Enable this switch to allow uploading multiple files in this category.</TooltipContent>
+                                    <TooltipContent className="text-center">
+                                        Enable this switch to allow uploading multiple files in this category.
+                                    </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
                         </div>

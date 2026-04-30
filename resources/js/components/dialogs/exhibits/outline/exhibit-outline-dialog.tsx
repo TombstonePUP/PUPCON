@@ -78,13 +78,13 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                         outline_description: data.outline_description,
                         exhibit_files: data.file
                             ? {
-                                file_name: data.file.name,
-                                file_path: URL.createObjectURL(data.file),
-                            }
+                                  file_name: data.file.name,
+                                  file_path: URL.createObjectURL(data.file),
+                              }
                             : {
-                                file_name: data.outline_description,
-                                file_path: updatedFilePath || '',
-                            },
+                                  file_name: data.outline_description,
+                                  file_path: updatedFilePath || '',
+                              },
                         exhibit_id: data.exhibit_id,
                     };
 
@@ -114,10 +114,10 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="space-y-6 sm:max-w-lg">
                 <DialogHeader className="flex flex-col items-start text-left">
-                    <DialogTitle className="text-lg font-medium text-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">
                         {type === 'add' ? 'Add Exhibit Outline' : 'Edit Exhibit Outline'}
                     </DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogDescription className="text-muted-foreground text-sm">
                         {type === 'add'
                             ? 'Fill out the form below to add a new exhibit outline.'
                             : 'Update the details of the exhibit outline below.'}
@@ -125,15 +125,16 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="m-0">
                     <div className="flex w-full flex-col items-center justify-center">
-                        <Label className="mb-2 w-full text-left text-sm font-medium text-foreground">Upload PDF File</Label>
+                        <Label className="text-foreground mb-2 w-full text-left text-sm font-medium">Upload PDF File</Label>
                         {!data.file ? (
                             <label
-                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
-                                    }`}
+                                className={`border-border bg-muted hover:bg-muted/80 flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed ${
+                                    isUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'
+                                }`}
                             >
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg
-                                        className="mb-4 h-8 w-8 text-muted-foreground"
+                                        className="text-muted-foreground mb-4 h-8 w-8"
                                         aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
@@ -147,7 +148,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                                             d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                         />
                                     </svg>
-                                    <p className="text-sm text-muted-foreground">
+                                    <p className="text-muted-foreground text-sm">
                                         <span className="font-semibold">Click to upload</span> or drag and drop
                                     </p>
                                     <p className="text-xs text-gray-500">PDF</p>
@@ -165,10 +166,11 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                             </label>
                         ) : (
                             <div
-                                className={`flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80 ${isUploading ? 'pointer-events-none opacity-70' : ''
-                                    }`}
+                                className={`border-border bg-muted hover:bg-muted/80 flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed ${
+                                    isUploading ? 'pointer-events-none opacity-70' : ''
+                                }`}
                             >
-                                <span className="text-sm font-semibold text-foreground">{data.file.name}</span>
+                                <span className="text-foreground text-sm font-semibold">{data.file.name}</span>
                                 <Button
                                     type="button"
                                     variant="outline"
@@ -185,7 +187,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
                     </div>
                     <div className="grid w-full gap-4 py-4">
                         <div className="space-y-2">
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Category</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Category</Label>
 
                             <input
                                 type="text"
@@ -203,7 +205,7 @@ export default function ExhibitOutlineDialog({ outline, type, exhibit, onClose, 
 
                     <div>
                         <div>
-                            <Label htmlFor="outline_description" className="mb-2 block text-sm font-medium text-foreground">
+                            <Label htmlFor="outline_description" className="text-foreground mb-2 block text-sm font-medium">
                                 Outline Description
                             </Label>
                             <input

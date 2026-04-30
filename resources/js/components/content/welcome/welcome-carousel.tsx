@@ -19,11 +19,7 @@ interface WelcomeCarouselProps {
     errors?: Record<string, string>;
 }
 
-const SharedPhotoPreview: React.FC<{ url: string | null; alt: string; heightClass?: string }> = ({
-    url,
-    alt,
-    heightClass = 'h-48',
-}) => {
+const SharedPhotoPreview: React.FC<{ url: string | null; alt: string; heightClass?: string }> = ({ url, alt, heightClass = 'h-48' }) => {
     const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
@@ -33,9 +29,9 @@ const SharedPhotoPreview: React.FC<{ url: string | null; alt: string; heightClas
     if (!url || hasError) {
         return (
             <div
-                className={`w-full ${heightClass} animate-in fade-in-0 flex flex-col items-center justify-center rounded-md border border-border bg-muted/30 text-muted-foreground`}
+                className={`w-full ${heightClass} animate-in fade-in-0 border-border bg-muted/30 text-muted-foreground flex flex-col items-center justify-center rounded-md border`}
             >
-                <ImageIcon className="h-12 w-12 text-muted-foreground/50" />
+                <ImageIcon className="text-muted-foreground/50 h-12 w-12" />
                 <span className="mt-2 text-sm">No Image Available</span>
             </div>
         );
@@ -45,7 +41,7 @@ const SharedPhotoPreview: React.FC<{ url: string | null; alt: string; heightClas
         <img
             src={url}
             alt={alt}
-            className={`w-full ${heightClass} animate-in fade-in-0 rounded-md border border-border bg-muted/30 object-cover`}
+            className={`w-full ${heightClass} animate-in fade-in-0 border-border bg-muted/30 rounded-md border object-cover`}
             onError={() => setHasError(true)}
         />
     );
@@ -154,16 +150,16 @@ export default function WelcomeCarouselSection({ gallery, onUpdate, onDelete, er
                                     heightClass="h-80"
                                 />
                                 {selectedGallery.description && (
-                                    <div className="rounded-md border border-border bg-muted/30 p-3">
-                                        <p className="mb-1 text-xs font-medium text-muted-foreground">Caption</p>
-                                        <p className="text-sm text-foreground">{selectedGallery.description}</p>
+                                    <div className="border-border bg-muted/30 rounded-md border p-3">
+                                        <p className="text-muted-foreground mb-1 text-xs font-medium">Caption</p>
+                                        <p className="text-foreground text-sm">{selectedGallery.description}</p>
                                     </div>
                                 )}
                             </div>
                             {selectedGalleryErrors.length > 0 && (
-                                <div className="rounded-md border border-destructive/20 bg-destructive/10 p-4">
-                                    <h4 className="mb-2 text-sm font-semibold text-destructive">Errors in this image</h4>
-                                    <ul className="list-disc space-y-1 pl-5 text-sm text-destructive">
+                                <div className="border-destructive/20 bg-destructive/10 rounded-md border p-4">
+                                    <h4 className="text-destructive mb-2 text-sm font-semibold">Errors in this image</h4>
+                                    <ul className="text-destructive list-disc space-y-1 pl-5 text-sm">
                                         {selectedGalleryErrors.map((msg, i) => (
                                             <li key={i}>{msg}</li>
                                         ))}
@@ -176,12 +172,7 @@ export default function WelcomeCarouselSection({ gallery, onUpdate, onDelete, er
             />
 
             {dialogOpen && (
-                <CampusGalleryDialog
-                    gallery={selectedGallery}
-                    type={dialogAction}
-                    onClose={() => setDialogOpen(false)}
-                    onSave={handleSave}
-                />
+                <CampusGalleryDialog gallery={selectedGallery} type={dialogAction} onClose={() => setDialogOpen(false)} onSave={handleSave} />
             )}
         </>
     );

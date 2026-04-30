@@ -18,10 +18,9 @@ export default function LocalTaskForceGuest({ local_task_force, page }: AdfaPage
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
             <Construction className="mb-4 h-16 w-16 text-gray-400" />
             <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <p className="text-muted-foreground text-sm">{description}</p>
         </div>
     );
-
 
     return (
         <>
@@ -64,41 +63,44 @@ export default function LocalTaskForceGuest({ local_task_force, page }: AdfaPage
                                             <h3 className="text-lg font-semibold text-[#7f1414]">
                                                 {official.first_name} {official.last_name}
                                             </h3>
-                                            <p className="text-sm font-bold">
-                                                {official.official ? official.official_position : 'Chairman'}
-                                            </p>
+                                            <p className="text-sm font-bold">{official.official ? official.official_position : 'Chairman'}</p>
                                             <p className="text-sm text-gray-600">{official.area_name}</p>
 
-                                            {official.members?.length > 0 && (() => {
-                                                const coChairs = official.members.filter((m) => m.role?.includes('Co-Chairman'));
-                                                const members = official.members.filter((m) => m.role?.includes('Member'));
+                                            {official.members?.length > 0 &&
+                                                (() => {
+                                                    const coChairs = official.members.filter((m) => m.role?.includes('Co-Chairman'));
+                                                    const members = official.members.filter((m) => m.role?.includes('Member'));
 
-                                                return (
-                                                    <div className="mt-2 text-left">
-                                                        {coChairs.length > 0 && (
-                                                            <>
-                                                                <h4 className="text-center text-sm font-semibold text-gray-800">Co-chair</h4>
-                                                                <ul className="text-center text-sm">
-                                                                    {coChairs.map((m, i) => (
-                                                                        <li key={i} className="text-sm text-gray-600">{m.full_name}</li>
-                                                                    ))}
-                                                                </ul>
-                                                            </>
-                                                        )}
+                                                    return (
+                                                        <div className="mt-2 text-left">
+                                                            {coChairs.length > 0 && (
+                                                                <>
+                                                                    <h4 className="text-center text-sm font-semibold text-gray-800">Co-chair</h4>
+                                                                    <ul className="text-center text-sm">
+                                                                        {coChairs.map((m, i) => (
+                                                                            <li key={i} className="text-sm text-gray-600">
+                                                                                {m.full_name}
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </>
+                                                            )}
 
-                                                        {members.length > 0 && (
-                                                            <>
-                                                                <h4 className="mt-2 text-center text-sm font-semibold text-gray-800">Members</h4>
-                                                                <ul className="text-center text-sm">
-                                                                    {members.map((m, i) => (
-                                                                        <li key={i} className="text-sm text-gray-600">{m.full_name}</li>
-                                                                    ))}
-                                                                </ul>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                );
-                                            })()}
+                                                            {members.length > 0 && (
+                                                                <>
+                                                                    <h4 className="mt-2 text-center text-sm font-semibold text-gray-800">Members</h4>
+                                                                    <ul className="text-center text-sm">
+                                                                        {members.map((m, i) => (
+                                                                            <li key={i} className="text-sm text-gray-600">
+                                                                                {m.full_name}
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })()}
                                         </div>
                                     ))}
                                 </div>
@@ -123,41 +125,44 @@ export default function LocalTaskForceGuest({ local_task_force, page }: AdfaPage
                                             <h3 className="text-lg font-semibold text-[#7f1414]">
                                                 {chair.first_name} {chair.last_name}
                                             </h3>
-                                            <p className="text-sm font-bold">
-                                                {chair.official ? chair.official_position : 'Chairman'}
-                                            </p>
+                                            <p className="text-sm font-bold">{chair.official ? chair.official_position : 'Chairman'}</p>
                                             <p className="text-sm text-gray-600">{chair.area_name}</p>
 
-                                            {chair.members?.length > 0 && (() => {
-                                                const coChairs = chair.members.filter((m) => m.role?.includes('Co-Chairman'));
-                                                const members = chair.members.filter((m) => m.role?.includes('Member'));
+                                            {chair.members?.length > 0 &&
+                                                (() => {
+                                                    const coChairs = chair.members.filter((m) => m.role?.includes('Co-Chairman'));
+                                                    const members = chair.members.filter((m) => m.role?.includes('Member'));
 
-                                                return (
-                                                    <div className="mt-2 text-left">
-                                                        {coChairs.length > 0 && (
-                                                            <>
-                                                                <h4 className="text-center text-sm font-semibold text-gray-800">Co-chair</h4>
-                                                                <ul className="text-center text-sm">
-                                                                    {coChairs.map((m, i) => (
-                                                                        <li key={i} className="text-sm text-gray-600">{m.full_name}</li>
-                                                                    ))}
-                                                                </ul>
-                                                            </>
-                                                        )}
+                                                    return (
+                                                        <div className="mt-2 text-left">
+                                                            {coChairs.length > 0 && (
+                                                                <>
+                                                                    <h4 className="text-center text-sm font-semibold text-gray-800">Co-chair</h4>
+                                                                    <ul className="text-center text-sm">
+                                                                        {coChairs.map((m, i) => (
+                                                                            <li key={i} className="text-sm text-gray-600">
+                                                                                {m.full_name}
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </>
+                                                            )}
 
-                                                        {members.length > 0 && (
-                                                            <>
-                                                                <h4 className="mt-2 text-center text-sm font-semibold text-gray-800">Members</h4>
-                                                                <ul className="text-center text-sm">
-                                                                    {members.map((m, i) => (
-                                                                        <li key={i} className="text-sm text-gray-600">{m.full_name}</li>
-                                                                    ))}
-                                                                </ul>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                );
-                                            })()}
+                                                            {members.length > 0 && (
+                                                                <>
+                                                                    <h4 className="mt-2 text-center text-sm font-semibold text-gray-800">Members</h4>
+                                                                    <ul className="text-center text-sm">
+                                                                        {members.map((m, i) => (
+                                                                            <li key={i} className="text-sm text-gray-600">
+                                                                                {m.full_name}
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })()}
                                         </div>
                                     ))}
                                 </div>
@@ -165,7 +170,6 @@ export default function LocalTaskForceGuest({ local_task_force, page }: AdfaPage
                                 <EmptyState title="No Chairmen Found" description="The list of chairmen is not available at the moment." />
                             )}
                         </section>
-
                     </article>
                 </div>
             </Layout>

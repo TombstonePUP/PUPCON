@@ -1,7 +1,7 @@
 'use client';
 
 import { lazy, Suspense, useMemo, useState } from 'react';
-const DocumentViewer = lazy(() => import('@/components/dialogs/documents/view-document').then(m => ({ default: m.DocumentViewer })));
+const DocumentViewer = lazy(() => import('@/components/dialogs/documents/view-document').then((m) => ({ default: m.DocumentViewer })));
 
 import {
     ContextMenu,
@@ -133,31 +133,31 @@ export function RecursiveOutline({ outlines, program, area, resolveDocDialog, re
     const handleRatingChange = (outlineId: number, value: string) => {
         setRatings((prev) => ({
             ...prev,
-            [outlineId]: value === 'N/A' ? 'N/A' : Number(value)
+            [outlineId]: value === 'N/A' ? 'N/A' : Number(value),
         }));
     };
 
     const meanRating = useMemo(() => {
         const numericValues = Object.values(ratings).filter((v): v is number => typeof v === 'number' && !isNaN(v));
-        return numericValues.length > 0
-            ? (numericValues.reduce((a, b) => a + b, 0) / numericValues.length).toFixed(2)
-            : '—';
+        return numericValues.length > 0 ? (numericValues.reduce((a, b) => a + b, 0) / numericValues.length).toFixed(2) : '—';
     }, [ratings]);
 
     return (
         <>
-            <Suspense fallback={
-                showDocumentViewer ? (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-                        <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
-                            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            <Suspense
+                fallback={
+                    showDocumentViewer ? (
+                        <div className="bg-background/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+                            <div className="animate-in fade-in zoom-in flex flex-col items-center gap-4 duration-300">
+                                <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-xl">
+                                    <Loader2 className="text-primary h-6 w-6 animate-spin" />
+                                </div>
+                                <p className="text-muted-foreground text-sm font-medium">Initialising PDF viewer...</p>
                             </div>
-                            <p className="text-sm font-medium text-muted-foreground">Initialising PDF viewer...</p>
                         </div>
-                    </div>
-                ) : null
-            }>
+                    ) : null
+                }
+            >
                 <DocumentViewer
                     open={showDocumentViewer}
                     onOpenChange={setShowDocumentViewer}
@@ -204,15 +204,17 @@ export function RecursiveOutline({ outlines, program, area, resolveDocDialog, re
                                 )}
                             </div>
                             {/* Recursive children */}
-                            {outline.children && (outline.children as any[]).length > 0 && 
-                                <RecursiveOutline 
-                                    outlines={outline.children as any} 
-                                    program={program} 
-                                    area={area} 
-                                    resolveDocDialog={resolveDocDialog} 
-                                    resolveBenchDialog={resolveBenchDialog} 
-                                /> as any
-                            }
+                            {outline.children &&
+                                (outline.children as any[]).length > 0 &&
+                                ((
+                                    <RecursiveOutline
+                                        outlines={outline.children as any}
+                                        program={program}
+                                        area={area}
+                                        resolveDocDialog={resolveDocDialog}
+                                        resolveBenchDialog={resolveBenchDialog}
+                                    />
+                                ) as any)}
                         </div>
                     </li>
                 ))}
@@ -260,10 +262,10 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
     };
 
     const download = (outline: ParameterOutlines) => {
-        const levelId = Array.isArray(program.levels) 
-            ? (program.levels as any)[0]?.accreditation_level_id 
+        const levelId = Array.isArray(program.levels)
+            ? (program.levels as any)[0]?.accreditation_level_id
             : (program.levels as any)?.accreditation_level_id;
-            
+
         const url = route('manage.area.download.file', {
             program_name: program.program_link,
             level_id: levelId,
@@ -299,7 +301,7 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
                                                 </TooltipContent>
                                             </Tooltip>
                                         </TooltipProvider>
-                                        <span className="flex cursor-pointer gap-2 font-medium text-foreground">
+                                        <span className="text-foreground flex cursor-pointer gap-2 font-medium">
                                             {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                                         </span>
                                     </>
@@ -313,7 +315,7 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
                                                     setTimeout(() => resolveDocDialog({ type: 'view', benchmark: outline }), 50);
                                                 }
                                             }}
-                                            className="cursor-pointer hover:underline decoration-primary"
+                                            className="decoration-primary cursor-pointer hover:underline"
                                         >
                                             {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                                         </a>
@@ -402,15 +404,17 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
                                 )}
                             </ContextMenuContent>
                         </ContextMenu>
-                        {outline.children && (outline.children as any[]).length > 0 && (
-                            <RecursiveOutlineForm
-                                outlines={outline.children as any}
-                                program={program}
-                                area={area}
-                                resolveDocDialog={resolveDocDialog}
-                                resolveBenchDialog={resolveBenchDialog}
-                            /> as any
-                        )}
+                        {outline.children &&
+                            (outline.children as any[]).length > 0 &&
+                            ((
+                                <RecursiveOutlineForm
+                                    outlines={outline.children as any}
+                                    program={program}
+                                    area={area}
+                                    resolveDocDialog={resolveDocDialog}
+                                    resolveBenchDialog={resolveBenchDialog}
+                                />
+                            ) as any)}
                     </li>
                 ))}
             </ul>

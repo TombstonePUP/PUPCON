@@ -31,10 +31,10 @@ export function OrganizationDialog({ ...props }: OrganizationDialogProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">
                         {type === 'edit' ? 'Edit Organization' : 'Add Organization'}
                     </DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogDescription className="text-muted-foreground text-sm">
                         {type === 'edit'
                             ? 'Make changes to the organization details below.'
                             : 'Fill out the details below to add a new organization.'}
@@ -43,7 +43,7 @@ export function OrganizationDialog({ ...props }: OrganizationDialogProps) {
                 <form onSubmit={handleSubmit}>
                     <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Organization Name</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Organization Name</Label>
                             <Input
                                 placeholder="Enter organization name"
                                 value={data.organization_name}
@@ -52,7 +52,7 @@ export function OrganizationDialog({ ...props }: OrganizationDialogProps) {
                             />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Affiliation</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Affiliation</Label>
                             <Input
                                 placeholder="e.g., BS Information Technology"
                                 value={data.affiliation}

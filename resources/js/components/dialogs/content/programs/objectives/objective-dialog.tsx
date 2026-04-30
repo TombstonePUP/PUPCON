@@ -24,8 +24,8 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective, next
     const [data, setData] = useState<ObjectiveForm>({
         objective_id: objective?.program_objective_id || null,
         title:
-            type === "add"
-                ? `Objective ${nextObjectiveNumber ?? 1}`               // ← AUTO-GENERATED TITLE
+            type === 'add'
+                ? `Objective ${nextObjectiveNumber ?? 1}` // ← AUTO-GENERATED TITLE
                 : objective?.objective_title || '',
         description: objective?.objective_description || '',
     });
@@ -50,14 +50,16 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective, next
                             className="mt-2"
                             type="text"
                             // required
-                            value={data.title}                               // ← switched to value
+                            value={data.title} // ← switched to value
                             onChange={(e) => setData({ ...data, title: e.target.value })}
                             disabled
                         />
                     </div>
 
                     <div>
-                        <Label>Description <span className="text-red-500">*</span></Label>
+                        <Label>
+                            Description <span className="text-red-500">*</span>
+                        </Label>
                         <Textarea
                             className="mt-2"
                             // required
@@ -71,7 +73,9 @@ export default function ObjectiveDialog({ type, onClose, onSave, objective, next
 
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="outline" type="button">Cancel</Button>
+                            <Button variant="outline" type="button">
+                                Cancel
+                            </Button>
                         </DialogClose>
                         <Button type="submit" variant="noborder">
                             {type === 'edit' ? 'Save Changes' : 'Add Objective'}

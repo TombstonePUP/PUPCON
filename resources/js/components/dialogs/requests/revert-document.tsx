@@ -1,15 +1,7 @@
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { FilesOverview } from "@/types";
-import { useForm } from "@inertiajs/react";
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { FilesOverview } from '@/types';
+import { useForm } from '@inertiajs/react';
 
 interface FileForm {
     file_id: number;
@@ -27,12 +19,8 @@ interface RevertRequestProps {
 }
 
 export default function RevertRequest({ file, onClose }: RevertRequestProps) {
-    const {
-        data,
-        post,
-        reset,
-    } = useForm<DocumentRequestForm>({
-        file: file.map(f => ({
+    const { data, post, reset } = useForm<DocumentRequestForm>({
+        file: file.map((f) => ({
             file_id: f.file_id,
             file_type: f.file_type,
         })),
@@ -44,7 +32,7 @@ export default function RevertRequest({ file, onClose }: RevertRequestProps) {
         post(route('revertDocument'), {
             onSuccess: () => {
                 reset();
-            }
+            },
         });
     };
 
@@ -52,12 +40,12 @@ export default function RevertRequest({ file, onClose }: RevertRequestProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">Reset Status</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">Reset document status to pending</DialogDescription>
+                    <DialogTitle className="text-foreground text-lg font-medium">Reset Status</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">Reset document status to pending</DialogDescription>
                 </DialogHeader>
-               <div className="my-4 rounded-md border border-warning-border bg-warning p-4">
-              <p className="text-sm text-warning-foreground">
-                <span className="mb-1 block font-semibold text-warning-foreground">Note: Important Action!</span>
+                <div className="border-warning-border bg-warning my-4 rounded-md border p-4">
+                    <p className="text-warning-foreground text-sm">
+                        <span className="text-warning-foreground mb-1 block font-semibold">Note: Important Action!</span>
                         This action will reset the status of this Document back to pending status.
                     </p>
                 </div>

@@ -56,8 +56,8 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="w-full max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">{type === 'edit' ? 'Edit Facility' : 'Add Facility'}</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">{type === 'edit' ? 'Edit Facility' : 'Add Facility'}</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         {type === 'edit' ? `Modify the details of "${facility?.facility_name}".` : 'Fill in the details to add a new facility.'}
                     </DialogDescription>
                 </DialogHeader>
@@ -66,10 +66,10 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                     <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div>
                             {!data.previewUrl ? (
-                                <label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
+                                <label className="border-border bg-muted hover:bg-muted/80 flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg
-                                            className="mb-4 h-8 w-8 text-muted-foreground"
+                                            className="text-muted-foreground mb-4 h-8 w-8"
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
                                             viewBox="0 0 20 16"
@@ -82,7 +82,7 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                                                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                             />
                                         </svg>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             <span className="font-semibold">Click to upload</span> or drag and drop
                                         </p>
                                         <p className="text-xs text-gray-500">JPG, PNG, JPEG</p>
@@ -132,7 +132,9 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Facility Name <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Facility Name <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 placeholder="e.g., Library"
                                 value={data.facility_name}
@@ -142,7 +144,9 @@ export function FacilitiesDialog({ facility, type, onSave, onClose }: Facilities
                         </div>
 
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Description <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Description <span className="text-red-500">*</span>
+                            </Label>
                             <Textarea
                                 placeholder="Enter a description for the facility..."
                                 value={data.description}

@@ -1,20 +1,11 @@
-import React from 'react';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/text-area';
-import InputError from '@/components/input-error';
-import { useForm } from '@inertiajs/react';
 import { FilesOverview } from '@/types';
-import { useEffect } from 'react';
+import { useForm } from '@inertiajs/react';
+import React, { useEffect } from 'react';
 
 interface FileForm {
     file_id: number;
@@ -33,23 +24,19 @@ interface RejectRequestProps {
 
 export default function RejectRequest({ file, onClose }: RejectRequestProps) {
     const [rejectionComment, setRejectionComment] = React.useState('');
-    const {
-        data,
-        setData,
-        post,
-        processing,
-        errors,
-        reset,
-    } = useForm<DocumentRequestForm>({
+    const { data, setData, post, processing, errors, reset } = useForm<DocumentRequestForm>({
         file: [],
     });
 
     useEffect(() => {
-        setData('file', file.map(f => ({
-            file_id: f.file_id,
-            file_type: f.file_type,
-            rejection_reason: rejectionComment,
-        })));
+        setData(
+            'file',
+            file.map((f) => ({
+                file_id: f.file_id,
+                file_type: f.file_type,
+                rejection_reason: rejectionComment,
+            })),
+        );
     }, [file, rejectionComment, setData]);
 
     const rejectDocument = (e: React.FormEvent) => {
@@ -58,12 +45,12 @@ export default function RejectRequest({ file, onClose }: RejectRequestProps) {
             onSuccess: () => {
                 reset();
                 onClose();
-            }
+            },
         });
     };
 
-    const rawFileType = file.length !> 0 ? file[0].file_type : '';
-    const rawOutline = file.length !> 0 ? file[0].outline : '';
+    const rawFileType = file.length! > 0 ? file[0].file_type : '';
+    const rawOutline = file.length! > 0 ? file[0].outline : '';
 
     const isAreaType = rawFileType.startsWith('area');
 
@@ -98,12 +85,14 @@ export default function RejectRequest({ file, onClose }: RejectRequestProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">Reject Document</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">{file.length === 0 ? formattedAreaName : 'Comments for Rejecting Files'}</DialogDescription>
+                    <DialogTitle className="text-foreground text-lg font-medium">Reject Document</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
+                        {file.length === 0 ? formattedAreaName : 'Comments for Rejecting Files'}
+                    </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={rejectDocument}>
                     <div className="mb-2">
-                        <Label className="mb-2 block text-sm font-medium text-foreground">Rejection Comments</Label>
+                        <Label className="text-foreground mb-2 block text-sm font-medium">Rejection Comments</Label>
                         <Textarea
                             autoResize
                             id="rejection_reason"

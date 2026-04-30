@@ -5,69 +5,65 @@ import { FilesOverview, type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { useCallback } from 'react';
 
-import { Boxes } from 'lucide-react';
-import { useMemo, useState } from 'react';
 import RenderRequestDialog from '@/components/dialogs/requests/request-dialog-renderer';
 import { PageTitle } from '@/components/page-header';
+import { Boxes } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-  {
-    title: 'Requests',
-    href: `/requests`,
-  },
+    {
+        title: 'Requests',
+        href: `/requests`,
+    },
 ];
 
 interface DialogProps {
-  type: 'approve' | 'reject' | 'revert' | null;
-  file: FilesOverview[];
+    type: 'approve' | 'reject' | 'revert' | null;
+    file: FilesOverview[];
 }
 
 interface DocumentRequests {
-  files: FilesOverview[];
+    files: FilesOverview[];
 }
 
 export default function Requests({ files }: DocumentRequests) {
-  const { auth } = usePage().props;
-  const role = auth.user.roles.role_name;
+    const { auth } = usePage().props;
+    const role = auth.user.roles.role_name;
 
-  const [dialog, setDialog] = useState<{
-    type: 'approve' | 'reject' | 'revert' | null;
-    file: FilesOverview[];
-  }>({ type: null, file: [] as FilesOverview[] });
+    const [dialog, setDialog] = useState<{
+        type: 'approve' | 'reject' | 'revert' | null;
+        file: FilesOverview[];
+    }>({ type: null, file: [] as FilesOverview[] });
 
-  const openDialog = useCallback((type: 'approve' | 'reject' | 'revert' | null, file: FilesOverview[]) => {
-    setDialog({ type, file });
-  }, []);
+    const openDialog = useCallback((type: 'approve' | 'reject' | 'revert' | null, file: FilesOverview[]) => {
+        setDialog({ type, file });
+    }, []);
 
-  const columns = useMemo(() => {
-    const generatedColumns = getRequestsColumns({
-      resolveDialog: ({ type, file }: DialogProps) => openDialog(type, file),
-    });
+    const columns = useMemo(() => {
+        const generatedColumns = getRequestsColumns({
+            resolveDialog: ({ type, file }: DialogProps) => openDialog(type, file),
+        });
 
-    if (role === 'Admin' || role === 'Coordinator') return generatedColumns;
+        if (role === 'Admin' || role === 'Coordinator') return generatedColumns;
 
-    return generatedColumns.filter((column) => column.id !== 'actions');
-  }, [role, openDialog]);
+        return generatedColumns.filter((column) => column.id !== 'actions');
+    }, [role, openDialog]);
 
-  const closeDialog = () => {
-    setDialog({ type: null, file: {} as FilesOverview });
-  };
+    const closeDialog = () => {
+        setDialog({ type: null, file: {} as FilesOverview });
+    };
 
-  return (
-    <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Requests" />
-      {/* Header Section */}
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Requests" />
+            {/* Header Section */}
 
-      <PageTitle
-        icon={<Boxes className="size-5" />}
-        title="Document Request"
-        description="Manage all document request submissions."
-      />
+            <PageTitle icon={<Boxes className="size-5" />} title="Document Request" description="Manage all document request submissions." />
 
-      <div>
-        <DocumentRequestDataTable columns={columns} data={files} resolveDialog={({ type, file }: DialogProps) => openDialog(type, file)} />
-      </div>
-      <RenderRequestDialog type={dialog.type} file={dialog.file} onClose={closeDialog} />
-    </AppLayout>
-  );
+            <div>
+                <DocumentRequestDataTable columns={columns} data={files} resolveDialog={({ type, file }: DialogProps) => openDialog(type, file)} />
+            </div>
+            <RenderRequestDialog type={dialog.type} file={dialog.file} onClose={closeDialog} />
+        </AppLayout>
+    );
 }

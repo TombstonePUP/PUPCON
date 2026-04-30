@@ -9,81 +9,80 @@ import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
 interface EndSurveyDialogProps {
-  programs: PerProgramUnderSurvey[];
-  onClose: () => void;
+    programs: PerProgramUnderSurvey[];
+    onClose: () => void;
 }
 
 interface EndSurveyForm {
-  program_name: string;
-  accreditation_level_id: number;
-  remarks: string;
-  is_active: boolean;
+    program_name: string;
+    accreditation_level_id: number;
+    remarks: string;
+    is_active: boolean;
 }
 
 export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogProps) {
-  const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
-  const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
-  const level = selectedProgram?.latest_level?.level;
-  const { data, setData, patch, processing, errors } = useForm<EndSurveyForm>({
-    program_name: '',
-    accreditation_level_id: 0,
-    remarks: '',
-    is_active: false,
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    patch(route('manage.level.update', { program_id: selectedProgram?.program_id }), {
-      onSuccess: () => onClose(),
+    const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
+    const selectedProgram = programs.find((p) => p.program_id === selectedProgramId);
+    const level = selectedProgram?.latest_level?.level;
+    const { data, setData, patch, processing, errors } = useForm<EndSurveyForm>({
+        program_name: '',
+        accreditation_level_id: 0,
+        remarks: '',
+        is_active: false,
     });
-  };
 
-  return (
-    <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-medium text-foreground">End a Program Survey</DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">Select a program to end its current survey.</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="space-y-2">
-            <Label className="mb-2 block text-sm font-medium text-foreground">Programs Under Survey <span className="text-red-500">*</span></Label>
-            <Select
-              value={selectedProgramId ? String(selectedProgramId) : ''}
-              onValueChange={(value) => {
-                const programId = Number(value);
-                setSelectedProgramId(programId);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        patch(route('manage.level.update', { program_id: selectedProgram?.program_id }), {
+            onSuccess: () => onClose(),
+        });
+    };
 
-                // Get the program immediately
-                const program = programs.find((p) => p.program_id === programId);
+    return (
+        <Dialog open={true} onOpenChange={onClose}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle className="text-foreground text-lg font-medium">End a Program Survey</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">Select a program to end its current survey.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <div className="space-y-2">
+                        <Label className="text-foreground mb-2 block text-sm font-medium">
+                            Programs Under Survey <span className="text-red-500">*</span>
+                        </Label>
+                        <Select
+                            value={selectedProgramId ? String(selectedProgramId) : ''}
+                            onValueChange={(value) => {
+                                const programId = Number(value);
+                                setSelectedProgramId(programId);
 
-                setData({
-                  ...data,
-                  program_name: program?.program_name ?? '',
-                  accreditation_level_id: program?.latest_level?.accreditation_level_id ?? 0,
-                });
-              }}
-              disabled={processing}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a program" />
-              </SelectTrigger>
-              <SelectContent>
-                {programs.length > 0 ? (
-                  programs.map((program) => (
-                    <SelectItem
-                      key={program.program_id}
-                      value={String(program.program_id)}
-                    >
-                      {program.degree_type.match(/\b[A-Z]/g)?.join('')}
-                      {' in '}
-                      {program.program_name}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <div className='text-sm py-2 pl-4 text-gray-500'>No programs available</div>
-                )}
-                {/* {programs.map((program) => (
+                                // Get the program immediately
+                                const program = programs.find((p) => p.program_id === programId);
+
+                                setData({
+                                    ...data,
+                                    program_name: program?.program_name ?? '',
+                                    accreditation_level_id: program?.latest_level?.accreditation_level_id ?? 0,
+                                });
+                            }}
+                            disabled={processing}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a program" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {programs.length > 0 ? (
+                                    programs.map((program) => (
+                                        <SelectItem key={program.program_id} value={String(program.program_id)}>
+                                            {program.degree_type.match(/\b[A-Z]/g)?.join('')}
+                                            {' in '}
+                                            {program.program_name}
+                                        </SelectItem>
+                                    ))
+                                ) : (
+                                    <div className="py-2 pl-4 text-sm text-gray-500">No programs available</div>
+                                )}
+                                {/* {programs.map((program) => (
                                     <SelectItem value={String(program.program_id)}>
                                         {program.degree_type.match(/\b[A-Z]/g)}
                                         { }
@@ -91,47 +90,49 @@ export default function EndSurveyDialog({ programs, onClose }: EndSurveyDialogPr
                                         {program.program_name}
                                     </SelectItem>
                                 ))} */}
-              </SelectContent>
-            </Select>
-            <InputError message={errors.program_name} />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="mb-2 block text-sm font-medium text-foreground">Current Status</Label>
-              <div className="flex w-full items-center rounded-md border border-border bg-muted px-3">
-                <Input
-                  disabled
-                  value={level == null ? 'No Level' : level === 0 ? 'Preliminary Survey' : `Level ${level}`}
-                  className="border-0 bg-transparent p-0 focus:ring-0"
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="mb-2 block text-sm font-medium text-foreground">Remarks <span className="text-red-500">*</span></Label>
-              <Select value={data.remarks} onValueChange={(value) => setData('remarks', value)} disabled={processing}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Remarks" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Passed">Pass</SelectItem>
-                  <SelectItem value="Failed">Fail</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <InputError message={errors.remarks} />
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" onClick={onClose} disabled={processing}>
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button variant="noborder" type="submit" disabled={processing}>
-              Submit
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.program_name} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Current Status</Label>
+                            <div className="border-border bg-muted flex w-full items-center rounded-md border px-3">
+                                <Input
+                                    disabled
+                                    value={level == null ? 'No Level' : level === 0 ? 'Preliminary Survey' : `Level ${level}`}
+                                    className="border-0 bg-transparent p-0 focus:ring-0"
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Remarks <span className="text-red-500">*</span>
+                            </Label>
+                            <Select value={data.remarks} onValueChange={(value) => setData('remarks', value)} disabled={processing}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select Remarks" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Passed">Pass</SelectItem>
+                                    <SelectItem value="Failed">Fail</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <InputError message={errors.remarks} />
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline" onClick={onClose} disabled={processing}>
+                                Cancel
+                            </Button>
+                        </DialogClose>
+                        <Button variant="noborder" type="submit" disabled={processing}>
+                            Submit
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
 }

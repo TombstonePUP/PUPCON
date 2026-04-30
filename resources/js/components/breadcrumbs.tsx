@@ -4,31 +4,33 @@ import { Link } from '@inertiajs/react';
 import { Fragment } from 'react';
 
 export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: BreadcrumbItemType[] }) {
-  return (
-    <>
-      {breadcrumbs.length > 0 && (
-        <Breadcrumb>
-          <BreadcrumbList>
-            {breadcrumbs.map((item, index) => {
-              const isLast = index === breadcrumbs.length - 1;
-              return (
-                <Fragment key={index}>
-                  <BreadcrumbItem className='text-sm'>
-                    {isLast ? (
-                      <BreadcrumbPage className='capitalize font-semibold text-muted-foreground'>{item.title}</BreadcrumbPage>
-                    ) : (
-                      <BreadcrumbLink asChild>
-                        <Link className='capitalize' href={item.href}>{item.title}</Link>
-                      </BreadcrumbLink>
-                    )}
-                  </BreadcrumbItem>
-                  {!isLast && <BreadcrumbSeparator />}
-                </Fragment>
-              );
-            })}
-          </BreadcrumbList>
-        </Breadcrumb>
-      )}
-    </>
-  );
+    return (
+        <>
+            {breadcrumbs.length > 0 && (
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        {breadcrumbs.map((item, index) => {
+                            const isLast = index === breadcrumbs.length - 1;
+                            return (
+                                <Fragment key={index}>
+                                    <BreadcrumbItem className="text-sm">
+                                        {isLast ? (
+                                            <BreadcrumbPage className="text-muted-foreground font-semibold capitalize">{item.title}</BreadcrumbPage>
+                                        ) : (
+                                            <BreadcrumbLink asChild>
+                                                <Link className="capitalize" href={item.href}>
+                                                    {item.title}
+                                                </Link>
+                                            </BreadcrumbLink>
+                                        )}
+                                    </BreadcrumbItem>
+                                    {!isLast && <BreadcrumbSeparator />}
+                                </Fragment>
+                            );
+                        })}
+                    </BreadcrumbList>
+                </Breadcrumb>
+            )}
+        </>
+    );
 }

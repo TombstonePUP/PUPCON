@@ -9,20 +9,7 @@ import { defineConfig } from 'vite';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-function getLocalIp() {
-  const interfaces = os.networkInterfaces();
-  for (const name in interfaces) {
-    const interfaceInfo = interfaces[name];
-    for (const { family, address, internal } of interfaceInfo) {
-      if (family === 'IPv4' && !internal) {
-        return address;
-      }
-    }
-  }
-  return '127.0.0.1';
-}
-
-const LAN_IP = getLocalIp();
+// Hardcoded LAN IP detection removed to allow Vite/Laravel to handle HMR dynamically
 
 export default defineConfig(({ mode }) => ({
   plugins: [
@@ -44,19 +31,13 @@ export default defineConfig(({ mode }) => ({
     },
   },
   server: {
-    host: '0.0.0.0',
+    host: '127.0.0.1',
     port: 5173,
     strictPort: true,
     cors: true,
     watch: {
       usePolling: true,
       interval: 500,
-    },
-    hmr: {
-      host: LAN_IP,
-      port: 5173,
-      protocol: 'ws',
-      clientPort: 5173,
     },
   },
 }));

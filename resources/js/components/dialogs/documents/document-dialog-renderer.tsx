@@ -22,18 +22,14 @@ export function RenderDocumentDialog({ type, benchmark, program, area, onClose }
     switch (type) {
         case 'view':
             return benchmark.area_files?.file_path ? (
-                <DocumentViewer
-                    open={true}
-                    onOpenChange={onClose}
-                    fileUrl={benchmark.area_files.file_path}
-                    title={benchmark.area_files.file_name} />
+                <DocumentViewer open={true} onOpenChange={onClose} fileUrl={benchmark.area_files.file_path} title={benchmark.area_files.file_name} />
             ) : (
                 <Dialog open={true} onOpenChange={onClose}>
                     <DialogContent className="">
                         <DialogHeader className="flex flex-row items-start text-left">
                             <div className="">
-                                <DialogTitle className="text-lg font-medium text-foreground">No Document Available</DialogTitle>
-                                <DialogDescription className="text-sm text-muted-foreground">
+                                <DialogTitle className="text-foreground text-lg font-medium">No Document Available</DialogTitle>
+                                <DialogDescription className="text-muted-foreground text-sm">
                                     {`${benchmark.initial}.${benchmark.outline_number}. ${benchmark.outline_description}`}
                                 </DialogDescription>
                             </div>
@@ -56,17 +52,9 @@ export function RenderDocumentDialog({ type, benchmark, program, area, onClose }
                 </Dialog>
             );
         case 'upload':
-            return <UploadDocument
-                outline={benchmark}
-                program={program}
-                area_id={area?.area_id}
-                onClose={onClose} />;
+            return <UploadDocument outline={benchmark} program={program} area_id={area?.area_id} onClose={onClose} />;
         case 'delete':
-            return <DeleteDocument
-                outline={benchmark}
-                program={program}
-                area_id={area?.area_id}
-                onClose={onClose} />;
+            return <DeleteDocument outline={benchmark} program={program} area_id={area?.area_id} onClose={onClose} />;
         case 'rejected':
             return <RejectedDocument outline={benchmark} onClose={onClose} />;
         case null:

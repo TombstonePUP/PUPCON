@@ -1,6 +1,6 @@
 /**
  * useImageCompressor
- * 
+ *
  * Compresses an image File client-side using an offscreen canvas.
  * Reduces file size before upload to save bandwidth and server storage.
  */
@@ -31,7 +31,7 @@ export function useImageCompressor() {
                 originalSize: file.size,
                 compressedSize: file.size,
                 savedPercent: 0,
-                skipped: true
+                skipped: true,
             };
         }
 
@@ -61,7 +61,7 @@ export function useImageCompressor() {
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
-                    
+
                     if (!ctx) {
                         setIsCompressing(false);
                         resolve({ file, originalSize: file.size, compressedSize: file.size, savedPercent: 0, skipped: true });
@@ -92,11 +92,11 @@ export function useImageCompressor() {
                                 originalSize: file.size,
                                 compressedSize: compressedFile.size,
                                 savedPercent: Math.max(0, savedPercent),
-                                skipped: false
+                                skipped: false,
                             });
                         },
                         'image/jpeg',
-                        QUALITY
+                        QUALITY,
                     );
                 };
                 img.onerror = () => {

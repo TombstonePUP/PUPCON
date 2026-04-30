@@ -3,10 +3,10 @@ import { useEffect, useRef } from 'react';
 
 /**
  * Smart Polling Hook
- * 
+ *
  * Automatically reloads the current page data at a specified interval,
  * but only if the tab is currently active (visible).
- * 
+ *
  * @param interval - Polling interval in milliseconds (default: 5000)
  * @param only - Optional array of keys to refresh (e.g., ['users', 'stats'])
  */
@@ -25,7 +25,7 @@ export function useSmartPoll(interval: number = 5000, only?: string[]) {
                         // Reschedule the next poll after the current one finishes
                         // This prevents overlapping requests if the server is slow
                         timerRef.current = setTimeout(poll, interval);
-                    }
+                    },
                 });
             } else {
                 // If not visible, just wait and check again later

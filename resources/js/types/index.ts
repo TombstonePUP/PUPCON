@@ -236,12 +236,12 @@ export interface FilesOverview {
 }
 
 export type OverallUploads = {
-    document_type: string
-    documents: number
-    outlines?: number
-}
+    document_type: string;
+    documents: number;
+    outlines?: number;
+};
 
 export interface FrequencyUploads {
-    activity_date: string
-    activity: number
+    activity_date: string;
+    activity: number;
 }

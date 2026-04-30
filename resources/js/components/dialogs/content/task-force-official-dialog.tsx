@@ -45,10 +45,10 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
         previewUrl: official?.profile_image_path || null,
         members: official?.members
             ? official.members.map((member) => ({
-                member_id: member.member_id,
-                local_task_force_id: member.local_task_force_id,
-                full_name: member.full_name,
-            }))
+                  member_id: member.member_id,
+                  local_task_force_id: member.local_task_force_id,
+                  full_name: member.full_name,
+              }))
             : [],
     });
 
@@ -88,12 +88,12 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                     <form onSubmit={handleSubmit}>
                         <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1">
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-foreground">Photo</Label>
+                                <Label className="text-foreground mb-2 block text-sm font-medium">Photo</Label>
                                 {!data.previewUrl ? (
-                                    <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
+                                    <Label className="border-border bg-muted hover:bg-muted/80 flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
-                                                className="mb-4 h-8 w-8 text-muted-foreground"
+                                                className="text-muted-foreground mb-4 h-8 w-8"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 fill="none"
                                                 viewBox="0 0 20 16"
@@ -106,7 +106,7 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                                                     d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                                 />
                                             </svg>
-                                            <p className="text-sm text-muted-foreground">
+                                            <p className="text-muted-foreground text-sm">
                                                 <span className="font-semibold">Click to upload</span> or drag and drop
                                             </p>
                                             <p className="text-xs text-gray-500">JPG, PNG, JPEG</p>
@@ -159,7 +159,7 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                                 )}
                             </div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-foreground">First Name</Label>
+                                <Label className="text-foreground mb-2 block text-sm font-medium">First Name</Label>
                                 <Input
                                     placeholder="Enter first name"
                                     value={data.first_name}
@@ -169,7 +169,7 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                                 />
                             </div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-foreground">Last Name</Label>
+                                <Label className="text-foreground mb-2 block text-sm font-medium">Last Name</Label>
                                 <Input
                                     placeholder="Enter last name"
                                     value={data.last_name}
@@ -179,7 +179,7 @@ export default function TaskForceOfficialDialog({ ...props }: TaskForceOfficialD
                                 />
                             </div>
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-foreground">Position</Label>
+                                <Label className="text-foreground mb-2 block text-sm font-medium">Position</Label>
                                 <Input
                                     placeholder="e.g., Overall Chairman"
                                     value={data.official_position}

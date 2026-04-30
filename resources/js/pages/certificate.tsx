@@ -20,7 +20,7 @@ const EmptyState = ({ title, description }: { title: string; description: string
     <div className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
         <Construction className="mb-4 h-16 w-16 text-gray-400" />
         <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground text-sm">{description}</p>
     </div>
 );
 
@@ -41,7 +41,7 @@ const Certificate: React.FC<{ certificate: ContentPages }> = ({ certificate }) =
     if (!url) {
         return (
             <Layout>
-                <div className="flex flex-col items-center ">
+                <div className="flex flex-col items-center">
                     <PageHeader
                         title="Certificate of Authenticity"
                         breadcrumbs={[
@@ -51,10 +51,7 @@ const Certificate: React.FC<{ certificate: ContentPages }> = ({ certificate }) =
                     />
 
                     <div className="mx-auto my-16 w-[75%]">
-                        <EmptyState
-                            title="No Certificate Available"
-                            description="The certificate of authenticity has not been uploaded yet."
-                        />
+                        <EmptyState title="No Certificate Available" description="The certificate of authenticity has not been uploaded yet." />
                     </div>
                 </div>
             </Layout>
@@ -74,7 +71,7 @@ const Certificate: React.FC<{ certificate: ContentPages }> = ({ certificate }) =
                 >
                     <div className="absolute inset-0 bg-gradient-to-b from-[rgba(128,0,0,0.64)] to-[rgb(255,255,255)]"></div>
 
-                    <div className="relative z-10 flex w-full flex-col items-center ">
+                    <div className="relative z-10 flex w-full flex-col items-center">
                         <PageHeader
                             title="Certificate of Authenticity"
                             breadcrumbs={[
@@ -83,12 +80,17 @@ const Certificate: React.FC<{ certificate: ContentPages }> = ({ certificate }) =
                             ]}
                         />
 
-                        <article className="flex min-h-[80vh] w-full justify-center py-12 ">
+                        <article className="flex min-h-[80vh] w-full justify-center py-12">
                             <div className="flex w-[90%] max-w-[1100px] flex-col items-center">
                                 {hasLoadError ? (
                                     <ErrorState />
                                 ) : (
-                                    <Document className={"rounded-xl"} file={url} onLoadError={() => setHasLoadError(true)} onLoadSuccess={() => setIsLoading(false)}>
+                                    <Document
+                                        className={'rounded-xl'}
+                                        file={url}
+                                        onLoadError={() => setHasLoadError(true)}
+                                        onLoadSuccess={() => setIsLoading(false)}
+                                    >
                                         {!isLoading && <Page pageNumber={1} scale={scale} />}
                                     </Document>
                                 )}

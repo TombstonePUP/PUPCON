@@ -11,14 +11,7 @@ import { REGEXP_ONLY_DIGITS } from 'input-otp';
 
 export default function VerifyEmail() {
     const { flash } = usePage().props;
-    const {
-        data,
-        setData,
-        post,
-        processing,
-        errors,
-        reset,
-    } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         otp: '',
     });
 
@@ -33,12 +26,7 @@ export default function VerifyEmail() {
         <AuthLayout title="Verify email" description="Please enter the 6-digit code we sent to your email.">
             <Head title="Email verification" />
 
-            {flash && (
-                <div
-                    className={`mb-4 rounded-md p-4 text-center text-sm font-medium text-green-700`}>
-                    {flash?.message}
-                </div>
-            )}
+            {flash && <div className={`mb-4 rounded-md p-4 text-center text-sm font-medium text-green-700`}>{flash?.message}</div>}
 
             <form onSubmit={submit} className="space-y-6 text-center">
                 {/* OTP Input */}
@@ -66,23 +54,17 @@ export default function VerifyEmail() {
                 </InputOTP>
 
                 {/* Validation error */}
-                {errors.otp && (
-                    <div className="text-sm text-red-600">{errors.otp}</div>
-                )}
+                {errors.otp && <div className="text-sm text-red-600">{errors.otp}</div>}
 
                 {/* Submit button */}
-                <Button
-                    type="submit"
-                    disabled={processing}
-                    className="mx-auto flex w-full max-w-xs items-center justify-center gap-2"
-                >
+                <Button type="submit" disabled={processing} className="mx-auto flex w-full max-w-xs items-center justify-center gap-2">
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     Verify
                 </Button>
 
                 {/* Secondary actions */}
-                <div className="mt-4 flex flex-row-center justify-center space-between gap-4">
-                    <TextLink href={route('logout')} method="post" className="block text-sm text-muted-foreground hover:underline">
+                <div className="flex-row-center space-between mt-4 flex justify-center gap-4">
+                    <TextLink href={route('logout')} method="post" className="text-muted-foreground block text-sm hover:underline">
                         Log out
                     </TextLink>
 
@@ -99,4 +81,3 @@ export default function VerifyEmail() {
         </AuthLayout>
     );
 }
-

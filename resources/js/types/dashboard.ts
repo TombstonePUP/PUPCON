@@ -4,7 +4,7 @@ export interface ActivityLogs {
     description: string;
     activity: string;
     type: 'Document' | 'Users' | 'Content';
-    action: 'Approved' | 'Pending' | 'Rejected';  
+    action: 'Approved' | 'Pending' | 'Rejected';
     activity_date: string;
 }
 

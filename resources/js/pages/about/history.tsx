@@ -47,11 +47,7 @@ export default function History({ page, directors, gallery }: HistoryProps) {
                 </motion.p>
 
                 <div className="relative mb-8 h-64 w-full overflow-hidden rounded-xl">
-                    <img
-                        src={`${page?.image_path}`}
-                        alt={`${page?.image_name}`}
-                        className="h-full w-full object-cover"
-                    />
+                    <img src={`${page?.image_path}`} alt={`${page?.image_name}`} className="h-full w-full object-cover" />
                     <div className="absolute inset-0 flex items-end bg-gradient-to-t from-[#800020]/70 to-transparent">
                         <div className="p-6 text-white">
                             <h3 className="text-xl font-bold">PUP San Juan Campus</h3>

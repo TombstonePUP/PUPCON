@@ -11,12 +11,11 @@ interface FacultyPageProps {
 }
 
 export default function Faculty({ faculties, page }: FacultyPageProps) {
-
     const EmptyState = ({ title, description }: { title: string; description: string }) => (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center col-span-full">
+        <div className="col-span-full flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
             <Construction className="mb-4 h-16 w-16 text-gray-400" />
             <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <p className="text-muted-foreground text-sm">{description}</p>
         </div>
     );
 
@@ -38,12 +37,10 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
                             <div className="mb-4 inline-block rounded-full bg-[#7f1414]/5 px-4 py-1.5 text-sm font-medium text-[#7f1414]">
                                 {page?.title || 'Our Faculty & Staff'}
                             </div>
-                            <h2 className="mb-4 text-4xl font-bold text-gray-900">
-                                {page?.subtitle || "Meet the Minds Behind"}
-                             
-                            </h2>
+                            <h2 className="mb-4 text-4xl font-bold text-gray-900">{page?.subtitle || 'Meet the Minds Behind'}</h2>
                             <p className="text-lg leading-relaxed text-gray-600">
-                                {page?.description || 'Our dedicated faculty and staff are the backbone of our institution, committed to fostering a nurturing and dynamic learning environment. With a wealth of knowledge and experience, they inspire and guide our students towards academic excellence and personal growth.'}
+                                {page?.description ||
+                                    'Our dedicated faculty and staff are the backbone of our institution, committed to fostering a nurturing and dynamic learning environment. With a wealth of knowledge and experience, they inspire and guide our students towards academic excellence and personal growth.'}
                             </p>
                         </div>
 
@@ -69,7 +66,7 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
                     </div>
                 </section>
 
-                <div className="grid gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
                     {faculties.length > 0 ? (
                         faculties.map((f) => (
                             <FacultyCard
@@ -78,7 +75,7 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
                                     id: f.faculty_staff_id,
                                     name: `${f.first_name} ${f.middle_name ?? ''} ${f.last_name}`,
                                     photo: f.image_path || '/images/placeholder.png',
-                                    position: f.status
+                                    position: f.status,
                                 }}
                             />
                         ))
@@ -89,7 +86,6 @@ export default function Faculty({ faculties, page }: FacultyPageProps) {
                         />
                     )}
                 </div>
-
             </div>
         </Layout>
     );

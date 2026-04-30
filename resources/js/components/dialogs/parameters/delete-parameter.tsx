@@ -16,29 +16,34 @@ interface DeleteParameterProps {
 export function DeleteParameter({ parameter, program, area_id, onClose }: DeleteParameterProps) {
     const deleteParameter = (e: React.FormEvent) => {
         e.preventDefault();
-        router.delete(route('manage.area.delete.parameter', {
-            program_id: program.program_id,
-            level_id: program.levels[0]?.accreditation_level_id,
-            area_id: area_id,
-            parameter_id: parameter.area_parameter_id,
-        }), {
-            onSuccess: () => {
-                onClose();
+        router.delete(
+            route('manage.area.delete.parameter', {
+                program_id: program.program_id,
+                level_id: program.levels[0]?.accreditation_level_id,
+                area_id: area_id,
+                parameter_id: parameter.area_parameter_id,
+            }),
+            {
+                onSuccess: () => {
+                    onClose();
+                },
             },
-        });
+        );
     };
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground mb-5">Are you sure?</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">This action cannot be undone. This will permanently delete the Parameter</DialogDescription>
+                    <DialogTitle className="text-foreground mb-5 text-lg font-medium">Are you sure?</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
+                        This action cannot be undone. This will permanently delete the Parameter
+                    </DialogDescription>
                 </DialogHeader>
 
-                <div className="my-0 rounded-md border border-destructive/20 bg-destructive/10 p-4">
-  <p className="text-sm text-destructive">
-    <span className="mb-1 block font-semibold text-destructive">Warning: Irreversible Action!</span>
+                <div className="border-destructive/20 bg-destructive/10 my-0 rounded-md border p-4">
+                    <p className="text-destructive text-sm">
+                        <span className="text-destructive mb-1 block font-semibold">Warning: Irreversible Action!</span>
                         This action will permanently delete the benchmark and associated document (if any). This action cannot be undone.
                     </p>
                 </div>
@@ -46,10 +51,7 @@ export function DeleteParameter({ parameter, program, area_id, onClose }: Delete
                     <DialogClose asChild>
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
-                    <Button
-                        variant="noborder"
-                        onClick={deleteParameter}
-                    >
+                    <Button variant="noborder" onClick={deleteParameter}>
                         Delete Parameter
                     </Button>
                 </DialogFooter>

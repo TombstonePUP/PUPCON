@@ -1,44 +1,19 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import {
-    CheckCircle,
-    FileText,
-    Calendar,
-    Award,
-    ChevronDown,
-    ChevronRight,
-    Download,
-    FileSpreadsheet,
-    Check,
-    AlertCircle,
-} from "lucide-react";
-import { DocumentViewer } from "@/components/dialogs/documents/view-document";
+import { DocumentViewer } from '@/components/dialogs/documents/view-document';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AccreditorLayout from '@/layouts/accreditor-layout';
-import { Head, useForm, usePage } from '@inertiajs/react';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
+import { Head } from '@inertiajs/react';
+import { AlertCircle, Check, ChevronDown, ChevronRight, Download, FileSpreadsheet, FileText } from 'lucide-react';
+import React, { useState } from 'react';
 
 export default function AccreditorDashboard() {
     const [expandedAreas, setExpandedAreas] = useState({});
     const [expandedParameters, setExpandedParameters] = useState({});
     const [viewerOpen, setViewerOpen] = useState(false);
-    const [viewerFile, setViewerFile] = useState({ url: "", title: "" });
+    const [viewerFile, setViewerFile] = useState({ url: '', title: '' });
     const [exportDropdown, setExportDropdown] = useState({});
     const [exportAreaDropdown, setExportAreaDropdown] = useState({});
     const [ratings, setRatings] = useState({});
@@ -46,9 +21,9 @@ export default function AccreditorDashboard() {
     const [selectedLevels, setSelectedLevels] = useState({});
 
     const accreditor = {
-        name: "Dr. Maria Santos",
-        role: "AACCUP Accreditor",
-        specialty: "Engineering Programs",
+        name: 'Dr. Maria Santos',
+        role: 'AACCUP Accreditor',
+        specialty: 'Engineering Programs',
     };
 
     const programs = [
@@ -65,51 +40,51 @@ export default function AccreditorDashboard() {
                     progress: 0,
                     parameters: [
                         {
-                            id: "A",
-                            label: "Program Goals and Objectives",
-                            status: "approved",
+                            id: 'A',
+                            label: 'Program Goals and Objectives',
+                            status: 'approved',
                             benchmarks: [
                                 {
                                     id: 1,
-                                    category: "S",
-                                    text: "S.4. The Goals are clearly stated, and are consistent with the Mission of the Institution.",
-                                    pdfUrl: "/docs/goals.pdf"
+                                    category: 'S',
+                                    text: 'S.4. The Goals are clearly stated, and are consistent with the Mission of the Institution.',
+                                    pdfUrl: '/docs/goals.pdf',
                                 },
                                 {
                                     id: 2,
-                                    category: "S",
-                                    text: "S.5. The Objectives of the program clearly state the expected outcomes in terms of competencies (skills and knowledge), values, and other attributes of the graduates which include the development of:",
-                                    pdfUrl: "/docs/objectives.pdf",
+                                    category: 'S',
+                                    text: 'S.5. The Objectives of the program clearly state the expected outcomes in terms of competencies (skills and knowledge), values, and other attributes of the graduates which include the development of:',
+                                    pdfUrl: '/docs/objectives.pdf',
                                     children: [
                                         {
                                             id: 3,
-                                            category: "S",
-                                            text: "S.5.1. technical skills in Hotel and Restaurant Management/TM/HM/TrM;",
-                                            pdfUrl: "/docs/skills.pdf"
+                                            category: 'S',
+                                            text: 'S.5.1. technical skills in Hotel and Restaurant Management/TM/HM/TrM;',
+                                            pdfUrl: '/docs/skills.pdf',
                                         },
                                         {
                                             id: 4,
-                                            category: "S",
-                                            text: "S.5.2. scientific habit thought;",
-                                            pdfUrl: "/docs/habit.pdf"
-                                        }
-                                    ]
+                                            category: 'S',
+                                            text: 'S.5.2. scientific habit thought;',
+                                            pdfUrl: '/docs/habit.pdf',
+                                        },
+                                    ],
                                 },
                                 {
                                     id: 5,
-                                    category: "I",
-                                    text: "I.7. Implementation aligns with institutional goals.",
-                                    pdfUrl: "/docs/implementation.pdf"
+                                    category: 'I',
+                                    text: 'I.7. Implementation aligns with institutional goals.',
+                                    pdfUrl: '/docs/implementation.pdf',
                                 },
                                 {
                                     id: 6,
-                                    category: "O",
-                                    text: "O.10. Graduates exhibit competencies aligned with program objectives.",
-                                    pdfUrl: "/docs/outcomes.pdf"
-                                }
-                            ]
-                        }
-                    ]
+                                    category: 'O',
+                                    text: 'O.10. Graduates exhibit competencies aligned with program objectives.',
+                                    pdfUrl: '/docs/outcomes.pdf',
+                                },
+                            ],
+                        },
+                    ],
                 },
                 {
                     id: 2,
@@ -191,18 +166,14 @@ export default function AccreditorDashboard() {
     ];
 
     const computeParentMean = (areaId, paramId, children) => {
-        const childRatings = children
-            .map((child) => parseFloat(ratings[`${areaId}-${paramId}-${child.id}`]))
-            .filter((v) => !isNaN(v));
+        const childRatings = children.map((child) => parseFloat(ratings[`${areaId}-${paramId}-${child.id}`])).filter((v) => !isNaN(v));
 
-        if (childRatings.length === 0) return "—";
+        if (childRatings.length === 0) return '—';
 
-        const avg =
-            childRatings.reduce((sum, val) => sum + val, 0) / childRatings.length;
+        const avg = childRatings.reduce((sum, val) => sum + val, 0) / childRatings.length;
 
         return avg.toFixed(2);
     };
-
 
     // Helpers
     const openViewer = (fileUrl, title) => {
@@ -210,10 +181,8 @@ export default function AccreditorDashboard() {
         setViewerOpen(true);
     };
 
-    const toggleArea = (areaId) =>
-        setExpandedAreas((prev) => ({ ...prev, [areaId]: !prev[areaId] }));
-    const toggleParameter = (paramId) =>
-        setExpandedParameters((prev) => ({ ...prev, [paramId]: !prev[paramId] }));
+    const toggleArea = (areaId) => setExpandedAreas((prev) => ({ ...prev, [areaId]: !prev[areaId] }));
+    const toggleParameter = (paramId) => setExpandedParameters((prev) => ({ ...prev, [paramId]: !prev[paramId] }));
 
     // Toggle Export Dropdown per program
     const toggleExport = (programId) => {
@@ -231,7 +200,6 @@ export default function AccreditorDashboard() {
     const handleExport = (programId, type) => {
         const program = programs.find((p) => p.id === programId);
         if (!program) return;
-
 
         alert(` Exporting ${program.program_name} as ${type.toUpperCase()}`);
 
@@ -252,7 +220,7 @@ export default function AccreditorDashboard() {
 
     // Handle Export Actions for areas
     const handleAreaExport = (areaId, type) => {
-        const area = programs.flatMap(p => p.assigned_areas).find(a => a.id === areaId);
+        const area = programs.flatMap((p) => p.assigned_areas).find((a) => a.id === areaId);
         if (!area) return;
 
         alert(`Exporting ${area.area_name} as ${type.toUpperCase()}`);
@@ -260,49 +228,47 @@ export default function AccreditorDashboard() {
         setExportAreaDropdown((prev) => ({ ...prev, [areaId]: false }));
     };
 
-
     // Close dropdowns when clicking outside
     React.useEffect(() => {
         const handleClickOutside = (event) => {
-            const exportButtons = document.querySelectorAll(".export-dropdown");
+            const exportButtons = document.querySelectorAll('.export-dropdown');
             let clickedInside = false;
             exportButtons.forEach((btn) => {
                 if (btn.contains(event.target)) clickedInside = true;
             });
             if (!clickedInside) setExportDropdown({});
         };
-        document.addEventListener("click", handleClickOutside);
-        return () => document.removeEventListener("click", handleClickOutside);
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
     }, []);
-
 
     const getStatusColor = (status) => {
         switch (status) {
-            case "completed":
-                return "bg-green-100 text-green-800 border-green-300";
-            case "in_progress":
-                return "bg-blue-100 text-blue-800 border-blue-300";
+            case 'completed':
+                return 'bg-green-100 text-green-800 border-green-300';
+            case 'in_progress':
+                return 'bg-blue-100 text-blue-800 border-blue-300';
             default:
-                return "bg-gray-100 text-gray-800 border-gray-300";
+                return 'bg-gray-100 text-gray-800 border-gray-300';
         }
     };
 
     const getStatusText = (status) => {
         switch (status) {
-            case "completed":
-                return "Completed";
-            case "in_progress":
-                return "In Progress";
+            case 'completed':
+                return 'Completed';
+            case 'in_progress':
+                return 'In Progress';
             default:
-                return "Pending";
+                return 'Pending';
         }
     };
 
     const getParameterStatusIcon = (status) => {
         switch (status) {
-            case "approved":
+            case 'approved':
                 return <Check className="h-4 w-4 text-green-600" />;
-            case "needs_revision":
+            case 'needs_revision':
                 return <AlertCircle className="h-4 w-4 text-amber-600" />;
             default:
                 return <div className="h-4 w-4 rounded-full border-2 border-gray-300" />;
@@ -311,52 +277,44 @@ export default function AccreditorDashboard() {
 
     const getParameterStatusBadge = (status) => {
         switch (status) {
-            case "approved":
-                return "bg-green-100 text-green-700 border-green-300";
-            case "needs_revision":
-                return "bg-amber-100 text-amber-700 border-amber-300";
+            case 'approved':
+                return 'bg-green-100 text-green-700 border-green-300';
+            case 'needs_revision':
+                return 'bg-amber-100 text-amber-700 border-amber-300';
             default:
-                return "bg-gray-100 text-gray-600 border-gray-300";
+                return 'bg-gray-100 text-gray-600 border-gray-300';
         }
     };
 
     const getParameterStatusText = (status) => {
         switch (status) {
-            case "approved":
-                return "Approved";
-            case "needs_revision":
-                return "Needs Revision";
+            case 'approved':
+                return 'Approved';
+            case 'needs_revision':
+                return 'Needs Revision';
             default:
-                return "Pending Review";
+                return 'Pending Review';
         }
     };
 
     const handleRatingChange = (key, value) => {
         setRatings((prev) => {
             const newRatings = { ...prev, [key]: value };
-            const [areaId, paramId] = key.split("-").slice(0, 2);
+            const [areaId, paramId] = key.split('-').slice(0, 2);
             const paramKey = `${areaId}-${paramId}`;
             const paramRatings = Object.entries(newRatings)
                 .filter(([k]) => k.startsWith(paramKey))
                 .map(([, v]) => v)
-                .filter((v) => v !== "N/A" && v !== "" && !isNaN(v))
+                .filter((v) => v !== 'N/A' && v !== '' && !isNaN(v))
                 .map(Number);
-            const paramMean =
-                paramRatings.length > 0
-                    ? (
-                        paramRatings.reduce((a, b) => a + b, 0) / paramRatings.length
-                    ).toFixed(2)
-                    : "—";
+            const paramMean = paramRatings.length > 0 ? (paramRatings.reduce((a, b) => a + b, 0) / paramRatings.length).toFixed(2) : '—';
             setMeans((prevMeans) => {
                 const updated = { ...prevMeans, [paramKey]: paramMean };
                 const areaMeans = Object.entries(updated)
-                    .filter(([k]) => k.startsWith(areaId + "-"))
+                    .filter(([k]) => k.startsWith(areaId + '-'))
                     .map(([, v]) => parseFloat(v))
                     .filter((v) => !isNaN(v));
-                const areaMean =
-                    areaMeans.length > 0
-                        ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2)
-                        : "—";
+                const areaMean = areaMeans.length > 0 ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2) : '—';
                 updated[areaId] = areaMean;
                 return updated;
             });
@@ -374,15 +332,13 @@ export default function AccreditorDashboard() {
                 <div className="min-h-screen bg-gray-50">
                     <div className="mx-auto w-[85%] max-w-7xl px-6 py-12">
                         <section className="mb-12 rounded-xl border border-[#7f1414]/25 bg-gradient-to-br from-white to-gray-50 p-8">
-                            <h1 className="mb-2 text-3xl font-bold text-[#7f1414]">
-                                Welcome back, {accreditor.name}
-                            </h1>
+                            <h1 className="mb-2 text-3xl font-bold text-[#7f1414]">Welcome back, {accreditor.name}</h1>
                             <p className="text-lg text-gray-700">
                                 {accreditor.role} • {accreditor.specialty}
                             </p>
                             <p className="text-gray-600">
                                 You have been assigned to evaluate {programs.length} program
-                                {programs.length > 1 ? "s" : ""}.
+                                {programs.length > 1 ? 's' : ''}.
                             </p>
                         </section>
 
@@ -391,33 +347,17 @@ export default function AccreditorDashboard() {
                             {programs.map((program) => {
                                 // 🔹 Compute Program Mean
                                 const areaIds = program.assigned_areas.map((a) => a.id);
-                                const areaMeans = areaIds
-                                    .map((id) => parseFloat(means[id]))
-                                    .filter((v) => !isNaN(v));
+                                const areaMeans = areaIds.map((id) => parseFloat(means[id])).filter((v) => !isNaN(v));
 
-                                const programMean =
-                                    areaMeans.length > 0
-                                        ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2)
-                                        : "—";
+                                const programMean = areaMeans.length > 0 ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2) : '—';
 
                                 return (
-                                    <div
-                                        key={program.id}
-                                        className="mb-6 rounded-xl border border-gray-200 bg-white"
-                                    >
-                                        <div className="border-b border-gray-100 bg-[#7f1414]/5 p-6 flex items-center justify-between">
-                                            <h3 className="text-xl font-bold text-[#7f1414]">
-                                                {program.program_name}
-                                            </h3>
-                                            <Select
-                                                onValueChange={(value) =>
-                                                    setSelectedLevels((prev) => ({ ...prev, [program.id]: value }))
-                                                }
-                                            >
+                                    <div key={program.id} className="mb-6 rounded-xl border border-gray-200 bg-white">
+                                        <div className="flex items-center justify-between border-b border-gray-100 bg-[#7f1414]/5 p-6">
+                                            <h3 className="text-xl font-bold text-[#7f1414]">{program.program_name}</h3>
+                                            <Select onValueChange={(value) => setSelectedLevels((prev) => ({ ...prev, [program.id]: value }))}>
                                                 <SelectTrigger className="w-fit gap-2 bg-white">
-                                                    <SelectValue
-                                                        placeholder={`Level ${program.accreditation_level}`}
-                                                    />
+                                                    <SelectValue placeholder={`Level ${program.accreditation_level}`} />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectGroup>
@@ -435,13 +375,10 @@ export default function AccreditorDashboard() {
                                         {/* Areas */}
                                         <div className="p-6">
                                             {program.assigned_areas.map((area) => (
-                                                <div
-                                                    key={area.id}
-                                                    className="mb-4 rounded-lg border border-gray-200 bg-gray-50"
-                                                >
+                                                <div key={area.id} className="mb-4 rounded-lg border border-gray-200 bg-gray-50">
                                                     <button
                                                         onClick={() => toggleArea(area.id)}
-                                                        className="flex w-full items-center justify-between p-4 text-left hover:bg-white hover:rounded-lg"
+                                                        className="flex w-full items-center justify-between p-4 text-left hover:rounded-lg hover:bg-white"
                                                     >
                                                         <div className="flex items-center gap-3">
                                                             {expandedAreas[area.id] ? (
@@ -449,12 +386,10 @@ export default function AccreditorDashboard() {
                                                             ) : (
                                                                 <ChevronRight className="h-5 w-5 text-gray-500" />
                                                             )}
-                                                            <h4 className="font-semibold text-gray-900">
-                                                                {area.area_name}
-                                                            </h4>
+                                                            <h4 className="font-semibold text-gray-900">{area.area_name}</h4>
                                                             <span
                                                                 className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getStatusColor(
-                                                                    area.status
+                                                                    area.status,
                                                                 )}`}
                                                             >
                                                                 {getStatusText(area.status)}
@@ -464,10 +399,7 @@ export default function AccreditorDashboard() {
                                                         {/* Export Dropdown */}
                                                         <DropdownMenu>
                                                             <DropdownMenuTrigger asChild>
-                                                                <Button
-                                                                    onClick={(e) => e.stopPropagation()}
-                                                                    variant="noborder"
-                                                                >
+                                                                <Button onClick={(e) => e.stopPropagation()} variant="noborder">
                                                                     <Download className="h-4 w-4" />
                                                                     Export
                                                                 </Button>
@@ -475,12 +407,12 @@ export default function AccreditorDashboard() {
 
                                                             <DropdownMenuContent align="end">
                                                                 {/* <DropdownMenuLabel>Export {area.area_name}</DropdownMenuLabel> */}
-                                                                <DropdownMenuItem onClick={() => handleAreaExport(area.id, "excel")}>
-                                                                    <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                                                <DropdownMenuItem onClick={() => handleAreaExport(area.id, 'excel')}>
+                                                                    <FileSpreadsheet className="mr-2 h-4 w-4 text-green-600" />
                                                                     Export as Excel
                                                                 </DropdownMenuItem>
-                                                                <DropdownMenuItem onClick={() => handleAreaExport(area.id, "pdf")}>
-                                                                    <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                                                <DropdownMenuItem onClick={() => handleAreaExport(area.id, 'pdf')}>
+                                                                    <FileText className="mr-2 h-4 w-4 text-red-600" />
                                                                     Export as PDF
                                                                 </DropdownMenuItem>
                                                             </DropdownMenuContent>
@@ -488,17 +420,12 @@ export default function AccreditorDashboard() {
                                                     </button>
 
                                                     {expandedAreas[area.id] && (
-                                                        <div className="border-t border-gray-200 bg-white p-4 ">
+                                                        <div className="border-t border-gray-200 bg-white p-4">
                                                             {area.parameters.map((param) => (
-                                                                <div
-                                                                    key={param.id}
-                                                                    className="mb-3 rounded-lg border border-gray-200"
-                                                                >
+                                                                <div key={param.id} className="mb-3 rounded-lg border border-gray-200">
                                                                     <button
-                                                                        onClick={() =>
-                                                                            toggleParameter(`${area.id}-${param.id}`)
-                                                                        }
-                                                                        className="flex w-full items-center justify-between p-3 hover:bg-gray-50 hover:rounded-lg"
+                                                                        onClick={() => toggleParameter(`${area.id}-${param.id}`)}
+                                                                        className="flex w-full items-center justify-between p-3 hover:rounded-lg hover:bg-gray-50"
                                                                     >
                                                                         <div className="flex items-center gap-3">
                                                                             {expandedParameters[`${area.id}-${param.id}`] ? (
@@ -507,14 +434,12 @@ export default function AccreditorDashboard() {
                                                                                 <ChevronRight className="h-4 w-4 text-gray-500" />
                                                                             )}
                                                                             {getParameterStatusIcon(param.status)}
-                                                                            <span className="font-medium text-[#7f1414]">
-                                                                                Parameter {param.id}
-                                                                            </span>
+                                                                            <span className="font-medium text-[#7f1414]">Parameter {param.id}</span>
                                                                             <span className="text-gray-600">{param.label}</span>
                                                                         </div>
                                                                         <span
                                                                             className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${getParameterStatusBadge(
-                                                                                param.status
+                                                                                param.status,
                                                                             )}`}
                                                                         >
                                                                             {getParameterStatusText(param.status)}
@@ -529,13 +454,13 @@ export default function AccreditorDashboard() {
                                                                                 </h4>
 
                                                                                 {/* Table */}
-                                                                                <table className="w-full text-sm text-gray-700 border-t border-gray-200">
+                                                                                <table className="w-full border-t border-gray-200 text-sm text-gray-700">
                                                                                     <thead>
                                                                                         <tr className="bg-white">
-                                                                                            <th className="text-left font-semibold py-3 px-3">
+                                                                                            <th className="px-3 py-3 text-left font-semibold">
                                                                                                 Indicators
                                                                                             </th>
-                                                                                            <th className="text-center font-semibold py-3">
+                                                                                            <th className="py-3 text-center font-semibold">
                                                                                                 Item Rating
                                                                                             </th>
                                                                                         </tr>
@@ -545,20 +470,16 @@ export default function AccreditorDashboard() {
                                                                                         {param.benchmarks.map((benchmark, idx) => (
                                                                                             <React.Fragment key={benchmark.id}>
                                                                                                 <tr
-                                                                                                    className={`
-                                                                                ${idx % 2 === 0
-                                                                                                            ? "bg-gray-50"
-                                                                                                            : "bg-white"
-                                                                                                        }
-                                                                                hover:bg-gray-100 transition
-                                                                            `}
+                                                                                                    className={` ${
+                                                                                                        idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                                                                                                    } transition hover:bg-gray-100`}
                                                                                                 >
-                                                                                                    <td className="px-3 py-2 align-top border-t border-gray-200">
+                                                                                                    <td className="border-t border-gray-200 px-3 py-2 align-top">
                                                                                                         <button
                                                                                                             onClick={() =>
                                                                                                                 openViewer(
                                                                                                                     benchmark.pdfUrl,
-                                                                                                                    benchmark.text
+                                                                                                                    benchmark.text,
                                                                                                                 )
                                                                                                             }
                                                                                                             className="text-left text-gray-700 hover:text-[#7f1414] hover:underline"
@@ -574,20 +495,17 @@ export default function AccreditorDashboard() {
                                                                                                                         (child, cidx) => (
                                                                                                                             <li
                                                                                                                                 key={child.id}
-                                                                                                                                className={`
-                                                                                                            flex items-center justify-between text-sm text-gray-700 
-                                                                                                            ${cidx % 2 === 0
-                                                                                                                                        ? "bg-gray-50"
-                                                                                                                                        : "bg-white"
-                                                                                                                                    } 
-                                                                                                            rounded-md px-2 py-1
-                                                                                                        `}
+                                                                                                                                className={`flex items-center justify-between text-sm text-gray-700 ${
+                                                                                                                                    cidx % 2 === 0
+                                                                                                                                        ? 'bg-gray-50'
+                                                                                                                                        : 'bg-white'
+                                                                                                                                } rounded-md px-2 py-1`}
                                                                                                                             >
                                                                                                                                 <button
                                                                                                                                     onClick={() =>
                                                                                                                                         openViewer(
                                                                                                                                             child.pdfUrl,
-                                                                                                                                            child.text
+                                                                                                                                            child.text,
                                                                                                                                         )
                                                                                                                                     }
                                                                                                                                     className="text-left hover:text-[#7f1414] hover:underline"
@@ -595,67 +513,75 @@ export default function AccreditorDashboard() {
                                                                                                                                     {child.text}
                                                                                                                                 </button>
                                                                                                                                 <select
-                                                                                                                                    className="rounded-md border-none bg-transparent text-center focus:outline-none focus:ring-0 ml-4"
+                                                                                                                                    className="ml-4 rounded-md border-none bg-transparent text-center focus:ring-0 focus:outline-none"
                                                                                                                                     value={
                                                                                                                                         ratings[
-                                                                                                                                        `${area.id}-${param.id}-${child.id}`
-                                                                                                                                        ] || "N/A"
+                                                                                                                                            `${area.id}-${param.id}-${child.id}`
+                                                                                                                                        ] || 'N/A'
                                                                                                                                     }
                                                                                                                                     onChange={(e) =>
                                                                                                                                         handleRatingChange(
                                                                                                                                             `${area.id}-${param.id}-${child.id}`,
-                                                                                                                                            e.target.value
+                                                                                                                                            e.target
+                                                                                                                                                .value,
                                                                                                                                         )
                                                                                                                                     }
                                                                                                                                 >
-                                                                                                                                    <option value="N/A">N/A</option>
-                                                                                                                                    {[0, 1, 2, 3, 4, 5].map((num) => (
+                                                                                                                                    <option value="N/A">
+                                                                                                                                        N/A
+                                                                                                                                    </option>
+                                                                                                                                    {[
+                                                                                                                                        0, 1, 2, 3, 4,
+                                                                                                                                        5,
+                                                                                                                                    ].map((num) => (
                                                                                                                                         <option
                                                                                                                                             key={num}
-                                                                                                                                            value={num}
+                                                                                                                                            value={
+                                                                                                                                                num
+                                                                                                                                            }
                                                                                                                                         >
                                                                                                                                             {num}
                                                                                                                                         </option>
                                                                                                                                     ))}
                                                                                                                                 </select>
                                                                                                                             </li>
-                                                                                                                        )
+                                                                                                                        ),
                                                                                                                     )}
                                                                                                                 </ul>
                                                                                                             )}
                                                                                                     </td>
 
-                                                                                                    <td className="px-3 py-2 text-center border-t border-gray-200 font-semibold">
+                                                                                                    <td className="border-t border-gray-200 px-3 py-2 text-center font-semibold">
                                                                                                         {benchmark.children &&
-                                                                                                            benchmark.children.length > 0
-                                                                                                            ? computeParentMean(
+                                                                                                        benchmark.children.length > 0 ? (
+                                                                                                            computeParentMean(
                                                                                                                 area.id,
                                                                                                                 param.id,
-                                                                                                                benchmark.children
+                                                                                                                benchmark.children,
                                                                                                             )
-                                                                                                            : (
-                                                                                                                <select
-                                                                                                                    className="rounded-md border-none bg-transparent text-center focus:outline-none focus:ring-0"
-                                                                                                                    value={
-                                                                                                                        ratings[
+                                                                                                        ) : (
+                                                                                                            <select
+                                                                                                                className="rounded-md border-none bg-transparent text-center focus:ring-0 focus:outline-none"
+                                                                                                                value={
+                                                                                                                    ratings[
                                                                                                                         `${area.id}-${param.id}-${benchmark.id}`
-                                                                                                                        ] || "N/A"
-                                                                                                                    }
-                                                                                                                    onChange={(e) =>
-                                                                                                                        handleRatingChange(
-                                                                                                                            `${area.id}-${param.id}-${benchmark.id}`,
-                                                                                                                            e.target.value
-                                                                                                                        )
-                                                                                                                    }
-                                                                                                                >
-                                                                                                                    <option value="N/A">N/A</option>
-                                                                                                                    {[0, 1, 2, 3, 4, 5].map((num) => (
-                                                                                                                        <option key={num} value={num}>
-                                                                                                                            {num}
-                                                                                                                        </option>
-                                                                                                                    ))}
-                                                                                                                </select>
-                                                                                                            )}
+                                                                                                                    ] || 'N/A'
+                                                                                                                }
+                                                                                                                onChange={(e) =>
+                                                                                                                    handleRatingChange(
+                                                                                                                        `${area.id}-${param.id}-${benchmark.id}`,
+                                                                                                                        e.target.value,
+                                                                                                                    )
+                                                                                                                }
+                                                                                                            >
+                                                                                                                <option value="N/A">N/A</option>
+                                                                                                                {[0, 1, 2, 3, 4, 5].map((num) => (
+                                                                                                                    <option key={num} value={num}>
+                                                                                                                        {num}
+                                                                                                                    </option>
+                                                                                                                ))}
+                                                                                                            </select>
+                                                                                                        )}
                                                                                                     </td>
                                                                                                 </tr>
                                                                                             </React.Fragment>
@@ -663,11 +589,11 @@ export default function AccreditorDashboard() {
 
                                                                                         {/* Parameter mean */}
                                                                                         <tr className="bg-[#f7f7f7] font-semibold">
-                                                                                            <td className="px-3 py-2 text-right border-t border-gray-300">
+                                                                                            <td className="border-t border-gray-300 px-3 py-2 text-right">
                                                                                                 System – Implementation – Outcome Means
                                                                                             </td>
-                                                                                            <td className="px-3 py-2 text-center border-t border-gray-300 text-[#7f1414]">
-                                                                                                {means[`${area.id}-${param.id}`] ?? "—"}
+                                                                                            <td className="border-t border-gray-300 px-3 py-2 text-center text-[#7f1414]">
+                                                                                                {means[`${area.id}-${param.id}`] ?? '—'}
                                                                                             </td>
                                                                                         </tr>
                                                                                     </tbody>
@@ -680,10 +606,7 @@ export default function AccreditorDashboard() {
 
                                                             {/* Area Mean */}
                                                             <div className="mt-4 text-right text-sm font-semibold text-gray-800">
-                                                                Parameter Mean:{" "}
-                                                                <span className="text-[#7f1414]">
-                                                                    {means[`${area.id}`] ?? "—"}
-                                                                </span>
+                                                                Parameter Mean: <span className="text-[#7f1414]">{means[`${area.id}`] ?? '—'}</span>
                                                             </div>
                                                         </div>
                                                     )}
@@ -691,9 +614,8 @@ export default function AccreditorDashboard() {
                                             ))}
 
                                             {/* Program Mean (added below all areas) */}
-                                            <div className="mt-6 text-right border-t border-gray-300 pt-4 text-base font-bold text-gray-900">
-                                                Program Mean:{" "}
-                                                <span className="text-[#7f1414]">{programMean}</span>
+                                            <div className="mt-6 border-t border-gray-300 pt-4 text-right text-base font-bold text-gray-900">
+                                                Program Mean: <span className="text-[#7f1414]">{programMean}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -701,70 +623,57 @@ export default function AccreditorDashboard() {
                             })}
                         </section>
                         {/* Program Means Summary Section */}
-                        <section className="mt-12 rounded-xl border border-gray-200 bg-white shadow-sm p-8">
-                            <div className="flex items-center justify-between mb-6">
+                        <section className="mt-12 rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+                            <div className="mb-6 flex items-center justify-between">
                                 <h2 className="text-2xl font-bold text-[#7f1414]">Overall Program Means</h2>
 
                                 {/* Export All Dropdown */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant="noborder"
-                                        >
+                                        <Button variant="noborder">
                                             <Download className="h-4 w-4" /> Export Program Means
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                         <DropdownMenuItem>
-                                            <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                            <FileSpreadsheet className="mr-2 h-4 w-4 text-green-600" />
                                             Excel
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem >
-                                            <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                        <DropdownMenuItem>
+                                            <FileText className="mr-2 h-4 w-4 text-red-600" />
                                             PDF
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-
                             </div>
 
                             {/* Table of Program Means */}
-                            <table className="w-full text-sm text-gray-700 overflow-hidden">
+                            <table className="w-full overflow-hidden text-sm text-gray-700">
                                 <thead className="bg-[#7f1414]/10">
                                     <tr>
-                                        <th className="text-left px-4 py-3 font-semibold">Program Name</th>
+                                        <th className="px-4 py-3 text-left font-semibold">Program Name</th>
                                         <th className="px-4 py-3 text-center font-semibold">Accreditation Level</th>
-                                        <th className="text-center px-4 py-3 font-semibold">Program Mean</th>
-                                        <th className="text-center px-4 py-3 font-semibold">Export Area Means</th> {/* New Column */}
+                                        <th className="px-4 py-3 text-center font-semibold">Program Mean</th>
+                                        <th className="px-4 py-3 text-center font-semibold">Export Area Means</th> {/* New Column */}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {programs.map((program, idx) => {
                                         const areaIds = program.assigned_areas.map((a) => a.id);
-                                        const areaMeans = areaIds
-                                            .map((id) => parseFloat(means[id]))
-                                            .filter((v) => !isNaN(v));
+                                        const areaMeans = areaIds.map((id) => parseFloat(means[id])).filter((v) => !isNaN(v));
                                         const programMean =
-                                            areaMeans.length > 0
-                                                ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2)
-                                                : "—";
+                                            areaMeans.length > 0 ? (areaMeans.reduce((a, b) => a + b, 0) / areaMeans.length).toFixed(2) : '—';
 
                                         return (
-                                            <tr
-                                                key={program.id}
-                                                className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                                    } border-t border-gray-200`}
-                                            >
+                                            <tr key={program.id} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} border-t border-gray-200`}>
                                                 <td className="px-4 py-3">{program.program_name}</td>
                                                 <td className="px-4 py-3 text-center font-semibold">
                                                     {selectedLevels[program.id] || program.accreditation_level}
                                                 </td>
-                                                <td className="px-4 py-3 text-center font-semibold text-[#7f1414]">
-                                                    {programMean}
-                                                </td>
+                                                <td className="px-4 py-3 text-center font-semibold text-[#7f1414]">{programMean}</td>
 
                                                 {/* Export Column */}
-                                                <td className="px-4 py-3 text-center flex  justify-center">
+                                                <td className="flex justify-center px-4 py-3 text-center">
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger asChild>
                                                             <Button variant="noborder">
@@ -773,12 +682,12 @@ export default function AccreditorDashboard() {
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end">
                                                             {/* <DropdownMenuLabel>Export {program.program_name}</DropdownMenuLabel> */}
-                                                            <DropdownMenuItem >
-                                                                <FileSpreadsheet className="h-4 w-4 text-green-600 mr-2" />
+                                                            <DropdownMenuItem>
+                                                                <FileSpreadsheet className="mr-2 h-4 w-4 text-green-600" />
                                                                 Excel
                                                             </DropdownMenuItem>
-                                                            <DropdownMenuItem >
-                                                                <FileText className="h-4 w-4 text-red-600 mr-2" />
+                                                            <DropdownMenuItem>
+                                                                <FileText className="mr-2 h-4 w-4 text-red-600" />
                                                                 PDF
                                                             </DropdownMenuItem>
                                                         </DropdownMenuContent>
@@ -792,15 +701,9 @@ export default function AccreditorDashboard() {
                         </section>
                     </div>
 
-                    <DocumentViewer
-                        open={viewerOpen}
-                        onOpenChange={setViewerOpen}
-                        fileUrl={viewerFile.url}
-                        title={viewerFile.title}
-                    />
+                    <DocumentViewer open={viewerOpen} onOpenChange={setViewerOpen} fileUrl={viewerFile.url} title={viewerFile.title} />
                 </div>
             </AccreditorLayout>
         </>
     );
-
 }

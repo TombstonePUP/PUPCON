@@ -65,8 +65,8 @@ export default function ExhibitContainerDrawer({ exhibit, onClose }: ExhibitCont
             <Drawer open={true} onOpenChange={onClose}>
                 <DrawerContent className="mx-auto p-4 sm:max-w-5xl">
                     <DrawerHeader>
-                        <DrawerTitle className="text-lg font-medium text-foreground">{exhibit.exhibit_name}</DrawerTitle>
-                        <DrawerDescription className="text-sm text-muted-foreground">Manage Documents in this Exhibit</DrawerDescription>
+                        <DrawerTitle className="text-foreground text-lg font-medium">{exhibit.exhibit_name}</DrawerTitle>
+                        <DrawerDescription className="text-muted-foreground text-sm">Manage Documents in this Exhibit</DrawerDescription>
                     </DrawerHeader>
 
                     {outlines.length === 0 ? (
@@ -114,10 +114,10 @@ export default function ExhibitContainerDrawer({ exhibit, onClose }: ExhibitCont
                                     </div>
                                 ) : (
                                     <>
-                                        <h4 className="mb-6 truncate text-lg font-medium text-foreground">{selectedCategory}</h4>
+                                        <h4 className="text-foreground mb-6 truncate text-lg font-medium">{selectedCategory}</h4>
                                         <div className="max-h-[300px] space-y-3 overflow-y-auto pr-2">
                                             {!filteredOutlines.length ? (
-                                                <p className="text-sm text-muted-foreground italic">No documents found in this category.</p>
+                                                <p className="text-muted-foreground text-sm italic">No documents found in this category.</p>
                                             ) : (
                                                 filteredOutlines.map((outline) => (
                                                     <div
@@ -125,7 +125,7 @@ export default function ExhibitContainerDrawer({ exhibit, onClose }: ExhibitCont
                                                         className="group flex cursor-pointer items-start justify-between rounded-md border border-gray-100 bg-white p-3 px-6 transition-all hover:border-red-200"
                                                     >
                                                         <div>
-                                                            <span className="text-sm font-medium text-foreground">{outline.outline_description}</span>
+                                                            <span className="text-foreground text-sm font-medium">{outline.outline_description}</span>
                                                         </div>
                                                         <div className="flex shrink-0 items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
                                                             <ActionButton onClick={() => openDialog('outline', 'view', outline)}>

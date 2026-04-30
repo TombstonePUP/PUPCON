@@ -1,6 +1,6 @@
 import ContentPageLayout from '@/layouts/about-layout';
 import { CampusGoals, ContentPages, Pillars, Vmgo } from '@/types/content';
-import { Play, Construction, AlertCircle } from 'lucide-react';
+import { AlertCircle, Construction, Play } from 'lucide-react';
 
 interface VMGOProps {
     page: ContentPages;
@@ -14,7 +14,7 @@ const EmptyState = ({ title, description }: { title: string; description: string
     <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
         <Construction className="mb-4 h-16 w-16 text-gray-400" />
         <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground text-sm">{description}</p>
     </div>
 );
 
@@ -48,7 +48,6 @@ const extractYouTubeID = (url: string): string | null => {
 };
 
 export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
-
     const pageSections = [
         { label: 'Vision & Mission', href: 'vision-mission' },
         { label: 'University Goals', href: 'university-goals' },
@@ -127,9 +126,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
 
                             {/* Content */}
                             <div className="lg:col-span-2">
-                                <h3 className="mb-4 text-2xl font-bold text-[#7f1414]">
-                                    {page?.video_title || 'University Development Plan'}
-                                </h3>
+                                <h3 className="mb-4 text-2xl font-bold text-[#7f1414]">{page?.video_title || 'University Development Plan'}</h3>
                                 <p className="mb-6 leading-relaxed text-gray-700">{page.video_description}</p>
 
                                 {/* Watch on YouTube Button */}
@@ -191,7 +188,7 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
                                         ))
                                     ) : (
                                         <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-center">
-                                            <p className="text-sm text-muted-foreground">No goals defined for this pillar yet.</p>
+                                            <p className="text-muted-foreground text-sm">No goals defined for this pillar yet.</p>
                                         </div>
                                     )}
                                 </div>
@@ -252,4 +249,3 @@ export default function VMGO({ page, campus_goals, pillars, vmgo }: VMGOProps) {
         </ContentPageLayout>
     );
 }
-

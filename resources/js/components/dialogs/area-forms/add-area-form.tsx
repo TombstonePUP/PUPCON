@@ -79,15 +79,17 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
         <Dialog open={true} onOpenChange={() => !isUploading && onClose()}>
             <DialogContent className="max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">Add Form</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">Add Form</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         Make a new form for Program Performance Profile, Self-Survey, or Compliance Report
                     </DialogDescription>
                 </DialogHeader>
                 <form className="flex flex-col gap-6" onSubmit={addAreaForm}>
                     <div className="flex flex-col gap-6">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Form Category <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Form Category <span className="text-red-500">*</span>
+                            </Label>
                             <Select
                                 value={data.area_form_category_id?.toString() || ''}
                                 onValueChange={(value) => setData('area_form_category_id', Number(value))}
@@ -109,13 +111,13 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                             <InputError message={errors.area_form_category_id} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Upload Document</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Upload Document</Label>
                             <div className="flex w-full items-center justify-center">
                                 {!data.document ? (
-                                    <label className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
+                                    <label className="border-border bg-muted hover:bg-muted/80 flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
-                                                className="mb-4 h-8 w-8 text-muted-foreground"
+                                                className="text-muted-foreground mb-4 h-8 w-8"
                                                 aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 fill="none"
@@ -129,7 +131,7 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                                                     d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                                 />
                                             </svg>
-                                            <p className="text-sm text-muted-foreground">
+                                            <p className="text-muted-foreground text-sm">
                                                 <span className="font-semibold">Click to upload</span> or drag and drop
                                             </p>
                                             <p className="text-xs text-gray-500">PDF</p>
@@ -147,7 +149,7 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                                     </label>
                                 ) : (
                                     <div className="flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-50 p-5 text-center">
-                                        <span className="text-sm font-semibold text-foreground">{data.document.name}</span>
+                                        <span className="text-foreground text-sm font-semibold">{data.document.name}</span>
                                         <Button
                                             type="button"
                                             variant="outline"

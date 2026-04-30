@@ -82,15 +82,14 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
         onClose();
     };
 
-
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="max-h-[90vh] w-3xl overflow-y-auto sm:max-w-3xl">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">
                         {type === 'edit' ? 'Edit Faculty Member' : 'Add New Faculty Member'}
                     </DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogDescription className="text-muted-foreground text-sm">
                         {type === 'edit'
                             ? `Modify the details of "${faculty?.first_name} ${faculty?.last_name}".`
                             : 'Fill in the details to add a new faculty member.'}
@@ -102,10 +101,10 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                         <div className="flex gap-8">
                             <div className="flex w-[50%] flex-col gap-4">
                                 {!data.previewUrl ? (
-                                    <Label className="flex h-36 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
+                                    <Label className="border-border bg-muted hover:bg-muted/80 flex h-36 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
-                                                className="mb-4 h-8 w-8 text-muted-foreground"
+                                                className="text-muted-foreground mb-4 h-8 w-8"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 fill="none"
                                                 viewBox="0 0 20 16"
@@ -118,7 +117,7 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                                     d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                                 />
                                             </svg>
-                                            <p className="text-sm text-muted-foreground">
+                                            <p className="text-muted-foreground text-sm">
                                                 <span className="font-semibold">Click to upload</span> or drag and drop
                                             </p>
                                             <p className="text-xs text-gray-500">JPG, PNG, JPEG</p>
@@ -171,7 +170,9 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                 )}
 
                                 <div>
-                                    <Label className="mb-2 block w-full text-sm font-medium text-foreground">First Name <span className="text-red-500">*</span></Label>
+                                    <Label className="text-foreground mb-2 block w-full text-sm font-medium">
+                                        First Name <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         placeholder="Enter First Name"
                                         value={data.first_name}
@@ -182,20 +183,21 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-foreground">Middle Name/Initial</Label>
+                                    <Label className="text-foreground mb-2 block text-sm font-medium">Middle Name/Initial</Label>
                                     <Input
                                         placeholder="Enter Middle Name/Initial"
                                         value={data.middle_name}
                                         onChange={(e) => setData({ ...data, middle_name: e.target.value })}
                                         autoFocus
-
                                     />
                                 </div>
                             </div>
 
                             <div className="mb-0 flex w-[50%] flex-col gap-4 pb-0">
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-foreground">Last Name <span className="text-red-500">*</span></Label>
+                                    <Label className="text-foreground mb-2 block text-sm font-medium">
+                                        Last Name <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         placeholder="Enter Last Name"
                                         value={data.last_name}
@@ -206,7 +208,9 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                 </div>
 
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-foreground">Member Type <span className="text-red-500">*</span></Label>
+                                    <Label className="text-foreground mb-2 block text-sm font-medium">
+                                        Member Type <span className="text-red-500">*</span>
+                                    </Label>
                                     <Select
                                         value={data.personnel_type || ''}
                                         onValueChange={(value) => setData((prev) => ({ ...prev, personnel_type: value }))}
@@ -225,12 +229,10 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                     </Select>
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-foreground">Employment Status <span className="text-red-500">*</span></Label>
-                                    <Select
-                                        value={data.status || ''}
-                                        onValueChange={(value) => setData({ ...data, status: value })}
-                                        required
-                                    >
+                                    <Label className="text-foreground mb-2 block text-sm font-medium">
+                                        Employment Status <span className="text-red-500">*</span>
+                                    </Label>
+                                    <Select value={data.status || ''} onValueChange={(value) => setData({ ...data, status: value })} required>
                                         <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Select Status" />
                                         </SelectTrigger>
@@ -248,7 +250,7 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                     </Select>
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-foreground">Program Affiliation</Label>
+                                    <Label className="text-foreground mb-2 block text-sm font-medium">Program Affiliation</Label>
                                     <Select
                                         value={data.program_id === null ? 'null' : String(data.program_id)}
                                         onValueChange={(value) =>
@@ -291,7 +293,7 @@ export function FacultyDialog({ ...props }: FacultyDialogProps) {
                                             }
                                         />
 
-                                        <Label htmlFor="program-coordinator" className="block text-sm font-medium text-foreground">
+                                        <Label htmlFor="program-coordinator" className="text-foreground block text-sm font-medium">
                                             Program Coordinator
                                         </Label>
                                     </div>

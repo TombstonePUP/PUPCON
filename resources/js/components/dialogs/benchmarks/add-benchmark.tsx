@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/text-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -66,8 +66,8 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">Add Benchmark</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">Add Benchmark</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         Create a new benchmark for {parameter.parameter_description}
                     </DialogDescription>
                 </DialogHeader>
@@ -75,7 +75,9 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                 <div className="flex flex-col gap-4">
                     <form className="flex flex-col gap-6" onSubmit={addBenchmark}>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Benchmark Number <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Benchmark Number <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="benchmark_number"
                                 type="text"
@@ -89,7 +91,9 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                             <InputError message={errors.benchmark_number} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Benchmark Description <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Benchmark Description <span className="text-red-500">*</span>
+                            </Label>
                             <Textarea
                                 id="benchmark_description"
                                 value={data.benchmark_description}
@@ -101,7 +105,9 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                             <InputError message={errors.benchmark_description} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Benchmark Category <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Benchmark Category <span className="text-red-500">*</span>
+                            </Label>
                             <Select
                                 value={data.benchmark_category ? String(data.benchmark_category) : ''}
                                 onValueChange={(value) => setData('benchmark_category', value)}
@@ -135,9 +141,9 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                             />
                             <Label
                                 htmlFor="is-container-mode"
-                                className="flex gap-2 text-sm leading-none font-medium text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                className="text-foreground flex gap-2 text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                                Benchmark Container  
+                                Benchmark Container
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
@@ -145,7 +151,10 @@ export function AddBenchmark({ parameter, program, area_id, parameter_outline_ca
                                                 <HelpCircleIcon className="h-auto w-4 text-red-800" />
                                             </span>
                                         </TooltipTrigger>
-                                        <TooltipContent className='text-center'>Enable this switch to make it just a container or parent benchmark. (This will disable the upload document)</TooltipContent>
+                                        <TooltipContent className="text-center">
+                                            Enable this switch to make it just a container or parent benchmark. (This will disable the upload
+                                            document)
+                                        </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>
                             </Label>

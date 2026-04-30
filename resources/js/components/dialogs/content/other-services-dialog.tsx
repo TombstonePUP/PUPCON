@@ -32,14 +32,14 @@ export default function ServicesDialog({ ...props }: ServicesDialogProps) {
             <Dialog open={true} onOpenChange={onClose}>
                 <DialogContent className="sm:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle className="text-lg font-medium text-foreground">{type === 'edit' ? 'Edit Service' : 'Add Service'}</DialogTitle>
-                        <DialogDescription className="text-sm text-muted-foreground">
+                        <DialogTitle className="text-foreground text-lg font-medium">{type === 'edit' ? 'Edit Service' : 'Add Service'}</DialogTitle>
+                        <DialogDescription className="text-muted-foreground text-sm">
                             {type === 'edit' ? 'Make changes to the service details below.' : 'Fill out the details below to add a new service.'}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="mt-6 max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Title</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Title</Label>
                             <Input
                                 placeholder="e.g., University Student Portal"
                                 value={data.service_name}
@@ -48,7 +48,7 @@ export default function ServicesDialog({ ...props }: ServicesDialogProps) {
                             />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Description</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">Description</Label>
                             <Textarea
                                 placeholder="Enter a brief description..."
                                 value={data.description}
@@ -58,7 +58,7 @@ export default function ServicesDialog({ ...props }: ServicesDialogProps) {
                             />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">URL (Link)</Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">URL (Link)</Label>
                             <Input
                                 placeholder="https://studentportal.example.com"
                                 value={data.service_link}

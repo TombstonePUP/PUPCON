@@ -24,10 +24,7 @@ export default function UpdatePassword() {
     };
 
     return (
-        <AuthLayout
-            title="Confirm your password"
-            description="Update your default password to a new secure password."
-        >
+        <AuthLayout title="Confirm your password" description="Update your default password to a new secure password.">
             <Head title="Confirm password" />
 
             <form onSubmit={submit}>

@@ -1,5 +1,5 @@
-import AuthLayoutTemplate from '@/layouts/auth/auth-simple-layout';
 import GuideTour from '@/components/tour/guide-tour';
+import AuthLayoutTemplate from '@/layouts/auth/auth-simple-layout';
 interface AuthLayoutProps {
     children: React.ReactNode;
     title: string;
@@ -13,13 +13,13 @@ export default function AuthLayout({ children, title, description }: AuthLayoutP
     return (
         <TourProvider>
             {/* Mobile Block */}
-            <div className="flex flex-col items-center justify-center h-svh p-6 text-center bg-[#f4f4f5] md:hidden">
-                <div className="rounded-2xl bg-white p-8 shadow-sm border border-border max-w-sm">
-                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#7f1414]/10 mb-4">
+            <div className="flex h-svh flex-col items-center justify-center bg-[#f4f4f5] p-6 text-center md:hidden">
+                <div className="border-border max-w-sm rounded-2xl border bg-white p-8 shadow-sm">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#7f1414]/10">
                         <Monitor className="h-7 w-7 text-[#7f1414]" />
                     </div>
-                    <h2 className="text-xl font-bold text-foreground mb-2">Desktop Required</h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <h2 className="text-foreground mb-2 text-xl font-bold">Desktop Required</h2>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
                         Login access is securely restricted to desktop devices. Please use a PC or Laptop to proceed.
                     </p>
                 </div>

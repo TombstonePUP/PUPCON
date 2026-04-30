@@ -1,10 +1,9 @@
 'use client';
-import ContentPageLayout from '@/layouts/about-layout';
 import FacultyCard from '@/components/ui/facultyCard';
+import ContentPageLayout from '@/layouts/about-layout';
 import { Administration, ContentPages } from '@/types/content';
-import { Construction } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+import { Construction } from 'lucide-react';
 
 interface AdministrationPageProps {
     officials: Administration[];
@@ -22,28 +21,19 @@ export default function AdministrationPage({ officials, page }: AdministrationPa
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
             <Construction className="mb-4 h-16 w-16 text-gray-400" />
             <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <p className="text-muted-foreground text-sm">{description}</p>
         </div>
     );
 
-
     const renderOfficials = (officials: Administration[]) => {
         if (!officials || officials.length === 0) {
-            return (
-                <EmptyState
-                    title="No Officials Found"
-                    description="There are currently no officials available for this section."
-                />
-            );
+            return <EmptyState title="No Officials Found" description="There are currently no officials available for this section." />;
         }
 
         return (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
                 {officials.map((a) => (
-                    <div
-                        key={a.administration_id}
-                        className="transform scale-95 transition-all duration-300 hover:scale-100 h-full flex"
-                    >
+                    <div key={a.administration_id} className="flex h-full scale-95 transform transition-all duration-300 hover:scale-100">
                         <FacultyCard
                             className="h-full flex-1"
                             faculty={{
@@ -58,7 +48,6 @@ export default function AdministrationPage({ officials, page }: AdministrationPa
             </div>
         );
     };
-
 
     const campus_officials = officials.filter((o) => o.type === 'Campus');
     const university_officials = officials.filter((o) => o.type === 'University');
@@ -96,9 +85,7 @@ export default function AdministrationPage({ officials, page }: AdministrationPa
             <section id="university" className="space-y-6">
                 <div className="card-fx rounded-xl border border-[#7f1414]/25 bg-white p-8 duration-300 hover:border-[#7f1414]">
                     <h2 className="mb-3 text-3xl font-bold text-[#7f1414]">University Officials</h2>
-                    <p className="leading-relaxed text-gray-700">
-                        Meet the top officials managing PUP and driving university-wide initiatives.
-                    </p>
+                    <p className="leading-relaxed text-gray-700">Meet the top officials managing PUP and driving university-wide initiatives.</p>
                 </div>
                 {renderOfficials(university_officials)}
             </section>
@@ -106,13 +93,10 @@ export default function AdministrationPage({ officials, page }: AdministrationPa
             <section id="campus" className="space-y-6">
                 <div className="card-fx rounded-xl border border-[#7f1414]/25 bg-white p-8 duration-300 hover:border-[#7f1414]">
                     <h2 className="mb-3 text-3xl font-bold text-[#7f1414]">Campus Officials</h2>
-                    <p className="leading-relaxed text-gray-700">
-                        Meet the dedicated campus officials who ensure smooth operations at PUP San Juan.
-                    </p>
+                    <p className="leading-relaxed text-gray-700">Meet the dedicated campus officials who ensure smooth operations at PUP San Juan.</p>
                 </div>
                 {renderOfficials(campus_officials)}
             </section>
         </ContentPageLayout>
     );
 }
-

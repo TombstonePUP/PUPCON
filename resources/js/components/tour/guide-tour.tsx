@@ -2,10 +2,10 @@
 
 import { usePage } from '@inertiajs/react';
 import { useEffect, useMemo } from 'react';
+import { FALLBACK_TOUR, TOUR_DEFINITIONS } from './tour-config';
 import { useTour } from './tour-context';
 import { TourMask } from './tour-mask';
 import { TourTooltip } from './tour-tooltip';
-import { FALLBACK_TOUR, TOUR_DEFINITIONS } from './tour-config';
 
 const GuideTour = () => {
     const { url } = usePage();
@@ -44,11 +44,8 @@ const GuideTour = () => {
 
     return (
         <>
-            <TourMask 
-                isOpen={isOpen} 
-                elementSelector={step.element} 
-            />
-            <TourTooltip 
+            <TourMask isOpen={isOpen} elementSelector={step.element} />
+            <TourTooltip
                 elementSelector={step.element}
                 title={step.title}
                 text={step.text}

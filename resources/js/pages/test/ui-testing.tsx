@@ -22,8 +22,6 @@ const VideoSection: React.FC<{ loading: boolean }> = ({ loading }) => {
     );
 };
 
-
-
 // ✅ Text Section
 const TextSection: React.FC<{ loading: boolean }> = ({ loading }) => {
     return (

@@ -1,12 +1,11 @@
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/text-area";
-import { Edit2, Trash2 } from "lucide-react";
-import { CampusDirectors } from "@/types/content";
-
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/text-area';
+import { CampusDirectors } from '@/types/content';
+import { Edit2, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface DirectorsForm {
     director_id: number;
@@ -56,30 +55,33 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
     const handleSubmit = () => {
         onSave(data);
         onClose();
-    }
+    };
 
     return (
         <>
             <Dialog open={true} onOpenChange={onClose}>
                 <DialogContent className="sm:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle className="text-lg font-medium text-foreground">
+                        <DialogTitle className="text-foreground text-lg font-medium">
                             {type === 'edit' ? 'Edit Director' : 'Add Director'}
                         </DialogTitle>
-                        <DialogDescription className="text-sm text-muted-foreground">
-                            {type === 'edit'
-                                ? 'Make changes to the director details below.'
-                                : 'Fill out the details below to add a new director.'}
+                        <DialogDescription className="text-muted-foreground text-sm">
+                            {type === 'edit' ? 'Make changes to the director details below.' : 'Fill out the details below to add a new director.'}
                         </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleSubmit}>
                         <div className="max-h-[70vh] overflow-y-auto pr-2">
                             <div>
-                                <Label className="mb-2 block text-sm font-medium text-foreground">President's Photo</Label>
+                                <Label className="text-foreground mb-2 block text-sm font-medium">President's Photo</Label>
                                 {!data.previewUrl ? (
-                                    <Label className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted hover:bg-muted/80">
+                                    <Label className="border-border bg-muted hover:bg-muted/80 flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                            <svg className="mb-4 h-8 w-8 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <svg
+                                                className="text-muted-foreground mb-4 h-8 w-8"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 20 16"
+                                            >
                                                 <path
                                                     stroke="currentColor"
                                                     strokeLinecap="round"
@@ -88,7 +90,7 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                                                     d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                                 />
                                             </svg>
-                                            <p className="text-sm text-muted-foreground">
+                                            <p className="text-muted-foreground text-sm">
                                                 <span className="font-semibold">Click to upload</span> or drag and drop
                                             </p>
                                             <p className="text-xs text-gray-500">JPG, PNG, JPEG</p>
@@ -97,7 +99,11 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                                     </Label>
                                 ) : (
                                     <div className="group relative">
-                                        <img src={data.previewUrl} alt="Preview" className="h-48 w-full rounded-lg border border-gray-200 object-cover" />
+                                        <img
+                                            src={data.previewUrl}
+                                            alt="Preview"
+                                            className="h-48 w-full rounded-lg border border-gray-200 object-cover"
+                                        />
                                         <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-lg bg-black/40 opacity-0 transition group-hover:opacity-100">
                                             <input
                                                 type="file"
@@ -136,11 +142,12 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                                     </div>
                                 )}
                                 {/* <InputError message={errors['page.banner']} className="mt-2" /> */}
-
                             </div>
-                            <div className="space-y-4 mt-2">
+                            <div className="mt-2 space-y-4">
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-foreground">Name <span className="text-red-500">*</span></Label>
+                                    <Label className="text-foreground mb-2 block text-sm font-medium">
+                                        Name <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         placeholder="Enter president's full name"
                                         value={data.name}
@@ -150,7 +157,9 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-foreground">Year Started <span className="text-red-500">*</span></Label>
+                                    <Label className="text-foreground mb-2 block text-sm font-medium">
+                                        Year Started <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         placeholder="e.g., 1988-1992"
                                         value={data.term_start_date}
@@ -159,7 +168,7 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-foreground">Year Ended</Label>
+                                    <Label className="text-foreground mb-2 block text-sm font-medium">Year Ended</Label>
                                     <Input
                                         placeholder="e.g., 1988-1992"
                                         value={data.term_end_date}
@@ -167,7 +176,9 @@ export function DirectorsDialog({ ...props }: DirectorsDialogProps) {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2 block text-sm font-medium text-foreground">Description / Details <span className="text-red-500">*</span></Label>
+                                    <Label className="text-foreground mb-2 block text-sm font-medium">
+                                        Description / Details <span className="text-red-500">*</span>
+                                    </Label>
                                     <Textarea
                                         placeholder="Enter details about their term..."
                                         value={data.description}

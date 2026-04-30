@@ -65,8 +65,8 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">Edit Benchmark</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">Edit Benchmark</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         {`${outline.initial}.${outline.outline_number}. ${outline.outline_description}`}
                     </DialogDescription>
                 </DialogHeader>
@@ -74,7 +74,9 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                 <div className="flex flex-col gap-4">
                     <form className="flex flex-col gap-6" onSubmit={editBenchmark}>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Benchmark Number <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Benchmark Number <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="benchmark_number"
                                 type="text"
@@ -88,7 +90,9 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                             <InputError message={errors.benchmark_number} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Benchmark Description <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Benchmark Description <span className="text-red-500">*</span>
+                            </Label>
                             <Textarea
                                 id="benchmark_description"
                                 value={data.benchmark_description}
@@ -101,7 +105,9 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                             <InputError message={errors.benchmark_description} className="mt-2" />
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Benchmark Category <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Benchmark Category <span className="text-red-500">*</span>
+                            </Label>
                             <Select
                                 value={data.benchmark_category ? String(data.benchmark_category) : ''}
                                 onValueChange={(value) => setData('benchmark_category', Number(value))}
@@ -136,7 +142,7 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                                 />
                                 <Label
                                     htmlFor="is-container-mode"
-                                    className="flex gap-2 text-sm leading-none font-medium text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    className="text-foreground flex gap-2 text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
                                     Benchmark Container
                                     <TooltipProvider>
@@ -146,7 +152,10 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                                                     <HelpCircleIcon className="h-auto w-4 text-red-800" />
                                                 </span>
                                             </TooltipTrigger>
-                                            <TooltipContent className='text-center'>Enable this switch to make it just a container or parent benchmark. (This will disable the upload button)</TooltipContent>
+                                            <TooltipContent className="text-center">
+                                                Enable this switch to make it just a container or parent benchmark. (This will disable the upload
+                                                button)
+                                            </TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
                                 </Label>
@@ -165,7 +174,7 @@ export function EditBenchmark({ outline, program, area_id, parameter_outline_cat
                         </DialogFooter>
                     </form>
                 </div>
-            </DialogContent >
-        </Dialog >
+            </DialogContent>
+        </Dialog>
     );
 }

@@ -28,8 +28,8 @@ export function OrganizationTypeDialog({ ...props }: OrganizationTypeDialogProps
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">{type === 'edit' ? 'Edit Org. Type' : 'Add Org. Type'}</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">{type === 'edit' ? 'Edit Org. Type' : 'Add Org. Type'}</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         {type === 'edit'
                             ? 'Make changes to the organization type details below.'
                             : 'Fill out the details below to add a new organization type.'}
@@ -38,7 +38,9 @@ export function OrganizationTypeDialog({ ...props }: OrganizationTypeDialogProps
                 <form onSubmit={handleSubmit}>
                     <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-2">
                         <div className="mt-6">
-                            <Label className="mb-2 block text-sm font-medium text-foreground">Type Name <span className="text-red-500">*</span></Label>
+                            <Label className="text-foreground mb-2 block text-sm font-medium">
+                                Type Name <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 placeholder="e.g., Academic Organizations"
                                 value={data.type_name}

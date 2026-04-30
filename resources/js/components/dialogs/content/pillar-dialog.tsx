@@ -27,14 +27,16 @@ export default function PillarDialog({ ...props }: PillarDialogProps) {
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">{type === 'edit' ? 'Edit Pillar' : 'Add Pillar'}</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">{type === 'edit' ? 'Edit Pillar' : 'Add Pillar'}</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         {type === 'edit' ? 'Make changes to the pillar details below.' : 'Fill out the details below to add a new pillar.'}
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="mt-1">
-                        <label className="mb-1 block text-sm font-medium text-foreground">Pillar Title <span className="text-red-500">*</span></label>
+                        <label className="text-foreground mb-1 block text-sm font-medium">
+                            Pillar Title <span className="text-red-500">*</span>
+                        </label>
                         <Input
                             placeholder="e.g., Teaching and Learning"
                             value={data.pillar_title}

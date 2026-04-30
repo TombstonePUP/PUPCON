@@ -33,17 +33,16 @@ export default function DeleteAreaDialog({ area, program, level, onClose }: Dele
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-medium text-foreground">Archive Area</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">
+                    <DialogTitle className="text-foreground text-lg font-medium">Archive Area</DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
                         This action will permanently archive the selected area. This action cannot be undone.
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="my-4 rounded-md border border-warning-border bg-warning p-4">
-              <p className="text-sm text-warning-foreground">
-                <span className="mb-1 block font-semibold text-warning-foreground">Note: Important Action!</span>
-                        The area will be hidden from active listings, all data will be preserved, and accreditation history will
-                        remain intact.
+                <div className="border-warning-border bg-warning my-4 rounded-md border p-4">
+                    <p className="text-warning-foreground text-sm">
+                        <span className="text-warning-foreground mb-1 block font-semibold">Note: Important Action!</span>
+                        The area will be hidden from active listings, all data will be preserved, and accreditation history will remain intact.
                     </p>
                 </div>
 
