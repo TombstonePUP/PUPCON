@@ -33,9 +33,10 @@ export default function GuestHeader({
   return (
     <motion.header
       className={cn(
-        'sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm transition-all duration-300',
+        'sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r from-[#7f1414] to-[#a71d1d] shadow-md backdrop-blur-sm',
       )}
       animate={{ y: scrollDir === 'down' ? '-100%' : '0%' }}
+      transition={{ duration: 0.1, ease: 'easeInOut' }}
     >
       <Link href="/" className="flex items-center" preserveScroll>
         <div className="h-[14vw] w-[85vw] rounded-br-full bg-[#d2b539] lg:h-[4vw] lg:w-[38vw]">
