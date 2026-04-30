@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c2d5b9ea275513741f7f23fe3625a48",
+    "content-hash": "6056c6d4fbfa1cbf24fa13b3b77ddf3b",
     "packages": [
         {
             "name": "brick/math",
@@ -2538,6 +2538,76 @@
                 }
             ],
             "time": "2025-03-24T10:02:05+00:00"
+        },
+        {
+            "name": "mostafaznv/pdf-optimizer",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mostafaznv/pdf-optimizer.git",
+                "reference": "fe42a6ea211754308c60232f59d9ee3c8a570dea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mostafaznv/pdf-optimizer/zipball/fe42a6ea211754308c60232f59d9ee3c8a570dea",
+                "reference": "fe42a6ea211754308c60232f59d9ee3c8a570dea",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": "^8.2",
+                "psr/log": "^3.0",
+                "symfony/process": "^6.2|^7.0|^8.0"
+            },
+            "require-dev": {
+                "league/flysystem-aws-s3-v3": "^3.0",
+                "orchestra/testbench": "^v8.19.0|^9.0|^10.0|^11.0",
+                "pestphp/pest": "^2.0|^3.7|^4.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mostafaznv\\PdfOptimizer\\PdfOptimizerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Helpers/Utils.php"
+                ],
+                "psr-4": {
+                    "Mostafaznv\\PdfOptimizer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "mostafaznv",
+                    "email": "mostafa.zeinivand@gmail.com"
+                }
+            ],
+            "description": "PDF optimization tool for PHP and Laravel applications",
+            "keywords": [
+                "compress-pdf",
+                "ghostscript",
+                "laravel",
+                "mostafaznv",
+                "pdf",
+                "pdf-compressor",
+                "pdf-optimizer",
+                "php",
+                "tiny-pdf"
+            ],
+            "support": {
+                "docs": "https://github.com/mostafaznv/pdf-optimizer/blob/master/README.md",
+                "issues": "https://github.com/mostafaznv/pdf-optimizer/issues",
+                "source": "https://github.com/mostafaznv/pdf-optimizer"
+            },
+            "time": "2026-04-25T10:59:55+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -9611,5 +9681,5 @@
         "php": "^8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
