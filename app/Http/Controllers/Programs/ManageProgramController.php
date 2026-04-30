@@ -37,7 +37,7 @@ class ManageProgramController extends Controller
             return $program;
         });
 
-        return inertia('manage-programs', [
+        return inertia('admin/manage-programs', [
             'programs' => $programs,
         ]);
     }
@@ -78,7 +78,7 @@ class ManageProgramController extends Controller
 
         $program->program_link = Str::slug($program->program_name, '_');
 
-        return inertia('document/program', [
+        return inertia('admin/document/program', [
             'program' => $program,
         ]);
     }

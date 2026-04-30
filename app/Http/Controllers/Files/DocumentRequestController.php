@@ -38,7 +38,7 @@ class DocumentRequestController extends Controller
             return $file;
         });
 
-        return inertia('document/document-request', [
+        return inertia('admin/document/document-request', [
             'files' => $files,
         ]);
     }

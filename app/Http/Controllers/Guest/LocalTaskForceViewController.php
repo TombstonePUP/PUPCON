@@ -23,7 +23,7 @@ class LocalTaskForceViewController extends Controller
             return $task_force;
         });
 
-        return inertia('about/local-task-force', [
+        return inertia('guest/about/local-task-force', [
             'page' => $page,
             'local_task_force' => $local_task_force,
         ]);

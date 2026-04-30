@@ -77,7 +77,7 @@ class AreaParameterOutlinesController extends Controller
             return $form;
         });
 
-        return inertia('document/area', [
+        return inertia('admin/document/area', [
             'program' => $program,
             'area' => $area,
             'parameterOutlineCategories' => $parameterOutlineCategories,

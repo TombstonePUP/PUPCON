@@ -32,7 +32,7 @@ class ProgramsController extends Controller
             return $program;
         });
 
-        return inertia('programs', [
+        return inertia('guest/programs', [
             'programs' => $programs,
         ]);
     }
@@ -74,7 +74,7 @@ class ProgramsController extends Controller
             return $level->Areas;
         });
 
-        return inertia('programview', [
+        return inertia('guest/programview', [
             'program' => $program,
         ]);
     }

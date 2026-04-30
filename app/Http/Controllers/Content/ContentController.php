@@ -98,7 +98,7 @@ class ContentController extends Controller
             'vmgo' => $vmgo,
         ];
 
-        return Inertia::render('content-management/main-content', [
+        return Inertia::render('admin/content-management/main-content', [
             'pages' => $pages,
             'welcome_gallery' => $welcome_carousel,
             'org_types' => $orgTypes,

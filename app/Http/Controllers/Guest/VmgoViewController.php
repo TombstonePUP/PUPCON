@@ -30,7 +30,7 @@ class VmgoViewController extends Controller
         $pillars = Pillars::with('PillarItems')->get();
         $vmgo = Vmgo::first();
 
-        return inertia('about/vmgo', [
+        return inertia('guest/about/vmgo', [
             'page' => $page,
             'campus_goals' => $campus_goals,
             'pillars' => $pillars,

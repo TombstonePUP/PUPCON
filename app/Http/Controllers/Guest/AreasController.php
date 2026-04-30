@@ -67,7 +67,7 @@ class AreasController extends Controller
 
         $area->area_image_path = $area->area_image_path ? Storage::url($area->area_image_path) : null;
 
-        return inertia('area', [
+        return inertia('admin/area', [
             'area' => $area,
             'program' => $program,
             'categories' => $parameterOutlineCategories,

@@ -26,7 +26,7 @@ class WelcomeViewController extends Controller
             return $item;
         });
 
-        return inertia('welcome', [
+        return inertia('guest/welcome', [
             'page' => $page,
             'carousel_images' => $carousel_images,
         ]);

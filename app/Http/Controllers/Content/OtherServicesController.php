@@ -20,7 +20,7 @@ class OtherServicesController extends Controller
         $services_page = ContentPages::where('page', 'Other Services')->first();
         $services = OtherServices::all();
 
-        return inertia('content-management/other-services', [
+        return inertia('admin/content-management/other-services', [
             'services_page' => $services_page,
             'services' => $services,
         ]);

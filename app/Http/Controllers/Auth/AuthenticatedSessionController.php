@@ -24,7 +24,7 @@ class AuthenticatedSessionController extends Controller
 
         $images = array_map(fn($file) => asset('images/landing/' . $file->getFilename()), $files);
 
-        return Inertia::render('auth/login', [
+        return Inertia::render('guest/auth/login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
             'carouselImages' => $images,

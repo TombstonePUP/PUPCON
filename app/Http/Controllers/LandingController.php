@@ -17,7 +17,7 @@ class LandingController extends Controller
 
         $images = array_map(fn($file) => asset('images/landing/' . $file->getFilename()), $files);
 
-        return inertia('welcome', [
+        return inertia('guest/welcome', [
             'carouselImages' => $images,
         ]);
     }
