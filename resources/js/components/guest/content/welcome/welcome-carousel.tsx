@@ -48,7 +48,11 @@ const SharedPhotoPreview: React.FC<{ url: string | null; alt: string; heightClas
 };
 
 export default function WelcomeCarouselSection({ gallery, onUpdate, onDelete, errors = {} }: WelcomeCarouselProps) {
-    const [galleryList, setGalleryList] = React.useState<CampusGallery[]>(gallery);
+    const [galleryList, setGalleryList] = React.useState<CampusGallery[]>(gallery || []);
+
+    React.useEffect(() => {
+        setGalleryList(gallery || []);
+    }, [gallery]);
     const [selectedGalleryId, setSelectedGalleryId] = React.useState<number | null>(null);
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [dialogAction, setDialogAction] = React.useState<'add' | 'edit'>('add');

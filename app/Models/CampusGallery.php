@@ -28,5 +28,6 @@ class CampusGallery extends Model
     protected $casts = [
         'image_name' => 'encrypted',
         'image_path' => 'encrypted',
+        'carousel' => 'boolean',
     ];
 }
