@@ -57,7 +57,7 @@ The layout system is centralized in `resources/js/layouts/`.
 
 | Layout | File | Usage | Styling Approach |
 | :--- | :--- | :--- | :--- |
-| **Landing Layout** | `landing-layout.tsx` | Used for guest-facing pages (home, about, programs, exhibits). | Features a sticky header with a maroon gradient, animated navigation menus, a complex mobile sidebar, and an image-based footer with gradients. Uses Framer Motion for transitions. |
+| **Landing Layout** | `landing-layout.tsx` | Used for guest-facing pages (home, about, programs, exhibits). | Modularized layout utilizing `GuestHeader`, `SearchModal`, `MobileMenu`, and `GuestFooter`. Features a sticky header, animated menus, and image-based footer. Uses Framer Motion for transitions. |
 | **App Layout** | `app-layout.tsx` | Used for authenticated dashboard areas (wrapping `app-sidebar-layout`). | Structured with a responsive sidebar and main content area. Focuses on utility and data presentation. |
 | **Auth Layout** | `auth-layout.tsx` | Used for authentication pages (login, register, reset password). | Centered, minimalist card-based design with background graphics or splits. |
 | **Accreditor Layout** | `accreditor-layout.tsx` | Used specifically for accreditor portal pages. | Similar to App Layout but with tailored navigation and context. |
@@ -83,7 +83,7 @@ The application uses **Inertia.js** to render React components.
 > [!IMPORTANT]
 > **Styling Approach**
 > This project uses **Tailwind CSS v4** and relies on CSS variables defined in `resources/css/app.css` for its design system.
-> All specifics regarding color tokens, typography, component structures, and Tailwind classes **MUST** be referenced from `DESIGN.md`. `DESIGN.md` is the single source of truth for all visual and design decisions.
+> All specifics regarding color tokens, typography, component structures, and Tailwind classes **MUST** be referenced from `GUEST_DESIGN.md` (for public pages) and `ADMIN_DESIGN.md` (for dashboards). These documents are the single sources of truth for all visual and design decisions.
 
 ## Key Constraints & Gotchas
 - **Never do**:
