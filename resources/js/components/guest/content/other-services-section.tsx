@@ -3,7 +3,7 @@ import { Separator } from '@/components/ui/separator';
 import { OtherServices } from '@/types/content';
 import { LibrarySquare, Link, MousePointerClick } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import OtherServicesDialog from '../dialogs/content/other-services-dialog';
+import OtherServicesDialog from '@/components/admin/dialogs/content/other-services-dialog';
 
 interface OtherServicesSectionProps {
     services: OtherServices[];

@@ -12,7 +12,7 @@ import type { BreadcrumbItem } from '@/types';
 import { ContentPages, OtherServices } from '@/types/content';
 import { Head, useForm } from '@inertiajs/react';
 import { LibrarySquare } from 'lucide-react';
-import React from 'react';
+import React, { useRef } from 'react';
 
 interface OtherServicesProps {
     services_page: ContentPages;
@@ -33,6 +33,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const OtherServicesPage = ({ ...props }: OtherServicesProps) => {
     const { services_page, services } = props;
+    const overviewRef = useRef<HTMLDivElement>(null);
+    const servicesRef = useRef<HTMLDivElement>(null);
 
     const { data, setData, post, errors, processing } = useForm<OtherServicesForm>({
         page: {

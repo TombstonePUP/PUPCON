@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/text-area';
 import { CampusGoals, ContentPages, Pillars, Vmgo } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
-import InputError from '../input-error';
+import InputError from '@/components/input-error';
 import CampusGoalsSection from './vmgo/campus-goals';
 import PillarsSection from './vmgo/pillars';
 

@@ -6,8 +6,8 @@ import { Administration, ContentPages } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import { ImageIcon, UserRoundPlus } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { AdministrationDialog } from '../dialogs/content/admin-dialog';
-import InputError from '../input-error';
+import { AdministrationDialog } from '@/components/admin/dialogs/content/admin-dialog';
+import InputError from '@/components/input-error';
 
 interface AdministrationProps {
     admin_page: ContentPages;

@@ -2,6 +2,7 @@ import { Card, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartLegend, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { type DocumentStatistics, type FrequencyUploads, type OverallUploads } from '@/types';
+import { TrendingDown, TrendingUp } from 'lucide-react';
 import * as React from 'react';
 import { useMemo, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, Cell, Label, Pie, PieChart, XAxis, YAxis } from 'recharts';
@@ -39,12 +40,14 @@ function AnalyticsCard({
     title,
     description,
     filter,
+    trend,
     children,
     contentClassName,
 }: {
     title: string;
     description: string;
     filter?: React.ReactNode;
+    trend?: React.ReactNode;
     children: React.ReactNode;
     contentClassName?: string;
 }) {
@@ -52,7 +55,10 @@ function AnalyticsCard({
         <Card className="h-full">
             <div className="bg-muted/50 flex items-center justify-between border-b px-6 py-4">
                 <div>
-                    <CardTitle className="text-foreground font-semibold">{title}</CardTitle>
+                    <div className="flex items-center gap-3">
+                        <CardTitle className="text-foreground font-semibold">{title}</CardTitle>
+                        {trend}
+                    </div>
                     <p className="text-muted-foreground mt-1 text-xs">{description}</p>
                 </div>
                 {filter}
@@ -150,6 +156,28 @@ export function DocumentsAnalytics({ frequencyUploads, overallUploads = [], docu
     // --- Area chart data ---
     const filteredFrequency = useMemo(() => filterByRange(frequencyUploads, timeRange), [frequencyUploads, timeRange]);
 
+    // --- Activity trend computation ---
+    const activityTrend = useMemo(() => {
+        const current = filteredFrequency;
+        const currentTotal = current.reduce((sum, d) => sum + d.activity, 0);
+
+        const days = timeRange === '3d' ? 3 : timeRange === '7d' ? 7 : 30;
+        const prevCutoff = new Date();
+        prevCutoff.setDate(prevCutoff.getDate() - days * 2);
+        const currCutoff = new Date();
+        currCutoff.setDate(currCutoff.getDate() - days);
+
+        const prevPeriod = frequencyUploads.filter((d) => {
+            const date = new Date(d.activity_date);
+            return date >= prevCutoff && date < currCutoff;
+        });
+        const prevTotal = prevPeriod.reduce((sum, d) => sum + d.activity, 0);
+
+        const pctChange = prevTotal > 0 ? Math.round(((currentTotal - prevTotal) / prevTotal) * 100) : currentTotal > 0 ? 100 : 0;
+
+        return { currentTotal, pctChange };
+    }, [filteredFrequency, frequencyUploads, timeRange]);
+
     // --- Pie chart data ---
     const pieData = useMemo(() => {
         let missing = 0;
@@ -163,6 +191,9 @@ export function DocumentsAnalytics({ frequencyUploads, overallUploads = [], docu
     }, [overallUploads]);
 
     const pieTotal = pieData.filter((e) => e.name !== 'Missing Files').reduce((acc, cur) => acc + cur.value, 0);
+    const pieMissing = pieData.find((e) => e.name === 'Missing Files')?.value ?? 0;
+    const pieGrandTotal = pieTotal + pieMissing;
+    const completionPct = pieGrandTotal > 0 ? Math.round((pieTotal / pieGrandTotal) * 100) : 0;
 
     // ---------------------------------------------------------------------------
     // Render
@@ -177,6 +208,23 @@ export function DocumentsAnalytics({ frequencyUploads, overallUploads = [], docu
                     description={`Overall upload frequency — last ${timeRange === '3d' ? '3 days' : timeRange === '7d' ? '7 days' : '30 days'}`}
                     filter={<TimeFilter value={timeRange} onChange={setTimeRange} />}
                     contentClassName="px-2 py-4 sm:px-6 sm:py-6"
+                    trend={
+                        <span
+                            className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
+                                activityTrend.pctChange >= 0
+                                    ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400'
+                                    : 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
+                            }`}
+                        >
+                            {activityTrend.pctChange >= 0 ? (
+                                <TrendingUp className="size-3" />
+                            ) : (
+                                <TrendingDown className="size-3" />
+                            )}
+                            {activityTrend.pctChange >= 0 ? '+' : ''}
+                            {activityTrend.pctChange}%
+                        </span>
+                    }
                 >
                     {loading ? (
                         <ChartSkeleton height={220} />
@@ -227,7 +275,24 @@ export function DocumentsAnalytics({ frequencyUploads, overallUploads = [], docu
 
             {/* 2 ─ Overall Progress (pie / donut) */}
             <div className="col-span-2 xl:col-span-1">
-                <AnalyticsCard title="Document Uploads" description="Uploaded vs outlines with no documents" contentClassName="px-2 py-4 sm:px-6">
+                <AnalyticsCard
+                    title="Document Uploads"
+                    description="Uploaded vs outlines with no documents"
+                    contentClassName="px-2 py-4 sm:px-6"
+                    trend={
+                        <span
+                            className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
+                                completionPct >= 75
+                                    ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400'
+                                    : completionPct >= 50
+                                      ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400'
+                                      : 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
+                            }`}
+                        >
+                            {completionPct}% complete
+                        </span>
+                    }
+                >
                     {loading ? (
                         <ChartSkeleton height={220} />
                     ) : (

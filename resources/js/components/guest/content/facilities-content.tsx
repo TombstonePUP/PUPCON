@@ -8,7 +8,7 @@ import { ContentPages, Facilities } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import { Building2, ImageIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import InputError from '../input-error';
+import InputError from '@/components/input-error';
 
 interface FacilitiesProps {
     facility_page: ContentPages;

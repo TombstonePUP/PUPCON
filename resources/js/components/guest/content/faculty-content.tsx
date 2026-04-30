@@ -8,8 +8,8 @@ import { ContentPages, FacultyStaff } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import { ImageIcon, UserRoundPlus } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { FacultyDialog } from '../dialogs/content/faculty-dialog';
-import InputError from '../input-error';
+import { FacultyDialog } from '@/components/admin/dialogs/content/faculty-dialog';
+import InputError from '@/components/input-error';
 
 interface FacultyProps {
     faculty_page: ContentPages;

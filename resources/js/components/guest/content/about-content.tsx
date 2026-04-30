@@ -5,8 +5,8 @@ import { Separator } from '@/components/ui/separator';
 import { ContentPages, OrganizationTypes } from '@/types/content';
 import { useForm } from '@inertiajs/react';
 import { useEffect } from 'react';
-import ImageUpload from '../image-upload';
-import InputError from '../input-error';
+import ImageUpload from '@/components/admin/image-upload';
+import InputError from '@/components/input-error';
 
 interface AboutProps {
     about_page: ContentPages;
