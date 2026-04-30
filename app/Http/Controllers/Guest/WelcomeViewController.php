@@ -17,12 +17,16 @@ class WelcomeViewController extends Controller
     {
         $page = ContentPages::where('page', 'Welcome')->first();
         if ($page) {
-            $page->director_image_path = $page->director_image_path ? Storage::url($page->director_image_path) : null;
+            $page->director_image_path = $page->director_image_path 
+                ? (str_starts_with($page->director_image_path, '/') ? $page->director_image_path : Storage::url($page->director_image_path)) 
+                : null;
         }
 
         $carousel_images = CampusGallery::where('carousel', true)->get();
         $carousel_images = $carousel_images->map(function ($item) {
-            $item->image_path = $item->image_path ? Storage::url($item->image_path) : null;
+            $item->image_path = $item->image_path 
+                ? (str_starts_with($item->image_path, '/') ? $item->image_path : Storage::url($item->image_path)) 
+                : null;
             return $item;
         });
 

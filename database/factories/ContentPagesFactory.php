@@ -18,15 +18,15 @@ class ContentPagesFactory extends Factory
     {
         return [
             'content_page_id' => fake()->unique()->randomNumber(),
-            'title' => fake()->sentence(),
-            'subtitle' => fake()->sentence(),
-            'description' => fake()->paragraphs(4, true),
-            'image_name' => fake()->word(),
-            'image_path' => fake()->imageUrl(),
-            'quote' => fake()->sentence(),
-            'author' => fake()->name(),
-            'phone_number' => fake()->phoneNumber(),
-            'address' => fake()->address(),
+            'title' => 'Welcome to PUP San Juan',
+            'subtitle' => 'The Country\'s First Polytechnic University',
+            'description' => 'Polytechnic University of the Philippines San Juan Campus is committed to providing quality education and fostering excellence in various academic fields.',
+            'image_name' => 'campus-view',
+            'image_path' => '/images/landing/1.jpg',
+            'quote' => 'Quality education for all.',
+            'author' => 'PUP San Juan Administration',
+            'phone_number' => '(02) 8727-2614',
+            'address' => 'San Juan, Metro Manila, Philippines',
         ];
     }
 }

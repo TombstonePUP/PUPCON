@@ -95,7 +95,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                     {area.area_image_path ? (
                         <img className="w-[45%] rounded-xl object-cover" src={area.area_image_path} />
                     ) : (
-                        <img className="w-[45%] rounded-xl object-cover" src="https://placehold.co/800x400/7f1414/white?text=No+Image" />
+                        <img className="w-[45%] rounded-xl object-cover" src="/images/area/placeholder.png" />
                     )}
                 </div>
 

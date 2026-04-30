@@ -16,7 +16,7 @@ PUPCON (Polytechnic University of the Philippines - San Juan Campus) is a web ap
 | **Styling** | Tailwind CSS v4 | Utility-first CSS framework (configured via `@tailwindcss/vite`). Includes Radix UI for accessible components and Framer Motion for animations. |
 | **Runtime / Package Managers** | PHP 8.2 (Composer), Node.js (npm/vite) | PHP for backend dependencies; Node for frontend asset bundling and dev server. |
 | **Render Mode** | Inertia.js 2.0 | Bridges Laravel routing to React components, providing a SPA experience without building an API. |
-| **Database** | SQLite (Default) | Configured in `.env` (can be MySQL/PostgreSQL in production). |
+| **Database** | PostgreSQL (Primary) | Configured in `.env`. SQLite also supported for local dev. |
 
 ## Project Structure
 ```text

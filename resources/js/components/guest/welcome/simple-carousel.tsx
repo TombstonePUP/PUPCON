@@ -21,9 +21,6 @@ export const SimpleCarousel = React.memo(({ images }: { images: string[] }) => {
         return () => clearInterval(interval);
     }, [images]);
 
-    if (!images || images.length === 0) {
-        return <SafeImage src="/images/landing/1.png" alt="Default Slide" className="h-full w-full" priority={true} />;
-    }
 
     return (
         <div className="absolute inset-0">

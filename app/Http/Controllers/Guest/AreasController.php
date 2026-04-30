@@ -65,7 +65,9 @@ class AreasController extends Controller
             return $form;
         });
 
-        $area->area_image_path = $area->area_image_path ? Storage::url($area->area_image_path) : null;
+        $area->area_image_path = $area->area_image_path 
+            ? (str_starts_with($area->area_image_path, '/') ? $area->area_image_path : Storage::url($area->area_image_path)) 
+            : null;
 
         return inertia('admin/area', [
             'area' => $area,

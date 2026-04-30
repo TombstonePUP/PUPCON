@@ -4,9 +4,9 @@
 
 **🏛️ PUP San Juan Accreditation System**
 
-[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
-[![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://reactjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
+[![React](https://img.shields.io/badge/React-19.x-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://reactjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org)
 
 [🚀 Demo](http://localhost:8000) • [📋 Issues](https://github.com/TombstonePUP/PUPCON/issues) • [💡 Feature Request](https://github.com/TombstonePUP/PUPCON/issues/new)
@@ -36,9 +36,9 @@
 
 ## 🎯 Overview
 
-📚 **File management system** for PUP San Juan accreditation processes  
-🔐 **Secure document handling** with role-based access  
-📊 **Real-time progress tracking** and analytics
+📚 **Comprehensive management system** for PUP San Juan programs, faculty, history, facilities, and administration data.  
+🔐 **Administrative Portal** for accreditors and campus admins with secure document handling.  
+📊 **Real-time accreditation tracking** and program evaluation analytics.
 
 ---
 
@@ -94,13 +94,13 @@
 ## 🛠️ Tech Stack
 
 **Frontend** 🎨  
-[![React](https://img.shields.io/badge/React_18-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://reactjs.org) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org) [![Tailwind](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com) [![Inertia](https://img.shields.io/badge/Inertia.js-9553E9?style=flat-square&logo=inertiajs&logoColor=white)](https://inertiajs.com)
+[![React](https://img.shields.io/badge/React_19-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://reactjs.org) [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org) [![Tailwind](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com) [![Inertia](https://img.shields.io/badge/Inertia.js_2.0-9553E9?style=flat-square&logo=inertiajs&logoColor=white)](https://inertiajs.com)
 
 **Backend** ⚙️  
-[![Laravel](https://img.shields.io/badge/Laravel_11-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com) [![PHP](https://img.shields.io/badge/PHP_8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://www.php.net) [![Sanctum](https://img.shields.io/badge/Sanctum-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com/docs/sanctum)
+[![Laravel](https://img.shields.io/badge/Laravel_12-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com) [![PHP](https://img.shields.io/badge/PHP_8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://www.php.net)
 
 **Database** 🗄️  
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org) [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://www.sqlite.org)
 
 **Tools** 🔧  
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev) [![Composer](https://img.shields.io/badge/Composer-885630?style=flat-square&logo=composer&logoColor=white)](https://getcomposer.org) [![npm](https://img.shields.io/badge/npm-CB3837?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com) [![Ghostscript](https://img.shields.io/badge/Ghostscript-000000?style=flat-square&logo=ghostscript&logoColor=white)](https://www.ghostscript.com)
@@ -112,8 +112,9 @@
 ### ⚡ Prerequisites
 
 - 🐘 PHP 8.2+
-- 🟢 Node.js 18+
-- 🐘 PostgreSQL 13+
+- 🟢 Node.js 20+ (Recommended for React 19)
+- 🐘 PostgreSQL 13+ (Primary)
+- 🗄️ SQLite (Supported)
 - 📦 Composer 2.x
 - 👻 Ghostscript (for PDF optimization)
 - 🔐 cURL & OpenSSL enabled
@@ -127,7 +128,6 @@ cd PUPCON
 
 # 2️⃣ Install dependencies
 composer install
-composer require mostafaznv/pdf-optimizer  # 📄 Install PDF Optimizer package
 npm install
 
 # 3️⃣ Environment setup
@@ -137,11 +137,12 @@ php artisan storage:link
 
 # 4️⃣ Database setup
 php artisan migrate
-php artisan db:seed --class=UserSeeder
-php artisan db:seed --class=PagesSeeder
+php artisan db:seed
 
 # 5️⃣ Start servers
 composer run dev
+# OR
+npm run dev
 ```
 
 ### 🔑 Default Accounts
@@ -177,7 +178,7 @@ composer run dev
 | `APP_KEY` | Laravel application key | Yes |
 | `APP_DEBUG` | Enable/disable debug mode | Yes |
 | `APP_URL` | The base URL of the application | Yes |
-| `DB_CONNECTION` | Database type (e.g., sqlite, mysql, pgsql) | Yes |
+| `DB_CONNECTION` | Database type (e.g., sqlite, mysql, pgsql) - Default: sqlite | Yes |
 | `DB_DATABASE` | Database name or path | Yes |
 | `MAIL_MAILER` | Mail driver (e.g., smtp) | Optional |
 | `PDF_OPTIMIZER_BIN_PATH` | Path to Ghostscript executable | Optional |
