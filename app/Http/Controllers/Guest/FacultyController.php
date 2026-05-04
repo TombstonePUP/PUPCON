@@ -23,7 +23,7 @@ class FacultyController extends Controller
         });
         $page = ContentPages::where('page', 'Faculty & Staff')->first();
 
-        return Inertia::render('about/faculty', [
+        return Inertia::render('guest/about/faculty', [
             'faculties' => $faculties,
             'page' => $page,
         ]);

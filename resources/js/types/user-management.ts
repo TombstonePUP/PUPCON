@@ -34,7 +34,6 @@ export interface AssignedLevels {
     [key: string]: unknown;
 }
 
-
 export interface AssignedPrograms {
     program_id: number;
     program_name: string;

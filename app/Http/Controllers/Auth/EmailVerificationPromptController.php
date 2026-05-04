@@ -36,6 +36,6 @@ class EmailVerificationPromptController extends Controller
             $user->notify(new UserVerification($user->email, $otp));
         }
 
-        return Inertia::render('auth/verify-email');
+        return Inertia::render('guest/auth/verify-email');
     }
 }

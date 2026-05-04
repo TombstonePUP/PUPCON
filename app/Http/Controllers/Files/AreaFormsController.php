@@ -28,7 +28,10 @@ class AreaFormsController extends Controller
         $validated = $request->validate(
             [
                 'area_form_category_id' => 'required|integer|exists:area_form_categories,area_form_category_id',
-                'document' => 'nullable|file|mimes:pdf',
+                'document' => 'nullable|file|mimes:pdf|max:10240',
+                'program_id' => 'required|integer|exists:programs,program_id',
+                'level_id' => 'required|integer|exists:accreditation_levels,accreditation_level_id',
+                'area_id' => 'required|integer|exists:areas,area_id',
             ],
             [
                 'area_form_category_id.required' => 'Form category ID is required.',

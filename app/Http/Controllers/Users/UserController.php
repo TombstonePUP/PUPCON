@@ -66,7 +66,7 @@ class UserController extends Controller
                 },
             ])->get();
 
-        return inertia('user-management', [
+        return inertia('admin/user-management', [
             'programRoles' => $programs,
             'roles' => $roles,
             'userRecords' => $users,

@@ -28,8 +28,11 @@ class AreaFilesController extends Controller
     {
         $validated = $request->validate(
             [
-                'outline_id' => 'nullable|exists:parameter_outlines,parameter_outline_id',
-                'document' => 'required|file|mimes:pdf'
+                'outline_id' => 'required|integer|exists:parameter_outlines,parameter_outline_id',
+                'document' => 'required|file|mimes:pdf|max:10240',
+                'program_id' => 'required|integer|exists:programs,program_id',
+                'level_id' => 'required|integer|exists:accreditation_levels,accreditation_level_id',
+                'area_id' => 'required|integer|exists:areas,area_id',
             ],
             [
                 'outline_id.exists' => 'The selected outline does not exist.',
@@ -134,7 +137,7 @@ class AreaFilesController extends Controller
         $areaFile = $parameterOutlines->AreaFiles;
 
         if ($areaFile && Storage::disk('public')->exists($areaFile->file_path)) {
-            return Storage::disk('public')->download($areaFile->file_path, $areaFile->file_name);
+            return response()->download(storage_path("app/public/" . $areaFile->file_path), $areaFile->file_name);
         } else {
             return redirect()->back()
                 ->with('type', 'error')

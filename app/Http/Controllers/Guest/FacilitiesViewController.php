@@ -24,7 +24,7 @@ class FacilitiesViewController extends Controller
             return $facility;
         });
 
-        return inertia('about/facilities', [
+        return inertia('guest/about/facilities', [
             'page' => $page,
             'facilities' => $facilities,
         ]);

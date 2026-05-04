@@ -13,7 +13,7 @@ class UpdatePasswordController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('auth/update-password');
+        return Inertia::render('guest/auth/update-password');
     }
 
     public function update(Request $request)

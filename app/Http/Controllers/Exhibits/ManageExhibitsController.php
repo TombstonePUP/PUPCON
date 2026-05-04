@@ -46,7 +46,7 @@ class ManageExhibitsController extends Controller
             return $exhibit;
         });
 
-        return Inertia::render('document/exhibits', [
+        return Inertia::render('admin/document/exhibits', [
             'exhibits' => $exhibits,
         ]);
     }

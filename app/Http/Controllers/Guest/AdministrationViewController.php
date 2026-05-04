@@ -24,7 +24,7 @@ class AdministrationViewController extends Controller
         });
         $page = ContentPages::where('page', 'Administration')->first();
 
-        return inertia('about/admin', [
+        return inertia('guest/about/admin', [
             'officials' => $officials,
             'page' => $page,
         ]);

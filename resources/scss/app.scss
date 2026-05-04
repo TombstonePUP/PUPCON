@@ -1,180 +1,179 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-
 @tailwind utilities;
 
 header {
-  .group {
-    font-size: 0.85vw;
+    .group {
+        font-size: 0.85vw;
 
-    a {
-      white-space: nowrap;
+        a {
+            white-space: nowrap;
+        }
     }
-  }
 }
 
 footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: radial-gradient(circle, rgba(152, 1, 1, 1) 0%, rgba(127, 20, 20, 1) 57%);
-  // padding: 0 10vw;
-  color: #fff;
-  width: 100%;
-
-  .footer1 {
-    flex: 2;
-    // height: 5vh;
-    padding: 5vw;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    background: radial-gradient(circle, rgba(152, 1, 1, 1) 0%, rgba(127, 20, 20, 1) 57%);
+    // padding: 0 10vw;
+    color: #fff;
+    width: 100%;
 
-    img {
-      width: 4vw;
-      margin-bottom: 1.5vh;
-    }
+    .footer1 {
+        flex: 2;
+        // height: 5vh;
+        padding: 5vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
-    h6 {
-      font-weight: 300;
-      color: #ffffff;
-    }
-
-    h2 {
-      font-size: 1.5vw;
-      margin: 0;
-      font-weight: 600;
-    }
-
-    h3 {
-      font-size: 1vw;
-      margin-bottom: 1.5vh;
-      color: #f4f4f4;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-
-      li {
-        // margin-bottom: 1vh;
-        height: 0.3vh;
-
-        a {
-          text-decoration: none;
-          color: #bbb;
-          transition: color 0.3s ease;
-
-          &:hover {
-            color: #fff;
-          }
+        img {
+            width: 4vw;
+            margin-bottom: 1.5vh;
         }
-      }
-    }
-  }
 
-  .footer2,
-  .footer3,
-  .footer4 {
-    flex: 1;
-
-    h3 {
-      font-size: 1vw;
-      margin-bottom: 1vh;
-      color: #f4f4f4;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-
-      li {
-        margin-bottom: 0.5vh;
-
-        a {
-          font-size: 0.8vw;
-          text-decoration: none;
-          color: #bbb;
-          transition: color 0.3s ease;
-
-          &:hover {
-            color: #fff;
-          }
+        h6 {
+            font-weight: 300;
+            color: #ffffff;
         }
-      }
+
+        h2 {
+            font-size: 1.5vw;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1vw;
+            margin-bottom: 1.5vh;
+            color: #f4f4f4;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+
+            li {
+                // margin-bottom: 1vh;
+                height: 0.3vh;
+
+                a {
+                    text-decoration: none;
+                    color: #bbb;
+                    transition: color 0.3s ease;
+
+                    &:hover {
+                        color: #fff;
+                    }
+                }
+            }
+        }
     }
-  }
+
+    .footer2,
+    .footer3,
+    .footer4 {
+        flex: 1;
+
+        h3 {
+            font-size: 1vw;
+            margin-bottom: 1vh;
+            color: #f4f4f4;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+
+            li {
+                margin-bottom: 0.5vh;
+
+                a {
+                    font-size: 0.8vw;
+                    text-decoration: none;
+                    color: #bbb;
+                    transition: color 0.3s ease;
+
+                    &:hover {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
 }
 
 body {
-  background: #ffffff;
+    background: #ffffff;
 }
 
 #nprogress .bar {
-  height: 2px !important; // Change to your desired height
+    height: 2px !important; // Change to your desired height
 }
 
 /* globals.css or your tailwind import file */
 .hide-scrollbar::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .hide-scrollbar {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 @layer utilities {
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
     }
 
-    to {
-      opacity: 1;
-    }
-  }
-
-  .animate-fadeIn {
-    animation: fadeIn 0.3s ease-out;
-  }
-
-  @keyframes zoomIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.95);
+    .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out;
     }
 
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
+    @keyframes zoomIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.95);
+        }
 
-  .animate-zoomIn {
-    animation: zoomIn 0.3s ease-out;
-  }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .animate-zoomIn {
+        animation: zoomIn 0.3s ease-out;
+    }
 }
 
 @keyframes accordion-down {
-  from {
-    height: 0
-  }
+    from {
+        height: 0;
+    }
 
-  to {
-    height: var(--radix-accordion-content-height)
-  }
+    to {
+        height: var(--radix-accordion-content-height);
+    }
 }
 
 @keyframes accordion-up {
-  from {
-    height: var(--radix-accordion-content-height)
-  }
+    from {
+        height: var(--radix-accordion-content-height);
+    }
 
-  to {
-    height: 0
-  }
+    to {
+        height: 0;
+    }
 }

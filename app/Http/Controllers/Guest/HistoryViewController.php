@@ -36,7 +36,7 @@ class HistoryViewController extends Controller
             return $item;
         });
 
-        return inertia('about/history', [
+        return inertia('guest/about/history', [
             'page' => $pages,
             'directors' => $directors,
             'gallery' => $gallery,

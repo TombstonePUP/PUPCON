@@ -1,4 +1,4 @@
-import { FileStatus, User } from ".";
+import { FileStatus, User } from '.';
 
 export interface Exhibits {
     exhibit_id: number;
@@ -31,4 +31,3 @@ export interface ExhibitFiles {
     file_status?: FileStatus;
     user?: User;
 }
-

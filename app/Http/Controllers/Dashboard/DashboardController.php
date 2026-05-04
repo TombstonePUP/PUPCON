@@ -27,7 +27,7 @@ class DashboardController extends Controller
         $frequency = $this->documentUploadFrequency();
         $areaUploads = $this->areaUploads();
         $overallUploads = $this->overallUploads();
-        return Inertia::render('dashboard', [
+        return Inertia::render('admin/dashboard', [
             'activityLogs' => $activityLog,
             'frequencyUploads' => $frequency,
             'documentStatistics' => $areaUploads,
