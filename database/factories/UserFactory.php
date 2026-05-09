@@ -26,9 +26,9 @@ class UserFactory extends Factory
     {
         $roles = Roles::inRandomOrder()->first();
         return [
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'email' => fake()->unique()->safeEmail(),
+            /* 'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'email' => $this->faker->unique()->safeEmail(), */
             'is_active' => true,
             'otp' => null,
             'otp_expires_at' => null,

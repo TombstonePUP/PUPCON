@@ -17,8 +17,8 @@ class OrganizationTypesFactory extends Factory
     public function definition(): array
     {
         return [
-            'type_id' => fake()->unique()->randomNumber(),
-            'type_name' => fake()->word(),
+            /* 'type_id' => $this->faker->unique()->randomNumber(),
+            'type_name' => $this->faker->word(), */
         ];
     }
 }

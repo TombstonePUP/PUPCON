@@ -19,9 +19,9 @@ class PillarItemsFactory extends Factory
     {
         $pillar = Pillars::inRandomOrder()->first();
         return [
-            'pillar_item_id' => fake()->unique()->randomNumber(),
+            // 'pillar_item_id' => $this->faker->unique()->randomNumber(),
             'pillar_id' => $pillar ? $pillar->pillar_id : null,
-            'item_description' => fake()->paragraph(),
+            // 'item_description' => $this->faker->paragraph(),
         ];
     }
 }

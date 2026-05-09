@@ -22,7 +22,7 @@ class UserProgramRolesFactory extends Factory
         $user = User::inRandomOrder()->first();
         $program = Programs::inRandomOrder()->first();
         return [
-            'user_program_role_id' => fake()->unique()->randomNumber(),
+            // 'user_program_role_id' => $this->faker->unique()->randomNumber(),
             'user_id' => $user->user_id,
             'program_id' => $program->program_id,
         ];

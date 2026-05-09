@@ -17,8 +17,8 @@ class OtherServicesFactory extends Factory
     public function definition(): array
     {
         return [
-            'service_id' => fake()->unique()->randomNumber(),
-            'service_link' => fake()->sentence(),
+            /* 'service_id' => $this->faker->unique()->randomNumber(),
+            'service_link' => $this->faker->sentence(), */
         ];
     }
 }

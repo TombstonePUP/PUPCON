@@ -1,0 +1,58 @@
+name: laravel_react_dev
+
+services:
+  database:
+    image: postgres:18
+    container_name: postgres-database
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE:-app}
+      POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+      target: development
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - vendor-data:/var/www/vendor
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
+      target: development
+    working_dir: /app
+    volumes:
+      - .:/app
+      - node-modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_ENV=development
+      - VITE_APP_VERSION=dev
+      - CHOKIDAR_USEPOLLING=true
+      - VITE_API_URL=http://localhost:8000
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres-data:
+  vendor-data:
+  node-modules:

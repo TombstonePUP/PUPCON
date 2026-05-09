@@ -20,10 +20,10 @@ class ExhibitOutlinesFactory extends Factory
     {
         $exhibit = Exhibits::inRandomOrder()->first();
         return [
-            'exhibit_outline_id' => fake()->unique()->randomNumber(),
+            // 'exhibit_outline_id' => $this->faker->unique()->randomNumber(),
             'exhibit_id' => $exhibit->exhibit_id,
-            'outline_description' => fake()->sentence(),
-            'container' => fake()->boolean(),
+            // 'outline_description' => $this->faker->sentence(),
+            'container' => $this->faker->boolean(),
         ];
     }
 }

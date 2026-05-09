@@ -19,16 +19,16 @@ class FacultyStaffFactory extends Factory
     {
         $program = Programs::inRandomOrder()->first();
         return [
-            'faculty_staff_id' => fake()->unique()->randomNumber(),
-            'first_name' => fake()->firstName(),
-            'middle_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'personnel_type' => fake()->randomElement(['Faculty', 'Staff']),
-            'status' => fake()->randomElement(['Regular', 'Part-Time']),
+            /* 'faculty_staff_id' => $this->faker->unique()->randomNumber(),
+            'first_name' => $this->faker->firstName(),
+            'middle_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'personnel_type' => $this->faker->randomElement(['Faculty', 'Staff']),
+            'status' => $this->faker->randomElement(['Regular', 'Part-Time']), */
             'program_id' => $program ? $program->program_id : null,
-            'program_coordinator' => fake()->boolean(),
-            'image_name' => fake()->word(),
-            'image_path' => fake()->imageUrl(),
+            /* 'program_coordinator' => $this->faker->boolean(),
+            'image_name' => $this->faker->word(),
+            'image_path' => $this->faker->imageUrl(), */
         ];
     }
 }

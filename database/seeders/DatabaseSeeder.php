@@ -3,27 +3,19 @@
 namespace Database\Seeders;
 
 use App\Models\AccreditationLevels;
-use App\Models\AreaFormCategory;
 use App\Models\Areas;
 use App\Models\AreaParameters;
 use App\Models\Exhibits;
-use App\Models\Facilities;
 use App\Models\FileStatus;
 use App\Models\ParameterOutlineCategory;
-use App\Models\ProgramGallery;
 use App\Models\ProgramObjectives;
 use App\Models\Programs;
-use App\Models\ParameterOutlines;
 use App\Models\Roles;
 use App\Models\User;
 use App\Models\ContentPages;
 use App\Models\UserAreaRoles;
 use App\Models\CampusGallery;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File;
 
 class DatabaseSeeder extends Seeder
 {
@@ -32,25 +24,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
-
-        $roles = [
-            [
-                'role_name' => 'Admin'
-            ],
-            [
-                'role_name' => 'Coordinator'
-            ],
-            [
-                'role_name' => 'Chairman'
-            ],
-            /* [
-                'role_id' => 5,
-                'role_name' => 'Unassigned'
-            ], */
-        ];
-        foreach ($roles as $attributes) {
-            Roles::factory()->create($attributes);
+        foreach (['Admin', 'Coordinator', 'Chairman'] as $role) {
+            Roles::firstOrCreate([
+                'role_name' => $role,
+            ]);
         }
         $role1 = Roles::where('role_name', 'Admin')->first();
         $role2 = Roles::where('role_name', 'Coordinator')->first();
@@ -78,7 +55,7 @@ class DatabaseSeeder extends Seeder
             User::factory()->create($attributes);
         }
 
-         $exhibits = [
+        $exhibits = [
             ['exhibit_name' => 'University Charter', 'container' => false],
             ['exhibit_name' => 'Academic Council Resolutions', 'container' => true],
             ['exhibit_name' => 'Strategic Development Plan', 'container' => false],
@@ -238,7 +215,7 @@ class DatabaseSeeder extends Seeder
 
         $user1 = User::where('user_id', 22222)->first();
         $areaRole1 = Areas::where('area_name', 'Faculty')->first();
-        
+
         if ($areaRole1) {
             UserAreaRoles::factory()->create([
                 'user_id' => $user1->user_id,

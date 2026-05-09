@@ -16,10 +16,10 @@ class CampusGalleryFactory extends Factory
     public function definition(): array
     {
         return [
-            'gallery_id' => fake()->unique()->randomNumber(),
-            'image_name' => fake()->word(),
-            'image_path' => fake()->imageUrl(),
-            'description' => fake()->paragraphs(2, true),
+            /* 'gallery_id' => $this->faker->unique()->randomNumber(),
+            'image_name' => $this->faker->word(),
+            'image_path' => $this->faker->imageUrl(),
+            'description' => $this->faker->paragraphs(2, true), */
         ];
     }
 }

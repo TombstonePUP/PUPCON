@@ -20,14 +20,14 @@ class AreasFactory extends Factory
     {
         $accreditationLevel = AccreditationLevels::inRandomOrder()->first();
         return [
-            'area_id' => fake()->unique()->randomNumber(),
+            // 'area_id' => $this->faker->unique()->randomNumber(),
             'accreditation_level_id' => $accreditationLevel->accreditation_level_id,
-            'area_number' => fake()->numberBetween(1, 15),
-            'area_name' => fake()->unique()->word(),
-            'area_description' => fake()->paragraphs(4, true),
-            'area_image_name' => fake()->word(),
+            /* 'area_number' => $this->faker->numberBetween(1, 15),
+            'area_name' => $this->faker->unique()->word(),
+            'area_description' => $this->faker->paragraphs(4, true),
+            'area_image_name' => $this->faker->word(), */
             'area_image_path' => null,
-            'mean' => fake()->randomFloat(2, 0, 5),
+            // 'mean' => $this->faker->randomFloat(2, 0, 5),
         ];
     }
 }

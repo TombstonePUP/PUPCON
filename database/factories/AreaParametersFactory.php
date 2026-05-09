@@ -21,11 +21,11 @@ class AreaParametersFactory extends Factory
     {
         $area = Areas::inRandomOrder()->first();
         return [
-            'area_parameter_id' => fake()->unique()->randomNumber(),
+            // 'area_parameter_id' => $this->faker->unique()->randomNumber(),
             'area_id' => $area->area_id,
-            'parameter_name' => fake()->word(),
-            'parameter_description' => fake()->sentence(),
-            'mean' => fake()->randomFloat(2, 0, 5),
+            /* 'parameter_name' => $this->faker->word(),
+            'parameter_description' => $this->faker->sentence(),
+            'mean' => $this->faker->randomFloat(2, 0, 5), */
         ];
     }
 }

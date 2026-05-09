@@ -17,8 +17,8 @@ class FileStatusFactory extends Factory
     public function definition(): array
     {
         return [
-            'file_status_id' => fake()->unique()->randomNumber(),
-            'status_name' => fake()->unique()->word(),
+            /* 'file_status_id' => $this->faker->unique()->randomNumber(),
+            'status_name' => $this->faker->unique()->word(), */
         ];
     }
 }

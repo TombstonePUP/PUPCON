@@ -17,9 +17,9 @@ class ExhibitsFactory extends Factory
     public function definition(): array
     {
         return [
-            'exhibit_id' => fake()->unique()->randomNumber(),
-            'exhibit_name' => fake()->word(),
-            'container' => fake()->boolean(),
+            /* 'exhibit_id' => $this->faker->unique()->randomNumber(),
+            'exhibit_name' => $this->faker->word(),
+            'container' => $this->faker->boolean(), */
         ];
     }
 }

@@ -17,7 +17,7 @@ class ContentPagesFactory extends Factory
     public function definition(): array
     {
         return [
-            'content_page_id' => fake()->unique()->randomNumber(),
+            // 'content_page_id' => $this->faker->unique()->randomNumber(),
             'title' => 'Welcome to PUP San Juan',
             'subtitle' => 'The Country\'s First Polytechnic University',
             'description' => 'Polytechnic University of the Philippines San Juan Campus is committed to providing quality education and fostering excellence in various academic fields.',

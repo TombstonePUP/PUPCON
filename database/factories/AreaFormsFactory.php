@@ -25,17 +25,17 @@ class AreaFormsFactory extends Factory
         $fileStatusId = FileStatus::inRandomOrder()->first();
         $user = User::inRandomOrder()->first();
         return [
-            'area_form_id' => fake()->unique()->randomNumber(),
+            // 'area_form_id' => $this->faker->unique()->randomNumber(),
             'area_id' => $area->area_id,
             'area_form_category_id' => $areaFormCategory->area_form_category_id,
-            'form_image_name' => fake()->word(),
-            'form_image_path' => fake()->imageUrl(),
-            'file_name' => fake()->word(),
-            'file_path' => fake()->imageUrl(),
+            /* 'form_image_name' => $this->faker->word(),
+            'form_image_path' => $this->faker->imageUrl(),
+            'file_name' => $this->faker->word(),
+            'file_path' => $this->faker->imageUrl(), */
             'uploaded_by' => $user->user_id,
-            'uploaded_at' => fake()->dateTimeThisMonth(),
+            // 'uploaded_at' => $this->faker->dateTimeThisMonth(),
             'file_status_id' => $fileStatusId->file_status_id,
-            'file_rejection_reason' => fake()->sentence(),
+            // 'file_rejection_reason' => $this->faker->sentence(),
         ];
     }
 }

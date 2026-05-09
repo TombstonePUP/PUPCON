@@ -19,10 +19,10 @@ class OrganizationsFactory extends Factory
     {
         $type = OrganizationTypes::inRandomOrder()->first();
         return [
-            'organization_id' => fake()->unique()->randomNumber(),
+            // 'organization_id' => $this->faker->unique()->randomNumber(),
             'type_id' => $type ? $type->type_id : null,
-            'organization_name' => fake()->company(),
-            'affiliation' => fake()->companySuffix(),
+            /* 'organization_name' => $this->faker->company(),
+            'affiliation' => $this->faker->companySuffix(), */
         ];
     }
 }

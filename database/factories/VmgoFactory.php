@@ -17,12 +17,12 @@ class VmgoFactory extends Factory
     public function definition(): array
     {
         return [
-            'vmgo_id' => fake()->unique()->randomNumber(),
-            'vision' => fake()->paragraph(),
-            'mission' => fake()->paragraph(),
-            'avp_link' => fake()->paragraph(),
-            'avp_title' => fake()->sentence(),
-            'avp_description' => fake()->paragraph(),
+            /* 'vmgo_id' => $this->faker->unique()->randomNumber(),
+            'vision' => $this->faker->paragraph(),
+            'mission' => $this->faker->paragraph(),
+            'avp_link' => $this->faker->paragraph(),
+            'avp_title' => $this->faker->sentence(),
+            'avp_description' => $this->faker->paragraph(), */
         ];
     }
 }

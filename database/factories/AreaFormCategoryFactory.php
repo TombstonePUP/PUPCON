@@ -17,8 +17,8 @@ class AreaFormCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'area_form_category_id' => fake()->unique()->randomNumber(),
-            'category_name' => fake()->word(),
+            /* 'area_form_category_id' => $this->faker->unique()->randomNumber(),
+            'category_name' => $this->faker->word(), */
         ];
     }
 }

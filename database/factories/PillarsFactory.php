@@ -17,8 +17,8 @@ class PillarsFactory extends Factory
     public function definition(): array
     {
         return [
-            'pillar_id' => fake()->unique()->randomNumber(),
-            'pillar_title' => fake()->word(),
+            /* 'pillar_id' => $this->faker->unique()->randomNumber(),
+            'pillar_title' => $this->faker->word(), */
         ];
     }
 }

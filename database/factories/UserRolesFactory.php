@@ -22,7 +22,7 @@ class UserRolesFactory extends Factory
         $user = User::inRandomOrder()->first();
         $role = Roles::inRandomOrder()->first();
         return [
-            'user_role_id' => fake()->unique()->randomNumber(),
+            // 'user_role_id' => $this->faker->unique()->randomNumber(),
             'user_id' => $user->user_id,
             'role_id' => $role->role_id,
         ];

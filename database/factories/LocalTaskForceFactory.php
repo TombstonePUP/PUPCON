@@ -21,12 +21,12 @@ class LocalTaskForceFactory extends Factory
     public function definition(): array
     {
         return [
-            'local_task_force_id' => fake()->unique()->randomNumber(),
+            // 'local_task_force_id' => $this->faker->unique()->randomNumber(),
             'area_name' => Areas::inRandomOrder()->first()->area_name,
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'profile_image_name' => fake()->word(),
-            'profile_image_path' => fake()->imageUrl(),
+            /* 'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'profile_image_name' => $this->faker->word(),
+            'profile_image_path' => $this->faker->imageUrl(), */
         ];
     }
 }

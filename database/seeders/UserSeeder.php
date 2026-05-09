@@ -3,11 +3,7 @@
 namespace Database\Seeders;
 
 use Faker\Factory as Faker;
-
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\UserAreaRoles;
 use App\Models\Roles;
 use App\Models\ParameterOutlineCategory;
 use App\Models\User;
@@ -22,8 +18,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
-
         $roles = [
             [
                 'role_name' => 'Admin'
