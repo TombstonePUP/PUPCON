@@ -1,4 +1,4 @@
-name: pupcon_production
+name: pupcon_staging
 
 services:
   # database-production:
@@ -56,3 +56,4 @@ volumes:
   postgres-data-production:
   laravel-storage-production:
   public-assets:
+

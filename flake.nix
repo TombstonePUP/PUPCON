@@ -29,6 +29,7 @@
             };
           in
           [
+            awscli2
             php
             nodejs_25
             prettier
@@ -47,6 +48,8 @@
             phpExtensions.mysqli
             phpExtensions.pdo
             pgadmin4-desktopmode
+            opentofu
+            tofu-ls
           ];
         shellHook = ''
           echo "Welcome to the Laravel Development with reactjs and postgresql"

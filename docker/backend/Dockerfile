@@ -15,6 +15,9 @@ RUN composer install \
     --no-scripts \
     --prefer-dist \
     --no-interaction
+COPY docker/backend/entrypoint.dev.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 
 FROM base AS vendor
@@ -38,9 +41,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=vendor --chown=www-data:www-data /var/www /var/www
-COPY docker/backend/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY docker/backend/entrypoint.prod.sh /usr/local/bin/entrypoint.sh
 RUN mkdir -p storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 USER www-data
 EXPOSE 9000
+COPY docker/backend/entrypoint.prod.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php-fpm"]
