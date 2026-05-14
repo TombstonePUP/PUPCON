@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\AccreditationLevels;
-use App\Models\Areas;
 use App\Models\AreaParameters;
+use App\Models\Areas;
+use App\Models\CampusGallery;
+use App\Models\ContentPages;
 use App\Models\Exhibits;
 use App\Models\FileStatus;
 use App\Models\ParameterOutlineCategory;
@@ -12,9 +14,7 @@ use App\Models\ProgramObjectives;
 use App\Models\Programs;
 use App\Models\Roles;
 use App\Models\User;
-use App\Models\ContentPages;
 use App\Models\UserAreaRoles;
-use App\Models\CampusGallery;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -227,12 +227,12 @@ class DatabaseSeeder extends Seeder
             [
                 'program_id' => $program1->program_id,
                 'objective_title' => 'Core Competency',
-                'objective_description' => "Develop high-level technical skills in information technology and software development.",
+                'objective_description' => 'Develop high-level technical skills in information technology and software development.',
             ],
             [
                 'program_id' => $program4->program_id,
                 'objective_title' => 'Behavioral Analysis',
-                'objective_description' => "Equip students with the ability to conduct scientific research in human behavior.",
+                'objective_description' => 'Equip students with the ability to conduct scientific research in human behavior.',
             ],
         ];
         foreach ($objectives as $attributes) {
@@ -244,7 +244,7 @@ class DatabaseSeeder extends Seeder
             [
                 'area_id' => $area1->area_id,
                 'parameter_name' => 'A',
-                'parameter_description' => 'Statement of Vision, Mission, Goals, and Objectives'
+                'parameter_description' => 'Statement of Vision, Mission, Goals, and Objectives',
             ],
         ];
         foreach ($areaparameter as $attributes) {

@@ -4,11 +4,11 @@ namespace Database\Factories;
 
 use App\Models\Programs;
 use App\Models\User;
-use Illuminate\Database\Query\Builder;
+use App\Models\UserProgramRoles;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UserProgramRoles>
+ * @extends Factory<UserProgramRoles>
  */
 class UserProgramRolesFactory extends Factory
 {
@@ -21,6 +21,7 @@ class UserProgramRolesFactory extends Factory
     {
         $user = User::inRandomOrder()->first();
         $program = Programs::inRandomOrder()->first();
+
         return [
             // 'user_program_role_id' => $this->faker->unique()->randomNumber(),
             'user_id' => $user->user_id,

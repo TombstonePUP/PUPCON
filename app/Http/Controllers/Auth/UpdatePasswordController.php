@@ -20,8 +20,8 @@ class UpdatePasswordController extends Controller
     {
         $validated = $request->validate(
             [
-            'password' => 'required|string',
-            'password_confirmation' => 'required|string|min:8|confirmed:password',
+                'password' => 'required|string',
+                'password_confirmation' => 'required|string|min:8|confirmed:password',
             ],
             [
                 'password.required' => 'Current password is required',
@@ -39,7 +39,7 @@ class UpdatePasswordController extends Controller
         ActivityLogService::authenticationLog(
             userId: $user->user_id,
             activity: ActivityLogAction::UpdatePassword,
-            description: "New Password Updated After Reset",
+            description: 'New Password Updated After Reset',
         );
 
         return redirect()->intended(route('dashboard', absolute: false).'?password-updated=1')

@@ -5,21 +5,20 @@ namespace App\Http\Controllers\Exhibits;
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\Exhibits;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Models\FileStatus;
 use App\Services\ActivityLogService;
-use Illuminate\Support\Str;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ExhibitFilesController extends Controller
 {
     /**
      * Store a newly created resource in storage.
-     * @return RedirectResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'exhibit_id' => ['required', 'integer', 'exists:exhibits,exhibit_id'],
@@ -32,7 +31,7 @@ class ExhibitFilesController extends Controller
 
         $outline = $exhibit->ExhibitOutlines->first();
 
-        if (!$outline) {
+        if (! $outline) {
             // Create the single outline for the exhibit
             $outline = $exhibit->ExhibitOutlines()->create([
                 'outline_description' => $exhibit->exhibit_name,
@@ -41,7 +40,7 @@ class ExhibitFilesController extends Controller
         }
 
         $exhibit_name = Str::slug($exhibit->exhibit_name, '_');
-        $file_name = $exhibit_name . '.pdf';
+        $file_name = $exhibit_name.'.pdf';
         $file_path = "exhibits/{$exhibit_name}/{$file_name}";
 
         $existing_file = $outline->ExhibitFiles()->first();

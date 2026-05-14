@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Response;
@@ -12,9 +11,8 @@ class CertificateController extends Controller
 {
     /**
      * Handle the incoming request.
-     * @return Response
      */
-    public function __invoke(Request $request)
+    public function __invoke(): Response
     {
         $certificate = ContentPages::where('page', 'Welcome')->first();
         if ($certificate) {

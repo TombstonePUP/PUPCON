@@ -2,13 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\AreaParameters;
 use App\Models\Areas;
-use App\Models\Programs;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AreaParameters>
+ * @extends Factory<AreaParameters>
  */
 class AreaParametersFactory extends Factory
 {
@@ -20,6 +19,7 @@ class AreaParametersFactory extends Factory
     public function definition(): array
     {
         $area = Areas::inRandomOrder()->first();
+
         return [
             // 'area_parameter_id' => $this->faker->unique()->randomNumber(),
             'area_id' => $area->area_id,

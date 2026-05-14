@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Pillars;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pillars>
+ * @extends Factory<Pillars>
  */
 class PillarsFactory extends Factory
 {

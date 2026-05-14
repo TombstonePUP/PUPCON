@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\ParameterOutlineCategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ParameterOutlineCategory extends Model
 {
-    /** @use HasFactory<\Database\Factories\ParameterOutlineCategoryFactory> */
+    /** @use HasFactory<ParameterOutlineCategoryFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class ParameterOutlineCategory extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'parameter_outline_category';
+
     protected $primaryKey = 'parameter_outline_category_id';
+
     protected $fillable = [
         'category_name',
     ];

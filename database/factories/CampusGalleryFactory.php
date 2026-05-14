@@ -1,10 +1,12 @@
 <?php
+
 namespace Database\Factories;
 
+use App\Models\CampusGallery;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CampusGallery>
+ * @extends Factory<CampusGallery>
  */
 class CampusGalleryFactory extends Factory
 {

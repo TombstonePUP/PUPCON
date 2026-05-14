@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\LocalTaskForceMembers;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LocalTaskForceMembers>
+ * @extends Factory<LocalTaskForceMembers>
  */
 class LocalTaskForceMembersFactory extends Factory
 {

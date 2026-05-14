@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\UniversityAdministrationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UniversityAdministration extends Model
 {
-    /** @use HasFactory<\Database\Factories\UniversityAdministrationFactory> */
+    /** @use HasFactory<UniversityAdministrationFactory> */
     use HasFactory;
 
     /**
@@ -16,8 +17,11 @@ class UniversityAdministration extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'university_administration';
+
     protected $primaryKey = 'administration_id';
+
     protected $fillable = [
         'first_name',
         'middle_name',

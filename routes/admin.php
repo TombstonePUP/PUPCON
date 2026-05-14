@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Areas\Forms\AreaFormsController;
 use App\Http\Controllers\Content\AboutController;
-use App\Http\Controllers\Content\WelcomeController;
 use App\Http\Controllers\Content\AdministrationController;
 use App\Http\Controllers\Content\ContentController;
 use App\Http\Controllers\Content\FacilitiesController;
@@ -12,20 +12,19 @@ use App\Http\Controllers\Content\ManageAreasController;
 use App\Http\Controllers\Content\OtherServicesController;
 use App\Http\Controllers\Content\ProgramContentController;
 use App\Http\Controllers\Content\VmgoController;
+use App\Http\Controllers\Content\WelcomeController;
+use App\Http\Controllers\Documents\Requests\DocumentRequestController;
+use App\Http\Controllers\Exhibits\ExhibitFilesController;
+use App\Http\Controllers\Exhibits\ExhibitOutlinesFileController;
 use App\Http\Controllers\Exhibits\ManageExhibitsController;
-use App\Http\Controllers\Files\DocumentRequestController;
 use App\Http\Controllers\Parameters\AreaParameterController;
 use App\Http\Controllers\Parameters\AreaParameterOutlinesController;
 use App\Http\Controllers\Parameters\ImportParametersController;
 use App\Http\Controllers\Programs\LevelsController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use App\Http\Controllers\Users\UserController;
-use App\Http\Controllers\Exhibits\ExhibitFilesController;
-use App\Http\Controllers\Exhibits\ExhibitOutlinesFileController;
-use App\Http\Controllers\Files\AreaFormsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
 
 Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(function () {
     Route::controller(UserController::class)->group(function () {

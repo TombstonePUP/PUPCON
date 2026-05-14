@@ -4,22 +4,23 @@ namespace App\Http\Controllers\Exhibits;
 
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ExhibitOutlines;
 use App\Models\ExhibitFiles;
-use Illuminate\Support\Facades\Auth;
-use App\Models\FileStatus;
+use App\Models\ExhibitOutlines;
 use App\Models\Exhibits;
+use App\Models\FileStatus;
 use App\Services\ActivityLogService;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ExhibitOutlinesFileController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function upload(Request $request)
+    public function upload(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'outline_id' => ['nullable', 'integer'],
@@ -55,13 +56,13 @@ class ExhibitOutlinesFileController extends Controller
         $old_file_path = $existing_file ? $existing_file->file_path : null;
 
         $outline_slug = Str::slug($validated['outline_description'], '_');
-        $file_name = $outline_slug . '.pdf';
+        $file_name = $outline_slug.'.pdf';
         $category_slug = Str::slug($validated['category'], '_');
-        $file_path = 'exhibits/' . $exhibit_name . '/' . $category_slug . '/' . $file_name;
+        $file_path = 'exhibits/'.$exhibit_name.'/'.$category_slug.'/'.$file_name;
 
         $new_file_upload = isset($validated['file']);
 
-        if (!$outline) {
+        if (! $outline) {
             $outline = ExhibitOutlines::create([
                 'exhibit_id' => $exhibit->exhibit_id,
                 'outline_description' => $validated['outline_description'],
@@ -79,14 +80,14 @@ class ExhibitOutlinesFileController extends Controller
                 Storage::disk('public')->delete($old_file_path);
             }
 
-            $validated['file']->storeAs('exhibits/' . $exhibit_name . '/' . $category_slug, $file_name, 'public');
+            $validated['file']->storeAs('exhibits/'.$exhibit_name.'/'.$category_slug, $file_name, 'public');
             $activity = $existing_file ? ActivityLogAction::Update : ActivityLogAction::Upload;
         }
 
         if ($existing_file) {
             $exhibit_file = $existing_file;
         } else {
-            $exhibit_file = new ExhibitFiles();
+            $exhibit_file = new ExhibitFiles;
             $exhibit_file->exhibit_outline_id = $outline->exhibit_outline_id;
         }
 
@@ -109,13 +110,12 @@ class ExhibitOutlinesFileController extends Controller
             }
         }
 
-
         // <-- Add a fallback for updates without file change
-        if (!$activity) {
+        if (! $activity) {
             $activity = $outline ? ActivityLogAction::Update : ActivityLogAction::Upload;
         }
 
-        if (!empty($exhibit_file->file_path)) {
+        if (! empty($exhibit_file->file_path)) {
             $exhibit_file->uploaded_by = $user->user_id;
             $exhibit_file->uploaded_at = now();
             $exhibit_file->file_status_id = $file_status;
@@ -137,7 +137,7 @@ class ExhibitOutlinesFileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): RedirectResponse
     {
         $outline = ExhibitOutlines::where('exhibit_outline_id', $request->outline_id)->first();
         $user = Auth::user();
@@ -152,7 +152,7 @@ class ExhibitOutlinesFileController extends Controller
             ActivityLogService::fileManagementLog(
                 userId: $user->user_id,
                 activity: ActivityLogAction::Delete,
-                description: 'Deleted Exhibit Outline: ' . $outline->outline_description,
+                description: 'Deleted Exhibit Outline: '.$outline->outline_description,
             );
 
             $outline->delete();

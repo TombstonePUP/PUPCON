@@ -9,15 +9,12 @@ use App\Models\Facilities;
 use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class FacilitiesController extends Controller
 {
-    /**
-     * @return RedirectResponse
-     */
     public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
@@ -95,8 +92,8 @@ class FacilitiesController extends Controller
 
             // --- UPLOAD NEW IMAGE IF PRESENT ---
             if (isset($facilityData['facility_image'])) {
-                $imagename = $facilityData['facility_name'] . '.' . $facilityData['facility_image']->getClientOriginalExtension();
-                $imagepath = 'facilities/' . $imagename;
+                $imagename = $facilityData['facility_name'].'.'.$facilityData['facility_image']->getClientOriginalExtension();
+                $imagepath = 'facilities/'.$imagename;
 
                 // delete old image if exists
                 if ($facility && $facility->image_path && Storage::disk('public')->exists($facility->image_path)) {
@@ -119,7 +116,7 @@ class FacilitiesController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Update,
-                    description: 'Updated Facility: ' . $facility->facility_name,
+                    description: 'Updated Facility: '.$facility->facility_name,
                 );
 
             } else {
@@ -134,7 +131,7 @@ class FacilitiesController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Create,
-                    description: 'Created Facility: ' . $facility->facility_name,
+                    description: 'Created Facility: '.$facility->facility_name,
                 );
             }
         }

@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Areas;
-use App\Models\Programs;
 // use App\Models\User;
-use Illuminate\Database\Query\Builder;
+use App\Models\LocalTaskForce;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LocalTaskForce>
+ * @extends Factory<LocalTaskForce>
  */
 class LocalTaskForceFactory extends Factory
 {

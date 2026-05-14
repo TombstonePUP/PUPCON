@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\ProgramGalleryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProgramGallery extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProgramGalleryFactory> */
+    /** @use HasFactory<ProgramGalleryFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class ProgramGallery extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'program_gallery';
+
     protected $primaryKey = 'program_gallery_id';
+
     protected $fillable = [
         'program_id',
         'caption',

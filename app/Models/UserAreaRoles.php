@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\UserAreaRolesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserAreaRoles extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserAreaRolesFactory> */
+    /** @use HasFactory<UserAreaRolesFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class UserAreaRoles extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'user_area_roles';
+
     protected $primaryKey = 'user_area_role_id';
+
     protected $fillable = [
         'user_id',
         'area_id',

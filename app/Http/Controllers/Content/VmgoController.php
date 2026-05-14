@@ -5,22 +5,19 @@ namespace App\Http\Controllers\Content;
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\CampusGoals;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use App\Models\PillarItems;
 use App\Models\Pillars;
 use App\Models\Vmgo;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Services\ActivityLogService;
 
 class VmgoController extends Controller
 {
-    /**
-     * @return RedirectResponse
-     */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make(
             $request->all(),
@@ -138,7 +135,7 @@ class VmgoController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Update,
-                    description: 'Updated Pillar: ' . $pillar->pillar_title,
+                    description: 'Updated Pillar: '.$pillar->pillar_title,
                 );
             } else {
                 $pillar = Pillars::create([
@@ -147,7 +144,7 @@ class VmgoController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Create,
-                    description: 'Created Pillar: ' . $pillar->pillar_title,
+                    description: 'Created Pillar: '.$pillar->pillar_title,
                 );
             }
             $pillar_ids[] = $pillar->pillar_id;
@@ -161,7 +158,7 @@ class VmgoController extends Controller
                     ActivityLogService::contentManagementLog(
                         userId: $user->user_id,
                         activity: ActivityLogAction::Update,
-                        description: 'Updated Pillar Item: ' . $item->item_description,
+                        description: 'Updated Pillar Item: '.$item->item_description,
                     );
                 } else {
                     $item = PillarItems::create([
@@ -171,7 +168,7 @@ class VmgoController extends Controller
                     ActivityLogService::contentManagementLog(
                         userId: $user->user_id,
                         activity: ActivityLogAction::Create,
-                        description: 'Created Pillar Item: ' . $item->item_description,
+                        description: 'Created Pillar Item: '.$item->item_description,
                     );
 
                     $pillar_items_ids[] = $item->item_id;
@@ -192,7 +189,7 @@ class VmgoController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Update,
-                    description: 'Updated Campus Goal: ' . $goal->goal_title_eng,
+                    description: 'Updated Campus Goal: '.$goal->goal_title_eng,
                 );
             } else {
                 $goal = CampusGoals::create([
@@ -204,7 +201,7 @@ class VmgoController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Create,
-                    description: 'Created Campus Goal: ' . $goal->goal_title_eng,
+                    description: 'Created Campus Goal: '.$goal->goal_title_eng,
                 );
             }
             $goal_ids[] = $goal->goal_id;

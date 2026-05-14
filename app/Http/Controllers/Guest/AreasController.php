@@ -13,13 +13,13 @@ use Inertia\Response;
 
 class AreasController extends Controller
 {
-    use ProgramLinkFormats;
     use AreaNumeralFormat;
+    use ProgramLinkFormats;
+
     /**
      * Handle the incoming request.
-     * @return Response
      */
-    public function __invoke(string $program_id, string $area_id)
+    public function __invoke(string $program_id, string $area_id): Response
     {
         $program = Programs::findOrFail($program_id)->load([
             'Levels' => function ($query) {
@@ -53,8 +53,10 @@ class AreasController extends Controller
                 if ($outline->AreaFiles) {
                     $outline->AreaFiles->file_path = Storage::url($outline->AreaFiles->file_path);
                 }
+
                 return $outline;
             });
+
             return $parameter;
         });
 
@@ -62,11 +64,12 @@ class AreasController extends Controller
             if ($form) {
                 $form->file_path = Storage::url($form->file_path);
             }
+
             return $form;
         });
 
-        $area->area_image_path = $area->area_image_path 
-            ? (str_starts_with($area->area_image_path, '/') ? $area->area_image_path : Storage::url($area->area_image_path)) 
+        $area->area_image_path = $area->area_image_path
+            ? (str_starts_with($area->area_image_path, '/') ? $area->area_image_path : Storage::url($area->area_image_path))
             : null;
 
         return inertia('admin/area', [

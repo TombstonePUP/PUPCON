@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+
 class FacultySeeder extends Seeder
 {
     /**
@@ -22,7 +23,7 @@ class FacultySeeder extends Seeder
         $psychFaculties = [
             'Angeline Pabilona',
             'Anna Madonna Arellano',
-            'Ian Llenares'
+            'Ian Llenares',
         ];
 
         $fullTime = [
@@ -33,7 +34,7 @@ class FacultySeeder extends Seeder
             'Lemuel Damole',
             'Ronette Espiritu',
             'Anna Madonna Arellano',
-            'Cecille R. Alagon'
+            'Cecille R. Alagon',
         ];
 
         $directory = public_path('images/adfa-new/faculty'); // Folder location
@@ -80,10 +81,9 @@ class FacultySeeder extends Seeder
                 'program_id' => $programId,
                 'program_coordinator' => false,
                 'faculty_image_name' => $fileName,
-                'faculty_image_path' => '/images/adfa-new/faculty/' . $fileName,
+                'faculty_image_path' => '/images/adfa-new/faculty/'.$fileName,
             ];
         }
-
 
         // Insert all entries at once
         DB::table('faculties')->insert($faculties);

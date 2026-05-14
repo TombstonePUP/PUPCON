@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\ActivityLog;
 use App\Models\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ActivityLog>
+ * @extends Factory<ActivityLog>
  */
 class ActivityLogFactory extends Factory
 {
@@ -19,6 +19,7 @@ class ActivityLogFactory extends Factory
     public function definition(): array
     {
         $user = User::inRandomOrder()->first();
+
         return [
             // 'activity_log_id' => $this->faker->unique()->randomNumber(),
             'user_id' => $user->user_id,

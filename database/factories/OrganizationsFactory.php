@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Organizations;
 use App\Models\OrganizationTypes;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Organizations>
+ * @extends Factory<Organizations>
  */
 class OrganizationsFactory extends Factory
 {
@@ -18,6 +19,7 @@ class OrganizationsFactory extends Factory
     public function definition(): array
     {
         $type = OrganizationTypes::inRandomOrder()->first();
+
         return [
             // 'organization_id' => $this->faker->unique()->randomNumber(),
             'type_id' => $type ? $type->type_id : null,

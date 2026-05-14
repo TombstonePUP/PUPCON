@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\CampusDirectorsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class CampusDirectors extends Model
 {
-    /** @use HasFactory<\Database\Factories\CampusDirectorsFactory> */
+    /** @use HasFactory<CampusDirectorsFactory> */
     use HasFactory;
 
     /**
@@ -16,8 +17,11 @@ class CampusDirectors extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'campus_directors';
+
     protected $primaryKey = 'director_id';
+
     protected $fillable = [
         'name',
         'term_start_date',

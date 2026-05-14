@@ -6,19 +6,16 @@ use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\ContentPages;
 use App\Models\LocalTaskForce;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
-use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class LocalTaskForceController extends Controller
 {
-    /**
-     * @return RedirectResponse
-     */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make(
             $request->all(),
@@ -41,7 +38,7 @@ class LocalTaskForceController extends Controller
                 'chairmen.*.official_position' => [
                     'required_if:chairmen.*.official,true',
                     'nullable',
-                    'string'
+                    'string',
                 ],
                 'chairmen.*.profile_image' => ['nullable', 'file', 'image', 'mimes:jpeg,jpg,png', 'max:20480'],
                 'chairmen.*.previewUrl' => ['nullable', 'string'],
@@ -125,15 +122,15 @@ class LocalTaskForceController extends Controller
                 $profileImagePath = null;
             }
             // Handle new image upload
-            if (!empty($chairmanData['profile_image'])) {
+            if (! empty($chairmanData['profile_image'])) {
                 // Delete old image from storage if exists
                 if ($profileImagePath && Storage::disk('public')->exists($profileImagePath)) {
                     Storage::disk('public')->delete($profileImagePath);
                 }
 
-                $profileImageName = $chairmanData['first_name'] . '-' . $chairmanData['last_name'] . '-profile.' .
+                $profileImageName = $chairmanData['first_name'].'-'.$chairmanData['last_name'].'-profile.'.
                     $chairmanData['profile_image']->getClientOriginalExtension();
-                $profileImagePath = 'local-task-force/' . $profileImageName;
+                $profileImagePath = 'local-task-force/'.$profileImageName;
                 $chairmanData['profile_image']->storeAs('local-task-force', $profileImageName, 'public');
             }
 
@@ -152,7 +149,7 @@ class LocalTaskForceController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Update,
-                    description: 'Updated Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
+                    description: 'Updated Local Task Force Chairman: '.$chairman->first_name.' '.$chairman->last_name,
                 );
             } else {
                 $chairman = LocalTaskForce::create([
@@ -168,7 +165,7 @@ class LocalTaskForceController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Create,
-                    description: 'Created Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
+                    description: 'Created Local Task Force Chairman: '.$chairman->first_name.' '.$chairman->last_name,
                 );
             }
 
@@ -190,10 +187,10 @@ class LocalTaskForceController extends Controller
                         ]);
                         $member_ids[] = $member->member_id;
                     }
-                };
+                }
                 $chairman->Members()->whereNotIn('member_id', $member_ids)->delete();
             }
-        };
+        }
 
         // Delete Local Task Force records that are not in the request
         $chairmenToDelete = LocalTaskForce::whereNotIn('local_task_force_id', $task_force_ids)->get();
@@ -205,7 +202,7 @@ class LocalTaskForceController extends Controller
             ActivityLogService::contentManagementLog(
                 userId: $user->user_id,
                 activity: ActivityLogAction::Delete,
-                description: 'Deleted Local Task Force Chairman: ' . $chairman->first_name . ' ' . $chairman->last_name,
+                description: 'Deleted Local Task Force Chairman: '.$chairman->first_name.' '.$chairman->last_name,
             );
 
             $chairman->delete();

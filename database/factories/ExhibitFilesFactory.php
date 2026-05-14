@@ -2,14 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\ExhibitFiles;
 use App\Models\ExhibitOutlines;
 use App\Models\FileStatus;
 use App\Models\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExhibitFiles>
+ * @extends Factory<ExhibitFiles>
  */
 class ExhibitFilesFactory extends Factory
 {
@@ -23,6 +23,7 @@ class ExhibitFilesFactory extends Factory
         $exhibitOutline = ExhibitOutlines::inRandomOrder()->first();
         $fileStatus = FileStatus::inRandomOrder()->first();
         $user = User::inRandomOrder()->first();
+
         return [
             // 'exhibit_file_id' => $this->faker->unique()->randomNumber(),
             'exhibit_outline_id' => $exhibitOutline->exhibit_outline_id,

@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Vmgo;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Vmgo>
+ * @extends Factory<Vmgo>
  */
 class VmgoFactory extends Factory
 {

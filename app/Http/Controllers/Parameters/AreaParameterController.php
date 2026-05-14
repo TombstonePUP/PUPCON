@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\AccreditationLevels;
 use App\Models\ActivityLog;
 use App\Models\AreaParameters;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Programs;
 use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AreaParameterController extends Controller
@@ -29,14 +29,14 @@ class AreaParameterController extends Controller
         ]);
         $validated['parameter_name'] = strtoupper($validated['parameter_name'] ?? '');
 
-        $areaParameter = new AreaParameters();
+        $areaParameter = new AreaParameters;
         $areaParameter->create($validated);
 
         $user = Auth::user();
 
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'description' => 'Created a new Area Parameter: ' . $validated['parameter_name'] . $validated['parameter_description'],
+            'description' => 'Created a new Area Parameter: '.$validated['parameter_name'].$validated['parameter_description'],
             'activity' => 'Create',
             'type' => 'Content',
             'activity_date' => now(),
@@ -51,7 +51,7 @@ class AreaParameterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'area_id' => ['required', 'integer'],
@@ -74,7 +74,7 @@ class AreaParameterController extends Controller
         $program = Programs::findOrFail($request->program_id);
 
         // Determine level folder (same logic as your Area update)
-        $level_name = $level->level === 0 ? 'psv' : 'level_' . $level->level;
+        $level_name = $level->level === 0 ? 'psv' : 'level_'.$level->level;
 
         // Base path without parameter yet
         $degree_type = Str::slug($program->degree_type, '_');
@@ -95,7 +95,7 @@ class AreaParameterController extends Controller
          */
         foreach ($parameter->ParameterOutlines as $outline) {
 
-            if (!$outline->AreaFiles) {
+            if (! $outline->AreaFiles) {
                 continue;
             }
 
@@ -103,8 +103,8 @@ class AreaParameterController extends Controller
 
             $category_folder = Str::slug($outline->ParameterOutlineCategory->category_name, '_');
 
-            $old_path = "documents/{$program_folder}/{$level_name}/{$area_folder}/{$old_param_folder}/{$category_folder}/" . basename($file->file_path);
-            $new_path = "documents/{$program_folder}/{$level_name}/{$area_folder}/{$new_param_folder}/{$category_folder}/" . basename($file->file_path);
+            $old_path = "documents/{$program_folder}/{$level_name}/{$area_folder}/{$old_param_folder}/{$category_folder}/".basename($file->file_path);
+            $new_path = "documents/{$program_folder}/{$level_name}/{$area_folder}/{$new_param_folder}/{$category_folder}/".basename($file->file_path);
 
             // Ensure folder exists
             $disk->makeDirectory("documents/{$program_folder}/{$level_name}/{$area_folder}/{$new_param_folder}/{$category_folder}");
@@ -131,8 +131,8 @@ class AreaParameterController extends Controller
         $user = Auth::user();
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'description' => 'Updated Area Parameter "' . $parameter->parameter_name . '" in '
-                . $program->program_name . ' - ' . $level_name,
+            'description' => 'Updated Area Parameter "'.$parameter->parameter_name.'" in '
+                .$program->program_name.' - '.$level_name,
             'activity' => 'Update',
             'type' => 'Content',
             'activity_date' => now(),
@@ -162,7 +162,7 @@ class AreaParameterController extends Controller
                 }
                 ActivityLog::create([
                     'user_id' => Auth::user()->user_id,
-                    'description' => 'Deleted Benchmark File: ' . $outline->AreaFiles->file_name . 'from Area: ' . $outline->AreaParameter->Areas->area_name,
+                    'description' => 'Deleted Benchmark File: '.$outline->AreaFiles->file_name.'from Area: '.$outline->AreaParameter->Areas->area_name,
                     'activity' => 'Delete',
                     'type' => 'Files',
                     'activity_date' => now(),
@@ -177,7 +177,7 @@ class AreaParameterController extends Controller
         ActivityLogService::contentManagementLog(
             userId: $user->user_id,
             activity: ActivityLogAction::Delete,
-            description: 'Deleted Area Parameter: ' . $name . $description
+            description: 'Deleted Area Parameter: '.$name.$description
         );
 
         return redirect()->back()

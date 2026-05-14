@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\SearchFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Search extends Model
 {
-    /** @use HasFactory<\Database\Factories\SearchFactory> */
+    /** @use HasFactory<SearchFactory> */
     use HasFactory;
 
     /**
@@ -16,8 +17,11 @@ class Search extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'search';
+
     protected $primaryKey = 'search_id';
+
     protected $fillable = [
         'content',
         'content_type',

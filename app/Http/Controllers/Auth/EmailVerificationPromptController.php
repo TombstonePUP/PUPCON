@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\UserVerification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Notifications\UserVerification;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
 
 class EmailVerificationPromptController extends Controller
 {
@@ -25,7 +24,7 @@ class EmailVerificationPromptController extends Controller
         }
 
         // If no OTP yet or OTP expired, generate a new one
-        if (!$user->otp || $user->otp_expires_at < now()) {
+        if (! $user->otp || $user->otp_expires_at < now()) {
             $otp = rand(100000, 999999);
 
             $user->otp = Hash::make($otp);

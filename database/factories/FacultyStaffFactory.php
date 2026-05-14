@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\FacultyStaff;
 use App\Models\Programs;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FacultyStaff>
+ * @extends Factory<FacultyStaff>
  */
 class FacultyStaffFactory extends Factory
 {
@@ -18,6 +19,7 @@ class FacultyStaffFactory extends Factory
     public function definition(): array
     {
         $program = Programs::inRandomOrder()->first();
+
         return [
             /* 'faculty_staff_id' => $this->faker->unique()->randomNumber(),
             'first_name' => $this->faker->firstName(),

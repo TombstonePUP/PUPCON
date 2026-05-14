@@ -9,10 +9,10 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\File;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -24,7 +24,7 @@ class AuthenticatedSessionController extends Controller
         $folder = public_path('images/landing');
         $files = File::files($folder);
 
-        $images = array_map(fn($file) => asset('images/landing/' . $file->getFilename()), $files);
+        $images = array_map(fn ($file) => asset('images/landing/'.$file->getFilename()), $files);
 
         return Inertia::render('guest/auth/login', [
             'canResetPassword' => Route::has('password.request'),
@@ -47,7 +47,7 @@ class AuthenticatedSessionController extends Controller
         ActivityLogService::authenticationLog(
             userId: $request->user()->user_id,
             activity: ActivityLogAction::Login,
-            description: "Account Authenticated Successfully",
+            description: 'Account Authenticated Successfully',
         );
 
         return $userRole === 'Accreditor'
@@ -63,7 +63,7 @@ class AuthenticatedSessionController extends Controller
         ActivityLogService::authenticationLog(
             userId: $request->user()->user_id,
             activity: ActivityLogAction::Logout,
-            description: "Account Logged out",
+            description: 'Account Logged out',
         );
 
         Auth::guard('web')->logout();

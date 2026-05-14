@@ -15,7 +15,7 @@ return new class extends Migration
             ->update([
                 'video_link' => 'https://www.youtube.com/embed/9ypv1kOj7CU',
                 'video_title' => 'PUP San Juan AVP',
-                'video_description' => 'A glimpse into the life and achievements of our campus.'
+                'video_description' => 'A glimpse into the life and achievements of our campus.',
             ]);
     }
 

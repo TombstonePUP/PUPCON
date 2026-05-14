@@ -9,17 +9,16 @@ use App\Models\OtherServices;
 use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Response;
 
 class OtherServicesController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         $services_page = ContentPages::where('page', 'Other Services')->first();
         $services = OtherServices::all();
@@ -32,9 +31,8 @@ class OtherServicesController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'page' => ['required', 'array'],
@@ -99,7 +97,7 @@ class OtherServicesController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Update,
-                    description: 'Updated Other Service: ' . $service->service_name,
+                    description: 'Updated Other Service: '.$service->service_name,
                 );
             } else {
                 $service = OtherServices::create([
@@ -110,7 +108,7 @@ class OtherServicesController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Create,
-                    description: 'Created Other Service: ' . $service->service_name,
+                    description: 'Created Other Service: '.$service->service_name,
                 );
             }
             $service_ids[] = $service->service_id;

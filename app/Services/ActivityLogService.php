@@ -12,13 +12,13 @@ class ActivityLogService
         ActivityLogAction $activity,
         ActivityLogType $type,
         string $description,
-        ?int    $userId = null,
+        ?int $userId = null,
     ): void {
         ActivityLog::create([
-            'user_id'       => $userId,
-            'activity'      => $activity,
-            'description'   => $description,
-            'type'          => $type,
+            'user_id' => $userId,
+            'activity' => $activity,
+            'description' => $description,
+            'type' => $type,
             'activity_date' => now(),
         ]);
     }

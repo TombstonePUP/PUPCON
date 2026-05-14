@@ -18,9 +18,8 @@ class WelcomeController extends Controller
 {
     /**
      * Handle the incoming request.
-     * @return RedirectResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make(
             $request->all(),
@@ -42,11 +41,12 @@ class WelcomeController extends Controller
                     Rule::requiredIf(function () use ($request) {
                         $index = null;
                         foreach ($request->input('gallery', []) as $i => $item) {
-                            if (!isset($item['image']) && empty($item['previewUrl'])) {
+                            if (! isset($item['image']) && empty($item['previewUrl'])) {
                                 $index = $i;
                                 break;
                             }
                         }
+
                         return $index !== null;
                     }),
                     'nullable',
@@ -93,8 +93,8 @@ class WelcomeController extends Controller
             if ($page && $page->director_image_path && Storage::disk()->exists($page->director_image_path)) {
                 Storage::disk()->delete($page->director_image_path);
             }
-            $imageName = 'director.' . $validated['page']['director_image']->getClientOriginalExtension();
-            $directorImagePath = 'welcome/' . $imageName;
+            $imageName = 'director.'.$validated['page']['director_image']->getClientOriginalExtension();
+            $directorImagePath = 'welcome/'.$imageName;
             $storedPath = $validated['page']['director_image']->storeAs('welcome', $imageName, 'public');
             $page->director_image_name = $imageName;
             $page->director_image_path = $storedPath;
@@ -103,12 +103,12 @@ class WelcomeController extends Controller
             if ($page && $page->certificate_of_authenticity && Storage::disk()->exists($page->certificate_of_authenticity)) {
                 Storage::disk()->delete($page->certificate_of_authenticity);
             }
-            $certName = 'certificate_of_authenticity.' . $validated['page']['certificate_of_authenticity']->getClientOriginalExtension();
-            $certPath = 'welcome/' . $certName;
+            $certName = 'certificate_of_authenticity.'.$validated['page']['certificate_of_authenticity']->getClientOriginalExtension();
+            $certPath = 'welcome/'.$certName;
             $storedCertPath = $validated['page']['certificate_of_authenticity']->storeAs('welcome', $certName, 'public');
             $page->certificate_of_authenticity = $storedCertPath;
         }
-        if ($page->certificate_of_authenticity && !isset($validated['page']['certificate_of_authenticity'])) {
+        if ($page->certificate_of_authenticity && ! isset($validated['page']['certificate_of_authenticity'])) {
             if (Storage::disk()->exists($page->certificate_of_authenticity)) {
                 Storage::disk()->delete($page->certificate_of_authenticity);
             }
@@ -148,8 +148,8 @@ class WelcomeController extends Controller
             $imagePath = null;
             $imageName = null;
             if (isset($galleryData['image'])) {
-                $imageName = 'gallery_' . uniqid() . '.' . $galleryData['image']->getClientOriginalExtension();
-                $imagePath = 'welcome/gallery/' . $imageName;
+                $imageName = 'gallery_'.uniqid().'.'.$galleryData['image']->getClientOriginalExtension();
+                $imagePath = 'welcome/gallery/'.$imageName;
                 $galleryData['image']->storeAs('welcome/gallery', $imageName, 'public');
             }
 
@@ -163,7 +163,7 @@ class WelcomeController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Update,
-                    description: 'Updated Welcome Page Gallery Item ID: ' . $gallery->gallery_id,
+                    description: 'Updated Welcome Page Gallery Item ID: '.$gallery->gallery_id,
                 );
                 $gallery_ids[] = $gallery->gallery_id;
             } else {
@@ -176,7 +176,7 @@ class WelcomeController extends Controller
                 ActivityLogService::contentManagementLog(
                     userId: $user->user_id,
                     activity: ActivityLogAction::Update,
-                    description: 'Created Welcome Page Gallery Item ID: ' . $gallery->gallery_id,
+                    description: 'Created Welcome Page Gallery Item ID: '.$gallery->gallery_id,
                 );
                 $gallery_ids[] = $gallery->gallery_id;
             }
@@ -191,7 +191,7 @@ class WelcomeController extends Controller
             ActivityLogService::contentManagementLog(
                 userId: $user->user_id,
                 activity: ActivityLogAction::Delete,
-                description: 'Deleted Welcome Page Gallery Item ID: ' . $gallery->gallery_id,
+                description: 'Deleted Welcome Page Gallery Item ID: '.$gallery->gallery_id,
             );
         }
 

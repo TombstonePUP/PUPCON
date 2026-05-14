@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\FileStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FileStatus>
+ * @extends Factory<FileStatus>
  */
 class FileStatusFactory extends Factory
 {

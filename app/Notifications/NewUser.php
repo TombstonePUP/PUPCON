@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -14,7 +13,7 @@ class NewUser extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public string $email, public string $name ,public string $password)
+    public function __construct(public string $email, public string $name, public string $password)
     {
         //
     }

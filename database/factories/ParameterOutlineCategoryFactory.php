@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\ParameterOutlineCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ParameterOutlineCategory>
+ * @extends Factory<ParameterOutlineCategory>
  */
 class ParameterOutlineCategoryFactory extends Factory
 {

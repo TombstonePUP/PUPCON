@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\CampusDirectors;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CampusDirectors>
+ * @extends Factory<CampusDirectors>
  */
 class CampusDirectorsFactory extends Factory
 {

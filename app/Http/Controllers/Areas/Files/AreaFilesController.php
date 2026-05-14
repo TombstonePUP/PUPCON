@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Files;
+namespace App\Http\Controllers\Areas\Files;
 
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
@@ -13,18 +13,16 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AreaFilesController extends Controller
 {
     /**
      * Store a newly created resource in storage.
-     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate(
             [
@@ -38,7 +36,7 @@ class AreaFilesController extends Controller
                 'outline_id.exists' => 'The selected outline does not exist.',
                 'document.required' => 'Please upload a PDF document.',
                 'document.file' => 'The uploaded file must be a valid file.',
-                'document.pdf' => 'The uploaded file must be a PDF document.'
+                'document.pdf' => 'The uploaded file must be a PDF document.',
             ]
         );
 
@@ -49,7 +47,7 @@ class AreaFilesController extends Controller
         ])
             ->findOrFail($request->program_id);
         $level = AccreditationLevels::where('accreditation_level_id', $request->level_id)->first();
-        $level = $level->level === 0 ? 'psv' : 'level_' . $level->level;
+        $level = $level->level === 0 ? 'psv' : 'level_'.$level->level;
         $area = Areas::where('area_id', $request->area_id)->first();
         $parameterOutlines = ParameterOutlines::find($validated['outline_id']);
 
@@ -75,18 +73,17 @@ class AreaFilesController extends Controller
         } else {
             $initial = substr($categoryName, 0, 1);
         }
-        $categoryName = $categoryName === "Outcome/s" ? substr($categoryName, 0, -2) : $categoryName;
+        $categoryName = $categoryName === 'Outcome/s' ? substr($categoryName, 0, -2) : $categoryName;
 
         $file = $validated['document'];
         $parameter_outline = Str::slug($parameterOutlines->outline_description, '_');
-        $fileName = $initial . '.' . $parameterOutlines->outline_number . '.' . $parameter_outline . '.' . $file->getClientOriginalExtension();
+        $fileName = $initial.'.'.$parameterOutlines->outline_number.'.'.$parameter_outline.'.'.$file->getClientOriginalExtension();
         $program_name = Str::slug($program->program_name, '_');
         $degree_type = Str::slug($program->degree_type, '_');
         $area_name = Str::slug($area->area_name, '_');
         $parameter_name = Str::slug($parameterName, '_');
         $category_name = Str::slug($categoryName, '_');
         $filePath = "documents/{$degree_type}_{$program_name}/{$level}/{$area_name}/{$parameter_name}/{$category_name}";
-
 
         DB::transaction(function () use (
             $activity,
@@ -103,11 +100,11 @@ class AreaFilesController extends Controller
             $file->storeAs($filePath, $fileName, 'public');
 
             $parameterOutlines->AreaFiles()->create([
-                'file_name'      => $fileName,
-                'file_path'      => "{$filePath}/{$fileName}",
+                'file_name' => $fileName,
+                'file_path' => "{$filePath}/{$fileName}",
                 'file_status_id' => $fileStatus,
-                'uploaded_by'    => $user->user_id,
-                'uploaded_at'    => now(),
+                'uploaded_by' => $user->user_id,
+                'uploaded_at' => now(),
             ]);
 
             $activity_description = "{$activity->activity} for
@@ -129,7 +126,6 @@ class AreaFilesController extends Controller
 
     /**
      * Download the specified resource from storage.
-     * @return RedirectResponse
      */
     public function download(Request $request): RedirectResponse
     {
@@ -137,7 +133,7 @@ class AreaFilesController extends Controller
         $areaFile = $parameterOutlines->AreaFiles;
 
         if ($areaFile && Storage::disk('public')->exists($areaFile->file_path)) {
-            return response()->download(storage_path("app/public/" . $areaFile->file_path), $areaFile->file_name);
+            return response()->download(storage_path('app/public/'.$areaFile->file_path), $areaFile->file_name);
         } else {
             return redirect()->back()
                 ->with('type', 'error')
@@ -148,6 +144,7 @@ class AreaFilesController extends Controller
 
     /**
      * Destroy the specified resource from storage.
+     *
      * @return RedirectResponse
      */
     public function destroy(Request $request)

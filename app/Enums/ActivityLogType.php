@@ -6,7 +6,7 @@ enum ActivityLogType: string
 {
     case Authentication = 'Authentication';
     case FileManagement = 'File Management';
-    case ContentManagement  = 'Content Management';
+    case ContentManagement = 'Content Management';
     case UserManagement = 'User Management';
-    case System         = 'System';
+    case System = 'System';
 }

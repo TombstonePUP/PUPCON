@@ -1,18 +1,17 @@
 <?php
 
-use App\Http\Controllers\Content\WelcomeController;
 use App\Http\Controllers\Guest\AboutViewController;
-use App\Http\Controllers\Guest\AreasController;
-use App\Http\Controllers\Guest\ProgramsController;
-use App\Http\Controllers\Guest\FacultyController;
-use App\Http\Controllers\Guest\HistoryViewController;
-use App\Http\Controllers\Guest\VmgoViewController;
 use App\Http\Controllers\Guest\AdministrationViewController;
+use App\Http\Controllers\Guest\AreasController;
 use App\Http\Controllers\Guest\CertificateController;
 use App\Http\Controllers\Guest\ExhibitsController;
 use App\Http\Controllers\Guest\FacilitiesViewController;
+use App\Http\Controllers\Guest\FacultyController;
+use App\Http\Controllers\Guest\HistoryViewController;
 use App\Http\Controllers\Guest\LocalTaskForceViewController;
 use App\Http\Controllers\Guest\OtherServicesViewController;
+use App\Http\Controllers\Guest\ProgramsController;
+use App\Http\Controllers\Guest\VmgoViewController;
 use App\Http\Controllers\Guest\WelcomeViewController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -38,8 +37,6 @@ Route::get('certificate', CertificateController::class)->name('certificate');
 
 Route::get('exhibits', ExhibitsController::class)->name('exhibits');
 
-
-
 Route::get('others', OtherServicesViewController::class)->name('others');
 
 Route::controller(ProgramsController::class)->prefix('programs')->group(function () {
@@ -60,12 +57,8 @@ Route::get('/programs/{program_id}/{area_id}', AreasController::class)
     return Inertia::render('accreditor/accreditor-view');
 })->name('accreditor'); */
 
-
-
-
-
-require __DIR__ . '/settings.php';
-require __DIR__ . '/auth.php';
-require __DIR__ . '/shared.php';
-require __DIR__ . '/accreditor.php';
-require __DIR__ . '/admin.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/shared.php';
+require __DIR__.'/accreditor.php';
+require __DIR__.'/admin.php';

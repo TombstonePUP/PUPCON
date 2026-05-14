@@ -11,7 +11,7 @@ class Admin
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -19,8 +19,7 @@ class Admin
 
         if ($role === 'Admin' || $role === 'Coordinator') {
             return $next($request);
-        }
-        else {
+        } else {
             return redirect()->back()->with('error', 'You do not have permission to access this page.');
         }
     }

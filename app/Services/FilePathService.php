@@ -10,10 +10,10 @@ class FilePathService
 {
     public static function buildBasePath(
         Programs $program,
-        string   $level,
-        Areas    $area
+        string $level,
+        Areas $area
     ): string {
-        $degree   = Str::slug($program->degree_type, '_');
+        $degree = Str::slug($program->degree_type, '_');
         $progName = Str::slug($program->program_name, '_');
         $areaName = Str::slug($area->area_name, '_');
 
@@ -22,6 +22,6 @@ class FilePathService
 
     public static function resolveLevel(int $level): string
     {
-        return $level === 0 ? 'psv' : 'level_' . $level;
+        return $level === 0 ? 'psv' : 'level_'.$level;
     }
 }

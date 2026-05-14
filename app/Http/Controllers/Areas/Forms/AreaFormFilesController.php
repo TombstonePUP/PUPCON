@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\Files;
+namespace App\Http\Controllers\Areas\Forms;
 
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\AreaForms;
-use App\Models\Programs;
 use App\Models\Areas;
 use App\Models\FileStatus;
+use App\Models\Programs;
 use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AreaFormFilesController extends Controller
 {
     /**
      * Update/Upload the specified resource in storage.
+     *
      * @return void
      */
     public function store(Request $request, AreaForms $areaForms): RedirectResponse
@@ -32,7 +33,7 @@ class AreaFormFilesController extends Controller
             [
                 'document.required' => 'Please upload a PDF document.',
                 'document.file' => 'The uploaded file must be a valid file.',
-                'document.pdf' => 'The uploaded file must be a PDF document.'
+                'document.pdf' => 'The uploaded file must be a PDF document.',
             ]
         );
 
@@ -47,7 +48,7 @@ class AreaFormFilesController extends Controller
 
         $level = $level->level === 0
             ? 'psv'
-            : 'level_' . $level->level;
+            : 'level_'.$level->level;
 
         if ($user->Roles->role_name === 'Coordinator' || $user->Roles->role_name === 'Admin') {
             $status = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
@@ -94,7 +95,7 @@ class AreaFormFilesController extends Controller
             $areaForm->uploaded_at = now();
             $areaForm->file_status_id = $status;
 
-            $activity_description =  "{$activity} for '{$area->area_name}' in program '{$program->program_name}'.";
+            $activity_description = "{$activity} for '{$area->area_name}' in program '{$program->program_name}'.";
 
             ActivityLogService::fileManagementLog(
                 activity: $activity,
@@ -102,6 +103,7 @@ class AreaFormFilesController extends Controller
                 description: $activity_description
             );
         });
+
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'File Uploaded')
@@ -110,8 +112,10 @@ class AreaFormFilesController extends Controller
 
     /**
      * Download the specified resource from storage.
+     *
+     * @return <missing>|RedirectResponse
      */
-    public function download(Request $request)
+    public function download(Request $request): RedirectResponse
     {
         $form = AreaForms::where('area_form_id', $request->form_id)->first();
 
@@ -128,7 +132,7 @@ class AreaFormFilesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, AreaForms $areaForms)
+    public function destroy(Request $request, AreaForms $areaForms): RedirectResponse
     {
         $areaForm = $areaForms->find($request->form_id);
         $user = Auth::user();
@@ -137,11 +141,11 @@ class AreaFormFilesController extends Controller
 
         Storage::disk('public')->delete($areaForm->file_path);
 
-        $activityLog = new ActivityLog();
+        $activityLog = new ActivityLog;
         $activityLog->user_id = $user->user_id;
-        $activityLog->activity = "Delete";
+        $activityLog->activity = 'Delete';
         $activityLog->description = "Deleted area form for '{$area->area_name}' in program '{$program->program_name}'.";
-        $activityLog->type = "Files";
+        $activityLog->type = 'Files';
         $activityLog->activity_date = now();
         $activityLog->save();
 

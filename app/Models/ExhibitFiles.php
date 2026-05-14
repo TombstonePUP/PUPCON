@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\ExhibitFilesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ExhibitFiles extends Model
 {
-    /** @use HasFactory<\Database\Factories\ExhibitFilesFactory> */
+    /** @use HasFactory<ExhibitFilesFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class ExhibitFiles extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'exhibit_files';
+
     protected $primaryKey = 'exhibit_file_id';
+
     protected $fillable = [
         'exhibit_outline_id',
         'file_name',

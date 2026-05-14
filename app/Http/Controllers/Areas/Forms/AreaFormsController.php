@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Files;
+namespace App\Http\Controllers\Areas\Forms;
 
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\AreaFormCategory;
 use App\Models\AreaForms;
-use App\Models\Programs;
 use App\Models\Areas;
 use App\Models\FileStatus;
+use App\Models\Programs;
 use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 use function Symfony\Component\Clock\now;
 
 class AreaFormsController extends Controller
@@ -38,7 +39,7 @@ class AreaFormsController extends Controller
                 'area_form_category_id.integer' => 'Form category ID must be an integer.',
                 'area_form_category_id.exists' => 'The selected form category does not exist.',
                 'document.file' => 'The uploaded file must be a valid file.',
-                'document.pdf' => 'The uploaded file must be a PDF document.'
+                'document.pdf' => 'The uploaded file must be a PDF document.',
             ]
         );
 
@@ -53,7 +54,7 @@ class AreaFormsController extends Controller
 
         $level = $level->level === 0
             ? 'psv'
-            : 'level_' . $level->level;
+            : 'level_'.$level->level;
 
         if ($user->Roles->role_name === 'Coordinator' || $user->Roles->role_name === 'Admin') {
             $status = FileStatus::where('status_name', 'Approved')->first()->file_status_id;
@@ -64,7 +65,7 @@ class AreaFormsController extends Controller
         $category = AreaFormCategory::where('area_form_category_id', $validated['area_form_category_id'])
             ->first()->category_name;
 
-        $areaForm = new AreaForms();
+        $areaForm = new AreaForms;
 
         if ($request->hasFile('document')) {
             $category = Str::slug($category, '_');
@@ -76,18 +77,18 @@ class AreaFormsController extends Controller
             $request->file('document')->storeAs($formFilePath, $formFileName, 'public');
 
             $formFilePath = "{$formFilePath}/{$formFileName}";
-            //Populate the areaForm model
+            // Populate the areaForm model
             $areaForm->file_name = $formFileName;
             $areaForm->file_path = $formFilePath;
             $areaForm->uploaded_by = $user->user_id;
             $areaForm->uploaded_at = now();
             $areaForm->file_status_id = $status;
-            //Log the activity
-            $activityLog = new ActivityLog();
+            // Log the activity
+            $activityLog = new ActivityLog;
             $activityLog->user_id = $user->user_id;
             $activityLog->description = "Uploaded area form for '{$area->area_name}' in program '{$program->program_name}'.";
-            $activityLog->activity = "Upload";
-            $activityLog->type = "Files";
+            $activityLog->activity = 'Upload';
+            $activityLog->type = 'Files';
             $activityLog->activity_date = now();
             $activityLog->save();
         }
@@ -97,11 +98,11 @@ class AreaFormsController extends Controller
 
         $areaForm->save();
 
-        $activityLog = new ActivityLog();
+        $activityLog = new ActivityLog;
         $activityLog->user_id = $user->user_id;
         $activityLog->description = "Created area form entry for '{$area->area_name}' in program '{$program->program_name}'.";
-        $activityLog->activity = "Create";
-        $activityLog->type = "Files";
+        $activityLog->activity = 'Create';
+        $activityLog->type = 'Files';
         $activityLog->activity_date = now();
         $activityLog->save();
 
@@ -113,6 +114,7 @@ class AreaFormsController extends Controller
 
     /**
      * Remove the specified file resource from storage.
+     *
      * @return void
      */
     public function destroy(Request $request, AreaForms $areaForms): RedirectResponse

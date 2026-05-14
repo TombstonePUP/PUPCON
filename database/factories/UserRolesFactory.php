@@ -4,11 +4,11 @@ namespace Database\Factories;
 
 use App\Models\Roles;
 use App\Models\User;
-use Illuminate\Database\Query\Builder;
+use App\Models\UserRoles;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UserRoles>
+ * @extends Factory<UserRoles>
  */
 class UserRolesFactory extends Factory
 {
@@ -21,6 +21,7 @@ class UserRolesFactory extends Factory
     {
         $user = User::inRandomOrder()->first();
         $role = Roles::inRandomOrder()->first();
+
         return [
             // 'user_role_id' => $this->faker->unique()->randomNumber(),
             'user_id' => $user->user_id,

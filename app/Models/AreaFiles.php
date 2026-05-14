@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\AreaFilesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AreaFiles extends Model
 {
-    /** @use HasFactory<\Database\Factories\AreaFilesFactory> */
+    /** @use HasFactory<AreaFilesFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class AreaFiles extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'area_files';
+
     protected $primaryKey = 'area_file_id';
+
     protected $fillable = [
         'parameter_outline_id',
         'file_name',

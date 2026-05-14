@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests\Benchmarks;
 
-use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BenchmarkRequest extends FormRequest
 {
@@ -13,13 +14,14 @@ class BenchmarkRequest extends FormRequest
     public function authorize(): bool
     {
         $user = $this->user();
+
         return $user && $user->Roles->whereIn('role_name', ['Admin', 'Coordinator'])->exists();
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {

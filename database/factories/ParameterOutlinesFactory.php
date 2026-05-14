@@ -4,11 +4,11 @@ namespace Database\Factories;
 
 use App\Models\AreaParameters;
 use App\Models\ParameterOutlineCategory;
-use Illuminate\Database\Query\Builder;
+use App\Models\ParameterOutlines;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ParameterOutlines>
+ * @extends Factory<ParameterOutlines>
  */
 class ParameterOutlinesFactory extends Factory
 {
@@ -21,6 +21,7 @@ class ParameterOutlinesFactory extends Factory
     {
         $areaParameter = AreaParameters::inRandomOrder()->first();
         $outlineCategory = ParameterOutlineCategory::inRandomOrder()->first();
+
         return [
             // 'parameter_outline_id' => $this->faker->unique()->randomNumber(),
             'area_parameter_id' => $areaParameter->area_parameter_id,

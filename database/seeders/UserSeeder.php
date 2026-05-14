@@ -2,14 +2,12 @@
 
 namespace Database\Seeders;
 
-use Faker\Factory as Faker;
-use Illuminate\Database\Seeder;
-use App\Models\Roles;
-use App\Models\ParameterOutlineCategory;
-use App\Models\User;
-use App\Models\FileStatus;
 use App\Models\AreaFormCategory;
-
+use App\Models\FileStatus;
+use App\Models\ParameterOutlineCategory;
+use App\Models\Roles;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
@@ -20,13 +18,13 @@ class UserSeeder extends Seeder
     {
         $roles = [
             [
-                'role_name' => 'Admin'
+                'role_name' => 'Admin',
             ],
             [
-                'role_name' => 'Coordinator'
+                'role_name' => 'Coordinator',
             ],
             [
-                'role_name' => 'Chairman'
+                'role_name' => 'Chairman',
             ],
             /* [
                 'role_id' => 5,
@@ -62,23 +60,22 @@ class UserSeeder extends Seeder
             User::factory()->create($attributes);
         }
 
-
         $parameterCategory = [
             [
                 'category_name' => 'No Category',
-                'parameter_outline_category_id' => 1
+                'parameter_outline_category_id' => 1,
             ],
             [
                 'category_name' => 'Systems - Inputs and Processes',
-                'parameter_outline_category_id' => 2
+                'parameter_outline_category_id' => 2,
             ],
             [
                 'category_name' => 'Implementation',
-                'parameter_outline_category_id' => 3
+                'parameter_outline_category_id' => 3,
             ],
             [
                 'category_name' => 'Outcome/s',
-                'parameter_outline_category_id' => 4
+                'parameter_outline_category_id' => 4,
             ],
         ];
         foreach ($parameterCategory as $attributes) {
@@ -94,11 +91,10 @@ class UserSeeder extends Seeder
             FileStatus::factory()->create($attributes);
         }
 
-
         $area_forms_category = [
             ['category_name' => 'Program Performance Profile'],
             ['category_name' => 'Self-Survey'],
-            ['category_name' => 'Compliance Report']
+            ['category_name' => 'Compliance Report'],
         ];
         foreach ($area_forms_category as $attributes) {
             AreaFormCategory::factory()->create($attributes);

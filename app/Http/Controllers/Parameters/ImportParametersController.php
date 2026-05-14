@@ -4,25 +4,26 @@ namespace App\Http\Controllers\Parameters;
 
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\Programs;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
+use App\Models\Programs;
 use App\Services\ActivityLogService;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use League\Csv\Reader;
 use Illuminate\Support\Facades\DB;
-
+use League\Csv\Reader;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ImportParametersController extends Controller
 {
-    public function download()
+    public function download(): BinaryFileResponse
     {
         $filePath = public_path('/documents/import_parameter.csv');
         $headers = ['Content-Type' => 'text/csv'];
         $fileName = 'parameter_template.csv';
+
         return response()->download($filePath, $fileName, $headers);
     }
 
@@ -58,12 +59,14 @@ class ImportParametersController extends Controller
                 if (stripos($record, '#parameters') === 0) {
                     $section = 'parameters';
                     $headers = [];
+
                     continue;
                 }
 
                 if (stripos($record, '#benchmarks') === 0) {
                     $section = 'benchmarks';
                     $headers = [];
+
                     continue;
                 }
 
@@ -74,12 +77,13 @@ class ImportParametersController extends Controller
 
                 $columns = str_getcsv($record);
 
-                if (count(array_filter($columns, fn($value) => trim($value) !== '')) === 0) {
+                if (count(array_filter($columns, fn ($value) => trim($value) !== '')) === 0) {
                     continue;
                 }
 
                 if (empty($headers) && in_array('parameter', $columns)) {
                     $headers = $columns;
+
                     continue;
                 }
 

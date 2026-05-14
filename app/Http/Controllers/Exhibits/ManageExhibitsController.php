@@ -17,9 +17,8 @@ class ManageExhibitsController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         $exhibits = Exhibits::with(['ExhibitOutlines.ExhibitFiles'])->get();
 
@@ -53,9 +52,8 @@ class ManageExhibitsController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'exhibit_id' => ['nullable', 'integer', 'exists:exhibits,exhibit_id'],
@@ -72,13 +70,13 @@ class ManageExhibitsController extends Controller
         if ($isUpdate) {
             $exhibit = Exhibits::findOrFail($validated['exhibit_id']);
         } else {
-            $exhibit = new Exhibits();
+            $exhibit = new Exhibits;
         }
 
         // Handle image upload if provided
         if (isset($validated['image'])) {
-            $imageName = $validated['exhibit_name'] . '.' . $validated['image']->getClientOriginalExtension();
-            $imagePath = 'exhibits/assets/' . $imageName;
+            $imageName = $validated['exhibit_name'].'.'.$validated['image']->getClientOriginalExtension();
+            $imagePath = 'exhibits/assets/'.$imageName;
 
             $validated['image']->storeAs('exhibits/assets', $imageName, 'public');
 
@@ -93,8 +91,8 @@ class ManageExhibitsController extends Controller
 
         //  AUTO-CREATE OUTLINE IF NOT A CONTAINER
         //  Only for NEW exhibits (not updating)
-        if (!$exhibit->container && !$isUpdate) {
-            if (!$exhibit->ExhibitOutlines()->exists()) {
+        if (! $exhibit->container && ! $isUpdate) {
+            if (! $exhibit->ExhibitOutlines()->exists()) {
                 $exhibit->ExhibitOutlines()->create([
                     'outline_description' => $exhibit->exhibit_name,
                     'category' => null,
@@ -120,9 +118,8 @@ class ManageExhibitsController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * @return RedirectResponse
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): RedirectResponse
     {
         $exhibit = Exhibits::find($request->exhibit_id);
         $user = Auth::user();

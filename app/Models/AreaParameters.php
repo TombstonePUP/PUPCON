@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\AreaParametersFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AreaParameters extends Model
 {
-    /** @use HasFactory<\Database\Factories\AreaParametersFactory> */
+    /** @use HasFactory<AreaParametersFactory> */
     use HasFactory;
 
     /**
@@ -18,8 +19,11 @@ class AreaParameters extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'area_parameters';
+
     protected $primaryKey = 'area_parameter_id';
+
     protected $fillable = [
         'area_id',
         'parameter_name',

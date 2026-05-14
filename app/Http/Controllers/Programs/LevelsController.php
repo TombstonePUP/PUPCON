@@ -13,6 +13,7 @@ class LevelsController extends Controller
 {
     /**
      * Store a newly created resource in storage.
+     *
      * @return RedirectResponse
      */
     public function store(Request $request)
@@ -56,11 +57,11 @@ class LevelsController extends Controller
             'is_active' => true,
         ]);
 
-        $level = $program->level === 0 ? 'Preliminary Survey' : 'Level ' . $program->level;
+        $level = $program->level === 0 ? 'Preliminary Survey' : 'Level '.$program->level;
 
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'description' => 'Added a new level: ' . $level . ' to program: ' . $validated['program_name'],
+            'description' => 'Added a new level: '.$level.' to program: '.$validated['program_name'],
             'activity' => 'Create',
             'type' => 'Content',
             'activity_date' => now(),
@@ -69,11 +70,12 @@ class LevelsController extends Controller
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Level Added')
-            ->with('message', 'Level "' . $level . '" has been added successfully to program.');
+            ->with('message', 'Level "'.$level.'" has been added successfully to program.');
     }
 
     /**
      * Update the specified resource in storage.
+     *
      * @return RedirectResponse
      */
     public function update(Request $request, Programs $programs)
@@ -114,8 +116,8 @@ class LevelsController extends Controller
 
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'description' => 'Updated level: ' . ($level->level === 0 ? 'Preliminary Survey' : 'Level ' . $level->level) .
-                ' for program: ' . $validated['program_name'],
+            'description' => 'Updated level: '.($level->level === 0 ? 'Preliminary Survey' : 'Level '.$level->level).
+                ' for program: '.$validated['program_name'],
             'activity' => 'Update',
             'type' => 'Content',
             'activity_date' => now(),

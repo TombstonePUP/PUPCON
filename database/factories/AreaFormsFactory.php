@@ -3,13 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\AreaFormCategory;
+use App\Models\AreaForms;
 use App\Models\Areas;
 use App\Models\FileStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AreaForms>
+ * @extends Factory<AreaForms>
  */
 class AreaFormsFactory extends Factory
 {
@@ -24,6 +25,7 @@ class AreaFormsFactory extends Factory
         $areaFormCategory = AreaFormCategory::inRandomOrder()->first();
         $fileStatusId = FileStatus::inRandomOrder()->first();
         $user = User::inRandomOrder()->first();
+
         return [
             // 'area_form_id' => $this->faker->unique()->randomNumber(),
             'area_id' => $area->area_id,

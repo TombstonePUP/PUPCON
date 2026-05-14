@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\ProgramGallery;
 use App\Models\Programs;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProgramGallery>
+ * @extends Factory<ProgramGallery>
  */
 class ProgramGalleryFactory extends Factory
 {
@@ -18,6 +19,7 @@ class ProgramGalleryFactory extends Factory
     public function definition(): array
     {
         $program = Programs::inRandomOrder()->first();
+
         return [
             'program_id' => $program->program_id,
             /* 'image_name' => $this->faker->word() . '.jpg',

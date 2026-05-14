@@ -3,11 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\AccreditationLevels;
+use App\Models\Areas;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Programs;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Areas>
+ * @extends Factory<Areas>
  */
 class AreasFactory extends Factory
 {
@@ -19,6 +19,7 @@ class AreasFactory extends Factory
     public function definition(): array
     {
         $accreditationLevel = AccreditationLevels::inRandomOrder()->first();
+
         return [
             // 'area_id' => $this->faker->unique()->randomNumber(),
             'accreditation_level_id' => $accreditationLevel->accreditation_level_id,
