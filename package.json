@@ -10,6 +10,8 @@
         "lint": "eslint . --fix"
     },
     "devDependencies": {
+        "@commitlint/cli": "^21.0.1",
+        "@commitlint/config-conventional": "^21.0.1",
         "@eslint/js": "^9.19.0",
         "@tailwindcss/vite": "^4.0.6",
         "@types/react": "^19.1.6",
@@ -21,6 +23,7 @@
         "eslint-plugin-react": "^7.37.3",
         "eslint-plugin-react-hooks": "^5.1.0",
         "globals": "^15.14.0",
+        "husky": "^9.1.7",
         "laravel-echo": "^2.2.0",
         "laravel-vite-plugin": "^1.0",
         "prettier": "^3.4.2",
