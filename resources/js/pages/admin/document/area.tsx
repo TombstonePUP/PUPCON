@@ -1,5 +1,5 @@
-import AreaCards from '@/components/dashboard/areas/area-card-form';
-import ParameterAccordion from '@/components/dashboard/areas/parameter-accordion';
+import AreaCards from '@/components/admin/dashboard/areas/area-card-form';
+import ParameterAccordion from '@/components/admin/dashboard/areas/parameter-accordion';
 import { RenderAreaFormDialog } from '@/components/admin/dialogs/area-forms/area-forms-dialog-renderer';
 import { RenderBenchmarkDialog } from '@/components/admin/dialogs/benchmarks/benchmark-dialog-renderer';
 import { RenderDocumentDialog } from '@/components/admin/dialogs/documents/document-dialog-renderer';
