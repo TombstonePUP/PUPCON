@@ -63,7 +63,7 @@ export default function ParameterAccordion({
                         >
                             <div className="relative">
                                 <AccordionTrigger className="flex flex-row items-center justify-between p-4 px-6 group-hover:cursor-pointer hover:no-underline">
-                                    <div className="flex w-full flex-row items-center justify-between pr-24">
+                                    <div className="flex w-full flex-row items-center justify-between pr-24 xl:pr-52">
                                         <h1 className="text-primary group-hover:text-primary/80 font-bold">
                                             {parameter.parameter_name?.trim()
                                                 ? `Parameter ${parameter.parameter_name}`
@@ -76,7 +76,7 @@ export default function ParameterAccordion({
                                 </AccordionTrigger>
 
                                 {canShowActions && (
-                                    <div className="absolute top-1/2 right-14 z-10 flex -translate-y-1/2 justify-center gap-3">
+                                    <div className="absolute top-1/2 right-14 z-10 flex -translate-y-1/2 justify-center gap-2">
                                         <Button
                                             size="sm"
                                             variant="ghost"
