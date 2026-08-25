@@ -1,9 +1,10 @@
-FROM node:25-alpine AS base
+FROM node:24-alpine AS base
 WORKDIR /app
 
 FROM base AS development
 COPY package*.json ./
 RUN npm install
+RUN npm cache clean --force
 COPY . .
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 

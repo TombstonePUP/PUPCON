@@ -1,13 +1,13 @@
 name: pupcon_staging
 
 services:
-  # database-production:
+  # database-staging:
   #   image: postgres:18
   #   restart: unless-stopped
   #   ports:
   #     - "5433:5432" # optional; remove this if only containers need DB access
   #   volumes:
-  #     - postgres-data-production:/var/lib/postgresql
+  #     - postgres-data-staging:/var/lib/postgresql
   #   environment:
   #     POSTGRES_DB: ${POSTGRES_DATABASE:-app}
   #     POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
@@ -19,41 +19,41 @@ services:
   #     timeout: 5s
   #     retries: 5
 
-  api-prod:
+  api-staging:
     build:
       context: .
       dockerfile: ./docker/backend/Dockerfile
-      target: production
-    image: laravel_api:prod
-    container_name: laravel-api-prod
+      target: staging
+    image: laravel_api:staging
+    container_name: laravel-api-staging
     restart: unless-stopped
     depends_on:
-      database-production:
+      database-staging:
         condition: service_healthy
     env_file:
-      - ./.env.production
+      - ./.env.staging
     volumes:
-      - laravel-storage-production:/var/www/storage
+      - laravel-storage-staging:/var/www/storage
       - public-assets:/var/www/public/build:rw
 
-  web-prod:
+  web-staging:
     build:
       context: .
       dockerfile: ./docker/frontend/Dockerfile
-      target: production
-    image: react_client:prod
-    container_name: react-frontend-prod
+      target: staging
+    image: react_client:staging
+    container_name: react-frontend-staging
     restart: unless-stopped
     depends_on:
-      - api-prod
+      - api-staging
     volumes:
-      - laravel-storage-production:/var/www/storage:ro
+      - laravel-storage-staging:/var/www/storage:ro
       - public-assets:/var/www/public/build:ro
     ports:
       - "8000:80"
 
 volumes:
-  postgres-data-production:
-  laravel-storage-production:
+  postgres-data-staging:
+  laravel-storage-staging:
   public-assets:
 
