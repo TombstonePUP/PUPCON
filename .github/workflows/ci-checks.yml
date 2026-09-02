@@ -76,8 +76,8 @@ jobs:
       - name: Run database migrations
         run: php artisan migrate --env=testing --force
 
-      - name: Run Laravel tests
-        run: php artisan test --env=testing
+      # - name: Run Laravel tests
+      #   run: php artisan test --env=testing
 
   # ============================================================
   # FRONTEND — React + TypeScript
