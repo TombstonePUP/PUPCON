@@ -1,0 +1,64 @@
+name: CI - Build Containers and Push to GHCR
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      app_version:
+        required: true
+        type: string
+      compose_file:
+        required: true
+        type: string
+      env_file:
+        required: false
+        type: string
+        default: ".env"
+    secrets:
+      inherit
+
+concurrency:
+  group: ci-${{ inputs.environment }}-package-and-push
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set lowercase repository name
+        id: repo
+        run: echo "name=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate env file
+        run: |
+          echo "APP_VERSION=${{ inputs.app_version }}" > ${{ inputs.env_file }}
+          echo "Env file generated with APP_VERSION=${{ inputs.app_version }}"
+
+      - name: Build and push images
+        run: |
+          chmod +x .github/scripts/package.sh
+          .github/scripts/package.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          APP_VERSION: ${{ inputs.app_version }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          COMPOSE_FILE: ${{ inputs.compose_file }}
+          ENV_FILE: ${{ inputs.env_file }}
