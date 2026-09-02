@@ -54,14 +54,11 @@ class HandleInertiaRequests extends Middleware
                     $areaQuery->where('archive', false);
                 },
                 'AreaParameter.Areas.Levels' => function ($programQuery) {
-                    $programQuery->where('is_active', true)
-                        ->orderBy('survey_date', 'desc')
-                        ->limit(1)
-                        ->with([
-                            'Programs' => function ($programsQuery) {
-                                $programsQuery->where('under_survey', true);
-                            },
-                        ]);
+                    $programQuery->where('is_active', true)->with([
+                        'Programs' => function ($programsQuery) {
+                            $programsQuery->where('under_survey', true);
+                        },
+                    ]);
                 },
             ])
             ->get();
