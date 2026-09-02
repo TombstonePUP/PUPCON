@@ -2,9 +2,10 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { buildSearchIndex, searchOutlines } from '@/lib/search';
 import type { GuestNavigation } from '@/types';
 import { router } from '@inertiajs/react';
-import { ChevronRight, FileText, Search } from 'lucide-react';
+import { ChevronRight, FileText, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { OutlineSearchSource, SearchResult } from './mobile-menu';
 
@@ -18,56 +19,11 @@ export default function SearchModal({ open, onClose, guestProps }: SearchModalPr
     const [searchTerm, setSearchTerm] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // ---- Precompute a lightweight lowercase search index once ----
-    // Avoids re-lowercasing the whole outlines list on every keystroke.
-    const searchIndex = useMemo(
-        () =>
-            ((guestProps?.outlines || []) as unknown as OutlineSearchSource[]).map((o) => ({
-                id: o.parameter_outline_id,
-                parameterId: o.area_parameter_id,
-                program: o.area_parameter?.areas?.levels?.programs?.program_name,
-                area: o.area_parameter?.areas?.area_name,
-                parameter: o.area_parameter?.parameter_name,
-                outline: o.outline_description,
-                level: o.area_parameter?.areas?.levels?.level,
-                programId: o.area_parameter?.areas?.levels?.programs?.program_id,
-                areaId: o.area_parameter?.areas?.area_id,
-                haystack: [
-                    o.outline_description,
-                    o.area_parameter?.parameter_name,
-                    o.area_parameter?.areas?.area_name,
-                    o.area_parameter?.areas?.levels?.programs?.program_name,
-                ]
-                    .filter(Boolean)
-                    .join(' ')
-                    .toLowerCase(),
-            })),
-        [guestProps],
-    );
+    // ---- Precompute a rich lowercase search index once ----
+    const searchIndex = useMemo(() => buildSearchIndex((guestProps?.outlines || []) as unknown as OutlineSearchSource[]), [guestProps]);
 
     // ---- Derived, memoized results: only recomputed when the term changes ----
-    const searchResults = useMemo<SearchResult[]>(() => {
-        const t = searchTerm.trim().toLowerCase();
-        if (!t) return [];
-
-        return searchIndex
-            .filter((item) => item.haystack.includes(t))
-            .map(
-                (item): SearchResult => ({
-                    outline: item.outline,
-                    outlineId: item.id,
-                    parameterId: item.parameterId,
-                    program: item.program,
-                    area: item.area,
-                    parameter: item.parameter,
-                    level: item.level,
-                    program_id: item.programId,
-                    area_id: item.areaId,
-                }),
-            );
-    }, [searchTerm, searchIndex]);
-
-    const isSearching = searchResults.length === 0 && searchTerm.trim().length > 0;
+    const searchResults = useMemo(() => searchOutlines(searchIndex, searchTerm), [searchTerm, searchIndex]);
 
     // Focus the input when the dialog opens (Radix focuses the close button by default)
     useEffect(() => {
@@ -98,10 +54,19 @@ export default function SearchModal({ open, onClose, guestProps }: SearchModalPr
                     <Input
                         ref={inputRef}
                         placeholder="Search programs, areas, or benchmarks..."
-                        className="pl-9"
+                        className="pr-10 pl-9"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
+                    {searchTerm && (
+                        <button
+                            type="button"
+                            onClick={() => setSearchTerm('')}
+                            className="text-muted-foreground hover:text-foreground absolute top-1/2 right-10 -translate-y-1/2 rounded-sm p-1 opacity-70 hover:opacity-100"
+                        >
+                            <X className="size-4" />
+                        </button>
+                    )}
                 </div>
 
                 {/* Results Area */}
@@ -112,11 +77,6 @@ export default function SearchModal({ open, onClose, guestProps }: SearchModalPr
                                 <Search className="size-6 text-gray-400" />
                             </div>
                             <p className="text-muted-foreground text-sm">Type something to search...</p>
-                        </div>
-                    ) : isSearching ? (
-                        <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 px-4 text-center">
-                            <div className="size-6 animate-spin rounded-full border-b-2 border-[#7f1414]" />
-                            <p className="text-muted-foreground text-sm">Searching benchmarks...</p>
                         </div>
                     ) : searchResults.length > 0 ? (
                         <div className="space-y-1">

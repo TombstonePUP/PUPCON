@@ -1,5 +1,6 @@
 'use client';
 
+import { buildSearchIndex, searchOutlines } from '@/lib/search';
 import { cn } from '@/lib/utils';
 import type { GuestNavigation } from '@/types';
 import { Link, router } from '@inertiajs/react';
@@ -27,18 +28,26 @@ export interface SearchResult {
 
 export interface OutlineSearchSource {
     outline_description?: string;
+    outline_number?: string;
+    outline_name?: string;
     parameter_outline_id: number;
     area_parameter_id: number;
     area_parameter?: {
         parameter_name?: string;
+        parameter_description?: string;
         areas?: {
             area_name?: string;
             area_id?: number;
+            area_description?: string;
+            area_number?: string;
+            area_numeral?: string;
             levels?: {
                 level?: number;
+                level_name?: string;
                 programs?: {
                     program_name?: string;
                     program_id?: number;
+                    degree_type?: string;
                 };
             };
         };
@@ -59,55 +68,11 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
 
     const allLinks = [...leftNav, ...rightNav];
 
-    // ---- Precompute a lightweight lowercase search index once ----
-    const searchIndex = useMemo(
-        () =>
-            ((guestProps?.outlines || []) as unknown as OutlineSearchSource[]).map((o) => ({
-                id: o.parameter_outline_id,
-                parameterId: o.area_parameter_id,
-                programId: o.area_parameter?.areas?.levels?.programs?.program_id,
-                areaId: o.area_parameter?.areas?.area_id,
-                program: o.area_parameter?.areas?.levels?.programs?.program_name,
-                area: o.area_parameter?.areas?.area_name,
-                parameter: o.area_parameter?.parameter_name,
-                outline: o.outline_description,
-                level: o.area_parameter?.areas?.levels?.level,
-                haystack: [
-                    o.outline_description,
-                    o.area_parameter?.parameter_name,
-                    o.area_parameter?.areas?.area_name,
-                    o.area_parameter?.areas?.levels?.programs?.program_name,
-                ]
-                    .filter(Boolean)
-                    .join(' ')
-                    .toLowerCase(),
-            })),
-        [guestProps],
-    );
+    // ---- Precompute a rich lowercase search index once ----
+    const searchIndex = useMemo(() => buildSearchIndex((guestProps?.outlines || []) as unknown as OutlineSearchSource[]), [guestProps]);
 
     // ---- Derived, memoized results: only recomputed when the term changes ----
-    const searchResults = useMemo<SearchResult[]>(() => {
-        const t = searchTerm.trim().toLowerCase();
-        if (!t) return [];
-
-        return searchIndex
-            .filter((item) => item.haystack.includes(t))
-            .map(
-                (item): SearchResult => ({
-                    outline: item.outline,
-                    outlineId: item.id,
-                    parameterId: item.parameterId,
-                    program: item.program,
-                    area: item.area,
-                    parameter: item.parameter,
-                    level: item.level,
-                    program_id: item.programId,
-                    area_id: item.areaId,
-                }),
-            );
-    }, [searchTerm, searchIndex]);
-
-    const isSearching = searchResults.length === 0 && searchTerm.trim().length > 0;
+    const searchResults = useMemo(() => searchOutlines(searchIndex, searchTerm), [searchTerm, searchIndex]);
 
     const redirectLink = (outline: SearchResult) => {
         const { program_id, area_id, outlineId, parameterId } = outline;
@@ -157,10 +122,19 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
                             <input
                                 type="text"
                                 placeholder="Search benchmarks..."
-                                className="w-full rounded-xl border border-gray-200 bg-white py-3 pr-4 pl-10 font-sans text-sm transition-all focus:border-[#7f1414] focus:ring-2 focus:ring-[#7f1414]/10 focus:outline-none"
+                                className="w-full rounded-xl border border-gray-200 bg-white py-3 pr-10 pl-10 font-sans text-sm transition-all focus:border-[#7f1414] focus:ring-2 focus:ring-[#7f1414]/10 focus:outline-none"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
+                            {searchTerm && (
+                                <button
+                                    type="button"
+                                    onClick={() => setSearchTerm('')}
+                                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                                >
+                                    <X className="size-4" />
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -168,12 +142,7 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
                     <div className="relative z-10 flex-1 overflow-y-auto">
                         {searchTerm ? (
                             <div className="p-4">
-                                {isSearching ? (
-                                    <div className="py-12 text-center">
-                                        <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2 border-[#7f1414]" />
-                                        <p className="font-sans text-sm text-gray-500">Searching benchmarks...</p>
-                                    </div>
-                                ) : searchResults.length > 0 ? (
+                                {searchResults.length > 0 ? (
                                     <div className="space-y-1">
                                         {searchResults.map((result, idx) => (
                                             <button
