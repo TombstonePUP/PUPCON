@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import type { User } from '@/types';
 import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import { LogOut, Menu, Search, X } from 'lucide-react';
+import { ChevronDown, LogOut, Menu, Search, X } from 'lucide-react';
 
 interface GuestNavItem {
     label: string;
@@ -66,14 +66,31 @@ export default function GuestHeader({
                                 <Link
                                     href={item.href}
                                     className={cn(
-                                        'relative px-3 py-2 text-sm transition-colors duration-300 hover:text-white',
+                                        'relative flex items-center gap-1 px-3 py-2 text-sm transition-colors duration-300 hover:text-white',
                                         isActive(item.href) && 'text-white',
                                     )}
                                     preserveScroll
                                 >
                                     {item.label}
+                                    {item.dropdown && item.dropdown.length > 0 && (
+                                        <ChevronDown className="size-3.5 transition-transform duration-200 group-hover:rotate-180" />
+                                    )}
                                     <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white transition-all duration-300 group-hover:w-full" />
                                 </Link>
+
+                                {item.dropdown && item.dropdown.length > 0 && (
+                                    <div className="invisible absolute top-full left-0 z-50 mt-3 min-w-[220px] translate-y-2 rounded-lg border border-gray-100 bg-white p-2 opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                                        {item.dropdown.map((sub) => (
+                                            <Link
+                                                key={sub.href}
+                                                href={sub.href}
+                                                className="block rounded-md px-4 py-2 font-sans text-sm text-gray-700 transition-colors hover:bg-gray-50 hover:text-[#7f1414]"
+                                            >
+                                                {sub.label}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
                             </li>
                         ))}
                     </ul>
