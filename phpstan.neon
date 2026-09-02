@@ -1,0 +1,40 @@
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 1
+
+    paths:
+        - app/
+
+    tmpDir: storage/phpstan
+
+    excludePaths:
+        - app/Providers/*
+
+    # Baseline ignores for pre-existing findings. Keep this list minimal so
+    # only NEW genuine errors fail the CI gate.
+    ignoreErrors:
+        - identifier: variable.undefined
+          path: app/Http/Controllers/Areas/Files/AreaFilesController.php
+        - identifier: closure.unusedUse
+          path: app/Http/Controllers/Areas/Files/AreaFilesController.php
+        - identifier: nullCoalesce.variable
+          path: app/Http/Controllers/Content/AboutController.php
+        - identifier: isset.variable
+          path: app/Http/Controllers/Content/ProgramContentController.php
+        - identifier: variable.undefined
+          path: app/Http/Controllers/Dashboard/DashboardController.php
+        - identifier: variable.undefined
+          path: app/Http/Controllers/Exhibits/ExhibitOutlinesFileController.php
+        - identifier: larastan.relationExistence
+          path: app/Http/Controllers/Exhibits/ExhibitFilesController.php
+        - identifier: larastan.relationExistence
+          path: app/Http/Controllers/Exhibits/ManageExhibitsController.php
+        - identifier: larastan.relationExistence
+          path: app/Http/Controllers/Guest/ProgramsController.php
+        - identifier: larastan.relationExistence
+          path: app/Http/Controllers/Programs/ManageProgramController.php
+        - identifier: larastan.relationExistence
+          path: app/Http/Middleware/HandleInertiaRequests.php

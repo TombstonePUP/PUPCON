@@ -58,7 +58,7 @@ class Programs extends Model
     }
 
     /**
-     * @return HasMany<Faculty,Programs>
+     * @return HasMany<FacultyStaff,Programs>
      */
     public function FacultyStaff(): HasMany
     {
