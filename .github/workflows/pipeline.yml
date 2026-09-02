@@ -22,7 +22,7 @@ jobs:
   # Runs on: all pushes and pull requests
   # ============================================================
   ci-checks:
-    uses: ./modules/ci-checks.yml
+    uses: ./.github/workflows/modules/ci-checks.yml
     secrets: inherit
 
   # # ============================================================
@@ -63,7 +63,7 @@ jobs:
   build-production:
     needs: ci-checks
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    uses: ./modules/build.yml
+    uses: ./.github/workflows/modules/build.yml
     with:
       environment: production
       app_version: ${{ github.sha }}
@@ -79,7 +79,7 @@ jobs:
   deploy-production:
     needs: build-production
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    uses: ./modules/deploy.yml
+    uses: ./.github/workflows/modules/deploy.yml
     with:
       environment: production
       app_version: ${{ github.sha }}
