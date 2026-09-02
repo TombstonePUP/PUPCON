@@ -16,8 +16,7 @@ on:
         required: false
         type: string
         default: ".env"
-    secrets:
-      inherit
+    secrets: inherit
 
 concurrency:
   group: ci-${{ inputs.environment }}-package-and-push
