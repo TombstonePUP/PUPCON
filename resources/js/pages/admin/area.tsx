@@ -1,6 +1,6 @@
 import { DocumentViewer } from '@/components/admin/dialogs/documents/view-document';
-import PageHeader from '@/components/guest/page-header';
 import { buildOutlineTree, RecursiveOutline } from '@/components/admin/recursive-outline';
+import PageHeader from '@/components/guest/page-header';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useSmartPoll } from '@/hooks/use-smart-poll';
 import Layout from '@/layouts/guest/landing-layout';
@@ -205,6 +205,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                                 ref={(el) => {
                                                     parameterRef.current[paramKey] = el;
                                                 }}
+                                                className="scroll-mt-28"
                                             >
                                                 <AccordionItem className="group bg-white transition duration-300" value={`parameter-${paramKey}`}>
                                                     <AccordionTrigger className="my-1 group-hover:cursor-pointer">
