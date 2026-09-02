@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/text-area';
 import { type FilesOverview } from '@/types';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { ArrowUpDown, MessageSquareOff, MessageSquareText } from 'lucide-react';
 import { useState } from 'react';
 
@@ -38,7 +38,7 @@ const getAcronym = (text: string) => {
         .toUpperCase();
 };
 
-const OutlineCell = ({ row }: { row: any }) => {
+const OutlineCell = ({ row }: { row: Row<FilesOverview> }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const origpath = row.original.file_path ?? '';
 
@@ -107,17 +107,6 @@ export function getRequestsColumns({ resolveDialog }: DocumentRecordProps): Colu
                 </Button>
             ),
             cell: ({ row }) => {
-                const filePath = row.original.file_path;
-                const pathSegments = filePath.split('/').filter(Boolean);
-                let rawSegment = '';
-
-                if (filePath.includes('/files/')) {
-                    const fileNameWithExt = pathSegments[pathSegments.length - 1];
-                    rawSegment = fileNameWithExt.split('.').slice(0, -1).join('.');
-                } else {
-                    rawSegment = pathSegments[pathSegments.length - 2];
-                }
-
                 const fileType = row.getValue('file_type') as string;
                 const cleanedData = fileType.replace(/-/g, ' ');
 

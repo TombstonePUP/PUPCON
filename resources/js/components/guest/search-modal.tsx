@@ -1,25 +1,26 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Link, router } from "@inertiajs/react";
+import type { GuestNavigation } from "@/types";
+import { router } from "@inertiajs/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, X, ChevronRight, FileText } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import type { OutlineSearchSource, SearchResult } from "./mobile-menu";
 
 interface SearchModalProps {
   open: boolean;
   onClose: () => void;
-  guestProps: any;
+  guestProps: GuestNavigation;
 }
 
 export default function SearchModal({ open, onClose, guestProps }: SearchModalProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // ---- Enhanced Search handling with debouncing ----
-  const handleSearch = (term: string) => {
+  const handleSearch = useCallback((term: string) => {
     if (!term.trim()) {
       setSearchResults([]);
       setIsSearching(false);
@@ -30,16 +31,16 @@ export default function SearchModal({ open, onClose, guestProps }: SearchModalPr
     const t = term.toLowerCase();
     
     // Safety check for guestProps.outlines
-    const outlines = guestProps?.outlines || [];
-    
+    const outlines = (guestProps?.outlines || []) as unknown as OutlineSearchSource[];
+
     const results = outlines
-      .filter((o: any) =>
+      .filter((o) =>
         o.outline_description?.toLowerCase().includes(t) ||
         o.area_parameter?.parameter_name?.toLowerCase().includes(t) ||
         o.area_parameter?.areas?.area_name?.toLowerCase().includes(t) ||
         o.area_parameter?.areas?.levels?.programs?.program_name?.toLowerCase().includes(t)
       )
-      .map((o: any) => ({
+      .map((o): SearchResult => ({
         outline: o.outline_description,
         outlineId: o.parameter_outline_id,
         parameterId: o.area_parameter_id,
@@ -55,7 +56,7 @@ export default function SearchModal({ open, onClose, guestProps }: SearchModalPr
       setSearchResults(results);
       setIsSearching(false);
     }, 300);
-  };
+  }, [guestProps]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -67,7 +68,7 @@ export default function SearchModal({ open, onClose, guestProps }: SearchModalPr
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchTerm]);
+  }, [searchTerm, handleSearch]);
 
   // Focus input when modal opens
   useEffect(() => {
@@ -86,7 +87,7 @@ export default function SearchModal({ open, onClose, guestProps }: SearchModalPr
     return () => window.removeEventListener("keydown", handleEsc);
   }, [open, onClose]);
 
-  const redirectLink = (outline: any) => {
+  const redirectLink = (outline: SearchResult) => {
     const { program_id, area_id, outlineId, parameterId } = outline;
     router.visit(`/programs/${program_id}/${area_id}?parameter=${parameterId}#outline-${outlineId}`, {
       preserveScroll: true,

@@ -63,7 +63,6 @@ export default function AreaCards({ program, area, forms, resolveFormDialog }: A
             {forms.map((card) => {
                 const canUploadOrUpdate = !area.archive;
                 const canDownload = !!card.file_name;
-                const canComment = card.file_status?.status_name === 'Rejected' && !area.archive;
                 const canDeleteFile = !!card.file_path && !area.archive;
                 const canDeleteForm = (role === 'Admin' || role === 'Coordinator') && !area.archive;
                 return (

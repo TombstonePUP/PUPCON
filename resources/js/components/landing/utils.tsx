@@ -118,7 +118,10 @@ export const ActionButton = React.memo(
     children: React.ReactNode;
     icon?: React.ElementType;
     external?: boolean;
-    [key: string]: any;
+    onClick?: () => void;
+    target?: string;
+    rel?: string;
+    className?: string;
   }) => {
     const Component = external ? 'a' : Link;
     const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};

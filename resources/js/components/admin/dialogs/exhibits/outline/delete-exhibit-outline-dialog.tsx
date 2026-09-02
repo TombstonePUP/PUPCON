@@ -15,7 +15,6 @@ export default function DeleteExhibitOutlineDialog({ outline, onClose, onDelete 
         data,
         delete: destroy,
         processing,
-        errors,
         reset,
     } = useForm<{ outline_id: number }>({
         outline_id: outline.exhibit_outline_id,

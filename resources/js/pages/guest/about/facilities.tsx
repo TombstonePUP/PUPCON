@@ -5,8 +5,7 @@ import Layout from '@/layouts/guest/landing-layout';
 import { ContentPages, Facilities } from '@/types/content';
 import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import { AlertCircle, Building2, Construction } from 'lucide-react';
-import { useState } from 'react';
+import { AlertCircle, Building2, Construction, type LucideIcon } from 'lucide-react';
 
 interface FacilitiesPageProps {
     page: ContentPages;
@@ -14,7 +13,7 @@ interface FacilitiesPageProps {
 }
 
 // Fallback Empty State Component
-const EmptyState = ({ title, description, icon: Icon = Construction }: { title: string; description: string; icon?: any }) => (
+const EmptyState = ({ title, description, icon: Icon = Construction }: { title: string; description: string; icon?: LucideIcon }) => (
     <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
         <Icon className="mb-4 h-16 w-16 text-gray-400" />
         <h3 className="mb-2 text-lg font-semibold text-gray-900">{title}</h3>
@@ -35,8 +34,6 @@ const DataAlert = ({ message }: { message: string }) => (
 
 export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps) {
     useSmartPoll(5000);
-
-    const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
     // Check if data exists
     const hasPageData = page && (page.title || page.description);
@@ -89,8 +86,6 @@ export default function FacilitiesPage({ page, facilities }: FacilitiesPageProps
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.4, delay: index * 0.1 }}
-                                    onMouseEnter={() => setHoveredCard(index)}
-                                    onMouseLeave={() => setHoveredCard(null)}
                                     className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:border-[#7f1414]/40 hover:shadow-xl"
                                 >
                                     {/* Image Container */}

@@ -3,7 +3,7 @@ import { buildOutlineTree, RecursiveOutlineForm } from '@/components/admin/recur
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { Area, type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
+import { Area, type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program, SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { FolderPlus, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 
@@ -44,7 +44,7 @@ export default function ParameterAccordion({
     resolveBenchDialog,
     resolveParamDialog,
 }: ParameterAccordionProps) {
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage<SharedData>().props;
     const role = auth?.user?.roles?.role_name;
 
     const activeLevel = Array.isArray(program.levels) ? program.levels[0] : program.levels;

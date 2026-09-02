@@ -1,29 +1,68 @@
 "use client";
 
+import type { GuestNavigation } from "@/types";
 import { cn } from "@/lib/utils";
 import { Link, router } from "@inertiajs/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Search, ChevronRight, FileText } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+
+interface GuestNavItem {
+  label: string;
+  href: string;
+  dropdown?: { label: string; href: string }[];
+}
+
+export interface SearchResult {
+  outline?: string;
+  outlineId: number;
+  parameterId: number;
+  program?: string;
+  area?: string;
+  parameter?: string;
+  level?: number;
+  program_id?: number;
+  area_id?: number;
+}
+
+export interface OutlineSearchSource {
+  outline_description?: string;
+  parameter_outline_id: number;
+  area_parameter_id: number;
+  area_parameter?: {
+    parameter_name?: string;
+    areas?: {
+      area_name?: string;
+      area_id?: number;
+      levels?: {
+        level?: number;
+        programs?: {
+          program_name?: string;
+          program_id?: number;
+        };
+      };
+    };
+  };
+}
 
 interface MobileMenuProps {
     open: boolean;
     onClose: () => void;
-    leftNav: any[];
-    rightNav: any[];
+    leftNav: GuestNavItem[];
+    rightNav: GuestNavItem[];
     isActive: (path: string) => boolean;
-    guestProps: any;
+    guestProps: GuestNavigation;
 }
 
 export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive, guestProps }: MobileMenuProps) {
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const [isSearching, setIsSearching] = useState(false);
 
     const allLinks = [...leftNav, ...rightNav];
 
     // ---- Search logic (copied from SearchModal logic) ----
-    const handleSearch = (term: string) => {
+    const handleSearch = useCallback((term: string) => {
         if (!term.trim()) {
             setSearchResults([]);
             setIsSearching(false);
@@ -32,16 +71,16 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
 
         setIsSearching(true);
         const t = term.toLowerCase();
-        const outlines = guestProps?.outlines || [];
-        
+        const outlines = (guestProps?.outlines || []) as unknown as OutlineSearchSource[];
+
         const results = outlines
-            .filter((o: any) =>
+            .filter((o) =>
                 o.outline_description?.toLowerCase().includes(t) ||
                 o.area_parameter?.parameter_name?.toLowerCase().includes(t) ||
                 o.area_parameter?.areas?.area_name?.toLowerCase().includes(t) ||
                 o.area_parameter?.areas?.levels?.programs?.program_name?.toLowerCase().includes(t)
             )
-            .map((o: any) => ({
+            .map((o): SearchResult => ({
                 outline: o.outline_description,
                 outlineId: o.parameter_outline_id,
                 parameterId: o.area_parameter_id,
@@ -57,7 +96,7 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
             setSearchResults(results);
             setIsSearching(false);
         }, 300);
-    };
+    }, [guestProps]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -69,9 +108,9 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
             }
         }, 300);
         return () => clearTimeout(timer);
-    }, [searchTerm]);
+    }, [searchTerm, handleSearch]);
 
-    const redirectLink = (outline: any) => {
+    const redirectLink = (outline: SearchResult) => {
         const { program_id, area_id, outlineId, parameterId } = outline;
         router.visit(`/programs/${program_id}/${area_id}?parameter=${parameterId}#outline-${outlineId}`, {
             preserveScroll: true,

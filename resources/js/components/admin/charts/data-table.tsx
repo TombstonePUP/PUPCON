@@ -212,7 +212,7 @@ export function DocumentRequestDataTable<TData, TValue>({ columns, data, resolve
         data,
         columns,
         onRowSelectionChange: setRowSelection,
-        getRowId: (row, index) => `${(row as any).file_id}-${index}`,
+        getRowId: (row, index) => `${(row as FilesOverview).file_id}-${index}`,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),

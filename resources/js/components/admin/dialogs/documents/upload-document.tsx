@@ -62,8 +62,8 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
         }
 
         const programLevelId = Array.isArray(program.levels)
-            ? (program.levels as any)[0]?.accreditation_level_id
-            : (program.levels as any)?.accreditation_level_id;
+            ? program.levels[0]?.accreditation_level_id
+            : program.levels?.accreditation_level_id;
 
         post(
             route('manage.area.upload.file', {

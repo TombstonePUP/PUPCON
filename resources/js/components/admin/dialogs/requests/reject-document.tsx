@@ -24,7 +24,7 @@ interface RejectRequestProps {
 
 export default function RejectRequest({ file, onClose }: RejectRequestProps) {
     const [rejectionComment, setRejectionComment] = React.useState('');
-    const { data, setData, post, processing, errors, reset } = useForm<DocumentRequestForm>({
+    const { setData, post, processing, reset } = useForm<DocumentRequestForm>({
         file: [],
     });
 

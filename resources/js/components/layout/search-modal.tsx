@@ -1,7 +1,15 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import { ChevronRight, FileText, Menu, Search, X } from 'lucide-react';
 import { Button } from '@headlessui/react';
 import { RefObject } from 'react';
+
+interface SearchResult {
+    outline?: string;
+    outlineId?: number;
+    parameter?: string;
+    program?: string;
+    area?: string;
+}
 
 export const SearchModal = ({
     searchOpen,
@@ -24,15 +32,15 @@ export const SearchModal = ({
     setMenuOpen: (v: boolean) => void;
     searchTerm: string;
     setSearchTerm: (v: string) => void;
-    searchResults: any[];
+    searchResults: SearchResult[];
     isSearching: boolean;
     inputRef: RefObject<HTMLInputElement>;
     searchRef: RefObject<HTMLDivElement>;
-    redirectLink: (r: any) => void;
-    backdropVariants: any;
-    sidebarVariants: any;
-    searchResultsVariants: any;
-    resultItemVariants: any;
+    redirectLink: (r: SearchResult) => void;
+    backdropVariants: Variants;
+    sidebarVariants: Variants;
+    searchResultsVariants: Variants;
+    resultItemVariants: Variants;
 }) => {
     return (
         <AnimatePresence>

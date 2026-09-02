@@ -93,18 +93,6 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
         })),
     });
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const previewUrl = URL.createObjectURL(file);
-            setData({
-                ...data,
-                banner: file,
-                previewUrl,
-            });
-        }
-    };
-
     const objectiveErrorCount = Object.keys(errors).filter((key) => key.startsWith('objectives.')).length;
 
     const getSelectedObjectiveIndex = () => {
@@ -246,10 +234,7 @@ export default function ProgramSection({ program, overviewRef, objectivesRef, ga
             const current = prev ?? [];
             const existingIndex = current.findIndex((g) => g.program_gallery_id === item.gallery_id);
             let updatedList;
-            let galleryForLocalState: ProgramGalleryImages; // Object for display (facilityList)
-
-            // Local State Update
-            galleryForLocalState = {
+            const galleryForLocalState: ProgramGalleryImages = {
                 program_gallery_id: item.gallery_id || 0,
                 program_id: program.program_id,
                 image_name: item.caption,

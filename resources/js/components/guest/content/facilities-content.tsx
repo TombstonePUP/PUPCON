@@ -146,9 +146,7 @@ const FacilitiesSection: React.FC = ({ ...props }: FacilitiesProps) => {
             const current = prev ?? [];
             const existingIndex = current.findIndex((f) => f.facility_id === formData.facility_id);
             let updatedList;
-            let facilityForLocalState: Facilities;
-
-            facilityForLocalState = {
+            const facilityForLocalState: Facilities = {
                 facility_id: formData.facility_id ?? 0,
                 facility_name: formData.facility_name,
                 description: formData.description,

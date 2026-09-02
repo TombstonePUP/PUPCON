@@ -1,21 +1,28 @@
 "use client";
 
+import type { User } from "@/types";
 import { cn } from "@/lib/utils";
 import { Link } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import { LogOut, Menu, Search, X } from "lucide-react";
+
+interface GuestNavItem {
+  label: string;
+  href: string;
+  dropdown?: { label: string; href: string }[];
+}
 
 interface GuestHeaderProps {
   scrollDir: "up" | "down";
   setSearchOpen: (open: boolean) => void;
   menuOpen: boolean;
   setMenuOpen: (open: boolean) => void;
-  leftNav: any[];
-  rightNav: any[];
+  leftNav: GuestNavItem[];
+  rightNav: GuestNavItem[];
   isActive: (path: string) => boolean;
-  user: any;
+  user: User;
   cleanup: () => void;
-  route: any;
+  route: typeof route;
 }
 
 export default function GuestHeader({

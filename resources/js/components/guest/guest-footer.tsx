@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import type { User } from "@/types";
 import { Link } from "@inertiajs/react";
 import { 
     Facebook, 
@@ -13,9 +13,9 @@ import {
 } from "lucide-react";
 
 interface GuestFooterProps {
-    user: any;
+    user: User;
     cleanup: () => void;
-    route: any;
+    route: typeof route;
 }
 
 export default function GuestFooter({ user, cleanup, route }: GuestFooterProps) {

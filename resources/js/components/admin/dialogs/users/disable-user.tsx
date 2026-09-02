@@ -10,7 +10,7 @@ interface DisableUserDialogProps {
 }
 
 export function DisableUser({ user, onClose }: DisableUserDialogProps) {
-    const { data, patch, reset } = useForm<{ user_id: number }>({
+    const { patch, reset } = useForm<{ user_id: number }>({
         user_id: user.user_id,
     });
 

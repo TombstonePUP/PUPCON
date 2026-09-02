@@ -26,7 +26,7 @@ interface ExhibitForm {
 }
 
 export default function ExhibitDialog({ type, exhibit, onClose }: ExhibitDialogProps) {
-    const { data, setData, post, patch, processing, errors } = useForm<ExhibitForm>({
+    const { data, setData, post, processing, errors } = useForm<ExhibitForm>({
         exhibit_id: exhibit ? exhibit.exhibit_id : undefined,
         exhibit_name: exhibit ? exhibit.exhibit_name : '',
         image: null,

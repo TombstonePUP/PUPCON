@@ -142,9 +142,7 @@ const FacultySection: React.FC = ({ ...props }: FacultyProps) => {
             const current = prev ?? [];
             const existingIndex = current.findIndex((f) => f.faculty_staff_id === facultyData.faculty_staff_id);
             let updatedList;
-            let facultyForLocalState: FacultyStaff;
-
-            facultyForLocalState = {
+            const facultyForLocalState: FacultyStaff = {
                 faculty_staff_id: facultyData.faculty_staff_id,
                 first_name: facultyData.first_name,
                 middle_name: facultyData.middle_name || '',

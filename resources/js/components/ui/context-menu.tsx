@@ -77,7 +77,7 @@ const ContextMenuItem = React.forwardRef<
     inset?: boolean,
     variant?: "default" | "destructive"
   }
->(({ className, inset, variant = "default", ...props }, ref) => (
+>(({ className, inset, variant = "default", ...props }) => (
     <ContextMenuPrimitive.Item
       data-slot="context-menu-item"
       data-inset={inset}
