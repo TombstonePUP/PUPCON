@@ -1,48 +1,48 @@
-"use client";
+'use client';
 
-import type { GuestNavigation } from "@/types";
-import { cn } from "@/lib/utils";
-import { Link, router } from "@inertiajs/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { X, Search, ChevronRight, FileText } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { cn } from '@/lib/utils';
+import type { GuestNavigation } from '@/types';
+import { Link, router } from '@inertiajs/react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronRight, FileText, Search, X } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 interface GuestNavItem {
-  label: string;
-  href: string;
-  dropdown?: { label: string; href: string }[];
+    label: string;
+    href: string;
+    dropdown?: { label: string; href: string }[];
 }
 
 export interface SearchResult {
-  outline?: string;
-  outlineId: number;
-  parameterId: number;
-  program?: string;
-  area?: string;
-  parameter?: string;
-  level?: number;
-  program_id?: number;
-  area_id?: number;
+    outline?: string;
+    outlineId: number;
+    parameterId: number;
+    program?: string;
+    area?: string;
+    parameter?: string;
+    level?: number;
+    program_id?: number;
+    area_id?: number;
 }
 
 export interface OutlineSearchSource {
-  outline_description?: string;
-  parameter_outline_id: number;
-  area_parameter_id: number;
-  area_parameter?: {
-    parameter_name?: string;
-    areas?: {
-      area_name?: string;
-      area_id?: number;
-      levels?: {
-        level?: number;
-        programs?: {
-          program_name?: string;
-          program_id?: number;
+    outline_description?: string;
+    parameter_outline_id: number;
+    area_parameter_id: number;
+    area_parameter?: {
+        parameter_name?: string;
+        areas?: {
+            area_name?: string;
+            area_id?: number;
+            levels?: {
+                level?: number;
+                programs?: {
+                    program_name?: string;
+                    program_id?: number;
+                };
+            };
         };
-      };
     };
-  };
 }
 
 interface MobileMenuProps {
@@ -55,60 +55,59 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive, guestProps }: MobileMenuProps) {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-    const [isSearching, setIsSearching] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const allLinks = [...leftNav, ...rightNav];
 
-    // ---- Search logic (copied from SearchModal logic) ----
-    const handleSearch = useCallback((term: string) => {
-        if (!term.trim()) {
-            setSearchResults([]);
-            setIsSearching(false);
-            return;
-        }
-
-        setIsSearching(true);
-        const t = term.toLowerCase();
-        const outlines = (guestProps?.outlines || []) as unknown as OutlineSearchSource[];
-
-        const results = outlines
-            .filter((o) =>
-                o.outline_description?.toLowerCase().includes(t) ||
-                o.area_parameter?.parameter_name?.toLowerCase().includes(t) ||
-                o.area_parameter?.areas?.area_name?.toLowerCase().includes(t) ||
-                o.area_parameter?.areas?.levels?.programs?.program_name?.toLowerCase().includes(t)
-            )
-            .map((o): SearchResult => ({
-                outline: o.outline_description,
-                outlineId: o.parameter_outline_id,
+    // ---- Precompute a lightweight lowercase search index once ----
+    const searchIndex = useMemo(
+        () =>
+            ((guestProps?.outlines || []) as unknown as OutlineSearchSource[]).map((o) => ({
+                id: o.parameter_outline_id,
                 parameterId: o.area_parameter_id,
+                programId: o.area_parameter?.areas?.levels?.programs?.program_id,
+                areaId: o.area_parameter?.areas?.area_id,
                 program: o.area_parameter?.areas?.levels?.programs?.program_name,
                 area: o.area_parameter?.areas?.area_name,
                 parameter: o.area_parameter?.parameter_name,
+                outline: o.outline_description,
                 level: o.area_parameter?.areas?.levels?.level,
-                program_id: o.area_parameter?.areas?.levels?.programs?.program_id,
-                area_id: o.area_parameter?.areas?.area_id,
-            }));
+                haystack: [
+                    o.outline_description,
+                    o.area_parameter?.parameter_name,
+                    o.area_parameter?.areas?.area_name,
+                    o.area_parameter?.areas?.levels?.programs?.program_name,
+                ]
+                    .filter(Boolean)
+                    .join(' ')
+                    .toLowerCase(),
+            })),
+        [guestProps],
+    );
 
-        setTimeout(() => {
-            setSearchResults(results);
-            setIsSearching(false);
-        }, 300);
-    }, [guestProps]);
+    // ---- Derived, memoized results: only recomputed when the term changes ----
+    const searchResults = useMemo<SearchResult[]>(() => {
+        const t = searchTerm.trim().toLowerCase();
+        if (!t) return [];
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (searchTerm) {
-                handleSearch(searchTerm);
-            } else {
-                setSearchResults([]);
-                setIsSearching(false);
-            }
-        }, 300);
-        return () => clearTimeout(timer);
-    }, [searchTerm, handleSearch]);
+        return searchIndex
+            .filter((item) => item.haystack.includes(t))
+            .map(
+                (item): SearchResult => ({
+                    outline: item.outline,
+                    outlineId: item.id,
+                    parameterId: item.parameterId,
+                    program: item.program,
+                    area: item.area,
+                    parameter: item.parameter,
+                    level: item.level,
+                    program_id: item.programId,
+                    area_id: item.areaId,
+                }),
+            );
+    }, [searchTerm, searchIndex]);
+
+    const isSearching = searchResults.length === 0 && searchTerm.trim().length > 0;
 
     const redirectLink = (outline: SearchResult) => {
         const { program_id, area_id, outlineId, parameterId } = outline;
@@ -126,39 +125,39 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="fixed inset-0 z-[100] flex flex-col bg-white lg:hidden overflow-hidden"
+                    className="fixed inset-0 z-[100] flex flex-col overflow-hidden bg-white lg:hidden"
                 >
                     {/* Grid Texture Background */}
-                    <div 
-                        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                    <div
+                        className="pointer-events-none absolute inset-0 opacity-[0.03]"
                         style={{
                             backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`,
-                            backgroundSize: '40px 40px'
+                            backgroundSize: '40px 40px',
                         }}
                     />
 
                     {/* Menu Header (Mobile) */}
-                    <div className="flex items-center justify-between px-7 py-6 border-b border-gray-100 bg-white/80 backdrop-blur-md relative z-10">
+                    <div className="relative z-10 flex items-center justify-between border-b border-gray-100 bg-white/80 px-7 py-6 backdrop-blur-md">
                         <div className="flex flex-col">
-                            <span className="font-poppins text-[16px] font-black text-[#7f1414] uppercase tracking-tight">Navigation</span>
-                            <span className="font-sans text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Directory Menu</span>
+                            <span className="font-poppins text-[16px] font-black tracking-tight text-[#7f1414] uppercase">Navigation</span>
+                            <span className="mt-0.5 font-sans text-[8px] font-bold tracking-widest text-gray-400 uppercase">Directory Menu</span>
                         </div>
                         <button
                             onClick={onClose}
-                            className="size-10 flex items-center justify-center rounded-full bg-gray-50 text-[#7f1414] transition-transform active:scale-90"
+                            className="flex size-10 items-center justify-center rounded-full bg-gray-50 text-[#7f1414] transition-transform active:scale-90"
                         >
                             <X className="size-6" strokeWidth={2.5} />
                         </button>
                     </div>
 
                     {/* Search Section (New) */}
-                    <div className="px-7 py-6 border-b border-gray-100 bg-gray-50/30 relative z-10">
-                        <div className="relative group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-gray-400 group-focus-within:text-[#7f1414] transition-colors" />
+                    <div className="relative z-10 border-b border-gray-100 bg-gray-50/30 px-7 py-6">
+                        <div className="group relative">
+                            <Search className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-[#7f1414]" />
                             <input
                                 type="text"
                                 placeholder="Search benchmarks..."
-                                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[#7f1414]/10 focus:border-[#7f1414] transition-all"
+                                className="w-full rounded-xl border border-gray-200 bg-white py-3 pr-4 pl-10 font-sans text-sm transition-all focus:border-[#7f1414] focus:ring-2 focus:ring-[#7f1414]/10 focus:outline-none"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -166,13 +165,13 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
                     </div>
 
                     {/* Content Area: Either Links or Search Results */}
-                    <div className="flex-1 overflow-y-auto relative z-10">
+                    <div className="relative z-10 flex-1 overflow-y-auto">
                         {searchTerm ? (
                             <div className="p-4">
                                 {isSearching ? (
                                     <div className="py-12 text-center">
-                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7f1414] mx-auto mb-4" />
-                                        <p className="text-sm text-gray-500 font-sans">Searching benchmarks...</p>
+                                        <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2 border-[#7f1414]" />
+                                        <p className="font-sans text-sm text-gray-500">Searching benchmarks...</p>
                                     </div>
                                 ) : searchResults.length > 0 ? (
                                     <div className="space-y-1">
@@ -180,16 +179,18 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
                                             <button
                                                 key={idx}
                                                 onClick={() => redirectLink(result)}
-                                                className="w-full text-left p-4 rounded-xl hover:bg-gray-50 group transition-all"
+                                                className="group w-full rounded-xl p-4 text-left transition-all hover:bg-gray-50"
                                             >
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-[10px] font-bold text-[#7f1414] px-2 py-0.5 bg-[#7f1414]/5 rounded font-poppins">
+                                                <div className="mb-1 flex items-center gap-2">
+                                                    <span className="font-poppins rounded bg-[#7f1414]/5 px-2 py-0.5 text-[10px] font-bold text-[#7f1414]">
                                                         {result.program}
                                                     </span>
                                                     <ChevronRight className="size-3 text-gray-300" />
-                                                    <span className="text-[10px] text-gray-500 font-bold uppercase font-sans tracking-wider">{result.area}</span>
+                                                    <span className="font-sans text-[10px] font-bold tracking-wider text-gray-500 uppercase">
+                                                        {result.area}
+                                                    </span>
                                                 </div>
-                                                <p className="text-sm text-gray-700 font-medium leading-relaxed font-sans group-hover:text-black">
+                                                <p className="font-sans text-sm leading-relaxed font-medium text-gray-700 group-hover:text-black">
                                                     {result.outline}
                                                 </p>
                                             </button>
@@ -197,30 +198,28 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
                                     </div>
                                 ) : (
                                     <div className="py-12 text-center">
-                                        <FileText className="mx-auto size-12 text-gray-200 mb-4" />
-                                        <p className="text-sm text-gray-500 font-sans">No results found for "{searchTerm}"</p>
+                                        <FileText className="mx-auto mb-4 size-12 text-gray-200" />
+                                        <p className="font-sans text-sm text-gray-500">No results found for "{searchTerm}"</p>
                                     </div>
                                 )}
                             </div>
                         ) : (
-                            <nav className="px-8 py-12 flex flex-col gap-6">
+                            <nav className="flex flex-col gap-6 px-8 py-12">
                                 {allLinks.map((link, idx) => (
                                     <motion.div
                                         key={link.href}
                                         initial={{ x: -20, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
-                                        transition={{ delay: 0.1 + idx * 0.05, duration: 0.4, ease: "easeOut" }}
+                                        transition={{ delay: 0.1 + idx * 0.05, duration: 0.4, ease: 'easeOut' }}
                                     >
-                                        <Link
-                                            href={link.href}
-                                            onClick={onClose}
-                                            className="group flex items-end gap-3"
-                                        >
-                                            <span className="font-sans text-[10px] text-gray-300 font-bold mb-2">0{idx + 1}</span>
-                                            <span className={cn(
-                                                "font-poppins text-[42px] font-black uppercase leading-none tracking-tighter transition-all group-hover:pl-4",
-                                                isActive(link.href) ? "text-[#7f1414]" : "text-gray-900"
-                                            )}>
+                                        <Link href={link.href} onClick={onClose} className="group flex items-end gap-3">
+                                            <span className="mb-2 font-sans text-[10px] font-bold text-gray-300">0{idx + 1}</span>
+                                            <span
+                                                className={cn(
+                                                    'font-poppins text-[42px] leading-none font-black tracking-tighter uppercase transition-all group-hover:pl-4',
+                                                    isActive(link.href) ? 'text-[#7f1414]' : 'text-gray-900',
+                                                )}
+                                            >
                                                 {link.label}
                                             </span>
                                         </Link>
@@ -229,16 +228,16 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
                             </nav>
                         )}
                     </div>
-                    
+
                     {/* Mobile Footer Area */}
-                    <div className="p-8 border-t border-gray-100 bg-gray-50 relative z-10">
+                    <div className="relative z-10 border-t border-gray-100 bg-gray-50 p-8">
                         <div className="grid grid-cols-2 gap-8">
                             <div>
-                                <h4 className="font-sans text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">Campus</h4>
+                                <h4 className="mb-2 font-sans text-[9px] font-bold tracking-widest text-gray-400 uppercase">Campus</h4>
                                 <p className="font-poppins text-[13px] font-bold text-gray-600 uppercase">San Juan, Manila</p>
                             </div>
                             <div>
-                                <h4 className="font-sans text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">System</h4>
+                                <h4 className="mb-2 font-sans text-[9px] font-bold tracking-widest text-gray-400 uppercase">System</h4>
                                 <p className="font-poppins text-[13px] font-bold text-gray-600 uppercase">PUPCON v2.0</p>
                             </div>
                         </div>
