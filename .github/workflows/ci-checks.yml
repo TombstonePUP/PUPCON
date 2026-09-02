@@ -54,13 +54,15 @@ jobs:
 
       - name: Set test environment variables
         run: |
-          echo "APP_KEY=" >> .env.testing
-          echo "DB_CONNECTION=pgsql" >> .env.testing
-          echo "DB_HOST=127.0.0.1" >> .env.testing
-          echo "DB_PORT=5432" >> .env.testing
-          echo "DB_DATABASE=pupcon_test" >> .env.testing
-          echo "DB_USERNAME=pupcon" >> .env.testing
-          echo "DB_PASSWORD=secret" >> .env.testing
+          sed -i \
+            -e 's/^APP_KEY=.*/APP_KEY=/' \
+            -e 's/^DB_CONNECTION=.*/DB_CONNECTION=pgsql/' \
+            -e 's/^DB_HOST=.*/DB_HOST=127.0.0.1/' \
+            -e 's/^DB_PORT=.*/DB_PORT=5432/' \
+            -e 's/^DB_DATABASE=.*/DB_DATABASE=pupcon_test/' \
+            -e 's/^DB_USERNAME=.*/DB_USERNAME=pupcon/' \
+            -e 's/^DB_PASSWORD=.*/DB_PASSWORD=secret/' \
+            .env.testing
 
       - name: Generate app key
         run: php artisan key:generate --env=testing
