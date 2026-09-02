@@ -22,7 +22,7 @@ services:
       - pupcon_staging_network
 
   api-staging:
-    image: ghcr.io/tombstonepup/pupcon/pupcon-api:${APP_VERSION}
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-api:staging-${APP_VERSION}
     container_name: pupcon-api-staging
     restart: unless-stopped
     depends_on:
@@ -37,7 +37,7 @@ services:
         - pupcon_staging_network
 
   web-staging:
-    image: ghcr.io/tombstonepup/pupcon/pupcon-client:${APP_VERSION}
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-client:staging-${APP_VERSION}
     container_name: pupcon-client-staging
     restart: unless-stopped
     depends_on:

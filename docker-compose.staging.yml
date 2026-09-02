@@ -24,12 +24,9 @@ services:
       context: .
       dockerfile: ./docker/backend/Dockerfile
       target: staging
-    image: laravel_api:staging
+    image: pupcon-api:staging-${APP_VERSION}
     container_name: laravel-api-staging
     restart: unless-stopped
-    depends_on:
-      database-staging:
-        condition: service_healthy
     env_file:
       - ./.env.staging
     volumes:
@@ -41,11 +38,9 @@ services:
       context: .
       dockerfile: ./docker/frontend/Dockerfile
       target: staging
-    image: react_client:staging
+    image: pupcon-client:staging-${APP_VERSION}
     container_name: react-frontend-staging
     restart: unless-stopped
-    depends_on:
-      - api-staging
     volumes:
       - laravel-storage-staging:/var/www/storage:ro
       - public-assets:/var/www/public/build:ro
