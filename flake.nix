@@ -31,7 +31,7 @@
           [
             awscli2
             php
-            nodejs_25
+            nodejs_24
             prettier
             eslint
             eslint_d

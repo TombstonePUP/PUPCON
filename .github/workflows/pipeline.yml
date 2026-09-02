@@ -25,36 +25,36 @@ jobs:
     uses: ./.github/workflows/modules/ci-checks.yml
     secrets: inherit
 
-  # ============================================================
-  # GATE 2 — Build & Push Staging Images to GHCR
-  # Runs on: push to develop or staging only
-  # ============================================================
-  build-staging:
-    needs: ci-checks
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging')
-    uses: ./.github/workflows/modules/build.yml
-    with:
-      environment: staging
-      app_version: ${{ github.sha }}
-      compose_file: docker-compose.staging.yml
-      env_file: .env.staging
-    secrets: inherit
-
-  # ============================================================
-  # GATE 3 — Deploy to Staging via OpenTofu + SSM
-  # Runs on: push to develop or staging only
-  # ============================================================
-  deploy-staging:
-    needs: build-staging
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging')
-    uses: ./.github/workflows/modules/deploy.yml
-    with:
-      environment: staging
-      app_version: ${{ github.sha }}
-      aws_region: ap-southeast-1
-      compose_file: docker-compose.staging.run.yml
-      env_file: .env.staging
-    secrets: inherit
+  # # ============================================================
+  # # GATE 2 — Build & Push Staging Images to GHCR
+  # # Runs on: push to develop or staging only
+  # # ============================================================
+  # build-staging:
+  #   needs: ci-checks
+  #   if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging')
+  #   uses: ./.github/workflows/modules/build.yml
+  #   with:
+  #     environment: staging
+  #     app_version: ${{ github.sha }}
+  #     compose_file: docker-compose.staging.yml
+  #     env_file: .env.staging
+  #   secrets: inherit
+  #
+  # # ============================================================
+  # # GATE 3 — Deploy to Staging via OpenTofu + SSM
+  # # Runs on: push to develop or staging only
+  # # ============================================================
+  # deploy-staging:
+  #   needs: build-staging
+  #   if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging')
+  #   uses: ./.github/workflows/modules/deploy.yml
+  #   with:
+  #     environment: staging
+  #     app_version: ${{ github.sha }}
+  #     aws_region: ap-southeast-1
+  #     compose_file: docker-compose.staging.run.yml
+  #     env_file: .env.staging
+  #   secrets: inherit
 
   # ============================================================
   # GATE 4 — Build & Push Production Images to GHCR

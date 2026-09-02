@@ -24,12 +24,9 @@ services:
       context: .
       dockerfile: ./docker/backend/Dockerfile
       target: production
-    image: laravel_api:prod
+    image: pupcon-api:prod-${APP_VERSION}
     container_name: laravel-api-prod
     restart: unless-stopped
-    depends_on:
-      database-production:
-        condition: service_healthy
     env_file:
       - ./.env.production
     volumes:
@@ -41,11 +38,9 @@ services:
       context: .
       dockerfile: ./docker/frontend/Dockerfile
       target: production
-    image: react_client:prod
+    image: pupcon-client:prod-${APP_VERSION}
     container_name: react-frontend-prod
     restart: unless-stopped
-    depends_on:
-      - api-prod
     volumes:
       - laravel-storage-production:/var/www/storage:ro
       - public-assets:/var/www/public/build:ro
