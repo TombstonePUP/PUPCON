@@ -110,17 +110,47 @@ export function searchOutlines(index: ReturnType<typeof buildSearchIndex>, query
     return index
         .filter((item) => tokens.every((token) => item.haystack.includes(token)))
         .filter((item) => item.programId != null && item.areaId != null)
-        .map(
-            (item): SearchResult => ({
-                outline: item.outline,
-                outlineId: item.id,
-                parameterId: item.parameterId,
-                program: item.program,
-                area: item.area,
-                parameter: item.parameter,
-                level: item.level,
-                program_id: item.programId,
-                area_id: item.areaId,
-            }),
-        );
+        .map((item) => ({ item, score: relevanceScore(item, query) }))
+        .sort((a, b) => b.score - a.score)
+        .map(({ item }) => ({
+            outline: item.outline,
+            outlineId: item.id,
+            parameterId: item.parameterId,
+            program: item.program,
+            area: item.area,
+            parameter: item.parameter,
+            level: item.level,
+            program_id: item.programId,
+            area_id: item.areaId,
+        }));
+}
+
+function relevanceScore(item: ReturnType<typeof buildSearchIndex>[number], query: string): number {
+    const q = query.toLowerCase().trim();
+
+    const fields: string[] = [
+        item.outline ?? '',
+        item.parameter ?? '',
+        item.area ?? '',
+        item.program ?? '',
+        `${item.program ?? ''} ${item.area ?? ''} ${item.parameter ?? ''}`,
+    ];
+
+    let score = 0;
+    for (const field of fields) {
+        const value = field.toLowerCase();
+
+        if (value.startsWith(q)) score += 100;
+        else if (new RegExp(`(^|\\s)${escapeRegExp(q)}`).test(value)) score += 60;
+
+        if (value.includes(q)) score += 30;
+    }
+
+    score += Math.max(0, 50 - (item.outline?.length ?? 0)) / 10;
+
+    return score;
+}
+
+function escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
