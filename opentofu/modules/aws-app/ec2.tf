@@ -21,6 +21,13 @@ resource "aws_instance" "app" {
       systemctl enable docker
       systemctl start docker
       mkdir -p /opt/apps/${var.project_name}-${var.environment}
+      mkdir -p /tmp/ssm
+      curl -fSL -o /tmp/ssm/amazon-ssm-agent.deb \
+        "https://s3.${var.aws_region}.amazonaws.com/amazon-ssm-${var.aws_region}/latest/debian_amd64/amazon-ssm-agent.deb"
+      dpkg -i /tmp/ssm/amazon-ssm-agent.deb || true
+      rm -rf /tmp/ssm
+      systemctl enable amazon-ssm-agent
+      systemctl start amazon-ssm-agent
     EOF
 
   tags = {
