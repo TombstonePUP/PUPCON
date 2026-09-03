@@ -82,8 +82,8 @@ class FacilitiesController extends Controller
 
             // --- DELETE IF NO NEW IMAGE AND NO PREVIEW URL ---
             if (empty($facilityData['facility_image']) && empty($facilityData['previewUrl'])) {
-                if ($facility && $facility->image_path && Storage::disk('public')->exists($facility->image_path)) {
-                    Storage::disk('public')->delete($facility->image_path);
+                if ($facility && $facility->image_path && Storage::disk('s3')->exists($facility->image_path)) {
+                    Storage::disk('s3')->delete($facility->image_path);
                 }
 
                 $imagename = null;
@@ -96,11 +96,11 @@ class FacilitiesController extends Controller
                 $imagepath = 'facilities/'.$imagename;
 
                 // delete old image if exists
-                if ($facility && $facility->image_path && Storage::disk('public')->exists($facility->image_path)) {
-                    Storage::disk('public')->delete($facility->image_path);
+                if ($facility && $facility->image_path && Storage::disk('s3')->exists($facility->image_path)) {
+                    Storage::disk('s3')->delete($facility->image_path);
                 }
 
-                $facilityData['facility_image']->storeAs('facilities', $imagename, 'public');
+                $facilityData['facility_image']->storeAs('facilities', $imagename, 's3');
             }
 
             // --- UPDATE OR CREATE ---
@@ -138,8 +138,8 @@ class FacilitiesController extends Controller
 
         $facilitiesToDelete = Facilities::whereNotIn('facility_id', $facility_id)->get();
         foreach ($facilitiesToDelete as $facility) {
-            if ($facility->image_path && Storage::disk('public')->exists($facility->image_path)) {
-                Storage::disk('public')->delete($facility->image_path);
+            if ($facility->image_path && Storage::disk('s3')->exists($facility->image_path)) {
+                Storage::disk('s3')->delete($facility->image_path);
             }
         }
         Facilities::whereNotIn('facility_id', $facility_id)->delete();

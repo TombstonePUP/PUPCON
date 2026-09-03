@@ -23,3 +23,7 @@ module "app" {
   allowed_http_cidr = "0.0.0.0/0"
   create_lock_table = true
 }
+
+output "instance_id" {
+  value = module.app.instance_id
+}

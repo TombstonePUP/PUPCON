@@ -35,7 +35,7 @@ class DownloadPerAreaFilesController extends Controller
 
         $zipFileName = $program_name.'_level_'.$level->level.'_area_'.$area->area_number.'.zip';
 
-        $files = Storage::disk('public')->allFiles($folderPath);
+        $files = Storage::disk('s3')->allFiles($folderPath);
 
         if (! $level || ! $area || empty($files)) {
             return redirect()->back()
@@ -50,7 +50,7 @@ class DownloadPerAreaFilesController extends Controller
         if ($zip->open($tempFile, ZipArchive::CREATE) === true) {
             foreach ($files as $file) {
                 $relativePath = Str::after($file, $folderPath.'/');
-                $absolutePath = Storage::disk('public')->path($file);
+                $absolutePath = Storage::disk('s3')->path($file);
                 $zip->addFile($absolutePath, $relativePath);
             }
             $zip->close();

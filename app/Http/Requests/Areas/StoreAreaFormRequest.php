@@ -2,17 +2,18 @@
 
 namespace App\Http\Requests\Areas;
 
+use App\Http\Requests\BaseRequest;
+use App\Http\Requests\Files\UploadPdfRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAreaFormRequest extends FormRequest
+class StoreAreaFormRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->isAdminCoordinatorOrChairman();
     }
 
     /**
@@ -23,7 +24,13 @@ class StoreAreaFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            ...$this->programAreaRules(),
+            'form_id' => [
+                'required',
+                'integer',
+                'exists:area_forms,area_form_id',
+            ],
+            'document' => UploadPdfRequest::pdfRules(),
         ];
     }
 }

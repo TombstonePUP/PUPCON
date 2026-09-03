@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Areas\Forms;
 
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Areas\StoreAreaFormRequest;
+use App\Http\Requests\Files\UploadPdfRequest;
 use App\Models\ActivityLog;
 use App\Models\AreaForms;
 use App\Models\Areas;
@@ -22,28 +24,19 @@ class AreaFormFilesController extends Controller
     /**
      * Update/Upload the specified resource in storage.
      *
-     * @return void
+     * @return RedirectResponse
      */
-    public function store(Request $request, AreaForms $areaForms): RedirectResponse
+    public function store(StoreAreaFormRequest $request, AreaForms $areaForms): RedirectResponse
     {
-        $validated = $request->validate(
-            [
-                'document' => 'required|file|mimes:pdf',
-            ],
-            [
-                'document.required' => 'Please upload a PDF document.',
-                'document.file' => 'The uploaded file must be a valid file.',
-                'document.pdf' => 'The uploaded file must be a PDF document.',
-            ]
-        );
+        $validated = $request->validated();
 
         $user = Auth::user();
-        $area = Areas::where('area_id', $request->area_id)->first();
+        $area = Areas::where('area_id', $validated['area_id'])->firstOrFail();
         // $program = Str::of($request->program_name)->replace('_', ' ')->title();
-        $program = Programs::with('Levels')->findOrFail($request->program_id);
+        $program = Programs::with('Levels')->findOrFail($validated['program_id']);
 
         $level = $program->Levels
-            ->where('accreditation_level_id', $request->level_id)
+            ->where('accreditation_level_id', $validated['level_id'])
             ->first();
 
         $level = $level->level === 0
@@ -56,10 +49,10 @@ class AreaFormFilesController extends Controller
             $status = FileStatus::where('status_name', 'Pending')->first()->file_status_id;
         }
 
-        $areaForm = $areaForms->find($request->form_id);
+        $areaForm = $areaForms->find($validated['form_id']);
 
         if ($file = $areaForm->file_path) {
-            Storage::disk('public')->delete($file);
+            Storage::disk('s3')->delete($file);
             $activity = ActivityLogAction::Update;
         } else {
             $activity = ActivityLogAction::Upload;
@@ -86,7 +79,7 @@ class AreaFormFilesController extends Controller
             $status,
             $file
         ) {
-            $file->storeAs($formFilePath, $formFileName, 'public');
+            $file->storeAs($formFilePath, $formFileName, 's3');
 
             $formFilePath = "{$formFilePath}/{$formFileName}";
             $areaForm->file_name = $formFileName;
@@ -113,14 +106,14 @@ class AreaFormFilesController extends Controller
     /**
      * Download the specified resource from storage.
      *
-     * @return <missing>|RedirectResponse
+     * @return RedirectResponse
      */
     public function download(Request $request): RedirectResponse
     {
         $form = AreaForms::where('area_form_id', $request->form_id)->first();
 
-        if ($form && Storage::disk('public')->exists($form->file_path)) {
-            return Storage::disk('public')->download($form->file_path, $form->file_name);
+        if ($form && Storage::disk('s3')->exists($form->file_path)) {
+            return Storage::disk('s3')->download($form->file_path, $form->file_name);
         } else {
             return redirect()->back()
                 ->with('type', 'error')
@@ -139,7 +132,7 @@ class AreaFormFilesController extends Controller
         $area = Areas::where('area_id', $request->area_id)->first();
         $program = Programs::findOrFail($request->program_id);
 
-        Storage::disk('public')->delete($areaForm->file_path);
+        Storage::disk('s3')->delete($areaForm->file_path);
 
         $activityLog = new ActivityLog;
         $activityLog->user_id = $user->user_id;

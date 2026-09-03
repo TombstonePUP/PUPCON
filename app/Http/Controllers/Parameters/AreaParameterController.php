@@ -87,7 +87,7 @@ class AreaParameterController extends Controller
         $new_param_folder = Str::slug($validated['parameter_name'], '_');
 
         // Disk
-        $disk = Storage::disk('public');
+        $disk = Storage::disk('s3');
 
         /**
          * MOVE ALL FILES UNDER:
@@ -157,8 +157,8 @@ class AreaParameterController extends Controller
 
         $parameter->ParameterOutlines->map(function ($outline) {
             if ($outline->AreaFiles) {
-                if (Storage::disk('public')->exists($outline->AreaFiles->file_path)) {
-                    Storage::disk('public')->delete($outline->AreaFiles->file_path);
+                if (Storage::disk('s3')->exists($outline->AreaFiles->file_path)) {
+                    Storage::disk('s3')->delete($outline->AreaFiles->file_path);
                 }
                 ActivityLog::create([
                     'user_id' => Auth::user()->user_id,

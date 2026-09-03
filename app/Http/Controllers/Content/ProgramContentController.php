@@ -88,14 +88,14 @@ class ProgramContentController extends Controller
         if (isset($validated['banner'])) {
             $bannerName = $program_name.'_banner.'.$validated['banner']->getClientOriginalExtension();
             $bannerPath = 'documents/'.$degree_type.'_'.$program_name.'/assets/'.$bannerName;
-            if (Storage::disk('public')->exists($bannerPath)) {
-                Storage::disk('public')->delete($bannerPath);
+            if (Storage::disk('s3')->exists($bannerPath)) {
+                Storage::disk('s3')->delete($bannerPath);
             }
-            $validated['banner']->storeAs('documents/'.$degree_type.'_'.$program_name.'/assets/', $bannerName, 'public');
+            $validated['banner']->storeAs('documents/'.$degree_type.'_'.$program_name.'/assets/', $bannerName, 's3');
         }
 
         if ($program->program_image_path && ! isset($validated['previewUrl'])) {
-            Storage::disk('public')->delete($program->program_image_path);
+            Storage::disk('s3')->delete($program->program_image_path);
             $program->program_image_name = null;
             $program->program_image_path = null;
         }
@@ -137,10 +137,10 @@ class ProgramContentController extends Controller
                 $caption = Str::slug($galleryItem['caption'], '_');
                 $imageName = 'gallery_'.$caption.uniqid().'.'.$galleryItem['image']->getClientOriginalExtension();
                 $imagePath = 'documents/'.$degree_type.'_'.$program_name.'/assets/gallery/'.$imageName;
-                if (Storage::disk('public')->exists($imagePath)) {
-                    Storage::disk('public')->delete($imagePath);
+                if (Storage::disk('s3')->exists($imagePath)) {
+                    Storage::disk('s3')->delete($imagePath);
                 }
-                $galleryItem['image']->storeAs('documents/'.$degree_type.'_'.$program_name.'/assets/gallery/', $imageName, 'public');
+                $galleryItem['image']->storeAs('documents/'.$degree_type.'_'.$program_name.'/assets/gallery/', $imageName, 's3');
             }
             if ($galleryModel) {
                 $galleryModel->image_name = $imageName ?? $galleryModel->image_name;

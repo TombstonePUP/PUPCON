@@ -146,7 +146,7 @@ class AreaParameterOutlinesController extends Controller
             $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level '.$program->accreditation_level;
             $filePath = "{$program->program_name}/{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
             $filePath = "{$filePath}/{$fileName}";
-            Storage::disk('public')->move($file->file_path, $filePath);
+            Storage::disk('s3')->move($file->file_path, $filePath);
             $file->file_name = $fileName;
             $file->file_path = $filePath;
             $file->save();
@@ -187,7 +187,7 @@ class AreaParameterOutlinesController extends Controller
         $message = '';
 
         if ($file = $parameterOutlines->AreaFiles) {
-            Storage::disk('public')->delete($file->file_path);
+            Storage::disk('s3')->delete($file->file_path);
             $file->delete();
             $message = 'The benchmark and its associated document have been deleted.';
             ActivityLogService::fileManagementLog(

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Areas\Files;
 
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Areas\StoreAreaFileRequest;
 use App\Models\AccreditationLevels;
 use App\Models\Areas;
 use App\Models\FileStatus;
@@ -22,33 +23,20 @@ class AreaFilesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreAreaFileRequest $request): RedirectResponse
     {
-        $validated = $request->validate(
-            [
-                'outline_id' => 'required|integer|exists:parameter_outlines,parameter_outline_id',
-                'document' => 'required|file|mimes:pdf|max:10240',
-                'program_id' => 'required|integer|exists:programs,program_id',
-                'level_id' => 'required|integer|exists:accreditation_levels,accreditation_level_id',
-                'area_id' => 'required|integer|exists:areas,area_id',
-            ],
-            [
-                'outline_id.exists' => 'The selected outline does not exist.',
-                'document.required' => 'Please upload a PDF document.',
-                'document.file' => 'The uploaded file must be a valid file.',
-                'document.pdf' => 'The uploaded file must be a PDF document.',
-            ]
-        );
+        $validated = $request->validated();
 
         $program = Programs::with([
             'Levels' => function ($query) use ($request) {
-                $query->where('accreditation_level_id', $request->level_id);
+                $query->where('accreditation_level_id', $validated['level_id']);
             },
-        ])
-            ->findOrFail($request->program_id);
-        $level = AccreditationLevels::where('accreditation_level_id', $request->level_id)->first();
-        $level = $level->level === 0 ? 'psv' : 'level_'.$level->level;
-        $area = Areas::where('area_id', $request->area_id)->first();
+        ])->findOrFail($request->program_id);
+
+        $level = AccreditationLevels::where('accreditation_level_id', $validated['level_id'])->firstOrFail();
+        $level = $level->level === 0 ? 'psv' : 'level_' . $level->level;
+
+        $area = Areas::findOrFail($validated['area_id']);
         $parameterOutlines = ParameterOutlines::find($validated['outline_id']);
 
         $user = Auth::user();
@@ -59,7 +47,7 @@ class AreaFilesController extends Controller
         }
 
         if ($file = $parameterOutlines->AreaFiles) {
-            Storage::disk('public')->delete($file->file_path);
+            Storage::disk('s3')->delete($file->file_path);
             $file->delete();
             $activity = ActivityLogAction::Update;
         } else {
@@ -77,7 +65,7 @@ class AreaFilesController extends Controller
 
         $file = $validated['document'];
         $parameter_outline = Str::slug($parameterOutlines->outline_description, '_');
-        $fileName = $initial.'.'.$parameterOutlines->outline_number.'.'.$parameter_outline.'.'.$file->getClientOriginalExtension();
+        $fileName = $initial . '.' . $parameterOutlines->outline_number . '.' . $parameter_outline . '.' . $file->getClientOriginalExtension();
         $program_name = Str::slug($program->program_name, '_');
         $degree_type = Str::slug($program->degree_type, '_');
         $area_name = Str::slug($area->area_name, '_');
@@ -97,7 +85,7 @@ class AreaFilesController extends Controller
             $area
         ) {
 
-            $file->storeAs($filePath, $fileName, 'public');
+            $file->storeAs($filePath, $fileName, 's3');
 
             $parameterOutlines->AreaFiles()->create([
                 'file_name' => $fileName,
@@ -132,8 +120,8 @@ class AreaFilesController extends Controller
         $parameterOutlines = ParameterOutlines::where('parameter_outline_id', $request->outline_id)->first();
         $areaFile = $parameterOutlines->AreaFiles;
 
-        if ($areaFile && Storage::disk('public')->exists($areaFile->file_path)) {
-            return response()->download(storage_path('app/public/'.$areaFile->file_path), $areaFile->file_name);
+        if ($areaFile && Storage::disk('s3')->exists($areaFile->file_path)) {
+            return response()->download(storage_path('app/public/' . $areaFile->file_path), $areaFile->file_name);
         } else {
             return redirect()->back()
                 ->with('type', 'error')
@@ -149,21 +137,26 @@ class AreaFilesController extends Controller
      */
     public function destroy(Request $request)
     {
-        $parameterOutlines = ParameterOutlines::where('parameter_outline_id', $request->outline_id)->first();
-        $areaFile = $parameterOutlines->AreaFiles;
-        $file_name = $areaFile->file_name;
+        $areaFile = ParameterOutlines::find($request->outline_id)?->AreaFiles;
+
+        if (!$areaFile) {
+            return redirect()->back()
+                ->with('type', 'success')
+                ->with('title', 'Delete Successful')
+                ->with('message', 'The Document has been deleted.');
+        }
+
         $user = Auth::user();
 
-        if ($areaFile) {
-            Storage::disk('public')->delete($areaFile->file_path);
-            $areaFile->delete();
-            $description = "Deleted file: {$file_name}";
-            ActivityLogService::fileManagementLog(
-                activity: ActivityLogAction::Delete,
-                userId: $user->user_id,
-                description: $description,
-            );
-        }
+        Storage::disk('s3')->delete($areaFile->file_path);
+
+        ActivityLogService::fileManagementLog(
+            activity: ActivityLogAction::Delete,
+            userId: $user->user_id,
+            description: "Deleted file: {$areaFile->file_name}",
+        );
+
+        $areaFile->delete();
 
         return redirect()->back()
             ->with('type', 'success')

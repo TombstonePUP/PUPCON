@@ -17,10 +17,9 @@ class Admin
     {
         $role = $request->user()->Roles->role_name;
 
-        if ($role === 'Admin' || $role === 'Coordinator') {
-            return $next($request);
-        } else {
+        if ($role !== 'Admin') {
             return redirect()->back()->with('error', 'You do not have permission to access this page.');
         }
+        return $next($request);
     }
 }

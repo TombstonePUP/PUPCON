@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('area_number');
             $table->string('area_name');
             $table->text('area_description')->nullable();
-            $table->string('area_image_name')->nullable();
+            $table->text('area_image_name')->nullable();
             $table->text('area_image_path')->nullable();
             $table->boolean('archive')->default(false);
             $table->float('mean')->default(false);

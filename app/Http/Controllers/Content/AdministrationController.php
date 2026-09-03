@@ -87,8 +87,8 @@ class AdministrationController extends Controller
 
             // --- DELETE IF NO NEW IMAGE AND NO PREVIEW URL ---
             if (empty($officialData['profile']) && empty($officialData['previewUrl'])) {
-                if ($official && $official->profile_picture_path && Storage::disk('public')->exists($official->profile_picture_path)) {
-                    Storage::disk('public')->delete($official->profile_picture_path);
+                if ($official && $official->profile_picture_path && Storage::disk('s3')->exists($official->profile_picture_path)) {
+                    Storage::disk('s3')->delete($official->profile_picture_path);
                 }
                 $profilename = null;
                 $profilepath = null;
@@ -100,11 +100,11 @@ class AdministrationController extends Controller
                 $profilepath = 'administration_profiles/'.$profilename;
 
                 // delete old one
-                if ($official && $official->profile_picture_path && Storage::disk('public')->exists($official->profile_picture_path)) {
-                    Storage::disk('public')->delete($official->profile_picture_path);
+                if ($official && $official->profile_picture_path && Storage::disk('s3')->exists($official->profile_picture_path)) {
+                    Storage::disk('s3')->delete($official->profile_picture_path);
                 }
 
-                $officialData['profile']->storeAs('administration_profiles', $profilename, 'public');
+                $officialData['profile']->storeAs('administration_profiles', $profilename, 's3');
             }
 
             // --- UPDATE OR CREATE ---
@@ -147,8 +147,8 @@ class AdministrationController extends Controller
 
         $officialsToDelete = UniversityAdministration::whereNotIn('administration_id', $administration_ids)->get();
         foreach ($officialsToDelete as $official) {
-            if ($official->profile_picture_path && Storage::disk('public')->exists($official->profile_picture_path)) {
-                Storage::disk('public')->delete($official->profile_picture_path);
+            if ($official->profile_picture_path && Storage::disk('s3')->exists($official->profile_picture_path)) {
+                Storage::disk('s3')->delete($official->profile_picture_path);
             }
             ActivityLogService::contentManagementLog(
                 userId: $user->user_id,

@@ -20,7 +20,7 @@ class UploadPdfRequest extends BaseRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    protected function pdfRules(
+    public static function pdfRules(
         bool $required = true,
         int $max = 10240
     ): array {

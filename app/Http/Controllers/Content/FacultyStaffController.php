@@ -97,8 +97,8 @@ class FacultyStaffController extends Controller
 
             // Handle image deletion
             if ($faculty && empty($facultyData['faculty_image']) && empty($facultyData['previewUrl'])) {
-                if ($faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
-                    Storage::disk('public')->delete($faculty->image_path);
+                if ($faculty->image_path && Storage::disk('s3')->exists($faculty->image_path)) {
+                    Storage::disk('s3')->delete($faculty->image_path);
                 }
 
                 // Reset after delete
@@ -110,15 +110,15 @@ class FacultyStaffController extends Controller
             if (! empty($facultyData['faculty_image'])) {
 
                 // Delete old image if it exists
-                if ($faculty && $faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
-                    Storage::disk('public')->delete($faculty->image_path);
+                if ($faculty && $faculty->image_path && Storage::disk('s3')->exists($faculty->image_path)) {
+                    Storage::disk('s3')->delete($faculty->image_path);
                 }
 
                 $imagename = $facultyData['first_name'].'-'.$facultyData['last_name'].'.'.
                     $facultyData['faculty_image']->getClientOriginalExtension();
                 $imagepath = 'faculty_staff_images/'.$imagename;
 
-                $facultyData['faculty_image']->storeAs('faculty_staff_images', $imagename, 'public');
+                $facultyData['faculty_image']->storeAs('faculty_staff_images', $imagename, 's3');
             }
 
             // Update or create faculty/staff record
@@ -171,8 +171,8 @@ class FacultyStaffController extends Controller
         // Delete faculty/staff records not in the submitted list
         $facultyToDelete = FacultyStaff::whereNotIn('faculty_staff_id', $faculty_staff_ids)->get();
         foreach ($facultyToDelete as $faculty) {
-            if ($faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
-                Storage::disk('public')->delete($faculty->image_path);
+            if ($faculty->image_path && Storage::disk('s3')->exists($faculty->image_path)) {
+                Storage::disk('s3')->delete($faculty->image_path);
             }
 
             ActivityLogService::contentManagementLog(

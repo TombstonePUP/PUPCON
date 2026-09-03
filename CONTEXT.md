@@ -75,6 +75,14 @@ Routes are defined in the `routes/` directory and map directly to React componen
 | `/admin/*` | App | Administrative dashboard routes. Requires Admin role. |
 | `/accreditor/*` | Accreditor | Accreditor evaluation routes. Requires Accreditor role. |
 | `/settings/*` | App | User profile and system settings. |
+| `/storage/s3/{path}` | none (public) | Streams a private S3 object through the app (`S3StorageController`). |
+
+## File Storage (S3)
+- **Uploads** go to AWS S3 via `Storage::disk('s3')->storeAs(...)` (controller code) — the uploaded objects are **private** by default.
+- **Serving** private objects is done through a public proxy route `/storage/s3/{path}` (`S3StorageController`) which streams the object from S3, instead of exposing public S3 URLs.
+- URL generation uses the s3 disk config `url` in `config/filesystems.php`, which defaults to `APP_URL/storage/s3`, so `Storage::url()` / `Storage::disk('s3')->url()` produce proxy URLs (`/storage/s3/...`), not the raw S3 endpoint.
+- `FILESYSTEM_DISK=s3` makes the default disk S3, so bare `Storage::url($path)` on S3-stored paths resolves correctly.
+- **Gotcha**: `docker/backend/php.ini` sets `opcache.validate_timestamps=0`, so after code/config changes you must `docker compose restart api` to pick them up (a fresh `php artisan tinker` boot is not affected).
 
 ## Render Mode
 The application uses **Inertia.js** to render React components.

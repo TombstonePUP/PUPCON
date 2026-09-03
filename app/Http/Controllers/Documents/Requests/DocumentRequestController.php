@@ -51,7 +51,7 @@ class DocumentRequestController extends Controller
     /**
      * Approve the specified resource in storage.
      */
-    public function appreve(Request $request): RedirectResponse
+    public function approve(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'file' => ['required', 'array'],
