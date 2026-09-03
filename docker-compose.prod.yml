@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: ./docker/backend/Dockerfile
       target: production
-    image: pupcon-api:prod-${APP_VERSION}
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-api
     container_name: laravel-api-prod
     restart: unless-stopped
     env_file:
@@ -38,7 +38,7 @@ services:
       context: .
       dockerfile: ./docker/frontend/Dockerfile
       target: production
-    image: pupcon-client:prod-${APP_VERSION}
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-client
     container_name: react-frontend-prod
     restart: unless-stopped
     volumes:

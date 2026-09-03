@@ -4,7 +4,7 @@ set -euo pipefail
 GHCR_USER="${GHCR_USER:-$GITHUB_ACTOR}"
 GHCR_TOKEN="${GHCR_TOKEN:-$GITHUB_TOKEN}"
 GHCR_REGISTRY="ghcr.io"
-IMAGE_NAMESPACE="tombstonepup/pupcon"
+IMAGE_NAMESPACE="zero-index-developers/pupcon"
 API_IMAGE="$GHCR_REGISTRY/$IMAGE_NAMESPACE/pupcon-api"
 CLIENT_IMAGE="$GHCR_REGISTRY/$IMAGE_NAMESPACE/pupcon-client"
 
