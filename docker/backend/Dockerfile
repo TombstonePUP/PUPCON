@@ -46,6 +46,6 @@ RUN chmod +x /usr/local/bin/entrypoint.sh \
     && mkdir -p storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 USER www-data
-EXPOSE 9000
+EXPOSE 8000
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php-fpm"]
