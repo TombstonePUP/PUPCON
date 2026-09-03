@@ -61,9 +61,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
             return;
         }
 
-        const programLevelId = Array.isArray(program.levels)
-            ? program.levels[0]?.accreditation_level_id
-            : program.levels?.accreditation_level_id;
+        const programLevelId = Array.isArray(program.levels) ? program.levels[0]?.accreditation_level_id : program.levels?.accreditation_level_id;
 
         post(
             route('manage.area.upload.file', {
@@ -106,7 +104,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
 
     return (
         <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="border-border overflow-hidden rounded-xl border p-0 shadow-2xl sm:max-w-[480px]">
+            <DialogContent hideCloseButton className="border-border overflow-hidden rounded-xl border p-0 shadow-2xl sm:max-w-[480px]">
                 {/* ── Header ── */}
                 <DialogHeader className="bg-primary border-primary/80 border-b px-6 py-4">
                     <div className="flex items-center gap-4">
@@ -115,7 +113,7 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                         </div>
                         <div className="min-w-0 flex-1">
                             <DialogTitle className="text-primary-foreground text-base leading-tight font-bold">Upload Document</DialogTitle>
-                            <DialogDescription className="text-primary-foreground/75 mt-0.5 truncate text-xs font-medium">
+                            <DialogDescription className="text-primary-foreground/75 mt-0.5 line-clamp-3 text-xs font-medium text-pretty break-words">
                                 {outline.initial && `${outline.initial}.`}
                                 {outline.outline_number}. {outline.outline_description}
                             </DialogDescription>

@@ -79,7 +79,7 @@ export default function DocumentExhibitDialog({ type, exhibit, onClose }: Docume
 
     return (
         <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="border-border overflow-hidden rounded-xl border p-0 shadow-2xl sm:max-w-[480px]">
+            <DialogContent hideCloseButton className="border-border overflow-hidden rounded-xl border p-0 shadow-2xl sm:max-w-[480px]">
                 {/* ── Header ── */}
                 <DialogHeader className="bg-primary border-primary/80 border-b px-6 py-4">
                     <div className="flex items-center gap-4">
