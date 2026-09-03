@@ -46,7 +46,7 @@ services:
       - laravel-storage-production:/var/www/storage:ro
       - public-assets:/var/www/public/build:ro
     ports:
-      - "8000:80"
+      - "80:80"
     networks:
       - pupcon_prod_network
 
