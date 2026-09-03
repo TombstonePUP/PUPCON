@@ -122,10 +122,13 @@ jobs:
           echo "instance_id=$instance_id" >> $GITHUB_OUTPUT
 
       # Always deploy the latest app images on every push, using the current
-      # instance ID resolved from state.
+      # instance ID resolved from state. The compose file content is read from
+      # the checked-out repo and written verbatim on the instance so the deploy
+      # does not depend on files already existing there.
       - name: Deploy images to EC2 via SSM
         run: |
           chmod +x .github/scripts/deploy_ssm.sh
+          export COMPOSE_FILE_CONTENT="$(cat "${COMPOSE_FILE}")"
           .github/scripts/deploy_ssm.sh
         env:
           INSTANCE_ID: ${{ steps.instance.outputs.instance_id }}

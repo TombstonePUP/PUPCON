@@ -16,6 +16,7 @@
 #   ENV_FILE          - name of the env file to write (e.g. .env.production)
 #   COMPOSE_FILE      - compose file to use (e.g. docker-compose.prod.run.yml)
 #   ENV_FILE_CONTENT  - FULL literal contents to write to the remote env file
+#   COMPOSE_FILE_CONTENT - FULL literal contents to write to the remote compose file
 #   GITHUB_TOKEN      - token used to log into GHCR on the instance
 #   GITHUB_ACTOR      - user to log into GHCR as (optional, defaults to GITHUB_ACTOR env)
 set -euo pipefail
@@ -28,18 +29,21 @@ deploy_via_ssm() {
   : "${ENV_FILE:?ENV_FILE is required}"
   : "${COMPOSE_FILE:?COMPOSE_FILE is required}"
   : "${ENV_FILE_CONTENT:?ENV_FILE_CONTENT is required}"
+  : "${COMPOSE_FILE_CONTENT:?COMPOSE_FILE_CONTENT is required}"
   : "${GITHUB_TOKEN:?GITHUB_TOKEN is required}"
 
   local GHCR_USER="${GITHUB_ACTOR:-github-actions}"
   local instance_env_file="/opt/apps/pupcon-${ENVIRONMENT}/${ENV_FILE}"
+  local instance_compose_file="/opt/apps/pupcon-${ENVIRONMENT}/${COMPOSE_FILE}"
 
   # Build the command body that runs ON the instance via AWS-RunShellScript.
   #
   # NOTE on expansion:
   #   - Variables referenced as ${VAR} in the heredoc below are expanded by the
   #     LOCAL shell when the body is assembled, baking concrete values in.
-  #   - ENV_FILE_CONTENT is written verbatim to the remote file, so it is wrapped
-  #     in a quoted heredoc (<<'ENVEOF') so the REMOTE shell does not re-expand it.
+  #   - ENV_FILE_CONTENT and COMPOSE_FILE_CONTENT are written verbatim to the
+  #     remote files, so they are wrapped in quoted heredocs (<<'ENVEOF' /
+  #     <<'COMPOSEEOF') so the REMOTE shell does not re-expand them.
   local ssm_commands
   ssm_commands=$(cat <<EOF
 set -e
@@ -48,6 +52,10 @@ cat > "${instance_env_file}" <<'ENVEOF'
 ${ENV_FILE_CONTENT}
 ENVEOF
 echo "APP_VERSION=${APP_VERSION}" >> "${instance_env_file}"
+echo "Writing ${COMPOSE_FILE} on instance..."
+cat > "${instance_compose_file}" <<'COMPOSEEOF'
+${COMPOSE_FILE_CONTENT}
+COMPOSEEOF
 echo "Logging in to GHCR on instance..."
 echo "${GITHUB_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
 cd /opt/apps/pupcon-${ENVIRONMENT}
