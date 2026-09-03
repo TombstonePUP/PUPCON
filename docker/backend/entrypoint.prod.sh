@@ -26,8 +26,8 @@ fi
 # -----------------------------------------------------------
 # Create storage symlink
 # -----------------------------------------------------------
-echo "Linking storage..."
-php artisan storage:link || true
+# echo "Linking storage..."
+# php artisan storage:link || true
 
 # Run Laravel migrations
 # -----------------------------------------------------------
