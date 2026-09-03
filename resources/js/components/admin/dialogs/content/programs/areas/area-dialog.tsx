@@ -27,7 +27,7 @@ interface AreaForm {
 }
 
 export default function AreaDialog({ type, area, program, level, onClose }: AreaDialogProps) {
-    const { data, setData, post, patch, processing, errors } = useForm<AreaForm>({
+    const { data, setData, post, processing, errors } = useForm<AreaForm>({
         area_id: area?.area_id || undefined,
         area_number: area?.area_number || '',
         area_name: area?.area_name || '',
@@ -141,7 +141,7 @@ export default function AreaDialog({ type, area, program, level, onClose }: Area
                                         type="button"
                                         variant="outline"
                                         className="h-12 w-12 rounded-full bg-white p-0"
-                                        onClick={(e) =>
+                                        onClick={() =>
                                             setData({
                                                 ...data,
                                                 area_image: undefined,

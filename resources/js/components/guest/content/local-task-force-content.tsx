@@ -157,9 +157,7 @@ export default function LocalTaskForceContentSection({ ...props }: LocalTaskForc
             const current = prev ?? [];
             const existingIndex = current.findIndex((o) => o.local_task_force_id === official.local_task_force_id);
             let updatedList;
-            let officialForLocalState: LocalTaskForce;
-
-            officialForLocalState = {
+            const officialForLocalState: LocalTaskForce = {
                 local_task_force_id: official.local_task_force_id!,
                 area_name: official.area_name,
                 first_name: official.first_name,

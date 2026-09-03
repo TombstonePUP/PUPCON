@@ -26,7 +26,6 @@ export default function PillarsSection({ pillars, updatePillars, errors = {} }: 
     const [selectedPillarItemId, setSelectedPillarItemId] = useState<number | null>(null);
 
     const selectedPillar = pillarList?.find((p) => p.pillar_id === selectedPillarId) ?? null;
-    const selectedPillarItem = selectedPillar?.pillar_items?.find((i) => i.item_id === selectedPillarItemId) ?? null;
 
     const [addingNewItem, setAddingNewItem] = useState(false);
     const [editingItem, setEditingItem] = useState(false);

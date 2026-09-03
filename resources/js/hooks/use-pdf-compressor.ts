@@ -10,6 +10,7 @@
  *  - On any worker error, the original file is returned as a safe fallback
  */
 
+import PdfCompressorWorker from '@/workers/pdf-compressor.worker.ts?worker';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 // ── Tune these for the quality / size tradeoff ────────────────────────────────
@@ -47,10 +48,10 @@ export function usePdfCompressor(): UsePdfCompressorReturn {
     });
 
     // Lazily instantiate the Worker the first time compress() is called.
-    // Vite handles the `?worker` transform automatically when `new Worker(new URL(...))` syntax is used.
+    // `?worker` import bundles the worker as a blob URL, avoiding cross-origin issues in dev.
     const getWorker = useCallback((): Worker => {
         if (!workerRef.current) {
-            workerRef.current = new Worker(new URL('../workers/pdf-compressor.worker.ts', import.meta.url), { type: 'module' });
+            workerRef.current = new PdfCompressorWorker();
         }
         return workerRef.current;
     }, []);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Parameters;
 
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
+use App\Models\AccreditationLevels;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
@@ -30,9 +31,9 @@ class ImportParametersController extends Controller
     public function import(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'document' => 'required|file|mimes:csv',
+            'document' => 'required|file|mimes:csv,txt',
         ], [
-            'document.mimes' => 'The document must be a file of type: csv.',
+            'document.mimes' => 'The document must be a CSV file.',
             'document.required' => 'Please upload a document to import.',
         ]);
 
@@ -41,6 +42,7 @@ class ImportParametersController extends Controller
 
         $area = $request->area_id;
         $area = Areas::findOrFail($area);
+        $level = AccreditationLevels::find($request->level_id);
         $file = $validated['document'];
         $path = $file->getRealPath();
         $csv = Reader::from($file->getRealPath(), 'r');
@@ -48,7 +50,7 @@ class ImportParametersController extends Controller
 
         $records = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-        DB::transaction(function () use ($records, $area, $program, $user) {
+        DB::transaction(function () use ($records, $area, $level, $program, $user) {
             $section = null;
             $headers = [];
             $parameters = [];
@@ -104,7 +106,7 @@ class ImportParametersController extends Controller
                         description: "Imported parameter
                             '{$row['parameter']}' for area
                             '{$area->area_name}' in program
-                            '{$program->program_name}'-'{$program->Levels->level}'.",
+                            '{$program->program_name}'-'{$level?->level}'.",
                     );
                 }
 
@@ -133,7 +135,7 @@ class ImportParametersController extends Controller
                                 '{$row['benchmark_number']}' for parameter
                                 '{$row['parameter']}' in area
                                 '{$area->area_name}' in program
-                                '{$program->program_name}'-'{$program->Levels->level}'.",
+                                '{$program->program_name}'-'{$level?->level}'.",
                         );
                     }
                 }

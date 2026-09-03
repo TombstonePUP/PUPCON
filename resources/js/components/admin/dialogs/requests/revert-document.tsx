@@ -19,7 +19,7 @@ interface RevertRequestProps {
 }
 
 export default function RevertRequest({ file, onClose }: RevertRequestProps) {
-    const { data, post, reset } = useForm<DocumentRequestForm>({
+    const { post, reset } = useForm<DocumentRequestForm>({
         file: file.map((f) => ({
             file_id: f.file_id,
             file_type: f.file_type,

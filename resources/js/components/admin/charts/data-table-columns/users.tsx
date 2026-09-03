@@ -17,7 +17,7 @@ interface UserRecordProps {
     resolveDialog: ({ type, user }: DialogProps) => void;
 }
 
-export function getUserColumns({ programRoles, roles, resolveDialog }: UserRecordProps): ColumnDef<UserRecords>[] {
+export function getUserColumns({ resolveDialog }: UserRecordProps): ColumnDef<UserRecords>[] {
     return [
         {
             accessorKey: 'name',

@@ -10,7 +10,7 @@ interface EnableUserDialogProps {
 }
 
 export function EnableUser({ user, onClose }: EnableUserDialogProps) {
-    const { data, patch, reset } = useForm<{ user_id: number }>({
+    const { patch, reset } = useForm<{ user_id: number }>({
         user_id: user.user_id,
     });
 

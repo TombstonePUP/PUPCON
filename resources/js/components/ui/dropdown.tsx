@@ -2,7 +2,20 @@ import { useState } from 'react';
 import { Link } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
 
-function DropdownNavItem({ item }: { item: any }) {
+interface DropdownItem {
+    label: string;
+    href: string;
+}
+
+interface DropdownNavItemProps {
+    item: {
+        label: string;
+        href: string;
+        dropdown: DropdownItem[];
+    };
+}
+
+export function DropdownNavItem({ item }: DropdownNavItemProps) {
     const [showDropdown, setShowDropdown] = useState(false);
     let timeout: NodeJS.Timeout;
 

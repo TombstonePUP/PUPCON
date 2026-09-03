@@ -2,7 +2,7 @@ import { PageTitle } from '@/components/admin/page-header';
 import AppLayout from '@/layouts/admin/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { InfoIcon } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 
 // Section Imports
 import AboutSection from '@/components/guest/content/about-content';

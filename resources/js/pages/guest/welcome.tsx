@@ -2,7 +2,7 @@ import useFacebookFeed from '@/hooks/useFacebookFeed';
 import Layout from '@/layouts/guest/landing-layout';
 import { CampusGallery, ContentPages } from '@/types/content';
 import { Head, usePage } from '@inertiajs/react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 // Modularized Components
 import { HeroSection } from '@/components/guest/welcome/sections/hero-section';
@@ -29,7 +29,6 @@ interface Auth {
 }
 
 export default function Welcome({ page, carousel_images }: LandingProps) {
-    const [isPageReady, setIsPageReady] = useState(false);
     const [selectedNewsItem, setSelectedNewsItem] = useState<NewsCard | null>(null);
     const [isNewsDialogOpen, setIsNewsDialogOpen] = useState(false);
     const [isNewsDialogVisible, setIsNewsDialogVisible] = useState(false);
@@ -125,8 +124,6 @@ export default function Welcome({ page, carousel_images }: LandingProps) {
 
     const handleNextPage = () => { if (newsPage < totalPages - 1) setNewsPage(newsPage + 1); };
     const handlePrevPage = () => { if (newsPage > 0) setNewsPage(newsPage - 1); };
-
-    useEffect(() => { setIsPageReady(true); }, []);
 
     const handleOpenNewsDialog = (card: NewsCard) => {
         setSelectedNewsItem(card);

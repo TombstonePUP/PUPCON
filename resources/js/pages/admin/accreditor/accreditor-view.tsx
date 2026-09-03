@@ -14,8 +14,6 @@ export default function AccreditorDashboard() {
     const [expandedParameters, setExpandedParameters] = useState({});
     const [viewerOpen, setViewerOpen] = useState(false);
     const [viewerFile, setViewerFile] = useState({ url: '', title: '' });
-    const [exportDropdown, setExportDropdown] = useState({});
-    const [exportAreaDropdown, setExportAreaDropdown] = useState({});
     const [ratings, setRatings] = useState({});
     const [means, setMeans] = useState({});
     const [selectedLevels, setSelectedLevels] = useState({});
@@ -184,63 +182,13 @@ export default function AccreditorDashboard() {
     const toggleArea = (areaId) => setExpandedAreas((prev) => ({ ...prev, [areaId]: !prev[areaId] }));
     const toggleParameter = (paramId) => setExpandedParameters((prev) => ({ ...prev, [paramId]: !prev[paramId] }));
 
-    // Toggle Export Dropdown per program
-    const toggleExport = (programId) => {
-        setExportDropdown((prev) => {
-            const updated = {};
-            Object.keys(prev).forEach((key) => {
-                updated[key] = false; // close all other dropdowns
-            });
-            updated[programId] = !prev[programId]; // toggle the clicked one
-            return updated;
-        });
-    };
-
-    // Handle Export Actions (Excel/PDF)
-    const handleExport = (programId, type) => {
-        const program = programs.find((p) => p.id === programId);
-        if (!program) return;
-
-        alert(` Exporting ${program.program_name} as ${type.toUpperCase()}`);
-
-        setExportDropdown((prev) => ({ ...prev, [programId]: false }));
-    };
-
-    // Toggle Export Dropdown per area
-    const toggleAreaExport = (areaId) => {
-        setExportAreaDropdown((prev) => {
-            const updated = {};
-            Object.keys(prev).forEach((key) => {
-                updated[key] = false; // close all other dropdowns
-            });
-            updated[areaId] = !prev[areaId]; // toggle clicked area
-            return updated;
-        });
-    };
-
     // Handle Export Actions for areas
     const handleAreaExport = (areaId, type) => {
         const area = programs.flatMap((p) => p.assigned_areas).find((a) => a.id === areaId);
         if (!area) return;
 
         alert(`Exporting ${area.area_name} as ${type.toUpperCase()}`);
-
-        setExportAreaDropdown((prev) => ({ ...prev, [areaId]: false }));
     };
-
-    // Close dropdowns when clicking outside
-    React.useEffect(() => {
-        const handleClickOutside = (event) => {
-            const exportButtons = document.querySelectorAll('.export-dropdown');
-            let clickedInside = false;
-            exportButtons.forEach((btn) => {
-                if (btn.contains(event.target)) clickedInside = true;
-            });
-            if (!clickedInside) setExportDropdown({});
-        };
-        document.addEventListener('click', handleClickOutside);
-        return () => document.removeEventListener('click', handleClickOutside);
-    }, []);
 
     const getStatusColor = (status) => {
         switch (status) {

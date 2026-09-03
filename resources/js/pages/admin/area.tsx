@@ -1,11 +1,11 @@
 import { DocumentViewer } from '@/components/admin/dialogs/documents/view-document';
-import PageHeader from '@/components/guest/page-header';
 import { buildOutlineTree, RecursiveOutline } from '@/components/admin/recursive-outline';
+import PageHeader from '@/components/guest/page-header';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useSmartPoll } from '@/hooks/use-smart-poll';
 import Layout from '@/layouts/guest/landing-layout';
-import type { Area, ParameterOutlineCategory, Program } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import type { Area, AreaForms, AreaParameters, ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
+import { Head } from '@inertiajs/react';
 import { Construction } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -25,12 +25,14 @@ const EmptyState = ({ title, description }: { title: string; description: string
 
 const alphaRegex = new RegExp('^[A-Za-z]');
 
+interface AreaWithForms extends Area {
+    area_forms?: AreaForms[];
+    area_parameters?: AreaParameters[];
+}
+
 export default function AreaPage({ program, area, categories }: AreaProps) {
     useSmartPoll(5000);
     const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-    const searchKeyword = searchParams?.get('search') || '';
-
-    const { auth } = usePage<any>().props;
 
     const [viewerOpen, setViewerOpen] = useState(false);
     const [viewerFile, setViewerFile] = useState({ url: '', title: '' });
@@ -57,6 +59,35 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, 150);
+    }, [parameterId]);
+
+    // Flash the target benchmark outline when arriving from a search result
+    // (URL looks like /programs/.../?parameter=X#outline-Y).
+    useEffect(() => {
+        const match = window.location.hash.match(/^#outline-(\d+)$/);
+        if (!match) return;
+
+        const outlineId = match[1];
+
+        const timer = setTimeout(() => {
+            const el = document.getElementById(`outline-${outlineId}`);
+            if (!el) return;
+
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            let flashes = 0;
+            const interval = setInterval(() => {
+                if (flashes >= 3) {
+                    clearInterval(interval);
+                    el.classList.remove('outline-flash');
+                    return;
+                }
+                el.classList.toggle('outline-flash');
+                flashes++;
+            }, 360);
+        }, 450);
+
+        return () => clearTimeout(timer);
     }, [parameterId]);
 
     const activeLevel = Array.isArray(program.levels) ? program.levels[0] : program.levels;
@@ -112,17 +143,17 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                 {/* Forms Section */}
                 <div className="flex justify-center py-[2vw]">
                     <div className="w-[68%]">
-                        {(area as any).area_forms?.length > 0 ? (
+                        {(area as AreaWithForms).area_forms?.length > 0 ? (
                             <div
                                 className={`grid gap-[2vw] ${
-                                    (area as any).area_forms.length === 1
+                                    (area as AreaWithForms).area_forms.length === 1
                                         ? 'grid-cols-1 md:mx-auto md:max-w-md'
-                                        : (area as any).area_forms.length === 2
+                                        : (area as AreaWithForms).area_forms.length === 2
                                           ? 'grid-cols-1 md:grid-cols-2'
                                           : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
                                 }`}
                             >
-                                {(area as any).area_forms?.map((area_form: any) => (
+                                {(area as AreaWithForms).area_forms?.map((area_form: AreaForms) => (
                                     <div
                                         key={area_form.area_form_id}
                                         className="group relative flex flex-col overflow-hidden rounded-xl border border-[#7f1414]/25 bg-white transition-all duration-300 hover:border-[#7f1414]"
@@ -177,21 +208,21 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
 
                 <div className="flex w-full flex-col items-center justify-center gap-4 py-2">
                     <div className="w-[68%]">
-                        {(area as any).area_parameters?.length > 0 ? (
+                        {(area as AreaWithForms).area_parameters?.length > 0 ? (
                             <Accordion type="single" collapsible className="flex flex-col gap-[1vw]" value={openItem} onValueChange={setOpenItem}>
-                                {[...(area as any).area_parameters]
+                                {[...(area as AreaWithForms).area_parameters]
                                     .sort((a, b) => {
                                         if (a.parameter_name?.trim().toUpperCase() === 'A') return -1;
                                         if (b.parameter_name?.trim().toUpperCase() === 'A') return 1;
                                         return a.parameter_name?.localeCompare(b.parameter_name || '') || 0;
                                     })
-                                    .map((parameter: any) => {
+                                    .map((parameter: AreaParameters) => {
                                         const paramKey = parameter.parameter_id ?? parameter.area_parameter_id;
 
                                         const hasOutlines = categories.some((category) => {
                                             const outlines =
                                                 parameter.parameter_outlines?.filter(
-                                                    (outline: any) =>
+                                                    (outline: ParameterOutlines) =>
                                                         outline.parameter_outline_category_id === category.parameter_outline_category_id,
                                                 ) || [];
                                             return outlines.length > 0;
@@ -203,6 +234,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                                 ref={(el) => {
                                                     parameterRef.current[paramKey] = el;
                                                 }}
+                                                className="scroll-mt-28"
                                             >
                                                 <AccordionItem className="group bg-white transition duration-300" value={`parameter-${paramKey}`}>
                                                     <AccordionTrigger className="my-1 group-hover:cursor-pointer">
@@ -222,11 +254,11 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                                             categories.map((category) => {
                                                                 const filteredOutlines = (parameter.parameter_outlines || [])
                                                                     .filter(
-                                                                        (o: any) =>
+                                                                        (o: ParameterOutlines) =>
                                                                             o.parameter_outline_category_id ===
                                                                             category.parameter_outline_category_id,
                                                                     )
-                                                                    .map((o: any) => ({
+                                                                    .map((o: ParameterOutlines) => ({
                                                                         ...o,
                                                                         initial:
                                                                             category.category_name === 'No Category'
@@ -251,7 +283,7 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
                                                                         </h1>
                                                                         <RecursiveOutline
                                                                             outlines={sortedOutlines}
-                                                                            program={program as any}
+                                                                            program={program}
                                                                             area={area}
                                                                             resolveDocDialog={(params) => {
                                                                                 if (params.type === 'view') {

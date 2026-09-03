@@ -28,10 +28,10 @@ export default function useFacebookFeed(limit = 8) {
                 if (!mounted) return;
                 if (Array.isArray(data)) setPosts(data.slice(0, limit));
                 else setPosts([]);
-            } catch (err: any) {
-                if (err.name === 'AbortError') return;
+            } catch (err) {
+                if (err instanceof Error && err.name === 'AbortError') return;
                 if (!mounted) return;
-                setError(err.message || 'Failed to fetch feed');
+                setError(err instanceof Error ? err.message : 'Failed to fetch feed');
                 setPosts([]);
             } finally {
                 if (mounted) setLoading(false);

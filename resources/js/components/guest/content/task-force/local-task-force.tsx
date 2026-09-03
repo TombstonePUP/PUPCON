@@ -48,7 +48,7 @@ interface LocalTaskForceForm {
 const LocalTaskForceSection: React.FC = ({ ...props }: LocalTaskForceSectionProps) => {
     const { ltf_page, local_task_force } = props;
 
-    const { data, setData, post, errors, processing } = useForm<LocalTaskForceForm>({
+    const { data, setData, post, errors } = useForm<LocalTaskForceForm>({
         page: {
             content_page_id: ltf_page?.content_page_id,
             page: ltf_page?.page || 'Local Task Force',

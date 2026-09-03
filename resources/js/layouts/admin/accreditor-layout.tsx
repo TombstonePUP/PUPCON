@@ -1,7 +1,7 @@
 import GuideTour from '@/components/admin/tour/guide-tour';
 import { TourProvider } from '@/components/admin/tour/tour-context';
 import { cn } from '@/lib/utils';
-import { Link, router, usePage } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { LogOut, Monitor } from 'lucide-react';
 import { ReactNode, useEffect, useState } from 'react';
@@ -15,7 +15,6 @@ function isActive(path: string) {
 }
 
 export default function AccreditorLayout({ children }: AccreditorLayoutProps) {
-    const { auth } = usePage().props;
     const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
 
     useEffect(() => {

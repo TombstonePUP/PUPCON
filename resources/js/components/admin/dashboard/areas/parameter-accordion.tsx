@@ -3,7 +3,7 @@ import { buildOutlineTree, RecursiveOutlineForm } from '@/components/admin/recur
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { Area, type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program } from '@/types';
+import { Area, type AreaParameters, type ParameterOutlineCategory, ParameterOutlines, Program, SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { FolderPlus, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 
@@ -44,7 +44,7 @@ export default function ParameterAccordion({
     resolveBenchDialog,
     resolveParamDialog,
 }: ParameterAccordionProps) {
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage<SharedData>().props;
     const role = auth?.user?.roles?.role_name;
 
     const activeLevel = Array.isArray(program.levels) ? program.levels[0] : program.levels;
@@ -63,7 +63,7 @@ export default function ParameterAccordion({
                         >
                             <div className="relative">
                                 <AccordionTrigger className="flex flex-row items-center justify-between p-4 px-6 group-hover:cursor-pointer hover:no-underline">
-                                    <div className="flex w-full flex-row items-center justify-between pr-24">
+                                    <div className="flex w-full flex-row items-center justify-between pr-24 xl:pr-52">
                                         <h1 className="text-primary group-hover:text-primary/80 font-bold">
                                             {parameter.parameter_name?.trim()
                                                 ? `Parameter ${parameter.parameter_name}`
@@ -76,7 +76,7 @@ export default function ParameterAccordion({
                                 </AccordionTrigger>
 
                                 {canShowActions && (
-                                    <div className="absolute top-1/2 right-14 z-10 flex -translate-y-1/2 justify-center gap-3">
+                                    <div className="absolute top-1/2 right-14 z-10 flex -translate-y-1/2 justify-center gap-2">
                                         <Button
                                             size="sm"
                                             variant="ghost"
