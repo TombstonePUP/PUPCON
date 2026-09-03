@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: ./docker/backend/Dockerfile
       target: staging
-    image: pupcon-api:staging-${APP_VERSION}
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-api
     container_name: laravel-api-staging
     restart: unless-stopped
     env_file:
@@ -38,7 +38,7 @@ services:
       context: .
       dockerfile: ./docker/frontend/Dockerfile
       target: staging
-    image: pupcon-client:staging-${APP_VERSION}
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-client
     container_name: react-frontend-staging
     restart: unless-stopped
     volumes:

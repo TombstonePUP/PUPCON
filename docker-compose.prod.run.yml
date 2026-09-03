@@ -22,7 +22,7 @@ services:
       - pupcon_prod_network
 
   api-prod:
-    image: ghcr.io/zero-index-developers/pupcon/pupcon-api:prod-${APP_VERSION}
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-api:${APP_VERSION}
     container_name: pupcon-api-prod
     restart: unless-stopped
     depends_on:
@@ -37,7 +37,7 @@ services:
         - pupcon_prod_network
 
   web-prod:
-    image: ghcr.io/zero-index-developers/pupcon/pupcon-client:prod-${APP_VERSION}
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-client:${APP_VERSION}
     container_name: pupcon-client-prod
     restart: unless-stopped
     depends_on:
