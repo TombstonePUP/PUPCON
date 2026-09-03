@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
             ], */
         ];
         foreach ($roles as $attributes) {
-            Roles::factory()->create($attributes);
+            Roles::firstOrCreate($attributes);
         }
         $role1 = Roles::where('role_name', 'Admin')->first();
         $role2 = Roles::where('role_name', 'Coordinator')->first();
@@ -57,29 +57,20 @@ class UserSeeder extends Seeder
             ],
         ];
         foreach ($users as $attributes) {
-            User::factory()->create($attributes);
+            User::firstOrCreate(
+                ['user_id' => $attributes['user_id']],
+                $attributes
+            );
         }
 
         $parameterCategory = [
-            [
-                'category_name' => 'No Category',
-                'parameter_outline_category_id' => 1,
-            ],
-            [
-                'category_name' => 'Systems - Inputs and Processes',
-                'parameter_outline_category_id' => 2,
-            ],
-            [
-                'category_name' => 'Implementation',
-                'parameter_outline_category_id' => 3,
-            ],
-            [
-                'category_name' => 'Outcome/s',
-                'parameter_outline_category_id' => 4,
-            ],
+            ['category_name' => 'No Category'],
+            ['category_name' => 'Systems - Inputs and Processes'],
+            ['category_name' => 'Implementation'],
+            ['category_name' => 'Outcome/s'],
         ];
         foreach ($parameterCategory as $attributes) {
-            ParameterOutlineCategory::factory()->create($attributes);
+            ParameterOutlineCategory::firstOrCreate($attributes);
         }
 
         $file_status = [
@@ -88,7 +79,7 @@ class UserSeeder extends Seeder
             ['status_name' => 'Rejected'],
         ];
         foreach ($file_status as $attributes) {
-            FileStatus::factory()->create($attributes);
+            FileStatus::firstOrCreate($attributes);
         }
 
         $area_forms_category = [
@@ -97,7 +88,7 @@ class UserSeeder extends Seeder
             ['category_name' => 'Compliance Report'],
         ];
         foreach ($area_forms_category as $attributes) {
-            AreaFormCategory::factory()->create($attributes);
+            AreaFormCategory::firstOrCreate($attributes);
         }
 
     }

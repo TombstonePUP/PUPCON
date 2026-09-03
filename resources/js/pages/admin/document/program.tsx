@@ -19,7 +19,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/admin/app-layout';
-import type { BreadcrumbItem, PerProgram, ProgramAreas } from '@/types';
+import { Auth, type BreadcrumbItem, type PerProgram, type ProgramAreas } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Archive, BookOpen, ChevronDown, Download, EditIcon, MoreVertical, Plus } from 'lucide-react';
 
@@ -29,7 +29,7 @@ export interface ProgramProps {
 
 // --- Main Component ---
 export default function Programs({ program }: ProgramProps) {
-    const { auth } = usePage().props;
+    const { auth } = usePage<Auth>().props;
     const role = auth.user.roles.role_name;
     const assignedAreas = auth.user.areas;
 

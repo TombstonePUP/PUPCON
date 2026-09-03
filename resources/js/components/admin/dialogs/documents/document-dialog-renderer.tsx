@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Area, ParameterOutlines, Program } from '@/types';
+import { ParameterOutlines } from '@/types';
 import { DeleteDocument } from './delete-document';
 import { RejectedDocument } from './rejected-document';
 import { UploadDocument } from './upload-document';
@@ -11,12 +11,13 @@ import { DocumentViewer } from './view-document';
 interface DocumentDialogProps {
     type: 'view' | 'upload' | 'delete' | 'rejected';
     benchmark?: ParameterOutlines;
-    program: Program;
-    area: Area;
+    program_id: number;
+    level_id: number;
+    area_id: number;
     onClose: () => void;
 }
 
-export function RenderDocumentDialog({ type, benchmark, program, area, onClose }: DocumentDialogProps) {
+export function RenderDocumentDialog({ type, benchmark, program_id, level_id, area_id, onClose }: DocumentDialogProps) {
     if (!benchmark) return null;
 
     switch (type) {
@@ -52,9 +53,9 @@ export function RenderDocumentDialog({ type, benchmark, program, area, onClose }
                 </Dialog>
             );
         case 'upload':
-            return <UploadDocument outline={benchmark} program={program} area_id={area?.area_id} onClose={onClose} />;
+            return <UploadDocument outline={benchmark} program_id={program_id} level_id={level_id} area_id={area_id} onClose={onClose} />;
         case 'delete':
-            return <DeleteDocument outline={benchmark} program={program} area_id={area?.area_id} onClose={onClose} />;
+            return <DeleteDocument outline={benchmark} program_id={program_id} level_id={level_id} area_id={area_id} onClose={onClose} />;
         case 'rejected':
             return <RejectedDocument outline={benchmark} onClose={onClose} />;
         case null:

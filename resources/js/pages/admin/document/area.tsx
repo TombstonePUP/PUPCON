@@ -14,12 +14,15 @@ import { useState } from 'react';
 
 interface AreaFilesProps {
     program: Program;
+    program_id: number;
+    level_id: number;
     area: Area;
+    area_id: number;
     parameterOutlineCategories?: ParameterOutlineCategory[];
     areaFormsCategories?: AreaFormCategory[];
 }
 
-export default function Areas({ program, area, parameterOutlineCategories, areaFormsCategories }: AreaFilesProps) {
+export default function Areas({ program, program_id, level_id, area, area_id, parameterOutlineCategories, areaFormsCategories }: AreaFilesProps) {
     const { auth } = usePage().props;
     const role = auth.user.roles.role_name;
 
@@ -150,12 +153,22 @@ export default function Areas({ program, area, parameterOutlineCategories, areaF
                     form={dialog.form}
                     categories={areaFormsCategories}
                     program={program}
+                    program_id={program_id}
+                    level_id={level_id}
                     area={area}
+                    area_id={area_id}
                     onClose={closeDialog}
                 />
             )}
             {dialog.kind === 'document' && (
-                <RenderDocumentDialog type={dialog.action} benchmark={dialog.benchmark} program={program} area={area} onClose={closeDialog} />
+                <RenderDocumentDialog
+                    type={dialog.action}
+                    benchmark={dialog.benchmark}
+                    program_id={program_id}
+                    level_id={level_id}
+                    area_id={area_id}
+                    onClose={closeDialog}
+                />
             )}
             {dialog.kind === 'benchmark' && (
                 <RenderBenchmarkDialog

@@ -85,19 +85,17 @@ class AreaFilesController extends Controller
             $area
         ) {
 
-            $file->storeAs($filePath, $fileName, 's3');
+            $storedPath = $file->storeAs($filePath, $fileName, 's3');
 
             $parameterOutlines->AreaFiles()->create([
                 'file_name' => $fileName,
-                'file_path' => "{$filePath}/{$fileName}",
+                'file_path' => $storedPath,
                 'file_status_id' => $fileStatus,
                 'uploaded_by' => $user->user_id,
                 'uploaded_at' => now(),
             ]);
 
-            $activity_description = "{$activity->activity} for
-                '{$parameterOutlines->outline_description}' in
-                {$program->program_name} - {$area->area_name}.";
+            $activity_description = "{$activity->value} for '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.";
 
             ActivityLogService::fileManagementLog(
                 activity: $activity,
@@ -121,7 +119,7 @@ class AreaFilesController extends Controller
         $areaFile = $parameterOutlines->AreaFiles;
 
         if ($areaFile && Storage::disk('s3')->exists($areaFile->file_path)) {
-            return response()->download(storage_path('app/public/'.$areaFile->file_path), $areaFile->file_name);
+            return Storage::disk('s3')->download($areaFile->file_path, $areaFile->file_name);
         } else {
             return redirect()->back()
                 ->with('type', 'error')

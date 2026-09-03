@@ -16,11 +16,14 @@ interface AreaFormDialogProps {
     form?: AreaForms;
     categories?: AreaFormCategory[];
     program: Program;
+    program_id: number;
+    level_id: number;
     area: Area;
+    area_id: number;
     onClose: () => void;
 }
 
-export function RenderAreaFormDialog({ type, forms, form, categories, program, area, onClose }: AreaFormDialogProps) {
+export function RenderAreaFormDialog({ type, forms, form, categories, program, program_id, level_id, area, area_id, onClose }: AreaFormDialogProps) {
     if (!area) return null;
 
     switch (type) {
@@ -57,13 +60,13 @@ export function RenderAreaFormDialog({ type, forms, form, categories, program, a
                 </Dialog>
             );
         case 'add':
-            return <AddAreaForm forms={forms} program={program} area_id={area?.area_id} categories={categories} onClose={onClose} />;
+            return <AddAreaForm forms={forms} program={program} program_id={program_id} level_id={level_id} area_id={area_id} categories={categories} onClose={onClose} />;
         case 'upload':
-            return <UploadAreaForm program={program} form={form} area_id={area?.area_id} onClose={onClose} />;
+            return <UploadAreaForm program={program} program_id={program_id} level_id={level_id} form={form} area_id={area_id} onClose={onClose} />;
         case 'delete-form':
-            return <DeleteAreaForm form={form} program={program} area_id={area?.area_id} onClose={onClose} />;
+            return <DeleteAreaForm form={form} program={program} program_id={program_id} level_id={level_id} area_id={area_id} onClose={onClose} />;
         case 'delete':
-            return <DeleteAreaFormFile form={form} program={program} area_id={area?.area_id} onClose={onClose} />;
+            return <DeleteAreaFormFile form={form} program={program} program_id={program_id} level_id={level_id} area_id={area_id} onClose={onClose} />;
         case 'rejected':
             return <RejectedAreaForm form={form} onClose={onClose} />;
         case null:

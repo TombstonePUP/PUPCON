@@ -13,6 +13,8 @@ import { toast } from 'sonner';
 
 interface UploadAreaFormProps {
     program: Program;
+    program_id: number;
+    level_id: number;
     area_id: number;
     form: AreaForms;
     onClose: () => void;
@@ -22,7 +24,7 @@ interface UploadAreaFormForm {
     document: File | null;
 }
 
-export function UploadAreaForm({ program, form, area_id, onClose }: UploadAreaFormProps) {
+export function UploadAreaForm({ program, program_id, level_id, form, area_id, onClose }: UploadAreaFormProps) {
     const { data, setData, post, processing, errors, reset } = useForm<UploadAreaFormForm>({
         document: null,
     });
@@ -54,8 +56,8 @@ export function UploadAreaForm({ program, form, area_id, onClose }: UploadAreaFo
 
         post(
             route('manage.area.upload.area.form.file', {
-                program_id: program.program_id,
-                level_id: programLevelId,
+                program_id: program_id,
+                level_id: level_id,
                 area_id: area_id,
                 form_id: form.area_form_id,
             }),

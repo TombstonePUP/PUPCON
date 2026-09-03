@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Areas\Forms;
 
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\AreaFormCategory;
 use App\Models\AreaForms;
 use App\Models\Areas;
@@ -16,8 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
-use function Symfony\Component\Clock\now;
 
 class AreaFormsController extends Controller
 {
@@ -83,14 +80,11 @@ class AreaFormsController extends Controller
             $areaForm->uploaded_by = $user->user_id;
             $areaForm->uploaded_at = now();
             $areaForm->file_status_id = $status;
-            // Log the activity
-            $activityLog = new ActivityLog;
-            $activityLog->user_id = $user->user_id;
-            $activityLog->description = "Uploaded area form for '{$area->area_name}' in program '{$program->program_name}'.";
-            $activityLog->activity = 'Upload';
-            $activityLog->type = 'Files';
-            $activityLog->activity_date = now();
-            $activityLog->save();
+            ActivityLogService::fileManagementLog(
+                activity: ActivityLogAction::Upload,
+                userId: $user->user_id,
+                description: "Uploaded area form for '{$area->area_name}' in program '{$program->program_name}'.",
+            );
         }
 
         $areaForm->area_id = $area->area_id;
@@ -98,13 +92,11 @@ class AreaFormsController extends Controller
 
         $areaForm->save();
 
-        $activityLog = new ActivityLog;
-        $activityLog->user_id = $user->user_id;
-        $activityLog->description = "Created area form entry for '{$area->area_name}' in program '{$program->program_name}'.";
-        $activityLog->activity = 'Create';
-        $activityLog->type = 'Files';
-        $activityLog->activity_date = now();
-        $activityLog->save();
+        ActivityLogService::contentManagementLog(
+            activity: ActivityLogAction::Create,
+            userId: $user->user_id,
+            description: "Created area form entry for '{$area->area_name}' in program '{$program->program_name}'.",
+        );
 
         return redirect()->back()
             ->with('type', 'success')

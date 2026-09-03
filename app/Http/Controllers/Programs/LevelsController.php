@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Programs;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\Programs;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,13 +60,11 @@ class LevelsController extends Controller
 
         $level = $program->level === 0 ? 'Preliminary Survey' : 'Level '.$program->level;
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Added a new level: '.$level.' to program: '.$validated['program_name'],
-            'activity' => 'Create',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            activity: ActivityLogAction::Create,
+            userId: $user->user_id,
+            description: 'Added a new level: '.$level.' to program: '.$validated['program_name'],
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -114,14 +113,12 @@ class LevelsController extends Controller
 
         $level->Areas()->update(['archive' => true]);
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated level: '.($level->level === 0 ? 'Preliminary Survey' : 'Level '.$level->level).
+        ActivityLogService::contentManagementLog(
+            activity: ActivityLogAction::Update,
+            userId: $user->user_id,
+            description: 'Updated level: '.($level->level === 0 ? 'Preliminary Survey' : 'Level '.$level->level).
                 ' for program: '.$validated['program_name'],
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        );
 
         return redirect()->back()
             ->with('type', 'success')

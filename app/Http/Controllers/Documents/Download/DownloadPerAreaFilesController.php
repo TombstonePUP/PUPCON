@@ -28,10 +28,13 @@ class DownloadPerAreaFilesController extends Controller
 
         $program_name = Str::slug($program->program_name, '_');
         $area_name = Str::slug($area->area_name, '_');
+        $degree_type = Str::slug($program->degree_type, '_');
         $level = $program->Levels->first();
         $area = $level->Areas->find($request->area_id);
 
-        $folderPath = $program_name.'/level_'.$level->level.'/'.$area_name;
+        $levelLabel = $level->level === 0 ? 'psv' : 'level_'.$level->level;
+
+        $folderPath = "documents/{$degree_type}_{$program_name}/{$levelLabel}/{$area_name}";
 
         $zipFileName = $program_name.'_level_'.$level->level.'_area_'.$area->area_number.'.zip';
 
