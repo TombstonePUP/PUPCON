@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Programs;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\Programs;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,6 +13,8 @@ class LevelsController extends Controller
 {
     /**
      * Store a newly created resource in storage.
+     *
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -22,15 +25,6 @@ class LevelsController extends Controller
 
         $min = $level ?? 0;
         $max = $level !== null ? $level + 1 : 0;
-
-        /* $level = $program->levels()
-            ->where('remarks', 'passed')
-            ->orderBy('level', 'desc')
-            ->first(); */
-
-        /* $level = isset($program->latestlevel->level)
-            ? $program->latestlevel->level
-            : null; */
 
         $user = Auth::user();
 
@@ -58,17 +52,16 @@ class LevelsController extends Controller
         $program = $program->Levels()->create([
             'program_id' => $program->program_id,
             'level' => $validated['new_level'],
-            // 'level' => $level === null ? 0 : $level + 1,
             'survey_date' => now(),
             'remarks' => 'Ongoing Survey',
             'is_active' => true,
         ]);
 
-        $level = $program->level === 0 ? 'Preliminary Survey' : 'Level ' . $program->level;
+        $level = $program->level === 0 ? 'Preliminary Survey' : 'Level '.$program->level;
 
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'description' => 'Added a new level: ' . $level . ' to program: ' . $validated['program_name'],
+            'description' => 'Added a new level: '.$level.' to program: '.$validated['program_name'],
             'activity' => 'Create',
             'type' => 'Content',
             'activity_date' => now(),
@@ -77,11 +70,13 @@ class LevelsController extends Controller
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Level Added')
-            ->with('message', 'Level "' . $level . '" has been added successfully to program.');
+            ->with('message', 'Level "'.$level.'" has been added successfully to program.');
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @return RedirectResponse
      */
     public function update(Request $request, Programs $programs)
     {
@@ -121,8 +116,8 @@ class LevelsController extends Controller
 
         ActivityLog::create([
             'user_id' => $user->user_id,
-            'description' => 'Updated level: ' . ($level->level === 0 ? 'Preliminary Survey' : 'Level ' . $level->level) .
-                ' for program: ' . $validated['program_name'],
+            'description' => 'Updated level: '.($level->level === 0 ? 'Preliminary Survey' : 'Level '.$level->level).
+                ' for program: '.$validated['program_name'],
             'activity' => 'Update',
             'type' => 'Content',
             'activity_date' => now(),

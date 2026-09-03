@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\ContentPages;
+use Illuminate\Database\Seeder;
 
 class PagesSeeder extends Seeder
 {
@@ -40,7 +39,7 @@ class PagesSeeder extends Seeder
             ],
             [
                 'page' => 'Welcome',
-            ]
+            ],
         ];
         foreach ($content as $attributes) {
             ContentPages::factory()->create($attributes);

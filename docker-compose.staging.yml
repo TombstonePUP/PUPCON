@@ -1,0 +1,54 @@
+name: pupcon_staging
+
+services:
+  # database-staging:
+  #   image: postgres:18
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5433:5432" # optional; remove this if only containers need DB access
+  #   volumes:
+  #     - postgres-data-staging:/var/lib/postgresql
+  #   environment:
+  #     POSTGRES_DB: ${POSTGRES_DATABASE:-app}
+  #     POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+  #     PGDATA: /var/lib/postgresql/data/pgdata
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  api-staging:
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+      target: staging
+    image: pupcon-api:staging-${APP_VERSION}
+    container_name: laravel-api-staging
+    restart: unless-stopped
+    env_file:
+      - ./.env.staging
+    volumes:
+      - laravel-storage-staging:/var/www/storage
+      - public-assets:/var/www/public/build:rw
+
+  web-staging:
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
+      target: staging
+    image: pupcon-client:staging-${APP_VERSION}
+    container_name: react-frontend-staging
+    restart: unless-stopped
+    volumes:
+      - laravel-storage-staging:/var/www/storage:ro
+      - public-assets:/var/www/public/build:ro
+    ports:
+      - "8000:80"
+
+volumes:
+  postgres-data-staging:
+  laravel-storage-staging:
+  public-assets:
+

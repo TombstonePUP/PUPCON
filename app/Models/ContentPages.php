@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\ContentPagesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ContentPages extends Model
 {
-    /** @use HasFactory<\Database\Factories\ContentPagesFactory> */
+    /** @use HasFactory<ContentPagesFactory> */
     use HasFactory;
 
     /**
@@ -16,8 +17,11 @@ class ContentPages extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'content_pages';
+
     protected $primaryKey = 'content_page_id';
+
     protected $fillable = [
         'page',
         'title',

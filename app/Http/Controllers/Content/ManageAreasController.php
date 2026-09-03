@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\AreaFiles;
 use App\Models\Areas;
 use App\Models\Programs;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use App\Models\AreaForms;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ManageAreasController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate(
             [
@@ -54,7 +55,7 @@ class ManageAreasController extends Controller
 
         $level = $program->Levels->first();
 
-        $level_name = $level->level === 0 ? 'psv' : 'level_' . $level->level;
+        $level_name = $level->level === 0 ? 'psv' : 'level_'.$level->level;
 
         $area = $level->Areas()->create([
             'area_name' => $validated['area_name'],
@@ -65,9 +66,9 @@ class ManageAreasController extends Controller
         $disk = Storage::disk('public');
 
         if (isset($validated['area_image'])) {
-            $areaImageName = Str::slug($validated['area_name'], '_') . '.' . $validated['area_image']->getClientOriginalExtension();
-            $path = Str::slug($program->program_name, '_') . $level_name . '/assets';
-            $areaImagePath = $path . '/' . $areaImageName;
+            $areaImageName = Str::slug($validated['area_name'], '_').'.'.$validated['area_image']->getClientOriginalExtension();
+            $path = Str::slug($program->program_name, '_').$level_name.'/assets';
+            $areaImagePath = $path.'/'.$areaImageName;
             if ($disk->exists($areaImagePath)) {
                 $disk->delete($areaImagePath);
             }
@@ -78,22 +79,25 @@ class ManageAreasController extends Controller
         }
         $area->save();
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Created Area "' . $area->area_name . '" in ' . $program->program_name . ' - ' . Str::title(str_replace('_', ' ', $level_name)),
-            'activity' => 'Create',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Create,
+            description: 'Created Area "'
+                .$area->area_name.'" in '
+                .$program->program_name.' - '
+                .Str::title(str_replace('_', ' ', $level_name)),
+        );
 
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Area Created')
-            ->with('message', 'Area "' . $area->area_name . '" has been created successfully.');
+            ->with('message', 'Area "'.$area->area_name.'" has been created successfully.');
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @return RedirectResponse
      */
     public function update(Request $request)
     {
@@ -132,24 +136,24 @@ class ManageAreasController extends Controller
             ->where('accreditation_level_id', $request->level_id)
             ->firstOrFail();
 
-        $level_name = $level->level === 0 ? 'psv' : 'level_' . $level->level;
+        $level_name = $level->level === 0 ? 'psv' : 'level_'.$level->level;
         // Get area
         $area = $level->Areas()
             ->where('area_id', $validated['area_id'])
             ->firstOrFail();
 
-        $base_path = Str::slug($program->program_name, '_') . '/' . $level_name;
+        $base_path = Str::slug($program->program_name, '_').'/'.$level_name;
 
         $old_folder = Str::slug($area->area_name, '_');
         $new_folder = Str::slug($validated['area_name'], '_');
 
-        $old_path = $base_path . '/' . $old_folder;
-        $new_path = $base_path . '/' . $new_folder;
+        $old_path = $base_path.'/'.$old_folder;
+        $new_path = $base_path.'/'.$new_folder;
 
         $disk = Storage::disk('public');
 
         AreaFiles::query()
-            ->whereHas('ParameterOutlines.AreaParameter.Areas', fn($q) => $q->where('area_id', $area->area_id))
+            ->whereHas('ParameterOutlines.AreaParameter.Areas', fn ($q) => $q->where('area_id', $area->area_id))
             ->cursor()
             ->each(function ($file) use ($old_folder, $new_folder, $disk) {
                 $old_file_path = $file->file_path;
@@ -173,7 +177,7 @@ class ManageAreasController extends Controller
 
         if ($area->area_name !== $validated['area_name']) {
             if ($disk->exists($area->area_image_path)) {
-                $newAreaImageName = Str::slug($validated['area_name'], '_') . '.' . Str::afterLast($area->area_image_name, '.');
+                $newAreaImageName = Str::slug($validated['area_name'], '_').'.'.Str::afterLast($area->area_image_name, '.');
                 $newAreaImagePath = Str::of($area->area_image_path)->replace($area->area_image_name, $newAreaImageName);
                 $disk->move($area->area_image_path, $newAreaImagePath);
                 $area->area_image_name = $newAreaImageName;
@@ -185,9 +189,9 @@ class ManageAreasController extends Controller
         $area->area_number = $validated['area_number'];
         $area->area_description = $validated['area_description'] ?? null;
         if (isset($validated['area_image'])) {
-            $areaImageName = 'area_' . Str::slug($validated['area_name'], '_') . '.' . $validated['area_image']->getClientOriginalExtension();
-            $path = Str::slug($program->program_name, '_') . '/level_' . $program->Levels->first()->level;
-            $areaImagePath = $path . '/' . $areaImageName;
+            $areaImageName = 'area_'.Str::slug($validated['area_name'], '_').'.'.$validated['area_image']->getClientOriginalExtension();
+            $path = Str::slug($program->program_name, '_').'/level_'.$program->Levels->first()->level;
+            $areaImagePath = $path.'/'.$areaImageName;
             if ($disk->exists($areaImagePath)) {
                 $disk->delete($areaImagePath);
             }
@@ -198,22 +202,24 @@ class ManageAreasController extends Controller
         $area->save();
 
         $user = Auth::user();
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Area "' . $area->area_name . '" in ' . $program->program_name . ' - level_' . $level->level,
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated Area "'
+                .$area->area_name.'" in '
+                .$program->program_name.' - level_'.$level->level,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Area Updated')
-            ->with('message', 'Area "' . $area->area_name . '" has been updated successfully.');
+            ->with('message', 'Area "'.$area->area_name.'" has been updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @return RedirectResponse
      */
     public function destroy(Areas $areas, Request $request)
     {
@@ -229,17 +235,18 @@ class ManageAreasController extends Controller
         }
 
         $user = Auth::user();
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Archived Area "' . $area->area_name . '"' . 'From ' . $request->program_name . ' - level_' . $area->Levels->first()->level,
-            'activity' => 'Archive',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Archive,
+            description: 'Archived Area "'
+                .$area->area_name.'"'
+                .'From '.$request->program_name
+                .' - level_'.$area->Levels->first()->level,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Area Archived')
-            ->with('message', 'Area "' . $area->area_name . '" has been archived successfully.');
+            ->with('message', 'Area "'.$area->area_name.'" has been archived successfully.');
     }
 }

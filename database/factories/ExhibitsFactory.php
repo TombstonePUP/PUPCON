@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Exhibits;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Exhibits>
+ * @extends Factory<Exhibits>
  */
 class ExhibitsFactory extends Factory
 {
@@ -17,9 +18,9 @@ class ExhibitsFactory extends Factory
     public function definition(): array
     {
         return [
-            'exhibit_id' => fake()->unique()->randomNumber(),
-            'exhibit_name' => fake()->word(),
-            'container' => fake()->boolean(),
+            /* 'exhibit_id' => $this->faker->unique()->randomNumber(),
+            'exhibit_name' => $this->faker->word(),
+            'container' => $this->faker->boolean(), */
         ];
     }
 }

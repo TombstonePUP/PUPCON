@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\FileStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FileStatus>
+ * @extends Factory<FileStatus>
  */
 class FileStatusFactory extends Factory
 {
@@ -17,8 +18,8 @@ class FileStatusFactory extends Factory
     public function definition(): array
     {
         return [
-            'file_status_id' => fake()->unique()->randomNumber(),
-            'status_name' => fake()->unique()->word(),
+            /* 'file_status_id' => $this->faker->unique()->randomNumber(),
+            'status_name' => $this->faker->unique()->word(), */
         ];
     }
 }

@@ -5,15 +5,13 @@ namespace App\Http\Middleware;
 use App\Models\ParameterOutlines;
 use App\Models\Programs;
 use App\Traits\ProgramLinkFormats;
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
     use ProgramLinkFormats;
+
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -83,7 +81,7 @@ class HandleInertiaRequests extends Middleware
         if ($role === 'Admin' || $role === 'Coordinator') {
             $programs = Programs::select('program_name', 'program_id')
                 ->where('is_active', true)
-            ->whereHas('latestLevel')
+                ->whereHas('latestLevel')
                 ->with('latestLevel')
                 ->get();
         } elseif ($role === 'Chairman') {
@@ -104,11 +102,13 @@ class HandleInertiaRequests extends Middleware
 
         $programs_under_survey = $programs_under_survey->map(function ($program) {
             $this->formatPrograms($program);
+
             return $program;
         });
 
         $programs = $programs->map(function ($program) {
             $this->formatPrograms($program);
+
             return $program;
         });
 
@@ -117,9 +117,9 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'flash' => [
-                'type' => fn() => $request->session()->get('type'),
-                'title' => fn() => $request->session()->get('title'),
-                'message' => fn() => $request->session()->get('message'),
+                'type' => fn () => $request->session()->get('type'),
+                'title' => fn () => $request->session()->get('title'),
+                'message' => fn () => $request->session()->get('message'),
             ],
             'auth' => [
                 'user' => $user,

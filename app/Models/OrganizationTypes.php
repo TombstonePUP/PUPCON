@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\OrganizationTypesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrganizationTypes extends Model
 {
-    /** @use HasFactory<\Database\Factories\OrganizationTypesFactory> */
+    /** @use HasFactory<OrganizationTypesFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class OrganizationTypes extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'organization_types';
+
     protected $primaryKey = 'type_id';
+
     protected $fillable = [
         'type_name',
     ];

@@ -2,25 +2,28 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\ContentPages;
 use App\Models\OtherServices;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Inertia\Response;
 
 class OtherServicesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $services_page = ContentPages::where('page', 'Other Services')->first();
         $services = OtherServices::all();
 
-        return inertia('content-management/other-services', [
+        return inertia('admin/content-management/other-services', [
             'services_page' => $services_page,
             'services' => $services,
         ]);
@@ -29,7 +32,7 @@ class OtherServicesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, OtherServices $otherServices)
+    public function update(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'page' => ['required', 'array'],
@@ -76,13 +79,11 @@ class OtherServicesController extends Controller
             ]);
         }
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Other Services Content Page',
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated Other Services Content Page',
+        );
 
         $service_ids = [];
         foreach ($validated['other_services'] as $serviceData) {
@@ -92,26 +93,23 @@ class OtherServicesController extends Controller
                 $service->description = $serviceData['description'];
                 $service->service_link = $serviceData['service_link'];
                 $service->save();
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated Other Service: ' . $service->service_name,
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated Other Service: '.$service->service_name,
+                );
             } else {
                 $service = OtherServices::create([
                     'service_name' => $serviceData['service_name'],
                     'description' => $serviceData['description'],
                     'service_link' => $serviceData['service_link'],
                 ]);
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Created Other Service: ' . $service->service_name,
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Created Other Service: '.$service->service_name,
+                );
             }
             $service_ids[] = $service->service_id;
         }

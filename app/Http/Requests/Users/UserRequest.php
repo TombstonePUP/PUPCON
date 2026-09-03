@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Users;
 
 use App\Models\Roles;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,32 +15,34 @@ class UserRequest extends FormRequest
     public function authorize(): bool
     {
         $user = $this->user();
+
         return $user && $user->Roles->whereIn('role_name', ['Admin', 'Coordinator'])->exists();
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         $chairman = Roles::where('role_name', 'Chairman')->first();
+
         return [
             'user_id' => [
                 'integer',
                 'exists:users,user_id',
-                Rule::requiredIf(fn () => $this->method() === 'PATCH')
+                Rule::requiredIf(fn () => $this->method() === 'PATCH'),
             ],
             'first_name' => [
                 'string',
                 'max:255',
-                Rule::requiredIf(fn () => $this->user_id === null && $this->method() === 'POST')
+                Rule::requiredIf(fn () => $this->user_id === null && $this->method() === 'POST'),
             ],
             'last_name' => [
                 'string',
                 'max:255',
-                Rule::requiredIf(fn () => $this->user_id === null && $this->method() === 'POST')
+                Rule::requiredIf(fn () => $this->user_id === null && $this->method() === 'POST'),
             ],
             'email' => [
                 'lowercase',
@@ -47,7 +50,7 @@ class UserRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::requiredIf(fn () => $this->user_id === null && $this->method() === 'POST')
+                Rule::requiredIf(fn () => $this->user_id === null && $this->method() === 'POST'),
             ],
             'assigned_role' => ['required', 'integer', 'exists:roles,role_id'],
             'assigned_areas' => [

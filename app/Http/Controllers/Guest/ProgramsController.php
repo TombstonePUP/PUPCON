@@ -4,21 +4,19 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Programs;
-use App\Traits\ProgramLinkFormats;
 use App\Traits\AreaNumeralFormat;
-use Illuminate\Support\Str;
-use Inertia\Inertia;
-use Inertia\Response;
+use App\Traits\ProgramLinkFormats;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class ProgramsController extends Controller
 {
-    use ProgramLinkFormats, AreaNumeralFormat;
+    use AreaNumeralFormat, ProgramLinkFormats;
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $programs = Programs::select('program_id', 'degree_type', 'program_name', 'program_description', 'program_image_name', 'program_image_path')
             ->with('ActiveLevels')
@@ -28,11 +26,14 @@ class ProgramsController extends Controller
 
         $programs = $programs->map(function ($program) {
             $this->formatPrograms($program);
-            $program->program_image_path = $program->program_image_path ? Storage::url($program->program_image_path) : null;
+            $program->program_image_path = $program->program_image_path
+                ? (str_starts_with($program->program_image_path, '/') ? $program->program_image_path : Storage::url($program->program_image_path))
+                : null;
+
             return $program;
         });
 
-        return inertia('programs', [
+        return inertia('guest/programs', [
             'programs' => $programs,
         ]);
     }
@@ -52,15 +53,23 @@ class ProgramsController extends Controller
             'Gallery',
         ]);
 
-        $program->program_image_path = $program->program_image_path ? Storage::url($program->program_image_path) : null;
+        $program->program_image_path = $program->program_image_path
+            ? (str_starts_with($program->program_image_path, '/') ? $program->program_image_path : Storage::url($program->program_image_path))
+            : null;
 
         $program->FacultyStaff = $program->FacultyStaff->map(function ($faculty) {
-            $faculty->image_path = $faculty->image_path ? Storage::url($faculty->image_path) : null;
+            $faculty->image_path = $faculty->image_path
+                ? (str_starts_with($faculty->image_path, '/') ? $faculty->image_path : Storage::url($faculty->image_path))
+                : null;
+
             return $faculty;
         });
 
         $program->Gallery = $program->Gallery->map(function ($gallery) {
-            $gallery->image_path = Storage::url($gallery->image_path);
+            $gallery->image_path = $gallery->image_path
+                ? (str_starts_with($gallery->image_path, '/') ? $gallery->image_path : Storage::url($gallery->image_path))
+                : null;
+
             return $gallery;
         });
 
@@ -68,13 +77,17 @@ class ProgramsController extends Controller
         $program->Levels->Areas = $program->Levels->flatMap(function ($level) {
             $level->Areas = $level->Areas->map(function ($area) {
                 $area->area_numeral = $this->toRoman($area->area_number);
-                $area->area_image_path = $area->area_image_path ? Storage::url($area->area_image_path) : null;
+                $area->area_image_path = $area->area_image_path
+                    ? (str_starts_with($area->area_image_path, '/') ? $area->area_image_path : Storage::url($area->area_image_path))
+                    : null;
+
                 return $area;
             });
+
             return $level->Areas;
         });
 
-        return inertia('programview', [
+        return inertia('guest/programview', [
             'program' => $program,
         ]);
     }

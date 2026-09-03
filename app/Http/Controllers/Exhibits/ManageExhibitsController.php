@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers\Exhibits;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\Exhibits;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ManageExhibitsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $exhibits = Exhibits::with(['ExhibitOutlines.ExhibitFiles'])->get();
 
@@ -42,7 +45,7 @@ class ManageExhibitsController extends Controller
             return $exhibit;
         });
 
-        return Inertia::render('document/exhibits', [
+        return Inertia::render('admin/document/exhibits', [
             'exhibits' => $exhibits,
         ]);
     }
@@ -50,7 +53,7 @@ class ManageExhibitsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'exhibit_id' => ['nullable', 'integer', 'exists:exhibits,exhibit_id'],
@@ -67,13 +70,13 @@ class ManageExhibitsController extends Controller
         if ($isUpdate) {
             $exhibit = Exhibits::findOrFail($validated['exhibit_id']);
         } else {
-            $exhibit = new Exhibits();
+            $exhibit = new Exhibits;
         }
 
         // Handle image upload if provided
         if (isset($validated['image'])) {
-            $imageName = $validated['exhibit_name'] . '.' . $validated['image']->getClientOriginalExtension();
-            $imagePath = 'exhibits/assets/' . $imageName;
+            $imageName = $validated['exhibit_name'].'.'.$validated['image']->getClientOriginalExtension();
+            $imagePath = 'exhibits/assets/'.$imageName;
 
             $validated['image']->storeAs('exhibits/assets', $imageName, 'public');
 
@@ -88,8 +91,8 @@ class ManageExhibitsController extends Controller
 
         //  AUTO-CREATE OUTLINE IF NOT A CONTAINER
         //  Only for NEW exhibits (not updating)
-        if (!$exhibit->container && !$isUpdate) {
-            if (!$exhibit->ExhibitOutlines()->exists()) {
+        if (! $exhibit->container && ! $isUpdate) {
+            if (! $exhibit->ExhibitOutlines()->exists()) {
                 $exhibit->ExhibitOutlines()->create([
                     'outline_description' => $exhibit->exhibit_name,
                     'category' => null,
@@ -97,16 +100,13 @@ class ManageExhibitsController extends Controller
             }
         }
 
-        //  Log activity
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'activity' => $isUpdate ? 'Update' : 'Create',
-            'description' => ($isUpdate
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: $isUpdate ? ActivityLogAction::Update : ActivityLogAction::Create,
+            description: ($isUpdate
                 ? "Updated exhibit '{$exhibit->exhibit_name}'."
                 : "Created exhibit '{$exhibit->exhibit_name}'."),
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -119,7 +119,7 @@ class ManageExhibitsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): RedirectResponse
     {
         $exhibit = Exhibits::find($request->exhibit_id);
         $user = Auth::user();
@@ -135,18 +135,21 @@ class ManageExhibitsController extends Controller
                             Storage::disk('public')->delete($outline->ExhibitFiles->file_path);
                         }
                         $outline->ExhibitFiles->delete();
+                        ActivityLogService::fileManagementLog(
+                            userId: $user->user_id,
+                            activity: ActivityLogAction::Delete,
+                            description: "Deleted exhibit file/s '{$exhibit->exhibit_name}'.",
+                        );
                     }
                     $outline->delete();
                 }
             }
 
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'activity' => 'Delete',
-                'description' => "Deleted exhibit '{$exhibit->exhibit_name}'.",
-                'type' => 'Content',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: "Deleted exhibit '{$exhibit->exhibit_name}'.",
+            );
 
             return redirect()->back()
                 ->with('type', 'success')

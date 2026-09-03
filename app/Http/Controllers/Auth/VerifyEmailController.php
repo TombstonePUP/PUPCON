@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,7 @@ class VerifyEmailController extends Controller
             return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
         }
 
-        if (!Hash::check($validated['otp'], $user->otp)) {
+        if (! Hash::check($validated['otp'], $user->otp)) {
             return redirect()->back()->withErrors(['otp' => 'The provided OTP is invalid.']);
         }
         if ($user->otp_expires_at->isPast()) {
@@ -32,7 +33,7 @@ class VerifyEmailController extends Controller
         }
 
         if ($user->markEmailAsVerified()) {
-            /** @var \Illuminate\Contracts\Auth\MustVerifyEmail $user */
+            /** @var MustVerifyEmail $user */
             $user = $request->user();
 
             event(new Verified($user));

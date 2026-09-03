@@ -25,7 +25,7 @@ const SectionFooter: React.FC<SectionFooterProps> = ({
   previewUrl,
 }) => {
   return (
-    <div className="rounded-b-lg border-t border-border bg-muted/50 px-8 py-4">
+    <div className=" border-t border-border bg-muted/50 px-8 py-4">
       <div className="flex items-center justify-end gap-3">
         {onPreview && (
           <Dialog>
@@ -42,7 +42,7 @@ const SectionFooter: React.FC<SectionFooterProps> = ({
                   {previewDescription}
                 </DialogDescription>
               </DialogHeader>
-              <div className="my-0 rounded-md border border-warning-border bg-warning p-4">
+              <div className="my-0 rounded-md border border-warning-border bg-warning/30 p-4">
                 <p className="text-sm text-warning-foreground">
                   <span className="mb-1 block font-semibold text-warning-foreground">Note: Redirecting page!</span>
                   This will open a new tab and take you to the section you edited.

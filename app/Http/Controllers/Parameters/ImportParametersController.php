@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers\Parameters;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
-use App\Models\AreaParameters;
-use App\Models\Programs;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
-use Illuminate\Http\Request;
+use App\Models\Programs;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use League\Csv\Reader;
 use Illuminate\Support\Facades\DB;
-
+use League\Csv\Reader;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ImportParametersController extends Controller
 {
-    public function download()
+    public function download(): BinaryFileResponse
     {
         $filePath = public_path('/documents/import_parameter.csv');
         $headers = ['Content-Type' => 'text/csv'];
         $fileName = 'parameter_template.csv';
+
         return response()->download($filePath, $fileName, $headers);
     }
 
@@ -58,12 +59,14 @@ class ImportParametersController extends Controller
                 if (stripos($record, '#parameters') === 0) {
                     $section = 'parameters';
                     $headers = [];
+
                     continue;
                 }
 
                 if (stripos($record, '#benchmarks') === 0) {
                     $section = 'benchmarks';
                     $headers = [];
+
                     continue;
                 }
 
@@ -74,12 +77,13 @@ class ImportParametersController extends Controller
 
                 $columns = str_getcsv($record);
 
-                if (count(array_filter($columns, fn($value) => trim($value) !== '')) === 0) {
+                if (count(array_filter($columns, fn ($value) => trim($value) !== '')) === 0) {
                     continue;
                 }
 
                 if (empty($headers) && in_array('parameter', $columns)) {
                     $headers = $columns;
+
                     continue;
                 }
 
@@ -94,13 +98,14 @@ class ImportParametersController extends Controller
                         ]
                     );
                     $parameters[$row['parameter']] = $parameter->area_parameter_id;
-                    ActivityLog::create([
-                        'user_id' => $user->user_id,
-                        'activity' => 'Import Parameter',
-                        'description' => "Imported parameter '{$row['parameter']}' for area '{$area->area_name}' in program '{$program->program_name}'-'{$program->Levels->level}'.",
-                        'type' => 'Content',
-                        'activity_date' => now(),
-                    ]);
+                    ActivityLogService::contentManagementLog(
+                        userId: $user->user_id,
+                        activity: ActivityLogAction::Import,
+                        description: "Imported parameter
+                            '{$row['parameter']}' for area
+                            '{$area->area_name}' in program
+                            '{$program->program_name}'-'{$program->Levels->level}'.",
+                    );
                 }
 
                 if ($section === 'benchmarks') {
@@ -121,13 +126,15 @@ class ImportParametersController extends Controller
                                 'container' => filter_var($row['benchmark_container'], FILTER_VALIDATE_BOOLEAN),
                             ]
                         );
-                        ActivityLog::create([
-                            'user_id' => $user->user_id,
-                            'activity' => 'Import Benchmark',
-                            'description' => "Imported benchmark '{$row['benchmark_number']}' for parameter '{$row['parameter']}' in area '{$area->area_name}' in program '{$program->program_name}'-'{$program->Levels->level}'.",
-                            'type' => 'Content',
-                            'activity_date' => now(),
-                        ]);
+                        ActivityLogService::contentManagementLog(
+                            userId: $user->user_id,
+                            activity: ActivityLogAction::Import,
+                            description: "Imported benchmark
+                                '{$row['benchmark_number']}' for parameter
+                                '{$row['parameter']}' in area
+                                '{$area->area_name}' in program
+                                '{$program->program_name}'-'{$program->Levels->level}'.",
+                        );
                     }
                 }
             }

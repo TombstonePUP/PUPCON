@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
-use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use App\Models\UniversityAdministration;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class AdministrationController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'page' => ['nullable', 'array'],
@@ -70,13 +72,11 @@ class AdministrationController extends Controller
             ]);
         }
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated University Administration Page',
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated University Administration Page',
+        );
 
         $administration_ids = [];
         foreach ($validated['officials'] ?? [] as $officialData) {
@@ -96,8 +96,8 @@ class AdministrationController extends Controller
 
             // --- UPLOAD NEW IMAGE IF PRESENT ---
             if (isset($officialData['profile'])) {
-                $profilename = $officialData['first_name'] . '-' . $officialData['last_name'] . '.' . $officialData['profile']->getClientOriginalExtension();
-                $profilepath = 'administration_profiles/' . $profilename;
+                $profilename = $officialData['first_name'].'-'.$officialData['last_name'].'.'.$officialData['profile']->getClientOriginalExtension();
+                $profilepath = 'administration_profiles/'.$profilename;
 
                 // delete old one
                 if ($official && $official->profile_picture_path && Storage::disk('public')->exists($official->profile_picture_path)) {
@@ -120,13 +120,11 @@ class AdministrationController extends Controller
                     'profile_picture_path' => $profilepath ?? $official->profile_picture_path,
                 ]);
                 $administration_ids[] = $official->administration_id;
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated University Official: ' . $official->first_name . ' ' . $official->last_name,
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated University Official: '.$official->first_name.' '.$official->last_name,
+                );
             } else {
                 $official = UniversityAdministration::create([
                     'first_name' => $officialData['first_name'],
@@ -139,13 +137,11 @@ class AdministrationController extends Controller
                     'profile_picture_path' => $profilepath,
                 ]);
                 $administration_ids[] = $official->administration_id;
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Added University Official: ' . $official->first_name . ' ' . $official->last_name,
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Added University Official: '.$official->first_name.' '.$official->last_name,
+                );
             }
         }
 
@@ -154,13 +150,11 @@ class AdministrationController extends Controller
             if ($official->profile_picture_path && Storage::disk('public')->exists($official->profile_picture_path)) {
                 Storage::disk('public')->delete($official->profile_picture_path);
             }
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'description' => 'Deleted University Official: ' . $official->first_name . ' ' . $official->last_name,
-                'activity' => 'Delete',
-                'type' => 'Content',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: 'Deleted University Official: '.$official->first_name.' '.$official->last_name,
+            );
         }
 
         UniversityAdministration::whereNotIn('administration_id', $administration_ids)->delete();

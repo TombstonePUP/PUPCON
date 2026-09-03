@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\AreaFormCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AreaFormCategory>
+ * @extends Factory<AreaFormCategory>
  */
 class AreaFormCategoryFactory extends Factory
 {
@@ -17,8 +18,8 @@ class AreaFormCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'area_form_category_id' => fake()->unique()->randomNumber(),
-            'category_name' => fake()->word(),
+            /* 'area_form_category_id' => $this->faker->unique()->randomNumber(),
+            'category_name' => $this->faker->word(), */
         ];
     }
 }

@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\ExhibitsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Exhibits extends Model
 {
-    /** @use HasFactory<\Database\Factories\ExhibitsFactory> */
+    /** @use HasFactory<ExhibitsFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class Exhibits extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'exhibits';
+
     protected $primaryKey = 'exhibit_id';
+
     protected $fillable = [
         'exhibit_name',
         'image_name',

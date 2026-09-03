@@ -1,0 +1,101 @@
+name: Deploy - OpenTofu Apply + SSM Deploy to EC2
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      app_version:
+        required: true
+        type: string
+      aws_region:
+        required: false
+        type: string
+        default: "ap-southeast-1"
+      compose_file:
+        required: false
+        type: string
+        default: "docker-compose.prod.run.yml"
+      env_file:
+        required: false
+        type: string
+        default: ".env.production"
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      ENV_FILE_CONTENT:
+        description: "Full content of the environment file (env_file) to write on the EC2 instance"
+        required: false
+    outputs:
+      instance_id:
+        description: "The EC2 instance that was deployed to"
+        value: ${{ jobs.deploy.outputs.instance_id }}
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    outputs:
+      instance_id: ${{ steps.apply.outputs.instance_id }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.9.0
+          tofu_wrapper: false
+
+      - name: OpenTofu Init
+        working-directory: infra/environments/${{ inputs.environment }}
+        run: |
+          tofu init \
+            -input=false \
+            -backend-config="key=${{ inputs.environment }}/terraform.tfstate"
+
+      - name: OpenTofu Plan
+        working-directory: infra/environments/${{ inputs.environment }}
+        run: |
+          tofu plan \
+            -input=false \
+            -var-file=terraform.tfvars \
+            -out=tfplan
+
+      - name: OpenTofu Apply
+        id: apply
+        working-directory: infra/environments/${{ inputs.environment }}
+        run: |
+          tofu apply -input=false -auto-approve tfplan
+          echo "instance_id=$(tofu output -raw instance_id)" >> $GITHUB_OUTPUT
+
+      - name: Deploy images to EC2 via SSM
+        run: |
+          chmod +x .github/scripts/deploy_ssm.sh
+          .github/scripts/deploy_ssm.sh
+        env:
+          INSTANCE_ID: ${{ steps.apply.outputs.instance_id }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          APP_VERSION: ${{ inputs.app_version }}
+          AWS_REGION: ${{ inputs.aws_region }}
+          ENV_FILE: ${{ inputs.env_file }}
+          COMPOSE_FILE: ${{ inputs.compose_file }}
+          ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}

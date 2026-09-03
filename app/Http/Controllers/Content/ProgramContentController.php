@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\Programs;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ProgramContentController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
-        // dd($request->all());
         $validator = Validator::make(
             $request->all(),
             [
@@ -36,17 +37,18 @@ class ProgramContentController extends Controller
                     Rule::requiredIf(function () use ($request) {
                         $index = null;
                         foreach ($request->input('gallery', []) as $i => $item) {
-                            if (!isset($item['image']) && empty($item['previewUrl'])) {
+                            if (! isset($item['image']) && empty($item['previewUrl'])) {
                                 $index = $i;
                                 break;
                             }
                         }
+
                         return $index !== null;
                     }),
                     'nullable',
                     'file',
                     'mimes:jpg,jpeg,png',
-                    'max:20480'
+                    'max:20480',
                 ],
                 'gallery.*.previewUrl' => ['nullable', 'string'],
                 'gallery.*.caption' => ['required', 'string', 'max:255'],
@@ -84,15 +86,15 @@ class ProgramContentController extends Controller
         $program_name = Str::slug($program->program_name, '_');
         $degree_type = Str::slug($program->degree_type, '_');
         if (isset($validated['banner'])) {
-            $bannerName = $program_name . '_banner.' . $validated['banner']->getClientOriginalExtension();
-            $bannerPath = 'documents/' . $degree_type . '_' . $program_name . '/assets/' . $bannerName;
+            $bannerName = $program_name.'_banner.'.$validated['banner']->getClientOriginalExtension();
+            $bannerPath = 'documents/'.$degree_type.'_'.$program_name.'/assets/'.$bannerName;
             if (Storage::disk('public')->exists($bannerPath)) {
                 Storage::disk('public')->delete($bannerPath);
             }
-            $validated['banner']->storeAs('documents/' . $degree_type . '_' . $program_name . '/assets/', $bannerName, 'public');
+            $validated['banner']->storeAs('documents/'.$degree_type.'_'.$program_name.'/assets/', $bannerName, 'public');
         }
 
-        if ($program->program_image_path && !isset($validated['previewUrl'])) {
+        if ($program->program_image_path && ! isset($validated['previewUrl'])) {
             Storage::disk('public')->delete($program->program_image_path);
             $program->program_image_name = null;
             $program->program_image_path = null;
@@ -133,12 +135,12 @@ class ProgramContentController extends Controller
             $imagePath = null;
             if (isset($galleryItem['image'])) {
                 $caption = Str::slug($galleryItem['caption'], '_');
-                $imageName = 'gallery_' . $caption . uniqid() . '.' . $galleryItem['image']->getClientOriginalExtension();
-                $imagePath = 'documents/' . $degree_type . '_' . $program_name . '/assets/gallery/' . $imageName;
+                $imageName = 'gallery_'.$caption.uniqid().'.'.$galleryItem['image']->getClientOriginalExtension();
+                $imagePath = 'documents/'.$degree_type.'_'.$program_name.'/assets/gallery/'.$imageName;
                 if (Storage::disk('public')->exists($imagePath)) {
                     Storage::disk('public')->delete($imagePath);
-                };
-                $galleryItem['image']->storeAs('documents/' . $degree_type . '_' . $program_name . '/assets/gallery/', $imageName, 'public');
+                }
+                $galleryItem['image']->storeAs('documents/'.$degree_type.'_'.$program_name.'/assets/gallery/', $imageName, 'public');
             }
             if ($galleryModel) {
                 $galleryModel->image_name = $imageName ?? $galleryModel->image_name;
@@ -159,13 +161,11 @@ class ProgramContentController extends Controller
             ->whereNotIn('program_gallery_id', $gallery_ids)
             ->delete();
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Program Content: ' . $program->program_name,
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated Program Content: '.$program->program_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')

@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\LocalTaskForceFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LocalTaskForce extends Model
 {
-    /** @use HasFactory<\Database\Factories\LocalTaskForceFactory> */
+    /** @use HasFactory<LocalTaskForceFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class LocalTaskForce extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'local_task_force';
+
     protected $primaryKey = 'local_task_force_id';
+
     protected $fillable = [
         'area_name',
         'first_name',
@@ -41,5 +45,4 @@ class LocalTaskForce extends Model
     {
         return $this->hasMany(LocalTaskForceMembers::class, 'local_task_force_id', 'local_task_force_id');
     }
-
 }

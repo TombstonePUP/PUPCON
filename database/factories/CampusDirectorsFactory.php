@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\CampusDirectors;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CampusDirectors>
+ * @extends Factory<CampusDirectors>
  */
 class CampusDirectorsFactory extends Factory
 {
@@ -17,13 +18,13 @@ class CampusDirectorsFactory extends Factory
     public function definition(): array
     {
         return [
-            'director_id' => fake()->unique()->randomNumber(),
-            'name' => fake()->name(),
-            'term_start_date' => fake()->date(),
-            'term_end_date' => fake()->date(),
-            'description' => fake()->paragraphs(4, true),
-            'profile_image_name' => fake()->word(),
-            'profile_image_path' => fake()->imageUrl(),
+            /* 'director_id' => $this->faker->unique()->randomNumber(),
+            'name' => $this->faker->name(),
+            'term_start_date' => $this->faker->date(),
+            'term_end_date' => $this->faker->date(),
+            'description' => $this->faker->paragraphs(4, true),
+            'profile_image_name' => $this->faker->word(),
+            'profile_image_path' => $this->faker->imageUrl(), */
         ];
     }
 }

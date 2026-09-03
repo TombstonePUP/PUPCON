@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LocalTaskForceMembers extends Model
@@ -17,8 +17,11 @@ class LocalTaskForceMembers extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'local_task_force_members';
+
     protected $primaryKey = 'member_id';
+
     protected $fillable = [
         'local_task_force_id',
         'full_name',

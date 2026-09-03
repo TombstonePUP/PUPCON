@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\CampusGoals;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CampusGoals>
+ * @extends Factory<CampusGoals>
  */
 class CampusGoalsFactory extends Factory
 {
@@ -17,11 +18,11 @@ class CampusGoalsFactory extends Factory
     public function definition(): array
     {
         return [
-            'goal_id' => fake()->unique()->randomNumber(),
-            'goal_title_eng' => fake()->sentence(),
-            'goal_desc_eng' => fake()->paragraphs(3, true),
-            'goal_title_fil' => fake()->sentence(),
-            'goal_desc_fil' => fake()->paragraphs(3, true),
+            /* 'goal_id' => $this->faker->unique()->randomNumber(),
+            'goal_title_eng' => $this->faker->sentence(),
+            'goal_desc_eng' => $this->faker->paragraphs(3, true),
+            'goal_title_fil' => $this->faker->sentence(),
+            'goal_desc_fil' => $this->faker->paragraphs(3, true), */
         ];
     }
 }

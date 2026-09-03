@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\Programs;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
+use App\Models\AreaFiles;
 use App\Models\AreaForms;
 use App\Models\Areas;
-use App\Models\AreaFiles;
 use App\Models\ProgramGallery;
 use App\Models\Programs;
-use App\Traits\ProgramLinkFormats;
+use App\Services\ActivityLogService;
 use App\Traits\AreaNumeralFormat;
-use Illuminate\Support\Str;
+use App\Traits\ProgramLinkFormats;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ManageProgramController extends Controller
 {
-    use ProgramLinkFormats, AreaNumeralFormat;
+    use AreaNumeralFormat, ProgramLinkFormats;
+
     /**
      * Display a listing of the resource.
      */
@@ -34,10 +36,11 @@ class ManageProgramController extends Controller
 
         $programs = $programs->map(function ($program) {
             $this->formatPrograms($program);
+
             return $program;
         });
 
-        return inertia('manage-programs', [
+        return inertia('admin/manage-programs', [
             'programs' => $programs,
         ]);
     }
@@ -56,6 +59,7 @@ class ManageProgramController extends Controller
         $program->program_image_path = $program->program_image_path ? Storage::url($program->program_image_path) : null;
         $program->Gallery->each(function ($gallery) {
             $gallery->image_path = Storage::url($gallery->image_path);
+
             return $gallery;
         });
 
@@ -63,6 +67,7 @@ class ManageProgramController extends Controller
             if ($level->accreditation_level_id != $level_id) {
                 $level->unsetRelation('Areas');
             }
+
             return $level;
         });
 
@@ -71,6 +76,7 @@ class ManageProgramController extends Controller
                 $level->Areas->each(function ($area) {
                     $area->area_numeral = $this->toRoman($area->area_number);
                     $area->area_image_path = $area->area_image_path ? Storage::url($area->area_image_path) : null;
+
                     return $area;
                 });
             }
@@ -78,7 +84,9 @@ class ManageProgramController extends Controller
 
         $program->program_link = Str::slug($program->program_name, '_');
 
-        return inertia('document/program', [
+        // dd($program);
+
+        return inertia('admin/document/program', [
             'program' => $program,
         ]);
     }
@@ -89,7 +97,7 @@ class ManageProgramController extends Controller
             [
                 'program_name' => ['required', 'string', 'max:255'],
                 'degree_type' => ['required', 'string', 'max:100'],
-                'color' => ['required', 'string' ],
+                'color' => ['required', 'string'],
             ],
             [
                 'program_name.required' => 'The program name field is required.',
@@ -103,7 +111,7 @@ class ManageProgramController extends Controller
         $color = Programs::where('color', $validated['color'])->first();
         if ($color) {
             return back()->withErrors([
-                'color' => 'The selected color is already in use. Please choose a different color.'
+                'color' => 'The selected color is already in use. Please choose a different color.',
             ]);
         }
 
@@ -115,7 +123,7 @@ class ManageProgramController extends Controller
 
         if ($existingProgram) {
             return back()->withErrors([
-                'program_name' => 'A program with this name and degree type already exists.'
+                'program_name' => 'A program with this name and degree type already exists.',
             ]);
         }
 
@@ -125,18 +133,16 @@ class ManageProgramController extends Controller
             'color' => $validated['color'],
         ]);
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Created a new program: ' . $program->program_name,
-            'activity' => 'Create',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Create,
+            description: 'Created a new program: '.$program->program_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Program Created')
-            ->with('message', 'Program "' . $program->program_name . '" has been created successfully.');
+            ->with('message', 'Program "'.$program->program_name.'" has been created successfully.');
     }
 
     public function update(Request $request)
@@ -147,7 +153,7 @@ class ManageProgramController extends Controller
             [
                 'program_name' => ['required', 'string', 'max:255'],
                 'degree_type' => ['required', 'string', 'max:100'],
-                'color' => ['required', 'string' ],
+                'color' => ['required', 'string'],
             ],
             [
                 'program_name.required' => 'The program name field is required.',
@@ -161,7 +167,7 @@ class ManageProgramController extends Controller
             ->first();
         if ($color) {
             return back()->withErrors([
-                'color' => 'The selected color is already in use. Please choose a different color.'
+                'color' => 'The selected color is already in use. Please choose a different color.',
             ]);
         }
 
@@ -175,30 +181,30 @@ class ManageProgramController extends Controller
 
         if ($existingProgram) {
             return back()->withErrors([
-                'program_name' => 'A program with this name and degree type already exists.'
+                'program_name' => 'A program with this name and degree type already exists.',
             ]);
         }
 
         $disk = Storage::disk('public');
 
         // Old & new base paths
-        $old_base_path = 'documents/' . Str::slug($program->degree_type, '_') . '_' . Str::slug($program->program_name, '_');
-        $new_base_path = 'documents/' . Str::slug($validated['degree_type'], '_') . '_' . Str::slug($validated['program_name'], '_');
+        $old_base_path = 'documents/'.Str::slug($program->degree_type, '_').'_'.Str::slug($program->program_name, '_');
+        $new_base_path = 'documents/'.Str::slug($validated['degree_type'], '_').'_'.Str::slug($validated['program_name'], '_');
 
         // Ensure new folder exists
-        if (!$disk->exists($new_base_path)) {
+        if (! $disk->exists($new_base_path)) {
             $disk->makeDirectory($new_base_path);
         }
 
         DB::transaction(function () use ($program, $validated, $disk, $old_base_path, $new_base_path) {
 
-            //Copy Program image
+            // Copy Program image
             if ($program->program_image_path && $disk->exists($program->program_image_path)) {
                 $extension = pathinfo($program->program_image_name, PATHINFO_EXTENSION);
-                $new_image_name = Str::slug($validated['program_name'], '_') . '.' . $extension;
-                $new_program_image_path = $new_base_path . '/assets/' . $new_image_name;
+                $new_image_name = Str::slug($validated['program_name'], '_').'.'.$extension;
+                $new_program_image_path = $new_base_path.'/assets/'.$new_image_name;
 
-                if (!$disk->exists(dirname($new_program_image_path))) {
+                if (! $disk->exists(dirname($new_program_image_path))) {
                     $disk->makeDirectory(dirname($new_program_image_path));
                 }
 
@@ -208,13 +214,13 @@ class ManageProgramController extends Controller
                 $program->save();
             }
 
-            //Copy Program Gallery
+            // Copy Program Gallery
             ProgramGallery::where('program_id', $program->program_id)->get()
                 ->each(function ($gallery) use ($disk, $new_base_path) {
                     if ($disk->exists($gallery->image_path)) {
-                        $new_image_path = $new_base_path . '/assets/gallery/' . basename($gallery->image_path);
+                        $new_image_path = $new_base_path.'/assets/gallery/'.basename($gallery->image_path);
 
-                        if (!$disk->exists(dirname($new_image_path))) {
+                        if (! $disk->exists(dirname($new_image_path))) {
                             $disk->makeDirectory(dirname($new_image_path));
                         }
 
@@ -224,17 +230,17 @@ class ManageProgramController extends Controller
                     }
                 });
 
-            //Copy Area images
-            Areas::whereHas('Levels', fn($q) => $q->where('program_id', $program->program_id))
+            // Copy Area images
+            Areas::whereHas('Levels', fn ($q) => $q->where('program_id', $program->program_id))
                 ->get()
                 ->each(function ($area) use ($disk, $old_base_path, $new_base_path, $validated) {
                     if ($area->area_image_path && $disk->exists($area->area_image_path)) {
                         $file_name = basename($area->area_image_path);
                         $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-                        $new_area_image_name = Str::slug($validated['program_name'], '_') . '_area_' . $area->area_number . '.' . $ext;
+                        $new_area_image_name = Str::slug($validated['program_name'], '_').'_area_'.$area->area_number.'.'.$ext;
                         $new_area_image_path = str_replace($old_base_path, $new_base_path, $area->area_image_path);
 
-                        if (!$disk->exists(dirname($new_area_image_path))) {
+                        if (! $disk->exists(dirname($new_area_image_path))) {
                             $disk->makeDirectory(dirname($new_area_image_path));
                         }
 
@@ -246,13 +252,13 @@ class ManageProgramController extends Controller
                     }
                 });
 
-            //Copy AreaFiles
-            AreaFiles::whereHas('ParameterOutlines.AreaParameter.Areas.Levels', fn($q) => $q->where('program_id', $program->program_id))
+            // Copy AreaFiles
+            AreaFiles::whereHas('ParameterOutlines.AreaParameter.Areas.Levels', fn ($q) => $q->where('program_id', $program->program_id))
                 ->get()
                 ->each(function ($file) use ($disk, $old_base_path, $new_base_path) {
                     if ($disk->exists($file->file_path)) {
                         $new_file_path = str_replace($old_base_path, $new_base_path, $file->file_path);
-                        if (!$disk->exists(dirname($new_file_path))) {
+                        if (! $disk->exists(dirname($new_file_path))) {
                             $disk->makeDirectory(dirname($new_file_path));
                         }
                         $disk->copy($file->file_path, $new_file_path);
@@ -261,13 +267,13 @@ class ManageProgramController extends Controller
                     }
                 });
 
-            //Copy AreaForms
-            AreaForms::whereHas('Area.Levels', fn($q) => $q->where('program_id', $program->program_id))
+            // Copy AreaForms
+            AreaForms::whereHas('Area.Levels', fn ($q) => $q->where('program_id', $program->program_id))
                 ->get()
                 ->each(function ($form) use ($disk, $old_base_path, $new_base_path) {
                     if ($disk->exists($form->file_path)) {
                         $new_form_path = str_replace($old_base_path, $new_base_path, $form->file_path);
-                        if (!$disk->exists(dirname($new_form_path))) {
+                        if (! $disk->exists(dirname($new_form_path))) {
                             $disk->makeDirectory(dirname($new_form_path));
                         }
                         $disk->copy($form->file_path, $new_form_path);
@@ -280,7 +286,7 @@ class ManageProgramController extends Controller
                 $disk->deleteDirectory($old_base_path);
             }
 
-            //Finally, update the program
+            // Finally, update the program
             $program->update([
                 'program_name' => $validated['program_name'],
                 'degree_type' => $validated['degree_type'],
@@ -288,18 +294,16 @@ class ManageProgramController extends Controller
             ]);
         });
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated program: ' . $program->program_name,
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated program: '.$program->program_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Program Updated')
-            ->with('message', 'Program "' . $program->program_name . '" has been updated successfully.');
+            ->with('message', 'Program "'.$program->program_name.'" has been updated successfully.');
     }
 
     public function destroy(Request $request)
@@ -335,17 +339,15 @@ class ManageProgramController extends Controller
             $level->update(['is_active' => false]);
         });
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Archived program: ' . $program->degree_type . ' ' . $program->program_name,
-            'activity' => 'Archive',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Archive,
+            description: 'Archived program: '.$program->degree_type.' '.$program->program_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
             ->with('title', 'Program Archived')
-            ->with('message', $programName . ' has been archived successfully.');
+            ->with('message', $programName.' has been archived successfully.');
     }
 }

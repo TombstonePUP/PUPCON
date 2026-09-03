@@ -1,0 +1,60 @@
+name: pupcon_staging
+
+services:
+  database-staging:
+    image: postgres:18
+    restart: unless-stopped
+    ports:
+      - "5433:5432" # optional; remove this if only containers need DB access
+    volumes:
+      - postgres-data-staging:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE:-pupcon}
+      POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pupcon_staging_network
+
+  api-staging:
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-api:staging-${APP_VERSION}
+    container_name: pupcon-api-staging
+    restart: unless-stopped
+    depends_on:
+      database-staging:
+        condition: service_healthy
+    env_file:
+      - ./.env.staging
+    volumes:
+      - laravel-storage-staging:/var/www/storage
+      - public-assets:/var/www/public/build:rw
+    networks:
+        - pupcon_staging_network
+
+  web-staging:
+    image: ghcr.io/zero-index-developers/pupcon/pupcon-client:staging-${APP_VERSION}
+    container_name: pupcon-client-staging
+    restart: unless-stopped
+    depends_on:
+      - api-staging
+    volumes:
+      - laravel-storage-staging:/var/www/storage:ro
+      - public-assets:/var/www/public/build:ro
+    ports:
+      - "8000:80"
+    networks:
+      - pupcon_staging_network
+
+volumes:
+  postgres-data-staging:
+  laravel-storage-staging:
+  public-assets:
+
+networks:
+  pupcon_staging_network:
+    driver: bridge

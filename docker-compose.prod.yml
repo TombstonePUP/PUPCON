@@ -1,0 +1,53 @@
+name: pupcon_production
+
+services:
+  # database-production:
+  #   image: postgres:18
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5433:5432" # optional; remove this if only containers need DB access
+  #   volumes:
+  #     - postgres-data-production:/var/lib/postgresql
+  #   environment:
+  #     POSTGRES_DB: ${POSTGRES_DATABASE:-app}
+  #     POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+  #     PGDATA: /var/lib/postgresql/data/pgdata
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  api-prod:
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+      target: production
+    image: pupcon-api:prod-${APP_VERSION}
+    container_name: laravel-api-prod
+    restart: unless-stopped
+    env_file:
+      - ./.env.production
+    volumes:
+      - laravel-storage-production:/var/www/storage
+      - public-assets:/var/www/public/build:rw
+
+  web-prod:
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
+      target: production
+    image: pupcon-client:prod-${APP_VERSION}
+    container_name: react-frontend-prod
+    restart: unless-stopped
+    volumes:
+      - laravel-storage-production:/var/www/storage:ro
+      - public-assets:/var/www/public/build:ro
+    ports:
+      - "8000:80"
+
+volumes:
+  postgres-data-production:
+  laravel-storage-production:
+  public-assets:

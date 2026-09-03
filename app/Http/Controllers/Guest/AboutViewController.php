@@ -7,15 +7,15 @@ use App\Models\ContentPages;
 use App\Models\Facilities;
 use App\Models\OrganizationTypes;
 use App\Models\Programs;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class AboutViewController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(): Response
     {
 
         $page = ContentPages::where('page', 'About')->first();
@@ -26,7 +26,8 @@ class AboutViewController extends Controller
         $facilities = Facilities::count();
 
         $org_types = OrganizationTypes::with('Organizations')->get();
-        return inertia('about/about', [
+
+        return inertia('guest/about/about', [
             'page' => $page,
             'programs' => $programs,
             'facilities' => $facilities,

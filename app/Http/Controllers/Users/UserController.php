@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserRequest;
-use App\Models\ActivityLog;
 use App\Models\Programs;
 use App\Models\Roles;
 use App\Models\User;
 use App\Notifications\NewUser;
-use Illuminate\Support\Str;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Inertia\Response;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $user = Auth::user();
         $programs = Programs::select('program_id', 'program_name')
@@ -37,14 +40,16 @@ class UserController extends Controller
         $programs->map(function ($program) {
             $program->levels = $program->Levels->first();
             unset($program->Levels);
-            return $program; });
+
+            return $program;
+        });
         $roles = [];
-        if($user->Roles->role_name == 'Coordinator'){
+        if ($user->Roles->role_name == 'Coordinator') {
             $roles = Roles::select('role_id', 'role_name')
                 ->where('role_name', '!=', 'Admin')
                 ->where('role_name', '!=', 'Coordinator')
                 ->get();
-        } elseif($user->Roles->role_name == 'Admin'){
+        } elseif ($user->Roles->role_name == 'Admin') {
             $roles = Roles::select('role_id', 'role_name')->get();
         }
 
@@ -65,7 +70,7 @@ class UserController extends Controller
                 },
             ])->get();
 
-        return inertia('user-management', [
+        return inertia('admin/user-management', [
             'programRoles' => $programs,
             'roles' => $roles,
             'userRecords' => $users,
@@ -75,11 +80,11 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request)
+    public function store(UserRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
-        $user = new User();
+        $user = new User;
         $password = Str::password(16, true, true, false, false);
 
         $user->first_name = $validated['first_name'];
@@ -95,33 +100,32 @@ class UserController extends Controller
             $user->Areas()->attach($validated['assigned_areas']);
         }
 
-        $name = $user->first_name . ' ' . $user->last_name;
+        $name = $user->first_name.' '.$user->last_name;
 
-        if($user->Roles->role_name === 'Accreditor'){
+        if ($user->Roles->role_name === 'Accreditor') {
             $user->notify(new NewUser($user->email, $name, ''));
         } else {
             $user->notify(new NewUser($user->email, $name, $password));
         }
 
-        $userAct = Auth::user();
-        ActivityLog::create([
-            'user_id' => $userAct->user_id,
-            'description' => 'Created New User: ' . $user->first_name . ' ' . $user->last_name,
-            'activity' => 'Create',
-            'type' => 'Users',
-            'activity_date' => now(),
-        ]);
+        $authUser = Auth::user();
+
+        ActivityLogService::userManagementLog(
+            userId: $authUser->user_id,
+            activity: ActivityLogAction::UserCreated,
+            description: 'Created New User: '.$user->first_name.' '.$user->last_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
-            ->with('title', "User Created Successfully")
-            ->with('message', "A new user has been created and notified via email.");
+            ->with('title', 'User Created Successfully')
+            ->with('message', 'A new user has been created and notified via email.');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function updateUserPrivileges(UserRequest $request)
+    public function updateUserPrivileges(UserRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         $user = User::findOrFail($validated['user_id']);
@@ -143,71 +147,65 @@ class UserController extends Controller
             $user->Areas()->sync($validated['assigned_areas']);
         }
 
-        $userAct = Auth::user();
+        $authUser = Auth::user();
 
-        ActivityLog::create([
-            'user_id' => $userAct->user_id,
-            'description' => 'Updated User Privileges: ' . $user->first_name . ' ' . $user->last_name,
-            'activity' => 'Update',
-            'type' => 'Users',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::userManagementLog(
+            userId: $authUser->user_id,
+            activity: ActivityLogAction::RoleChanged,
+            description: 'Updated User Privileges: '.$user->first_name.' '.$user->last_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
-            ->with('title', "User Updated Successfully")
+            ->with('title', 'User Updated Successfully')
             ->with('message', "The user's roles and areas have been updated.");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function disable(Request $request)
+    public function disable(Request $request): RedirectResponse
     {
         $user = User::findOrFail($request->user_id);
         $user->is_active = false;
         $user->updated_at = now();
         $user->save();
 
-        $userAct = Auth::user();
+        $authUser = Auth::user();
 
-        ActivityLog::create([
-            'user_id' => $userAct->user_id,
-            'description' => 'Disabled User: ' . $user->first_name . ' ' . $user->last_name,
-            'activity' => 'Disable',
-            'type' => 'Users',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::userManagementLog(
+            userId: $authUser->user_id,
+            activity: ActivityLogAction::UserUpdated,
+            description: 'Disabled User: '.$user->first_name.' '.$user->last_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
-            ->with('title', "User Disabled Successfully")
-            ->with('message', "The user has been disabled.");
+            ->with('title', 'User Disabled Successfully')
+            ->with('message', 'The user has been disabled.');
     }
 
     /**
      * Enable the specified resource from storage.
      */
-    public function enable(Request $request)
+    public function enable(Request $request): RedirectResponse
     {
         $user = User::findOrFail($request->user_id);
         $user->is_active = true;
         $user->updated_at = now();
         $user->save();
 
-        $userAct = Auth::user();
+        $authUser = Auth::user();
 
-        ActivityLog::create([
-            'user_id' => $userAct->user_id,
-            'description' => 'Enabled User: ' . $user->first_name . ' ' . $user->last_name,
-            'activity' => 'Enable',
-            'type' => 'Users',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::userManagementLog(
+            userId: $authUser->user_id,
+            activity: ActivityLogAction::UserUpdated,
+            description: 'Enabled User: '.$user->first_name.' '.$user->last_name,
+        );
 
         return redirect()->back()
             ->with('type', 'success')
-            ->with('title', "User Enabled Successfully")
-            ->with('message', "The user has been enabled.");
+            ->with('title', 'User Enabled Successfully')
+            ->with('message', 'The user has been enabled.');
     }
 }

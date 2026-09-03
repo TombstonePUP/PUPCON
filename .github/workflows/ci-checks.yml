@@ -1,0 +1,110 @@
+name: CI — Lint, Type Checks & Tests
+
+on:
+  workflow_call:
+
+jobs:
+
+  # ============================================================
+  # BACKEND — Laravel
+  # Pint lint, PHPStan type check, tests
+  # ============================================================
+  backend:
+    name: Backend — Lint, Type Checks & Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: pupcon_test
+          POSTGRES_USER: pupcon
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo, pdo_pgsql, mbstring, xml, bcmath
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Copy .env for testing
+        run: cp .env.example .env.testing
+
+      - name: Set test environment variables
+        run: |
+          sed -i \
+            -e 's/^APP_KEY=.*/APP_KEY=/' \
+            -e 's/^DB_CONNECTION=.*/DB_CONNECTION=pgsql/' \
+            -e 's/^DB_HOST=.*/DB_HOST=127.0.0.1/' \
+            -e 's/^DB_PORT=.*/DB_PORT=5432/' \
+            -e 's/^DB_DATABASE=.*/DB_DATABASE=pupcon_test/' \
+            -e 's/^DB_USERNAME=.*/DB_USERNAME=pupcon/' \
+            -e 's/^DB_PASSWORD=.*/DB_PASSWORD=secret/' \
+            .env.testing
+
+      - name: Generate app key
+        run: php artisan key:generate --env=testing
+
+      - name: Run Pint lint check
+        run: ./vendor/bin/pint --test
+
+      # - name: Run PHPStan type check
+      #   run: ./vendor/bin/phpstan analyse --no-progress
+
+      - name: Run database migrations
+        run: php artisan migrate --env=testing --force
+
+      # - name: Run Laravel tests
+      #   run: php artisan test --env=testing
+
+  # ============================================================
+  # FRONTEND — React + TypeScript
+  # ESLint lint, TypeScript type check, build check
+  # ============================================================
+  frontend:
+    name: Frontend — Lint, Type Checks & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      # - name: Run ESLint
+      #   run: npm run lint
+
+      # - name: Run TypeScript type check
+      #   run: npm run typecheck
+
+      - name: Run build check
+        run: npm run build

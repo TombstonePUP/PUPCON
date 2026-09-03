@@ -7,15 +7,15 @@ use App\Models\CampusGoals;
 use App\Models\ContentPages;
 use App\Models\Pillars;
 use App\Models\Vmgo;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class VmgoViewController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(): Response
     {
         $page = ContentPages::where('page', 'Vision, Mission & Goals')->first();
         if ($page) {
@@ -30,7 +30,7 @@ class VmgoViewController extends Controller
         $pillars = Pillars::with('PillarItems')->get();
         $vmgo = Vmgo::first();
 
-        return inertia('about/vmgo', [
+        return inertia('guest/about/vmgo', [
             'page' => $page,
             'campus_goals' => $campus_goals,
             'pillars' => $pillars,

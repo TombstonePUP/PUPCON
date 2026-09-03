@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Guest\ProgramsController;
 use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\Programs;
 use App\Traits\AreaNumeralFormat;
 use App\Traits\ProgramLinkFormats;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class AreasController extends Controller
 {
-    use ProgramLinkFormats;
     use AreaNumeralFormat;
+    use ProgramLinkFormats;
+
     /**
      * Handle the incoming request.
      */
-    public function __invoke(string $program_id, string $area_id)
+    public function __invoke(string $program_id, string $area_id): Response
     {
         $program = Programs::findOrFail($program_id)->load([
             'Levels' => function ($query) {
@@ -53,8 +53,10 @@ class AreasController extends Controller
                 if ($outline->AreaFiles) {
                     $outline->AreaFiles->file_path = Storage::url($outline->AreaFiles->file_path);
                 }
+
                 return $outline;
             });
+
             return $parameter;
         });
 
@@ -62,12 +64,15 @@ class AreasController extends Controller
             if ($form) {
                 $form->file_path = Storage::url($form->file_path);
             }
+
             return $form;
         });
 
-        $area->area_image_path = $area->area_image_path ? Storage::url($area->area_image_path) : null;
+        $area->area_image_path = $area->area_image_path
+            ? (str_starts_with($area->area_image_path, '/') ? $area->area_image_path : Storage::url($area->area_image_path))
+            : null;
 
-        return inertia('area', [
+        return inertia('admin/area', [
             'area' => $area,
             'program' => $program,
             'categories' => $parameterOutlineCategories,

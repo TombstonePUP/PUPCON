@@ -67,15 +67,20 @@ export interface Program {
     under_survey?: boolean;
     is_active?: boolean;
     color?: string;
-    // Handle the ambiguity: allow both single object and array for flexibility during transition
-    // but ideally we should move towards a consistent one.
     levels?: AccreditationLevels | AccreditationLevels[];
     active_levels?: AccreditationLevels | AccreditationLevels[];
     latest_level?: AccreditationLevels;
     faculty_staff?: FacultyStaff[];
     objectives?: ProgramObjectives[];
     gallery?: ProgramGalleryImages[];
+    student_count?: number;
     [key: string]: unknown;
+}
+
+export interface PerProgramUnderSurvey extends Program {
+    levels: AccreditationLevels[];
+    objectives: ProgramObjectives[];
+    gallery: ProgramGalleryImages[];
 }
 
 export interface ProgramPrivilege {
@@ -236,12 +241,12 @@ export interface FilesOverview {
 }
 
 export type OverallUploads = {
-    document_type: string
-    documents: number
-    outlines?: number
-}
+    document_type: string;
+    documents: number;
+    outlines?: number;
+};
 
 export interface FrequencyUploads {
-    activity_date: string
-    activity: number
+    activity_date: string;
+    activity: number;
 }

@@ -29,7 +29,8 @@ trait AreaNumeralFormat
                 $result .= $roman;
                 $number -= $num;
             }
-        };
+        }
+
         return $result;
     }
 }

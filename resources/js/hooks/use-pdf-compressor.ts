@@ -14,8 +14,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 // ── Tune these for the quality / size tradeoff ────────────────────────────────
 const SKIP_THRESHOLD_BYTES = 500 * 1024; // Files < 500 KB skip compression
-const JPEG_QUALITY = 0.82;               // 82% — good balance for documents
-const RENDER_SCALE = 1.5;               // 1.5× keeps text readable at screen res
+const JPEG_QUALITY = 0.82; // 82% — good balance for documents
+const RENDER_SCALE = 1.5; // 1.5× keeps text readable at screen res
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -23,14 +23,14 @@ export interface CompressionResult {
     file: File;
     originalSize: number;
     compressedSize: number;
-    skipped: boolean;         // true if file was below threshold
+    skipped: boolean; // true if file was below threshold
     savedBytes: number;
     savedPercent: number;
 }
 
 interface CompressionState {
     isCompressing: boolean;
-    progress: number;         // 0–100
+    progress: number; // 0–100
 }
 
 interface UsePdfCompressorReturn extends CompressionState {
@@ -50,10 +50,7 @@ export function usePdfCompressor(): UsePdfCompressorReturn {
     // Vite handles the `?worker` transform automatically when `new Worker(new URL(...))` syntax is used.
     const getWorker = useCallback((): Worker => {
         if (!workerRef.current) {
-            workerRef.current = new Worker(
-                new URL('../workers/pdf-compressor.worker.ts', import.meta.url),
-                { type: 'module' },
-            );
+            workerRef.current = new Worker(new URL('../workers/pdf-compressor.worker.ts', import.meta.url), { type: 'module' });
         }
         return workerRef.current;
     }, []);
@@ -96,7 +93,6 @@ export function usePdfCompressor(): UsePdfCompressorReturn {
                     if (msg.type === 'progress') {
                         const progress = Math.round((msg.page / msg.total) * 100);
                         setState({ isCompressing: true, progress });
-
                     } else if (msg.type === 'complete') {
                         const { buffer: outBuffer, originalSize, compressedSize, skipped } = msg;
 
@@ -106,9 +102,7 @@ export function usePdfCompressor(): UsePdfCompressorReturn {
                         });
 
                         const savedBytes = Math.max(0, originalSize - compressedSize);
-                        const savedPercent = originalSize > 0
-                            ? Math.round((savedBytes / originalSize) * 100)
-                            : 0;
+                        const savedPercent = originalSize > 0 ? Math.round((savedBytes / originalSize) * 100) : 0;
 
                         setState({ isCompressing: false, progress: 100 });
 
@@ -120,7 +114,6 @@ export function usePdfCompressor(): UsePdfCompressorReturn {
                             savedBytes,
                             savedPercent,
                         });
-
                     } else if (msg.type === 'error') {
                         console.warn('[usePdfCompressor] Worker error — using original file:', msg.message);
                         setState({ isCompressing: false, progress: 0 });

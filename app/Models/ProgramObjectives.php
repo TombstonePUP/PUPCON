@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\ProgramObjectivesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProgramObjectives extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProgramObjectivesFactory> */
+    /** @use HasFactory<ProgramObjectivesFactory> */
     use HasFactory;
 
     /**
@@ -17,12 +18,15 @@ class ProgramObjectives extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'program_objectives';
+
     protected $primaryKey = 'program_objective_id';
+
     protected $fillable = [
         'program_id',
         'objective_title',
-        'objective_description'
+        'objective_description',
     ];
 
     /**

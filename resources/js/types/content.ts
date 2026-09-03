@@ -1,4 +1,4 @@
-import { Program } from ".";
+import { Program } from '.';
 
 export interface ContentPages {
     content_page_id: number;

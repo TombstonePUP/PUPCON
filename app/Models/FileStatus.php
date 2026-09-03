@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\FileStatusFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FileStatus extends Model
 {
-    /** @use HasFactory<\Database\Factories\FileStatusFactory> */
+    /** @use HasFactory<FileStatusFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class FileStatus extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'file_status';
+
     protected $primaryKey = 'file_status_id';
+
     protected $fillable = [
         'status_name',
     ];

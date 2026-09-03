@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\ContentPages;
 use App\Models\FacultyStaff;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class FacultyStaffController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'page' => ['required', 'array'],
@@ -79,13 +81,11 @@ class FacultyStaffController extends Controller
             ]);
         }
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Faculty and Staff Content Page',
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated Faculty and Staff Content Page',
+        );
 
         $faculty_staff_ids = [];
         foreach ($validated['faculties'] ?? [] as $facultyData) {
@@ -107,16 +107,16 @@ class FacultyStaffController extends Controller
             }
 
             // Handle new image upload
-            if (!empty($facultyData['faculty_image'])) {
+            if (! empty($facultyData['faculty_image'])) {
 
                 // Delete old image if it exists
                 if ($faculty && $faculty->image_path && Storage::disk('public')->exists($faculty->image_path)) {
                     Storage::disk('public')->delete($faculty->image_path);
                 }
 
-                $imagename = $facultyData['first_name'] . '-' . $facultyData['last_name'] . '.' .
+                $imagename = $facultyData['first_name'].'-'.$facultyData['last_name'].'.'.
                     $facultyData['faculty_image']->getClientOriginalExtension();
-                $imagepath = 'faculty_staff_images/' . $imagename;
+                $imagepath = 'faculty_staff_images/'.$imagename;
 
                 $facultyData['faculty_image']->storeAs('faculty_staff_images', $imagename, 'public');
             }
@@ -139,13 +139,11 @@ class FacultyStaffController extends Controller
 
                 $faculty_staff_ids[] = $faculty->faculty_staff_id;
 
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated Faculty/Staff: ' . $faculty->first_name . ' ' . $faculty->last_name,
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated Faculty/Staff: '.$faculty->first_name.' '.$faculty->last_name,
+                );
 
             } else {
                 $faculty = FacultyStaff::create([
@@ -162,13 +160,11 @@ class FacultyStaffController extends Controller
 
                 $faculty_staff_ids[] = $faculty->faculty_staff_id;
 
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Added Faculty/Staff: ' . $faculty->first_name . ' ' . $faculty->last_name,
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Added Faculty/Staff: '.$faculty->first_name.' '.$faculty->last_name
+                );
             }
         }
 
@@ -179,13 +175,11 @@ class FacultyStaffController extends Controller
                 Storage::disk('public')->delete($faculty->image_path);
             }
 
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'description' => 'Deleted Faculty/Staff: ' . $faculty->first_name . ' ' . $faculty->last_name,
-                'activity' => 'Delete',
-                'type' => 'Content',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: 'Deleted Faculty/Staff: '.$faculty->first_name.' '.$faculty->last_name,
+            );
         }
         FacultyStaff::whereNotIn('faculty_staff_id', $faculty_staff_ids)->delete();
 

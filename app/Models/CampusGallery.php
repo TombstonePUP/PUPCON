@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class CampusGallery extends Model
 {
@@ -16,8 +16,11 @@ class CampusGallery extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'campus_gallery';
+
     protected $primaryKey = 'gallery_id';
+
     protected $fillable = [
         'image_name',
         'image_path',
@@ -28,5 +31,6 @@ class CampusGallery extends Model
     protected $casts = [
         'image_name' => 'encrypted',
         'image_path' => 'encrypted',
+        'carousel' => 'boolean',
     ];
 }
