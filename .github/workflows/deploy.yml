@@ -44,7 +44,7 @@ jobs:
     environment: ${{ inputs.environment }}
 
     outputs:
-      instance_id: ${{ steps.apply.outputs.instance_id }}
+      instance_id: ${{ steps.instance.outputs.instance_id }}
 
     steps:
       - name: Checkout code
@@ -70,27 +70,52 @@ jobs:
             -input=false \
             -backend-config="key=${{ inputs.environment }}/terraform.tfstate"
 
+      # Plan with a detailed exit code:
+      #   0 = no changes, 1 = error, 2 = changes present
       - name: OpenTofu Plan
+        id: plan
         working-directory: opentofu/environments/${{ inputs.environment }}
         run: |
+          set +e
           tofu plan \
             -input=false \
+            -detailed-exitcode \
             -var-file=terraform.tfvars \
             -out=tfplan
+          code=$?
+          set -e
+          case "$code" in
+            0) echo "plan_changed=false" >> $GITHUB_OUTPUT ;;
+            1) echo "tofu plan failed (exit 1)" >&2; exit 1 ;;
+            2) echo "plan_changed=true" >> $GITHUB_OUTPUT ;;
+            *) echo "tofu plan returned unexpected exit code $code" >&2; exit 1 ;;
+          esac
 
+      # Apply only when there are real infrastructure changes, so the EC2
+      # instance (and its ID) is not needlessly recreated on every deploy.
       - name: OpenTofu Apply
-        id: apply
+        if: steps.plan.outputs.plan_changed == 'true'
         working-directory: opentofu/environments/${{ inputs.environment }}
         run: |
           tofu apply -input=false -auto-approve tfplan
+
+      # Resolve the current instance ID from the OpenTofu state. Whether or not
+      # apply ran, `tofu output` reads the persisted state, so it always returns
+      # the live, valid instance ID (and works even when infra did not change).
+      - name: Resolve EC2 instance ID from state
+        id: instance
+        working-directory: opentofu/environments/${{ inputs.environment }}
+        run: |
           echo "instance_id=$(tofu output -raw instance_id)" >> $GITHUB_OUTPUT
 
+      # Always deploy the latest app images on every push, using the current
+      # instance ID resolved from state.
       - name: Deploy images to EC2 via SSM
         run: |
           chmod +x .github/scripts/deploy_ssm.sh
           .github/scripts/deploy_ssm.sh
         env:
-          INSTANCE_ID: ${{ steps.apply.outputs.instance_id }}
+          INSTANCE_ID: ${{ steps.instance.outputs.instance_id }}
           ENVIRONMENT: ${{ inputs.environment }}
           APP_VERSION: ${{ inputs.app_version }}
           AWS_REGION: ${{ inputs.aws_region }}
