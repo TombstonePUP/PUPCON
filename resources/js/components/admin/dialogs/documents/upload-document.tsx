@@ -106,8 +106,8 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
         <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
             <DialogContent hideCloseButton className="border-border overflow-hidden rounded-xl border p-0 shadow-2xl sm:max-w-[480px]">
                 {/* ── Header ── */}
-                <DialogHeader className="bg-primary border-primary/80 border-b px-6 py-4">
-                    <div className="flex items-center gap-4">
+                <DialogHeader className="bg-primary border-primary/80 flex min-w-0 border-b px-6 py-4">
+                    <div className="flex min-w-0 items-center gap-4">
                         <div className="bg-primary-foreground/15 border-primary-foreground/20 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border">
                             <Upload className="text-primary-foreground h-5 w-5" />
                         </div>
@@ -127,9 +127,9 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
                     </div>
                 </DialogHeader>
 
-                <form onSubmit={uploadDocument} className="flex flex-col">
-                    <div className="space-y-5 p-6">
-                        <div className="space-y-3">
+                <form onSubmit={uploadDocument} className="flex min-w-0 flex-col">
+                    <div className="min-w-0 space-y-5 p-6">
+                        <div className="min-w-0 space-y-3">
                             {/* ── Drop zone (no file selected) ── */}
                             {!data.document && !isCompressing && (
                                 <label
@@ -175,13 +175,13 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
 
                             {/* ── File ready ── */}
                             {data.document && !isCompressing && (
-                                <div className="border-border bg-muted/20 flex min-h-[160px] w-full flex-col items-center justify-center gap-4 rounded-xl border p-6">
+                                <div className="border-border bg-muted/20 flex min-h-[160px] w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-xl border p-6">
                                     <div className="bg-background border-border flex w-full items-center gap-3 rounded-lg border p-3 shadow-sm">
                                         <div className="bg-primary/10 border-primary/15 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border">
                                             <FileText className="text-primary h-5 w-5" />
                                         </div>
-                                        <div className="min-w-0 flex-1">
-                                            <p className="text-foreground truncate text-sm font-semibold">{data.document.name}</p>
+                                        <div className="min-w-0 flex-1 overflow-hidden">
+                                            <p className="text-foreground w-full truncate text-sm font-semibold">{data.document.name}</p>
                                             <p className="text-muted-foreground text-[10px] font-medium tracking-wider uppercase">
                                                 PDF Document • {formatBytes(data.document.size)}
                                             </p>
