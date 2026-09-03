@@ -109,6 +109,7 @@ export function searchOutlines(index: ReturnType<typeof buildSearchIndex>, query
 
     return index
         .filter((item) => tokens.every((token) => item.haystack.includes(token)))
+        .filter((item) => item.programId != null && item.areaId != null)
         .map(
             (item): SearchResult => ({
                 outline: item.outline,

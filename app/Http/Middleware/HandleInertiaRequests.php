@@ -59,6 +59,15 @@ class HandleInertiaRequests extends Middleware
                     ]);
                 },
             ])
+            ->whereHas('AreaParameter.Areas', function ($areaQuery) {
+                $areaQuery->where('archive', false);
+            })
+            ->whereHas('AreaParameter.Areas.Levels', function ($programQuery) {
+                $programQuery->where('is_active', true);
+            })
+            ->whereHas('AreaParameter.Areas.Levels.Programs', function ($programsQuery) {
+                $programsQuery->where('under_survey', true);
+            })
             ->get();
 
         $outlines = $outlines->map(function ($outline) {
