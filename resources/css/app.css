@@ -227,3 +227,19 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* ── Search-result benchmark flash highlight ── */
+@keyframes outline-flash {
+    0%,
+    100% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: rgb(214 211 209 / 0.9);
+    }
+}
+
+.outline-flash {
+    border-radius: 0.375rem;
+    animation: outline-flash 0.7s ease-in-out 3;
+}

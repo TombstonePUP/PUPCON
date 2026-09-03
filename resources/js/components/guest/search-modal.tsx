@@ -87,12 +87,17 @@ export default function SearchModal({ open, onClose, guestProps }: SearchModalPr
                                     onClick={() => redirectLink(result)}
                                     className="group w-full cursor-pointer rounded-lg bg-gray-100/60 p-4 text-left transition-colors hover:bg-gray-100"
                                 >
-                                    <div className="mb-1 flex items-center gap-2">
+                                    <div className="mb-1 flex flex-wrap items-center gap-2">
                                         <span className="rounded bg-[#7f1414]/5 px-2 py-0.5 text-[10px] font-bold text-[#7f1414]">
                                             {result.program}
                                         </span>
                                         <ChevronRight className="size-3 text-gray-300" />
                                         <span className="text-xs font-medium text-gray-500">{result.area}</span>
+                                        {result.parameter && (
+                                            <span className="rounded bg-gray-800/5 px-2 py-0.5 text-[10px] font-bold text-gray-600 uppercase">
+                                                Parameter {result.parameter}
+                                            </span>
+                                        )}
                                     </div>
                                     <p className="text-sm leading-relaxed font-medium text-gray-700 group-hover:text-black">{result.outline}</p>
                                 </button>

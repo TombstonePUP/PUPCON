@@ -150,7 +150,7 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
                                                 onClick={() => redirectLink(result)}
                                                 className="group w-full rounded-xl p-4 text-left transition-all hover:bg-gray-50"
                                             >
-                                                <div className="mb-1 flex items-center gap-2">
+                                                <div className="mb-1 flex flex-wrap items-center gap-2">
                                                     <span className="font-poppins rounded bg-[#7f1414]/5 px-2 py-0.5 text-[10px] font-bold text-[#7f1414]">
                                                         {result.program}
                                                     </span>
@@ -158,6 +158,11 @@ export default function MobileMenu({ open, onClose, leftNav, rightNav, isActive,
                                                     <span className="font-sans text-[10px] font-bold tracking-wider text-gray-500 uppercase">
                                                         {result.area}
                                                     </span>
+                                                    {result.parameter && (
+                                                        <span className="rounded bg-gray-800/5 px-2 py-0.5 font-sans text-[10px] font-bold tracking-wider text-gray-600 uppercase">
+                                                            Parameter {result.parameter}
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <p className="font-sans text-sm leading-relaxed font-medium text-gray-700 group-hover:text-black">
                                                     {result.outline}

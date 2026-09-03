@@ -78,14 +78,23 @@ export function buildSearchIndex(outlines: OutlineSearchSource[]) {
         const areaNumber = o.area_parameter?.areas?.area_number;
         const numeral = toRoman(Number(areaNumber));
 
+        const parameterName = o.area_parameter?.parameter_name;
+        // Structural label e.g. "parameter a" so typo'd domain keywords ("paramater a")
+        // can still resolve to the right parameter.
+        const parameterLabel = `parameter ${parameterName ?? ''}`.trim().toLowerCase();
+
         const outlineParts = [
             o.outline_description,
             o.outline_number,
             o.outline_name,
-            o.area_parameter?.parameter_name,
+            parameterName,
             o.area_parameter?.parameter_description,
             ...programAliases(degreeType, programName),
             ...areaAliases(areaNumber, areaName, numeral),
+            // Domain keywords so fuzzy matching tolerates typos on structural
+            // words like "parameter", "benchmark", "area", "program", "outline".
+            parameterLabel,
+            'parameter benchmark outline area program level',
         ];
 
         return {
@@ -93,11 +102,12 @@ export function buildSearchIndex(outlines: OutlineSearchSource[]) {
             parameterId: o.area_parameter_id,
             program: programName,
             area: areaName,
-            parameter: o.area_parameter?.parameter_name,
+            parameter: parameterName,
             outline: o.outline_description,
             level: o.area_parameter?.areas?.levels?.level,
             programId: o.area_parameter?.areas?.levels?.programs?.program_id,
             areaId: o.area_parameter?.areas?.area_id,
+            parameterLabel,
             haystack: outlineParts.filter(Boolean).join(' ').toLowerCase(),
         };
     });
@@ -183,6 +193,7 @@ function relevanceScore(item: ReturnType<typeof buildSearchIndex>[number], query
         item.area ?? '',
         item.program ?? '',
         `${item.program ?? ''} ${item.area ?? ''} ${item.parameter ?? ''}`,
+        item.parameterLabel ?? '',
     ];
 
     let score = 0;

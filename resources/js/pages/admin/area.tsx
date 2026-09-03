@@ -61,6 +61,35 @@ export default function AreaPage({ program, area, categories }: AreaProps) {
         }, 150);
     }, [parameterId]);
 
+    // Flash the target benchmark outline when arriving from a search result
+    // (URL looks like /programs/.../?parameter=X#outline-Y).
+    useEffect(() => {
+        const match = window.location.hash.match(/^#outline-(\d+)$/);
+        if (!match) return;
+
+        const outlineId = match[1];
+
+        const timer = setTimeout(() => {
+            const el = document.getElementById(`outline-${outlineId}`);
+            if (!el) return;
+
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            let flashes = 0;
+            const interval = setInterval(() => {
+                if (flashes >= 3) {
+                    clearInterval(interval);
+                    el.classList.remove('outline-flash');
+                    return;
+                }
+                el.classList.toggle('outline-flash');
+                flashes++;
+            }, 360);
+        }, 450);
+
+        return () => clearTimeout(timer);
+    }, [parameterId]);
+
     const activeLevel = Array.isArray(program.levels) ? program.levels[0] : program.levels;
 
     return (
