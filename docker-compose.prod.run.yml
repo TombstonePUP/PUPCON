@@ -30,6 +30,9 @@ services:
         condition: service_healthy
     env_file:
       - ./.env.production
+    environment:
+      - XDG_CONFIG_HOME=/tmp/.config
+      - HOME=/tmp
     volumes:
       - laravel-storage-production:/var/www/storage
       - public-assets:/var/www/public/build:rw
