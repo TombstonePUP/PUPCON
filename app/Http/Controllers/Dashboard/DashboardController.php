@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\AreaForms;
-use App\Models\FilesOverview;
 use App\Models\ExhibitOutlines;
+use App\Models\FilesOverview;
 use App\Models\ParameterOutlines;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,20 +25,21 @@ class DashboardController extends Controller
     {
         $activityLog = $this->activityLog();
         $frequency = $this->documentUploadFrequency();
-        $areaUploads = $this->areaUploads();
-        $overallUploads = $this->overallUploads();
+        $documentStatus = $this->documentStatus();
+        $documentUploads = $this->documentUploads();
+
         return Inertia::render('admin/dashboard', [
             'activityLogs' => $activityLog,
             'frequencyUploads' => $frequency,
-            'documentStatistics' => $areaUploads,
-            'overallUploads' => $overallUploads
+            'documentStatistics' => $documentStatus,
+            'overallUploads' => $documentUploads,
         ]);
     }
 
     /**
      * @return Collection<int,Model>
      */
-    public function activityLog(): Collection
+    private function activityLog(): Collection
     {
         $user = Auth::user();
         $role = $user->Roles->role_name;
@@ -57,6 +58,7 @@ class DashboardController extends Controller
                 ->get();
             $activityLogs->transform(function ($activityLog) {
                 $activityLog->activity_date = Carbon::parse($activityLog->activity_date)->format('M d,Y');
+
                 return $activityLog;
             });
         }
@@ -72,40 +74,44 @@ class DashboardController extends Controller
                     'al.activity_date'
                 )
                 ->where('al.type', 'ILIKE', 'Files')
-                ->where('al.user_id', $user->user_id) 
+                ->where('al.user_id', $user->user_id)
                 ->orderBy('al.activity_date', 'desc')
                 ->get();
             $activityLogs->transform(function ($activityLog) {
                 $activityLog->activity_date = Carbon::parse($activityLog->activity_date)->format('M d,Y');
+
                 return $activityLog;
             });
         }
+
         return $activityLogs;
     }
 
     /**
      * @return Collection<int,Model>
      */
-    public function documentUploadFrequency(): Collection
+    private function documentUploadFrequency(): Collection
     {
-        $frequency = ActivityLog::selectRaw("
+        $frequency = ActivityLog::selectRaw('
             activity_date::date as activity_date,
-            count(*)  as activity")
-            ->groupByRaw("activity_date::date")
+            count(*)  as activity')
+            ->groupByRaw('activity_date::date')
             ->orderBy('activity_date')
             ->get();
+
         return $frequency;
     }
 
     /**
      * @return Collection<int,Model>
      */
-    public function areaUploads(): Collection
+    private function documentStatus(): Collection
     {
-        $areaUploads = FilesOverview::selectRaw("file_status, count(*) as documents")
-            ->groupBy("file_status")
-            ->orderBy("file_status")
+        $areaUploads = FilesOverview::selectRaw('file_status, count(*) as documents')
+            ->groupBy('file_status')
+            ->orderBy('file_status')
             ->get();
+
         return $areaUploads;
     }
 
@@ -114,7 +120,7 @@ class DashboardController extends Controller
      *
      * @return Collection<int,Model>
      */
-    public function overallUploads(): Collection
+    private function documentUploads(): Collection
     {
         $area_files = ParameterOutlines::from('parameter_outlines AS po')
             ->leftJoin('area_files AS af', 'po.parameter_outline_id', '=', 'af.parameter_outline_id')

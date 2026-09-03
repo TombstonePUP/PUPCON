@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\AreaFormCategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AreaFormCategory extends Model
 {
-    /** @use HasFactory<\Database\Factories\AreaFormCategoryFactory> */
+    /** @use HasFactory<AreaFormCategoryFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class AreaFormCategory extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'area_form_categories';
+
     protected $primaryKey = 'area_form_category_id';
+
     protected $fillable = [
         'category_name',
     ];

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ParameterOutlinesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ParameterOutlines extends Model
 {
-    /** @use HasFactory<\Database\Factories\ParameterOutlinesFactory> */
+    /** @use HasFactory<ParameterOutlinesFactory> */
     use HasFactory;
 
     /**
@@ -18,8 +19,11 @@ class ParameterOutlines extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'parameter_outlines';
+
     protected $primaryKey = 'parameter_outline_id';
+
     protected $fillable = [
         'area_parameter_id',
         'parameter_outline_category_id',

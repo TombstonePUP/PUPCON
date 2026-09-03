@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\AccreditationLevelsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AccreditationLevels extends Model
 {
-    /** @use HasFactory<\Database\Factories\AccreditationLevelsFactory> */
+    /** @use HasFactory<AccreditationLevelsFactory> */
     use HasFactory;
 
     /**
@@ -18,8 +19,11 @@ class AccreditationLevels extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'accreditation_levels';
+
     protected $primaryKey = 'accreditation_level_id';
+
     protected $fillable = [
         'program_id',
         'level',

@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\ContentPages;
 use App\Models\Facilities;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class FacilitiesController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'page' => ['required', 'array'],
@@ -63,13 +65,11 @@ class FacilitiesController extends Controller
             ]);
         }
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Facilities Content Page',
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated Facilities Content Page',
+        );
 
         $facility_id = [];
 
@@ -82,8 +82,8 @@ class FacilitiesController extends Controller
 
             // --- DELETE IF NO NEW IMAGE AND NO PREVIEW URL ---
             if (empty($facilityData['facility_image']) && empty($facilityData['previewUrl'])) {
-                if ($facility && $facility->image_path && Storage::disk('public')->exists($facility->image_path)) {
-                    Storage::disk('public')->delete($facility->image_path);
+                if ($facility && $facility->image_path && Storage::disk('s3')->exists($facility->image_path)) {
+                    Storage::disk('s3')->delete($facility->image_path);
                 }
 
                 $imagename = null;
@@ -92,15 +92,15 @@ class FacilitiesController extends Controller
 
             // --- UPLOAD NEW IMAGE IF PRESENT ---
             if (isset($facilityData['facility_image'])) {
-                $imagename = $facilityData['facility_name'] . '.' . $facilityData['facility_image']->getClientOriginalExtension();
-                $imagepath = 'facilities/' . $imagename;
+                $imagename = $facilityData['facility_name'].'.'.$facilityData['facility_image']->getClientOriginalExtension();
+                $imagepath = 'facilities/'.$imagename;
 
                 // delete old image if exists
-                if ($facility && $facility->image_path && Storage::disk('public')->exists($facility->image_path)) {
-                    Storage::disk('public')->delete($facility->image_path);
+                if ($facility && $facility->image_path && Storage::disk('s3')->exists($facility->image_path)) {
+                    Storage::disk('s3')->delete($facility->image_path);
                 }
 
-                $facilityData['facility_image']->storeAs('facilities', $imagename, 'public');
+                $facilityData['facility_image']->storeAs('facilities', $imagename, 's3');
             }
 
             // --- UPDATE OR CREATE ---
@@ -113,13 +113,11 @@ class FacilitiesController extends Controller
                 ]);
                 $facility_id[] = $facility->facility_id;
 
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated Facility: ' . $facility->facility_name,
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated Facility: '.$facility->facility_name,
+                );
 
             } else {
                 $facility = Facilities::create([
@@ -130,21 +128,18 @@ class FacilitiesController extends Controller
                 ]);
                 $facility_id[] = $facility->facility_id;
 
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Created Facility: ' . $facility->facility_name,
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
-
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Created Facility: '.$facility->facility_name,
+                );
             }
         }
 
         $facilitiesToDelete = Facilities::whereNotIn('facility_id', $facility_id)->get();
         foreach ($facilitiesToDelete as $facility) {
-            if ($facility->image_path && Storage::disk('public')->exists($facility->image_path)) {
-                Storage::disk('public')->delete($facility->image_path);
+            if ($facility->image_path && Storage::disk('s3')->exists($facility->image_path)) {
+                Storage::disk('s3')->delete($facility->image_path);
             }
         }
         Facilities::whereNotIn('facility_id', $facility_id)->delete();

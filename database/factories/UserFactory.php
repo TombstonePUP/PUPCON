@@ -3,12 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Roles;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -25,10 +26,11 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $roles = Roles::inRandomOrder()->first();
+
         return [
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'email' => fake()->unique()->safeEmail(),
+            /* 'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'email' => $this->faker->unique()->safeEmail(), */
             'is_active' => true,
             'otp' => null,
             'otp_expires_at' => null,

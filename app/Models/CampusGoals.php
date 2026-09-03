@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\CampusGoalsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class CampusGoals extends Model
 {
-    /** @use HasFactory<\Database\Factories\CampusGoalsFactory> */
+    /** @use HasFactory<CampusGoalsFactory> */
     use HasFactory;
 
     /**
@@ -16,8 +17,11 @@ class CampusGoals extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'campus_goals';
+
     protected $primaryKey = 'goal_id';
+
     protected $fillable = [
         'goal_title_eng',
         'goal_desc_eng',

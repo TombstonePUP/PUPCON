@@ -44,7 +44,7 @@ class AreaFormsControllerTest extends TestCase
         $image = UploadedFile::fake()->image('test-image.jpg');
         $file = UploadedFile::fake()->create('test-file.pdf', 100, 'application/pdf');
 
-        $response = $this->post(route('test.addForm', [ 'program_name' => 'Testing', 'area_id' => 1]), [
+        $response = $this->post(route('test.addForm', ['program_name' => 'Testing', 'area_id' => 1]), [
             'area_id' => 1,
             'area_form_category_id' => 1,
             'form_image' => $image,

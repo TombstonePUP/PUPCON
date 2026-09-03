@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('area_number');
             $table->string('area_name');
             $table->text('area_description')->nullable();
-            $table->string('area_image_name')->nullable();
+            $table->text('area_image_name')->nullable();
             $table->text('area_image_path')->nullable();
             $table->boolean('archive')->default(false);
             $table->float('mean')->default(false);
@@ -124,7 +124,7 @@ return new class extends Migration
             $table->text('file_rejection_reason')->nullable();
         });
 
-        DB::statement(<<<SQL
+        DB::statement(<<<'SQL'
             CREATE VIEW public.files_overview AS
             SELECT
                 CONCAT(p.degree_type , ' ', p.program_name, '-', 'Level ', l.level, '-', 'Area', '-', a.area_number, '-','Parameter', '-', ap.parameter_name) file_type, -- area_name and parameter_name

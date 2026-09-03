@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Services\ActivityLogService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,6 +38,12 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
+
+        ActivityLogService::authenticationLog(
+            userId: $request->user()->user_id,
+            activity: ActivityLogAction::UpdateProfile,
+            description: "Updated Profile of {$request->user()->first_name} {$request->user()->last_name}",
+        );
 
         return to_route('profile.edit');
     }

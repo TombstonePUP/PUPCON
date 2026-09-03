@@ -2,18 +2,17 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Areas;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\Areas;
 
 class UserAreaPrivileges
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -27,10 +26,11 @@ class UserAreaPrivileges
             $activeArea = Areas::where('area_id', $request->area_id)->first()->is_active;
             if ($userAreaRole->firstWhere('area_id', $request->area_id) && $level) {
                 return $next($request);
-            } elseif (!$activeArea && !$level) {
+            } elseif (! $activeArea && ! $level) {
                 return $next($request);
             }
         }
+
         return redirect()->back()
             ->with('type', 'error')
             ->with('title', 'Access Denied')

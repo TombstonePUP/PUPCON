@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\PillarItemsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PillarItems extends Model
 {
-    /** @use HasFactory<\Database\Factories\PillarItemsFactory> */
+    /** @use HasFactory<PillarItemsFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class PillarItems extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'pillar_items';
+
     protected $primaryKey = 'item_id';
+
     protected $fillable = [
         'pillar_id',
         'item_description',

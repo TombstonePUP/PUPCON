@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\AreaFormsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AreaForms extends Model
 {
-    /** @use HasFactory<\Database\Factories\AreaFormsFactory> */
+    /** @use HasFactory<AreaFormsFactory> */
     use HasFactory;
 
     /**
@@ -17,8 +18,11 @@ class AreaForms extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'area_forms';
+
     protected $primaryKey = 'area_form_id';
+
     protected $fillable = [
         'area_id',
         'area_form_category_id',

@@ -2,14 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\AreaFiles;
 use App\Models\FileStatus;
 use App\Models\ParameterOutlines;
 use App\Models\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AreaFiles>
+ * @extends Factory<AreaFiles>
  */
 class AreaFilesFactory extends Factory
 {
@@ -23,15 +23,16 @@ class AreaFilesFactory extends Factory
         $parameterOutlines = ParameterOutlines::inRandomOrder()->first();
         $fileStatus = FileStatus::inRandomOrder()->first();
         $user = User::inRandomOrder()->first();
+
         return [
-            'area_file_id' => fake()->unique()->randomNumber(),
+            // 'area_file_id' => $this->faker->unique()->randomNumber(),
             'parameter_outline_id' => $parameterOutlines->parameter_outline_id,
-            'file_name' => fake()->word(),
-            'file_path' => fake()->filePath(),
+            /* 'file_name' => $this->faker->word(),
+            'file_path' => $this->faker->filePath(), */
             'uploaded_by' => $user->user_id,
-            'uploaded_at' => fake()->dateTimeThisMonth(),
+            // 'uploaded_at' => $this->faker->dateTimeThisMonth(),
             'file_status_id' => $fileStatus->file_status_id,
-            'file_rejection_reason' => fake()->sentence(),
+            // 'file_rejection_reason' => $this->faker->sentence(),
         ];
     }
 }

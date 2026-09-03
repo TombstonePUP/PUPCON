@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\AccreditationLevels;
 use App\Models\Programs;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AccreditationLevels>
+ * @extends Factory<AccreditationLevels>
  */
 class AccreditationLevelsFactory extends Factory
 {
@@ -18,14 +19,15 @@ class AccreditationLevelsFactory extends Factory
     public function definition(): array
     {
         $program = Programs::inRandomOrder()->first();
+
         return [
-            'accreditation_level_id' => fake()->unique()->randomNumber(),
+            // 'accreditation_level_id' => $this->faker->unique()->randomNumber(),
             'program_id' => $program->program_id,
-            'level' => fake()->numberBetween(0, 6),
-            'remarks' => fake()->word(),
-            'survey_date' => fake()->date(),
-            'mean' => fake()->randomFloat(2, 0, 5),
-            'is_active' => fake()->boolean(),
+            /* 'level' => $this->faker->numberBetween(0, 6),
+            'remarks' => $this->faker->word(),
+            'survey_date' => $this->faker->date(),
+            'mean' => $this->faker->randomFloat(2, 0, 5),
+            'is_active' => $this->faker->boolean(), */
         ];
     }
 }

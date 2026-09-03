@@ -1,0 +1,139 @@
+name: Deploy - OpenTofu Apply + SSM Deploy to EC2
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      app_version:
+        required: true
+        type: string
+      aws_region:
+        required: false
+        type: string
+        default: "ap-southeast-1"
+      compose_file:
+        required: false
+        type: string
+        default: "docker-compose.prod.run.yml"
+      env_file:
+        required: false
+        type: string
+        default: ".env.production"
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      ENV_FILE_CONTENT:
+        description: "Full content of the environment file (env_file) to write on the EC2 instance"
+        required: false
+    outputs:
+      instance_id:
+        description: "The EC2 instance that was deployed to"
+        value: ${{ jobs.deploy.outputs.instance_id }}
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    outputs:
+      instance_id: ${{ steps.instance.outputs.instance_id }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.9.0
+          tofu_wrapper: false
+
+      - name: OpenTofu Init
+        working-directory: opentofu/environments/${{ inputs.environment }}
+        run: |
+          tofu init \
+            -input=false \
+            -backend-config="key=${{ inputs.environment }}/terraform.tfstate"
+
+      # Plan with a detailed exit code:
+      #   0 = no changes, 1 = error, 2 = changes present
+      - name: OpenTofu Plan
+        id: plan
+        working-directory: opentofu/environments/${{ inputs.environment }}
+        run: |
+          set +e
+          tofu plan \
+            -input=false \
+            -detailed-exitcode \
+            -var-file=terraform.tfvars \
+            -out=tfplan
+          code=$?
+          set -e
+          case "$code" in
+            0) echo "plan_changed=false" >> $GITHUB_OUTPUT ;;
+            1) echo "tofu plan failed (exit 1)" >&2; exit 1 ;;
+            2) echo "plan_changed=true" >> $GITHUB_OUTPUT ;;
+            *) echo "tofu plan returned unexpected exit code $code" >&2; exit 1 ;;
+          esac
+
+      # Apply only when there are real infrastructure changes, so the EC2
+      # instance (and its ID) is not needlessly recreated on every deploy.
+      - name: OpenTofu Apply
+        if: steps.plan.outputs.plan_changed == 'true'
+        working-directory: opentofu/environments/${{ inputs.environment }}
+        run: |
+          tofu apply -input=false -auto-approve tfplan
+
+      # Resolve the current, running EC2 instance ID. Query AWS EC2 directly by
+      # the instance's Name tag so we always use a real, live instance that is
+      # registered with SSM (avoids stale/terminated IDs from state). Falls back
+      # to the OpenTofu state output if the tag lookup returns nothing.
+      - name: Resolve running EC2 instance ID
+        id: instance
+        working-directory: opentofu/environments/${{ inputs.environment }}
+        run: |
+          instance_id=$(aws ec2 describe-instances \
+            --region "${{ inputs.aws_region }}" \
+            --filters \
+              "Name=tag:Name,Values=pupcon-${{ inputs.environment }}-app" \
+              "Name=instance-state-name,Values=running" \
+            --query "Reservations[0].Instances[0].InstanceId" \
+            --output text 2>/dev/null)
+          if [ -z "$instance_id" ] || [ "$instance_id" = "None" ]; then
+            echo "Tag lookup found no running instance; falling back to OpenTofu state."
+            instance_id=$(tofu output -raw instance_id)
+          fi
+          echo "Using instance ID: $instance_id"
+          echo "instance_id=$instance_id" >> $GITHUB_OUTPUT
+
+      # Always deploy the latest app images on every push, using the current
+      # instance ID resolved from state.
+      - name: Deploy images to EC2 via SSM
+        run: |
+          chmod +x .github/scripts/deploy_ssm.sh
+          .github/scripts/deploy_ssm.sh
+        env:
+          INSTANCE_ID: ${{ steps.instance.outputs.instance_id }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          APP_VERSION: ${{ inputs.app_version }}
+          AWS_REGION: ${{ inputs.aws_region }}
+          ENV_FILE: ${{ inputs.env_file }}
+          COMPOSE_FILE: ${{ inputs.compose_file }}
+          ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}

@@ -1,0 +1,22 @@
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 1
+    paths:
+        - app/
+    tmpDir: storage/phpstan
+    excludePaths:
+        - app/Providers/*
+    # Do not fail the build when a baseline/ignore entry no longer matches
+    # (code gets fixed or the analysis environment differs). New errors
+    # that aren't covered below still fail the build.
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # Dynamic Eloquent relations used via query string dot-notation are
+        # common in this codebase and produce false positives for Larastan.
+        - identifier: larastan.relationExistence
+        # Static access to a request helper method.
+        - message: '#Static call to instance method.*UploadPdfRequest::pdfRules#'

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits;
+
 use Illuminate\Support\Str;
 
 trait ProgramLinkFormats
@@ -9,6 +10,7 @@ trait ProgramLinkFormats
     {
         $name = $program->program_name;
         $program->program_link = Str::slug($name, '_');
+
         return $program;
     }
 }

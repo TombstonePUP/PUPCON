@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\OrganizationTypes;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\OrganizationTypes>
+ * @extends Factory<OrganizationTypes>
  */
 class OrganizationTypesFactory extends Factory
 {
@@ -17,8 +18,8 @@ class OrganizationTypesFactory extends Factory
     public function definition(): array
     {
         return [
-            'type_id' => fake()->unique()->randomNumber(),
-            'type_name' => fake()->word(),
+            /* 'type_id' => $this->faker->unique()->randomNumber(),
+            'type_name' => $this->faker->word(), */
         ];
     }
 }

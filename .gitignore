@@ -10,6 +10,7 @@
 .env.testing
 .env.backup
 .env.production
+.env.staging
 .phpactor.json
 .phpunit.result.cache
 Homestead.json
@@ -23,5 +24,10 @@ yarn-error.log
 /.vscode
 /.zed
 /.claude
-/.gemini/
+/.gemini
 /planning/
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars.local
+storage/phpstan/

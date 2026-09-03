@@ -3,18 +3,28 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Exhibits;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Response;
 
 class ExhibitsController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(): Response
     {
-        $exhibits = Exhibits::with(['ExhibitOutlines.ExhibitFiles'])->get();
+        $exhibits = Exhibits::with([
+            'ExhibitOutlines' => function ($query) {
+                $query->with([
+                    'ExhibitFiles' => function ($q) {
+                        $q->whereHas('FileStatus', function ($fs) {
+                            $fs->where('status_name', 'Approved');
+                        });
+                    },
+                ]);
+            },
+        ])->get();
 
         $exhibits->map(function ($exhibit) {
 
@@ -27,6 +37,7 @@ class ExhibitsController extends Controller
                         ? Storage::url($outline->ExhibitFiles->file_path)
                         : null;
                 }
+
                 return $outline;
             });
 

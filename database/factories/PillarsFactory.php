@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Pillars;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pillars>
+ * @extends Factory<Pillars>
  */
 class PillarsFactory extends Factory
 {
@@ -17,8 +18,8 @@ class PillarsFactory extends Factory
     public function definition(): array
     {
         return [
-            'pillar_id' => fake()->unique()->randomNumber(),
-            'pillar_title' => fake()->word(),
+            /* 'pillar_id' => $this->faker->unique()->randomNumber(),
+            'pillar_title' => $this->faker->word(), */
         ];
     }
 }

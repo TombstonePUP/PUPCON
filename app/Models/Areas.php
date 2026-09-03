@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\AreasFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Areas extends Model
 {
-    /** @use HasFactory<\Database\Factories\AreasFactory> */
+    /** @use HasFactory<AreasFactory> */
     use HasFactory;
 
     /**
@@ -19,8 +20,11 @@ class Areas extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'areas';
+
     protected $primaryKey = 'area_id';
+
     protected $fillable = [
         'accreditation_level_id',
         'area_number',

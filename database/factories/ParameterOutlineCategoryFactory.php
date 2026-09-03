@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\ParameterOutlineCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ParameterOutlineCategory>
+ * @extends Factory<ParameterOutlineCategory>
  */
 class ParameterOutlineCategoryFactory extends Factory
 {
@@ -17,8 +18,8 @@ class ParameterOutlineCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'parameter_outline_category_id' => fake()->unique()->randomNumber(),
-            'category_name' => fake()->word(),
+            /* 'parameter_outline_category_id' => $this->faker->unique()->randomNumber(),
+            'category_name' => $this->faker->word(), */
         ];
     }
 }

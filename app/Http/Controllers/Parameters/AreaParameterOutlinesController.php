@@ -2,33 +2,35 @@
 
 namespace App\Http\Controllers\Parameters;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Benchmarks\BenchmarkRequest;
-use App\Models\ActivityLog;
-use App\Models\Areas;
 use App\Models\AreaFormCategory;
+use App\Models\Areas;
 use App\Models\ParameterOutlineCategory;
 use App\Models\ParameterOutlines;
 use App\Models\Programs;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Inertia\Response;
 
 class AreaParameterOutlinesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(string $program_id, int $level_id, string $area_id)
+    public function index(string $program_id, int $level_id, string $area_id): Response
     {
         $program = Programs::select('program_id', 'program_name', 'degree_type')
             ->where('program_id', $program_id)
             ->with([
                 'Levels' => function ($query) use ($level_id) {
                     $query->where('accreditation_level_id', $level_id);
-                }
+                },
             ])
             ->firstOrFail();
         $program->program_link = Str::slug($program->program_name, '_');
@@ -40,7 +42,7 @@ class AreaParameterOutlinesController extends Controller
                 'AreaParameters.ParameterOutlines.ParameterOutlineCategory',
                 'AreaParameters.ParameterOutlines.AreaFiles.FileStatus',
                 'AreaForms.AreaFormCategory',
-                'AreaForms.FileStatus'
+                'AreaForms.FileStatus',
             ])
             ->firstOrFail();
         $parameterOutlineCategories = ParameterOutlineCategory::with([
@@ -50,7 +52,7 @@ class AreaParameterOutlinesController extends Controller
                 });
             },
             'ParameterOutlines.AreaFiles.FileStatus',
-            'ParameterOutlines.AreaParameter.Areas'
+            'ParameterOutlines.AreaParameter.Areas',
         ])
             ->get();
 
@@ -63,8 +65,10 @@ class AreaParameterOutlinesController extends Controller
                         $outline->AreaFiles->file_path = Storage::url($outline->AreaFiles->file_path);
                     }
                 }
+
                 return $outline;
             });
+
             return $parameter;
         });
 
@@ -74,6 +78,7 @@ class AreaParameterOutlinesController extends Controller
                     $form->file_path = Storage::url($form->file_path);
                 }
             }
+
             return $form;
         });
 
@@ -87,13 +92,12 @@ class AreaParameterOutlinesController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @return RedirectResponse
      */
-    public function store(BenchmarkRequest $request)
+    public function store(BenchmarkRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
-        $parameterOutline = new ParameterOutlines();
+        $parameterOutline = new ParameterOutlines;
         $parameterOutline->area_parameter_id = $validated['area_parameter_id'];
         $parameterOutline->parameter_outline_category_id = $validated['benchmark_category'];
         $parameterOutline->outline_number = $validated['benchmark_number'];
@@ -103,13 +107,11 @@ class AreaParameterOutlinesController extends Controller
 
         $user = Auth::user();
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'activity' => 'Create',
-            'description' => "Created benchmark: {$parameterOutline->outline_description}",
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Create,
+            description: "Created benchmark: {$parameterOutline->outline_description}",
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -119,7 +121,6 @@ class AreaParameterOutlinesController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @return RedirectResponse
      */
     public function edit(BenchmarkRequest $request): RedirectResponse
     {
@@ -138,14 +139,14 @@ class AreaParameterOutlinesController extends Controller
             } else {
                 $initial = substr($categoryName, 0, 1);
             }
-            $categoryName = $categoryName === "Outcome/s" ? substr($categoryName, 0, -2) : $categoryName;
-            $fileName = $initial . '.' . ($validated['benchmark_number'] ?? $parameterOutline->outline_number) . '.' .
-                ($validated['benchmark_description'] ?? $parameterOutline->outline_description) . '.' .
+            $categoryName = $categoryName === 'Outcome/s' ? substr($categoryName, 0, -2) : $categoryName;
+            $fileName = $initial.'.'.($validated['benchmark_number'] ?? $parameterOutline->outline_number).'.'.
+                ($validated['benchmark_description'] ?? $parameterOutline->outline_description).'.'.
                 pathinfo($file->file_name, PATHINFO_EXTENSION);
-            $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level ' . $program->accreditation_level;
+            $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level '.$program->accreditation_level;
             $filePath = "{$program->program_name}/{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
             $filePath = "{$filePath}/{$fileName}";
-            Storage::disk('public')->move($file->file_path, $filePath);
+            Storage::disk('s3')->move($file->file_path, $filePath);
             $file->file_name = $fileName;
             $file->file_path = $filePath;
             $file->save();
@@ -159,13 +160,11 @@ class AreaParameterOutlinesController extends Controller
         $parameterOutline->save();
 
         $user = Auth::user();
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'activity' => 'Update Benchmark',
-            'description' => "Updated benchmark: {$parameterOutline->outline_description}",
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: "Updated benchmark: {$parameterOutline->outline_description}",
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -185,28 +184,29 @@ class AreaParameterOutlinesController extends Controller
         // $program = Programs::where('program_name', 'ILIKE', $program)->first();
         $program = Programs::findOrFail($request->program_id);
 
-        $message = "";
+        $message = '';
 
         if ($file = $parameterOutlines->AreaFiles) {
-            Storage::disk('public')->delete($file->file_path);
+            Storage::disk('s3')->delete($file->file_path);
             $file->delete();
-            $activityLog = new ActivityLog();
-            $activityLog->user_id = $user->user_id;
-            $activityLog->description = "Deleted document for benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.";
-            $activityLog->activity = "Delete Document";
-            $activityLog->type = "Files";
-            $activityLog->activity_date = now();
-            $activityLog->save();
-            $message = "The benchmark and its associated document have been deleted.";
+            $message = 'The benchmark and its associated document have been deleted.';
+            ActivityLogService::fileManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: "Deleted document for benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.",
+            );
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: "Deleted benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.",
+            );
         } else {
-            $message = "The benchmark has been deleted.";
-            $activityLog = new ActivityLog();
-            $activityLog->user_id = $user->user_id;
-            $activityLog->description = "Deleted benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.";
-            $activityLog->activity = "Delete";
-            $activityLog->type = "Content";
-            $activityLog->activity_date = now();
-            $activityLog->save();
+            $message = 'The benchmark has been deleted.';
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Delete,
+                description: "Deleted benchmark '{$parameterOutlines->outline_description}' in {$program->program_name} - {$area->area_name}.",
+            );
         }
 
         $parameterOutlines->delete();

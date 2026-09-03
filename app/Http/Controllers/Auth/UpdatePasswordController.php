@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,8 +20,8 @@ class UpdatePasswordController extends Controller
     {
         $validated = $request->validate(
             [
-            'password' => 'required|string',
-            'password_confirmation' => 'required|string|min:8|confirmed:password',
+                'password' => 'required|string',
+                'password_confirmation' => 'required|string|min:8|confirmed:password',
             ],
             [
                 'password.required' => 'Current password is required',
@@ -33,6 +35,12 @@ class UpdatePasswordController extends Controller
         $user->must_update_password = false;
         $user->updated_at = now();
         $user->save();
+
+        ActivityLogService::authenticationLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::UpdatePassword,
+            description: 'New Password Updated After Reset',
+        );
 
         return redirect()->intended(route('dashboard', absolute: false).'?password-updated=1')
             ->with('success', 'Password updated successfully.');

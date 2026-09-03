@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\Content;
 
+use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\CampusGoals;
-use Illuminate\Http\Request;
 use App\Models\ContentPages;
 use App\Models\PillarItems;
 use App\Models\Pillars;
 use App\Models\Vmgo;
+use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Models\ActivityLog;
 
 class VmgoController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
         $validator = Validator::make(
             $request->all(),
@@ -94,38 +96,32 @@ class VmgoController extends Controller
             ]);
         }
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated VMGO Content Page',
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            userId: $user->user_id,
+            activity: ActivityLogAction::Update,
+            description: 'Updated VMGO Content Page',
+        );
 
         $vmgo = Vmgo::find($validated['vmgo']['vmgo_id']);
         if ($vmgo) {
             $vmgo->vision = $validated['vmgo']['vision'];
             $vmgo->mission = $validated['vmgo']['mission'];
             $vmgo->save();
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'description' => 'Updated VMGO Vision and Mission',
-                'activity' => 'Update',
-                'type' => 'Content',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Update,
+                description: 'Updated VMGO Vision and Mission',
+            );
         } else {
             Vmgo::create([
                 'vision' => $validated['vmgo']['vision'],
                 'mission' => $validated['vmgo']['mission'],
             ]);
-            ActivityLog::create([
-                'user_id' => $user->user_id,
-                'description' => 'Created VMGO Vision and Mission',
-                'activity' => 'Create',
-                'type' => 'Content',
-                'activity_date' => now(),
-            ]);
+            ActivityLogService::contentManagementLog(
+                userId: $user->user_id,
+                activity: ActivityLogAction::Create,
+                description: 'Created VMGO Vision and Mission',
+            );
         }
 
         $pillar_ids = [];
@@ -136,24 +132,20 @@ class VmgoController extends Controller
             if ($pillar) {
                 $pillar->pillar_title = $pillarData['pillar_title'];
                 $pillar->save();
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated Pillar: ' . $pillar->pillar_title,
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated Pillar: '.$pillar->pillar_title,
+                );
             } else {
                 $pillar = Pillars::create([
                     'pillar_title' => $pillarData['pillar_title'],
                 ]);
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Created Pillar: ' . $pillar->pillar_title,
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Created Pillar: '.$pillar->pillar_title,
+                );
             }
             $pillar_ids[] = $pillar->pillar_id;
             foreach ($pillarData['pillar_items'] as $itemData) {
@@ -163,25 +155,21 @@ class VmgoController extends Controller
                     $item->item_description = $itemData['item_description'];
                     $item->save();
                     $pillar_items_ids[] = $item->item_id;
-                    ActivityLog::create([
-                        'user_id' => $user->user_id,
-                        'description' => 'Updated Pillar Item: ' . $item->item_description,
-                        'activity' => 'Update',
-                        'type' => 'Content',
-                        'activity_date' => now(),
-                    ]);
+                    ActivityLogService::contentManagementLog(
+                        userId: $user->user_id,
+                        activity: ActivityLogAction::Update,
+                        description: 'Updated Pillar Item: '.$item->item_description,
+                    );
                 } else {
                     $item = PillarItems::create([
                         'pillar_id' => $pillar->pillar_id,
                         'item_description' => $itemData['item_description'],
                     ]);
-                    ActivityLog::create([
-                        'user_id' => $user->user_id,
-                        'description' => 'Created Pillar Item: ' . $item->item_description,
-                        'activity' => 'Create',
-                        'type' => 'Content',
-                        'activity_date' => now(),
-                    ]);
+                    ActivityLogService::contentManagementLog(
+                        userId: $user->user_id,
+                        activity: ActivityLogAction::Create,
+                        description: 'Created Pillar Item: '.$item->item_description,
+                    );
 
                     $pillar_items_ids[] = $item->item_id;
                 }
@@ -198,13 +186,11 @@ class VmgoController extends Controller
                 $goal->goal_title_fil = $goalData['goal_title_fil'];
                 $goal->goal_desc_fil = $goalData['goal_desc_fil'];
                 $goal->save();
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Updated Campus Goal: ' . $goal->goal_title_eng,
-                    'activity' => 'Update',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Update,
+                    description: 'Updated Campus Goal: '.$goal->goal_title_eng,
+                );
             } else {
                 $goal = CampusGoals::create([
                     'goal_title_eng' => $goalData['goal_title_eng'],
@@ -212,13 +198,11 @@ class VmgoController extends Controller
                     'goal_title_fil' => $goalData['goal_title_fil'],
                     'goal_desc_fil' => $goalData['goal_desc_fil'],
                 ]);
-                ActivityLog::create([
-                    'user_id' => $user->user_id,
-                    'description' => 'Created Campus Goal: ' . $goal->goal_title_eng,
-                    'activity' => 'Create',
-                    'type' => 'Content',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::contentManagementLog(
+                    userId: $user->user_id,
+                    activity: ActivityLogAction::Create,
+                    description: 'Created Campus Goal: '.$goal->goal_title_eng,
+                );
             }
             $goal_ids[] = $goal->goal_id;
         }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ProgramsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Programs extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProgramsFactory> */
+    /** @use HasFactory<ProgramsFactory> */
     use HasFactory;
 
     /**
@@ -18,8 +19,11 @@ class Programs extends Model
      * @var list<string>
      */
     public $timestamps = false;
+
     protected $table = 'programs';
+
     protected $primaryKey = 'program_id';
+
     protected $fillable = [
         'degree_type',
         'program_name',
@@ -28,7 +32,7 @@ class Programs extends Model
         'program_image_name',
         'program_image_path',
         'is_active',
-        'color'
+        'color',
     ];
 
     protected $casts = [
@@ -54,7 +58,7 @@ class Programs extends Model
     }
 
     /**
-     * @return HasMany<Faculty,Programs>
+     * @return HasMany<FacultyStaff,Programs>
      */
     public function FacultyStaff(): HasMany
     {
@@ -76,7 +80,6 @@ class Programs extends Model
     {
         return $this->hasMany(ProgramObjectives::class, 'program_id', 'program_id');
     }
-
 
     public function latestLevel()
     {

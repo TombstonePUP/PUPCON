@@ -1,0 +1,67 @@
+parameters:
+	ignoreErrors:
+		-
+			rawMessage: Anonymous function has an unused use $request.
+			identifier: closure.unusedUse
+			count: 1
+			path: app/Http/Controllers/Areas/Files/AreaFilesController.php
+
+		-
+			rawMessage: 'Undefined variable: $validated'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/Areas/Files/AreaFilesController.php
+
+		-
+			rawMessage: Variable $bannerName on left side of ?? always exists and is not nullable.
+			identifier: nullCoalesce.variable
+			count: 1
+			path: app/Http/Controllers/Content/AboutController.php
+
+		-
+			rawMessage: 'Variable $bannerPath in isset() always exists and is not nullable.'
+			identifier: isset.variable
+			count: 1
+			path: app/Http/Controllers/Content/ProgramContentController.php
+
+		-
+			rawMessage: Variable $activityLogs might not be defined.
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/Dashboard/DashboardController.php
+
+		-
+			rawMessage: Relation 'ExhibitFiles' is not found in App\Models\ExhibitFiles model.
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Exhibits/ExhibitFilesController.php
+
+		-
+			rawMessage: Variable $activity might not be defined.
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/Exhibits/ExhibitOutlinesFileController.php
+
+		-
+			rawMessage: Relation 'ExhibitFiles' is not found in App\Models\ExhibitFiles model.
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Exhibits/ManageExhibitsController.php
+
+		-
+			rawMessage: Relation 'ActiveLevels' is not found in App\Models\Programs model.
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Guest/ProgramsController.php
+
+		-
+			rawMessage: Relation 'latestLevel' is not found in App\Models\Programs model.
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Programs/ManageProgramController.php
+
+		-
+			rawMessage: Relation 'latestLevel' is not found in App\Models\Programs model.
+			identifier: larastan.relationExistence
+			count: 4
+			path: app/Http/Middleware/HandleInertiaRequests.php
