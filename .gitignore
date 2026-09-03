@@ -26,4 +26,7 @@ yarn-error.log
 /.claude
 /.gemini
 .terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars.local
 storage/phpstan/

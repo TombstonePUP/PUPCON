@@ -35,3 +35,9 @@ variable "allowed_ssh_cidr" {
   description = "The CIDR block to allow SSH access from (e.g., your IP address)"
   default = null
 }
+
+variable "create_lock_table" {
+  type    = bool
+  description = "Whether to create the shared OpenTofu state-lock DynamoDB table. Enable in exactly one environment (e.g., staging)."
+  default = false
+}
