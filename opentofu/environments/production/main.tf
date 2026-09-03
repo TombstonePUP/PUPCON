@@ -21,6 +21,8 @@ module "app" {
   aws_region        = var.aws_region
   instance_type     = var.instance_type
   allowed_http_cidr = "0.0.0.0/0"
+  key_name          = var.key_name
+  allowed_ssh_cidr  = var.allowed_ssh_cidr
 }
 
 output "instance_id" {
