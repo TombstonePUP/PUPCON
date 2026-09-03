@@ -13,6 +13,8 @@ import { toast } from 'sonner';
 
 interface AddAreaFormProps {
     program: Program;
+    program_id: number;
+    level_id: number;
     area_id: number;
     categories?: AreaFormCategory[];
     forms?: AreaForms[];
@@ -21,13 +23,19 @@ interface AddAreaFormProps {
 
 interface AddAreaFormForm {
     area_id: number;
+    program_id: number;
+    level_id: number;
     area_form_category_id: number | null;
     document: File | null;
 }
 
-export function AddAreaForm({ program, area_id, categories, forms, onClose }: AddAreaFormProps) {
+export function AddAreaForm({ program, program_id, level_id, area_id, categories, forms, onClose }: AddAreaFormProps) {
     const { data, setData, post, processing, errors, reset } = useForm<AddAreaFormForm>({
         area_form_category_id: null,
+        area_id: area_id,
+        program_id: program_id,
+        level_id: level_id,
+        area_id: area_id,
         document: null,
     });
 
@@ -38,9 +46,9 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
         setIsUploading(true);
         post(
             route('manage.area.add.area.form', {
-                program_id: program.program_id,
-                level_id: program.levels[0]?.accreditation_level_id,
-                area_id: area_id,
+                program_id: data.program_id,
+                level_id: data.level_id,
+                area_id: data.area_id,
             }),
             {
                 onProgress: (progress) => {
@@ -63,6 +71,7 @@ export function AddAreaForm({ program, area_id, categories, forms, onClose }: Ad
                     onClose();
                 },
                 onError: (errors) => {
+                    console.log(errors);
                     toast.dismiss('uploading');
                     toast.error('Failed to upload document', {
                         description: errors.document ?? 'There was an error uploading the document.',

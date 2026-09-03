@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\AccreditationLevels;
+use App\Models\AreaFormCategory;
 use App\Models\AreaParameters;
 use App\Models\Areas;
 use App\Models\CampusGallery;
@@ -10,6 +11,7 @@ use App\Models\ContentPages;
 use App\Models\Exhibits;
 use App\Models\FileStatus;
 use App\Models\ParameterOutlineCategory;
+use App\Models\ParameterOutlines;
 use App\Models\ProgramObjectives;
 use App\Models\Programs;
 use App\Models\Roles;
@@ -257,7 +259,76 @@ class DatabaseSeeder extends Seeder
             ['category_name' => 'Outcome/s'],
         ];
         foreach ($parameterCategory as $attributes) {
-            ParameterOutlineCategory::factory()->create($attributes);
+            ParameterOutlineCategory::firstOrCreate($attributes);
+        }
+
+        $categories = ParameterOutlineCategory::all()->keyBy('category_name');
+        $sysInput = $categories->get('Systems - Inputs and Processes');
+        $implementation = $categories->get('Implementation');
+        $outcome = $categories->get('Outcome/s');
+
+        $area1Parameter = AreaParameters::where('area_id', $area1->area_id)->first();
+
+        $parameterOutlines = [
+            [
+                'area_parameter_id' => $area1Parameter->area_parameter_id,
+                'parameter_outline_category_id' => $sysInput->parameter_outline_category_id,
+                'outline_number' => '1',
+                'outline_description' => 'Vision, Mission, Goals, and Objectives of the Institution',
+                'container' => true,
+                'item_rating' => 0,
+            ],
+            [
+                'area_parameter_id' => $area1Parameter->area_parameter_id,
+                'parameter_outline_category_id' => $sysInput->parameter_outline_category_id,
+                'outline_number' => '1.1',
+                'outline_description' => 'Statement of Vision, Mission, Goals, and Objectives',
+                'container' => false,
+                'item_rating' => 0,
+            ],
+            [
+                'area_parameter_id' => $area1Parameter->area_parameter_id,
+                'parameter_outline_category_id' => $sysInput->parameter_outline_category_id,
+                'outline_number' => '1.2',
+                'outline_description' => 'The Vision, Mission, Goals, and Objectives are publicly articulated and disseminated',
+                'container' => false,
+                'item_rating' => 0,
+            ],
+            [
+                'area_parameter_id' => $area1Parameter->area_parameter_id,
+                'parameter_outline_category_id' => $implementation->parameter_outline_category_id,
+                'outline_number' => '2',
+                'outline_description' => 'Implementation of Vision, Mission, Goals, and Objectives',
+                'container' => true,
+                'item_rating' => 0,
+            ],
+            [
+                'area_parameter_id' => $area1Parameter->area_parameter_id,
+                'parameter_outline_category_id' => $implementation->parameter_outline_category_id,
+                'outline_number' => '2.1',
+                'outline_description' => 'The institution implements programs towards the attainment of its VMGO',
+                'container' => false,
+                'item_rating' => 0,
+            ],
+            [
+                'area_parameter_id' => $area1Parameter->area_parameter_id,
+                'parameter_outline_category_id' => $outcome->parameter_outline_category_id,
+                'outline_number' => '3',
+                'outline_description' => 'Outcomes of the Vision, Mission, Goals, and Objectives',
+                'container' => true,
+                'item_rating' => 0,
+            ],
+            [
+                'area_parameter_id' => $area1Parameter->area_parameter_id,
+                'parameter_outline_category_id' => $outcome->parameter_outline_category_id,
+                'outline_number' => '3.1',
+                'outline_description' => 'The extent of attainment of the VMGO is regularly assessed',
+                'container' => false,
+                'item_rating' => 0,
+            ],
+        ];
+        foreach ($parameterOutlines as $attributes) {
+            ParameterOutlines::factory()->create($attributes);
         }
 
         $file_status = [
@@ -266,7 +337,16 @@ class DatabaseSeeder extends Seeder
             ['status_name' => 'Rejected'],
         ];
         foreach ($file_status as $attributes) {
-            FileStatus::factory()->create($attributes);
+            FileStatus::firstOrCreate($attributes);
+        }
+
+        $areaFormCategory = [
+            ['category_name' => 'Program Performance Profile'],
+            ['category_name' => 'Self-Survey'],
+            ['category_name' => 'Compliance Report'],
+        ];
+        foreach ($areaFormCategory as $attributes) {
+            AreaFormCategory::firstOrCreate($attributes);
         }
 
         $content = [

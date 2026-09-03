@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Parameters;
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Models\AccreditationLevels;
-use App\Models\ActivityLog;
 use App\Models\AreaParameters;
 use App\Models\Programs;
 use App\Services\ActivityLogService;
@@ -34,13 +33,11 @@ class AreaParameterController extends Controller
 
         $user = Auth::user();
 
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Created a new Area Parameter: '.$validated['parameter_name'].$validated['parameter_description'],
-            'activity' => 'Create',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        ActivityLogService::contentManagementLog(
+            activity: ActivityLogAction::Create,
+            userId: $user->user_id,
+            description: 'Created a new Area Parameter: '.$validated['parameter_name'].$validated['parameter_description'],
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -129,14 +126,12 @@ class AreaParameterController extends Controller
          * LOG
          */
         $user = Auth::user();
-        ActivityLog::create([
-            'user_id' => $user->user_id,
-            'description' => 'Updated Area Parameter "'.$parameter->parameter_name.'" in '
+        ActivityLogService::contentManagementLog(
+            activity: ActivityLogAction::Update,
+            userId: $user->user_id,
+            description: 'Updated Area Parameter "'.$parameter->parameter_name.'" in '
                 .$program->program_name.' - '.$level_name,
-            'activity' => 'Update',
-            'type' => 'Content',
-            'activity_date' => now(),
-        ]);
+        );
 
         return redirect()->back()
             ->with('type', 'success')
@@ -160,13 +155,11 @@ class AreaParameterController extends Controller
                 if (Storage::disk('s3')->exists($outline->AreaFiles->file_path)) {
                     Storage::disk('s3')->delete($outline->AreaFiles->file_path);
                 }
-                ActivityLog::create([
-                    'user_id' => Auth::user()->user_id,
-                    'description' => 'Deleted Benchmark File: '.$outline->AreaFiles->file_name.'from Area: '.$outline->AreaParameter->Areas->area_name,
-                    'activity' => 'Delete',
-                    'type' => 'Files',
-                    'activity_date' => now(),
-                ]);
+                ActivityLogService::fileManagementLog(
+                    activity: ActivityLogAction::Delete,
+                    userId: Auth::user()->user_id,
+                    description: 'Deleted Benchmark File: '.$outline->AreaFiles->file_name.'from Area: '.$outline->AreaParameter->Areas->area_name,
+                );
             }
         });
 

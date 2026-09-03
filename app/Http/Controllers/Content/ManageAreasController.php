@@ -67,7 +67,7 @@ class ManageAreasController extends Controller
 
         if (isset($validated['area_image'])) {
             $areaImageName = Str::slug($validated['area_name'], '_').'.'.$validated['area_image']->getClientOriginalExtension();
-            $path = Str::slug($program->program_name, '_').$level_name.'/assets';
+            $path = 'documents/'.Str::slug($program->degree_type, '_').'_'.Str::slug($program->program_name, '_').'/'.$level_name.'/assets';
             $areaImagePath = $path.'/'.$areaImageName;
             if ($disk->exists($areaImagePath)) {
                 $disk->delete($areaImagePath);
@@ -142,7 +142,7 @@ class ManageAreasController extends Controller
             ->where('area_id', $validated['area_id'])
             ->firstOrFail();
 
-        $base_path = Str::slug($program->program_name, '_').'/'.$level_name;
+        $base_path = 'documents/'.Str::slug($program->degree_type, '_').'_'.Str::slug($program->program_name, '_').'/'.$level_name;
 
         $old_folder = Str::slug($area->area_name, '_');
         $new_folder = Str::slug($validated['area_name'], '_');
@@ -190,7 +190,7 @@ class ManageAreasController extends Controller
         $area->area_description = $validated['area_description'] ?? null;
         if (isset($validated['area_image'])) {
             $areaImageName = 'area_'.Str::slug($validated['area_name'], '_').'.'.$validated['area_image']->getClientOriginalExtension();
-            $path = Str::slug($program->program_name, '_').'/level_'.$program->Levels->first()->level;
+            $path = 'documents/'.Str::slug($program->degree_type, '_').'_'.Str::slug($program->program_name, '_').'/'.$level_name.'/assets';
             $areaImagePath = $path.'/'.$areaImageName;
             if ($disk->exists($areaImagePath)) {
                 $disk->delete($areaImagePath);

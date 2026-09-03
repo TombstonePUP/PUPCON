@@ -32,6 +32,8 @@ class AreaForms extends Model
         'file_path',
         'file_status_id',
         'file_reject_reason',
+        'uploaded_by',
+        'uploaded_at',
     ];
 
     protected $casts = [

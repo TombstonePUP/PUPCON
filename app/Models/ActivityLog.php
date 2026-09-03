@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ActivityLogAction;
+use App\Enums\ActivityLogType;
 use Database\Factories\ActivityLogFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,11 +14,6 @@ class ActivityLog extends Model
     /** @use HasFactory<ActivityLogFactory> */
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     public $timestamps = false;
 
     protected $table = 'activity_log';
@@ -29,6 +26,12 @@ class ActivityLog extends Model
         'activity',
         'type',
         'activity_date',
+    ];
+
+    protected $casts = [
+        'activity' => ActivityLogAction::class,
+        'type' => ActivityLogType::class,
+        'activity_date' => 'datetime',
     ];
 
     /**

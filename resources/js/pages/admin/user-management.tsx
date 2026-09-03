@@ -38,7 +38,7 @@ export default function Users({ userRecords, programRoles, roles }: UsersProps) 
         setDialog({ type, user });
     };
 
-    const columns = getUserColumns({ programRoles, roles, resolveDialog });
+    const columns = getUserColumns({ resolveDialog });
     const { roleOptions, programOptions } = getUserFilterOptions(roles, programRoles);
 
     const openDialog = (type: 'add' | 'assign' | 'disable' | 'enable', user?: UserRecords) => {

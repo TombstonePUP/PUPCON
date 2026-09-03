@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { formatBytes, usePdfCompressor } from '@/hooks/use-pdf-compressor';
-import { ParameterOutlines, Program } from '@/types';
+import { ParameterOutlines } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { CheckCircle2, FileText, Loader2, Upload, X } from 'lucide-react';
 import React, { useState } from 'react';
@@ -13,19 +13,26 @@ import { toast } from 'sonner';
 
 interface UploadDocumentProps {
     outline: ParameterOutlines;
-    program: Program;
+    program_id: number;
+    level_id: number;
     area_id: number;
     onClose: () => void;
 }
 
 interface UploadDocumentForm {
     outline_id: number;
+    program_id: number;
+    level_id: number;
+    area_id: number;
     document?: File | null;
 }
 
-export function UploadDocument({ outline, program, area_id, onClose }: UploadDocumentProps) {
+export function UploadDocument({ outline, program_id, level_id, area_id, onClose }: UploadDocumentProps) {
     const { data, setData, post, processing, errors, reset } = useForm<UploadDocumentForm>({
         outline_id: outline.parameter_outline_id,
+        program_id: program_id,
+        level_id: level_id,
+        area_id: area_id,
         document: null,
     });
 
@@ -65,10 +72,10 @@ export function UploadDocument({ outline, program, area_id, onClose }: UploadDoc
 
         post(
             route('manage.area.upload.file', {
-                program_id: program.program_id,
-                level_id: programLevelId,
-                area_id: area_id,
-                outline_id: outline.parameter_outline_id,
+                program_id: data.program_id,
+                level_id: data.level_id,
+                area_id: data.area_id,
+                outline_id: data.outline_id,
             }),
             {
                 onProgress: (progress) => {

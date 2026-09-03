@@ -1,24 +1,25 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ParameterOutlines, Program } from '@/types';
+import { ParameterOutlines } from '@/types';
 import { router } from '@inertiajs/react';
 import { toast } from 'sonner';
 
 interface DeleteDocumentProps {
     outline: ParameterOutlines;
-    program: Program;
+    program_id: number;
+    level_id: number;
     area_id: number;
     onClose: () => void;
 }
 
-export function DeleteDocument({ outline, program, area_id, onClose }: DeleteDocumentProps) {
+export function DeleteDocument({ outline, program_id, level_id, area_id, onClose }: DeleteDocumentProps) {
     const deleteDocument = (e: React.FormEvent) => {
         e.preventDefault();
         router.delete(
             route('manage.area.delete.file', {
-                program_id: program.program_id,
-                level_id: program.levels[0]?.accreditation_level_id,
+                program_id: program_id,
+                level_id: level_id,
                 area_id: area_id,
                 outline_id: outline.parameter_outline_id,
             }),

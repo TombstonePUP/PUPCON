@@ -13,6 +13,8 @@
 import PdfCompressorWorker from '@/workers/pdf-compressor.worker.ts?worker';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import PdfCompressorWorker from '../workers/pdf-compressor.worker?worker&inline';
+
 // ── Tune these for the quality / size tradeoff ────────────────────────────────
 const SKIP_THRESHOLD_BYTES = 500 * 1024; // Files < 500 KB skip compression
 const JPEG_QUALITY = 0.82; // 82% — good balance for documents
@@ -48,7 +50,11 @@ export function usePdfCompressor(): UsePdfCompressorReturn {
     });
 
     // Lazily instantiate the Worker the first time compress() is called.
-    // `?worker` import bundles the worker as a blob URL, avoiding cross-origin issues in dev.
+    // Vite's `?worker&inline` bundles the worker (with its pdf-lib/pdfjs
+    // imports) into this module and creates it from a same-origin Blob URL.
+    // Because the Blob URL shares the page's origin, this avoids the
+    // cross-origin module-worker error when the app is browsed on :8000 while
+    // Vite serves assets from :5173.
     const getWorker = useCallback((): Worker => {
         if (!workerRef.current) {
             workerRef.current = new PdfCompressorWorker();

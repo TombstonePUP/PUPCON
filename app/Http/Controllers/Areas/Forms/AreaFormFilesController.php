@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Areas\Forms;
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Areas\StoreAreaFormRequest;
-use App\Models\ActivityLog;
 use App\Models\AreaForms;
 use App\Models\Areas;
 use App\Models\FileStatus;
@@ -76,16 +75,16 @@ class AreaFormFilesController extends Controller
             $status,
             $file
         ) {
-            $file->storeAs($formFilePath, $formFileName, 's3');
+            $storedPath = $file->storeAs($formFilePath, $formFileName, 's3');
 
-            $formFilePath = "{$formFilePath}/{$formFileName}";
             $areaForm->file_name = $formFileName;
-            $areaForm->file_path = $formFilePath;
+            $areaForm->file_path = $storedPath;
             $areaForm->uploaded_by = $user->user_id;
             $areaForm->uploaded_at = now();
             $areaForm->file_status_id = $status;
+            $areaForm->save();
 
-            $activity_description = "{$activity} for '{$area->area_name}' in program '{$program->program_name}'.";
+            $activity_description = "{$activity->value} for '{$area->area_name}' in program '{$program->program_name}'.";
 
             ActivityLogService::fileManagementLog(
                 activity: $activity,
@@ -129,13 +128,11 @@ class AreaFormFilesController extends Controller
 
         Storage::disk('s3')->delete($areaForm->file_path);
 
-        $activityLog = new ActivityLog;
-        $activityLog->user_id = $user->user_id;
-        $activityLog->activity = 'Delete';
-        $activityLog->description = "Deleted area form for '{$area->area_name}' in program '{$program->program_name}'.";
-        $activityLog->type = 'Files';
-        $activityLog->activity_date = now();
-        $activityLog->save();
+        ActivityLogService::fileManagementLog(
+            activity: ActivityLogAction::Delete,
+            userId: $user->user_id,
+            description: "Deleted area form for '{$area->area_name}' in program '{$program->program_name}'.",
+        );
 
         $areaForm->file_name = null;
         $areaForm->file_path = null;

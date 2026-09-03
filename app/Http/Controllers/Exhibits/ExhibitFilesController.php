@@ -67,7 +67,7 @@ class ExhibitFilesController extends Controller
         ActivityLogService::fileManagementLog(
             userId: $user->user_id,
             activity: $activity,
-            description: "{$activity}d exhibit file for '{$exhibit->exhibit_name}'.",
+            description: "{$activity->value}d exhibit file for '{$exhibit->exhibit_name}'.",
         );
 
         return redirect()->back()

@@ -84,7 +84,10 @@ class AreaParameterOutlinesController extends Controller
 
         return inertia('admin/document/area', [
             'program' => $program,
+            'program_id' => (int) $program_id,
+            'level_id' => (int) $level_id,
             'area' => $area,
+            'area_id' => (int) $area_id,
             'parameterOutlineCategories' => $parameterOutlineCategories,
             'areaFormsCategories' => $areaFormsCategories,
         ]);
@@ -143,9 +146,18 @@ class AreaParameterOutlinesController extends Controller
             $fileName = $initial.'.'.($validated['benchmark_number'] ?? $parameterOutline->outline_number).'.'.
                 ($validated['benchmark_description'] ?? $parameterOutline->outline_description).'.'.
                 pathinfo($file->file_name, PATHINFO_EXTENSION);
-            $level = $program->accreditation_level === 0 ? 'Preliminiary Survey Visit' : 'Level '.$program->accreditation_level;
-            $filePath = "{$program->program_name}/{$level}/{$area->area_name}/{$parameterName}/{$categoryName}";
-            $filePath = "{$filePath}/{$fileName}";
+            $level = $program->Levels
+                ->where('accreditation_level_id', $request->level_id)
+                ->first();
+            $levelLabel = $level && $level->level === 0 ? 'psv' : 'level_'.($level?->level ?? 0);
+
+            $program_name = Str::slug($program->program_name, '_');
+            $degree_type = Str::slug($program->degree_type, '_');
+            $area_name = Str::slug($area->area_name, '_');
+            $param_folder = Str::slug($parameterName, '_');
+            $cat_folder = Str::slug($categoryName, '_');
+
+            $filePath = "documents/{$degree_type}_{$program_name}/{$levelLabel}/{$area_name}/{$param_folder}/{$cat_folder}/{$fileName}";
             Storage::disk('s3')->move($file->file_path, $filePath);
             $file->file_name = $fileName;
             $file->file_path = $filePath;
