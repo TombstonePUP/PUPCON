@@ -35,6 +35,20 @@ php artisan storage:link || true
 # -----------------------------------------------------------
 php artisan migrate --force
 
+# Seed the database on first deployment
+# -----------------------------------------------------------
+# Only seed when the `roles` table is empty. This guards against
+# re-seeding (and duplicating) data on every container restart, while
+# ensuring a fresh database gets its initial/required records.
+# -----------------------------------------------------------
+roles_count=$(php artisan tinker --execute="echo \App\Models\Roles::count();")
+if [ "$roles_count" = "0" ] || [ -z "$roles_count" ]; then
+  echo "Database is empty; seeding initial data..."
+  php artisan db:seed --force
+else
+  echo "Database already has data; skipping seed."
+fi
+
 # Clear and cache configurations
 # -----------------------------------------------------------
 # Improves performance by caching config and routes.
