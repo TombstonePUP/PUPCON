@@ -49,6 +49,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check for infrastructure changes
+        id: infra
+        run: |
+          changed=$(git diff --name-only HEAD~1 HEAD -- opentofu/ docker-compose.prod*.yml docker-compose.staging*.yml)
+          if [ -z "$changed" ]; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No infrastructure files changed; skipping OpenTofu."
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Infrastructure files changed:"
+            echo "$changed"
+          fi
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -58,12 +73,14 @@ jobs:
           aws-region: ${{ inputs.aws_region }}
 
       - name: Setup OpenTofu
+        if: steps.infra.outputs.changed == 'true'
         uses: opentofu/setup-opentofu@v1
         with:
           tofu_version: 1.9.0
           tofu_wrapper: false
 
       - name: OpenTofu Init
+        if: steps.infra.outputs.changed == 'true'
         working-directory: opentofu/environments/${{ inputs.environment }}
         run: |
           tofu init \
@@ -73,6 +90,7 @@ jobs:
       # Plan with a detailed exit code:
       #   0 = no changes, 1 = error, 2 = changes present
       - name: OpenTofu Plan
+        if: steps.infra.outputs.changed == 'true'
         id: plan
         working-directory: opentofu/environments/${{ inputs.environment }}
         run: |
@@ -94,15 +112,11 @@ jobs:
       # Apply only when there are real infrastructure changes, so the EC2
       # instance (and its ID) is not needlessly recreated on every deploy.
       - name: OpenTofu Apply
-        if: steps.plan.outputs.plan_changed == 'true'
+        if: steps.infra.outputs.changed == 'true' && steps.plan.outputs.plan_changed == 'true'
         working-directory: opentofu/environments/${{ inputs.environment }}
         run: |
           tofu apply -input=false -auto-approve tfplan
 
-      # Resolve the current, running EC2 instance ID. Query AWS EC2 directly by
-      # the instance's Name tag so we always use a real, live instance that is
-      # registered with SSM (avoids stale/terminated IDs from state). Falls back
-      # to the OpenTofu state output if the tag lookup returns nothing.
       - name: Resolve running EC2 instance ID
         id: instance
         working-directory: opentofu/environments/${{ inputs.environment }}

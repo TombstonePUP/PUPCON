@@ -20,6 +20,7 @@ module "app" {
   environment       = "staging"
   aws_region        = var.aws_region
   instance_type     = var.instance_type
+  ami_id            = var.ami_id
   allowed_http_cidr = "0.0.0.0/0"
   create_lock_table = true
 }

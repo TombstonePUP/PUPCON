@@ -19,3 +19,8 @@ variable "allowed_ssh_cidr" {
   type    = string
   default = null
 }
+
+variable "ami_id" {
+  type        = string
+  description = "Pinned Debian 12 AMI ID for the EC2 instance"
+}
