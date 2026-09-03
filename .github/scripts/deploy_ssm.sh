@@ -61,8 +61,23 @@ echo "${GITHUB_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
 cd /opt/apps/pupcon-${ENVIRONMENT}
 echo "Pulling images for ${ENVIRONMENT}..."
 docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} pull
+echo "Syncing frontend build into shared host directory..."
+mkdir -p /opt/apps/pupcon-${ENVIRONMENT}/public-build
+# Extract the freshly-built public/build from the pupcon-client image into the
+# shared bind-mount directory. Because public/build is a build artifact that is
+# NOT committed to git and builds only inside the frontend image, we sync it
+# from the image on every deploy so api-prod (which renders Blade/@vite and
+# needs manifest.json) always has the build matching the current image.
+rm -rf /opt/apps/pupcon-${ENVIRONMENT}/public-build/*
+docker run --rm \
+  --entrypoint "" \
+  -v /opt/apps/pupcon-${ENVIRONMENT}/public-build:/out \
+  ghcr.io/zero-index-developers/pupcon/pupcon-client:${APP_VERSION} \
+  /bin/sh -c "cp -R /var/www/public/build/. /out/"
 echo "Switching to new ${ENVIRONMENT} containers..."
 docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} up -d
+echo "Restarting api-prod to pick up the synced manifest..."
+docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} restart api-prod || true
 echo "Cleaning up old ${ENVIRONMENT} images..."
 docker image prune -f
 echo "Deployment complete for ${ENVIRONMENT}"
