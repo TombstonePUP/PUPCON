@@ -162,9 +162,7 @@ const AdministrationSection: React.FC = ({ ...props }: AdministrationProps) => {
             const current = prev ?? [];
             const existingIndex = current.findIndex((o) => o.administration_id === formData.administration_id);
             let updatedList;
-            let officialForLocalState: Administration;
-
-            officialForLocalState = {
+            const officialForLocalState: Administration = {
                 administration_id: formData.administration_id ?? 0,
                 first_name: formData.first_name,
                 middle_name: formData.middle_name || null,

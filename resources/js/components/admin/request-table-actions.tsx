@@ -13,16 +13,6 @@ interface DocumentRequestActionsProps {
     resolveDialog: ({ type, file }: DialogProps) => void;
 }
 
-interface FileForm {
-    file_id: number;
-    file_type: string;
-    rejection_reason?: string;
-}
-
-interface DocumentRequestForm {
-    file: FileForm[];
-}
-
 export default function DocumentRequestActions({ file, resolveDialog }: DocumentRequestActionsProps) {
     const files = Array.isArray(file) ? file : [file];
     const canApprove = files.some((f) => f.file_status !== 'Approved');

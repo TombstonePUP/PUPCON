@@ -105,7 +105,7 @@ export default function WelcomeContentSection({ ...props }: WelcomeContentSectio
                 preserveScroll: true,
                 preserveState: true,
             });
-        } catch (error) {
+        } catch {
             toast.dismiss('uploading');
             toast.error('Unexpected error occurred', { description: 'Please check your connection or try again later.' });
             setIsUploading(false);

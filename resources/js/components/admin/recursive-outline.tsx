@@ -12,7 +12,7 @@ import {
     ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Area, AreaParameters, Program, type ParameterOutlines } from '@/types';
+import { Area, AreaParameters, Program, SharedData, type ParameterOutlines } from '@/types';
 import { usePage } from '@inertiajs/react';
 import {
     Circle,
@@ -39,16 +39,16 @@ interface BenchDialogParams {
     parameter?: AreaParameters;
 }
 
+interface OutlineNode extends ParameterOutlines {
+    children: OutlineNode[];
+}
+
 interface OutlineProps {
-    outlines: ParameterOutlines[];
+    outlines: OutlineNode[];
     program: Program;
     area: Area;
     resolveDocDialog: (params: DocDialogParams) => void;
     resolveBenchDialog: (params: BenchDialogParams) => void;
-}
-
-interface OutlineNode extends ParameterOutlines {
-    children: OutlineNode[];
 }
 
 export function buildOutlineTree({ outlines }: { outlines: ParameterOutlines[] }): OutlineNode[] {
@@ -113,7 +113,7 @@ export function buildOutlineTree({ outlines }: { outlines: ParameterOutlines[] }
 }
 
 export function RecursiveOutline({ outlines, program, area, resolveDocDialog, resolveBenchDialog }: OutlineProps) {
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage<SharedData>().props;
     const role = auth?.user?.roles?.role_name;
     const isAccreditor = role === 'Accreditor';
 
@@ -168,7 +168,11 @@ export function RecursiveOutline({ outlines, program, area, resolveDocDialog, re
 
             <ul>
                 {outlines.map((outline) => (
-                    <li className="flex flex-col gap-1 pl-[1vw]" key={`outline-${outline.parameter_outline_id}`}>
+                    <li
+                        className="flex scroll-mt-28 flex-col gap-1 pl-[1vw]"
+                        id={`outline-${outline.parameter_outline_id}`}
+                        key={`outline-${outline.parameter_outline_id}`}
+                    >
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center">
                                 {/* Outline label */}
@@ -204,17 +208,15 @@ export function RecursiveOutline({ outlines, program, area, resolveDocDialog, re
                                 )}
                             </div>
                             {/* Recursive children */}
-                            {outline.children &&
-                                (outline.children as any[]).length > 0 &&
-                                ((
-                                    <RecursiveOutline
-                                        outlines={outline.children as any}
-                                        program={program}
-                                        area={area}
-                                        resolveDocDialog={resolveDocDialog}
-                                        resolveBenchDialog={resolveBenchDialog}
-                                    />
-                                ) as any)}
+                            {outline.children && outline.children.length > 0 && (
+                                <RecursiveOutline
+                                    outlines={outline.children}
+                                    program={program}
+                                    area={area}
+                                    resolveDocDialog={resolveDocDialog}
+                                    resolveBenchDialog={resolveBenchDialog}
+                                />
+                            )}
                         </div>
                     </li>
                 ))}
@@ -231,7 +233,7 @@ export function RecursiveOutline({ outlines, program, area, resolveDocDialog, re
 }
 
 export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog, resolveBenchDialog }: OutlineProps) {
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage<SharedData>().props;
     const role = auth?.user?.roles?.role_name;
 
     const FileStatus = ({ outline }: { outline: ParameterOutlines }) => {
@@ -262,9 +264,7 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
     };
 
     const download = (outline: ParameterOutlines) => {
-        const levelId = Array.isArray(program.levels)
-            ? (program.levels as any)[0]?.accreditation_level_id
-            : (program.levels as any)?.accreditation_level_id;
+        const levelId = Array.isArray(program.levels) ? program.levels[0]?.accreditation_level_id : program.levels?.accreditation_level_id;
 
         const url = route('manage.area.download.file', {
             program_name: program.program_link,
@@ -404,17 +404,15 @@ export function RecursiveOutlineForm({ outlines, program, area, resolveDocDialog
                                 )}
                             </ContextMenuContent>
                         </ContextMenu>
-                        {outline.children &&
-                            (outline.children as any[]).length > 0 &&
-                            ((
-                                <RecursiveOutlineForm
-                                    outlines={outline.children as any}
-                                    program={program}
-                                    area={area}
-                                    resolveDocDialog={resolveDocDialog}
-                                    resolveBenchDialog={resolveBenchDialog}
-                                />
-                            ) as any)}
+                        {outline.children && outline.children.length > 0 && (
+                            <RecursiveOutlineForm
+                                outlines={outline.children}
+                                program={program}
+                                area={area}
+                                resolveDocDialog={resolveDocDialog}
+                                resolveBenchDialog={resolveBenchDialog}
+                            />
+                        )}
                     </li>
                 ))}
             </ul>

@@ -61,7 +61,7 @@ export default function ExhibitAdmin({ exhibits }: ExhibitAdminProps) {
             {/* --- Exhibits Grid --- */}
             <div className="flex gap-6">
                 {exhibits.length > 0 ? (
-                    <div className="grid w-full grid-cols-2 gap-6 xl:grid-cols-4">
+                    <div className="grid w-full grid-cols-2 gap-6 xl:grid-cols-3">
                         {exhibits.map((exhibit, index) => {
                             const handleCardClick = () => {
                                 if (exhibit.container) {

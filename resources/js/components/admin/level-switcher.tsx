@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Link } from '@inertiajs/react';
 import { FilesIcon } from 'lucide-react';
 
@@ -16,8 +16,7 @@ export function LevelSwitcher({
         plan: string;
     }[];
 }) {
-    const { isMobile } = useSidebar();
-    const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+    const [activeTeam] = React.useState(teams[0]);
 
     if (!activeTeam) {
         return null;

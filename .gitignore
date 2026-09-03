@@ -25,6 +25,7 @@ yarn-error.log
 /.zed
 /.claude
 /.gemini
+/planning/
 .terraform/
 *.tfstate
 *.tfstate.*

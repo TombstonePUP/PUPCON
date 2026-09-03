@@ -15,7 +15,7 @@ interface PageAsideProps {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function PageAside({ quickLinks = [], pageSections = [], className }: PageAsideProps) {
+export default function PageAside({ quickLinks = [], className }: PageAsideProps) {
     return (
         <aside
             className={`sticky top-24 mb-6 flex flex-col gap-4 self-start lg:sticky lg:top-24 lg:mb-0 lg:w-1/4 lg:flex-shrink-0 ${className ?? ''}`}

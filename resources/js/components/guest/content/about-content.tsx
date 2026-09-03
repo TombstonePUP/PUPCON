@@ -43,21 +43,6 @@ const AboutSection = ({ about_page, org_types }: AboutProps) => {
         org_types: org_types || [],
     });
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const previewUrl = URL.createObjectURL(file);
-            setData({
-                ...data,
-                page: {
-                    ...data.page,
-                    banner: file,
-                    previewUrl,
-                },
-            });
-        }
-    };
-
     const extractOrgTypeErrors = (errors: Record<string, string>) => {
         return Object.entries(errors)
             .filter(([key]) => {

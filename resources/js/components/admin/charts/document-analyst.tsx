@@ -121,13 +121,6 @@ const pieChartConfig = {
     'Missing Files': { color: 'var(--chart-5)' },
 } satisfies ChartConfig;
 
-const barChartConfig = {
-    documents: { label: 'Documents' },
-    Approved: { label: 'Approved', color: 'var(--chart-1)' },
-    Pending: { label: 'Pending', color: 'var(--chart-2)' },
-    Rejected: { label: 'Rejected', color: 'var(--chart-3)' },
-} satisfies ChartConfig;
-
 // ---------------------------------------------------------------------------
 // Helpers for OverallProgress
 // ---------------------------------------------------------------------------
@@ -150,7 +143,7 @@ function toTitleCase(str: string) {
 // Main component
 // ---------------------------------------------------------------------------
 
-export function DocumentsAnalytics({ frequencyUploads, overallUploads = [], documentStatistics, loading }: DocumentsAnalyticsProps) {
+export function DocumentsAnalytics({ frequencyUploads, overallUploads = [], loading }: DocumentsAnalyticsProps) {
     const [timeRange, setTimeRange] = useState('7d');
 
     // --- Area chart data ---

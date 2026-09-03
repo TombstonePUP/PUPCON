@@ -1,196 +1,118 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { Link, router } from "@inertiajs/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Search, X, ChevronRight, FileText } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { buildSearchIndex, searchOutlines } from '@/lib/search';
+import type { GuestNavigation } from '@/types';
+import { router } from '@inertiajs/react';
+import { ChevronRight, FileText, Search, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { OutlineSearchSource, SearchResult } from './mobile-menu';
 
 interface SearchModalProps {
-  open: boolean;
-  onClose: () => void;
-  guestProps: any;
+    open: boolean;
+    onClose: () => void;
+    guestProps: GuestNavigation;
 }
 
 export default function SearchModal({ open, onClose, guestProps }: SearchModalProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const inputRef = useRef<HTMLInputElement>(null);
 
-  // ---- Enhanced Search handling with debouncing ----
-  const handleSearch = (term: string) => {
-    if (!term.trim()) {
-      setSearchResults([]);
-      setIsSearching(false);
-      return;
-    }
+    // ---- Precompute a rich lowercase search index once ----
+    const searchIndex = useMemo(() => buildSearchIndex((guestProps?.outlines || []) as unknown as OutlineSearchSource[]), [guestProps]);
 
-    setIsSearching(true);
-    const t = term.toLowerCase();
-    
-    // Safety check for guestProps.outlines
-    const outlines = guestProps?.outlines || [];
-    
-    const results = outlines
-      .filter((o: any) =>
-        o.outline_description?.toLowerCase().includes(t) ||
-        o.area_parameter?.parameter_name?.toLowerCase().includes(t) ||
-        o.area_parameter?.areas?.area_name?.toLowerCase().includes(t) ||
-        o.area_parameter?.areas?.levels?.programs?.program_name?.toLowerCase().includes(t)
-      )
-      .map((o: any) => ({
-        outline: o.outline_description,
-        outlineId: o.parameter_outline_id,
-        parameterId: o.area_parameter_id,
-        program: o.area_parameter?.areas?.levels?.programs?.program_name,
-        area: o.area_parameter?.areas?.area_name,
-        parameter: o.area_parameter?.parameter_name,
-        level: o.area_parameter?.areas?.levels?.level,
-        program_id: o.area_parameter?.areas?.levels?.programs?.program_id,
-        area_id: o.area_parameter?.areas?.area_id,
-      }));
+    // ---- Derived, memoized results: only recomputed when the term changes ----
+    const searchResults = useMemo(() => searchOutlines(searchIndex, searchTerm), [searchTerm, searchIndex]);
 
-    setTimeout(() => {
-      setSearchResults(results);
-      setIsSearching(false);
-    }, 300);
-  };
+    // Focus the input when the dialog opens (Radix focuses the close button by default)
+    useEffect(() => {
+        if (open) {
+            const timer = setTimeout(() => inputRef.current?.select(), 0);
+            return () => clearTimeout(timer);
+        }
+    }, [open]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchTerm) {
-        handleSearch(searchTerm);
-      } else {
-        setSearchResults([]);
-        setIsSearching(false);
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
-  // Focus input when modal opens
-  useEffect(() => {
-    if (open && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
-  }, [open]);
-
-  // Handle Escape key
-  useEffect(() => {
-    if (!open) return;
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+    const redirectLink = (outline: SearchResult) => {
+        const { program_id, area_id, outlineId, parameterId } = outline;
+        router.visit(`/programs/${program_id}/${area_id}?parameter=${parameterId}#outline-${outlineId}`, {
+            preserveScroll: true,
+        });
+        onClose();
     };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [open, onClose]);
 
-  const redirectLink = (outline: any) => {
-    const { program_id, area_id, outlineId, parameterId } = outline;
-    router.visit(`/programs/${program_id}/${area_id}?parameter=${parameterId}#outline-${outlineId}`, {
-      preserveScroll: true,
-    });
-    onClose();
-  };
+    return (
+        <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+            <DialogContent className="gap-0 overflow-hidden p-0 sm:max-w-xl">
+                <DialogHeader className="px-6 pt-6 pb-4">
+                    <DialogTitle>Search benchmarks</DialogTitle>
+                    <DialogDescription className="sr-only">Search for benchmarks across programs, areas, and outlines.</DialogDescription>
+                </DialogHeader>
 
-  return (
-    <AnimatePresence>
-      {open && (
-        <div className="fixed inset-0 z-[200] overflow-y-auto">
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-          />
+                {/* Search Input */}
+                <div className="relative px-6">
+                    <Search className="text-muted-foreground absolute top-1/2 left-9 size-4 -translate-y-1/2" />
+                    <Input
+                        ref={inputRef}
+                        placeholder="Search programs, areas, or benchmarks..."
+                        className="pr-10 pl-9"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    {searchTerm && (
+                        <button
+                            type="button"
+                            onClick={() => setSearchTerm('')}
+                            className="text-muted-foreground hover:text-foreground absolute top-1/2 right-10 -translate-y-1/2 rounded-sm p-1 opacity-70 hover:opacity-100"
+                        >
+                            <X className="size-4" />
+                        </button>
+                    )}
+                </div>
 
-          {/* Modal Container */}
-          <div className="flex min-h-full items-start justify-center p-4 pt-[15vh]">
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="relative w-full max-w-2xl rounded-2xl bg-white shadow-2xl overflow-hidden"
-            >
-              {/* Search Header */}
-              <div className="relative border-b border-gray-100 p-6">
-                <Search className="absolute left-10 top-1/2 -translate-y-1/2 text-gray-400 size-5" />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Search programs, areas, or benchmarks..."
-                  className="w-full pl-12 pr-12 py-3 text-lg font-medium text-gray-900 placeholder:text-gray-400 focus:outline-none"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <button
-                  onClick={onClose}
-                  className="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-50"
-                >
-                  <X className="size-5" />
-                </button>
-              </div>
-
-              {/* Results Area */}
-              <div className="max-h-[60vh] overflow-y-auto p-2">
-                {!searchTerm ? (
-                  <div className="py-12 text-center">
-                    <Search className="mx-auto size-12 text-gray-200 mb-4" />
-                    <p className="text-gray-500 font-medium">Type something to search...</p>
-                  </div>
-                ) : isSearching ? (
-                  <div className="py-12 text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7f1414] mx-auto mb-4" />
-                    <p className="text-gray-500">Searching benchmarks...</p>
-                  </div>
-                ) : searchResults.length > 0 ? (
-                  <div className="space-y-1">
-                    {searchResults.map((result, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => redirectLink(result)}
-                        className="w-full text-left p-4 rounded-xl hover:bg-gray-50 group transition-all"
-                      >
-                        <div className="flex items-center gap-3 mb-1">
-                          <span className="text-[10px] font-bold text-[#7f1414] px-2 py-0.5 bg-[#7f1414]/5 rounded">
-                            {result.program}
-                          </span>
-                          <ChevronRight className="size-3 text-gray-300" />
-                          <span className="text-xs text-gray-500 font-medium">{result.area}</span>
+                {/* Results Area */}
+                <div className="max-h-[55vh] overflow-y-auto px-4 py-2">
+                    {!searchTerm ? (
+                        <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 px-4 text-center">
+                            <div className="rounded-full bg-gray-100 p-4">
+                                <Search className="size-6 text-gray-400" />
+                            </div>
+                            <p className="text-muted-foreground text-sm">Type something to search...</p>
                         </div>
-                        <p className="text-sm text-gray-700 font-medium leading-relaxed group-hover:text-black">
-                          {result.outline}
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="py-12 text-center">
-                    <FileText className="mx-auto size-12 text-gray-200 mb-4" />
-                    <p className="text-gray-500">No results found for "{searchTerm}"</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Footer / Shortcut hints */}
-              <div className="bg-gray-50 p-4 border-t border-gray-100 flex justify-between items-center">
-                <div className="flex gap-4">
-                  <div className="flex items-center gap-1.5">
-                    <kbd className="px-1.5 py-0.5 rounded border border-gray-300 bg-white text-[10px] text-gray-500 font-sans shadow-sm font-bold">ESC</kbd>
-                    <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">to close</span>
-                  </div>
+                    ) : searchResults.length > 0 ? (
+                        <div className="space-y-1">
+                            {searchResults.map((result) => (
+                                <button
+                                    key={`${result.program_id}-${result.area_id}-${result.outlineId}`}
+                                    onClick={() => redirectLink(result)}
+                                    className="group w-full cursor-pointer rounded-lg bg-gray-100/60 p-4 text-left transition-colors hover:bg-gray-100"
+                                >
+                                    <div className="mb-1 flex flex-wrap items-center gap-2">
+                                        <span className="rounded bg-[#7f1414]/5 px-2 py-0.5 text-[10px] font-bold text-[#7f1414]">
+                                            {result.program}
+                                        </span>
+                                        <ChevronRight className="size-3 text-gray-300" />
+                                        <span className="text-xs font-medium text-gray-500">{result.area}</span>
+                                        {result.parameter && (
+                                            <span className="rounded bg-gray-800/5 px-2 py-0.5 text-[10px] font-bold text-gray-600 uppercase">
+                                                Parameter {result.parameter}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-sm leading-relaxed font-medium text-gray-700 group-hover:text-black">{result.outline}</p>
+                                </button>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 px-4 text-center">
+                            <div className="rounded-full bg-gray-100 p-4">
+                                <FileText className="size-6 text-gray-400" />
+                            </div>
+                            <p className="text-muted-foreground text-sm">No results found for "{searchTerm}"</p>
+                        </div>
+                    )}
                 </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">PUPCON Search</span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
+            </DialogContent>
+        </Dialog>
+    );
 }

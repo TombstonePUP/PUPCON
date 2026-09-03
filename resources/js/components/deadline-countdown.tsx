@@ -10,8 +10,6 @@ const STORAGE_KEY = 'document_submission_deadline';
 function getTimeLeft(deadline: Date) {
     // helper at the top of the component
     const now = new Date();
-    const minDate = now.toISOString().slice(0, 16);
-    const maxDate = new Date(now.getFullYear() + 2, now.getMonth(), now.getDate()).toISOString().slice(0, 16);
     const diff = deadline.getTime() - now.getTime();
     if (diff <= 0) return null;
 

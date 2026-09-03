@@ -481,7 +481,6 @@ function CropModal({
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function ImageUpload({
-    value,
     previewUrl,
     onChange,
     onRemove,
