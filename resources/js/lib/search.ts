@@ -108,10 +108,21 @@ export function searchOutlines(index: ReturnType<typeof buildSearchIndex>, query
     if (tokens.length === 0) return [];
 
     return index
-        .filter((item) => tokens.every((token) => item.haystack.includes(token)))
         .filter((item) => item.programId != null && item.areaId != null)
-        .map((item) => ({ item, score: relevanceScore(item, query) }))
-        .sort((a, b) => b.score - a.score)
+        .map((item) => {
+            let usedFuzzy = false;
+            const matches = tokens.every((token) => {
+                const { exact, fuzzy } = matchToken(item.haystack, token);
+                if (fuzzy && !exact) usedFuzzy = true;
+                return exact || fuzzy;
+            });
+            return matches ? { item, usedFuzzy, score: relevanceScore(item, query) } : null;
+        })
+        .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
+        .sort((a, b) => {
+            if (a.usedFuzzy !== b.usedFuzzy) return a.usedFuzzy ? 1 : -1;
+            return b.score - a.score;
+        })
         .map(({ item }) => ({
             outline: item.outline,
             outlineId: item.id,
@@ -123,6 +134,44 @@ export function searchOutlines(index: ReturnType<typeof buildSearchIndex>, query
             program_id: item.programId,
             area_id: item.areaId,
         }));
+}
+
+interface TokenMatch {
+    exact: boolean;
+    fuzzy: boolean;
+}
+
+function matchToken(haystack: string, token: string): TokenMatch {
+    const exact = haystack.includes(token);
+    if (exact) return { exact, fuzzy: false };
+
+    // Skip fuzzy matching for very short tokens to avoid noisy matches.
+    if (token.length < 3) return { exact: false, fuzzy: false };
+
+    const tolerance = token.length <= 5 ? 1 : 2;
+    const words = haystack.split(/\s+/).filter(Boolean);
+    const fuzzy = words.some((word) => levenshtein(token, word) <= tolerance);
+
+    return { exact: false, fuzzy };
+}
+
+function levenshtein(a: string, b: string): number {
+    if (a === b) return 0;
+    if (a.length === 0) return b.length;
+    if (b.length === 0) return a.length;
+
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+
+    for (let i = 1; i <= a.length; i++) {
+        const curr = [i];
+        for (let j = 1; j <= b.length; j++) {
+            const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+            curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
+        }
+        prev = curr;
+    }
+
+    return prev[b.length];
 }
 
 function relevanceScore(item: ReturnType<typeof buildSearchIndex>[number], query: string): number {
