@@ -6,7 +6,7 @@ on:
       - '**.nix'
       - '**.md'
   pull_request:
-    branches: [main, staging, develop]
+    branches: [master, staging, develop]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -58,11 +58,11 @@ jobs:
 
   # ============================================================
   # GATE 4 — Build & Push Production Images to GHCR
-  # Runs on: push to main only
+  # Runs on: push to master only
   # ============================================================
   build-production:
     needs: ci-checks
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     uses: ./.github/workflows/build.yml
     with:
       environment: production
@@ -73,12 +73,12 @@ jobs:
 
   # ============================================================
   # GATE 5 — Deploy to Production via OpenTofu + SSM
-  # Runs on: push to main only
+  # Runs on: push to master only
   # Pauses for manual approval via GitHub Environment protection
   # ============================================================
   deploy-production:
     needs: build-production
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     uses: ./.github/workflows/deploy.yml
     with:
       environment: production
