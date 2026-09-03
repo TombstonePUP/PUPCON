@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { buildSearchIndex, searchOutlines } from '@/lib/search';
 import type { GuestNavigation } from '@/types';
@@ -46,6 +46,7 @@ export default function SearchModal({ open, onClose, guestProps }: SearchModalPr
             <DialogContent className="gap-0 overflow-hidden p-0 sm:max-w-xl">
                 <DialogHeader className="px-6 pt-6 pb-4">
                     <DialogTitle>Search benchmarks</DialogTitle>
+                    <DialogDescription className="sr-only">Search for benchmarks across programs, areas, and outlines.</DialogDescription>
                 </DialogHeader>
 
                 {/* Search Input */}
