@@ -35,7 +35,6 @@ services:
       - HOME=/tmp
     volumes:
       - laravel-storage-production:/var/www/storage
-      - public-assets:/var/www/public/build:rw
     networks:
         - pupcon_prod_network
 
@@ -47,7 +46,6 @@ services:
       - api-prod
     volumes:
       - laravel-storage-production:/var/www/storage:ro
-      - public-assets:/var/www/public/build:ro
     ports:
       - "80:80"
     networks:
@@ -56,7 +54,6 @@ services:
 volumes:
   postgres-data-production:
   laravel-storage-production:
-  public-assets:
 
 networks:
   pupcon_prod_network:
