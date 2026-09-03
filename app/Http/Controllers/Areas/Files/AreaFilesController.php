@@ -28,13 +28,13 @@ class AreaFilesController extends Controller
         $validated = $request->validated();
 
         $program = Programs::with([
-            'Levels' => function ($query) use ($request) {
+            'Levels' => function ($query) use ($validated) {
                 $query->where('accreditation_level_id', $validated['level_id']);
             },
         ])->findOrFail($request->program_id);
 
         $level = AccreditationLevels::where('accreditation_level_id', $validated['level_id'])->firstOrFail();
-        $level = $level->level === 0 ? 'psv' : 'level_' . $level->level;
+        $level = $level->level === 0 ? 'psv' : 'level_'.$level->level;
 
         $area = Areas::findOrFail($validated['area_id']);
         $parameterOutlines = ParameterOutlines::find($validated['outline_id']);
@@ -65,7 +65,7 @@ class AreaFilesController extends Controller
 
         $file = $validated['document'];
         $parameter_outline = Str::slug($parameterOutlines->outline_description, '_');
-        $fileName = $initial . '.' . $parameterOutlines->outline_number . '.' . $parameter_outline . '.' . $file->getClientOriginalExtension();
+        $fileName = $initial.'.'.$parameterOutlines->outline_number.'.'.$parameter_outline.'.'.$file->getClientOriginalExtension();
         $program_name = Str::slug($program->program_name, '_');
         $degree_type = Str::slug($program->degree_type, '_');
         $area_name = Str::slug($area->area_name, '_');
@@ -121,7 +121,7 @@ class AreaFilesController extends Controller
         $areaFile = $parameterOutlines->AreaFiles;
 
         if ($areaFile && Storage::disk('s3')->exists($areaFile->file_path)) {
-            return response()->download(storage_path('app/public/' . $areaFile->file_path), $areaFile->file_name);
+            return response()->download(storage_path('app/public/'.$areaFile->file_path), $areaFile->file_name);
         } else {
             return redirect()->back()
                 ->with('type', 'error')
@@ -139,7 +139,7 @@ class AreaFilesController extends Controller
     {
         $areaFile = ParameterOutlines::find($request->outline_id)?->AreaFiles;
 
-        if (!$areaFile) {
+        if (! $areaFile) {
             return redirect()->back()
                 ->with('type', 'success')
                 ->with('title', 'Delete Successful')

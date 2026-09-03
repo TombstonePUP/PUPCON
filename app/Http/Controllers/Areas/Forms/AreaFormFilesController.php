@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Areas\Forms;
 use App\Enums\ActivityLogAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Areas\StoreAreaFormRequest;
-use App\Http\Requests\Files\UploadPdfRequest;
 use App\Models\ActivityLog;
 use App\Models\AreaForms;
 use App\Models\Areas;
@@ -23,8 +22,6 @@ class AreaFormFilesController extends Controller
 {
     /**
      * Update/Upload the specified resource in storage.
-     *
-     * @return RedirectResponse
      */
     public function store(StoreAreaFormRequest $request, AreaForms $areaForms): RedirectResponse
     {
@@ -105,8 +102,6 @@ class AreaFormFilesController extends Controller
 
     /**
      * Download the specified resource from storage.
-     *
-     * @return RedirectResponse
      */
     public function download(Request $request): RedirectResponse
     {
@@ -114,12 +109,12 @@ class AreaFormFilesController extends Controller
 
         if ($form && Storage::disk('s3')->exists($form->file_path)) {
             return Storage::disk('s3')->download($form->file_path, $form->file_name);
-        } else {
-            return redirect()->back()
-                ->with('type', 'error')
-                ->with('title', 'Download Failed')
-                ->with('message', 'There is an error in downloading the document.');
         }
+
+        return redirect()->back()
+            ->with('type', 'error')
+            ->with('title', 'Download Failed')
+            ->with('message', 'There is an error in downloading the document.');
     }
 
     /**

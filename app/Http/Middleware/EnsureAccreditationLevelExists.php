@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use App\Models\Programs;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureAccreditationLevelExists
@@ -18,7 +17,7 @@ class EnsureAccreditationLevelExists
     public function handle(Request $request, Closure $next): Response
     {
         $exists = Programs::where('program_id', $request->program_id)
-            ->whereHas('Levels', fn($query) => $query->where('accreditation_level_id', $request->level_id))
+            ->whereHas('Levels', fn ($query) => $query->where('accreditation_level_id', $request->level_id))
             ->exists();
 
         if (! $exists) {

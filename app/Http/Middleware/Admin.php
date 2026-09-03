@@ -20,6 +20,7 @@ class Admin
         if ($role !== 'Admin') {
             return redirect()->back()->with('error', 'You do not have permission to access this page.');
         }
+
         return $next($request);
     }
 }
