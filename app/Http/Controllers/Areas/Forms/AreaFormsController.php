@@ -74,7 +74,7 @@ class AreaFormsController extends Controller
             $area_name = Str::slug($area->area_name, '_');
             $formFileName = "{$category}.{$validated['document']->getClientOriginalExtension()}";
             $formFilePath = "documents/{$degree_type}_{$program_name}/{$level}/{$area_name}/area_forms";
-            $request->file('document')->storeAs($formFilePath, $formFileName, 'public');
+            $request->file('document')->storeAs($formFilePath, $formFileName, 's3');
 
             $formFilePath = "{$formFilePath}/{$formFileName}";
             // Populate the areaForm model
@@ -127,7 +127,7 @@ class AreaFormsController extends Controller
         if ($areaForm->file_path) {
             $file_name = $areaForm->file_name;
             $description = "Deleted area form file {$file_name} for '{$area->area_name}' in program '{$program->program_name}'.";
-            Storage::disk('public')->delete($areaForm->file_path);
+            Storage::disk('s3')->delete($areaForm->file_path);
             ActivityLogService::fileManagementLog(
                 activity: ActivityLogAction::Delete,
                 userId: $user->user_id,

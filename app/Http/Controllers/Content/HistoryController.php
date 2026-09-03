@@ -100,16 +100,16 @@ class HistoryController extends Controller
             $bannerName = 'history-banner.'.$validated['page']['banner']->getClientOriginalExtension();
             $bannerPath = 'history-page/'.$bannerName;
 
-            if ($page && $page->image_path && Storage::disk('public')->exists($page->image_path)) {
-                Storage::disk('public')->delete($page->image_path);
+            if ($page && $page->image_path && Storage::disk('s3')->exists($page->image_path)) {
+                Storage::disk('s3')->delete($page->image_path);
             }
 
-            $validated['page']['banner']->storeAs('history-page', $bannerName, 'public');
+            $validated['page']['banner']->storeAs('history-page', $bannerName, 's3');
             $page->image_name = $bannerName;
             $page->image_path = $bannerPath;
         } elseif (empty($validated['page']['previewUrl']) && $page && $page->image_path) {
-            if (Storage::disk('public')->exists($page->image_path)) {
-                Storage::disk('public')->delete($page->image_path);
+            if (Storage::disk('s3')->exists($page->image_path)) {
+                Storage::disk('s3')->delete($page->image_path);
             }
             $page->image_name = null;
             $page->image_path = null;
@@ -149,14 +149,14 @@ class HistoryController extends Controller
                 $profileImageName = $directorData['name'].'.'.$directorData['profile_image']->getClientOriginalExtension();
                 $profileImagePath = 'history-page/directors/'.$profileImageName;
 
-                if ($director && $director->profile_image_path && Storage::disk('public')->exists($director->profile_image_path)) {
-                    Storage::disk('public')->delete($director->profile_image_path);
+                if ($director && $director->profile_image_path && Storage::disk('s3')->exists($director->profile_image_path)) {
+                    Storage::disk('s3')->delete($director->profile_image_path);
                 }
 
-                $directorData['profile_image']->storeAs('history-page/directors', $profileImageName, 'public');
+                $directorData['profile_image']->storeAs('history-page/directors', $profileImageName, 's3');
             } elseif (empty($directorData['previewUrl']) && $director && $director->profile_image_path) {
-                if (Storage::disk('public')->exists($director->profile_image_path)) {
-                    Storage::disk('public')->delete($director->profile_image_path);
+                if (Storage::disk('s3')->exists($director->profile_image_path)) {
+                    Storage::disk('s3')->delete($director->profile_image_path);
                 }
                 $profileImageName = null;
                 $profileImagePath = null;
@@ -206,7 +206,7 @@ class HistoryController extends Controller
             if (isset($galleryData['image'])) {
                 $galleryImageName = 'history-gallery-'.uniqid().'-'.$galleryData['description'].'.'.$galleryData['image']->getClientOriginalExtension();
                 $galleryImagePath = 'history-page/gallery/'.$galleryImageName;
-                $galleryData['image']->storeAs('history-page/gallery', $galleryImageName, 'public');
+                $galleryData['image']->storeAs('history-page/gallery', $galleryImageName, 's3');
             }
 
             if ($gallery = CampusGallery::find($galleryData['gallery_id'])) {
@@ -240,8 +240,8 @@ class HistoryController extends Controller
         $directorsToDelete = CampusDirectors::whereNotIn('director_id', $director_ids)->get();
 
         foreach ($directorsToDelete as $director) {
-            if ($director->profile_image_path && Storage::disk('public')->exists($director->profile_image_path)) {
-                Storage::disk('public')->delete($director->profile_image_path);
+            if ($director->profile_image_path && Storage::disk('s3')->exists($director->profile_image_path)) {
+                Storage::disk('s3')->delete($director->profile_image_path);
             }
             ActivityLogService::contentManagementLog(
                 userId: $user->user_id,
@@ -254,8 +254,8 @@ class HistoryController extends Controller
             ->whereNotIn('gallery_id', $gallery_ids)->get();
 
         foreach ($galleryToDelete as $gallery) {
-            if ($gallery->image_path && Storage::disk('public')->exists($gallery->image_path)) {
-                Storage::disk('public')->delete($gallery->image_path);
+            if ($gallery->image_path && Storage::disk('s3')->exists($gallery->image_path)) {
+                Storage::disk('s3')->delete($gallery->image_path);
             }
             ActivityLogService::contentManagementLog(
                 userId: $user->user_id,

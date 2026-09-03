@@ -185,7 +185,7 @@ class ManageProgramController extends Controller
             ]);
         }
 
-        $disk = Storage::disk('public');
+        $disk = Storage::disk('s3');
 
         // Old & new base paths
         $old_base_path = 'documents/'.Str::slug($program->degree_type, '_').'_'.Str::slug($program->program_name, '_');

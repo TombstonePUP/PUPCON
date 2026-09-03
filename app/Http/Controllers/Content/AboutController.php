@@ -66,10 +66,10 @@ class AboutController extends Controller
         if (isset($validated['page']['banner'])) {
             $bannerName = 'about-banner.'.$validated['page']['banner']->getClientOriginalExtension();
             $bannerPath = 'about-page/'.$bannerName;
-            if (Storage::disk('public')->exists($bannerPath)) {
-                Storage::disk('public')->delete($bannerPath);
+            if (Storage::disk('s3')->exists($bannerPath)) {
+                Storage::disk('s3')->delete($bannerPath);
             }
-            $validated['page']['banner']->storeAs('about-page', $bannerName, 'public');
+            $validated['page']['banner']->storeAs('about-page', $bannerName, 's3');
         }
         if ($page) {
             $page->title = $validated['page']['title'];

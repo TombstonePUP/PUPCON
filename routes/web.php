@@ -13,8 +13,13 @@ use App\Http\Controllers\Guest\OtherServicesViewController;
 use App\Http\Controllers\Guest\ProgramsController;
 use App\Http\Controllers\Guest\VmgoViewController;
 use App\Http\Controllers\Guest\WelcomeViewController;
+use App\Http\Controllers\S3StorageController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::get('/storage/s3/{path}', S3StorageController::class)
+    ->where('path', '.*')
+    ->name('s3.storage');
 
 Route::get('/', WelcomeViewController::class)->name('home');
 

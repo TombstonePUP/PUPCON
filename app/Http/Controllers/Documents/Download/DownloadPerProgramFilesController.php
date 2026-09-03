@@ -38,7 +38,7 @@ class DownloadPerProgramFilesController extends Controller
 
         $folderPath = "documents/{$degree_type}_{$program_name}/{$levelLabel}";
         $zipFileName = "{$program_name}_{$levelLabel}_all_areas.zip";
-        $files = Storage::disk('public')->allFiles($folderPath);
+        $files = Storage::disk('s3')->allFiles($folderPath);
 
         if (empty($files)) {
             return redirect()->back()
@@ -53,7 +53,7 @@ class DownloadPerProgramFilesController extends Controller
         if ($zip->open($tempFile, ZipArchive::CREATE) === true) {
             foreach ($files as $file) {
                 $relativeNameInZip = Str::after($file, $folderPath.'/');
-                $absolutePath = Storage::disk('public')->path($file);
+                $absolutePath = Storage::disk('s3')->path($file);
                 $zip->addFile($absolutePath, $relativeNameInZip);
             }
             $zip->close();

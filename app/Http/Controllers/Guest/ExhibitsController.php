@@ -14,7 +14,17 @@ class ExhibitsController extends Controller
      */
     public function __invoke(): Response
     {
-        $exhibits = Exhibits::with(['ExhibitOutlines.ExhibitFiles'])->get();
+        $exhibits = Exhibits::with([
+            'ExhibitOutlines' => function ($query) {
+                $query->with([
+                    'ExhibitFiles' => function ($q) {
+                        $q->whereHas('FileStatus', function ($fs) {
+                            $fs->where('status_name', 'Approved');
+                        });
+                    },
+                ]);
+            },
+        ])->get();
 
         $exhibits->map(function ($exhibit) {
 

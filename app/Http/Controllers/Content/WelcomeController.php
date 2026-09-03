@@ -95,7 +95,7 @@ class WelcomeController extends Controller
             }
             $imageName = 'director.'.$validated['page']['director_image']->getClientOriginalExtension();
             $directorImagePath = 'welcome/'.$imageName;
-            $storedPath = $validated['page']['director_image']->storeAs('welcome', $imageName, 'public');
+            $storedPath = $validated['page']['director_image']->storeAs('welcome', $imageName, 's3');
             $page->director_image_name = $imageName;
             $page->director_image_path = $storedPath;
         }
@@ -105,7 +105,7 @@ class WelcomeController extends Controller
             }
             $certName = 'certificate_of_authenticity.'.$validated['page']['certificate_of_authenticity']->getClientOriginalExtension();
             $certPath = 'welcome/'.$certName;
-            $storedCertPath = $validated['page']['certificate_of_authenticity']->storeAs('welcome', $certName, 'public');
+            $storedCertPath = $validated['page']['certificate_of_authenticity']->storeAs('welcome', $certName, 's3');
             $page->certificate_of_authenticity = $storedCertPath;
         }
         if ($page->certificate_of_authenticity && ! isset($validated['page']['certificate_of_authenticity'])) {
@@ -150,7 +150,7 @@ class WelcomeController extends Controller
             if (isset($galleryData['image'])) {
                 $imageName = 'gallery_'.uniqid().'.'.$galleryData['image']->getClientOriginalExtension();
                 $imagePath = 'welcome/gallery/'.$imageName;
-                $galleryData['image']->storeAs('welcome/gallery', $imageName, 'public');
+                $galleryData['image']->storeAs('welcome/gallery', $imageName, 's3');
             }
 
             if ($gallery = CampusGallery::find($galleryData['gallery_id'])) {

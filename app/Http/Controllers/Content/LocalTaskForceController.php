@@ -115,8 +115,8 @@ class LocalTaskForceController extends Controller
 
             // Handle image removal
             if ($chairman && empty($chairmanData['profile_image']) && empty($chairmanData['previewUrl'])) {
-                if ($profileImagePath && Storage::disk('public')->exists($profileImagePath)) {
-                    Storage::disk('public')->delete($profileImagePath);
+                if ($profileImagePath && Storage::disk('s3')->exists($profileImagePath)) {
+                    Storage::disk('s3')->delete($profileImagePath);
                 }
                 $profileImageName = null;
                 $profileImagePath = null;
@@ -124,14 +124,14 @@ class LocalTaskForceController extends Controller
             // Handle new image upload
             if (! empty($chairmanData['profile_image'])) {
                 // Delete old image from storage if exists
-                if ($profileImagePath && Storage::disk('public')->exists($profileImagePath)) {
-                    Storage::disk('public')->delete($profileImagePath);
+                if ($profileImagePath && Storage::disk('s3')->exists($profileImagePath)) {
+                    Storage::disk('s3')->delete($profileImagePath);
                 }
 
                 $profileImageName = $chairmanData['first_name'].'-'.$chairmanData['last_name'].'-profile.'.
                     $chairmanData['profile_image']->getClientOriginalExtension();
                 $profileImagePath = 'local-task-force/'.$profileImageName;
-                $chairmanData['profile_image']->storeAs('local-task-force', $profileImageName, 'public');
+                $chairmanData['profile_image']->storeAs('local-task-force', $profileImageName, 's3');
             }
 
             // Update or create the record
@@ -195,8 +195,8 @@ class LocalTaskForceController extends Controller
         // Delete Local Task Force records that are not in the request
         $chairmenToDelete = LocalTaskForce::whereNotIn('local_task_force_id', $task_force_ids)->get();
         foreach ($chairmenToDelete as $chairman) {
-            if ($chairman->profile_image_path && Storage::disk('public')->exists($chairman->profile_image_path)) {
-                Storage::disk('public')->delete($chairman->profile_image_path);
+            if ($chairman->profile_image_path && Storage::disk('s3')->exists($chairman->profile_image_path)) {
+                Storage::disk('s3')->delete($chairman->profile_image_path);
             }
 
             ActivityLogService::contentManagementLog(

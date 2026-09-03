@@ -22,3 +22,7 @@ module "app" {
   instance_type     = var.instance_type
   allowed_http_cidr = "0.0.0.0/0"
 }
+
+output "instance_id" {
+  value = module.app.instance_id
+}

@@ -63,7 +63,7 @@ class ManageAreasController extends Controller
             'area_description' => $validated['area_description'] ?? null,
         ]);
 
-        $disk = Storage::disk('public');
+        $disk = Storage::disk('s3');
 
         if (isset($validated['area_image'])) {
             $areaImageName = Str::slug($validated['area_name'], '_').'.'.$validated['area_image']->getClientOriginalExtension();
@@ -73,7 +73,7 @@ class ManageAreasController extends Controller
                 $disk->delete($areaImagePath);
             }
 
-            $validated['area_image']->storeAs($path, $areaImageName, 'public');
+            $validated['area_image']->storeAs($path, $areaImageName, 's3');
             $area->area_image_name = $areaImageName;
             $area->area_image_path = $areaImagePath;
         }
@@ -150,7 +150,7 @@ class ManageAreasController extends Controller
         $old_path = $base_path.'/'.$old_folder;
         $new_path = $base_path.'/'.$new_folder;
 
-        $disk = Storage::disk('public');
+        $disk = Storage::disk('s3');
 
         AreaFiles::query()
             ->whereHas('ParameterOutlines.AreaParameter.Areas', fn ($q) => $q->where('area_id', $area->area_id))
@@ -195,7 +195,7 @@ class ManageAreasController extends Controller
             if ($disk->exists($areaImagePath)) {
                 $disk->delete($areaImagePath);
             }
-            $validated['area_image']->storeAs($path, $areaImageName, 'public');
+            $validated['area_image']->storeAs($path, $areaImageName, 's3');
             $area->area_image_name = $areaImageName;
             $area->area_image_path = $areaImagePath;
         }

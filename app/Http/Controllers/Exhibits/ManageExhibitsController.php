@@ -78,7 +78,7 @@ class ManageExhibitsController extends Controller
             $imageName = $validated['exhibit_name'].'.'.$validated['image']->getClientOriginalExtension();
             $imagePath = 'exhibits/assets/'.$imageName;
 
-            $validated['image']->storeAs('exhibits/assets', $imageName, 'public');
+            $validated['image']->storeAs('exhibits/assets', $imageName, 's3');
 
             $exhibit->image_name = $imageName;
             $exhibit->image_path = $imagePath;
@@ -125,14 +125,14 @@ class ManageExhibitsController extends Controller
         $user = Auth::user();
         if ($exhibit) {
             $exhibit->delete();
-            if ($exhibit->image_path && Storage::disk('public')->exists($exhibit->image_path)) {
-                Storage::disk('public')->delete($exhibit->image_path);
+            if ($exhibit->image_path && Storage::disk('s3')->exists($exhibit->image_path)) {
+                Storage::disk('s3')->delete($exhibit->image_path);
             }
             if ($exhibit->ExhibitOutlines) {
                 foreach ($exhibit->ExhibitOutlines as $outline) {
                     if ($outline->ExhibitFiles) {
-                        if (Storage::disk('public')->exists($outline->ExhibitFiles->file_path)) {
-                            Storage::disk('public')->delete($outline->ExhibitFiles->file_path);
+                        if (Storage::disk('s3')->exists($outline->ExhibitFiles->file_path)) {
+                            Storage::disk('s3')->delete($outline->ExhibitFiles->file_path);
                         }
                         $outline->ExhibitFiles->delete();
                         ActivityLogService::fileManagementLog(

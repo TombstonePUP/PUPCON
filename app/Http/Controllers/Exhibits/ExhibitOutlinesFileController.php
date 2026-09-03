@@ -76,11 +76,11 @@ class ExhibitOutlinesFileController extends Controller
         }
 
         if ($new_file_upload) {
-            if ($existing_file && Storage::disk('public')->exists($old_file_path)) {
-                Storage::disk('public')->delete($old_file_path);
+            if ($existing_file && Storage::disk('s3')->exists($old_file_path)) {
+                Storage::disk('s3')->delete($old_file_path);
             }
 
-            $validated['file']->storeAs('exhibits/'.$exhibit_name.'/'.$category_slug, $file_name, 'public');
+            $validated['file']->storeAs('exhibits/'.$exhibit_name.'/'.$category_slug, $file_name, 's3');
             $activity = $existing_file ? ActivityLogAction::Update : ActivityLogAction::Upload;
         }
 
@@ -95,8 +95,8 @@ class ExhibitOutlinesFileController extends Controller
             $exhibit_file->file_name = $file_name;
             $exhibit_file->file_path = $file_path;
         } elseif ($existing_file) {
-            if (Storage::disk('public')->exists($old_file_path) && $old_file_path !== $file_path) {
-                if (Storage::disk('public')->move($old_file_path, $file_path)) {
+            if (Storage::disk('s3')->exists($old_file_path) && $old_file_path !== $file_path) {
+                if (Storage::disk('s3')->move($old_file_path, $file_path)) {
                     $exhibit_file->file_name = $file_name;
                     $exhibit_file->file_path = $file_path;
                     $activity = ActivityLogAction::Update;
@@ -125,7 +125,7 @@ class ExhibitOutlinesFileController extends Controller
         ActivityLogService::fileManagementLog(
             userId: $user->user_id,
             activity: $activity,
-            description: "{$activityLog->activity}d exhibit outline for '{$exhibit->exhibit_name}'.",
+            description: "{$activity}d exhibit outline for '{$exhibit->exhibit_name}'.",
         );
 
         return redirect()->back()
@@ -144,8 +144,8 @@ class ExhibitOutlinesFileController extends Controller
 
         if ($outline) {
             $exhibit_file = $outline->ExhibitFiles;
-            if ($exhibit_file && Storage::disk('public')->exists($exhibit_file->file_path)) {
-                Storage::disk('public')->delete($exhibit_file->file_path);
+            if ($exhibit_file && Storage::disk('s3')->exists($exhibit_file->file_path)) {
+                Storage::disk('s3')->delete($exhibit_file->file_path);
                 $exhibit_file->delete();
             }
 

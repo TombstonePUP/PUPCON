@@ -45,8 +45,8 @@ class ExhibitFilesController extends Controller
 
         $existing_file = $outline->ExhibitFiles()->first();
 
-        if ($existing_file && Storage::disk('public')->exists($existing_file->file_path)) {
-            Storage::disk('public')->delete($existing_file->file_path);
+        if ($existing_file && Storage::disk('s3')->exists($existing_file->file_path)) {
+            Storage::disk('s3')->delete($existing_file->file_path);
             $existing_file->delete();
             $activity = ActivityLogAction::Update;
         } else {
@@ -54,7 +54,7 @@ class ExhibitFilesController extends Controller
         }
 
         $uploadedFile = $validated['file'];
-        Storage::disk('public')->putFileAs("exhibits/{$exhibit_name}", $uploadedFile, $file_name);
+        Storage::disk('s3')->putFileAs("exhibits/{$exhibit_name}", $uploadedFile, $file_name);
 
         $outline->ExhibitFiles()->create([
             'file_name' => $file_name,
