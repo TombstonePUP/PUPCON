@@ -61,12 +61,15 @@ echo "Deployment complete for ${ENVIRONMENT}"
 EOF
 )
 
+  local params_json
+  params_json=$(jq -nc --arg cmds "${ssm_commands}" '{commands: [$cmds]}')
+
   local command_id
   command_id=$(aws ssm send-command \
     --instance-ids "${INSTANCE_ID}" \
     --document-name "AWS-RunShellScript" \
     --comment "Deploy pupcon ${ENVIRONMENT} ${APP_VERSION}" \
-    --parameters "commands=['''${ssm_commands}''']" \
+    --parameters "${params_json}" \
     --region "${AWS_REGION}" \
     --query "Command.CommandId" \
     --output text)
