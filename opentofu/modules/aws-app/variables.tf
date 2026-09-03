@@ -36,6 +36,11 @@ variable "allowed_ssh_cidr" {
   default = null
 }
 
+variable "ami_id" {
+  type        = string
+  description = "The AMI ID for the EC2 instance. Pin this to avoid instance recreation on every plan."
+}
+
 variable "create_lock_table" {
   type    = bool
   description = "Whether to create the shared OpenTofu state-lock DynamoDB table. Enable in exactly one environment (e.g., staging)."

@@ -20,6 +20,7 @@ module "app" {
   environment       = "production"
   aws_region        = var.aws_region
   instance_type     = var.instance_type
+  ami_id            = var.ami_id
   allowed_http_cidr = "0.0.0.0/0"
   key_name          = var.key_name
   allowed_ssh_cidr  = var.allowed_ssh_cidr

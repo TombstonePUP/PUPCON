@@ -1,5 +1,5 @@
 resource "aws_instance" "app" {
-  ami           = data.aws_ami.debian.id
+  ami           = var.ami_id
   instance_type = var.instance_type
   key_name      = var.key_name
 
@@ -36,25 +36,5 @@ resource "aws_instance" "app" {
     Environment = var.environment
     Application = "pupcon"
     awsApplication     = "arn:aws:resource-groups:ap-southeast-1:751264013679:group/pupcon/02mlg4cdlwexs7vjssacbc6b4k"
-  }
-}
-
-data "aws_ami" "debian" {
-  most_recent = true
-  owners      = ["136693071363"] # Debian official AWS account
-
-  filter {
-    name   = "name"
-    values = ["debian-12-amd64-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
   }
 }
