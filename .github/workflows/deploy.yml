@@ -99,14 +99,27 @@ jobs:
         run: |
           tofu apply -input=false -auto-approve tfplan
 
-      # Resolve the current instance ID from the OpenTofu state. Whether or not
-      # apply ran, `tofu output` reads the persisted state, so it always returns
-      # the live, valid instance ID (and works even when infra did not change).
-      - name: Resolve EC2 instance ID from state
+      # Resolve the current, running EC2 instance ID. Query AWS EC2 directly by
+      # the instance's Name tag so we always use a real, live instance that is
+      # registered with SSM (avoids stale/terminated IDs from state). Falls back
+      # to the OpenTofu state output if the tag lookup returns nothing.
+      - name: Resolve running EC2 instance ID
         id: instance
         working-directory: opentofu/environments/${{ inputs.environment }}
         run: |
-          echo "instance_id=$(tofu output -raw instance_id)" >> $GITHUB_OUTPUT
+          instance_id=$(aws ec2 describe-instances \
+            --region "${{ inputs.aws_region }}" \
+            --filters \
+              "Name=tag:Name,Values=pupcon-${{ inputs.environment }}-app" \
+              "Name=instance-state-name,Values=running" \
+            --query "Reservations[0].Instances[0].InstanceId" \
+            --output text 2>/dev/null)
+          if [ -z "$instance_id" ] || [ "$instance_id" = "None" ]; then
+            echo "Tag lookup found no running instance; falling back to OpenTofu state."
+            instance_id=$(tofu output -raw instance_id)
+          fi
+          echo "Using instance ID: $instance_id"
+          echo "instance_id=$instance_id" >> $GITHUB_OUTPUT
 
       # Always deploy the latest app images on every push, using the current
       # instance ID resolved from state.
