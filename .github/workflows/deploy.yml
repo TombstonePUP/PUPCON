@@ -64,14 +64,14 @@ jobs:
           tofu_wrapper: false
 
       - name: OpenTofu Init
-        working-directory: infra/environments/${{ inputs.environment }}
+        working-directory: opentofu/environments/${{ inputs.environment }}
         run: |
           tofu init \
             -input=false \
             -backend-config="key=${{ inputs.environment }}/terraform.tfstate"
 
       - name: OpenTofu Plan
-        working-directory: infra/environments/${{ inputs.environment }}
+        working-directory: opentofu/environments/${{ inputs.environment }}
         run: |
           tofu plan \
             -input=false \
@@ -80,7 +80,7 @@ jobs:
 
       - name: OpenTofu Apply
         id: apply
-        working-directory: infra/environments/${{ inputs.environment }}
+        working-directory: opentofu/environments/${{ inputs.environment }}
         run: |
           tofu apply -input=false -auto-approve tfplan
           echo "instance_id=$(tofu output -raw instance_id)" >> $GITHUB_OUTPUT
