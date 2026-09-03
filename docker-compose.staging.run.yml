@@ -32,7 +32,7 @@ services:
       - ./.env.staging
     volumes:
       - laravel-storage-staging:/var/www/storage
-      - public-assets:/var/www/public/build:rw
+      - ./public-build:/var/www/public/build
     networks:
         - pupcon_staging_network
 
@@ -44,7 +44,7 @@ services:
       - api-staging
     volumes:
       - laravel-storage-staging:/var/www/storage:ro
-      - public-assets:/var/www/public/build:ro
+      - ./public-build:/var/www/public/build:ro
     ports:
       - "8000:80"
     networks:
@@ -53,7 +53,6 @@ services:
 volumes:
   postgres-data-staging:
   laravel-storage-staging:
-  public-assets:
 
 networks:
   pupcon_staging_network:
