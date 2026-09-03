@@ -14,6 +14,7 @@ use App\Http\Controllers\Content\ProgramContentController;
 use App\Http\Controllers\Content\VmgoController;
 use App\Http\Controllers\Content\WelcomeController;
 use App\Http\Controllers\Documents\Requests\DocumentRequestController;
+use App\Http\Controllers\Documents\DocumentRatingsController;
 use App\Http\Controllers\Exhibits\ExhibitFilesController;
 use App\Http\Controllers\Exhibits\ExhibitOutlinesFileController;
 use App\Http\Controllers\Exhibits\ManageExhibitsController;
@@ -24,7 +25,6 @@ use App\Http\Controllers\Programs\LevelsController;
 use App\Http\Controllers\Programs\ManageProgramController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(function () {
     Route::controller(UserController::class)->group(function () {
@@ -38,13 +38,13 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
     Route::controller(ManageExhibitsController::class)->group(function () {
         Route::get('manage-exhibits', 'index')->name('manage.exhibits');
         Route::post('exhibits/store', 'store')->name('exhibits.store');
-        Route::patch('exhibits/{exhibit_id}/update', 'update')->name('exhibits.update');
+        Route::patch('exhibits/{exhibit_id}/update', 'store')->name('exhibits.update');
         Route::delete('exhibits/{exhibit_id}/delete', 'destroy')->name('exhibits.delete');
     });
 
     Route::controller(ExhibitOutlinesFileController::class)->group(function () {
         Route::post('exhibit-outline/upload', 'upload')->name('exhibit.outline.file.upload');
-        Route::get('exhibit-outline/{exhibit_file_id}/download', 'download')->name('exhibit.outline.file.download');
+        // Route::get('exhibit-outline/{exhibit_file_id}/download', 'download')->name('exhibit.outline.file.download');
         Route::delete('exhibit-outline/{outline_id}/delete', 'destroy')->name('exhibit.outline.file.delete');
     });
 
@@ -52,9 +52,7 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
         Route::post('exhibit-file/upload', '__invoke')->name('exhibit.file.upload');
     });
 
-    Route::get('ratings', function () {
-        return Inertia::render('document/ratings');
-    })->name('ratings');
+    Route::get('ratings', [DocumentRatingsController::class, 'index'])->name('ratings');
 
     Route::get('other-services', [OtherServicesController::class, 'index'])->name('other-services');
     Route::post('other-services/update', [OtherServicesController::class, 'update'])->name('other.services.update');
@@ -70,7 +68,7 @@ Route::middleware(['auth', 'verified', 'update.password', 'admin'])->group(funct
 
     Route::controller(LevelsController::class)->group(function () {
         Route::post('manage-programs/{program_id}/levels/store', 'store')->name('manage.level.store');
-        Route::patch('manage-programs/{program_id/levels/update', 'update')->name('manage.level.update');
+        Route::patch('manage-programs/{program_id}/levels/update', 'update')->name('manage.level.update');
     });
 
     Route::controller(ManageAreasController::class)->group(function () {
