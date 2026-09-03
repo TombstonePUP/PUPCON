@@ -42,11 +42,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=vendor --chown=www-data:www-data /var/www /var/www
 COPY docker/backend/entrypoint.prod.sh /usr/local/bin/entrypoint.sh
-RUN mkdir -p storage bootstrap/cache \
+RUN chmod +x /usr/local/bin/entrypoint.sh \
+    && mkdir -p storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 USER www-data
 EXPOSE 9000
-COPY docker/backend/entrypoint.prod.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php-fpm"]
