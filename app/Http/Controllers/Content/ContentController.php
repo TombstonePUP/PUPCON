@@ -108,7 +108,7 @@ class ContentController extends Controller
 
         $local_task_force = LocalTaskForce::with('Members')->get();
         $local_task_force = $local_task_force->map(function ($ltf) {
-            $ltf->profile_image_path = Storage::url($ltf->profile_image_path);
+            $ltf->profile_image_path = $ltf->profile_image_path ? Storage::url($ltf->profile_image_path) : null;
 
             return $ltf;
         });

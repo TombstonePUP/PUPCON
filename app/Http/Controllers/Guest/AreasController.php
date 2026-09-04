@@ -50,8 +50,10 @@ class AreasController extends Controller
 
         $area->AreaParameters->map(function ($parameter) {
             $parameter->ParameterOutlines->map(function ($outline) {
-                if ($outline->AreaFiles) {
-                    $outline->AreaFiles->file_path = Storage::url($outline->AreaFiles->file_path);
+                if ($outline->AreaFiles && $outline->AreaFiles->file_path) {
+                    $outline->AreaFiles->file_path = str_starts_with($outline->AreaFiles->file_path, '/')
+                        ? $outline->AreaFiles->file_path
+                        : Storage::url($outline->AreaFiles->file_path);
                 }
 
                 return $outline;
@@ -61,8 +63,10 @@ class AreasController extends Controller
         });
 
         $area->AreaForms->map(function ($form) {
-            if ($form) {
-                $form->file_path = Storage::url($form->file_path);
+            if ($form && $form->file_path) {
+                $form->file_path = str_starts_with($form->file_path, '/')
+                    ? $form->file_path
+                    : Storage::url($form->file_path);
             }
 
             return $form;

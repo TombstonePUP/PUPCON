@@ -58,7 +58,7 @@ class ManageProgramController extends Controller
 
         $program->program_image_path = $program->program_image_path ? Storage::url($program->program_image_path) : null;
         $program->Gallery->each(function ($gallery) {
-            $gallery->image_path = Storage::url($gallery->image_path);
+            $gallery->image_path = $gallery->image_path ? Storage::url($gallery->image_path) : null;
 
             return $gallery;
         });
