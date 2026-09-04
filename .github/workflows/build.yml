@@ -62,10 +62,13 @@ jobs:
           ENV_FILE: ${{ inputs.env_file }}
 
       - name: Cleanup old GHCR images (keep 3 most recent)
-        uses: dataaxiom/ghcr-cleanup-action@v1
-        with:
-          keep-n-tagged: 3
-          exclude-tags: latest
-          delete-untagged: true
-          package: pupcon-api,pupcon-client
-          owner: zero-index-developers
+        run: |
+          chmod +x .github/scripts/cleanup.sh
+          .github/scripts/cleanup.sh
+        env:
+          OWNER: ${{ github.repository_owner }}
+          PACKAGES: "pupcon-api,pupcon-client"
+          KEEP: 3
+          FILTER_TAGS: "*"
+          SKIP_TAGS: "latest"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
