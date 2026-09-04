@@ -117,7 +117,7 @@ EOF
     --command-id "${command_id}" \
     --instance-id "${INSTANCE_ID}" \
     --region "${AWS_REGION}" \
-    --query "{Status:Status,StatusCode:StatusCode,StdErrContent:StandardErrorContent}" \
+    --query "{Status:Status,StatusCode:StatusCode,StdErrContent:StandardErrorContent,StdOutContent:StandardOutputContent}" \
     --output json)
   echo "${detailed}"
 
