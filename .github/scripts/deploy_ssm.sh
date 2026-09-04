@@ -163,7 +163,7 @@ chmod +x "${deploy_script}"
 rm -f "${done_marker}" "${deploy_log}"
 echo "Launching deploy in background on instance..."
 nohup "${deploy_script}" > /dev/null 2>&1 &
-echo "Deploy launched (pid $!)."
+echo "Deploy launched (pid \$!)."
 EOF
 )
 
