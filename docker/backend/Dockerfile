@@ -35,6 +35,7 @@ RUN composer dump-autoload --optimize
 
 FROM php:8.4-fpm AS production
 WORKDIR /var/www
+COPY docker/backend/php.ini /usr/local/etc/php/conf.d/custom.ini
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl libpq-dev libzip-dev libicu-dev \
     && docker-php-ext-install pdo pdo_pgsql pgsql zip intl bcmath opcache \
