@@ -157,6 +157,11 @@ class ManageAreasController extends Controller
             ->cursor()
             ->each(function ($file) use ($old_folder, $new_folder, $disk) {
                 $old_file_path = $file->file_path;
+
+                if (! $old_file_path) {
+                    return;
+                }
+
                 $new_file_path = Str::replace($old_folder, $new_folder, $old_file_path);
                 if ($disk->exists($old_file_path)) {
                     $disk->move($old_file_path, $new_file_path);
@@ -167,6 +172,11 @@ class ManageAreasController extends Controller
 
         foreach ($area->AreaForms as $form) {
             $old_form_path = $form->file_path;
+
+            if (! $old_form_path) {
+                continue;
+            }
+
             $new_form_path = Str::of($old_form_path)->replace($old_folder, $new_folder);
             if ($disk->exists($old_form_path)) {
                 $disk->move($old_form_path, $new_form_path);
@@ -176,7 +186,7 @@ class ManageAreasController extends Controller
         }
 
         if ($area->area_name !== $validated['area_name']) {
-            if ($disk->exists($area->area_image_path)) {
+            if ($area->area_image_path && $disk->exists($area->area_image_path)) {
                 $newAreaImageName = Str::slug($validated['area_name'], '_').'.'.Str::afterLast($area->area_image_name, '.');
                 $newAreaImagePath = Str::of($area->area_image_path)->replace($area->area_image_name, $newAreaImageName);
                 $disk->move($area->area_image_path, $newAreaImagePath);
