@@ -70,6 +70,11 @@ deploy_via_ssm() {
 set -e
 export GHCR_USER=${GHCR_USER@Q}
 export GITHUB_TOKEN=${GITHUB_TOKEN@Q}
+# APP_VERSION must be exported so every `docker compose` child resolves the
+# ${APP_VERSION} interpolation in the compose file (image tags like
+# ghcr.io/.../pupcon-api:${APP_VERSION}). It is baked in as a literal here so it
+# is always set, regardless of the env-file or ssh non-interactive shell.
+export APP_VERSION='${APP_VERSION}'
 
 # SAFE cleanup: only remove DANGLING images (none-tagged, not referenced by any
 # container) and the build cache. We deliberately DO NOT prune volumes here —
@@ -214,12 +219,16 @@ EOF
   # Poll the instance with a short SSM command until the background job writes
   # its exit-code marker. Each poll is tiny, so it stays under the SSM timeout.
   local attempts=0
-  local max_attempts=240
+  local max_attempts=120   # 120 * ~18s ≈ 36 min cap, then report the log tail
   local poll_status=""
   local exit_code=""
+  local poll_id=""
+  local started_at; started_at=$(date +%s)
   while [ "${attempts}" -lt "${max_attempts}" ]; do
     sleep 15
     attempts=$((attempts + 1))
+    local elapsed=$(( $(date +%s) - started_at ))
+    echo "Polling attempt ${attempts}/${max_attempts} (${elapsed}s elapsed)..."
     poll_status=$(aws ssm send-command \
       --instance-ids "${INSTANCE_ID}" \
       --document-name "AWS-RunShellScript" \
@@ -239,7 +248,6 @@ EOF
     if [ -n "${exit_code}" ]; then
       echo "Deploy finished: ${exit_code}"
       echo "----- deploy log tail -----"
-      local log_command
       log_command=$(aws ssm send-command \
         --instance-ids "${INSTANCE_ID}" \
         --document-name "AWS-RunShellScript" \
@@ -258,12 +266,47 @@ EOF
       echo "--------------------------"
       case "${exit_code}" in
         EXIT_CODE=0) echo "Deployment to ${ENVIRONMENT} completed successfully"; return 0 ;;
-        *) echo "Deploy script failed on instance." >&2; return 1 ;;
+        *) echo "Deploy script failed on instance (exit ${exit_code#EXIT_CODE=})." >&2; return 1 ;;
       esac
     fi
   done
 
-  echo "Timed out waiting for background deploy to finish." >&2
+  # Timed out — surface the deploy log and running processes so a stuck deploy
+  # is diagnosable instead of a silent 36-minute black box.
+  echo "Timed out waiting for background deploy to finish (${max_attempts} attempts)." >&2
+  echo "----- deploy log tail on timeout -----"
+  log_command=$(aws ssm send-command \
+    --instance-ids "${INSTANCE_ID}" \
+    --document-name "AWS-RunShellScript" \
+    --comment "tail pupcon deploy log on timeout" \
+    --parameters "$(jq -nc --arg cmds "tail -n 80 ${deploy_log}" '{commands: [$cmds]}')" \
+    --region "${AWS_REGION}" \
+    --query "Command.CommandId" \
+    --output text)
+  sleep 3
+  aws ssm get-command-invocation \
+    --command-id "${log_command}" \
+    --instance-id "${INSTANCE_ID}" \
+    --region "${AWS_REGION}" \
+    --query "StandardOutputContent" \
+    --output text
+  echo "----- running deploy.sh processes -----"
+  ps_command=$(aws ssm send-command \
+    --instance-ids "${INSTANCE_ID}" \
+    --document-name "AWS-RunShellScript" \
+    --comment "ps pupcon deploy" \
+    --parameters "$(jq -nc --arg cmds "ps -ef | grep -E 'deploy.sh|docker compose|docker run' | grep -v grep || true" '{commands: [$cmds]}')" \
+    --region "${AWS_REGION}" \
+    --query "Command.CommandId" \
+    --output text)
+  sleep 3
+  aws ssm get-command-invocation \
+    --command-id "${ps_command}" \
+    --instance-id "${INSTANCE_ID}" \
+    --region "${AWS_REGION}" \
+    --query "StandardOutputContent" \
+    --output text
+  echo "--------------------------------------------------------------------------" >&2
   echo "Check ${deploy_log} on the instance for progress." >&2
   return 1
 }
