@@ -60,3 +60,10 @@ jobs:
           ENVIRONMENT: ${{ inputs.environment }}
           COMPOSE_FILE: ${{ inputs.compose_file }}
           ENV_FILE: ${{ inputs.env_file }}
+
+      - name: Cleanup old GHCR images (keep 3 most recent)
+        run: |
+          chmod +x .github/scripts/cleanup_ghcr.sh
+          .github/scripts/cleanup_ghcr.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
