@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActivityLogAction;
+use App\Enums\ActivityLogType;
 use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -11,23 +13,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ActivityLogFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = ActivityLog::class;
+
     public function definition(): array
     {
-        $user = User::inRandomOrder()->first();
-
         return [
-            // 'activity_log_id' => $this->faker->unique()->randomNumber(),
-            'user_id' => $user->user_id,
-            /* 'area' => $this->faker->word(),
-            'program' => $this->faker->word(),
-            'file_name' => $this->faker->word(),
-            'activity' => $this->faker->randomElement(['upload', 'delete', 'approval', 'rejection']),
-            'activity_date' => $this->faker->dateTimeThisMonth() */
+            'user_id' => User::inRandomOrder()->value('user_id') ?? User::factory(),
+            'description' => $this->faker->sentence(),
+            'activity' => $this->faker->randomElement(ActivityLogAction::cases())->value,
+            'type' => $this->faker->randomElement(ActivityLogType::cases())->value,
+            'activity_date' => $this->faker->dateTimeThisMonth(),
         ];
     }
 }

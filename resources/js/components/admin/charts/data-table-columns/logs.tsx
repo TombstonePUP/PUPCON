@@ -80,7 +80,14 @@ export const columns: ColumnDef<ActivityLogs>[] = [
             </Button>
         ),
         cell: ({ row }) => {
-            const date = (row.getValue('activity_date') as string).replace(',', ', ');
+            const raw = row.getValue('activity_date') as string;
+            const date = raw ? new Date(raw).toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+            }) : raw;
             return <span className="text-foreground text-sm">{date}</span>;
         },
         enableGlobalFilter: true,

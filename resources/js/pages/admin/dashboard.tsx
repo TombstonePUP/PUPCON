@@ -70,13 +70,13 @@ export default function Dashboard({ frequencyUploads, documentStatistics, overal
     const approved = activeStatistics.find((d) => d.file_status === 'Approved')?.documents ?? 0;
     const pending = activeStatistics.find((d) => d.file_status === 'Pending')?.documents ?? 0;
     const rejected = activeStatistics.find((d) => d.file_status === 'Rejected')?.documents ?? 0;
-    const totalUsers = activeLogs.filter((l) => l.type === 'Users').length;
+    const totalUsers = activeLogs.filter((l) => l.type === 'User Management').length;
 
     const last7Days = activeLogs.filter((l) => new Date(l.activity_date) >= subDays(new Date(), 7));
-    const last7Approved = last7Days.filter((l) => l.action === 'Approved').length;
-    const last7Pending = last7Days.filter((l) => l.action === 'Pending').length;
-    const last7Rejected = last7Days.filter((l) => l.action === 'Rejected').length;
-    const last7Users = last7Days.filter((l) => l.type === 'Users').length;
+    const last7Approved = last7Days.filter((l) => l.activity === 'Approve').length;
+    const last7Pending = last7Days.filter((l) => l.activity === 'Upload').length;
+    const last7Rejected = last7Days.filter((l) => l.activity === 'Reject').length;
+    const last7Users = last7Days.filter((l) => l.type === 'User Management').length;
 
     const statConfig = [
         {

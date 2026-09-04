@@ -93,9 +93,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = useState('');
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-        type: false,
-    });
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
     const table = useReactTable({
         data,
@@ -122,9 +120,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                         columnId: 'type',
                         title: 'Type',
                         options: [
-                            { label: 'Files', value: 'Files' },
-                            { label: 'Users', value: 'Users' },
-                            { label: 'Content', value: 'Content' },
+                            { label: 'File Management', value: 'File Management' },
+                            { label: 'Content Management', value: 'Content Management' },
+                            { label: 'User Management', value: 'User Management' },
                         ],
                     },
                 ]}
@@ -287,9 +285,9 @@ export function ActivityLogDataTable<TData, TValue>({ columns, data }: DataTable
                         columnId: 'type',
                         title: 'Type',
                         options: [
-                            { label: 'Documents', value: 'Document' },
-                            { label: 'Users', value: 'Users' },
-                            { label: 'Content', value: 'Content' },
+                            { label: 'File Management', value: 'File Management' },
+                            { label: 'Content Management', value: 'Content Management' },
+                            { label: 'User Management', value: 'User Management' },
                         ],
                     },
                 ]}

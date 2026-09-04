@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Enums\ActivityLogType;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\AreaForms;
 use App\Models\ExhibitOutlines;
 use App\Models\FilesOverview;
 use App\Models\ParameterOutlines;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -56,11 +57,6 @@ class DashboardController extends Controller
                 )
                 ->orderBy('al.activity_date', 'desc')
                 ->get();
-            $activityLogs->transform(function ($activityLog) {
-                $activityLog->activity_date = Carbon::parse($activityLog->activity_date)->format('M d,Y');
-
-                return $activityLog;
-            });
         }
         if ($role == 'Chairman') {
             $activityLogs = ActivityLog::from('activity_log as al')
@@ -77,29 +73,22 @@ class DashboardController extends Controller
                 ->where('al.user_id', $user->user_id)
                 ->orderBy('al.activity_date', 'desc')
                 ->get();
-            $activityLogs->transform(function ($activityLog) {
-                $activityLog->activity_date = Carbon::parse($activityLog->activity_date)->format('M d,Y');
-
-                return $activityLog;
-            });
         }
 
         return $activityLogs;
     }
 
     /**
-     * @return Collection<int,Model>
+     * @return BaseCollection<int,Model>
      */
-    private function documentUploadFrequency(): Collection
+    private function documentUploadFrequency(): BaseCollection
     {
-        $frequency = ActivityLog::selectRaw('
-            activity_date::date as activity_date,
-            count(*)  as activity')
+        return DB::table('activity_log')
+            ->selectRaw('activity_date::date as activity_date, count(*) as upload_count')
+            ->where('type', ActivityLogType::FileManagement->value)
             ->groupByRaw('activity_date::date')
             ->orderBy('activity_date')
             ->get();
-
-        return $frequency;
     }
 
     /**
