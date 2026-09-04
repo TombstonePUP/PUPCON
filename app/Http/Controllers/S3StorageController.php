@@ -56,20 +56,20 @@ class S3StorageController extends Controller
 
         // Only "bytes=start-end" is supported here.
         if (! preg_match('#^bytes=(\d*)-(\d*)$#', $rangeHeader, $m)) {
-            return (new Response(null, Response::HTTP_REQUESTED_RANGE_NOT_SATISFIABLE, [
+            return new Response(null, Response::HTTP_REQUESTED_RANGE_NOT_SATISFIABLE, [
                 'Content-Range' => 'bytes */'.$size,
                 'Cache-Control' => 'no-store',
-            ]));
+            ]);
         }
 
         $start = $m[1] === '' ? 0 : intval($m[1]);
         $end = $m[2] === '' ? $size - 1 : min(intval($m[2]), $size - 1);
 
         if ($start >= $size) {
-            return (new Response(null, Response::HTTP_REQUESTED_RANGE_NOT_SATISFIABLE, [
+            return new Response(null, Response::HTTP_REQUESTED_RANGE_NOT_SATISFIABLE, [
                 'Content-Range' => 'bytes */'.$size,
                 'Cache-Control' => 'no-store',
-            ]));
+            ]);
         }
 
         if ($end > $size - 1) {
