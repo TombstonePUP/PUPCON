@@ -2,14 +2,15 @@
 #
 # deploy_ssm.sh — Deploy Docker images on the pupcon EC2 instance via AWS SSM.
 #
-# Pulls the new images onto the instance, switches the containers, and cleans up.
-# Invoked by .github/workflows/modules/deploy.yml (see the "Deploy images to EC2
-# via SSM" step). Can also be sourced and called as a function:
-#
-#   source .github/scripts/deploy_ssm.sh && deploy_via_ssm
+# Runs the whole deploy (pull images, sync frontend build, switch containers,
+# cleanup) as ONE SSM command with an extended execution timeout, then polls
+# that same command's status until it finishes. No background job, no marker
+# file, no re-launching commands to check on the first one — get-command-
+# invocation on the original command ID gives us status + full stdout/stderr
+# directly.
 #
 # Required environment variables (set in the calling step's `env:`):
-#   INSTANCE_ID       - EC2 instance ID returned by OpenTofu apply
+#   INSTANCE_ID       - EC2 instance ID
 #   ENVIRONMENT       - e.g. staging / production
 #   APP_VERSION       - image/app version being deployed
 #   AWS_REGION        - AWS region (e.g. ap-southeast-1)
@@ -18,8 +19,13 @@
 #   ENV_FILE_CONTENT  - FULL literal contents to write to the remote env file
 #   COMPOSE_FILE_CONTENT - FULL literal contents to write to the remote compose file
 #   GITHUB_TOKEN      - token used to log into GHCR on the instance
-#   GITHUB_ACTOR      - user to log into GHCR as (optional, defaults to GITHUB_ACTOR env)
+#   GITHUB_ACTOR      - user to log into GHCR as (optional)
 set -euo pipefail
+
+# How long the SSM command is allowed to run on the instance before AWS kills
+# it. Raise this instead of building an async job system. Max allowed is
+# 172800 (48h); 1800s (30 min) is generous for an image pull + restart.
+SSM_EXECUTION_TIMEOUT="${SSM_EXECUTION_TIMEOUT:-1800}"
 
 deploy_via_ssm() {
   : "${INSTANCE_ID:?INSTANCE_ID is required}"
@@ -32,152 +38,84 @@ deploy_via_ssm() {
   : "${COMPOSE_FILE_CONTENT:?COMPOSE_FILE_CONTENT is required}"
   : "${GITHUB_TOKEN:?GITHUB_TOKEN is required}"
 
-  local GHCR_USER="${GITHUB_ACTOR:-github-actions}"
-  local instance_env_file="/opt/apps/pupcon-${ENVIRONMENT}/${ENV_FILE}"
-  local instance_compose_file="/opt/apps/pupcon-${ENVIRONMENT}/${COMPOSE_FILE}"
-
+  local ghcr_user="${GITHUB_ACTOR:-github-actions}"
   local app_dir="/opt/apps/pupcon-${ENVIRONMENT}"
-  local deploy_script="${app_dir}/deploy.sh"
-  local deploy_log="${app_dir}/deploy-${APP_VERSION}.log"
-  local done_marker="${app_dir}/deploy-${APP_VERSION}.done"
 
-  # Build the command body that runs ON the instance via AWS-RunShellScript.
-  #
-  # This step only WRITES the env/compose files and a deploy script, then kicks
-  # that script off in the BACKGROUND (nohup ... &). It returns in a few seconds.
-  #
-  # The heavy work (docker pull, the build-sync `docker run`, `docker compose
-  # up`) runs OUTSIDE the SSM command so the multi-minute job is not killed by
-  # the AWS-RunShellScript execution timeout ("ipc messaging received timeout
-  # signal"). Progress and the exit code are written to files on the instance
-  # and polled by the next phase.
-  #
-  # ── Assemble the deploy script that runs ON the instance ──────────────────
-  #
-  # All vars in this heredoc are expanded NOW by the LOCAL shell (`${app_dir}`,
-  # `${ENV_FILE}`, `${COMPOSE_FILE}`, `${ENVIRONMENT}`, `${APP_VERSION}`), baking
-  # in concrete values. The GHCR credentials are single-quoted via bash's `${@Q}`
-  # so they are safe to re-emit. Only the runtime references (`${GITHUB_TOKEN}`,
-  # `${GHCR_USER}`, `${exit_code}`, `$?`, `\${free_mb}`, `\${free_mb:-0}`) are
-  # escaped to stay literal on the instance. The whole script is then base64-
-  # encoded so the outer quotes/shell cannot mangle it, and decoded on the
-  # instance.
-  #
-  # Build the body via an UNQUOTED heredoc so the LOCAL vars bake in now.
-  local deploy_body
-  deploy_body=$(cat <<DEBUEOF
-#!/usr/bin/env bash
-set -e
-export GHCR_USER=${GHCR_USER@Q}
-export GITHUB_TOKEN=${GITHUB_TOKEN@Q}
-# APP_VERSION must be exported so every 'docker compose' child resolves the
-# ${APP_VERSION} interpolation in the compose file (image tags like
-# ghcr.io/.../pupcon-api:${APP_VERSION}). It is baked in as a literal here so it
-# is always set, regardless of the env-file or ssh non-interactive shell.
-export APP_VERSION='${APP_VERSION}'
+  # base64-encode the free-form file contents so they're safe to embed in the
+  # remote script regardless of quotes/newlines/special chars.
+  local env_b64 compose_b64
+  env_b64=$(printf '%s' "${ENV_FILE_CONTENT}" | base64 --wrap=0)
+  compose_b64=$(printf '%s' "${COMPOSE_FILE_CONTENT}" | base64 --wrap=0)
 
-# SAFE cleanup: only remove DANGLING images (none-tagged, not referenced by any
-# container) and the build cache. We deliberately DO NOT prune volumes here —
-# docker volume prune removes ALL unused volumes, and postgres-data-production
-# is the app database; a brief unref during restart would destroy it. We also do
-# NOT use 'docker image prune -af' because '-a' drops ALL unused images,
-# including the currently-running image tag if the container is mid-restart.
-prune_cleanup() {
-  echo "[cleanup] Pruning dangling images (safe)..."
-  docker image prune -f > /dev/null 2>&1 || true
-  echo "[cleanup] Pruning build cache (safe)..."
-  docker builder prune -f > /dev/null 2>&1 || true
-}
-
-deploy() {
-  echo "==== deploy.sh starting (APP_VERSION=${APP_VERSION}) ===="
-  # Free space before the heavy pull — fail fast with a clear message instead
-  # of timing out mid-pull due to a full disk.
-  local free_mb=\$(df -m / | awk 'NR==2 {print \$4}')
-  echo "Free disk before pull: \${free_mb} MB"
-  if [ "\${free_mb:-0}" -lt 1024 ]; then
-    echo "ERROR: Less than 1 GB free on /. Running cleanup before retry..."
-    prune_cleanup
-    free_mb=\$(df -m / | awk 'NR==2 {print \$4}')
-    echo "Free disk after cleanup: \${free_mb} MB"
-    if [ "\${free_mb:-0}" -lt 1024 ]; then
-      echo "ERROR: Still < 1 GB free after cleanup. Aborting."
-      exit 20
-    fi
-  fi
-
-  echo "Logging in to GHCR on instance..."
-  echo "\${GITHUB_TOKEN}" | docker login ghcr.io -u "\${GHCR_USER}" --password-stdin
-
-  cd ${app_dir}
-  echo "Pulling images for ${ENVIRONMENT}..."
-  docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} pull
-
-  echo "Syncing frontend build into shared host directory..."
-  mkdir -p ${app_dir}/public-build
-  # Extract the freshly-built public/build from the pupcon-client image into the
-  # shared bind-mount directory. Because public/build is a build artifact that is
-  # NOT committed to git and builds only inside the frontend image, we sync it
-  # from the image on every deploy so api-prod (which renders Blade/@vite and
-  # needs manifest.json) always has the build matching the current image.
-  rm -rf ${app_dir}/public-build/*
-  docker run --rm \
-    --entrypoint "" \
-    -v ${app_dir}/public-build:/out \
-    ghcr.io/zero-index-developers/pupcon/pupcon-client:${APP_VERSION} \
-    /bin/sh -c "cp -R /var/www/public/build/. /out/"
-
-  echo "Switching to new ${ENVIRONMENT} containers..."
-  docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} up -d
-  echo "Restarting api-prod to pick up the synced manifest..."
-  docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} restart api-prod || true
-
-  # Clean up after a successful deploy so images/volumes/cache don't accumulate
-  # and eventually fill the disk again.
-  prune_cleanup
-  echo "Deployment complete for ${ENVIRONMENT}"
-}
-
-if deploy > "${deploy_log}" 2>&1; then
-  exit_code=0
-else
-  exit_code=\$?
-fi
-echo "EXIT_CODE=\${exit_code}" > "${done_marker}"
-exit 0
-DEBUEOF
-)
-
-  # base64-encode the three "free-form" payloads so embedding them in the outer
-  # SSM command string is safe regardless of `$`, backticks, quotes, or newlines.
-  local env_file_b64
-  local compose_file_b64
-  local deploy_script_b64
-  env_file_b64=$(printf '%s' "${ENV_FILE_CONTENT}" | base64 --wrap=0)
-  compose_file_b64=$(printf '%s' "${COMPOSE_FILE_CONTENT}" | base64 --wrap=0)
-  deploy_script_b64=$(printf '%s' "${deploy_body}" | base64 --wrap=0)
-
-  local ssm_commands
-  ssm_commands=$(cat <<EOF
+  # The whole thing runs under `set -e`, so ANY failing command (docker
+  # login, pull, run, up, restart) aborts immediately and the SSM command
+  # comes back with Status=Failed. Nothing here is allowed to fail silently.
+  local remote_script
+  remote_script=$(cat <<REMOTE
 set -e
 mkdir -p ${app_dir}
-echo "Writing ${ENV_FILE} on instance..."
-printf '%s' "${env_file_b64}" | base64 --decode > "${instance_env_file}"
-echo "APP_VERSION=${APP_VERSION}" >> "${instance_env_file}"
-echo "Writing ${COMPOSE_FILE} on instance..."
-printf '%s' "${compose_file_b64}" | base64 --decode > "${instance_compose_file}"
-echo "Writing deploy script on instance..."
-printf '%s' "${deploy_script_b64}" | base64 --decode > "${deploy_script}"
-chmod +x "${deploy_script}"
-rm -f "${done_marker}" "${deploy_log}"
-echo "Launching deploy in background on instance..."
-nohup "${deploy_script}" > /dev/null 2>&1 &
-echo "Deploy launched (pid \$!)."
-EOF
+cd ${app_dir}
+
+echo '${env_b64}' | base64 --decode > ${ENV_FILE}
+echo "APP_VERSION=${APP_VERSION}" >> ${ENV_FILE}
+echo '${compose_b64}' | base64 --decode > ${COMPOSE_FILE}
+
+# Exported explicitly so every docker compose child process resolves
+# \${APP_VERSION} in image tags, regardless of shell/env-file quirks.
+export APP_VERSION='${APP_VERSION}'
+
+free_mb=\$(df -m / | awk 'NR==2 {print \$4}')
+echo "Free disk: \${free_mb} MB"
+if [ "\${free_mb}" -lt 1024 ]; then
+  echo "Low disk space, pruning dangling images/build cache before retrying..."
+  docker image prune -f
+  docker builder prune -f
+  free_mb=\$(df -m / | awk 'NR==2 {print \$4}')
+  echo "Free disk after cleanup: \${free_mb} MB"
+  if [ "\${free_mb}" -lt 1024 ]; then
+    echo "Still under 1GB free. Aborting." >&2
+    exit 20
+  fi
+fi
+
+echo "Logging in to GHCR..."
+echo '${GITHUB_TOKEN}' | docker login ghcr.io -u '${ghcr_user}' --password-stdin
+
+echo "Pulling images for ${ENVIRONMENT}..."
+docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} pull
+
+echo "Syncing frontend build into shared host directory..."
+mkdir -p public-build
+rm -rf public-build/*
+docker run --rm \
+  --entrypoint "" \
+  -v ${app_dir}/public-build:/out \
+  ghcr.io/zero-index-developers/pupcon/pupcon-client:${APP_VERSION} \
+  /bin/sh -c "cp -R /var/www/public/build/. /out/"
+
+echo "Switching to new ${ENVIRONMENT} containers..."
+docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} up -d
+
+echo "Restarting api-prod to pick up the synced manifest..."
+docker compose --env-file ${ENV_FILE} -f ${COMPOSE_FILE} restart api-prod
+
+# Safe cleanup only: dangling images + build cache. Deliberately NOT pruning
+# volumes (postgres-data-production lives there) and NOT using
+# 'docker image prune -af' (the -a would drop the image still in use if a
+# container is mid-restart).
+echo "Cleaning up dangling images and build cache..."
+docker image prune -f
+docker builder prune -f
+
+echo "Deployment complete for ${ENVIRONMENT}"
+REMOTE
 )
 
   local params_json
-  params_json=$(jq -nc --arg cmds "${ssm_commands}" '{commands: [$cmds]}')
+  params_json=$(jq -nc \
+    --arg cmd "${remote_script}" \
+    --arg timeout "${SSM_EXECUTION_TIMEOUT}" \
+    '{commands: [$cmd], executionTimeout: [$timeout]}')
 
   local command_id
   command_id=$(aws ssm send-command \
@@ -190,153 +128,43 @@ EOF
     --output text)
 
   echo "SSM Command ID: ${command_id}"
-  echo "Waiting for SSM command to complete..."
+  echo "Waiting for deploy to finish (timeout: ${SSM_EXECUTION_TIMEOUT}s)..."
 
-  local status=""
-  while [ "$status" != "Success" ] && [ "$status" != "Failed" ] && [ "$status" != "Cancelled" ]; do
-    sleep 5
+  # Poll the SAME command's status — no re-sending commands, no marker file.
+  local status="InProgress"
+  while [[ "${status}" == "InProgress" || "${status}" == "Pending" ]]; do
+    sleep 10
     status=$(aws ssm get-command-invocation \
       --command-id "${command_id}" \
       --instance-id "${INSTANCE_ID}" \
       --region "${AWS_REGION}" \
       --query "Status" \
       --output text)
-    echo "Command status: ${status}"
+    echo "Status: ${status}"
   done
 
-  if [ "$status" != "Success" ]; then
-    echo "Failed to launch background deploy (SSM status=${status})."
+  echo "----- deploy output -----"
+  aws ssm get-command-invocation \
+    --command-id "${command_id}" \
+    --instance-id "${INSTANCE_ID}" \
+    --region "${AWS_REGION}" \
+    --query "StandardOutputContent" \
+    --output text
+  echo "--------------------------"
+
+  if [[ "${status}" != "Success" ]]; then
+    echo "Deploy failed (status=${status})." >&2
+    echo "----- stderr -----" >&2
     aws ssm get-command-invocation \
       --command-id "${command_id}" \
       --instance-id "${INSTANCE_ID}" \
       --region "${AWS_REGION}" \
-      --query "{Status:Status,StatusCode:StatusCode,StdErrContent:StandardErrorContent,StdOutContent:StandardOutputContent}" \
-      --output json
+      --query "StandardErrorContent" \
+      --output text >&2
     return 1
   fi
-  echo "Background deploy started. Polling ${done_marker} on instance..."
 
-  # Poll the instance with a short SSM command until the background job writes
-  # its exit-code marker. Each poll is tiny, so it stays under the SSM timeout.
-  local attempts=0
-  local max_attempts=120   # 120 * ~18s ≈ 36 min cap, then report the log tail
-  local poll_status=""
-  local exit_code=""
-  local poll_id=""
-  local started_at; started_at=$(date +%s)
-  while [ "${attempts}" -lt "${max_attempts}" ]; do
-    sleep 15
-    attempts=$((attempts + 1))
-    local elapsed=$(( $(date +%s) - started_at ))
-    echo "Polling attempt ${attempts}/${max_attempts} (${elapsed}s elapsed)..."
-    poll_status=$(aws ssm send-command \
-      --instance-ids "${INSTANCE_ID}" \
-      --document-name "AWS-RunShellScript" \
-      --comment "poll pupcon ${ENVIRONMENT} deploy" \
-      --parameters "$(jq -nc --arg cmds "cat ${done_marker} 2>/dev/null || true; echo LIVE=\$(pgrep -x deploy.sh | head -1 | wc -l)" '{commands: [$cmds]}')" \
-      --region "${AWS_REGION}" \
-      --query "Command.CommandId" \
-      --output text)
-    # Give the poll a moment to run, then read its output.
-    sleep 3
-    exit_code=$(aws ssm get-command-invocation \
-      --command-id "${poll_status}" \
-      --instance-id "${INSTANCE_ID}" \
-      --region "${AWS_REGION}" \
-      --query "StandardOutputContent" \
-      --output text 2>/dev/null)
-    # liveness: is the background deploy.sh still running? (1 = yes, 0 = no)
-    local live_count
-    live_count=$(printf '%s' "${exit_code}" | grep -oE '^LIVE=[0-9]+' | grep -oE '[0-9]+$' || echo "0")
-    exit_code=$(printf '%s' "${exit_code}" | grep -oE 'EXIT_CODE=[0-9]+' || true)
-    # If the marker isn't present yet AND the background script is no longer
-    # running, it died without finishing — fail fast instead of waiting out the
-    # full cap.
-    if [ -z "${exit_code}" ] && [ "${live_count}" = "0" ] && [ "${attempts}" -gt 2 ]; then
-      echo "Background deploy.sh is no longer running and no EXIT_CODE marker was written — the background job died." >&2
-      echo "----- deploy log tail -----"
-      log_command=$(aws ssm send-command \
-        --instance-ids "${INSTANCE_ID}" \
-        --document-name "AWS-RunShellScript" \
-        --comment "tail pupcon deploy log (died)" \
-        --parameters "$(jq -nc --arg cmds "tail -n 80 ${deploy_log}" '{commands: [$cmds]}')" \
-        --region "${AWS_REGION}" \
-        --query "Command.CommandId" \
-        --output text)
-      sleep 3
-      aws ssm get-command-invocation \
-        --command-id "${log_command}" \
-        --instance-id "${INSTANCE_ID}" \
-        --region "${AWS_REGION}" \
-        --query "StandardOutputContent" \
-        --output text
-      echo "Check ${deploy_log} on the instance for the failure." >&2
-      return 1
-    fi
-    if [ -n "${exit_code}" ]; then
-      echo "Deploy finished: ${exit_code}"
-      echo "----- deploy log tail -----"
-      log_command=$(aws ssm send-command \
-        --instance-ids "${INSTANCE_ID}" \
-        --document-name "AWS-RunShellScript" \
-        --comment "tail pupcon deploy log" \
-        --parameters "$(jq -nc --arg cmds "tail -n 80 ${deploy_log}" '{commands: [$cmds]}')" \
-        --region "${AWS_REGION}" \
-        --query "Command.CommandId" \
-        --output text)
-      sleep 3
-      aws ssm get-command-invocation \
-        --command-id "${log_command}" \
-        --instance-id "${INSTANCE_ID}" \
-        --region "${AWS_REGION}" \
-        --query "StandardOutputContent" \
-        --output text
-      echo "--------------------------"
-      case "${exit_code}" in
-        EXIT_CODE=0) echo "Deployment to ${ENVIRONMENT} completed successfully"; return 0 ;;
-        *) echo "Deploy script failed on instance (exit ${exit_code#EXIT_CODE=})." >&2; return 1 ;;
-      esac
-    fi
-  done
-
-  # Timed out — surface the deploy log and running processes so a stuck deploy
-  # is diagnosable instead of a silent 36-minute black box.
-  echo "Timed out waiting for background deploy to finish (${max_attempts} attempts)." >&2
-  echo "----- deploy log tail on timeout -----"
-  log_command=$(aws ssm send-command \
-    --instance-ids "${INSTANCE_ID}" \
-    --document-name "AWS-RunShellScript" \
-    --comment "tail pupcon deploy log on timeout" \
-    --parameters "$(jq -nc --arg cmds "tail -n 80 ${deploy_log}" '{commands: [$cmds]}')" \
-    --region "${AWS_REGION}" \
-    --query "Command.CommandId" \
-    --output text)
-  sleep 3
-  aws ssm get-command-invocation \
-    --command-id "${log_command}" \
-    --instance-id "${INSTANCE_ID}" \
-    --region "${AWS_REGION}" \
-    --query "StandardOutputContent" \
-    --output text
-  echo "----- running deploy.sh processes -----"
-  ps_command=$(aws ssm send-command \
-    --instance-ids "${INSTANCE_ID}" \
-    --document-name "AWS-RunShellScript" \
-    --comment "ps pupcon deploy" \
-    --parameters "$(jq -nc --arg cmds "ps -ef | grep -E 'deploy.sh|docker compose|docker run' | grep -v grep || true" '{commands: [$cmds]}')" \
-    --region "${AWS_REGION}" \
-    --query "Command.CommandId" \
-    --output text)
-  sleep 3
-  aws ssm get-command-invocation \
-    --command-id "${ps_command}" \
-    --instance-id "${INSTANCE_ID}" \
-    --region "${AWS_REGION}" \
-    --query "StandardOutputContent" \
-    --output text
-  echo "--------------------------------------------------------------------------" >&2
-  echo "Check ${deploy_log} on the instance for progress." >&2
-  return 1
+  echo "Deployment to ${ENVIRONMENT} completed successfully"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
