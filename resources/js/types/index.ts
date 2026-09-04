@@ -224,5 +224,5 @@ export type OverallUploads = {
 
 export interface FrequencyUploads {
     activity_date: string;
-    activity: number;
+    upload_count: number;
 }

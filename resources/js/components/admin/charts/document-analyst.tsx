@@ -152,7 +152,7 @@ export function DocumentsAnalytics({ frequencyUploads, overallUploads = [], load
     // --- Activity trend computation ---
     const activityTrend = useMemo(() => {
         const current = filteredFrequency;
-        const currentTotal = current.reduce((sum, d) => sum + d.activity, 0);
+        const currentTotal = current.reduce((sum, d) => sum + d.upload_count, 0);
 
         const days = timeRange === '3d' ? 3 : timeRange === '7d' ? 7 : 30;
         const prevCutoff = new Date();
@@ -164,7 +164,7 @@ export function DocumentsAnalytics({ frequencyUploads, overallUploads = [], load
             const date = new Date(d.activity_date);
             return date >= prevCutoff && date < currCutoff;
         });
-        const prevTotal = prevPeriod.reduce((sum, d) => sum + d.activity, 0);
+        const prevTotal = prevPeriod.reduce((sum, d) => sum + d.upload_count, 0);
 
         const pctChange = prevTotal > 0 ? Math.round(((currentTotal - prevTotal) / prevTotal) * 100) : currentTotal > 0 ? 100 : 0;
 
@@ -253,7 +253,7 @@ export function DocumentsAnalytics({ frequencyUploads, overallUploads = [], load
                                 />
                                 {/* <ChartLegend content={<ChartLegendContent />} /> */}
                                 <Area
-                                    dataKey="activity"
+                                    dataKey="upload_count"
                                     type="bump"
                                     connectNulls={false}
                                     fill="url(#fillActivity)"

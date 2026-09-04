@@ -3,14 +3,13 @@ export interface ActivityLogs {
     full_name: string;
     description: string;
     activity: string;
-    type: 'Document' | 'Users' | 'Content';
-    action: 'Approved' | 'Pending' | 'Rejected';
+    type: 'Authentication' | 'File Management' | 'Content Management' | 'User Management' | 'System';
     activity_date: string;
 }
 
 export interface FrequencyUploads {
     activity_date: string;
-    activity: number;
+    upload_count: number;
 }
 
 export interface DocumentStatistics {
