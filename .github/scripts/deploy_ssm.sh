@@ -70,7 +70,7 @@ deploy_via_ssm() {
 set -e
 export GHCR_USER=${GHCR_USER@Q}
 export GITHUB_TOKEN=${GITHUB_TOKEN@Q}
-# APP_VERSION must be exported so every `docker compose` child resolves the
+# APP_VERSION must be exported so every 'docker compose' child resolves the
 # ${APP_VERSION} interpolation in the compose file (image tags like
 # ghcr.io/.../pupcon-api:${APP_VERSION}). It is baked in as a literal here so it
 # is always set, regardless of the env-file or ssh non-interactive shell.
@@ -80,7 +80,7 @@ export APP_VERSION='${APP_VERSION}'
 # container) and the build cache. We deliberately DO NOT prune volumes here —
 # docker volume prune removes ALL unused volumes, and postgres-data-production
 # is the app database; a brief unref during restart would destroy it. We also do
-# NOT use `docker image prune -af` because `-a` drops ALL unused images,
+# NOT use 'docker image prune -af' because '-a' drops ALL unused images,
 # including the currently-running image tag if the container is mid-restart.
 prune_cleanup() {
   echo "[cleanup] Pruning dangling images (safe)..."
@@ -233,7 +233,7 @@ EOF
       --instance-ids "${INSTANCE_ID}" \
       --document-name "AWS-RunShellScript" \
       --comment "poll pupcon ${ENVIRONMENT} deploy" \
-      --parameters "$(jq -nc --arg cmds "cat ${done_marker} 2>/dev/null || true" '{commands: [$cmds]}')" \
+      --parameters "$(jq -nc --arg cmds "cat ${done_marker} 2>/dev/null || true; echo LIVE=\$(pgrep -x deploy.sh | head -1 | wc -l)" '{commands: [$cmds]}')" \
       --region "${AWS_REGION}" \
       --query "Command.CommandId" \
       --output text)
@@ -244,7 +244,35 @@ EOF
       --instance-id "${INSTANCE_ID}" \
       --region "${AWS_REGION}" \
       --query "StandardOutputContent" \
-      --output text 2>/dev/null | grep -oE 'EXIT_CODE=[0-9]+' || true)
+      --output text 2>/dev/null)
+    # liveness: is the background deploy.sh still running? (1 = yes, 0 = no)
+    local live_count
+    live_count=$(printf '%s' "${exit_code}" | grep -oE '^LIVE=[0-9]+' | grep -oE '[0-9]+$' || echo "0")
+    exit_code=$(printf '%s' "${exit_code}" | grep -oE 'EXIT_CODE=[0-9]+' || true)
+    # If the marker isn't present yet AND the background script is no longer
+    # running, it died without finishing — fail fast instead of waiting out the
+    # full cap.
+    if [ -z "${exit_code}" ] && [ "${live_count}" = "0" ] && [ "${attempts}" -gt 2 ]; then
+      echo "Background deploy.sh is no longer running and no EXIT_CODE marker was written — the background job died." >&2
+      echo "----- deploy log tail -----"
+      log_command=$(aws ssm send-command \
+        --instance-ids "${INSTANCE_ID}" \
+        --document-name "AWS-RunShellScript" \
+        --comment "tail pupcon deploy log (died)" \
+        --parameters "$(jq -nc --arg cmds "tail -n 80 ${deploy_log}" '{commands: [$cmds]}')" \
+        --region "${AWS_REGION}" \
+        --query "Command.CommandId" \
+        --output text)
+      sleep 3
+      aws ssm get-command-invocation \
+        --command-id "${log_command}" \
+        --instance-id "${INSTANCE_ID}" \
+        --region "${AWS_REGION}" \
+        --query "StandardOutputContent" \
+        --output text
+      echo "Check ${deploy_log} on the instance for the failure." >&2
+      return 1
+    fi
     if [ -n "${exit_code}" ]; then
       echo "Deploy finished: ${exit_code}"
       echo "----- deploy log tail -----"
