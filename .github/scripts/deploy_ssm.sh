@@ -71,13 +71,17 @@ set -e
 export GHCR_USER=${GHCR_USER@Q}
 export GITHUB_TOKEN=${GITHUB_TOKEN@Q}
 
+# SAFE cleanup: only remove DANGLING images (none-tagged, not referenced by any
+# container) and the build cache. We deliberately DO NOT prune volumes here —
+# docker volume prune removes ALL unused volumes, and postgres-data-production
+# is the app database; a brief unref during restart would destroy it. We also do
+# NOT use `docker image prune -af` because `-a` drops ALL unused images,
+# including the currently-running image tag if the container is mid-restart.
 prune_cleanup() {
-  echo "[cleanup] Pruning dangling/unused images..."
+  echo "[cleanup] Pruning dangling images (safe)..."
   docker image prune -f > /dev/null 2>&1 || true
-  echo "[cleanup] Pruning unused volumes..."
-  docker volume prune -f > /dev/null 2>&1 || true
-  echo "[cleanup] Pruning build cache..."
-  docker builder prune -af > /dev/null 2>&1 || true
+  echo "[cleanup] Pruning build cache (safe)..."
+  docker builder prune -f > /dev/null 2>&1 || true
 }
 
 deploy() {
